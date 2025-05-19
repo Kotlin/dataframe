@@ -43,47 +43,6 @@ body {
     color: #FFFFFFCC
 }
 </style>
-    <script>
-        function sendHeight() {
-            const body = document.body;
-            const html = document.documentElement;
-
-            const height = Math.max(
-                body.scrollHeight,
-                body.offsetHeight,
-                html.clientHeight,
-                html.scrollHeight,
-                html.offsetHeight
-            );
-
-            parent.postMessage({ type: 'iframeHeight', height }, '*');
-        }
-
-
-        function repeatHeightCalculation(maxRetries = 10, interval = 100) {
-            let retries = 0;
-            const intervalId = setInterval(() => {
-                sendHeight();
-                retries++;
-                if (retries >= maxRetries) clearInterval(intervalId);
-            }, interval);
-        }
-
-        window.addEventListener('load', () => {
-            repeatHeightCalculation();
-        });
-
-
-        const observer = new MutationObserver(() => repeatHeightCalculation(5, 50));
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            characterData: true,
-            attributes: true
-        });
-
-        window.addEventListener('resize', sendHeight);
-    </script>
 </head>
 <body><p><code><code>columnSet</code></code></p><p>    <code><strong><code>[</code></strong></code><code><code>index</code></code><code><strong><code>]</code></strong></code></p><p>    <code>| </code><code><strong><code>[</code></strong></code><code><code>index</code></code><strong><code>,</code></strong><code>.. |</code><code><code>indexRange</code></code><code><strong><code>]</code></strong></code></p><p>    <code>| </code><code><strong><code>[</code></strong></code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code><strong><code>]</code></strong></code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>all</code></strong></code><strong><code>()</code></strong></p><p>    <code>| </code><strong><code>.all</code></strong><code>(</code><code><strong><code>Before</code></strong></code><code>|</code><code><strong><code>After</code></strong></code><code>|</code><code><strong><code>From</code></strong></code><code>|</code><code><strong><code>UpTo</code></strong></code><code>) ( </code><strong><code>(</code></strong><code><code>column</code></code><strong><code>)</code></strong><code> | </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> )</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>and</code></strong></code><strong><code> (</code></strong><code>|</code><strong><code>{ </code></strong><code><code>columnOrSet</code></code><strong><code> }</code></strong><code>|</code><strong><code>)</code></strong></p><p>    <code>| (</code><strong><code>.</code></strong><code><strong><code>col</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>valueCol</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>frameCol</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>colGroup</code></strong></code><code>)</code><strong><code>(</code></strong><code><code>index</code></code><strong><code>)</code></strong></p><p>    <code>| (</code><strong><code>.</code></strong><code><strong><code>cols</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>valueCols</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>frameCols</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>colGroups</code></strong></code><code>) [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>cols</code></strong></code><strong><code>(</code></strong><code><code>index</code></code><strong><code>,</code></strong><code>.. |</code><code><code>indexRange</code></code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>colsAtAnyDepth</code></strong></code><code> [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>colsInGroups</code></strong></code><code> [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>colsOf</code></strong></code><strong><code>&lt;</code></strong><code><code>T</code></code><strong><code>&gt;</code></strong><code> [ </code><strong><code>(</code></strong><code><code>kType</code></code><strong><code>)</code></strong><code> ] [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>colsOfKind</code></strong></code><strong><code>(</code></strong><code><code>kind</code></code><strong><code>,</code></strong><code> ..</code><strong><code>)</code></strong><code> [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>distinct</code></strong></code><strong><code>()</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>drop</code></strong></code><code>(</code><code><strong><code>Last</code></strong></code><code>)</code><strong><code>(</code></strong><code><code>number</code></code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>drop</code></strong></code><code>(</code><code><strong><code>Last</code></strong></code><code>)</code><code><strong><code>While</code></strong></code><strong><code> { </code></strong><code><code>condition</code></code><strong><code> }</code></strong></p><p>    <code>| </code><code><strong><code>except</code></strong></code><code> [</code><strong><code> { </code></strong><code>] </code><code><code>columnsResolver</code></code><code> [</code><strong><code> } </code></strong><code>]</code></p><p>    <code>| </code><code><strong><code>except</code></strong></code><code> </code><code><code>column</code></code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>except</code></strong></code><strong><code>(</code></strong><code><code>column</code></code><strong><code>,</code></strong><code> ..</code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>filter</code></strong></code><strong><code> { </code></strong><code><code>condition</code></code><strong><code> }</code></strong></p><p>    <code>| (</code><strong><code>.</code></strong><code><strong><code>first</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>last</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>single</code></strong></code><code>) [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    <code>| </code><strong><code>.name</code></strong><code>(</code><code><strong><code>Starts</code></strong></code><code>|</code><code><strong><code>Ends</code></strong></code><code>)</code><strong><code>With</code></strong><strong><code>(</code></strong><code><code>text</code></code><code>[</code><strong><code>, </code></strong><code><code>ignoreCase</code></code><code>]</code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>nameContains</code></strong></code><strong><code>(</code></strong><code><code>text</code></code><code>[</code><strong><code>, </code></strong><code><code>ignoreCase</code></code><code>] | </code><code><code>regex</code></code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>simplify</code></strong></code><strong><code>()</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>take</code></strong></code><code>(</code><code><strong><code>Last</code></strong></code><code>)</code><strong><code>(</code></strong><code><code>number</code></code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>take</code></strong></code><code>(</code><code><strong><code>Last</code></strong></code><code>)</code><code><strong><code>While</code></strong></code><strong><code> { </code></strong><code><code>condition</code></code><strong><code> }</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>withoutNulls</code></strong></code><strong><code>()</code></strong></p></body>
 <html/>
