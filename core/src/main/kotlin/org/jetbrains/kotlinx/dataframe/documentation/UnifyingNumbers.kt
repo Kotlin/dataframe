@@ -22,7 +22,8 @@ import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
  *
  * See [UnifiedNumberTypeOptions] for these settings.
  *
- * At the bottom of the graph is [Nothing]. This can be interpreted as `null`.
+ * At the bottom of the graph is [Nothing?][Nothing].
+ * This can be interpreted as `null`.
  */
 public interface UnifyingNumbers {
 
@@ -48,5 +49,6 @@ public interface UnifyingNumbers {
      * ```
      */
     @ExcludeFromSources
+    @ExportAsHtml
     private interface Graph
 }
