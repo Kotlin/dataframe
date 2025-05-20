@@ -8,7 +8,7 @@ but its logic implementation can be encountered in multiple places, such as
 
 The following graph shows the hierarchy of number types in Kotlin DataFrame.
 
-<inline-frame src="resources/snippets/kdocs/org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers.Graph.html" width="100%"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers.Graph.html" width="100%"/>
 
 The order is top-down from the most complex type to the simplest one.
 

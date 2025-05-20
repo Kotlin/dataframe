@@ -35,7 +35,7 @@ df.move { name.firstName and name.lastName }.after { city }
         <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html" width="100%"/>
 </tab>
     <tab title="On a Column Group">
-        <inline-frame src=Aorg.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html" width="100%"/>
+        <inline-frame src=resources/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html" width="100%"/>
 </tab>
 </tabs>
 
