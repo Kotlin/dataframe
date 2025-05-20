@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "participants": [
+      {
+        "name": {
+          "firstName": "Alice",
+          "lastName": "Cooper"
+        },
+        "age": 15,
+        "city": "London"
+      },
+      {
+        "name": {
+          "firstName": "Bob",
+          "lastName": "Dylan"
+        },
+        "age": 45,
+        "city": "Dubai"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "participants": [
+      {
+        "name": {
+          "firstName": "Charlie",
+          "lastName": "Daniels"
+        },
+        "age": 20,
+        "city": "Moscow"
+      },
+      {
+        "name": {
+          "firstName": "Charlie",
+          "lastName": "Chaplin"
+        },
+        "age": 40,
+        "city": "Milan"
+      }
+    ]
+  }
+]
