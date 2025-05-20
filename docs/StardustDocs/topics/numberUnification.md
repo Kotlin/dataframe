@@ -1,8 +1,9 @@
 [//]: # (title: Number Unification)
 
-The concept of unifying numbers is converting them to a common number type without losing information.
+Unifying numbers means converting them to a common number type without losing information.
 
-This is an internal part of the library for now, but its logic can be encountered in multiple places, such as
+This is currently an internal part of the library, 
+but its logic implementation can be encountered in multiple places, such as
 [statistics](summaryStatistics.md), and [reading JSON](read.md#read-from-json). 
 
 The following graph shows the hierarchy of number types in Kotlin DataFrame.
@@ -15,10 +16,11 @@ For each number type in the graph, it holds that a number of that type can be ex
 a number of a more complex type (any of its parents).
 This is either because the more complex type has a larger range or higher precision (in terms of bits).
 
-Nullability, while not displayed everywhere in the graph, is also taken into account.
+Nullability, while not displayed in the graph, is also taken into account.
 This means that `Int?` and `Float` will be unified to `Double?`.
 
-At the bottom of the graph is `Nothing?`. This can be interpreted as `null`.
+`Nothing` is at the bottom of the graph and is the starting point in unification.
+This can be interpreted as "no type" and can have no instance, while `Nothing?` can only be `null`.
 
 > There may be parts of the library that "unify" numbers, such as [`readCsv`](read.md#column-type-inference-from-csv),
 > or [`readExcel`](read.md#read-from-excel).

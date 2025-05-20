@@ -27,7 +27,7 @@ import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
  *    UByte     Byte
  *        \     /
  *        \    /
- *       Nothing?
+ *       Nothing
  * ```
  * For each number type in the graph, it holds that a number of that type can be expressed lossless by
  * a number of a more complex type (any of its parents).
@@ -40,7 +40,11 @@ import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
  *
  * See [UnifiedNumberTypeOptions] for these settings.
  *
- * At the bottom of the graph is [Nothing?][Nothing].
- * This can be interpreted as `null`.
+ * Nullability, while not displayed in the graph, is also taken into account.
+ * This means that `Int?` and `Float` will be unified to `Double?`.
+ *
+ * At the bottom of the graph is [Nothing].
+ * This can be interpreted as "no type" and can have no instance,
+ * while [Nothing?][Nothing] can only be `null`.
  */
 public interface UnifyingNumbers
