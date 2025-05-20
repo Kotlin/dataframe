@@ -43,6 +43,9 @@
         <toc-element topic="DataColumn.md"/>
         <toc-element topic="DataRow.md"/>
     </toc-element>
+    <toc-element topic="Compiler-Plugin.md">
+        <toc-element topic="dataSchema.md"/>
+    </toc-element>
     <toc-element topic="nanAndNa.md"/>
     <toc-element topic="numberUnification.md"/>
     <toc-element topic="operations.md">
@@ -195,7 +198,6 @@
         </toc-element>
     </toc-element>
     <toc-element topic="gradleReference.md"/>
-    <toc-element topic="Compiler-Plugin.md"/>
     <toc-element topic="DataSchema-Data-Classes-Generation.md"/>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
 </instance-profile>
