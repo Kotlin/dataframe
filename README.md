@@ -43,19 +43,10 @@ You could find the following articles there:
 
 Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
-The DataFrame compiler plugin has reached public preview!
-Here's a [compiler plugin demo project](https://github.com/koperagen/df-plugin-demo) that works with [IntelliJ IDEA](https://www.jetbrains.com/idea/) 2024.2.
-
 ## Setup
 
 ```kotlin
 implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta2")
-```
-
-Optional Gradle plugin for enhanced type safety and schema generation
-https://kotlin.github.io/dataframe/schemasgradle.html
-```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "1.0.0-Beta2"
 ```
 
 Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
@@ -76,58 +67,9 @@ df["full_name"][0] // Indexing https://kotlin.github.io/dataframe/access.html
 df.filter { "stargazers_count"<Int>() > 50 }.print() 
 ```
 
-## Getting started with data schema
+## Getting started in Kotlin Notebook
 
-Requires Gradle plugin to work
-```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "1.0.0-Beta2"
-```
-
-Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
-
-```kotlin
-// Make sure to place the file annotation above the package directive
-@file:ImportDataSchema(
-    "Repository",
-    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
-)
-
-package example
-
-import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
-
-fun main() {
-    // execute `assemble` to generate extension properties API
-    val df = Repository.readCSV()
-    df.fullName[0]
-    
-    df.filter { stargazersCount > 50 }
-}
-```
-
-## Getting started in Jupyter Notebook / Kotlin Notebook
-
-Install the [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter) for [Jupyter](https://jupyter.org/)
-
-Import the stable `dataframe` version into a notebook: 
-```
-%use dataframe
-```
-or a specific version:
-```
-%use dataframe(<version>)
-```
-
-```kotlin
-val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
-df // the last expression in the cell is displayed
-```
-
-When a cell with a variable declaration is executed, in the next cell `DataFrame` provides extension properties based on its data 
-```kotlin
-df.filter { stargazers_count > 50 }
-```
+Follow this [guide](https://kotlin.github.io/dataframe/gettingstartedkotlinnotebook.html)
 
 ## Data model
 * `DataFrame` is a list of columns with equal sizes and distinct names.
