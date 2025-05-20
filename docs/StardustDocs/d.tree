@@ -44,7 +44,9 @@
         <toc-element topic="DataRow.md"/>
     </toc-element>
     <toc-element topic="Compiler-Plugin.md">
+        <toc-element topic="staticInterpretation.md"/>
         <toc-element topic="dataSchema.md"/>
+        <toc-element topic="compilerPluginExamples.md"/>
     </toc-element>
     <toc-element topic="nanAndNa.md"/>
     <toc-element topic="numberUnification.md"/>
