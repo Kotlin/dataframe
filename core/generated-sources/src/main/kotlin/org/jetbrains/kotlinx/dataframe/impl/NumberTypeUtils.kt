@@ -52,7 +52,7 @@ private val unifiedNumberTypeGraphs = mutableMapOf<UnifiedNumberTypeOptions, Dir
  *    UByte     Byte
  *        \     /
  *        \    /
- *       Nothing?
+ *       Nothing
  * ```
  *
  * For any two numbers, we can find the nearest common ancestor in this graph
@@ -127,7 +127,7 @@ internal fun getUnifiedNumberTypeGraph(
  *    UByte     Byte
  *        \     /
  *        \    /
- *       Nothing?
+ *       Nothing
  * ```
  *
  * For any two numbers, we can find the nearest common ancestor in this graph

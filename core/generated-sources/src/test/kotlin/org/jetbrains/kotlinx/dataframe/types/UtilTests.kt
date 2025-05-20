@@ -438,7 +438,7 @@ class UtilTests {
      *    UByte     Byte
      *        \     /
      *        \    /
-     *       Nothing?
+     *       Nothing
      * ```
      */
     @Test
