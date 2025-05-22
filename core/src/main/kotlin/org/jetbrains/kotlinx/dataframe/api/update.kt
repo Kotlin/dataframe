@@ -206,6 +206,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
  *
  * @param [predicate] The [row value filter][RowValueFilter] to select the rows to update.
  */
+@Interpretable("UpdateWhere")
 public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T, C> =
     Update(df = df, filter = filter and predicate, columns = columns)
 
@@ -236,6 +237,7 @@ private interface CommonUpdateAtFunctionDoc {
  *
  * @param [rowIndices] {@include [CommonUpdateAtFunctionDoc.RowIndicesParam]}
  */
+@Interpretable("UpdateAt")
 public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = where { index in rowIndices }
 
 /**
@@ -245,6 +247,7 @@ public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = w
  *
  * @param [rowIndices] {@include [CommonUpdateAtFunctionDoc.RowIndicesParam]}
  */
+@Interpretable("UpdateAt")
 public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(rowIndices.toSet())
 
 /**
@@ -254,6 +257,7 @@ public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(row
  *
  * @param [rowRange] {@include [CommonUpdateAtFunctionDoc.RowIndicesParam]}
  */
+@Interpretable("UpdateAt")
 public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { index in rowRange }
 
 /** ## Per Row Col
@@ -265,6 +269,7 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  *  - {@include [SeeAlsoUpdatePerCol]}
  * @param [expression] The {@include [ExpressionsGivenRowAndColumn.RowColumnExpressionLink]} to provide a new value for every selected cell giving its row and column.
  */
+@Interpretable("UpdatePerRowCol")
 public inline fun <T, C> Update<T, C>.perRowCol(crossinline expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
@@ -354,6 +359,7 @@ private interface CommonUpdatePerColMapDoc
  * @param [values] The [Map]<[String], Value> to provide a new value for every selected cell.
  *   For each selected column, there must be a value in the map with the same name.
  */
+@Interpretable("UpdatePerColMap")
 public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
     updateWithValuePerColumnImpl {
         values[it.name()] ?: throw IllegalArgumentException("Update value for column ${it.name()} is not defined")
@@ -371,6 +377,7 @@ public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
  *
  * @param [values] The [DataRow] to provide a new value for every selected cell.
  */
+@Interpretable("UpdatePerColRow")
 public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
 
 /**
@@ -380,6 +387,7 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
  *
  * @param [valueSelector] The {@include [ExpressionsGivenColumn.ColumnExpressionLink]} to provide a new value for every selected cell giving its column.
  */
+@Interpretable("UpdatePerCol")
 public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
 
@@ -395,6 +403,7 @@ internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>)
 }
 
 /** @include [Update.notNull] */
+@Interpretable("UpdateNotNullDefault")
 public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } as Update<T, C>
 
 /**
@@ -418,6 +427,7 @@ public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } a
  * {@comment No brackets around `expression` because this doc is copied to [Update.notNull]}
  * @param expression Optional {@include [ExpressionsGivenRow.RowExpressionLink]} to update the rows with.
  */
+@Interpretable("UpdateNotNull")
 public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): DataFrame<T> =
     notNull().with(expression)
 
