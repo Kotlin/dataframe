@@ -203,6 +203,7 @@ private interface CommonFillNaNsFunctionDoc
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.DslParam]
  */
+@Interpretable("FillNulls0") // fillNaNs changes schema same as fillNulls
 public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<T, C> =
     update(columns).where { it.isNaN }
 
@@ -281,6 +282,7 @@ private interface CommonFillNAFunctionDoc
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetFillNAOperationArg]}
  * @include [Update.DslParam]
  */
+@Interpretable("FillNa0")
 public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T, C?> =
     update(columns).where { it.isNA }
 
@@ -397,6 +399,8 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: Co
  * This overload operates on all columns in the [DataFrame].
  * @include [DropNulls.WhereAllNullParam]
  */
+@Refine
+@Interpretable("DropNulls1")
 public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { all() }
 
 /**
