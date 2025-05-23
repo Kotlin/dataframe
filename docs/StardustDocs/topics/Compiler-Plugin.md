@@ -14,16 +14,16 @@ Next release: 2025.2
 Setup plugins in `build.gradle.kts`:
 
 ```kotlin
-kotlin("jvm") version "2.2.20-dev-3524"
+kotlin("jvm") version "%compilerPluginKotlinVersion%"
 ```
 
 ```kotlin
-kotlin("plugin.dataframe") version "2.2.20-dev-3524"
+kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
 ```
 
 Setup library dependency:
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta2")
+implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
 ```
 
 Plugin is released as a dev version, available in this maven repository:
