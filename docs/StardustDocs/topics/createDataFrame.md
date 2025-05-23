@@ -17,21 +17,6 @@ val df = emptyDataFrame<Any>()
 
 ### dataFrameOf
 
-Returns a [`DataFrame`](DataFrame.md) with given column names and values.
-
-<!---FUN createDataFrameOf-->
-
-```kotlin
-// DataFrame with 2 columns and 3 rows
-val df = dataFrameOf("name", "age")(
-    "Alice", 15,
-    "Bob", 20,
-    "Charlie", 100,
-)
-```
-
-<!---END-->
-
 <!---FUN createDataFrameOfPairs-->
 
 ```kotlin
@@ -73,16 +58,17 @@ val df = dataFrameOf(name, age)
 
 <!---END-->
 
-<!---FUN createDataFrameFromNamesAndValues-->
+Returns a [`DataFrame`](DataFrame.md) with given column names and values.
+
+<!---FUN createDataFrameOf-->
 
 ```kotlin
-val names = listOf("name", "age")
-val values = listOf(
+// DataFrame with 2 columns and 3 rows
+val df = dataFrameOf("name", "age")(
     "Alice", 15,
     "Bob", 20,
-    "Charlie", 22,
+    "Charlie", 100,
 )
-val df = dataFrameOf(names, values)
 ```
 
 <!---END-->
@@ -124,20 +110,6 @@ val df = dataFrameOf(names).fill(15, true)
 <!---END-->
 
 ### toDataFrame
-
-Creates a [`DataFrame`](DataFrame.md) from an `Iterable<DataColumn>`:
-
-<!---FUN createDataFrameFromIterable-->
-
-```kotlin
-val name by columnOf("Alice", "Bob", "Charlie")
-val age by columnOf(15, 20, 22)
-
-listOf(name, age).toDataFrame()
-```
-
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromIterable.html" width="100%"/>
-<!---END-->
 
 `DataFrame` from `Map<String, List<*>>`:
 
