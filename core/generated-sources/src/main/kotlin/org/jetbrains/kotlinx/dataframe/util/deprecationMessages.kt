@@ -163,6 +163,9 @@ internal const val TO_CSV_REPLACE = "this.toCsvStr()"
 internal const val SPLIT_STR =
     "Please explicitly specify how the String should be split. This shortcut will be removed in version 1.1.0"
 
+internal const val DATAFRAME_OF_WITH_VALUES =
+    "Deprecated in favor of dataFrameOf(names).withValues(values). Will be error in 1.1.0"
+
 // endregion
 
 // region keep across releases
