@@ -1,6 +1,6 @@
 # @DataSchema declarations
 
-`DataSchema` can be used as an argument for cast and convertTo functions. 
+`DataSchema` can be used as an argument for [cast](cast.md) and [convertTo](convertTo.md) functions. 
 It provides typed data access for raw dataframes you read from I/O sources and serves as a starting point for the compiler plugin to derive schema changes.
 
 Example 1:
@@ -182,5 +182,3 @@ data class Name(
 val url = "https://raw.githubusercontent.com/Kotlin/dataframe/refs/heads/master/data/participants.json"
 val df = DataFrame.readJson(url).cast<Group>()
 ```
-
-
