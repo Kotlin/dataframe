@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -393,21 +392,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun sortBy_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val weight by column<Int?>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
-        df.sortBy { age }
-        df.sortBy { age and firstName }
-        df.sortBy { weight.nullsLast() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun sortBy_strings() {
         // SampleStart
         df.sortBy("age")
@@ -420,17 +404,6 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun sortByDesc_properties() {
         // SampleStart
-        df.sortByDesc { age and weight }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun sortByDesc_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val weight by column<Int?>()
-
         df.sortByDesc { age and weight }
         // SampleEnd
     }
@@ -461,17 +434,6 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun reorder_properties() {
         // SampleStart
-        df.reorder { age..isHappy }.byName()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorder_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val isHappy by column<Boolean>()
-
         df.reorder { age..isHappy }.byName()
         // SampleEnd
     }
@@ -516,17 +478,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun splitInplace_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
-        df.split { firstName }.by { it.asIterable() }.inplace()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun splitInplace_strings() {
         // SampleStart
         df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
@@ -543,17 +494,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun split_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val lastName by name.column<String>()
-
-        df.split { lastName }.by { it.asIterable() }.into("char1", "char2")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun split_strings() {
         // SampleStart
         df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "char2")
@@ -565,19 +505,6 @@ class Modify : TestBase() {
     fun split1_properties() {
         // SampleStart
         df.split { name.lastName }
-            .by { it.asIterable() }.default(' ')
-            .inward { "char$it" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun split1_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val lastName by name.column<String>()
-
-        df.split { lastName }
             .by { it.asIterable() }.default(' ')
             .inward { "char$it" }
         // SampleEnd
@@ -650,19 +577,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun splitIntoRows_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
-        df.split { firstName }.by { it.asIterable() }.intoRows()
-
-        df.split { name }.by { it.values() }.intoRows()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun splitIntoRows_strings() {
         // SampleStart
         df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.intoRows()
@@ -714,19 +628,6 @@ class Modify : TestBase() {
     fun mergeDefault() {
         // SampleStart
         df.merge { colsOf<Number>() }.into("data")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun explode_accessors() {
-        // SampleStart
-        val a by columnOf(1, 2)
-        val b by columnOf(listOf(1, 2), listOf(3, 4))
-
-        val df = dataFrameOf(a, b)
-
-        df.explode { b }
         // SampleEnd
     }
 
@@ -824,17 +725,6 @@ class Modify : TestBase() {
     fun insert_properties() {
         // SampleStart
         df.insert("year of birth") { 2021 - age }.after { age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun insert_accessors() {
-        // SampleStart
-        val year = column<Int>("year of birth")
-        val age by column<Int>()
-
-        df.insert(year) { 2021 - age }.after { age }
         // SampleEnd
     }
 
@@ -941,19 +831,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun add_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val yearOfBirth by column<Int>("year of birth")
-
-        df.add(yearOfBirth) { 2021 - age }
-        // SampleEnd
-        val added = df.add(yearOfBirth) { 2021 - age }
-        added[yearOfBirth].name() shouldBe "year of birth"
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun add_strings() {
         // SampleStart
         df.add("year of birth") { 2021 - "age"<Int>() }
@@ -1024,22 +901,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun addCalculated_accessors() {
-        // SampleStart
-        val city by column<String?>()
-        val personWithCityInfo = df.add {
-            val cityInfo = city().map { queryCityInfo(it) }
-            "cityInfo" {
-                cityInfo.map { it.location } into CityInfo::location
-                cityInfo.map { it.population } into "population"
-            }
-        }
-        // SampleEnd
-        personWithCityInfo["cityInfo"]["population"] shouldBe df.city.map { it?.length ?: 0 }.named("population")
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun addCalculated_strings() {
         // SampleStart
         val personWithCityInfo = df.add {
@@ -1070,31 +931,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun addMany_accessors() {
-        // SampleStart
-        val yob = column<Int>("year of birth")
-        val lastNameLength = column<Int>("last name length")
-        val age by column<Int>()
-        val isAdult = column<Boolean>("is adult")
-        val fullName = column<String>("full name")
-        val name by columnGroup()
-        val details by columnGroup()
-        val firstName by name.column<String>()
-        val lastName by name.column<String>()
-
-        df.add {
-            yob from 2021 - age
-            age gt 18 into isAdult
-            details from {
-                lastName.length() into lastNameLength
-                fullName from { firstName() + " " + lastName() }
-            }
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun addMany_strings() {
         // SampleStart
         df.add {
@@ -1112,17 +948,6 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun remove_properties() {
         // SampleStart
-        df.remove { name and weight }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun remove_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val weight by column<Int?>()
-
         df.remove { name and weight }
         // SampleEnd
     }
@@ -1153,17 +978,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun mapToColumn_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val yearOfBirth by column<Int>("year of birth")
-
-        df.mapToColumn(yearOfBirth) { 2021 - age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun mapToColumn_strings() {
         // SampleStart
         df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
@@ -1179,30 +993,6 @@ class Modify : TestBase() {
             age gt 18 into "is adult"
             name.lastName.length() into "last name length"
             "full name" from { name.firstName + " " + name.lastName }
-            +city
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mapMany_accessors() {
-        // SampleStart
-        val yob = column<Int>("year of birth")
-        val lastNameLength = column<Int>("last name length")
-        val age by column<Int>()
-        val isAdult = column<Boolean>("is adult")
-        val fullName = column<String>("full name")
-        val name by columnGroup()
-        val firstName by name.column<String>()
-        val lastName by name.column<String>()
-        val city by column<String?>()
-
-        df.mapToFrame {
-            yob from 2021 - age
-            age gt 18 into isAdult
-            lastName.length() into lastNameLength
-            fullName from { firstName() + " " + lastName() }
             +city
         }
         // SampleEnd
@@ -1259,19 +1049,6 @@ class Modify : TestBase() {
         // name.firstName -> firstName
         // name.lastName -> lastName
         df.flatten("name")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun flatten_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val firstName by name.column<String>()
-        val lastName by name.column<String>()
-        // name.firstName -> firstName
-        // name.lastName -> lastName
-        df.flatten(name)
         // SampleEnd
     }
 
@@ -1499,15 +1276,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun rename_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        df.rename(name).into("fullName")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun rename_strings() {
         // SampleStart
         df.rename("name").into("fullName")
@@ -1519,18 +1287,6 @@ class Modify : TestBase() {
     fun renameExpression_properties() {
         // SampleStart
         df.rename { age }.into {
-            val mean = it.data.mean()
-            "age [mean = $mean]"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun renameExpression_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        df.rename(age).into {
             val mean = it.data.mean()
             "age [mean = $mean]"
         }
