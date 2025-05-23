@@ -114,20 +114,6 @@ class Create : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun columnAccessorComputed_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val firstName by name.column<String>()
-        val lastName by name.column<String>()
-
-        val fullName by column { firstName() + " " + lastName() }
-
-        df[fullName]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun columnAccessorComputed_strings() {
         // SampleStart
 
