@@ -2,4 +2,5 @@
 <!DOCTYPE vars SYSTEM "https://resources.jetbrains.com/writerside/1.0/vars.dtd">
 <vars>
     <var name="dataFrameVersion" value="1.0.0-Beta2" type="string"/>
+    <var name="compilerPluginKotlinVersion" value="2.2.20-dev-3524" type="string"/>
 </vars>
