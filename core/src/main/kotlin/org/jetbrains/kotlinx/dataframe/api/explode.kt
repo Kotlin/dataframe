@@ -13,7 +13,9 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import kotlin.reflect.KProperty
 
-private val defaultExplodeColumns: ColumnsSelector<*, *> = { colsAtAnyDepth { it.isList() || it.isFrameColumn() } }
+private val defaultExplodeColumns: ColumnsSelector<*, *> = {
+    colsAtAnyDepth().filter { it.isList() || it.isFrameColumn() }
+}
 
 // region explode DataFrame
 @Refine

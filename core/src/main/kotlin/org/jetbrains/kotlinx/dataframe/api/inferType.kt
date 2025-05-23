@@ -21,7 +21,10 @@ public fun AnyCol.inferType(): DataColumn<*> =
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.inferType(): DataFrame<T> = inferType { colsAtAnyDepth { !it.isColumnGroup() } }
+public fun <T> DataFrame<T>.inferType(): DataFrame<T> =
+    inferType {
+        colsAtAnyDepth().filter { !it.isColumnGroup() }
+    }
 
 public fun <T> DataFrame<T>.inferType(columns: ColumnsSelector<T, *>): DataFrame<T> =
     replace(columns).with { it.inferType() }

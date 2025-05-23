@@ -120,7 +120,7 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
  */
 public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
     describe {
-        colsAtAnyDepth { !it.isColumnGroup() }
+        colsAtAnyDepth().filter { !it.isColumnGroup() }
     }
 
 /**
