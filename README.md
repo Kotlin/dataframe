@@ -30,6 +30,7 @@ You could find the following articles there:
 
 * [Get started with Kotlin DataFrame](https://kotlin.github.io/dataframe/gettingstarted.html)
 * [Working with Data Schemas](https://kotlin.github.io/dataframe/schemas.html)
+* [Setup compiler plugin in Gradle project](https://kotlin.github.io/dataframe/compiler-plugin.html)
 * [Full list of all supported operations](https://kotlin.github.io/dataframe/operations.html)
     * [Reading from SQL databases](https://kotlin.github.io/dataframe/readsqldatabases.html)
     * [Reading/writing from/to different file formats like JSON, CSV, Apache Arrow](https://kotlin.github.io/dataframe/read.html)
@@ -52,7 +53,7 @@ implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta2")
 Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
 for Groovy, and for configurations specific to Android projects.
 
-## Getting started
+## Code example
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.*
@@ -78,87 +79,7 @@ Follow this [guide](https://kotlin.github.io/dataframe/gettingstartedkotlinnoteb
   * `ColumnGroup` — contains columns
   * `FrameColumn` — contains dataframes
 
-## Syntax example
-
-Let us show you how data cleaning and aggregation pipelines could look like with DataFrame.
-
-**Create:**
-```kotlin
-// create columns
-val fromTo by columnOf("LoNDon_paris", "MAdrid_miLAN", "londON_StockhOlm", "Budapest_PaRis", "Brussels_londOn")
-val flightNumber by columnOf(10045.0, Double.NaN, 10065.0, Double.NaN, 10085.0)
-val recentDelays by columnOf("23,47", null, "24, 43, 87", "13", "67, 32")
-val airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "12. Air France", "'Swiss Air'")
-
-// create dataframe
-val df = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
-
-// print dataframe
-df.print()
-```
-
-**Clean:**
-```kotlin
-// typed accessors for columns
-// that will appear during
-// dataframe transformation
-val origin by column<String>()
-val destination by column<String>()
-
-val clean = df
-    // fill missing flight numbers
-    .fillNA { flightNumber }.with { prev()!!.flightNumber + 10 }
-
-    // convert flight numbers to int
-    .convert { flightNumber }.toInt()
-
-    // clean 'airline' column
-    .update { airline }.with { "([a-zA-Z\\s]+)".toRegex().find(it)?.value ?: "" }
-
-    // split 'fromTo' column into 'origin' and 'destination'
-    .split { fromTo }.by("_").into(origin, destination)
-
-    // clean 'origin' and 'destination' columns
-    .update { origin and destination }.with { it.lowercase().replaceFirstChar(Char::uppercase) }
-
-    // split lists of delays in 'recentDelays' into separate columns
-    // 'delay1', 'delay2'... and nest them inside original column `recentDelays`
-    .split { recentDelays }.inward { "delay$it" }
-
-    // convert string values in `delay1`, `delay2` into ints
-    .parse { recentDelays }
-```
-
-**Aggregate:**
-```kotlin
-clean
-    // group by the flight origin renamed into "from"
-    .groupBy { origin named "from" }.aggregate {
-        // we are in the context of a single data group
-
-        // total number of flights from origin
-        count() into "count"
-
-        // list of flight numbers
-        flightNumber into "flight numbers"
-
-        // counts of flights per airline
-        airline.valueCounts() into "airlines"
-
-        // max delay across all delays in `delay1` and `delay2`
-        recentDelays.maxOrNull { delay1 and delay2 } into "major delay"
-
-        // separate lists of recent delays for `delay1`, `delay2` and `delay3`
-        recentDelays.implode(dropNA = true) into "recent delays"
-
-        // total delay per destination
-        pivot { destination }.sum { recentDelays.colsOf<Int?>() } into "total delays to"
-    }
-```
-
-Check it out on [**Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) to get a better visual impression of what happens and what the hierarchical dataframe structure looks like. 
-
-Explore [**more examples here**](examples).
+Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-examples.html).
 
 ## Kotlin, Kotlin Jupyter, Arrow, and JDK versions
 
