@@ -73,8 +73,8 @@ Compiler plugin aims to cover all functions where the result of the operation de
 In the library, such functions are annotated with `@Refine` or `@Interpretable`.
 
 There are functions that are not supported:
-`pivot`, `parse`, `read`, `ColumnSelectionDsl.filter`, etc. — operations where the resulting schema depends on data, so it's out of the scope 
-`gather`, `split`, `implode`, some CS DSL functions — they will be supported in the future release
+- `pivot`, `parse`, `read`, `ColumnSelectionDsl.filter`, etc. — operations where the resulting schema depends on data, so it's out of the scope 
+- `gather`, `split`, `implode`, some CS DSL functions — they will be supported in the future release
 
 In Gradle projects it means that sometimes you'd need to provide [data schema](dataSchema.md) or fall back to String API.
 

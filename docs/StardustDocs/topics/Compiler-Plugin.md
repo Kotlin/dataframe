@@ -55,6 +55,8 @@ Add this line to `gradle.properties`:
 ```properties
 kotlin.incremental=false
 ```
+ 
+`Sync` the project.
 
 Disabling incremental compilation will no longer be necessary
 when https://youtrack.jetbrains.com/issue/KT-66735 is resolved.
