@@ -6,8 +6,6 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.excludeJoin
 import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
@@ -30,17 +28,6 @@ class Join : TestBase() {
     @TransformDataFrameExpressions
     fun join_properties() {
         // SampleStart
-        df.join(other) { name and city }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun join_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val city by column<String>()
-
         df.join(other) { name and city }
         // SampleEnd
     }
@@ -79,18 +66,6 @@ class Join : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun joinWithMatch_accessors() {
-        val other = df.add("year") { 2021 - age }.select { name named "fullName" and "year" }
-        // SampleStart
-        val name by columnGroup()
-        val fullName by columnGroup()
-
-        df.join(other) { name match fullName }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun joinWithMatch_strings() {
         val other = df.add("year") { 2021 - age }.select { name named "fullName" and "year" }
         // SampleStart
@@ -102,21 +77,6 @@ class Join : TestBase() {
     @TransformDataFrameExpressions
     fun joinSpecial_properties() {
         // SampleStart
-        df.innerJoin(other) { name and city }
-        df.leftJoin(other) { name and city }
-        df.rightJoin(other) { name and city }
-        df.fullJoin(other) { name and city }
-        df.excludeJoin(other) { name and city }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun joinSpecial_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val city by column<String>()
-
         df.innerJoin(other) { name and city }
         df.leftJoin(other) { name and city }
         df.rightJoin(other) { name and city }
