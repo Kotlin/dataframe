@@ -1,6 +1,6 @@
 @file:ExcludeFromSources
 
-package org.jetbrains.kotlinx.dataframe.documentation
+package org.jetbrains.kotlinx.dataframe.documentationCsv
 
 internal interface DocumentationUrls {
 

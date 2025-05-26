@@ -5,7 +5,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams
 import java.io.File
 import java.io.InputStream
 import kotlin.reflect.typeOf

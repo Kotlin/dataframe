@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.documentation
+package org.jetbrains.kotlinx.dataframe.documentationCsv
 
 import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
+import org.jetbrains.kotlinx.dataframe.io.DefaultNullStringsContentLink
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 
 /**
@@ -19,25 +20,25 @@ internal object DelimParams {
 
     /**
      * @param path The file path to read.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface PATH_READ
 
     /**
      * @param file The file to read.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface FILE_READ
 
     /**
      * @param url The URL from which to fetch the data.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface URL_READ
 
     /**
      * @param fileOrUrl The file path or URL to read the data from.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface FILE_OR_URL_READ
 
@@ -59,29 +60,29 @@ internal object DelimParams {
     /**
      * @param delimiter The field delimiter character. Default: ','.
      *
-     *   Ignored if [hasFixedWidthColumns] is `true`.
+     *   Ignored if \[hasFixedWidthColumns\] is `true`.
      */
     const val CSV_DELIMITER: Char = ','
 
     /**
-     * @param delimiter The field delimiter character. Default: '\t'.
+     * @param delimiter The field delimiter character. Default: '\\t'.
      *
-     *   Ignored if [hasFixedWidthColumns] is `true`.
+     *   Ignored if \[hasFixedWidthColumns\] is `true`.
      */
     const val TSV_DELIMITER: Char = '\t'
 
     /**
      * @param delimiter The field delimiter character. Default: ','.
      *
-     *   Ignored if [hasFixedWidthColumns] is `true`.
+     *   Ignored if \[hasFixedWidthColumns\] is `true`.
      */
     const val DELIM_DELIMITER: Char = ','
 
     /**
      * @param header Optional column titles. Default: empty list.
      *
-     *   If non-empty, the data will be read with [header] as the column titles
-     *   (use [skipLines] if there's a header in the data).
+     *   If non-empty, the data will be read with \[header\] as the column titles
+     *   (use \[skipLines\] if there's a header in the data).
      *   If empty (default), the header will be read from the data.
      */
     val HEADER: List<String> = emptyList()
@@ -93,14 +94,14 @@ internal object DelimParams {
      *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
      *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
      *   Column widths are determined by the header in the data (if present), or manually by setting
-     *   [fixedColumnWidths].
+     *   \[fixedColumnWidths\].
      */
     const val HAS_FIXED_WIDTH_COLUMNS: Boolean = false
 
     /**
      * @param fixedColumnWidths The fixed column widths. Default: empty list.
      *
-     *   Requires [hasFixedWidthColumns]. If empty, the column widths will be determined by the header in the data
+     *   Requires \[hasFixedWidthColumns\]. If empty, the column widths will be determined by the header in the data
      *   (if present), else, this manually sets the column widths.
      *   The number of widths should match the number of columns.
      */
@@ -115,7 +116,7 @@ internal object DelimParams {
     /**
      * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every column type.
      *
-     *   If supplied for a certain column name (inferred from data or given by [header]),
+     *   If supplied for a certain column name (inferred from data or given by \[header\]),
      *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
      *
      *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`)`.
@@ -127,7 +128,7 @@ internal object DelimParams {
     /**
      * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
      *
-     *   Useful for files with metadata, or comments at the beginning, or to give a custom [header].
+     *   Useful for files with metadata, or comments at the beginning, or to give a custom \[header\].
      */
     const val SKIP_LINES: Long = 0L
 
@@ -144,12 +145,12 @@ internal object DelimParams {
      *
      *   Can configure locale, date format, double parsing, skipping types, etc.
      *
-     *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
+     *   If [parserOptions\] or any of the arguments are `null`, the global parser configuration
      *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
      *
      *   The only exceptions are:
      *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
-     *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
+     *   will take the global setting + {@include [DefaultNullStringsContentLink]}.
      *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses] to
      *   the given types or the global setting.
      */
@@ -158,7 +159,7 @@ internal object DelimParams {
     /**
      * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
      *
-     *   If `false`, empty lines will be interpreted as having _empty_ values if [allowMissingColumns].
+     *   If `false`, empty lines will be interpreted as having _empty_ values if \[allowMissingColumns\].
      */
     const val IGNORE_EMPTY_LINES: Boolean = false
 
@@ -236,7 +237,7 @@ internal object DelimParams {
 
     /**
      * @param recordSeparator The character that separates records in a CSV / TSV file.
-     *   Default: `'\n'`, a Unix-newline.
+     *   Default: `'\\n'`, a Unix-newline.
      */
     const val RECORD_SEPARATOR: String = "\n"
 

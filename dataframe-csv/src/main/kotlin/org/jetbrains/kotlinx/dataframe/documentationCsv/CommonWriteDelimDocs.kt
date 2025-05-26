@@ -1,6 +1,6 @@
 @file:ExcludeFromSources
 
-package org.jetbrains.kotlinx.dataframe.documentation
+package org.jetbrains.kotlinx.dataframe.documentationCsv
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL

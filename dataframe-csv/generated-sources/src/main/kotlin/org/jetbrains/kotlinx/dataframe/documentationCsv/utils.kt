@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.documentation
+package org.jetbrains.kotlinx.dataframe.documentationCsv
 
 import kotlin.annotation.AnnotationTarget.ANNOTATION_CLASS
 import kotlin.annotation.AnnotationTarget.CLASS
