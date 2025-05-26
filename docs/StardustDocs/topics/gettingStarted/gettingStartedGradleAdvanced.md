@@ -41,6 +41,7 @@ android {
                 "META-INF/LICENSE.md",
                 "META-INF/NOTICE.md",
                 "META-INF/LGPL-3.0.txt",
+                "META-INF/thirdparty-LICENSE",
             )
             excludes += listOf(
                 "META-INF/kotlin-jupyter-libraries/libraries.json",
