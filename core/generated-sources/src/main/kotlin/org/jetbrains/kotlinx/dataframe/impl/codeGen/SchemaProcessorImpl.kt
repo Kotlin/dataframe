@@ -58,6 +58,7 @@ internal class SchemaProcessorImpl(
     private fun generateFields(
         schema: DataFrameSchema,
         visibility: MarkerVisibility,
+        openNestedDataSchemas: Boolean,
         requiredSuperMarkers: List<Marker> = emptyList(),
     ): List<GeneratedField> {
         val usedFieldNames =
@@ -66,18 +67,26 @@ internal class SchemaProcessorImpl(
         fun getFieldType(columnSchema: ColumnSchema): FieldType =
             when (columnSchema) {
                 is ColumnSchema.Value ->
-                    FieldType.ValueFieldType(columnSchema.type.toString())
+                    FieldType.ValueFieldType(typeFqName = columnSchema.type.toString())
 
                 is ColumnSchema.Group ->
                     FieldType.GroupFieldType(
-                        process(columnSchema.schema, false, visibility).name,
+                        markerName = process(
+                            schema = columnSchema.schema,
+                            isOpen = openNestedDataSchemas,
+                            visibility = visibility,
+                        ).name,
                         renderAsObject = true,
                     )
 
                 is ColumnSchema.Frame ->
                     FieldType.FrameFieldType(
-                        process(columnSchema.schema, false, visibility).name,
-                        columnSchema.nullable,
+                        markerName = process(
+                            schema = columnSchema.schema,
+                            isOpen = openNestedDataSchemas,
+                            visibility = visibility,
+                        ).name,
+                        nullable = columnSchema.nullable,
                         renderAsList = true,
                     )
 
@@ -145,11 +154,24 @@ internal class SchemaProcessorImpl(
                     }
                 }
             }
-            generateFields(scheme, visibility, baseMarkers)
+            generateFields(
+                schema = scheme,
+                visibility = visibility,
+                openNestedDataSchemas = isOpen,
+                requiredSuperMarkers = baseMarkers,
+            )
         } else {
-            generateFields(scheme, visibility)
+            generateFields(schema = scheme, visibility = visibility, openNestedDataSchemas = isOpen)
         }
-        return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility, emptyList(), emptyList())
+        return Marker(
+            name = name,
+            isOpen = isOpen,
+            fields = fields,
+            superMarkers = baseMarkers.onlyLeafs(),
+            visibility = visibility,
+            typeParameters = emptyList(),
+            typeArguments = emptyList(),
+        )
     }
 
     private fun DataFrameSchema.getRequiredMarkers() = registeredMarkers.filterRequiredForSchema(this)
