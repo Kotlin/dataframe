@@ -6,8 +6,10 @@ Return [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequence
 
 ```
 values(byRows: Boolean = false) 
-    [ columns ]: Sequence<C>
+    [ { columns } ]: Sequence<C>
 ```
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 **Parameters:**
 * `columns` (optional) — subset of columns for values extraction

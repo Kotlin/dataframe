@@ -12,6 +12,8 @@ reorder { columns }
 columnExpression: DataColumn.(DataColumn) -> Value
 ```
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN reorder-->
 <tabs>
 <tab title="Properties">

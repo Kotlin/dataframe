@@ -10,7 +10,7 @@ replace { columns }
 columnExpression: DataFrame.(DataColumn) -> DataColumn
 ```
 
-See [column selectors](ColumnSelectors.md)
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN replace-->
 

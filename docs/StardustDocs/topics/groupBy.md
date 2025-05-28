@@ -24,7 +24,8 @@ pivot = .pivot { columns }
          pivotReducer | pivotAggregator  
 ```
 
-See [column selectors](ColumnSelectors.md), [groupBy transformations](#transformation), [groupBy aggregations](#aggregation), [pivot+groupBy](pivot.md#pivot-groupby)
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation,
+[groupBy transformations](#transformation), [groupBy aggregations](#aggregation), and [pivot+groupBy](pivot.md#pivot-groupby).
 
 <!---FUN groupBy-->
 <tabs>

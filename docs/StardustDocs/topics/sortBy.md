@@ -8,6 +8,8 @@ By default, columns are sorted in ascending order with `null` values going first
 * `.desc` — changes column sort order from ascending to descending
 * `.nullsLast` — forces `null` values to be placed at the end of the order
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN sortBy-->
 <tabs>
 <tab title="Properties">
@@ -34,6 +36,8 @@ df.sortBy { "weight".nullsLast() }
 ## sortByDesc
 
 Returns [`DataFrame`](DataFrame.md) sorted by one or several columns in descending order.
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN sortByDesc-->
 <tabs>

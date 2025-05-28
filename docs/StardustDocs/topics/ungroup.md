@@ -10,7 +10,7 @@ ungroup { columns }
 
 **Reverse operation:** [`group`](group.md)
 
-See [column selectors](ColumnSelectors.md)
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN ungroup-->
 

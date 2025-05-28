@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-This operation splits every value in the given columns into several values,
+This operation splits every value in the given columns into several values 
 and optionally spreads them horizontally or vertically.
 
 ```text
@@ -15,10 +15,12 @@ df.split { columns }
 splitter = DataRow.(T) -> Iterable<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
-The following types of columns can be split without any _splitter_ configuration:
-* `String`: split by `,` and trim
-* `List`: split into elements
-* [`DataFrame`](DataFrame.md): split into rows
+The following types of columns can be split easily:
+* `String`: for instance, by `","`
+* `List`: splits into elements, no `by` required!
+* [`DataFrame`](DataFrame.md): splits into rows, no `by` required!
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 ## Split in place
 

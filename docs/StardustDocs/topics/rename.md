@@ -11,6 +11,8 @@ df.rename { columns }.into { nameExpression }
 nameExpression = (DataColumn) -> String
 ```
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN rename-->
 <tabs>
 <tab title="Properties">

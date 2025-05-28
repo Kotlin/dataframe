@@ -54,6 +54,8 @@ When statistics `x` is applied to several columns, it can be computed in several
 * `xFor { columns }: DataRow` computes separate value per every given column
 * `xOf { rowExpression }: Value` computes single value across results of [row expression](DataRow.md#row-expressions) evaluated for every row
 
+(See [column selectors](ColumnSelectors.md) for how to select the columns for these operations)
+
 [min/max](minmax.md), [median](median.md), and [percentile](percentile.md) have additional mode `by`:
 * `minBy { rowExpression }: DataRow` finds a row with the minimal result of the [rowExpression](DataRow.md#row-expressions)
 * `medianBy { rowExpression }: DataRow` finds a row where the median lies based on the results of the [rowExpression](DataRow.md#row-expressions)
@@ -73,7 +75,7 @@ df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
 
 ### groupBy statistics
 
-When statistics is applied to [`GroupBy DataFrame`](groupBy.md#transformation), it is computed for every data group. 
+When statistics are applied to [`GroupBy DataFrame`](groupBy.md#transformation), it is computed for every data group. 
 
 If a statistic is applied in a mode that returns a single value for every data group,
 it will be stored in a single column named according to the statistic name.
