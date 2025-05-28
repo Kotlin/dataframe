@@ -2,6 +2,8 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.colsAtAnyDepth
+import org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.chunked
@@ -590,7 +592,7 @@ class Access : TestBase() {
         df.select { name.allCols() }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
+        df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
 
         // SampleEnd
     }
@@ -626,7 +628,7 @@ class Access : TestBase() {
         df.select { Person::name.allCols() }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { Person::name.colsAtAnyDepth { !it.isColumnGroup() } }
+        df.select { Person::name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -660,7 +662,7 @@ class Access : TestBase() {
         df.select { "name".allCols() }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { "name".colsAtAnyDepth { !it.isColumnGroup() } }
+        df.select { "name".colsAtAnyDepth().filter { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -719,13 +721,13 @@ class Access : TestBase() {
         }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { colsAtAnyDepth { !it.isColumnGroup() } }
+        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 
         // traversal of columns at any depth from here including ColumnGroups
         df.select { colsAtAnyDepth() }
 
         // traversal of columns at any depth with condition
-        df.select { colsAtAnyDepth { it.name().contains(":") } }
+        df.select { colsAtAnyDepth().filter() { it.name().contains(":") } }
 
         // traversal of columns at any depth to find columns of given type
         df.select { colsAtAnyDepth().colsOf<String>() }
@@ -743,18 +745,18 @@ class Access : TestBase() {
     fun columnSelectorsModifySet() {
         // SampleStart
         // first/last n value- and frame columns in column set
-        df.select { colsAtAnyDepth { !it.isColumnGroup() }.take(3) }
-        df.select { colsAtAnyDepth { !it.isColumnGroup() }.takeLast(3) }
+        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.take(3) }
+        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.takeLast(3) }
 
         // all except first/last n value- and frame columns in column set
-        df.select { colsAtAnyDepth { !it.isColumnGroup() }.drop(3) }
-        df.select { colsAtAnyDepth { !it.isColumnGroup() }.dropLast(3) }
+        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.drop(3) }
+        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.dropLast(3) }
 
         // filter column set by condition
-        df.select { colsAtAnyDepth { !it.isColumnGroup() }.filter { it.name().startsWith("year") } }
+        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() && it.name().startsWith("year") } }
 
         // exclude columns from column set
-        df.select { colsAtAnyDepth { !it.isColumnGroup() }.except { age } }
+        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.except { age } }
 
         // keep only unique columns
         df.select { (colsOf<Int>() and age).distinct() }
