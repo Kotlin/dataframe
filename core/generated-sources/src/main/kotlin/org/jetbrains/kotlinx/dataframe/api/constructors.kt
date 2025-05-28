@@ -33,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_OF_WITH_VALUES
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.random.Random
 import kotlin.random.nextInt
 import kotlin.reflect.KProperty
@@ -49,9 +50,7 @@ public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name
 
 public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccessorImpl(property.name)
 
@@ -61,9 +60,7 @@ public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = Co
 
 public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnGroupReference.column(property: KProperty<T>): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + property.name)
@@ -101,9 +98,7 @@ public fun valueColumn(path: ColumnPath): ColumnAccessor<Any?> = column(path)
 @JvmName("valueColumnTyped")
 public fun <T> valueColumn(path: ColumnPath): ColumnAccessor<T> = column(path)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> valueColumn(property: KProperty<T>): ColumnAccessor<T> = column(property.name)
 
@@ -124,9 +119,7 @@ public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<An
 public fun <T> ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + path)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnGroupReference.valueColumn(property: KProperty<T>): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + property.name)
@@ -151,15 +144,11 @@ public fun columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = column(path)
 public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
 
 @JvmName("columnGroupDataRowKProperty")
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> = column(property)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> = column(property.name)
 
@@ -182,16 +171,12 @@ public fun <T> ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccesso
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("columnGroupDataRowKProperty")
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnGroupReference.columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnGroupReference.columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + property.name)
@@ -216,15 +201,11 @@ public fun frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = column(path
 public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
 
 @JvmName("frameColumnDataFrameKProperty")
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> = column(property)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
 
@@ -247,16 +228,12 @@ public fun <T> ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccesso
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("frameColumnDataFrameKProperty")
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnGroupReference.frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + property.name)

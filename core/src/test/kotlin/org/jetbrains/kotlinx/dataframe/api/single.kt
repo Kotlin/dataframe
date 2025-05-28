@@ -22,7 +22,7 @@ class SingleTests : ColumnsSelectionDslTests() {
             df.select { cols().filter { false }.single() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { cols().filter { true }.single() }
+            df.select { single() }
         }
 
         val singleDf = df.select { take(1) }
