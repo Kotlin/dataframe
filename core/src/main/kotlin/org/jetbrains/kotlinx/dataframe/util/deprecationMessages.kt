@@ -169,6 +169,9 @@ internal const val DATAFRAME_OF_WITH_VALUES =
 internal const val COLS_AT_ANY_DEPTH = "Deprecated shortcut for better compiler plugin support. $MESSAGE_1_1"
 internal const val COLS_AT_ANY_DEPTH_REPLACE = "this.colsAtAnyDepth().filter(predicate)"
 
+internal const val COLS_IN_GROUPS = "Deprecated shortcut for better compiler plugin support. $MESSAGE_1_1"
+internal const val COLS_IN_GROUPS_REPLACE = "this.colsInGroups().filter(predicate)"
+
 // endregion
 
 // region keep across releases
