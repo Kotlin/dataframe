@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.countDistinct
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -70,19 +69,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun getColumnByName_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val name by columnGroup()
-        val lastName by name.column<String>()
-
-        df[age]
-        df[lastName]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun getColumnByName_strings() {
         // SampleStart
         df["age"]
@@ -94,16 +80,6 @@ class Access : TestBase() {
     @TransformDataFrameExpressions
     fun getColumn_properties() {
         // SampleStart
-        df.getColumn { age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumn_accessors() {
-        // SampleStart
-        val age by column<Int>()
-
         df.getColumn { age }
         // SampleEnd
     }
@@ -126,16 +102,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun getColumnOrNull_accessors() {
-        // SampleStart
-        val age by column<Int>()
-
-        df.getColumnOrNull(age)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun getColumnOrNull_strings() {
         // SampleStart
         df.getColumnOrNull("age")
@@ -146,17 +112,6 @@ class Access : TestBase() {
     @TransformDataFrameExpressions
     fun getColumns_properties() {
         // SampleStart
-        df.getColumns { age and name }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumns_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val name by columnGroup()
-
         df.getColumns { age and name }
         // SampleEnd
     }
@@ -174,16 +129,6 @@ class Access : TestBase() {
     fun getColumnGroup_properties() {
         // SampleStart
         df.getColumnGroup { name }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumnGroup_accessors() {
-        // SampleStart
-        val name by columnGroup()
-
-        df.getColumnGroup(name)
         // SampleEnd
     }
 
@@ -226,23 +171,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun getRowByCondition_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val weight by column<Int?>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
-        df.single { age() == 45 }
-        df.first { weight() != null }
-        df.minBy(age)
-        df.maxBy { firstName().length }
-        df.maxByOrNull { weight() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun getRowByCondition_strings() {
         // SampleStart
         df.single { "age"<Int>() == 45 }
@@ -273,31 +201,9 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun getCell_accessors() {
-        // SampleStart
-        val age by column<String>()
-
-        df[age][1]
-        df[1][age]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun getColumnsByName_properties() {
         // SampleStart
         df[df.age, df.weight]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumnsByName_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val weight by column<Int?>()
-
-        df[age, weight]
         // SampleEnd
     }
 
@@ -314,18 +220,6 @@ class Access : TestBase() {
     fun select_properties() {
         // SampleStart
         df.select { age and weight }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun select_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val weight by column<Int?>()
-
-        df.select { age and weight }
-        df.select(age, weight)
         // SampleEnd
     }
 
@@ -424,20 +318,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun filter_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
-        df.filter { age() > 18 && firstName().startsWith("A") }
-        // or
-        df.filter { it[age] > 18 && it[firstName].startsWith("A") }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun filter_strings() {
         // SampleStart
         df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
@@ -448,15 +328,6 @@ class Access : TestBase() {
     @TransformDataFrameExpressions
     fun filterBy_properties() {
         // SampleStart
-        df.filterBy { isHappy }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun filterBy_accessors() {
-        // SampleStart
-        val isHappy by column<Boolean>()
         df.filterBy { isHappy }
         // SampleEnd
     }
@@ -474,20 +345,6 @@ class Access : TestBase() {
     fun dropWhere_properties() {
         // SampleStart
         df.drop { weight == null || city == null }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun dropWhere_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val weight by column<Int?>()
-        val city by column<String?>()
-
-        df.drop { weight() == null || city() == null }
-        // or
-        df.drop { it[weight] == null || it[city] == null }
         // SampleEnd
     }
 
@@ -547,18 +404,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun byColumn_accessors() {
-        // SampleStart
-        val name by column<String>()
-        val age by column<Int>()
-        df[name][0]
-        df[name, age][3, 5, 6]
-        // SampleEnd
-        // TODO: df[age][2..4]
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun byColumn_properties() {
         // SampleStart
         df.name[0]
@@ -574,18 +419,6 @@ class Access : TestBase() {
         df[0]["name"]
         df[3, 5, 6]["name", "age"]
         df[3..5]["age"]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun byRow_accessors() {
-        // SampleStart
-        val name by column<String>()
-        val age by column<Int>()
-        df[0][name]
-        df[3, 5, 6][name, age]
-        df[3..5][age]
         // SampleEnd
     }
 
@@ -661,18 +494,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun distinctColumns_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val name by columnGroup()
-        df.distinct { age and name }
-        // same as
-        df.select { age and name }.distinct()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun countDistinct() {
         // SampleStart
         df.countDistinct()
@@ -683,16 +504,6 @@ class Access : TestBase() {
     @TransformDataFrameExpressions
     fun countDistinctColumns_properties() {
         // SampleStart
-        df.countDistinct { age and name }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun countDistinctColumns_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val name by columnGroup()
         df.countDistinct { age and name }
         // SampleEnd
     }
@@ -719,20 +530,6 @@ class Access : TestBase() {
     @TransformDataFrameExpressions
     fun distinctBy_properties() {
         // SampleStart
-        df.distinctBy { age and name }
-        // same as
-        df.groupBy { age and name }.mapToRows { group.first() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun distinctBy_accessors() {
-        // SampleStart
-        val age by column<Int>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
         df.distinctBy { age and name }
         // same as
         df.groupBy { age and name }.mapToRows { group.first() }
@@ -793,45 +590,8 @@ class Access : TestBase() {
         df.select { name.allCols() }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
+        df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
 
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnSelectors_accessors() {
-        // SampleStart
-        // by column name
-        val name by columnGroup()
-        df.select { it[name] }
-        df.select { name }
-
-        // by column path
-        val firstName by name.column<String>()
-        df.select { firstName }
-
-        // with a new name
-        df.select { name named "Full Name" }
-
-        // converted
-        df.select { firstName.map { it.lowercase() } }
-
-        // column arithmetics
-        val age by column<Int>()
-        df.select { 2021 - age }
-
-        // two columns
-        df.select { name and age }
-
-        // range of columns
-        df.select { name..age }
-
-        // all columns of ColumnGroup
-        df.select { name.allCols() }
-
-        // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -900,7 +660,7 @@ class Access : TestBase() {
         df.select { "name".allCols() }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { "name".colsAtAnyDepth().filter { !it.isColumnGroup() } }
+        df.select { "name".colsAtAnyDepth { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -959,13 +719,13 @@ class Access : TestBase() {
         }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() } }
 
         // traversal of columns at any depth from here including ColumnGroups
         df.select { colsAtAnyDepth() }
 
         // traversal of columns at any depth with condition
-        df.select { colsAtAnyDepth().filter { it.name().contains(":") } }
+        df.select { colsAtAnyDepth { it.name().contains(":") } }
 
         // traversal of columns at any depth to find columns of given type
         df.select { colsAtAnyDepth().colsOf<String>() }
@@ -983,18 +743,18 @@ class Access : TestBase() {
     fun columnSelectorsModifySet() {
         // SampleStart
         // first/last n value- and frame columns in column set
-        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.take(3) }
-        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.takeLast(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.take(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.takeLast(3) }
 
         // all except first/last n value- and frame columns in column set
-        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.drop(3) }
-        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.dropLast(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.drop(3) }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.dropLast(3) }
 
         // filter column set by condition
-        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.filter { it.name().startsWith("year") } }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.filter { it.name().startsWith("year") } }
 
         // exclude columns from column set
-        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.except { age } }
+        df.select { colsAtAnyDepth { !it.isColumnGroup() }.except { age } }
 
         // keep only unique columns
         df.select { (colsOf<Int>() and age).distinct() }
@@ -1015,26 +775,6 @@ class Access : TestBase() {
 
         df.rows().forEach {
             println(it.age)
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun forRows_accessors() {
-        // SampleStart
-        val age by column<Int>()
-
-        for (row in df) {
-            println(row[age])
-        }
-
-        df.forEach {
-            println(it[age])
-        }
-
-        df.rows().forEach {
-            println(it[age])
         }
         // SampleEnd
     }

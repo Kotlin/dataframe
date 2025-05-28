@@ -1,5 +1,28 @@
 [//]: # (title: Gradle plugin reference)
 
+This page describes the Gradle plugin that generates `@DataSchema` from data samples.
+```Kotlin
+id("org.jetbrains.kotlinx.dataframe") version "%dataFrameVersion%"
+```
+
+It's different from the DataFrame compiler plugin:
+```kotlin
+kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
+```
+
+Gradle plugin by default adds a KSP annotation processor to your build:
+
+```kotlin
+ksp("org.jetbrains.kotlinx.dataframe:symbol-processor-all:%dataFrameVersion%")
+```
+
+You should disable it if you want to use the Gradle plugin together with the compiler plugin.
+
+Add this to `gradle.properties`:
+```properties
+kotlin.dataframe.add.ksp=false
+```
+
 ## Examples
 In the best scenario, your schema could be defined as simple as this:
 ```kotlin

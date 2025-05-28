@@ -4,10 +4,10 @@
 <ihp version="2.0">
     <categories src="c.list"/>
     <topics dir="topics"/>
-    <images dir="images" version="0.15" web-path="images/" />
-    <snippets dir="snippets" version="0.15" web-path="snippets/" />
+    <images dir="images" version="1.0" web-path="images/" />
+    <snippets dir="snippets" version="1.0" web-path="snippets/" />
     <vars src="v.list"/>
-    <instance src="d.tree" version="0.15" id="dataframe"/>
+    <instance src="d.tree" version="1.0" id="dataframe"/>
     <settings>
         <default-property element-name="chapter" property-name="show-structure-depth" value="2"/>
     </settings>

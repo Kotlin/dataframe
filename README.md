@@ -1,8 +1,8 @@
 # Kotlin DataFrame: typesafe in-memory structured data processing for JVM
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
-[![Kotlin component alpha stability](https://img.shields.io/badge/project-alpha-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
+[![Kotlin component beta stability](https://img.shields.io/badge/project-beta-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
 [![Kotlin](https://img.shields.io/badge/kotlin-2.0.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
-[![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bnot%28contains%28text%28%29%2C%22dev%22%29%29%5D%5Blast%28%29%5D&label=Release%20version)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
+[![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bnot%28contains%28text%28%29%2C%22dev%22%29%29%20and%20not%28text%28%29%3D%221727%22%29%20%5D%5Blast%28%29%5D&label=Release%20version)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bcontains%28text%28%29%2C%22dev%22%29%5D%5Blast%28%29%5D&label=Dev%20version&color=yellow
 )](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
@@ -30,6 +30,7 @@ You could find the following articles there:
 
 * [Get started with Kotlin DataFrame](https://kotlin.github.io/dataframe/gettingstarted.html)
 * [Working with Data Schemas](https://kotlin.github.io/dataframe/schemas.html)
+* [Setup compiler plugin in Gradle project](https://kotlin.github.io/dataframe/compiler-plugin.html)
 * [Full list of all supported operations](https://kotlin.github.io/dataframe/operations.html)
     * [Reading from SQL databases](https://kotlin.github.io/dataframe/readsqldatabases.html)
     * [Reading/writing from/to different file formats like JSON, CSV, Apache Arrow](https://kotlin.github.io/dataframe/read.html)
@@ -38,27 +39,21 @@ You could find the following articles there:
 * [Rendering to HTML](https://kotlin.github.io/dataframe/tohtml.html#jupyter-notebooks)
 
 ### What's new
-Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
-The DataFrame compiler plugin has reached public preview!
-Here's a [compiler plugin demo project](https://github.com/koperagen/df-plugin-demo) that works with [IntelliJ IDEA](https://www.jetbrains.com/idea/) 2024.2.
+1.0.0-Beta2: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-Beta2)
+
+Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
 ## Setup
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe:0.15.0")
-```
-
-Optional Gradle plugin for enhanced type safety and schema generation
-https://kotlin.github.io/dataframe/schemasgradle.html
-```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.15.0"
+implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta2")
 ```
 
 Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
 for Groovy, and for configurations specific to Android projects.
 
-## Getting started
+## Code example
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.*
@@ -73,58 +68,9 @@ df["full_name"][0] // Indexing https://kotlin.github.io/dataframe/access.html
 df.filter { "stargazers_count"<Int>() > 50 }.print() 
 ```
 
-## Getting started with data schema
+## Getting started in Kotlin Notebook
 
-Requires Gradle plugin to work
-```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.15.0"
-```
-
-Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
-
-```kotlin
-// Make sure to place the file annotation above the package directive
-@file:ImportDataSchema(
-    "Repository",
-    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
-)
-
-package example
-
-import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
-
-fun main() {
-    // execute `assemble` to generate extension properties API
-    val df = Repository.readCSV()
-    df.fullName[0]
-    
-    df.filter { stargazersCount > 50 }
-}
-```
-
-## Getting started in Jupyter Notebook / Kotlin Notebook
-
-Install the [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter) for [Jupyter](https://jupyter.org/)
-
-Import the stable `dataframe` version into a notebook: 
-```
-%use dataframe
-```
-or a specific version:
-```
-%use dataframe(<version>)
-```
-
-```kotlin
-val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
-df // the last expression in the cell is displayed
-```
-
-When a cell with a variable declaration is executed, in the next cell `DataFrame` provides extension properties based on its data 
-```kotlin
-df.filter { stargazers_count > 50 }
-```
+Follow this [guide](https://kotlin.github.io/dataframe/gettingstartedkotlinnotebook.html)
 
 ## Data model
 * `DataFrame` is a list of columns with equal sizes and distinct names.
@@ -133,87 +79,7 @@ df.filter { stargazers_count > 50 }
   * `ColumnGroup` — contains columns
   * `FrameColumn` — contains dataframes
 
-## Syntax example
-
-Let us show you how data cleaning and aggregation pipelines could look like with DataFrame.
-
-**Create:**
-```kotlin
-// create columns
-val fromTo by columnOf("LoNDon_paris", "MAdrid_miLAN", "londON_StockhOlm", "Budapest_PaRis", "Brussels_londOn")
-val flightNumber by columnOf(10045.0, Double.NaN, 10065.0, Double.NaN, 10085.0)
-val recentDelays by columnOf("23,47", null, "24, 43, 87", "13", "67, 32")
-val airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "12. Air France", "'Swiss Air'")
-
-// create dataframe
-val df = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
-
-// print dataframe
-df.print()
-```
-
-**Clean:**
-```kotlin
-// typed accessors for columns
-// that will appear during
-// dataframe transformation
-val origin by column<String>()
-val destination by column<String>()
-
-val clean = df
-    // fill missing flight numbers
-    .fillNA { flightNumber }.with { prev()!!.flightNumber + 10 }
-
-    // convert flight numbers to int
-    .convert { flightNumber }.toInt()
-
-    // clean 'airline' column
-    .update { airline }.with { "([a-zA-Z\\s]+)".toRegex().find(it)?.value ?: "" }
-
-    // split 'fromTo' column into 'origin' and 'destination'
-    .split { fromTo }.by("_").into(origin, destination)
-
-    // clean 'origin' and 'destination' columns
-    .update { origin and destination }.with { it.lowercase().replaceFirstChar(Char::uppercase) }
-
-    // split lists of delays in 'recentDelays' into separate columns
-    // 'delay1', 'delay2'... and nest them inside original column `recentDelays`
-    .split { recentDelays }.inward { "delay$it" }
-
-    // convert string values in `delay1`, `delay2` into ints
-    .parse { recentDelays }
-```
-
-**Aggregate:**
-```kotlin
-clean
-    // group by the flight origin renamed into "from"
-    .groupBy { origin named "from" }.aggregate {
-        // we are in the context of a single data group
-
-        // total number of flights from origin
-        count() into "count"
-
-        // list of flight numbers
-        flightNumber into "flight numbers"
-
-        // counts of flights per airline
-        airline.valueCounts() into "airlines"
-
-        // max delay across all delays in `delay1` and `delay2`
-        recentDelays.maxOrNull { delay1 and delay2 } into "major delay"
-
-        // separate lists of recent delays for `delay1`, `delay2` and `delay3`
-        recentDelays.implode(dropNA = true) into "recent delays"
-
-        // total delay per destination
-        pivot { destination }.sum { recentDelays.colsOf<Int?>() } into "total delays to"
-    }
-```
-
-Check it out on [**Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) to get a better visual impression of what happens and what the hierarchical dataframe structure looks like. 
-
-Explore [**more examples here**](examples).
+Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-examples.html).
 
 ## Kotlin, Kotlin Jupyter, Arrow, and JDK versions
 
@@ -230,6 +96,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 15.0.0               |
 | 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 17.0.0               |
 | 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 18.1.0               |
+| 1.0.0-Beta2              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               |
 
 ## Code of Conduct
 

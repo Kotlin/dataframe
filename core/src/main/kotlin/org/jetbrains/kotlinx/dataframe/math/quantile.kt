@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.impl.canBeNaN
 import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
@@ -15,8 +14,6 @@ import kotlin.math.round
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
-
-private val logger = KotlinLogging.logger { }
 
 /**
  * Returns the p-quantile: the k'th q-quantile, where p = k/q.
@@ -60,9 +57,6 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
             throw IllegalArgumentException(
                 "Cannot calculate the $name for big numbers in DataFrame. Only primitive numbers are supported.",
             )
-
-        type == typeOf<Long>() ->
-            logger.warn { "Converting Longs to Doubles to calculate the $name, loss of precision may occur." }
     }
 
     // propagate NaN to return if they are not to be skipped

@@ -32,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReferenc
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_OF_WITH_VALUES
 import kotlin.random.Random
 import kotlin.random.nextInt
 import kotlin.reflect.KProperty
@@ -361,6 +362,7 @@ public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBu
 public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): DataFrame<*> =
     columns.map { it.second.toColumn(it.first, Infer.Type) }.toDataFrame()
 
+@Deprecated(DATAFRAME_OF_WITH_VALUES, ReplaceWith("dataFrameOf(header).withValues(values)"))
 public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFrame<*> =
     dataFrameOf(header).withValues(values)
 
@@ -393,7 +395,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     @JvmName("invoke1")
     internal fun withValues(values: Iterable<Any?>): DataFrame<*> =
-        withValuesImpl(header, values.asList()).map { (name, values) ->
+        (header to values.asList()).withValuesImpl().map { (name, values) ->
             DataColumn.createByInference(name, values)
         }.toDataFrame()
 

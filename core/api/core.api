@@ -2369,11 +2369,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/Gather {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Z)V
 	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun cast ()Lorg/jetbrains/kotlinx/dataframe/api/Gather;
-	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Z)Lorg/jetbrains/kotlinx/dataframe/api/Gather;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/Gather;Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/Gather;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
+	public final fun getColumns ()Lkotlin/jvm/functions/Function2;
+	public final fun getDf ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public final fun getExplode ()Z
+	public final fun getFilter ()Lkotlin/jvm/functions/Function2;
+	public final fun getKeyTransform ()Lkotlin/jvm/functions/Function1;
+	public final fun getKeyType ()Lkotlin/reflect/KType;
+	public final fun getValueTransform ()Lkotlin/jvm/functions/Function1;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/GatherKt {
@@ -5477,7 +5479,7 @@ public final class org/jetbrains/kotlinx/dataframe/exceptions/CellConversionExce
 	public final fun getRow ()Ljava/lang/Integer;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnNotFoundException : java/lang/RuntimeException, org/jetbrains/kotlinx/dataframe/exceptions/DataFrameException {
+public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnNotFoundException : java/lang/RuntimeException, org/jetbrains/kotlinx/dataframe/exceptions/DataFrameError {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getColumnName ()Ljava/lang/String;
 	public fun getMessage ()Ljava/lang/String;
@@ -5488,11 +5490,11 @@ public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnTypeMismatch
 	public final fun getColumn ()Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/exceptions/DataFrameException {
+public abstract interface class org/jetbrains/kotlinx/dataframe/exceptions/DataFrameError {
 	public abstract fun getMessage ()Ljava/lang/String;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/exceptions/DuplicateColumnNamesException : java/lang/IllegalArgumentException, org/jetbrains/kotlinx/dataframe/exceptions/DataFrameException {
+public final class org/jetbrains/kotlinx/dataframe/exceptions/DuplicateColumnNamesException : java/lang/IllegalArgumentException, org/jetbrains/kotlinx/dataframe/exceptions/DataFrameError {
 	public fun <init> (Ljava/util/List;)V
 	public final fun getAllColumnNames ()Ljava/util/List;
 	public final fun getDuplicatedNames ()Ljava/util/List;
@@ -5769,6 +5771,10 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/Ag
 	public static final fun internal (Lorg/jetbrains/kotlinx/dataframe/aggregation/AggregateDsl;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDsl;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/impl/api/ConstructorsKt {
+	public static final fun withValuesImpl (Lkotlin/Pair;)Ljava/util/List;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/impl/api/ConvertKt {
 	public static final fun convertRowColumnImpl (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun withRowCellImpl (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -5929,7 +5935,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/io/FastDoubleParser {
 
 public final class org/jetbrains/kotlinx/dataframe/impl/schema/DataFrameSchemaImpl : org/jetbrains/kotlinx/dataframe/schema/DataFrameSchema {
 	public fun <init> (Ljava/util/Map;)V
-	public fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Z)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getColumns ()Ljava/util/Map;
 	public fun hashCode ()I
@@ -6682,7 +6688,8 @@ public final class org/jetbrains/kotlinx/dataframe/schema/CompareResult$Companio
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/schema/DataFrameSchema {
-	public abstract fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public abstract fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Z)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public static synthetic fun compare$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public abstract fun getColumns ()Ljava/util/Map;
 }
 

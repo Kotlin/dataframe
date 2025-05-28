@@ -5,8 +5,17 @@
 <instance-profile id="d"
                  name="Dataframe"
                  status="release"
-                 start-page="overview.md">
+                 start-page="Home.topic">
+    <toc-element topic="Home.topic"/>
+    <toc-element topic="Guides-And-Examples.md">
+        <toc-element topic="quickstart.md"/>
+        <toc-element topic="Kotlin-DataFrame-Features-in-Kotlin-Notebook.md">
+            <toc-element topic="Trobleshooting.md"/>
+        </toc-element>
+    </toc-element>
+
     <toc-element topic="gettingStarted.md" accepts-web-file-names="installation.html">
+        <toc-element topic="gettingStartedKotlinNotebook.md"/>
         <toc-element topic="gettingStartedGradle.md"/>
         <toc-element topic="gettingStartedJupyterNotebook.md"/>
         <toc-element topic="gettingStartedDatalore.md"/>
@@ -34,10 +43,14 @@
         <toc-element topic="DataColumn.md"/>
         <toc-element topic="DataRow.md"/>
     </toc-element>
+    <toc-element topic="Compiler-Plugin.md">
+        <toc-element topic="staticInterpretation.md"/>
+        <toc-element topic="dataSchema.md"/>
+        <toc-element topic="compilerPluginExamples.md"/>
+    </toc-element>
     <toc-element topic="nanAndNa.md"/>
     <toc-element topic="numberUnification.md"/>
-    <toc-element topic="operations.md"/>
-    <toc-element toc-title="Operations">
+    <toc-element topic="operations.md">
         <toc-element topic="create.md">
             <toc-element topic="createColumn.md" toc-title="DataColumn"/>
             <toc-element topic="createDataFrame.md" toc-title="DataFrame"/>
@@ -186,9 +199,8 @@
             <toc-element topic="jupyterRendering.md"/>
         </toc-element>
     </toc-element>
-    <toc-element topic="gradleReference.md"/>
-    <toc-element topic="Usage-with-Kotlin-Notebook-Plugin.md">
-        <toc-element topic="Trobleshooting.md"/>
+    <toc-element topic="DataSchema-Data-Classes-Generation.md">
+        <toc-element topic="gradleReference.md"/>
     </toc-element>
-    <toc-element href="https://github.com/Kotlin/dataframe/tree/master/examples" toc-title="Examples"/>
+    <toc-element topic="_shadow_resources.md" hidden="true"/>
 </instance-profile>

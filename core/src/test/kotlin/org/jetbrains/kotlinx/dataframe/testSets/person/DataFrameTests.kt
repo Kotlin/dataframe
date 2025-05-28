@@ -2185,6 +2185,14 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `split iterable inplace`() {
+        val df = dataFrameOf("a" to listOf(listOf(1), null)).split { "a"<List<Int>?>() }.inplace()
+
+        df["a"].type() shouldBe typeOf<List<Int>>()
+        df["a"].values() shouldBe listOf(listOf(1), emptyList())
+    }
+
+    @Test
     fun `split into rows with transform`() {
         val split = typed.split { city }.by { it.toCharArray().toList() }.intoRows()
         split.nrow shouldBe typed.city.sumOf { it?.length ?: 0 }

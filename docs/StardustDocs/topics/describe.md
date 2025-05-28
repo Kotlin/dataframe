@@ -37,7 +37,7 @@ percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`
 df.describe()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describe.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describe.html" width="100%"/>
 <!---END-->
 
 To describe only specific columns, pass them as an argument:
@@ -58,5 +58,5 @@ df.describe { "age" and "name".allCols() }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describeColumns.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describeColumns.html" width="100%"/>
 <!---END-->
