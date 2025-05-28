@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -196,9 +197,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     @Interpretable("ToDataFrameFrom0")
     public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit = add(this, expression)
 
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
@@ -206,9 +205,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(this, source.map { inferType.expression(it) }))
 
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(columnName, source.map { inferType.expression(it) }))

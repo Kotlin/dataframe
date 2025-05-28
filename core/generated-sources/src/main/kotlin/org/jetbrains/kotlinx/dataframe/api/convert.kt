@@ -44,6 +44,7 @@ import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_URL
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_URL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.TO_URL
 import org.jetbrains.kotlinx.dataframe.util.TO_URL_REPLACE
 import java.math.BigDecimal
@@ -325,9 +326,7 @@ internal interface ConvertDocs {
 @Interpretable("Convert0")
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> = Convert(this, columns)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> = convert { columns.toColumnSet() }
 
@@ -376,16 +375,12 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T,
 @Interpretable("Convert2")
 public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
     convert { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: ColumnReference<C>,
@@ -394,9 +389,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
     noinline expression: RowValueExpression<T, C, R>,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: KProperty<C>,

@@ -178,7 +178,7 @@ summary {
 </head>
 <body>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.take(3) }</summary>
+                                <summary>df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.take(3) }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_0"></table>
@@ -194,7 +194,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.takeLast(3) }</summary>
+                                <summary>df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.takeLast(3) }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_2"></table>
@@ -210,7 +210,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.drop(3) }</summary>
+                                <summary>df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.drop(3) }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_4"></table>
@@ -226,7 +226,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.dropLast(3) }</summary>
+                                <summary>df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.dropLast(3) }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_6"></table>
@@ -242,7 +242,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.filter { it.name().startsWith(&quot;year&quot;) } }</summary>
+                                <summary>df.select { colsAtAnyDepth().filter { !it.isColumnGroup() &amp;&amp; it.name().startsWith(&quot;year&quot;) } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_8"></table>
@@ -258,7 +258,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() }.except { age } }</summary>
+                                <summary>df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.except { age } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_10"></table>

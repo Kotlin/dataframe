@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -62,23 +63,17 @@ public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
 
 public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AnyRow.getValue(column: KProperty<T>): T = get(column)
 
 public fun <T> AnyRow.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
 
@@ -88,23 +83,17 @@ public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<
 
 public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun AnyRow.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun AnyRow.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
 public operator fun AnyRow.contains(column: AnyColumnReference): Boolean = containsKey(column)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey(column)
 

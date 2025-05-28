@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
@@ -193,9 +194,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * `| `{@include [ColsColumnsSelectionDsl.Grammar.PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
          *
-         * `| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * `| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.PlainDslName]}`()`
          *
-         * `| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * `| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.PlainDslName]}`()`
          *
          * `| `{@include [ColsOfColumnsSelectionDsl.Grammar.PlainDslName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`  [  `**`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  ] [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
          *
@@ -207,7 +208,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * `| `{@include [ExprColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`) { `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \}`**
          *
-         * `| (`{@include [FirstColumnsSelectionDsl.Grammar.PlainDslName]}`| `{@include [LastColumnsSelectionDsl.Grammar.PlainDslName]}`| `{@include [SingleColumnsSelectionDsl.Grammar.PlainDslName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * `| (`{@include [FirstColumnsSelectionDsl.Grammar.PlainDslName]}`|`{@include [LastColumnsSelectionDsl.Grammar.PlainDslName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         *
+         * `| `{@include [SingleColumnsSelectionDsl.Grammar.PlainDslName]}`()`
          *
          * `| `{@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.PlainDslNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
          *
@@ -247,9 +250,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [ColsColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
          *
-         * {@include [Indent]}`| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnSetName]}`()`
          *
-         * {@include [Indent]}`| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnSetName]}`()`
          *
          * {@include [Indent]}`| `{@include [ColsOfColumnsSelectionDsl.Grammar.ColumnSetName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`  [  `**`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  ] [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
          *
@@ -269,7 +272,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [FilterColumnsSelectionDsl.Grammar.ColumnSetName]}**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
          *
-         * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnSetName]}`| `{@include [LastColumnsSelectionDsl.Grammar.ColumnSetName]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnSetName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnSetName]}`|`{@include [LastColumnsSelectionDsl.Grammar.ColumnSetName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         *
+         * {@include [Indent]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnSetName]}`()`
          *
          * {@include [Indent]}`| `{@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnSetNameStartsEndsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
          *
@@ -318,9 +323,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [ColsColumnsSelectionDsl.Grammar.ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
          *
-         * {@include [Indent]}`| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnGroupName]}`()`
          *
-         * {@include [Indent]}`| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnGroupName]}`()`
          *
          * {@include [Indent]}`| `{@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnGroupNameStartsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
          *
@@ -338,7 +343,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExceptName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
          *
-         * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnGroupName]}`| `{@include [LastColumnsSelectionDsl.Grammar.ColumnGroupName]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnGroupName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnGroupName]}`|`{@include [LastColumnsSelectionDsl.Grammar.ColumnGroupName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         *
+         * {@include [Indent]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnGroupName]}`()`
          *
          * {@include [Indent]}`| `{@include [SelectColumnsSelectionDsl.Grammar.ColumnGroupName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
          *
@@ -399,9 +406,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun <C, R> KProperty<C>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)

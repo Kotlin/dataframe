@@ -30,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT_REPLACE_VARARG
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.EXCEPT_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.EXCEPT_REPLACE_VARARG
 import kotlin.reflect.KProperty
@@ -287,9 +288,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetInfixDocs.ARGUMENT_1] Person::age
      * @set [ColumnSetInfixDocs.ARGUMENT_2] Person::name
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> = except(column(other))
 
@@ -300,9 +299,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetVarargDocs.ARGUMENT_1] (Person::age, Person::height)
      * @set [ColumnSetVarargDocs.ARGUMENT_2] (Person::name)
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> = except(others.toColumnSet())
 
@@ -383,9 +380,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `(Person::age, Person::height)`
      * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `(Person::name)`
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
@@ -533,9 +528,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.SingleColumnReceiverArgs]
      * @include [ColumnGroupDocs.KPropertyArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
@@ -591,9 +584,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupExceptDocs.SingleColumnReceiverArgs]
      * @include [ColumnGroupExceptDocs.KPropertyArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> SingleColumn<DataRow<C>>.except(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         exceptInternal(others.toColumnSet())
@@ -643,9 +634,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupExceptDocs.StringReceiverArgs]
      * @include [ColumnGroupExceptDocs.KPropertyArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun String.except(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
@@ -663,9 +652,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupExceptDocs.SelectorArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.except(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(selector.toColumns())
@@ -693,9 +680,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupExceptDocs.StringArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.except(vararg others: String): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
@@ -707,9 +692,7 @@ public interface AllExceptColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<DataRow<C>>.except(vararg others: String): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
@@ -719,9 +702,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupExceptDocs.KPropertyArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.except(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
@@ -733,9 +714,7 @@ public interface AllExceptColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<DataRow<C>>.except(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
@@ -745,9 +724,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupExceptDocs.ColumnPathArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.except(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
@@ -759,9 +736,7 @@ public interface AllExceptColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<DataRow<C>>.except(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
@@ -803,9 +778,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupExceptDocs.ColumnPathReceiverArgs]
      * @include [ColumnGroupExceptDocs.KPropertyArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun ColumnPath.except(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
@@ -860,9 +833,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.StringReceiverArgs]
      * @include [ColumnGroupDocs.KPropertyArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -884,9 +855,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupDocs.SelectorArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
@@ -914,9 +883,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupDocs.StringArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -926,9 +893,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupDocs.KPropertyArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
@@ -938,9 +903,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupDocs.ColumnPathArgs]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())

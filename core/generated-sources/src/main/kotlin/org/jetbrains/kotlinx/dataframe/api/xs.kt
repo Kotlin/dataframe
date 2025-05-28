@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.xsImpl
 @Interpretable("DataFrameXs")
 public fun <T> DataFrame<T>.xs(vararg keyValues: Any?): DataFrame<T> =
     xs(*keyValues) {
-        colsAtAnyDepth { !it.isColumnGroup() }.take(keyValues.size)
+        colsAtAnyDepth().filter { !it.isColumnGroup() }.take(keyValues.size)
     }
 
 @Refine
@@ -28,7 +28,7 @@ public fun <T, C> DataFrame<T>.xs(vararg keyValues: C, keyColumns: ColumnsSelect
 @Interpretable("GroupByXs")
 public fun <T, G> GroupBy<T, G>.xs(vararg keyValues: Any?): GroupBy<T, G> =
     xs(*keyValues) {
-        colsAtAnyDepth { !it.isColumnGroup() }.take(keyValues.size)
+        colsAtAnyDepth().filter { !it.isColumnGroup() }.take(keyValues.size)
     }
 
 @Refine

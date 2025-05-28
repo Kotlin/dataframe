@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MINUS
 import org.jetbrains.kotlinx.dataframe.util.MINUS_REPLACE
 import kotlin.reflect.KProperty
@@ -66,9 +67,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remov
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [Column Accessors][ColumnReference] used to remove the columns of this [DataFrame].
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFrame<T> = remove { columns.toColumnSet() }
 
@@ -77,9 +76,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFram
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [KProperties][KProperty] used to remove the columns of this [DataFrame].
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>): DataFrame<T> = remove { columns.toColumnSet() }
 

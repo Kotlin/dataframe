@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.flattenImpl
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -127,9 +128,7 @@ public fun <T> DataFrame<T>.flatten(
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: ColumnReference<C>,
@@ -161,9 +160,7 @@ public fun <T, C> DataFrame<T>.flatten(
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: KProperty<C>,
