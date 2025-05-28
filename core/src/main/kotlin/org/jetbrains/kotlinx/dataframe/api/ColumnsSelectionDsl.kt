@@ -193,9 +193,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * `| `{@include [ColsColumnsSelectionDsl.Grammar.PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
          *
-         * `| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * `| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.PlainDslName]}`()`
          *
-         * `| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * `| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.PlainDslName]}`()`
          *
          * `| `{@include [ColsOfColumnsSelectionDsl.Grammar.PlainDslName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`  [  `**`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  ] [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
          *
@@ -247,9 +247,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [ColsColumnsSelectionDsl.Grammar.ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
          *
-         * {@include [Indent]}`| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnSetName]}`()`
          *
-         * {@include [Indent]}`| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnSetName]}`()`
          *
          * {@include [Indent]}`| `{@include [ColsOfColumnsSelectionDsl.Grammar.ColumnSetName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`  [  `**`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  ] [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
          *
@@ -318,9 +318,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [ColsColumnsSelectionDsl.Grammar.ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
          *
-         * {@include [Indent]}`| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| `{@include [ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnGroupName]}`()`
          *
-         * {@include [Indent]}`| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| `{@include [ColsInGroupsColumnsSelectionDsl.Grammar.ColumnGroupName]}`()`
          *
          * {@include [Indent]}`| `{@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnGroupNameStartsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
          *

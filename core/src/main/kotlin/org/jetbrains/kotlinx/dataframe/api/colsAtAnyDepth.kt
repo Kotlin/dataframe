@@ -15,6 +15,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
+import org.jetbrains.kotlinx.dataframe.util.COLS_AT_ANY_DEPTH
+import org.jetbrains.kotlinx.dataframe.util.COLS_AT_ANY_DEPTH_REPLACE
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -36,18 +38,16 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
      * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
-     *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+     *  {@include [PlainDslName]}`()`
      * }
      * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+     *  {@include [Indent]}{@include [ColumnSetName]}`()`
      * }
      * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}`()`
      * }
      */
     public interface Grammar {
@@ -99,11 +99,11 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * `dfsOf<Type> { condition } -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[colsOf][ColumnsSelectionDsl.colsOf]`<Type> { condition }`
      *
-     * [cols][ColumnsSelectionDsl.cols]` { condition }.`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[filter][FilterColumnsSelectionDsl.filter]` { condition }`
+     * [cols][ColumnsSelectionDsl.cols]` { condition }.recursively() -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[filter][FilterColumnsSelectionDsl.filter]` { condition }`
      *
-     * [first][ColumnsSelectionDsl.first]` { condition }.`[rec][rec]`() -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }.`[first][ColumnsSelectionDsl.first]`()`
+     * [first][ColumnsSelectionDsl.first]` { condition }.rec() -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }.`[first][ColumnsSelectionDsl.first]`()`
      *
-     * [all][ColumnsSelectionDsl.all]`().`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]`()`
+     * [all][ColumnsSelectionDsl.all]`().recursively() -> `[colsAtAnyDepth][colsAtAnyDepth]`()`
      *
      * @see [DataFrame.flatten\]
      * @see [ColumnsSelectionDsl.simplify\]
@@ -121,7 +121,11 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Interpretable("ColsAtAnyDepth0")
-    @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
+    @Deprecated(
+        message = COLS_AT_ANY_DEPTH,
+        replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public fun ColumnSet<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         colsAtAnyDepthInternal(predicate)
 
@@ -143,7 +147,11 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
      */
     @Interpretable("ColsAtAnyDepth1")
-    @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
+    @Deprecated(
+        message = COLS_AT_ANY_DEPTH,
+        replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         asSingleColumn().colsAtAnyDepthInternal(predicate)
 
@@ -165,7 +173,11 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Interpretable("ColsAtAnyDepth2")
-    @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
+    @Deprecated(
+        message = COLS_AT_ANY_DEPTH,
+        replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
 
@@ -185,7 +197,11 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsAtAnyDepth][String.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
-    @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
+    @Deprecated(
+        message = COLS_AT_ANY_DEPTH,
+        replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public fun String.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 
