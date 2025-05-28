@@ -10,6 +10,8 @@ This operation is useful when:
 1. you use a library API that gives you class instances
 2. you do not want to or cannot annotate classes with [`@DataSchema`](schemas.md)
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 ### Library API
 
 <!---FUN convertToColumnGroupUseCase-->
@@ -38,7 +40,7 @@ val initialData = interestingRepos
 
 <!---END-->
 
-Using unfold you can convert `response` to a [`ColumnGroup`](DataColumn.md#columngroup) and use rich [modify](modify.md) capabilities.
+Using unfold, you can convert `response` to a [`ColumnGroup`](DataColumn.md#columngroup) and use rich [modify](modify.md) capabilities.
 
 <!---FUN convertToColumnGroup-->
 

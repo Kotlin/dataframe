@@ -27,6 +27,8 @@ df.drop { it["weight"] == null || it["city"] == null }
 
 Remove rows with `null` values
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN dropNulls-->
 
 ```kotlin
@@ -44,6 +46,8 @@ df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null v
 
 Remove rows with [`NaN` values](nanAndNa.md#nan) (`Double.NaN` or `Float.NaN`).
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN dropNaNs-->
 
 ```kotlin
@@ -60,6 +64,8 @@ df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'ag
 ## dropNA
 
 Remove rows with [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, or `Float.NaN`).
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN dropNA-->
 

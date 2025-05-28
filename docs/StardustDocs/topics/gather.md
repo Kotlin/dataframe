@@ -4,7 +4,7 @@
 
 Converts several columns into two columns `key` and `value`. `key` column will contain names of original columns, `value` column will contain values from original columns.
 
-This operation is reverse to [pivot](pivot.md)
+This operation is reverse to [](pivot.md)
 
 ```kotlin
 gather { columns }
@@ -21,7 +21,7 @@ keyTransform: (columnName: String) -> K
 valueTransform: (value) -> R 
 ```
 
-See [column selectors](ColumnSelectors.md)
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 Configuration options:
 * `explodeLists` — gathered values of type [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) will be exploded into their elements, so `where`, `cast`, `notNull` and `mapValues` will be applied to list elements instead of lists themselves

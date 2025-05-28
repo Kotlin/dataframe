@@ -8,6 +8,8 @@ Returns [`DataFrame`](DataFrame.md) where values in given columns are merged int
 implode(dropNA = false) [ { columns } ]
 ```
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 **Parameters:**
 * `dropNA` — if `true`, removes `NA` values from merged lists.
 

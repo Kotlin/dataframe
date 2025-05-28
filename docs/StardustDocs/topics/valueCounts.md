@@ -10,6 +10,8 @@ valueCounts(sort = true, ascending = false, dropNA = false)
      [ { columns } ]
 ```
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 **Parameters:**
 * `sort: Boolean = true` — sort by count
 * `ascending: Boolean = false` — sort in ascending order

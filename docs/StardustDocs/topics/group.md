@@ -15,6 +15,8 @@ groupNameExpression = DataColumn.(DataColumn) -> String
 
 It is a special case of [`move`](move.md) operation.
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN group-->
 
 ```kotlin
