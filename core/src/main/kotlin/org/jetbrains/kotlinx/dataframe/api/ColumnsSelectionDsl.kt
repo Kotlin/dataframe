@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
@@ -399,9 +400,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun <C, R> KProperty<C>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)

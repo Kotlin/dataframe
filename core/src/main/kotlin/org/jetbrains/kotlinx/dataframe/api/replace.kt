@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 public fun <T, C> DataFrame<T>.replace(columns: ColumnsSelector<T, C>): ReplaceClause<T, C> =
@@ -20,16 +21,12 @@ public fun <T, C> DataFrame<T>.replace(columns: ColumnsSelector<T, C>): ReplaceC
 
 public fun <T> DataFrame<T>.replace(vararg columns: String): ReplaceClause<T, Any?> = replace { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.replace(vararg columns: ColumnReference<C>): ReplaceClause<T, C> =
     replace { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceClause<T, C> =
     replace { columns.toColumnSet() }

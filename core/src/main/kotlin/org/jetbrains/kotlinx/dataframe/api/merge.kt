@@ -24,16 +24,12 @@ public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): Merge<T, 
 
 public fun <T> DataFrame<T>.merge(vararg columns: String): Merge<T, Any?, List<Any?>> = merge { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): Merge<T, C, List<C>> =
     merge { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: KProperty<C>): Merge<T, C, List<C>> =
     merge { columns.toColumnSet() }
@@ -78,15 +74,11 @@ public fun <T, C, R> MergeWithTransform<T, C, R>.into(columnName: String): DataF
 @Interpretable("MergeInto0")
 public fun <T, C, R> Merge<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, C, reified R> Merge<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> = into(column.path())
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, C, reified R> MergeWithTransform<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> =
     into(column.path())

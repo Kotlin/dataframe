@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
 import org.jetbrains.kotlinx.dataframe.util.COLS_AT_ANY_DEPTH
 import org.jetbrains.kotlinx.dataframe.util.COLS_AT_ANY_DEPTH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -219,9 +220,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsAtAnyDepth][KProperty.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
