@@ -23,6 +23,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerI
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.SINGLE
+import org.jetbrains.kotlinx.dataframe.util.SINGLE_COL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.SINGLE_PLAIN_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.SINGLE_SET_REPLACE
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -67,20 +71,18 @@ public interface SingleColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
      * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
-     *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+     *  {@include [PlainDslName]}`()`
      * }
      *
      * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+     *  {@include [Indent]}{@include [ColumnSetName]}`()`
      * }
      *
      * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}`()`
      * }
      */
     public interface Grammar {
@@ -135,7 +137,11 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
      */
     @Interpretable("Single0")
-    @Deprecated("", ReplaceWith("this.filter(condition).single()"))
+    @Deprecated(
+        message = SINGLE,
+        replaceWith = ReplaceWith(SINGLE_SET_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         singleInternal(condition)
 
@@ -156,7 +162,11 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     @Interpretable("Single1")
-    @Deprecated("", ReplaceWith("cols().filter(condition).single()"))
+    @Deprecated(
+        message = SINGLE,
+        replaceWith = ReplaceWith(SINGLE_PLAIN_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         asSingleColumn().singleCol(condition)
 
@@ -176,7 +186,11 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
      */
     @Interpretable("Single2")
-    @Deprecated("", ReplaceWith("this.cols().filter(condition).single()"))
+    @Deprecated(
+        message = SINGLE,
+        replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().single(condition)
 
@@ -195,7 +209,11 @@ public interface SingleColumnsSelectionDsl {
      * @set [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    @Deprecated("", ReplaceWith("this.cols().filter(condition).single()"))
+    @Deprecated(
+        message = SINGLE,
+        replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
     public fun String.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).singleCol(condition)
 

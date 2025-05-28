@@ -172,6 +172,11 @@ internal const val COLS_AT_ANY_DEPTH_REPLACE = "this.colsAtAnyDepth().filter(pre
 internal const val COLS_IN_GROUPS = "Deprecated shortcut for better compiler plugin support. $MESSAGE_1_1"
 internal const val COLS_IN_GROUPS_REPLACE = "this.colsInGroups().filter(predicate)"
 
+internal const val SINGLE = "Deprecated shortcut for better compiler plugin support. $MESSAGE_1_1"
+internal const val SINGLE_COL_REPLACE = "this.allCols().filter(condition).single()"
+internal const val SINGLE_PLAIN_REPLACE = "this.cols().filter(condition).single()"
+internal const val SINGLE_SET_REPLACE = "this.filter(condition).single()"
+
 // endregion
 
 // region keep across releases

@@ -208,7 +208,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * `| `{@include [ExprColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`) { `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \}`**
          *
-         * `| (`{@include [FirstColumnsSelectionDsl.Grammar.PlainDslName]}`| `{@include [LastColumnsSelectionDsl.Grammar.PlainDslName]}`| `{@include [SingleColumnsSelectionDsl.Grammar.PlainDslName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * `| (`{@include [FirstColumnsSelectionDsl.Grammar.PlainDslName]}`|`{@include [LastColumnsSelectionDsl.Grammar.PlainDslName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         *
+         * `| `{@include [SingleColumnsSelectionDsl.Grammar.PlainDslName]}`()`
          *
          * `| `{@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.PlainDslNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
          *
@@ -270,7 +272,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [FilterColumnsSelectionDsl.Grammar.ColumnSetName]}**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
          *
-         * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnSetName]}`| `{@include [LastColumnsSelectionDsl.Grammar.ColumnSetName]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnSetName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnSetName]}`|`{@include [LastColumnsSelectionDsl.Grammar.ColumnSetName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         *
+         * {@include [Indent]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnSetName]}`()`
          *
          * {@include [Indent]}`| `{@include [ColumnNameFiltersColumnsSelectionDsl.Grammar.ColumnSetNameStartsEndsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
          *
@@ -339,7 +343,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExceptName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
          *
-         * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnGroupName]}`| `{@include [LastColumnsSelectionDsl.Grammar.ColumnGroupName]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnGroupName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnGroupName]}`|`{@include [LastColumnsSelectionDsl.Grammar.ColumnGroupName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+         *
+         * {@include [Indent]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnGroupName]}`()`
          *
          * {@include [Indent]}`| `{@include [SelectColumnsSelectionDsl.Grammar.ColumnGroupName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
          *
