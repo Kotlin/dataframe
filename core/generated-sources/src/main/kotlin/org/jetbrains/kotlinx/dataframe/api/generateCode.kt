@@ -5,36 +5,36 @@ import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+
+// region DataFrame
 
 public inline fun <reified T> DataFrame<T>.generateCode(
     fields: Boolean = true,
     extensionProperties: Boolean = true,
-): CodeString {
-    val name = markerName<T>()
-    return generateCode(name, fields, extensionProperties)
-}
+): CodeString =
+    schema().generateCode(
+        markerName = markerName<T>(),
+        fields = fields,
+        extensionProperties = extensionProperties,
+    )
 
 public fun <T> DataFrame<T>.generateCode(
     markerName: String,
     fields: Boolean = true,
     extensionProperties: Boolean = true,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeString {
-    val codeGen = CodeGenerator.create()
-    return codeGen.generate(
-        schema = schema(),
-        name = markerName,
+): CodeString =
+    schema().generateCode(
+        markerName = markerName,
         fields = fields,
         extensionProperties = extensionProperties,
-        isOpen = true,
         visibility = visibility,
-    ).code.declarations.toCodeString()
-}
+    )
 
 public inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString =
-    generateCode(
-        fields = true,
-        extensionProperties = false,
+    schema().generateInterfaces(
+        markerName = markerName<T>(),
     )
 
 public inline fun <reified T> DataFrame<T>.generateDataClasses(
@@ -43,11 +43,59 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
+): CodeString =
+    schema().generateDataClasses(
+        name = markerName ?: markerName<T>(),
+        extensionProperties = extensionProperties,
+        visibility = visibility,
+        useFqNames = useFqNames,
+        nameNormalizer = nameNormalizer,
+    )
+
+public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString =
+    schema().generateInterfaces(markerName = markerName)
+
+// endregion
+
+// region DataFrameSchema
+
+@JvmName("generateCodeForSchema")
+public fun DataFrameSchema.generateCode(
+    markerName: String,
+    fields: Boolean = true,
+    extensionProperties: Boolean = true,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ): CodeString {
-    val name = markerName ?: markerName<T>()
+    val codeGen = CodeGenerator.create()
+    return codeGen.generate(
+        schema = this,
+        name = markerName,
+        fields = fields,
+        extensionProperties = extensionProperties,
+        isOpen = true,
+        visibility = visibility,
+    ).code.declarations.toCodeString()
+}
+
+@JvmName("generateInterfacesForSchema")
+public fun DataFrameSchema.generateInterfaces(markerName: String): CodeString =
+    generateCode(
+        markerName = markerName,
+        fields = true,
+        extensionProperties = false,
+    )
+
+@JvmName("generateDataClassesForSchema")
+public fun DataFrameSchema.generateDataClasses(
+    name: String,
+    extensionProperties: Boolean = false,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+    useFqNames: Boolean = false,
+    nameNormalizer: NameNormalizer = NameNormalizer.default,
+): CodeString {
     val codeGen = CodeGenerator.create(useFqNames)
     return codeGen.generate(
-        schema = schema(),
+        schema = this,
         name = name,
         fields = true,
         extensionProperties = extensionProperties,
@@ -58,6 +106,8 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
     ).code.declarations.toCodeString()
 }
 
+// endregion
+
 @PublishedApi
 internal inline fun <reified T> markerName(): String =
     if (T::class.isAbstract) {
@@ -65,13 +115,6 @@ internal inline fun <reified T> markerName(): String =
     } else {
         "DataEntry"
     }
-
-public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString =
-    generateCode(
-        markerName = markerName,
-        fields = true,
-        extensionProperties = false,
-    )
 
 /**
  * Converts delimited 'my_name', 'my name', etc., String to camelCase 'myName'
