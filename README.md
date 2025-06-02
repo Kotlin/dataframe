@@ -24,7 +24,7 @@ Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jup
 
 ## Documentation
 
-Explore [**documentation**](https://kotlin.github.io/dataframe/overview.html) for details.
+Explore [**documentation**](https://kotlin.github.io/dataframe) for details.
 
 You could find the following articles there:
 
