@@ -8,7 +8,10 @@ Returns [`DataFrame`](DataFrame.md) without column groupings under selected colu
 flatten  [ { columns } ]
 ```
 
-Columns after flattening will keep their original names. Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+Columns will keep their original names after flattening.
+Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN flatten-->
 <tabs>

@@ -16,6 +16,8 @@ df.distinct()
 
 If columns are specified, resulting [`DataFrame`](DataFrame.md) will have only given columns with distinct values.
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN distinctColumns-->
 <tabs>
 <tab title="Properties">
@@ -42,6 +44,8 @@ df.select("age", "name").distinct()
 ## distinctBy
 
 Keep only the first row for every group of rows grouped by some condition.
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN distinctBy-->
 <tabs>

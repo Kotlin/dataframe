@@ -25,7 +25,9 @@ df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 
 ## filterBy
 
-Returns [`DataFrame`](DataFrame.md) with rows that have value `true` in given column of type `Boolean`.
+Returns [`DataFrame`](DataFrame.md) with rows that have value `true` in the given column of type `Boolean`.
+
+See [column selectors](ColumnSelectors.md) for how to select the column for this operation.
 
 <!---FUN filterBy-->
 <tabs>

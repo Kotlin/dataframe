@@ -8,6 +8,8 @@ Splits list-like values in given columns and spreads them vertically. Values in 
 explode(dropEmpty = true) [ { columns } ]
 ```
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 **Parameters:**
 * `dropEmpty` — if `true`, removes rows with empty lists or [`DataFrame`](DataFrame.md) objects. Otherwise, they will be exploded into `null`.
 

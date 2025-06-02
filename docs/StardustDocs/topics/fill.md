@@ -8,6 +8,8 @@ Replace missing values.
 
 Replaces `null` values with given value or expression. 
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN fillNulls-->
 
 ```kotlin
@@ -23,6 +25,8 @@ df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
 
 Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with given value or expression.
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN fillNaNs-->
 
 ```kotlin
@@ -35,6 +39,8 @@ df.fillNaNs { colsOf<Double>() }.withZero()
 ## fillNA
 
 Replaces [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, and `Float.NaN`) with given value or expression.
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN fillNA-->
 
