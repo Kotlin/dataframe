@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveOrMixedNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MEAN_NO_SKIPNAN
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
@@ -75,18 +76,14 @@ public fun <T, C : Number?> DataFrame<T>.meanFor(
 public fun <T> DataFrame<T>.meanFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     meanFor(skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> DataFrame<T>.meanFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = meanFor(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> DataFrame<T>.meanFor(
     vararg columns: KProperty<C>,
@@ -101,18 +98,14 @@ public fun <T, C : Number?> DataFrame<T>.mean(
 public fun <T> DataFrame<T>.mean(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Double =
     mean(skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> DataFrame<T>.mean(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double = mean(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> DataFrame<T>.mean(
     vararg columns: KProperty<C>,
@@ -142,18 +135,14 @@ public fun <T, C : Number?> Grouped<T>.meanFor(
 public fun <T> Grouped<T>.meanFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     meanFor(skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> Grouped<T>.meanFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = meanFor(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> Grouped<T>.meanFor(
     vararg columns: KProperty<C>,
@@ -174,9 +163,7 @@ public fun <T> Grouped<T>.mean(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = mean(name, skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> Grouped<T>.mean(
     vararg columns: ColumnReference<C>,
@@ -184,9 +171,7 @@ public fun <T, C : Number?> Grouped<T>.mean(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = mean(name, skipNaN) { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> Grouped<T>.mean(
     vararg columns: KProperty<C>,
@@ -221,9 +206,7 @@ public fun <T> Pivot<T>.meanFor(
     separate: Boolean = false,
 ): DataRow<T> = meanFor(skipNaN, separate) { columns.toNumberColumns() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> Pivot<T>.meanFor(
     vararg columns: ColumnReference<C>,
@@ -231,9 +214,7 @@ public fun <T, C : Number?> Pivot<T>.meanFor(
     separate: Boolean = false,
 ): DataRow<T> = meanFor(skipNaN, separate) { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> Pivot<T>.meanFor(
     vararg columns: KProperty<C>,
@@ -270,9 +251,7 @@ public fun <T> PivotGroupBy<T>.meanFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = meanFor(skipNaN, separate) { columns.toNumberColumns() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
     vararg columns: ColumnReference<C>,
@@ -280,9 +259,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = meanFor(skipNaN, separate) { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
     vararg columns: KProperty<C>,
@@ -298,18 +275,14 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
 public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     mean(skipNaN) { columns.toColumnsSetOf() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, R : Number?> PivotGroupBy<T>.mean(
     vararg columns: ColumnReference<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = mean(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, R : Number?> PivotGroupBy<T>.mean(
     vararg columns: KProperty<R>,

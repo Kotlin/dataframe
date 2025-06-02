@@ -322,7 +322,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }</summary>
+                                <summary>df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_18"></table>

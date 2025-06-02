@@ -67,10 +67,10 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val rightCol = rightJoinColumns[i]
         if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
             val leftColumns = getColumnsWithPaths {
-                leftCol.colsAtAnyDepth { !it.isColumnGroup() }
+                leftCol.colsAtAnyDepth().filter { !it.isColumnGroup() }
             }
             val rightColumns = other.getColumnsWithPaths {
-                rightCol.colsAtAnyDepth { !it.isColumnGroup() }
+                rightCol.colsAtAnyDepth().filter { !it.isColumnGroup() }
             }
 
             val leftPrefixLength = leftCol.path.size
@@ -112,7 +112,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
 
     // group row indices by key from right data frame
     val groupedRight = when (joinType) {
-        JoinType.Exclude -> rightJoinKeyToIndex.associate { it.first to emptyList<Int>() }
+        JoinType.Exclude -> rightJoinKeyToIndex.associate { it.first to emptyList() }
         else -> rightJoinKeyToIndex.groupBy({ it.first }) { it.second }
     }
 
@@ -145,14 +145,14 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         outputRowsCount += rightUnmatchedCount
     }
 
-    val leftColumns = getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }
+    val leftColumns = getColumnsWithPaths { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 
     val rightJoinColumnPaths = allRightJoinColumns.associate { it.path to it.data }
 
     val newRightColumns =
         if (addNewColumns) {
             other.getColumnsWithPaths {
-                colsAtAnyDepth {
+                colsAtAnyDepth().filter {
                     !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path)
                 }
             }

@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.indices
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -61,9 +62,7 @@ public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFra
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> =
     distinct {
@@ -81,9 +80,7 @@ public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = dis
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFrame<T> =
     distinct { columns.toColumnSet() }
@@ -92,9 +89,7 @@ public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFr
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
@@ -109,9 +104,7 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = d
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): DataFrame<T> =
     distinctBy { columns.toColumnSet() }

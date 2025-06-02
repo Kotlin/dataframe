@@ -390,7 +390,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth { !it.isColumnGroup() } }</summary>
+                                <summary>df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                  <table class="dataframe" id="df_26"></table>
@@ -422,7 +422,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth { it.name().contains(&quot;:&quot;) } }</summary>
+                                <summary>df.select { colsAtAnyDepth().filter() { it.name().contains(&quot;:&quot;) } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                  <table class="dataframe" id="df_30"></table>
