@@ -12,6 +12,30 @@ and included in the [StardustDocs/d.tree](./StardustDocs/d.tree) file.
 
 Images all README files can be stored in [docs/imgs](./imgs).
 
+## Running the Documentation Website Locally
+
+⚠️ IFrames are not displayed when using the Writerside plugin preview. To view them correctly, you need to run the website locally.
+
+### Option 1: Using IntelliJ IDEA Configurations
+
+> Requires: `unzip` utility and **Python 3** installed in the environment. May not work properly on Windows.
+
+1. Run the **Build Docs Website** configuration.
+2. Run the **Run Docs Website Locally** configuration.
+3. Open [http://localhost:8000/home.html](http://localhost:8000/home.html) in your browser.
+
+### Option 2: Manual Steps
+
+1. Go to `Writerside > DataFrame(d) > Export To > Build Docs Website` or find Writerside web archive build in IDEA configuration.
+2. Unzip the archive located at: `./build/ws/webHelpD2-all.zip`
+3. Start a local web server in the extracted folder (e.g., using Python or `http-server` utility):
+   ```bash
+   python3 -m http.server
+   # or
+   http-server
+   ```
+4. Open [http://localhost:8000/home.html](http://localhost:8000/home.html) in your browser.
+
 ### Explainer dataframes
 `@TransformDataFrameExpressions` annotated test functions generate sample
 dataframe HTML files that can be used as iFrames on the documentation website.
