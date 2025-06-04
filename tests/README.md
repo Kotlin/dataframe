@@ -7,6 +7,6 @@ and they are copied over to Markdown files in [docs/StardustDocs/topics](../docs
 by [Korro](https://github.com/devcrocod/korro).
 
 This module might be merged with [:core](../core): [Issue #898](https://github.com/Kotlin/dataframe/issues/898).
-
-See https://github.com/Kotlin/kandy/blob/samples_util/util/kandy-samples-utils/README.md for details of
-the Writerside docs generation.
+ 
+Uses Kandy samples util.
+See https://github.com/Kotlin/kandy/blob/samples_util/util/kandy-samples-utils/README.md for more details.
