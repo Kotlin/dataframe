@@ -164,8 +164,6 @@ val customers: List<Customer> = df.cast<Customer>().toList()
 
 <!---END-->
 
-<!---FUN notebook_test_generate_docs_6-->
-
 ## generateCode
 
 ```kotlin
@@ -201,6 +199,8 @@ Default: `MarkerVisibility.IMPLICIT_PUBLIC`.
 the generated Kotlin code of `@DataSchema` interfaces and/or extension properties.
 
 ### Examples {id="generateCode-examples"}
+
+<!---FUN notebook_test_generate_docs_6-->
 
 ```kotlin
 df.generateCode("Customer")
