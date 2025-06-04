@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Web Archive (d)" type="StardustRunConfiguration" factoryName="save-as-zip">
-    <option name="folderPath" value="$PROJECT_DIR$" />
+  <configuration default="false" name="Build Docs Website" type="StardustRunConfiguration" factoryName="save-as-zip">
+    <option name="folderPath" value="$PROJECT_DIR$/build/ws" />
     <option name="instanceId" value="d" />
     <option name="instanceName" value="Dataframe" />
     <option name="moduleName" value="StardustDocs" />
