@@ -315,26 +315,21 @@ private fun convertToDescription(dataframeLike: Any): String =
     }.escapeHtmlForIFrame()
 
 internal fun String.escapeHtmlForIFrame(): String {
-    val str = this
     return buildString {
-        for (c in str) {
-            when {
-                c.code > 127 || c == '\'' || c == '\\' -> {
-                    append("&#")
-                    append(c.code)
-                    append(';')
-                }
-
-                c == '"' -> append("&quot;")
-
-                c == '<' -> append("&amp;lt;")
-
-                c == '>' -> append("&amp;gt;")
-
-                c == '&' -> append("&amp;")
-
+        for (c in this@escapeHtmlForIFrame) {
+            when (c) {
+                '<' -> append("&lt;")
+                '>' -> append("&gt;")
+                '&' -> append("&amp;")
+                '"' -> append("&quot;")
+                '\'' -> append("&#39;")
+                '\\' -> append("&#92;")
                 else -> {
-                    append(c)
+                    if (c.code > 127) {
+                        append("&#${c.code};")
+                    } else {
+                        append(c)
+                    }
                 }
             }
         }
