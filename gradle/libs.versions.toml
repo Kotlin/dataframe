@@ -2,7 +2,7 @@
 ksp = "2.0.20-1.0.24"
 kotlinJupyter = "0.12.0-383"
 
-ktlint = "12.1.2"
+ktlint = "12.3.0"
 
 # make sure to sync both manually with :generator module
 kotlin = "2.0.20" # needs jupyter compatibility with Kotlin 2.1 to update
