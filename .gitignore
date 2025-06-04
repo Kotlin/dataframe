@@ -2,6 +2,8 @@
 .idea
 !.idea/runConfigurations
 !.idea/runConfigurations/*.xml
+!.idea/externalDependencies.xml
+!.idea/vcs.xml
 .gradle
 .kotlin
 build
