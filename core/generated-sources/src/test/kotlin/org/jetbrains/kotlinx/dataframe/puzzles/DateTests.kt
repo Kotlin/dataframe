@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.puzzles
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
+import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.toJavaLocalDate
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.aggregate
@@ -113,7 +114,7 @@ class DateTests {
 
         (start..end).toList().toColumn("3thu").filter {
             it.toJavaLocalDate()[WeekFields.of(Locale.ENGLISH).weekOfMonth()] == 3 &&
-                it.dayOfWeek.value == 4
+                it.dayOfWeek.isoDayNumber == 4
         } shouldBe expected
     }
 }
