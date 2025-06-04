@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Docs Webiste Locally" type="ShConfigurationType">
+    <option name="SCRIPT_TEXT" value="unzip -o webHelpD2-all.zip -d webHelpD2-all &amp;&amp; cd webHelpD2-all &amp;&amp; python3 -m http.server 8000" />
+    <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+    <option name="SCRIPT_PATH" value="bash" />
+    <option name="SCRIPT_OPTIONS" value="-c &quot;unzip -o webHelpD2-all.zip -d temp &amp;&amp; cd temp/webHelpD2-all &amp;&amp; python3 -m http.server 8000&quot;" />
+    <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+    <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+    <option name="INTERPRETER_PATH" value="/bin/zsh" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="EXECUTE_IN_TERMINAL" value="true" />
+    <option name="EXECUTE_SCRIPT_FILE" value="false" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>
