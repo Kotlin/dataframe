@@ -27,6 +27,10 @@ dependencies {
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.json)
     implementation(libs.exposed.money)
+
+    // (kotlin) spark support
+    implementation(libs.kotlin.spark)
+    compileOnly(libs.spark)
 }
 
 tasks.withType<KotlinCompile> {
