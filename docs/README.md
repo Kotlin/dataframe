@@ -20,9 +20,10 @@ Images all README files can be stored in [docs/imgs](./imgs).
 
 > Requires: `unzip` utility and **Python 3** installed in the environment. May not work properly on Windows.
 
-1. Run the **Build Docs Website** configuration.
-2. Run the **Run Docs Website Locally** configuration.
+1. Run the `Build Docs Website` configuration.
+2. Run the `Run Docs Website Locally` configuration.
 3. Open [http://localhost:8000/home.html](http://localhost:8000/home.html) in your browser.
+4. Shut down the server with Ctrl+C or close the terminal window.
 
 ### Option 2: Manual Steps
 
@@ -35,6 +36,7 @@ Images all README files can be stored in [docs/imgs](./imgs).
    http-server
    ```
 4. Open [http://localhost:8000/home.html](http://localhost:8000/home.html) in your browser.
+5. Shut down the server with Ctrl+C or close the terminal window.
 
 ### Explainer dataframes
 `@TransformDataFrameExpressions` annotated test functions generate sample
