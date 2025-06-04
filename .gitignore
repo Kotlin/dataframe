@@ -1,5 +1,6 @@
 # Default ignored files
 .idea
+!.idea/vcs.xml
 .gradle
 .kotlin
 build

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+    <component name="IssueNavigationConfiguration">
+        <option name="links">
+            <list>
+                <!-- If you commit or comment something with an issue/PR number like "#1",
+                     this will become a clickable link to the right issue -->
+                <IssueNavigationLink>
+                    <option name="issueRegexp" value="#(\d+)"/>
+                    <option name="linkRegexp" value="https://github.com/Kotlin/dataframe/issues/$1"/>
+                </IssueNavigationLink>
+            </list>
+        </option>
+    </component>
+    <component name="VcsDirectoryMappings">
+        <mapping directory="" vcs="Git"/>
+    </component>
+</project>
