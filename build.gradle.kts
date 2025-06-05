@@ -189,7 +189,7 @@ allprojects {
     afterEvaluate {
         try {
             configure<KtlintExtension> {
-                version = "1.4.1"
+                version = "1.6.0"
                 // rules are set up through .editorconfig
             }
         } catch (_: UnknownDomainObjectException) {

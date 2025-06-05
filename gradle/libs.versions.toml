@@ -2,7 +2,7 @@
 ksp = "2.0.20-1.0.24"
 kotlinJupyter = "0.12.0-383"
 
-ktlint = "12.1.2"
+ktlint = "12.3.0"
 
 # make sure to sync both manually with :generator module
 kotlin = "2.0.20" # needs jupyter compatibility with Kotlin 2.1 to update
@@ -46,7 +46,7 @@ kotestAsserions = "6.0.0.M1"
 
 jsoup = "1.18.3"
 arrow = "18.1.0"
-kodex = "0.4.3"
+kodex = "0.4.4"
 simpleGit = "2.2.1"
 dependencyVersions = "0.51.0"
 plugin-publish = "1.3.0"

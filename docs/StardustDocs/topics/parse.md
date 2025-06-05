@@ -96,3 +96,42 @@ DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
 ```
 
 <!---END-->
+
+For `locale`, this means that the one being used by the parser is defined as:
+
+↪ The locale given as function argument directly, or in `parserOptions`, if it is not `null`, else
+
+&nbsp;&nbsp;&nbsp;&nbsp;↪ The locale set by `DataFrame.parser.locale = ...`, if it is not `null`, else
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↪ `Locale.getDefault()`, which is the system's default locale that can be changed with `Locale.setDefault()`.
+
+### Parsing Doubles
+
+DataFrame has a new fast and powerful double parser enabled by default.
+It is based on [the FastDoubleParser library](https://github.com/wrandelshofer/FastDoubleParser) for its
+high performance and configurability
+(in the future, we might expand this support to `Float`, `BigDecimal`, and `BigInteger` as well).
+
+The parser is locale-aware; it will use the locale set by the
+[(global)](#global-parser-options) [parser options](#parser-options) to parse the doubles.
+It also has a fallback mechanism built in, meaning it can recognize characters from
+all other locales (and some from [Wikipedia](https://en.wikipedia.org/wiki/Decimal_separator))
+and parse them correctly as long as they don't conflict with the current locale.
+
+For example, if your locale uses ',' as decimal separator, it will not recognize ',' as thousands separator, but it will
+recognize ''', ' ', '٬', '_', ' ', etc. as such.
+The same holds for characters like "e", "inf", "×10^", "NaN", etc. (ignoring case).
+
+This means you can safely parse `"123'456 789,012.345×10^6"` with a US locale but not `"1.234,5"`.
+
+Aside from this, DataFrame also explicitly recognizes "∞", "inf", "infinity", and "infty" as `Double.POSITIVE_INFINITY`
+(as well as their negative counterparts), "nan", "na", and "n/a" as `Double.NaN`,
+and all forms of whitespace are treated equally.
+
+If `FastDoubleParser` fails to parse a `String` as `Double`, DataFrame will try
+to parse it using the standard `NumberFormat.parse()` function as a last resort.
+
+If you experience any issues with the new parser, you can turn it off by setting
+`useFastDoubleParser = false`, which will use the old `NumberFormat.parse()` function instead.
+
+Please [report](https://github.com/Kotlin/dataframe/issues) any issues you encounter. 
