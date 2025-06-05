@@ -314,16 +314,22 @@ private fun convertToDescription(dataframeLike: Any): String =
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }.escapeHtmlForIFrame()
 
-internal fun String.escapeHtmlForIFrame(): String {
-    return buildString {
+internal fun String.escapeHtmlForIFrame(): String =
+    buildString {
         for (c in this@escapeHtmlForIFrame) {
             when (c) {
                 '<' -> append("&lt;")
+
                 '>' -> append("&gt;")
+
                 '&' -> append("&amp;")
+
                 '"' -> append("&quot;")
+
                 '\'' -> append("&#39;")
+
                 '\\' -> append("&#92;")
+
                 else -> {
                     if (c.code > 127) {
                         append("&#${c.code};")
@@ -334,4 +340,3 @@ internal fun String.escapeHtmlForIFrame(): String {
             }
         }
     }
-}
