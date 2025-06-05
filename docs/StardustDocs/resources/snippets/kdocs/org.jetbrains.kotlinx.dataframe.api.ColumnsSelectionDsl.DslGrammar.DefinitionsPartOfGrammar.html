@@ -44,45 +44,45 @@ body {
 }
 </style>
 <script>
-function calculateBodyHeight() {
-    const body = document.body;
-    const html = document.documentElement;
-    return Math.max(
-        body.scrollHeight,
-        body.offsetHeight,
-        html.scrollHeight,
-        html.offsetHeight,
-        html.clientHeight
-    );
-}
-
-function sendHeight() {
-    const height = calculateBodyHeight();
-    window.parent.postMessage({ type: 'iframeHeight', height }, '*');
-}
-
-function repeatHeightCalculation(maxRetries = 10, interval = 100) {
-    let retries = 0;
-    const intervalId = setInterval(() => {
-        sendHeight();
-        retries++;
-        if (retries >= maxRetries) clearInterval(intervalId);
-    }, interval);
-}
-
-window.addEventListener('load', () => {
-    repeatHeightCalculation();
-    const observer = new MutationObserver(() => {
-        setTimeout(sendHeight, 50);
+    function calculateBodyHeight() {
+        const body = document.body;
+        const html = document.documentElement;
+        return Math.max(
+            body.scrollHeight,
+            body.offsetHeight,
+            html.scrollHeight,
+            html.offsetHeight,
+            html.clientHeight
+        );
+    }
+    
+    function sendHeight() {
+        const height = calculateBodyHeight();
+        window.parent.postMessage({ type: 'iframeHeight', height }, '*');
+    }
+    
+    function repeatHeightCalculation(maxRetries = 10, interval = 100) {
+        let retries = 0;
+        const intervalId = setInterval(() => {
+            sendHeight();
+            retries++;
+            if (retries >= maxRetries) clearInterval(intervalId);
+        }, interval);
+    }
+    
+    window.addEventListener('load', () => {
+        repeatHeightCalculation();
+        const observer = new MutationObserver(() => {
+            setTimeout(sendHeight, 50);
+        });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
     });
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        characterData: true
-    });
-});
-
-window.addEventListener('resize', sendHeight);
+    
+    window.addEventListener('resize', sendHeight);
 </script>
 </head>
 <body><p><code>columnGroupReference: </code><code><code>String</code></code><code> | </code><code><code>ColumnPath</code></code></p><p><code>colSelector: </code><code><code>ColumnSelector</code></code></p><p><code>colsSelector: </code><code><code>ColumnsSelector</code></code></p><p><code>column: </code><code><code>ColumnAccessor</code></code><code> | </code><code><code>String</code></code><code> | </code><code><code>ColumnPath</code></code></p><p><code>columnGroup: </code><code><code>SingleColumn</code></code><code>&lt;</code><code><code>DataRow</code></code><code>&lt;*&gt;&gt; | </code><code><code>String</code></code><code> | </code><code><code>ColumnPath</code></code></p><p><code>columnNoAccessor: </code><code><code>String</code></code><code> | </code><code><code>ColumnPath</code></code></p><p><code>columnOrSet: </code><code><code>column</code></code><code> | </code><code><code>columnSet</code></code></p><p><code>columnSet: </code><code><code>ColumnSet</code></code><code>&lt;*&gt;</code></p><p><code>columnsResolver: </code><code><code>ColumnsResolver</code></code></p><p><code>condition: </code><code><code>ColumnFilter</code></code></p><p><code>expression: </code><code>Column Expression</code></p><p><code>ignoreCase: </code><code><code>Boolean</code></code></p><p><code>index: </code><code><code>Int</code></code></p><p><code>indexRange: </code><code><code>IntRange</code></code></p><p><code>infer: </code><code><code>Infer</code></code></p><p><code>kind: </code><code><code>ColumnKind</code></code></p><p><code>kType: </code><code><code>KType</code></code></p><p><code>name: </code><code><code>String</code></code></p><p><code>number: </code><code><code>Int</code></code></p><p><code>regex: </code><code><code>Regex</code></code></p><p><code>singleColumn: </code><code><code>SingleColumn</code></code><code>&lt;</code><code><code>DataRow</code></code><code>&lt;*&gt;&gt;</code></p><p><code>T: Column type</code></p><p><code>text: </code><code><code>String</code></code></p></body>
