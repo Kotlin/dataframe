@@ -3,7 +3,9 @@
 Kotlin DataFrame compiler plugin: available in Gradle projects, is coming to Kotlin Notebook and Maven projects soon.
 
 Check out this video that shows how expressions update the schema of a dataframe: 
-<video src="compiler_plugin.mp4" controls/>
+
+
+<video src="compiler_plugin.mp4" controls=""/>
 
 ## Setup
 

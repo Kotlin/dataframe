@@ -51,7 +51,7 @@ or `ColumnSet` that adheres to the optional given condition. If no column adhere
 ##### Col {collapsible="true"}
 `col(name)`, `col(5)`, `this[5]`
 
-Creates a [ColumnAccessor](DataColumn.md#column-accessors) (or `SingleColumn`) for a column with the given 
+Creates a [ColumnAccessor](DataColumn.md) (or `SingleColumn`) for a column with the given 
 argument from the top-level or specified [column group](DataColumn.md#columngroup). The argument can be either an 
 index (`Int`) or a reference to a column (`String`, `ColumnPath`, `KProperty`, or `ColumnAccessor`;
 any [AccessApi](apiLevels.md)).
@@ -59,7 +59,7 @@ any [AccessApi](apiLevels.md)).
 ##### Value Col, Frame Col, Col Group {collapsible="true"}
 `valueCol(name)`, `valueCol(5)`, `frameCol(name)`, `frameCol(5)`, `colGroup(name)`, `colGroup(5)`
 
-Creates a [ColumnAccessor](DataColumn.md#column-accessors) (or `SingleColumn`) for a 
+Creates a [ColumnAccessor](DataColumn.md) (or `SingleColumn`) for a 
 [value column](DataColumn.md#valuecolumn) / [frame column](DataColumn.md#framecolumn) / 
 [column group](DataColumn.md#columngroup) with the given argument from the top-level or
 specified [column group](DataColumn.md#columngroup). The argument can be either an index (`Int`) or a reference

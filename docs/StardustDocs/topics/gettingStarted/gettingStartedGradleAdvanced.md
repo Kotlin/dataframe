@@ -224,7 +224,7 @@ tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
 </tab>
 <tab title=".editorconfig">
 
-```.editorconfig
+```editorconfig
 [{**/*.Generated.kt,**/*$Extensions.kt}]
 ktlint = disabled
 ```
