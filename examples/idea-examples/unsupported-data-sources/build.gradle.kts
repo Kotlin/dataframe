@@ -31,8 +31,24 @@ dependencies {
     // (kotlin) spark support
     implementation(libs.kotlin.spark)
     compileOnly(libs.spark)
+    implementation(libs.log4j.core)
+    implementation(libs.log4j.api)
 }
 
-tasks.withType<KotlinCompile> {
-    compilerOptions.jvmTarget = JvmTarget.JVM_1_8
+/**
+ * Runs the kotlinSpark/typedDataset example with java 11.
+ */
+val runKotlinSparkTypedDataset by tasks.registering(JavaExec::class) {
+    classpath = sourceSets["main"].runtimeClasspath
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(11) }
+    mainClass = "org.jetbrains.kotlinx.dataframe.examples.kotlinSpark.TypedDatasetKt"
+}
+
+/**
+ * Runs the kotlinSpark/untypedDataset example with java 11.
+ */
+val runKotlinSparkUntypedDataset by tasks.registering(JavaExec::class) {
+    classpath = sourceSets["main"].runtimeClasspath
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(11) }
+    mainClass = "org.jetbrains.kotlinx.dataframe.examples.kotlinSpark.UntypedDatasetKt"
 }

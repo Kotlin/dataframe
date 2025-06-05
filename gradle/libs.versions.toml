@@ -37,6 +37,7 @@ kotlinDatetime = "0.6.1"
 openapi = "2.1.24"
 kotlinLogging = "7.0.3"
 sl4j = "2.0.16"
+log4j = "2.24.3"
 
 junit = "4.13.2"
 junit-jupiter = "5.11.3"
@@ -171,6 +172,8 @@ exposed-money = { group = "org.jetbrains.exposed", name = "exposed-money", versi
 
 kotlin-spark = { group = "org.jetbrains.kotlinx.spark", name = "kotlin-spark-api_3.3.2_2.13", version.ref = "kotlin-spark" }
 spark = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark" }
+log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
+log4j-api = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j" }
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
