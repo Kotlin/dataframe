@@ -49,13 +49,13 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 The following automatic type conversions are performed for the `min` and `max` operations.
 (Note that `null` only appears in the return type when using `-orNull` overloads).
 
-| Conversion                     | Result for Empty Input |
-|--------------------------------|------------------------|
-| T -> T where T : Comparable<T> | null                   |
-| Int -> Int                     | null                   |
-| Byte -> Byte                   | null                   |
-| Short -> Short                 | null                   |
-| Long -> Long                   | null                   |
-| Double -> Double               | null                   |
-| Float -> Float                 | null                   |
-| Nothing -> Nothing             | null                   |
+| Conversion                       | Result for Empty Input |
+|----------------------------------|------------------------|
+| T -> T where T : Comparable\<T\> | null                   |
+| Int -> Int                       | null                   |
+| Byte -> Byte                     | null                   |
+| Short -> Short                   | null                   |
+| Long -> Long                     | null                   |
+| Double -> Double                 | null                   |
+| Float -> Float                   | null                   |
+| Nothing -> Nothing               | null                   |
