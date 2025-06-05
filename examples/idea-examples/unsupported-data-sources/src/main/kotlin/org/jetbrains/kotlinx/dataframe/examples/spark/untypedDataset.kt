@@ -1,9 +1,12 @@
 @file:Suppress("ktlint:standard:function-signature")
 
-package org.jetbrains.kotlinx.dataframe.examples.kotlinSpark
+package org.jetbrains.kotlinx.dataframe.examples.spark
 
+import org.apache.spark.SparkConf
+import org.apache.spark.api.java.JavaSparkContext
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
+import org.apache.spark.sql.SparkSession
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.max
@@ -17,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.examples.spark.convertToDataFrameByInfere
 import org.jetbrains.kotlinx.dataframe.examples.spark.convertToSpark
 import org.jetbrains.kotlinx.spark.api.col
 import org.jetbrains.kotlinx.spark.api.gt
-import org.jetbrains.kotlinx.spark.api.withSpark
 
 /**
  * Since we don't know the schema at compile time this time, we need to do
@@ -26,18 +28,27 @@ import org.jetbrains.kotlinx.spark.api.withSpark
  * We will use spark/compatibilityLayer.kt to do this.
  *
  * NOTE: You will likely need to run this function with Java 8 or 11 for it to work correctly.
- * Use the `runKotlinSparkUntypedDataset` Gradle task to do so.
+ * Use the `runSparkUntypedDataset` Gradle task to do so.
  */
-fun main() = withSpark {
+fun main() {
+    val spark = SparkSession.builder()
+        .master(SparkConf().get("spark.master", "local[*]"))
+        .appName("Kotlin Spark Sample")
+        .getOrCreate()
+    val sc = JavaSparkContext(spark.sparkContext())
+
     // Creating a Spark Dataframe (untyped Dataset). Usually, this is loaded from some server or database.
-    val rawDataset: Dataset<Row> = listOf(
-        Person(Name("Alice", "Cooper"), 15, "London", 54, true),
-        Person(Name("Bob", "Dylan"), 45, "Dubai", 87, true),
-        Person(Name("Charlie", "Daniels"), 20, "Moscow", null, false),
-        Person(Name("Charlie", "Chaplin"), 40, "Milan", null, true),
-        Person(Name("Bob", "Marley"), 30, "Tokyo", 68, true),
-        Person(Name("Alice", "Wolf"), 20, null, 55, false),
-        Person(Name("Charlie", "Byrd"), 30, "Moscow", 90, true),
+    val rawDataset: Dataset<Row> = spark.createDataset(
+        listOf(
+            Person(Name("Alice", "Cooper"), 15, "London", 54, true),
+            Person(Name("Bob", "Dylan"), 45, "Dubai", 87, true),
+            Person(Name("Charlie", "Daniels"), 20, "Moscow", null, false),
+            Person(Name("Charlie", "Chaplin"), 40, "Milan", null, true),
+            Person(Name("Bob", "Marley"), 30, "Tokyo", 68, true),
+            Person(Name("Alice", "Wolf"), 20, null, 55, false),
+            Person(Name("Charlie", "Byrd"), 30, "Moscow", 90, true),
+        ),
+        Person.encoder,
     ).toDF()
 
     // we can perform large operations in Spark.
@@ -70,4 +81,6 @@ fun main() = withSpark {
     val sparkDataset = df2.convertToSpark(spark, sc)
     sparkDataset.printSchema()
     sparkDataset.show()
+
+    spark.stop()
 }

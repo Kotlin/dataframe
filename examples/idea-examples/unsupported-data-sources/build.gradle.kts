@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     application
     kotlin("jvm")
@@ -51,4 +48,22 @@ val runKotlinSparkUntypedDataset by tasks.registering(JavaExec::class) {
     classpath = sourceSets["main"].runtimeClasspath
     javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(11) }
     mainClass = "org.jetbrains.kotlinx.dataframe.examples.kotlinSpark.UntypedDatasetKt"
+}
+
+/**
+ * Runs the spark/typedDataset example with java 11.
+ */
+val runSparkTypedDataset by tasks.registering(JavaExec::class) {
+    classpath = sourceSets["main"].runtimeClasspath
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(11) }
+    mainClass = "org.jetbrains.kotlinx.dataframe.examples.spark.TypedDatasetKt"
+}
+
+/**
+ * Runs the spark/untypedDataset example with java 11.
+ */
+val runSparkUntypedDataset by tasks.registering(JavaExec::class) {
+    classpath = sourceSets["main"].runtimeClasspath
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(11) }
+    mainClass = "org.jetbrains.kotlinx.dataframe.examples.spark.UntypedDatasetKt"
 }
