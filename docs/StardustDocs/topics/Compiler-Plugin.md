@@ -30,9 +30,6 @@ allowing you to access columns and rows in a type-safe way and avoid mistakes in
 
 Check out this video that shows how expressions update the schema of a dataframe: 
 
-
-<video src="compiler_plugin.mp4" controls=""/>
-
 <video src="compiler_plugin.mp4" controls=""/>
 
 ## Setup
