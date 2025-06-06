@@ -30,6 +30,10 @@ dependencies {
     compileOnly(libs.spark)
     implementation(libs.log4j.core)
     implementation(libs.log4j.api)
+
+    // multik support
+    implementation(libs.multik.core)
+    implementation(libs.multik.default)
 }
 
 /**

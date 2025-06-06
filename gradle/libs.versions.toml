@@ -69,6 +69,8 @@ exposed = "1.0.0-beta-2"
 kotlin-spark = "1.2.4"
 spark = "3.3.2"
 
+multik = "0.2.3"
+
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
@@ -174,6 +176,9 @@ kotlin-spark = { group = "org.jetbrains.kotlinx.spark", name = "kotlin-spark-api
 spark = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark" }
 log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
 log4j-api = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j" }
+
+multik-core = { group = "org.jetbrains.kotlinx", name = "multik-core", version.ref = "multik" }
+multik-default = { group = "org.jetbrains.kotlinx", name = "multik-default", version.ref = "multik" }
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
