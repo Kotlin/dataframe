@@ -56,6 +56,11 @@ Explore our structured, in-depth guides to steadily improve your Kotlin DataFram
 
 Explore our extensive collection of practical examples and real-world analytics workflows.
 
+* [Kotlin DataFrame Compiler Plugin Example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-example)  
+  — a simple project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
+  showcasing DataFrame expressions with [extension properties](extensionPropertiesApi.md)  
+  that are generated on-the-fly in the IDEA project.
+
 * [Titanic Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/titanic/Titanic.ipynb)
   — discover the famous "Titanic"
   dataset with the Kotlin DataFrame analysis toolkit

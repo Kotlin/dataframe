@@ -1,6 +1,8 @@
 # Examples of Kotlin Dataframe
 
 ### Idea examples
+* [plugin example](kotlin-dataframe-plugin-example) IDEA project with a 
+[Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
 * [movies](idea-examples/movies) Using extension properties [Access API](https://kotlin.github.io/dataframe/apilevels.html) to perform a data cleaning task
 * [titanic](idea-examples/titanic)
 * [youtube](idea-examples/youtube)
