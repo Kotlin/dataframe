@@ -8,4 +8,4 @@ pluginManagement {
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
-rootProject.name = "kdf_plugin_example"
+rootProject.name = "kotlin-dataframe-plugin-example"
