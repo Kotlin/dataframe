@@ -35,27 +35,6 @@ import kotlin.reflect.typeOf
 /** Converts a one-dimensional array ([D1Array]) to a [DataColumn] with optional [name]. */
 inline fun <reified N> D1Array<N>.convertToColumn(name: String = ""): DataColumn<N> = column(toList()) named name
 
-/** Converts a [DataColumn] to a one-dimensional array ([D1Array]). */
-@JvmName("convertNumberColumnToMultik")
-inline fun <reified N> DataColumn<N>.convertToMultik(): D1Array<N> where N : Number, N : Comparable<N> =
-    mk.ndarray(toList())
-
-/** Converts a [DataColumn] to a one-dimensional array ([D1Array]). */
-@JvmName("convertComplexColumnToMultik")
-inline fun <reified N : Complex> DataColumn<N>.convertToMultik(): D1Array<N> = mk.ndarray(toList())
-
-@JvmName("convertNumberColumnFromDfToMultik")
-@OverloadResolutionByLambdaReturnType
-inline fun <T, reified N> DataFrame<T>.convertToMultik(
-    crossinline column: ColumnSelector<T, N>,
-): D1Array<N>
-    where N : Number, N : Comparable<N> = getColumn { column(it) }.convertToMultik()
-
-@JvmName("convertComplexColumnFromDfToMultik")
-@OverloadResolutionByLambdaReturnType
-inline fun <T, reified N : Complex> DataFrame<T>.convertToMultik(crossinline column: ColumnSelector<T, N>): D1Array<N> =
-    getColumn { column(it) }.convertToMultik()
-
 /**
  * Converts a one-dimensional array ([D1Array]) of type [N] into a DataFrame.
  * The resulting DataFrame contains a single column named "value", where each element of the array becomes a row in the DataFrame.
@@ -65,6 +44,29 @@ inline fun <T, reified N : Complex> DataFrame<T>.convertToMultik(crossinline col
 inline fun <reified N> D1Array<N>.convertToDataFrame(): DataFrame<ValueProperty<N>> =
     dataFrameOf(ValueProperty<*>::value.name to column(toList()))
         .cast()
+
+/** Converts a [DataColumn] to a one-dimensional array ([D1Array]). */
+@JvmName("convertNumberColumnToMultik")
+inline fun <reified N> DataColumn<N>.convertToMultik(): D1Array<N> where N : Number, N : Comparable<N> =
+    mk.ndarray(toList())
+
+/** Converts a [DataColumn] to a one-dimensional array ([D1Array]). */
+@JvmName("convertComplexColumnToMultik")
+inline fun <reified N : Complex> DataColumn<N>.convertToMultik(): D1Array<N> = mk.ndarray(toList())
+
+/** Converts a [DataColumn] selected by [column] to a one-dimensional array ([D1Array]). */
+@JvmName("convertNumberColumnFromDfToMultik")
+@OverloadResolutionByLambdaReturnType
+inline fun <T, reified N> DataFrame<T>.convertToMultik(
+    crossinline column: ColumnSelector<T, N>,
+): D1Array<N>
+    where N : Number, N : Comparable<N> = getColumn { column(it) }.convertToMultik()
+
+/** Converts a [DataColumn] selected by [column] to a one-dimensional array ([D1Array]). */
+@JvmName("convertComplexColumnFromDfToMultik")
+@OverloadResolutionByLambdaReturnType
+inline fun <T, reified N : Complex> DataFrame<T>.convertToMultik(crossinline column: ColumnSelector<T, N>): D1Array<N> =
+    getColumn { column(it) }.convertToMultik()
 
 // endregion
 
@@ -85,31 +87,15 @@ inline fun <reified N> D2Array<N>.convertToDataFrame(columnNameGenerator: (Int) 
             .toColumn(columnNameGenerator(col))
     }.toDataFrame()
 
-@JvmName("convertToMultikOfComplex")
-inline fun <reified N : Complex> AnyFrame.convertToMultikOf(_klass: KClass<Complex> = Complex::class): D2Array<N> =
-    convertToMultik { colsOf<N>() }
-
-@JvmName("convertToMultikOfNumber")
-inline fun <reified N> AnyFrame.convertToMultikOf(
-    _klass: KClass<Number> = Number::class,
-): D2Array<N> where N : Number, N : Comparable<N> = convertToMultik { colsOf<N>() }
-
-@JvmName("convertToMultikGuess")
-fun AnyFrame.convertToMultik(): D2Array<*> {
-    val columnTypes = columnTypes().distinct()
-    return when {
-        columnTypes.size != 1 -> error("found column types: $columnTypes")
-        columnTypes.single() == typeOf<Complex>() -> convertToMultik { colsOf<Complex>() }
-        columnTypes.single().isSubtypeOf(typeOf<Byte>()) -> convertToMultik { colsOf<Byte>() }
-        columnTypes.single().isSubtypeOf(typeOf<Short>()) -> convertToMultik { colsOf<Short>() }
-        columnTypes.single().isSubtypeOf(typeOf<Int>()) -> convertToMultik { colsOf<Int>() }
-        columnTypes.single().isSubtypeOf(typeOf<Long>()) -> convertToMultik { colsOf<Long>() }
-        columnTypes.single().isSubtypeOf(typeOf<Float>()) -> convertToMultik { colsOf<Float>() }
-        columnTypes.single().isSubtypeOf(typeOf<Double>()) -> convertToMultik { colsOf<Double>() }
-        else -> error("found column types: $columnTypes")
-    }
-}
-
+/**
+ * Converts a [DataFrame] to a two-dimensional array ([D2Array]).
+ * You'll need to specify which columns to convert using the [columns] selector.
+ *
+ * All column need to be of the same type. If no column are supplied, the function
+ * will only succeed if all columns are of the same type.
+ *
+ * @see convertToMultikOf
+ */
 @JvmName("convertNumberColumnsFromDfToMultik")
 @OverloadResolutionByLambdaReturnType
 inline fun <T, reified N> DataFrame<T>.convertToMultik(
@@ -117,22 +103,79 @@ inline fun <T, reified N> DataFrame<T>.convertToMultik(
 ): D2Array<N>
     where N : Number, N : Comparable<N> = getColumns { columns(it) }.convertToMultik()
 
+/**
+ * Converts a [DataFrame] to a two-dimensional array ([D2Array]).
+ * You'll need to specify which columns to convert using the [columns] selector.
+ *
+ * All column need to be of the same type. If no column are supplied, the function
+ * will only succeed if all columns are of the same type.
+ *
+ * @see convertToMultikOf
+ */
 @JvmName("convertComplexColumnsFromDfToMultik")
 @OverloadResolutionByLambdaReturnType
 inline fun <T, reified N : Complex> DataFrame<T>.convertToMultik(
     crossinline columns: ColumnsSelector<T, N>,
 ): D2Array<N> = getColumns { columns(it) }.convertToMultik()
 
+/**
+ * Converts a [DataFrame] to a two-dimensional array ([D2Array]).
+ * You'll need to specify which columns to convert using the `columns` selector.
+ *
+ * All column need to be of the same type. If no column are supplied, the function
+ * will only succeed if all columns are of the same type.
+ *
+ * @see convertToMultikOf
+ */
+@JvmName("convertToMultikGuess")
+fun AnyFrame.convertToMultik(): D2Array<*> {
+    val columnTypes = columnTypes().distinct()
+    val type = columnTypes.singleOrNull() ?: error("found column types: $columnTypes")
+    return when {
+        type == typeOf<Complex>() -> convertToMultik { colsOf<Complex>() }
+        type.isSubtypeOf(typeOf<Byte>()) -> convertToMultik { colsOf<Byte>() }
+        type.isSubtypeOf(typeOf<Short>()) -> convertToMultik { colsOf<Short>() }
+        type.isSubtypeOf(typeOf<Int>()) -> convertToMultik { colsOf<Int>() }
+        type.isSubtypeOf(typeOf<Long>()) -> convertToMultik { colsOf<Long>() }
+        type.isSubtypeOf(typeOf<Float>()) -> convertToMultik { colsOf<Float>() }
+        type.isSubtypeOf(typeOf<Double>()) -> convertToMultik { colsOf<Double>() }
+        else -> error("found column types: $columnTypes")
+    }
+}
+
+/**
+ * Converts a [DataFrame] to a two-dimensional array ([D2Array]) by taking all
+ * columns of type [N].
+ *
+ * @see convertToMultik
+ */
+@JvmName("convertToMultikOfComplex")
+@Suppress("LocalVariableName")
+inline fun <reified N : Complex> AnyFrame.convertToMultikOf(
+    // unused param to avoid overload resolution ambiguity
+    _klass: KClass<Complex> = Complex::class,
+): D2Array<N> =
+    convertToMultik { colsOf<N>() }
+
+/**
+ * Converts a [DataFrame] to a two-dimensional array ([D2Array]) by taking all
+ * columns of type [N].
+ *
+ * @see convertToMultik
+ */
+@JvmName("convertToMultikOfNumber")
+@Suppress("LocalVariableName")
+inline fun <reified N> AnyFrame.convertToMultikOf(
+    // unused param to avoid overload resolution ambiguity
+    _klass: KClass<Number> = Number::class,
+): D2Array<N> where N : Number, N : Comparable<N> = convertToMultik { colsOf<N>() }
+
 @JvmName("convertNumberColumnsToMultik")
 inline fun <reified N> List<DataColumn<N>>.convertToMultik(): D2Array<N> where N : Number, N : Comparable<N> =
-    mk.ndarray(
-        toDataFrame().map { it.values() as List<N> },
-    )
+    mk.ndarray(toDataFrame().map { it.values() as List<N> })
 
 @JvmName("convertComplexColumnsToMultik")
 inline fun <reified N : Complex> List<DataColumn<N>>.convertToMultik(): D2Array<N> =
-    mk.ndarray(
-        toDataFrame().map { it.values() as List<N> },
-    )
+    mk.ndarray(toDataFrame().map { it.values() as List<N> })
 
 // endregion

@@ -16,6 +16,8 @@ They show how to convert to and from Kotlin Dataframe and their respective table
     for an example of using Kotlin Dataframe with [Spark](https://spark.apache.org/).
   * **Spark (with Kotlin Spark API)**: See the [kotlinSpark folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/kotlinSpark)
     for an example of using Kotlin DataFrame with the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
+  * **Multik**: See the [multik folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/multik)
+    for an example of using Kotlin Dataframe with [Multik](https://github.com/Kotlin/multik).
 
 
 ### Notebook examples
