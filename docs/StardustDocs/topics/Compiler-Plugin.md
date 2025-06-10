@@ -2,25 +2,25 @@
 
 <web-summary>
 Explore the Kotlin DataFrame Compiler Plugin —  
-a powerful tool for on-the-fly generating type-safe accessors in DataFrames.
+a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
 </web-summary>
 
 <card-summary>
 Explore the Kotlin DataFrame Compiler Plugin —  
-a powerful tool for on-the-fly generating type-safe accessors in DataFrames.
+a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
 </card-summary>
 
 <link-summary>
 Explore the Kotlin DataFrame Compiler Plugin —  
-a powerful tool for on-the-fly generating type-safe accessors in DataFrames.
+a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
 </link-summary>
 
 
-> Now available in Gradle projects, is coming to Kotlin Notebook and Maven projects soon.
+> Now available in Gradle projects, is coming soon to Kotlin Notebook and Maven projects.
 
 **Kotlin DataFrame Compiler Plugin** is a Kotlin compiler plugin that automatically generates  
-**[type-safe extension properties](extensionPropertiesApi.md)** for your DataFrame,  
-allowing you to access columns and rows in a type-safe way and avoid mistakes in column names.
+**[type-safe extension properties](extensionPropertiesApi.md)** for your dataframes,  
+allowing you to access columns and row values in a type-safe way and avoid mistakes in column names.
 
 ## Why use it?
 
