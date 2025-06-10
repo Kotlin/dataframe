@@ -84,10 +84,10 @@ fun main() {
     reposUpdated.writeCsv("jetbrains_repositories_new.csv")
 
     // TODO: Add Kandy Plot
-    /*reposUpdated.groupBy { kind }.max { stargazersCount  }.plot {
-        bars {
-            x(kind)
-            y(stargazersCount)
-        }
-    }*/
+    //  reposUpdated.groupBy { kind }.max { stargazersCount  }.plot {
+    //      bars {
+    //          x(kind)
+    //          y(stargazersCount)
+    //      }
+    //  }
 }
