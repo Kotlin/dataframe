@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.assign
-import org.gradle.kotlin.dsl.configure
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
