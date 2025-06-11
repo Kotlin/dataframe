@@ -88,8 +88,8 @@ columns.
 Column selectors are widely used across operations — one of the simplest examples is `.select { }`, which returns a new
 DataFrame with only the columns chosen in Columns Selection expression.
 
-After executing the cell where a `DataFrame` variable is declared, an extension with properties for its columns is
-automatically generated.
+After executing the cell where a `DataFrame` variable is declared, 
+[extension properties](extensionPropertiesApi.md) for its columns are automatically generated.
 These properties can then be used in the Columns Selection DSL expression for typesafe and convenient column access.
 
 Select some columns:
@@ -104,15 +104,17 @@ dfSelected
 
 <!---END-->
 
+<inline-frame src="./resources/notebook_test_quickstart_5.html" width="705px" height="500px"></inline-frame>
+
 > With a [Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enabled,
 > you can use auto-generated properties in your IntelliJ IDEA projects.
 
-<inline-frame src="./resources/notebook_test_quickstart_5.html" width="705px" height="500px"></inline-frame>
+## Row Filtering
 
-## Raw Filtering
-
-Some operations use `RowExpression`, i.e., expression that applies for all `DataFrame` rows. For example `.filter { }`
-that returns a new `DataFrame` with rows that satisfy a condition given by row expression.
+Some operations use [DataRow API](DataRow.md), with expressions and conditions 
+that apply for all `DataFrame` rows.
+For example, `.filter { }` that returns a new `DataFrame` with rows \
+that satisfy a condition given by row expression.
 
 Inside a row expression, you can access the values of the current row by column names through auto-generated properties.
 Similar to the Columns Selection DSL, but in this case the properties represent actual values, not column references.
