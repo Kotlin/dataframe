@@ -351,6 +351,9 @@ Ready to go deeper? Check out what’s next:
 
 - 🧠 **Understand the design** and core concepts in the [library overview](overview.md).
 
+- 🔤 **[Learn more about Extension Properties](extensionPropertiesApi.md)**  
+  and make working with your data both convenient and type-safe.
+
 - 💡 **[Use Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md)**  
   for auto-generated column access in your IntelliJ IDEA projects.
 
