@@ -6,11 +6,14 @@ import kotlinx.datetime.LocalDateTime
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.net.URL
 import java.nio.file.Files
@@ -53,6 +56,7 @@ class XlsxTest {
             "Sheet1",
             columns = "A:C",
             stringColumns = StringColumns("A:C"),
+            parseEmptyAsNull = false,
         )
         df shouldBe dataFrameOf("col1", "col2", "C")("1", "", "3")
     }
@@ -216,6 +220,7 @@ class XlsxTest {
             firstRowIsHeader = false,
             skipRows = 2,
             rowsCount = 1,
+            parseEmptyAsNull = false,
         )
 
         df shouldBe dataFrameOf(
@@ -223,5 +228,18 @@ class XlsxTest {
         )(
             "Field 3: ", "", "TEAM 1", "", "", "", "", "Staff Code:", "Staff 1", "",
         )
+    }
+
+    @Test
+    fun `read columns with nulls`() {
+        val df = DataFrame.readExcel(
+            testResource("withNulls.xlsx"),
+        ).convert("age").toInt()
+        df shouldBe dataFrameOf(
+            "name" to listOf("Alice", null, "Bob"),
+            "age" to listOf(23, 27, null),
+        )
+        df["name"].type shouldBe typeOf<String?>()
+        df["age"].type shouldBe typeOf<Int?>()
     }
 }
