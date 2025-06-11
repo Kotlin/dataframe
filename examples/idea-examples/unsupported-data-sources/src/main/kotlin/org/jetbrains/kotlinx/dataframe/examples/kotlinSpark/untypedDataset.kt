@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.spark.api.withSpark
  * some schema mapping in between Spark and DataFrame.
  *
  * We will use spark/compatibilityLayer.kt to do this.
+ * Take a look at that file for the implementation details!
  *
  * NOTE: You will likely need to run this function with Java 8 or 11 for it to work correctly.
  * Use the `runKotlinSparkUntypedDataset` Gradle task to do so.

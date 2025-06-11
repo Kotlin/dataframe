@@ -17,16 +17,24 @@ import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.multik.api.mk
 import org.jetbrains.kotlinx.multik.api.ndarray
 import org.jetbrains.kotlinx.multik.ndarray.complex.Complex
 import org.jetbrains.kotlinx.multik.ndarray.data.D1Array
 import org.jetbrains.kotlinx.multik.ndarray.data.D2Array
+import org.jetbrains.kotlinx.multik.ndarray.data.D3Array
+import org.jetbrains.kotlinx.multik.ndarray.data.MultiArray
+import org.jetbrains.kotlinx.multik.ndarray.data.NDArray
 import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.operations.toList
+import org.jetbrains.kotlinx.multik.ndarray.operations.toListD2
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
@@ -41,6 +49,7 @@ inline fun <reified N> D1Array<N>.convertToColumn(name: String = ""): DataColumn
  *
  * @return a DataFrame where each element of the source array is represented as a row in a column named "value" under the schema [ValueProperty].
  */
+@JvmName("convert1dArrayToDataFrame")
 inline fun <reified N> D1Array<N>.convertToDataFrame(): DataFrame<ValueProperty<N>> =
     dataFrameOf(ValueProperty<*>::value.name to column(toList()))
         .cast()
@@ -80,11 +89,12 @@ inline fun <T, reified N : Complex> DataFrame<T>.convertToMultik(crossinline col
  *
  * The conversion enforces that `multikArray[x][y] == dataframe[x][y]`
  */
+@JvmName("convert2dArrayToDataFrame")
 inline fun <reified N> D2Array<N>.convertToDataFrame(columnNameGenerator: (Int) -> String = { "col$it" }): AnyFrame =
-    (0..<shape[1]).map { col ->
-        this[0..<shape[0], col]
+    List(shape[1]) { i ->
+        this[0..<shape[0], i] // get all cells of column i
             .toList()
-            .toColumn(columnNameGenerator(col))
+            .toColumn(columnNameGenerator(i))
     }.toDataFrame()
 
 /**
@@ -177,5 +187,119 @@ inline fun <reified N> List<DataColumn<N>>.convertToMultik(): D2Array<N> where N
 @JvmName("convertComplexColumnsToMultik")
 inline fun <reified N : Complex> List<DataColumn<N>>.convertToMultik(): D2Array<N> =
     mk.ndarray(toDataFrame().map { it.values() as List<N> })
+
+// endregion
+
+// region higher dimensions
+
+/**
+ * Converts a three-dimensional array ([D3Array]) to a DataFrame.
+ * It will contain `shape[0]` rows and `shape[1]` columns containing lists of size `shape[2]`.
+ *
+ * Column names can be specified using the [columnNameGenerator] lambda.
+ *
+ * The conversion enforces that `multikArray[x][y][z] == dataframe[x][y][z]`
+ */
+inline fun <reified N> D3Array<N>.convertToDataFrameWithLists(
+    columnNameGenerator: (Int) -> String = { "col$it" },
+): AnyFrame =
+    List(shape[1]) { y ->
+        this[0..<shape[0], y, 0..<shape[2]] // get all cells of column y, each is a 2d array of size shape[0] x shape[2]
+            .toListD2() // get a shape[0]-sized list/column filled with lists of size shape[2]
+            .toColumn(columnNameGenerator(y))
+    }.toDataFrame()
+
+/**
+ * Converts a three-dimensional array ([D3Array]) to a DataFrame.
+ * It will contain `shape[0]` rows and `shape[1]` column groups containing `shape[2]` columns each.
+ *
+ * Column names can be specified using the [columnNameGenerator] lambda.
+ *
+ * The conversion enforces that `multikArray[x][y][z] == dataframe[x][y][z]`
+ */
+@JvmName("convert3dArrayToDataFrame")
+inline fun <reified N> D3Array<N>.convertToDataFrame(columnNameGenerator: (Int) -> String = { "col$it" }): AnyFrame =
+    List(shape[1]) { y ->
+        this[0..<shape[0], y, 0..<shape[2]] // get all cells of column i, each is a 2d array of size shape[0] x shape[2]
+            .transpose(1, 0) // flip, so we get shape[2] x shape[0]
+            .toListD2() // get a shape[2]-sized list filled with lists of size shape[0]
+            .mapIndexed { z, list ->
+                list.toColumn(columnNameGenerator(z))
+            } // we get shape[2] columns inside each column group
+            .toColumnGroup(columnNameGenerator(y))
+    }.toDataFrame()
+
+/**
+ * Exploratory recursive function to convert a [MultiArray] of any number of dimensions
+ * to a `List<List<...>>` of the same number of dimensions.
+ */
+fun <T> MultiArray<T, *>.toListDn(): List<*> {
+    // Recursive helper function to handle traversal across dimensions
+    fun toListRecursive(indices: IntArray): List<*> {
+        // If we are at the last dimension (1D case)
+        if (indices.size == shape.lastIndex) {
+            return List(shape[indices.size]) { i ->
+                this[intArrayOf(*indices, i)] // Collect values for this dimension
+            }
+        }
+
+        // For higher dimensions, recursively process smaller dimensions
+        return List(shape[indices.size]) { i ->
+            toListRecursive(indices + i) // Add `i` to the current index array
+        }
+    }
+    return toListRecursive(intArrayOf())
+}
+
+/**
+ * Converts a multidimensional array ([NDArray]) to a DataFrame.
+ * Inspired by [toListDn].
+ *
+ * For a single-dimensional array, it will call [D1Array.convertToDataFrame].
+ *
+ * Column names can be specified using the [columnNameGenerator] lambda.
+ *
+ * The conversion enforces that `multikArray[a][b][c][d]... == dataframe[a][b][c][d]...`
+ */
+inline fun <reified N> NDArray<N, *>.convertToDataFrameNestedGroups(
+    noinline columnNameGenerator: (Int) -> String = { "col$it" },
+): AnyFrame {
+    if (shape.size == 1) return (this as D1Array<N>).convertToDataFrame()
+
+    // push the first dimension to the end, because this represents the rows in DataFrame,
+    // and they are accessed by []'s first
+    return transpose(*(1..<dim.d).toList().toIntArray(), 0)
+        .convertToDataFrameNestedGroupsRecursive(
+            indices = intArrayOf(),
+            type = typeOf<N>(),
+            columnNameGenerator = columnNameGenerator,
+        ).let { dataFrameOf((it as ColumnGroup<*>).columns()) }
+}
+
+// Recursive helper function to handle traversal across dimensions
+@PublishedApi
+internal fun NDArray<*, *>.convertToDataFrameNestedGroupsRecursive(
+    indices: IntArray,
+    type: KType,
+    columnNameGenerator: (Int) -> String = { "col$it" },
+): BaseColumn<*> {
+    // If we are at the last dimension (1D case)
+    if (indices.size == shape.lastIndex) {
+        return List(shape[indices.size]) { i ->
+            this[intArrayOf(*indices, i)] // Collect values for this dimension
+        }.let {
+            DataColumn.createByType(name = "", values = it, type = type)
+        }
+    }
+
+    // For higher dimensions, recursively process smaller dimensions
+    return List(shape[indices.size]) { i ->
+        convertToDataFrameNestedGroupsRecursive(
+            indices = indices + i, // Add `i` to the current index array
+            type = type,
+            columnNameGenerator = columnNameGenerator,
+        ).rename(columnNameGenerator(i))
+    }.toColumnGroup("")
+}
 
 // endregion
