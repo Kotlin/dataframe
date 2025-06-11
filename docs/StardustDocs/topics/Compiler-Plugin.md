@@ -1,9 +1,34 @@
 # Kotlin DataFrame Compiler Plugin
 
-Kotlin DataFrame compiler plugin: available in Gradle projects, is coming to Kotlin Notebook and Maven projects soon.
+<web-summary>
+Explore the Kotlin DataFrame Compiler Plugin —  
+a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
+</web-summary>
+
+<card-summary>
+Explore the Kotlin DataFrame Compiler Plugin —  
+a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
+</card-summary>
+
+<link-summary>
+Explore the Kotlin DataFrame Compiler Plugin —  
+a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
+</link-summary>
+
+
+> Now available in Gradle projects, is coming soon to Kotlin Notebook and Maven projects.
+
+**Kotlin DataFrame Compiler Plugin** is a Kotlin compiler plugin that automatically generates  
+**[type-safe extension properties](extensionPropertiesApi.md)** for your dataframes,  
+allowing you to access columns and row values in a type-safe way and avoid mistakes in column names.
+
+## Why use it?
+
+- Access columns as regular properties: `df.name` instead of `df["name"]`.
+- Get full IDE and compiler support: autocompletion, refactoring, and type checking.
+- Improve code readability and safety when working with DataFrame.
 
 Check out this video that shows how expressions update the schema of a dataframe: 
-
 
 <video src="compiler_plugin.mp4" controls=""/>
 
@@ -113,3 +138,9 @@ fun main() {
 ```
 
 [Learn more](dataSchema.md) about data schema declarations
+
+## Examples
+
+* [Kotlin DataFrame in the IntelliJ IDEA project example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-example)  
+  — an IntelliJ IDEA project showcasing simple DataFrame expressions using the Compiler Plugin.
+* [](compilerPluginExamples.md) — few examples of Compiler Plugin usages.
