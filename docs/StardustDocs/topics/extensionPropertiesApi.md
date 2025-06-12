@@ -1,16 +1,16 @@
 [//]: # (title: Extension Properties API)
 
-When working with a DataFrame, the most convenient and reliable way 
+When working with a [`DataFrame`](DataFrame.md), the most convenient and reliable way 
 to access its columns — including for operations and retrieving column values 
 in row expressions — is through auto-generated extension properties.
 They are generated based on a [dataframe schema](schemas.md),
 with the name and type of properties inferred from the name and type of the corresponding columns.
-It also works for all types of hierarchical dataframes
+It also works for all types of hierarchical dataframes.
 
 > The behavior of data schema generation differs between the 
 > [Compiler Plugin](Compiler-Plugin.md) and [Kotlin Notebook](gettingStartedKotlinNotebook.md).
 >
-> * In the **Kotlin Notebook**, a schema is generated *only after cell execution* for 
+> * In **Kotlin Notebook**, a schema is generated *only after cell execution* for 
 > `DataFrame` variables defined within that cell.
 > * With the **Compiler Plugin**, a new schema is generated *after every operation*
 > — but support for all operations is still in progress. 
@@ -21,10 +21,12 @@ It also works for all types of hierarchical dataframes
 
 ## Example
 
-Consider 
+Consider a simple hierarchical dataframe from
 <resource src="example.csv"></resource>.
+
 This table consists of two columns: `name`, which is a `String` column, and `info`, 
-which is a **column group** containing two nested value columns — 
+which is a [**column group**](DataColumn.md#columngroup) containing two nested 
+[value columns](DataColumn.md#valuecolumn) — 
 `age` of type `Int`, and `height` of type `Double`.
 
 <table>
@@ -55,7 +57,7 @@ which is a **column group** containing two nested value columns —
 
 <tabs>
 <tab title="Kotlin Notebook">
-Read the `DataFrame` from the CSV file:
+Read the [`DataFrame`](DataFrame.md) from the CSV file:
 
 ```kotlin
 val df = DataFrame.readCsv("example.csv")
@@ -78,10 +80,10 @@ df.sortBy { name and info.height }
 df.filter { name.startsWith("A") && info.age >= 16 }
 ```
 
-If you change DataFrame schema by changing any column [name](rename.md) 
-or [type](convert.md), or [add](add.md) a new one, you need to 
-run a cell with a new DataFrame declaration first. 
-For example, rename the "name" column into "firstName":
+If you change the dataframe's schema by changing any column [name](rename.md), 
+or [type](convert.md) or [add](add.md) a new one, you need to 
+run a cell with a new [`DataFrame`](DataFrame.md) declaration first. 
+For example, rename the `name` column into "firstName":
 
 ```kotlin
 val dfRenamed = df.rename { name }.into("firstName")
@@ -95,13 +97,13 @@ dfRenamed.rename { firstName }.into("name")
 dfRenamed.filter { firstName == "Nikita" }
 ```
 
-See [](quickstart.md) in the Kotlin Notebook with basic Extension Properties API examples.
+See the [](quickstart.md) in Kotlin Notebook with basic Extension Properties API examples.
 
 </tab>
 <tab title="Compiler Plugin">
 
-For now, if you read `DatFrame` from a file or URL, you need to define its schema manually. 
-You can do it fast with [`generate..()` methods](DataSchema-Data-Classes-Generation.md).
+For now, if you read [`DataFrame`](DataFrame.md) from a file or URL, you need to define its schema manually. 
+You can do it quickly with [`generate..()` methods](DataSchema-Data-Classes-Generation.md).
 
 Define schemas:
 ```kotlin
@@ -118,13 +120,14 @@ data class Person(
 )
 ```
 
-Read the `DataFrame` from the CSV file and specify the schema with `convertTo`:
+Read the `DataFrame` from the CSV file and specify the schema with 
+[`.convertTo()`](convertTo.md) or [`cast()`](cast.md):
 
 ```kotlin
 val df = DataFrame.readCsv("example.csv").convertTo<Person>()
 ```
 
-Extensions for this `DataFrame` will be generated automatically by plugin, 
+Extensions for this `DataFrame` will be generated automatically by the plugin, 
 so you can use extensions for accessing columns, 
 using it in operations inside the [Column Selector DSL](ColumnSelectors.md)
 and [DataRow API](DataRow.md).
@@ -142,8 +145,8 @@ df.filter { name.startsWith("A") && info.age >= 16 }
 ```
 
 Moreover, new extensions will be generated on-the-fly after each schema change: 
-by changing any column [name](rename.md)
-or [type](convert.md), or [add](add.md) a new one.
+by changing any column [name](rename.md),
+or [type](convert.md) or [add](add.md) a new one.
 For example, rename the "name" column into "firstName" and then we can use `firstName` extensions
 in the following operations:
 
@@ -155,7 +158,7 @@ df.rename { name }.into("firstName")
     .filter { firstName == "Nikita" }
 ```
 
-See [Kotlin DataFrame Compiler Plugin Example](https://github.com/Kotlin/dataframe/tree/plugin_example/examples/kotlin-dataframe-plugin-example) 
+See [Compiler Plugin Example](https://github.com/Kotlin/dataframe/tree/plugin_example/examples/kotlin-dataframe-plugin-example) 
 IDEA project with basic Extension Properties API examples.
 </tab>
 </tabs>
