@@ -77,7 +77,13 @@ internal val formatter = DataFrameFormatter(
 internal fun getResources(vararg resource: String) = resource.joinToString(separator = "\n") { getResourceText(it) }
 
 internal fun getResourceText(resource: String, vararg replacement: Pair<String, Any>): String {
-    val res = DataFrame::class.java.getResourceAsStream(resource) ?: error("Resource '$resource' not found")
+    /**
+     * The choice of loader is crucial here: it should always be a class loaded by the same class loader as the resource we load.
+     * I.e. [DataFrame] isn't a good fit because it might be loaded by Kotlin IDEA plugin (because Kotlin plugin
+     * loads DataFrame compiler plugin), and plugin's classloader knows nothing about the resources.
+     */
+    val loader = HtmlContent::class.java
+    val res = loader.getResourceAsStream(resource) ?: error("Resource '$resource' not found")
     var template = InputStreamReader(res).readText()
     replacement.forEach {
         template = template.replace(it.first, it.second.toString())
