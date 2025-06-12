@@ -88,7 +88,7 @@ columns.
 Column selectors are widely used across operations — one of the simplest examples is `.select { }`, which returns a new
 DataFrame with only the columns chosen in Columns Selection expression.
 
-After executing the cell where a `DataFrame` variable is declared, 
+*After executing the cell* where a `DataFrame` variable is declared, 
 [extension properties](extensionPropertiesApi.md) for its columns are automatically generated.
 These properties can then be used in the Columns Selection DSL expression for typesafe and convenient column access.
 
@@ -111,13 +111,13 @@ dfSelected
 
 ## Row Filtering
 
-Some operations use [DataRow API](DataRow.md), with expressions and conditions 
+Some operations use the [DataRow API](DataRow.md), with expressions and conditions 
 that apply for all `DataFrame` rows.
-For example, `.filter { }` that returns a new `DataFrame` with rows \
-that satisfy a condition given by row expression.
+For example, `.filter { }` that returns a new `DataFrame` with rows that satisfy a condition given by row expression.
 
 Inside a row expression, you can access the values of the current row by column names through auto-generated properties.
-Similar to the Columns Selection DSL, but in this case the properties represent actual values, not column references.
+Similar to the [Columns Selection DSL](ColumnSelectors.md),
+but in this case the properties represent actual values, not column references.
 
 Filter rows by "stargazers_count" value:
 

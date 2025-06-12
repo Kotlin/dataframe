@@ -147,7 +147,7 @@ df.filter { name.startsWith("A") && info.age >= 16 }
 Moreover, new extensions will be generated on-the-fly after each schema change: 
 by changing any column [name](rename.md),
 or [type](convert.md) or [add](add.md) a new one.
-For example, rename the "name" column into "firstName" and then we can use `firstName` extensions
+For example, rename the `name` column into "firstName" and then we can use `firstName` extensions
 in the following operations:
 
 ```kotlin

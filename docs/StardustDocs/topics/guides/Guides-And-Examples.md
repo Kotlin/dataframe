@@ -24,7 +24,7 @@ Explore our structured, in-depth guides to steadily improve your Kotlin DataFram
 
 <img src="quickstart_preview.png" border-effect="rounded" width="705"/>
 
-* [](extensionPropertiesApi.md) — learn about extension properties for `DataFrame` 
+* [](extensionPropertiesApi.md) — learn about extension properties for [`DataFrame`](DataFrame.md) 
 and make working with your data both convenient and type-safe.
 
 * [Enhanced Column Selection DSL](https://blog.jetbrains.com/kotlin/2024/07/enhanced-column-selection-dsl-in-kotlin-dataframe/)
