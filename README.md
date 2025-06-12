@@ -32,7 +32,6 @@ It walks you through the core features of Kotlin DataFrame with minimal setup an
 
 ![quickstart_preview](docs/StardustDocs/images/guides/quickstart_preview.png)
 
-
 ## Documentation
 
 Explore [**documentation**](https://kotlin.github.io/dataframe) for details.
@@ -58,14 +57,72 @@ Check out this [notebook with new features](examples/notebooks/feature_overviews
 
 ## Setup
 
-```kotlin
-implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta2")
+> For more detailed instructions on how to get started with Kotlin DataFrame, refer to the
+> [Getting Started](https://kotlin.github.io/dataframe/gettingstarted.html).
+
+### Kotlin Notebook
+
+You can use Kotlin DataFrame in [Kotlin Notebook](https://plugins.jetbrains.com/plugin/16340-kotlin-notebook),
+or other interactive environment with Kotlin Jupyter Kernel support, such as
+[Datalore](https://datalore.jetbrains.com/),
+and [Kotlin Jupyter](https://github.com/Kotlin/kotlin-jupyter).
+
+You can include all the necessary dependencies and imports in the notebook using *line magic*:
+
+```
+%use dataframe
 ```
 
-Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
+You can use `%useLatestDescriptors`
+to get the latest stable version without updating the Kotlin kernel:
+
+```
+%useLatestDescriptors
+%use dataframe
+```
+
+Or manually specify the version:
+
+```
+%use dataframe($dataframe_version)
+```
+
+Refer to the 
+[Get started with Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/gettingstartedkotlinnotebook.html)
+for details.
+
+### Gradle
+
+Add dependencies in the build.gradle.kts script:
+
+```kotlin
+dependencies {
+    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta2")
+}
+```
+
+Make sure that you have `mavenCentral()` in the list of repositories:
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+```
+
+Refer to the
+[Get started with Kotlin DataFrame on Gradle](https://kotlin.github.io/dataframe/gettingstartedgradle.html)
+for details.
+Also, check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) 
+if you don't need some formats as dependencies,
 for Groovy, and for configurations specific to Android projects.
 
 ## Code example
+
+This example of Kotlin DataFrame code with
+the [Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) enabled.
+See [the full project](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-example).
+See also 
+[this example in Kotlin Notebook](https://github.com/Kotlin/dataframe/tree/master/examples/notebooks/readme_example.ipynb).
 
 ```kotlin
 val df = DataFrame
@@ -74,15 +131,13 @@ val df = DataFrame
         // And convert it to match the `Repositories` schema.
         .convertTo<Repositories>()
 
-    // Let's update the DataFrame with some operations using these features.
-    val reposUpdated = repos
+// Update the DataFrame.
+val reposUpdated = repos
         // Rename columns to CamelCase.
-        // Note that after that, in the following operations, extension properties will have
-        // new names corresponding to the column names.
         .renameToCamelCase()
         // Rename "stargazersCount" column to "stars".
         .rename { stargazersCount }.into("stars")
-        // And we can immediately use the updated name in the filtering.
+        // Filter by the number of stars:
         .filter { stars > 50 }
         // Convert values in the "topic" column (which were `String` initially)
         // to the list of topics.
@@ -90,14 +145,11 @@ val df = DataFrame
             val inner = it.removeSurrounding("[", "]")
             if (inner.isEmpty()) emptyList() else inner.split(',').map(String::trim)
         }
-        // Now "topics" is a `List<String>` column.
         // Add a new column with the number of topics.
         .add("topicCount") { topics.size }
-        // Add a new column with the kind of repository.
-        .add("kind") { getKind(fullName, topics) }
 
-    // Write the updated DataFrame to a CSV file.
-    reposUpdated.writeCsv("jetbrains_repositories_new.csv")
+// Write the updated DataFrame to a CSV file.
+reposUpdated.writeCsv("jetbrains_repositories_new.csv")
 ```
 
 Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-examples.html).
@@ -108,6 +160,13 @@ Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-e
   * `ValueColumn` — contains data
   * `ColumnGroup` — contains columns
   * `FrameColumn` — contains dataframes
+
+## Visualisations
+
+[Kandy](https://kotlin.github.io/kandy/welcome.html) plotting library provides seamless visualizations 
+for your dataframes.
+
+![kandy_preview](docs/StardustDocs/images/guides/kandy_gallery_preview.png)
 
 ## Kotlin, Kotlin Jupyter, Arrow, and JDK versions
 
