@@ -22,12 +22,24 @@ Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic natur
 
 Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jupyter). Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
 
+## 🚀 Quickstart
+
+Looking for a fast and simple way to learn the basics?  
+Get started in minutes with our [Quickstart Guide](https://kotlin.github.io/dataframe/quickstart.html).
+
+It walks you through the core features of Kotlin DataFrame with minimal setup and clear examples 
+— perfect for getting up to speed in just a few minutes.
+
+![quickstart_preview](docs/StardustDocs/images/guides/quickstart_preview.png)
+
+
 ## Documentation
 
 Explore [**documentation**](https://kotlin.github.io/dataframe) for details.
 
 You could find the following articles there:
 
+* [Guides and Examples](https://kotlin.github.io/dataframe/guides-and-examples.html)
 * [Get started with Kotlin DataFrame](https://kotlin.github.io/dataframe/gettingstarted.html)
 * [Working with Data Schemas](https://kotlin.github.io/dataframe/schemas.html)
 * [Setup compiler plugin in Gradle project](https://kotlin.github.io/dataframe/compiler-plugin.html)
@@ -56,21 +68,39 @@ for Groovy, and for configurations specific to Android projects.
 ## Code example
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.*
-import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.io.*
+val df = DataFrame
+        // Read DataFrame from the CSV file.
+        .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+        // And convert it to match the `Repositories` schema.
+        .convertTo<Repositories>()
+
+    // Let's update the DataFrame with some operations using these features.
+    val reposUpdated = repos
+        // Rename columns to CamelCase.
+        // Note that after that, in the following operations, extension properties will have
+        // new names corresponding to the column names.
+        .renameToCamelCase()
+        // Rename "stargazersCount" column to "stars".
+        .rename { stargazersCount }.into("stars")
+        // And we can immediately use the updated name in the filtering.
+        .filter { stars > 50 }
+        // Convert values in the "topic" column (which were `String` initially)
+        // to the list of topics.
+        .convert { topics }.with {
+            val inner = it.removeSurrounding("[", "]")
+            if (inner.isEmpty()) emptyList() else inner.split(',').map(String::trim)
+        }
+        // Now "topics" is a `List<String>` column.
+        // Add a new column with the number of topics.
+        .add("topicCount") { topics.size }
+        // Add a new column with the kind of repository.
+        .add("kind") { getKind(fullName, topics) }
+
+    // Write the updated DataFrame to a CSV file.
+    reposUpdated.writeCsv("jetbrains_repositories_new.csv")
 ```
 
-```kotlin
-val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
-df["full_name"][0] // Indexing https://kotlin.github.io/dataframe/access.html
-
-df.filter { "stargazers_count"<Int>() > 50 }.print() 
-```
-
-## Getting started in Kotlin Notebook
-
-Follow this [guide](https://kotlin.github.io/dataframe/gettingstartedkotlinnotebook.html)
+Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-examples.html).
 
 ## Data model
 * `DataFrame` is a list of columns with equal sizes and distinct names.
@@ -78,8 +108,6 @@ Follow this [guide](https://kotlin.github.io/dataframe/gettingstartedkotlinnoteb
   * `ValueColumn` — contains data
   * `ColumnGroup` — contains columns
   * `FrameColumn` — contains dataframes
-
-Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-examples.html).
 
 ## Kotlin, Kotlin Jupyter, Arrow, and JDK versions
 
