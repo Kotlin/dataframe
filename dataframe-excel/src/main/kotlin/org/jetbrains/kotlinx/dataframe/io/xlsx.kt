@@ -124,7 +124,7 @@ public fun DataFrame.Companion.readExcel(
             rowsCount,
             nameRepairStrategy,
             firstRowIsHeader,
-            parseEmptyAsNull
+            parseEmptyAsNull,
         )
     }
 }
@@ -169,7 +169,7 @@ public fun DataFrame.Companion.readExcel(
             rowsCount,
             nameRepairStrategy,
             firstRowIsHeader,
-            parseEmptyAsNull
+            parseEmptyAsNull,
         )
     }
 }
@@ -210,7 +210,7 @@ public fun DataFrame.Companion.readExcel(
         rowsCount,
         nameRepairStrategy,
         firstRowIsHeader,
-        parseEmptyAsNull
+        parseEmptyAsNull,
     )
 
 /**
@@ -252,7 +252,7 @@ public fun DataFrame.Companion.readExcel(
             rowsCount,
             nameRepairStrategy,
             firstRowIsHeader,
-            parseEmptyAsNull
+            parseEmptyAsNull,
         )
     }
 }
@@ -288,7 +288,16 @@ public fun DataFrame.Companion.readExcel(
     val sheet: Sheet = sheetName
         ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
         ?: wb.getSheetAt(0)
-    return readExcel(sheet, columns, formattingOptions, skipRows, rowsCount, nameRepairStrategy, firstRowIsHeader, parseEmptyAsNull)
+    return readExcel(
+        sheet,
+        columns,
+        formattingOptions,
+        skipRows,
+        rowsCount,
+        nameRepairStrategy,
+        firstRowIsHeader,
+        parseEmptyAsNull,
+    )
 }
 
 /**
@@ -393,8 +402,11 @@ public fun DataFrame.Companion.readExcel(
                 } else {
                     cell.cellValue(sheet.sheetName)
                 }
-                if (parseEmptyAsNull && rawValue is String && rawValue.isEmpty()) null
-                else rawValue
+                if (parseEmptyAsNull && rawValue is String && rawValue.isEmpty()) {
+                    null
+                } else {
+                    rawValue
+                }
             }
         }
         val values: List<Any?> = valueRowsRange.map {

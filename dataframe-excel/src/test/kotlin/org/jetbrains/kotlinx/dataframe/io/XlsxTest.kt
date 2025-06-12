@@ -56,9 +56,8 @@ class XlsxTest {
             "Sheet1",
             columns = "A:C",
             stringColumns = StringColumns("A:C"),
-            parseEmptyAsNull = false,
         )
-        df shouldBe dataFrameOf("col1", "col2", "C")("1", "", "3")
+        df shouldBe dataFrameOf("col1", "col2", "C")("1", null, "3")
     }
 
     @Test
