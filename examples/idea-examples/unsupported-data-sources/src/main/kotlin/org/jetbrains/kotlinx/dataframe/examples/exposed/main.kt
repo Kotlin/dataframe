@@ -58,15 +58,16 @@ fun main() {
 
     // or make plots using Kandy! It's all up to you
 
-    // writing a DataFrame back into an SQL database with Exposed can also be done!
+    // writing a DataFrame back into an SQL database with Exposed can also be done easily!
     transaction(db) {
         addLogger(StdOutSqlLogger)
 
         // first delete the original contents
         Customers.deleteAll()
 
-        // batch insert our rows back into the SQL database
+        // batch-insert our dataframe back into the SQL database as a sequence of rows
         Customers.batchInsert(df.asSequence()) { dfRow ->
+            // we simply go over each value in the row and put it in the right place in the Exposed statement
             for (column in Customers.columns) {
                 this[column as Column<Any?>] = dfRow[column.name]
             }

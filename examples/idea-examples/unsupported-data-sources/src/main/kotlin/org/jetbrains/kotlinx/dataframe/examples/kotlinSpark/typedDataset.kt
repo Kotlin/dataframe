@@ -16,23 +16,13 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.spark.api.withSpark
 
-@DataSchema
-data class Name(val firstName: String, val lastName: String)
-
-@DataSchema
-data class Person(
-    val name: Name,
-    val age: Int,
-    val city: String?,
-    val weight: Int?,
-    val isHappy: Boolean,
-)
-
 /**
  * With the Kotlin Spark API, normal Kotlin data classes are supported,
  * meaning we can reuse the same class for Spark and DataFrame!
  *
  * Also, since we use an actual class to define the schema, we need no type conversion!
+ *
+ * See [Person] and [Name] for an example.
  *
  * NOTE: You will likely need to run this function with Java 8 or 11 for it to work correctly.
  * Use the `runKotlinSparkTypedDataset` Gradle task to do so.
@@ -74,3 +64,15 @@ fun main() = withSpark {
     sparkDatasetAgain.printSchema()
     sparkDatasetAgain.show()
 }
+
+@DataSchema
+data class Name(val firstName: String, val lastName: String)
+
+@DataSchema
+data class Person(
+    val name: Name,
+    val age: Int,
+    val city: String?,
+    val weight: Int?,
+    val isHappy: Boolean,
+)

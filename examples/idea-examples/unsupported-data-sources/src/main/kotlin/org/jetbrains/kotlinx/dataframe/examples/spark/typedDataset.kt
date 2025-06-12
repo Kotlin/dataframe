@@ -5,6 +5,7 @@ package org.jetbrains.kotlinx.dataframe.examples.spark
 import org.apache.spark.SparkConf
 import org.apache.spark.api.java.JavaSparkContext
 import org.apache.spark.sql.Dataset
+import org.apache.spark.sql.Encoder
 import org.apache.spark.sql.Encoders
 import org.apache.spark.sql.SparkSession
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -20,31 +21,6 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toList
 import java.io.Serializable
 
-@DataSchema
-data class Name
-    @JvmOverloads
-    constructor(var firstName: String = "", var lastName: String = "") :
-    Serializable {
-        companion object {
-            val encoder = Encoders.bean(Name::class.java)
-        }
-    }
-
-@DataSchema
-data class Person
-    @JvmOverloads
-    constructor(
-        var name: Name = Name(),
-        var age: Int = -1,
-        var city: String? = null,
-        var weight: Int? = null,
-        var isHappy: Boolean = false,
-    ) : Serializable {
-        companion object {
-            val encoder = Encoders.bean(Person::class.java)
-        }
-    }
-
 /**
  * For Spark, Kotlin data classes are supported if we:
  * - Add [@JvmOverloads][JvmOverloads] to the constructor
@@ -52,6 +28,8 @@ data class Person
  * - Make them [Serializable]
  *
  * But by adding [@DataSchema][DataSchema] we can reuse the same class for Spark and DataFrame!
+ *
+ * See [Person] and [Name] for an example.
  *
  * Also, since we use an actual class to define the schema, we need no type conversion!
  *
@@ -76,7 +54,7 @@ fun main() {
             Person(Name("Alice", "Wolf"), 20, null, 55, false),
             Person(Name("Charlie", "Byrd"), 30, "Moscow", 90, true),
         ),
-        Person.encoder,
+        beanEncoderOf(),
     )
 
     // we can perform large operations in Spark.
@@ -100,9 +78,28 @@ fun main() {
     ageStats.print(columnTypes = true, borders = true)
 
     // and when we want to convert a DataFrame back to Spark, we can do the same trick via a typed List
-    val sparkDatasetAgain = spark.createDataset(dataframe.toList(), Person.encoder)
+    val sparkDatasetAgain = spark.createDataset(dataframe.toList(), beanEncoderOf())
     sparkDatasetAgain.printSchema()
     sparkDatasetAgain.show()
 
     spark.stop()
 }
+
+/** Creates a [bean encoder][Encoders.bean] for the given [T] instance. */
+inline fun <reified T : Serializable> beanEncoderOf(): Encoder<T> = Encoders.bean(T::class.java)
+
+@DataSchema
+data class Name
+    @JvmOverloads
+    constructor(var firstName: String = "", var lastName: String = "") : Serializable
+
+@DataSchema
+data class Person
+    @JvmOverloads
+    constructor(
+        var name: Name = Name(),
+        var age: Int = -1,
+        var city: String? = null,
+        var weight: Int? = null,
+        var isHappy: Boolean = false,
+    ) : Serializable

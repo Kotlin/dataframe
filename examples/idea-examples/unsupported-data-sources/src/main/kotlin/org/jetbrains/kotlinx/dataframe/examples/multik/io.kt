@@ -9,6 +9,8 @@ import java.io.File
 /**
  * Multik can read/write data from NPY/NPZ files.
  * We can use this from DataFrame too!
+ *
+ * We use compatibilityLayer.kt for the conversions, check it out for the implementation details of the conversion!
  */
 fun main() {
     val npyFilename = "a1d.npy"

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.examples.spark
 
+import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.api.java.JavaSparkContext
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
@@ -44,7 +45,7 @@ import kotlin.reflect.typeOf
  * [StructTypes][StructType] are converted to [ColumnGroups][ColumnGroup].
  *
  * DataFrame supports type inference to do the conversion automatically.
- * This is usually fine for smaller data sets, but when working with larger datasets a type map might be a good idea.
+ * This is usually fine for smaller data sets, but when working with larger datasets, a type map might be a good idea.
  * See [convertToDataFrame] for more information.
  */
 fun Dataset<Row>.convertToDataFrameByInference(
@@ -55,18 +56,23 @@ fun Dataset<Row>.convertToDataFrameByInference(
         val name = field.name()
         when (val dataType = field.dataType()) {
             is StructType ->
+                // a column group can be easily created from a dataframe and a name
                 DataColumn.createColumnGroup(
                     name = name,
-                    df = convertToDataFrameByInference(dataType, prefix + name),
+                    df = this.convertToDataFrameByInference(dataType, prefix + name),
                 )
 
             else ->
+                // we can use DataFrame type inference to create a column with the correct type
+                // from Spark we use `select()` to select a single column
+                // and `collectAsList()` to get all the values in a list of single-celled rows
                 DataColumn.createByInference(
                     name = name,
-                    values = select((prefix + name).joinToString("."))
+                    values = this.select((prefix + name).joinToString("."))
                         .collectAsList()
                         .map { it[0] },
                     suggestedType = TypeSuggestion.Infer,
+                    // Spark provides nullability :) you can leave this out if you want this to be inferred too
                     nullable = field.nullable(),
                 )
         }
@@ -87,12 +93,16 @@ fun Dataset<Row>.convertToDataFrame(schema: StructType = schema(), prefix: List<
         val name = field.name()
         when (val dataType = field.dataType()) {
             is StructType ->
+                // a column group can be easily created from a dataframe and a name
                 DataColumn.createColumnGroup(
                     name = name,
                     df = convertToDataFrame(dataType, prefix + name),
                 )
 
             else ->
+                // we create a column with the correct type using our type-map with fallback to inference
+                // from Spark we use `select()` to select a single column
+                // and `collectAsList()` to get all the values in a list of single-celled rows
                 DataColumn.createByInference(
                     name = name,
                     values = select((prefix + name).joinToString("."))
@@ -110,11 +120,11 @@ fun Dataset<Row>.convertToDataFrame(schema: StructType = schema(), prefix: List<
 }
 
 /**
- * Returns the corresponding Kotlin type for a given Spark DataType.
+ * Returns the corresponding [Kotlin type][KType] for a given Spark [DataType].
  *
  * This list may be incomplete, but it can at least give you a good start.
  *
- * @return The KType that corresponds to the Spark DataType, or null if no matching KType is found.
+ * @return The [KType] that corresponds to the Spark [DataType], or null if no matching [KType] is found.
  */
 fun DataType.convertToDataFrame(): KType? =
     when {
@@ -177,50 +187,58 @@ fun DataType.convertToDataFrame(): KType? =
 // region DataFrame to Spark
 
 /**
- * Converts the DataFrame to a Spark Dataset of Rows using the provided SparkSession and JavaSparkContext.
+ * Converts the [DataFrame] to a Spark [Dataset] of [Rows][Row] using the provided [SparkSession] and [JavaSparkContext].
  *
- * Spark needs both the data and the schema to be converted to create a correct [Dataset].
+ * Spark needs both the data and the schema to be converted to create a correct [Dataset],
+ * so we need to map our types somehow.
  *
- * @param spark The SparkSession object to use for creating the DataFrame.
- * @param sc The JavaSparkContext object to use for converting the DataFrame to RDD.
- * @return A Dataset of Rows representing the converted DataFrame.
+ * @param spark The [SparkSession] object to use for creating the [DataFrame].
+ * @param sc The [JavaSparkContext] object to use for converting the [DataFrame] to [RDD][JavaRDD].
+ * @return A [Dataset] of [Rows][Row] representing the converted DataFrame.
  */
 fun DataFrame<*>.convertToSpark(spark: SparkSession, sc: JavaSparkContext): Dataset<Row> {
-    val rows = sc.parallelize(rows().map { it.convertToSpark() })
-    return spark.createDataFrame(rows, schema().convertToSpark())
+    // Convert each row to spark rows
+    val rows = sc.parallelize(this.rows().map { it.convertToSpark() })
+    // convert the data schema to a spark StructType
+    val schema = this.schema().convertToSpark()
+    return spark.createDataFrame(rows, schema)
 }
 
 /**
- * Converts a DataRow to a Spark Row object.
+ * Converts a [DataRow] to a Spark [Row] object.
  *
- * @return The converted Spark Row.
+ * @return The converted Spark [Row].
  */
 fun DataRow<*>.convertToSpark(): Row =
     RowFactory.create(
         *values().map {
             when (it) {
+                // a row can be nested inside another row if it's a column group
                 is DataRow<*> -> it.convertToSpark()
+
+                is DataFrame<*> -> error("nested dataframes are not supported")
+
                 else -> it
             }
         }.toTypedArray(),
     )
 
 /**
- * Converts a DataFrameSchema to a Spark StructType.
+ * Converts a [DataFrameSchema] to a Spark [StructType].
  *
- * @return The converted Spark StructType.
+ * @return The converted Spark [StructType].
  */
 fun DataFrameSchema.convertToSpark(): StructType =
     DataTypes.createStructType(
-        columns.map { (name, schema) ->
+        this.columns.map { (name, schema) ->
             DataTypes.createStructField(name, schema.convertToSpark(), schema.nullable)
         },
     )
 
 /**
- * Converts a ColumnSchema object to Spark DataType.
+ * Converts a [ColumnSchema] object to Spark [DataType].
  *
- * @return The Spark DataType corresponding to the given ColumnSchema object.
+ * @return The Spark [DataType] corresponding to the given [ColumnSchema] object.
  * @throws IllegalArgumentException if the column type or kind is unknown.
  */
 fun ColumnSchema.convertToSpark(): DataType =
@@ -232,11 +250,11 @@ fun ColumnSchema.convertToSpark(): DataType =
     }
 
 /**
- * Returns the corresponding Spark DataType for a given Kotlin type.
+ * Returns the corresponding Spark [DataType] for a given [Kotlin type][KType].
  *
  * This list may be incomplete, but it can at least give you a good start.
  *
- * @return The Spark DataType that corresponds to the Kotlin type, or null if no matching DataType is found.
+ * @return The Spark [DataType] that corresponds to the [Kotlin type][KType], or null if no matching [DataType] is found.
  */
 fun KType.convertToSpark(): DataType? =
     when {

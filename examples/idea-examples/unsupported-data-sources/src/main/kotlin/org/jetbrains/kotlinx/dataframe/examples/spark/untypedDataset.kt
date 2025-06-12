@@ -49,7 +49,7 @@ fun main() {
             Person(Name("Alice", "Wolf"), 20, null, 55, false),
             Person(Name("Charlie", "Byrd"), 30, "Moscow", 90, true),
         ),
-        Person.encoder,
+        beanEncoderOf<Person>(),
     ).toDF()
 
     // we can perform large operations in Spark.

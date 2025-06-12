@@ -9,6 +9,7 @@ import org.jetbrains.exposed.v1.core.Table
 import org.jetbrains.exposed.v1.jdbc.Query
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
@@ -30,8 +31,9 @@ inline fun <reified T : Any> Iterable<ResultRow>.convertToDataFrame(): DataFrame
     convertToDataFrame().convertTo<T>()
 
 /**
- * Retrieves all columns of any [Iterable][Iterable]`<`[ResultRow][ResultRow]`>`, like [Query][Query],
- * from Exposed row by row and converts the resulting [Map] into a [DataFrame].
+ * Retrieves all columns of an [Iterable][Iterable]`<`[ResultRow][ResultRow]`>` from Exposed, like [Query][Query],
+ * row by row and converts the resulting [Map] of lists into a [DataFrame] by calling
+ * [Map.toDataFrame].
  */
 @JvmName("convertToAnyFrame")
 fun Iterable<ResultRow>.convertToDataFrame(): AnyFrame {
@@ -62,26 +64,44 @@ val Expression<*>.readableName: String
 /**
  * Creates a [DataFrameSchema] from the declared [Table] instance.
  *
+ * This is not needed for conversion, but it can be useful to create a DataFrame [@DataSchema][DataSchema] instance.
+ *
  * @param columnNameToAccessor Optional [MutableMap] which will be filled with entries mapping
  *   the SQL column name to the accessor name from the [Table].
  *   This can be used to define a [NameNormalizer] later.
+ * @see toDataFrameSchemaWithNameNormalizer
  */
 @Suppress("UNCHECKED_CAST")
 fun Table.toDataFrameSchema(columnNameToAccessor: MutableMap<String, String> = mutableMapOf()): DataFrameSchema {
+    // we use reflection to go over all `Column<*>` properties in the Table object
     val columns = this::class.memberProperties
         .filter { it.returnType.isSubtypeOf(typeOf<Column<*>>()) }
         .associate { prop ->
             prop as KProperty1<Table, Column<*>>
 
-            // retrieve the actual column name
+            // retrieve the SQL column name
             val columnName = prop.get(this).name
-            // store the actual column name together with the accessor name in the map
+            // store the SQL column name together with the accessor name in the map
             columnNameToAccessor[columnName] = prop.name
 
             // get the column type from `val a: Column<Type>`
             val type = prop.returnType.arguments.first().type!!
 
+            // and we add the name and column shema type to the `columns` map :)
             columnName to ColumnSchema.Value(type)
         }
     return DataFrameSchemaImpl(columns)
+}
+
+/**
+ * Creates a [DataFrameSchema] from the declared [Table] instance with a [NameNormalizer] to
+ * convert the SQL column names to the corresponding Kotlin property names.
+ *
+ * This is not needed for conversion, but it can be useful to create a DataFrame [@DataSchema][DataSchema] instance.
+ *
+ * @see toDataFrameSchema
+ */
+fun Table.toDataFrameSchemaWithNameNormalizer(): Pair<DataFrameSchema, NameNormalizer> {
+    val columnNameToAccessor = mutableMapOf<String, String>()
+    return Pair(toDataFrameSchema(), NameNormalizer { columnNameToAccessor[it] ?: it })
 }

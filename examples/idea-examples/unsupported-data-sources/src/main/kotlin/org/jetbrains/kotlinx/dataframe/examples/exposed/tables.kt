@@ -51,8 +51,7 @@ object Customers : Table() {
  * This is what we created the [toDataFrameSchema] function for!
  */
 fun main() {
-    val columnNameToAccessor = mutableMapOf<String, String>()
-    val schema = Customers.toDataFrameSchema(columnNameToAccessor)
+    val (schema, nameNormalizer) = Customers.toDataFrameSchemaWithNameNormalizer()
 
     // checking whether the schema is converted correctly.
     // schema.print()
@@ -62,7 +61,7 @@ fun main() {
     // while keeping the correct column names
     schema.generateDataClasses(
         name = "CustomersDf",
-        nameNormalizer = NameNormalizer { columnNameToAccessor[it] ?: it },
+        nameNormalizer = nameNormalizer,
     ).print()
 }
 
