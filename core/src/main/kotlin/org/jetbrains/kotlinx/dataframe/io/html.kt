@@ -83,7 +83,8 @@ internal fun getResourceText(resource: String, vararg replacement: Pair<String, 
      * loads DataFrame compiler plugin), and plugin's classloader knows nothing about the resources.
      */
     val loader = HtmlContent::class.java
-    val res = loader.getResourceAsStream(resource) ?: error("Resource '$resource' not found")
+    val res = loader.getResourceAsStream(resource)
+        ?: error("Resource '$resource' not found. Load was attempted by $loader, loaded by ${loader.classLoader}")
     var template = InputStreamReader(res).readText()
     replacement.forEach {
         template = template.replace(it.first, it.second.toString())
