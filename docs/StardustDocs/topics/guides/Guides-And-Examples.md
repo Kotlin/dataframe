@@ -46,8 +46,17 @@ Explore our structured, in-depth guides to steadily improve your Kotlin DataFram
   — explore the GeoDataFrame module that brings a convenient Kotlin DataFrame API to geospatial workflows,
   enhanced with beautiful Kandy-Geo visualizations (*experimental*).
 
+
 <img src="geoguide_preview.png" border-effect="rounded" width="705"/>
 
+
+* [Using Unsupported Data Sources](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples):
+  — A guide by examples. While these might one day become proper integrations of DataFrame, for now,
+  we provide them as examples for how to make such integrations yourself.
+    * [Apache Spark Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/spark)
+    * [Apache Spark Interop (With Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/kotlinSpark)
+    * [Multik Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/multik)
+    * [JetBrains Exposed Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/exposed)
 * [OpenAPI Guide](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb)
   — learn how to parse and explore [OpenAPI](https://swagger.io) JSON structures using Kotlin DataFrame,
   enabling structured access and intuitive analysis of complex API schemas (*experimental*, supports OpenAPI 3.0.0).
