@@ -3,34 +3,55 @@ package org.jetbrains.kotlinx.dataframe.impl.schema
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.Equals
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsDerived
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsSuper
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.None
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.schema.plus
+import kotlin.collections.forEach
 
 public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
 
     override fun compare(other: DataFrameSchema, strictlyEqualNestedSchemas: Boolean): CompareResult {
         require(other is DataFrameSchemaImpl)
-        if (this === other) return CompareResult.Equals
-        var result = CompareResult.Equals
-        columns.forEach {
-            val otherColumn = other.columns[it.key]
-            if (otherColumn == null) {
-                result = result.combine(if (strictlyEqualNestedSchemas) CompareResult.None else CompareResult.IsDerived)
-            } else {
-                result = result.combine(it.value.compareStrictlyEqualNestedSchemas(otherColumn))
+        if (this === other) return Equals
+
+        var result: CompareResult = Equals
+
+        // check for each column in this schema if there is a column with the same name in the other schema
+        // - if so, strictly compare those schemas for equality, taking strictlyEqualNestedSchemas into account
+        // - if not, consider the other schema derived from this (or unrelated if strictlyEqualNestedSchemas == true)
+        this.columns.forEach { (thisColName, thisSchema) ->
+            val otherSchema = other.columns[thisColName]
+            result += when {
+                otherSchema != null -> {
+                    val comparison = thisSchema.compareStrictlyEqualNestedSchemas(otherSchema)
+                    when {
+                        comparison != Equals && strictlyEqualNestedSchemas -> None
+                        else -> comparison
+                    }
+                }
+
+                else -> if (strictlyEqualNestedSchemas) None else IsDerived
             }
-            if (result == CompareResult.None) return CompareResult.None
+            if (result == None) return None
         }
-        other.columns.forEach {
-            val thisField = columns[it.key]
-            if (thisField == null) {
-                result = result.combine(if (strictlyEqualNestedSchemas) CompareResult.None else CompareResult.IsSuper)
-                if (result == CompareResult.None) return CompareResult.None
+        // then check for each column in the other schema if there is a column with the same name in this schema
+        // if not, consider the other schema as super to this (or unrelated if strictlyEqualNestedSchemas == true)
+        other.columns.forEach { (otherColName, _) ->
+            if (this.columns[otherColName] != null) return@forEach
+
+            result += when {
+                strictlyEqualNestedSchemas -> None
+                else -> IsSuper
             }
+            if (result == None) return None
         }
         return result
     }
 
-    override fun equals(other: Any?): Boolean = other is DataFrameSchema && compare(other).isEqual()
+    override fun equals(other: Any?): Boolean = other is DataFrameSchema && this.compare(other).isEqual()
 
     override fun toString(): String = render()
 
