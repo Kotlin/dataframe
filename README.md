@@ -20,7 +20,8 @@ Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic natur
 * **Typesafe** — on-the-fly generation of extension properties for type safe data access with Kotlin-style care for null safety.
 * **Polymorphic** — type compatibility derives from column schema compatibility. You can define a function that requires a special subset of columns in a dataframe but doesn't care about other columns.
 
-Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jupyter). Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
+Integrates with [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html). 
+Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
 
 ## 🚀 Quickstart
 
@@ -30,7 +31,7 @@ Get started in minutes with our [Quickstart Guide](https://kotlin.github.io/data
 It walks you through the core features of Kotlin DataFrame with minimal setup and clear examples 
 — perfect for getting up to speed in just a few minutes.
 
-![quickstart_preview](docs/StardustDocs/images/guides/quickstart_preview.png)
+[![quickstart_preview](docs/StardustDocs/images/guides/quickstart_preview.png)](https://kotlin.github.io/dataframe/quickstart.html)
 
 ## Documentation
 
@@ -62,10 +63,10 @@ Check out this [notebook with new features](examples/notebooks/feature_overviews
 
 ### Kotlin Notebook
 
-You can use Kotlin DataFrame in [Kotlin Notebook](https://plugins.jetbrains.com/plugin/16340-kotlin-notebook),
-or other interactive environment with Kotlin Jupyter Kernel support, such as
-[Datalore](https://datalore.jetbrains.com/),
-and [Kotlin Jupyter](https://github.com/Kotlin/kotlin-jupyter).
+You can use Kotlin DataFrame in [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html),
+or other interactive environment with [Kotlin Jupyter Kernel](https://github.com/Kotlin/kotlin-jupyter) support, 
+such as [Datalore](https://datalore.jetbrains.com/),
+and [Jupyter Notebook](https://jupyter.org/).
 
 You can include all the necessary dependencies and imports in the notebook using *line magic*:
 
@@ -126,27 +127,27 @@ See also
 
 ```kotlin
 val df = DataFrame
-        // Read DataFrame from the CSV file.
-        .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
-        // And convert it to match the `Repositories` schema.
-        .convertTo<Repositories>()
+   // Read DataFrame from the CSV file.
+   .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+   // And convert it to match the `Repositories` schema.
+   .convertTo<Repositories>()
 
 // Update the DataFrame.
 val reposUpdated = repos
-        // Rename columns to CamelCase.
-        .renameToCamelCase()
-        // Rename "stargazersCount" column to "stars".
-        .rename { stargazersCount }.into("stars")
-        // Filter by the number of stars:
-        .filter { stars > 50 }
-        // Convert values in the "topic" column (which were `String` initially)
-        // to the list of topics.
-        .convert { topics }.with {
-            val inner = it.removeSurrounding("[", "]")
-            if (inner.isEmpty()) emptyList() else inner.split(',').map(String::trim)
-        }
-        // Add a new column with the number of topics.
-        .add("topicCount") { topics.size }
+   // Rename columns to CamelCase.
+   .renameToCamelCase()
+   // Rename "stargazersCount" column to "stars".
+   .rename { stargazersCount }.into("stars")
+   // Filter by the number of stars:
+   .filter { stars > 50 }
+   // Convert values in the "topic" column (which were `String` initially)
+   // to the list of topics.
+   .convert { topics }.with { 
+       val inner = it.removeSurrounding("[", "]")
+        if (inner.isEmpty()) emptyList() else inner.split(',').map(String::trim)
+   }
+   // Add a new column with the number of topics.
+   .add("topicCount") { topics.size }
 
 // Write the updated DataFrame to a CSV file.
 reposUpdated.writeCsv("jetbrains_repositories_new.csv")
@@ -161,7 +162,7 @@ Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-e
   * `ColumnGroup` — contains columns
   * `FrameColumn` — contains dataframes
 
-## Visualisations
+## Visualizations
 
 [Kandy](https://kotlin.github.io/kandy/welcome.html) plotting library provides seamless visualizations 
 for your dataframes.
