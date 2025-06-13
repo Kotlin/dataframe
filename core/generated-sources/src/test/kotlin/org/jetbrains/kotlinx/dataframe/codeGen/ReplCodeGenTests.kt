@@ -277,7 +277,7 @@ class ReplCodeGenTests : BaseTest() {
         val c = repl.process(Test5.df, Test5::df)
         c.declarations shouldBe
             """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface _DataFrameType3 {
                 val a: Int
                 val c: Int
