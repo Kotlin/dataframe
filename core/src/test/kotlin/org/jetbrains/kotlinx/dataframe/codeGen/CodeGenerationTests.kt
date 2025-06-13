@@ -158,7 +158,7 @@ class CodeGenerationTests : BaseTest() {
         val type2 = ReplCodeGeneratorImpl.markerInterfacePrefix
         val declaration1 =
             """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface $type1 {
                 val city: String?
                 val name: String
