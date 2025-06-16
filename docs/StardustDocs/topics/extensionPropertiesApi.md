@@ -57,6 +57,7 @@ which is a [**column group**](DataColumn.md#columngroup) containing two nested
 
 <tabs>
 <tab title="Kotlin Notebook">
+
 Read the [`DataFrame`](DataFrame.md) from the CSV file:
 
 ```kotlin
@@ -120,7 +121,7 @@ data class Person(
 )
 ```
 
-Read the `DataFrame` from the CSV file and specify the schema with 
+Read the [`DataFrame`](DataFrame.md) from the CSV file and specify the schema with 
 [`.convertTo()`](convertTo.md) or [`cast()`](cast.md):
 
 ```kotlin
