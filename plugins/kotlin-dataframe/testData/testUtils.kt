@@ -10,8 +10,8 @@ import kotlin.reflect.full.isSubtypeOf
 inline fun <reified T> DataFrame<T>.compareSchemas(strict: Boolean = false) {
     val schema = schema()
     val compileTimeSchema = compileTimeSchema()
-    val compare = compileTimeSchema.compare(schema)
-    require(if (strict) compare.isEqual() else compare.isSuperOrEqual()) {
+    val compare = compileTimeSchema.compare(schema, if (strict) ComparisonMode.STRICT else ComparisonMode.LENIENT)
+    require(compare.isSuperOrEqual()) {
         buildString {
             appendLine("Comparison result: $compare")
             appendLine("Runtime:")

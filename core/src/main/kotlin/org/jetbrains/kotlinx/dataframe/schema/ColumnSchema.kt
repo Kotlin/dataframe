@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.LENIENT
-import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -58,7 +57,7 @@ public sealed class ColumnSchema {
         override val nullable: Boolean = false
         override val type: KType get() = typeOf<AnyRow>()
 
-        public fun compare(other: Group, comparisonMode: ComparisonMode = LENIENT): CompareResult =
+        public fun compare(other: Group, comparisonMode: ComparisonMode = STRICT_FOR_NESTED_SCHEMAS): CompareResult =
             schema.compare(
                 other = other.schema,
                 comparisonMode = comparisonMode,
@@ -92,7 +91,7 @@ public sealed class ColumnSchema {
         }
     }
 
-    public fun compare(other: ColumnSchema, comparisonMode: ComparisonMode = LENIENT): CompareResult {
+    public fun compare(other: ColumnSchema, comparisonMode: ComparisonMode = STRICT_FOR_NESTED_SCHEMAS): CompareResult {
         if (kind != other.kind) return CompareResult.None
         if (this === other) return CompareResult.Equals
         return when (this) {
