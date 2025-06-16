@@ -59,8 +59,8 @@ public class Excel : SupportedDataFrameFormat {
         DefaultReadExcelMethod(pathRepresentation)
 }
 
-private const val MESSAGE_1_1 = "Will be ERROR in 1.1."
-internal const val READ_EXCEL_OLD = "This function is only here for binary compatibility. $MESSAGE_1_1"
+private const val MESSAGE_REMOVE_1_1 = "Will be removed in 1.1."
+internal const val READ_EXCEL_OLD = "This function is only here for binary compatibility. $MESSAGE_REMOVE_1_1"
 
 internal class DefaultReadExcelMethod(path: String?) :
     AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_EXCEL)
