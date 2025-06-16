@@ -5,12 +5,14 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.LENIENT
+import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.isSupertypeOf
 import kotlin.reflect.typeOf
 
-public abstract class ColumnSchema {
+public sealed class ColumnSchema {
 
     /** Either [Value] or [Group] or [Frame]. */
     public abstract val kind: ColumnKind
@@ -55,10 +57,11 @@ public abstract class ColumnSchema {
         override val nullable: Boolean = false
         override val type: KType get() = typeOf<AnyRow>()
 
-        public fun compare(other: Group): CompareResult = schema.compare(other.schema)
-
-        internal fun compareStrictlyEqualNestedSchemas(other: Group): CompareResult =
-            schema.compare(other.schema, strictlyEqualNestedSchemas = true)
+        public fun compare(other: Group, comparisonMode: ComparisonMode = LENIENT): CompareResult =
+            schema.compare(
+                other = other.schema,
+                comparisonMode = comparisonMode,
+            )
     }
 
     public class Frame(
@@ -69,14 +72,11 @@ public abstract class ColumnSchema {
         public override val kind: ColumnKind = ColumnKind.Frame
         override val type: KType get() = typeOf<AnyFrame>()
 
-        public fun compare(other: Frame): CompareResult =
-            schema.compare(other.schema).combine(CompareResult.compareNullability(nullable, other.nullable))
-
-        internal fun compareStrictlyEqualNestedSchemas(other: Frame): CompareResult =
+        public fun compare(other: Frame, comparisonMode: ComparisonMode = LENIENT): CompareResult =
             schema.compare(
-                other.schema,
-                strictlyEqualNestedSchemas = true,
-            ).combine(CompareResult.compareNullability(nullable, other.nullable))
+                other = other.schema,
+                comparisonMode = comparisonMode,
+            ) + CompareResult.compareNullability(thisIsNullable = nullable, otherIsNullable = other.nullable)
     }
 
     /** Checks equality just on kind, type, or schema. */
@@ -88,37 +88,27 @@ public abstract class ColumnSchema {
             is Value -> type == (otherType as Value).type
             is Group -> schema == (otherType as Group).schema
             is Frame -> schema == (otherType as Frame).schema
-            else -> throw NotImplementedError()
         }
     }
 
-    public fun compare(other: ColumnSchema): CompareResult = compare(other, false)
-
-    internal fun compareStrictlyEqualNestedSchemas(other: ColumnSchema): CompareResult = compare(other, true)
-
-    private fun compare(other: ColumnSchema, strictlyEqualNestedSchemas: Boolean): CompareResult {
+    public fun compare(other: ColumnSchema, comparisonMode: ComparisonMode = LENIENT): CompareResult {
         if (kind != other.kind) return CompareResult.None
         if (this === other) return CompareResult.Equals
         return when (this) {
             is Value -> compare(other as Value)
-
-            is Group -> if (strictlyEqualNestedSchemas) {
-                compareStrictlyEqualNestedSchemas(
-                    other as Group,
-                )
-            } else {
-                compare(other as Group)
-            }
-
-            is Frame -> if (strictlyEqualNestedSchemas) {
-                compareStrictlyEqualNestedSchemas(
-                    other as Frame,
-                )
-            } else {
-                compare(other as Frame)
-            }
-
-            else -> throw NotImplementedError()
+            is Group -> compare(other as Group, comparisonMode)
+            is Frame -> compare(other as Frame, comparisonMode)
         }
+    }
+
+    override fun hashCode(): Int {
+        var result = nullable.hashCode()
+        result = 31 * result + kind.hashCode()
+        result = 31 * result + when (this) {
+            is Value -> type.hashCode()
+            is Group -> schema.hashCode()
+            is Frame -> schema.hashCode()
+        }
+        return result
     }
 }
