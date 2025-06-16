@@ -57,7 +57,7 @@ public sealed class ColumnSchema {
         override val nullable: Boolean = false
         override val type: KType get() = typeOf<AnyRow>()
 
-        public fun compare(other: Group, comparisonMode: ComparisonMode = STRICT_FOR_NESTED_SCHEMAS): CompareResult =
+        public fun compare(other: Group, comparisonMode: ComparisonMode = LENIENT): CompareResult =
             schema.compare(
                 other = other.schema,
                 comparisonMode = comparisonMode,
@@ -91,7 +91,7 @@ public sealed class ColumnSchema {
         }
     }
 
-    public fun compare(other: ColumnSchema, comparisonMode: ComparisonMode = STRICT_FOR_NESTED_SCHEMAS): CompareResult {
+    public fun compare(other: ColumnSchema, comparisonMode: ComparisonMode = LENIENT): CompareResult {
         if (kind != other.kind) return CompareResult.None
         if (this === other) return CompareResult.Equals
         return when (this) {

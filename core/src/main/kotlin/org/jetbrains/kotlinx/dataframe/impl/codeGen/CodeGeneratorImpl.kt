@@ -34,12 +34,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.toSnakeCase
 import org.jetbrains.kotlinx.dataframe.keywords.HardKeywords
 import org.jetbrains.kotlinx.dataframe.keywords.ModifierKeywords
+import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
 internal fun Iterable<Marker>.filterRequiredForSchema(schema: DataFrameSchema) =
-    filter { it.isOpen && it.schema.compare(schema).isSuperOrEqual() }
+    filter { it.isOpen && it.schema.compare(schema, ComparisonMode.STRICT_FOR_NESTED_SCHEMAS).isSuperOrEqual() }
 
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 
