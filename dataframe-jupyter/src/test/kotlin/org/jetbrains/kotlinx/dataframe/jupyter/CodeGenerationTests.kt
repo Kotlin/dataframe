@@ -1,3 +1,5 @@
+@file:Suppress("LocalVariableName")
+
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.intellij.lang.annotations.Language
@@ -69,5 +71,25 @@ class CodeGenerationTests : DataFrameJupyterTest() {
         val df1 = df.convert { leaf }.asFrame { it.add("c") { 3 } }
         df1.leaf.c
         """.checkCompilation()
+    }
+
+    // Issue #1222
+    @Test
+    fun `do not reuse marker with non-matching sub-schema`() {
+        @Language("kt")
+        val _1 = """
+            val df1 = dataFrameOf("group" to columnOf("a" to columnOf(1, null, 3)))
+            val df2 = dataFrameOf("group" to columnOf("a" to columnOf(1, 2, 3)))
+            df1.group.a
+            df2.group.a
+            """.checkCompilation()
+
+        @Language("kt")
+        val _2 = """
+            val df1 = dataFrameOf("group" to columnOf("a" to columnOf(1, 2, 3)))
+            val df2 = dataFrameOf("group" to columnOf("a" to columnOf(1, null, 3)))
+            df1.group.a
+            df2.group.a
+            """.checkCompilation()
     }
 }
