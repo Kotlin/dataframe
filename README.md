@@ -11,14 +11,16 @@
 Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
-* **Functional** — data processing pipeline is organized in a chain of `DataFrame` transformation operations. Every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's possible.
+* **Functional** — the data processing pipeline is organized in a chain of `DataFrame` transformation operations.
+* **Immutable** — every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's possible.
 * **Readable** — data transformation operations are defined in DSL close to natural language.
 * **Practical** — provides simple solutions for common problems and the ability to perform complex tasks.
 * **Minimalistic** — simple, yet powerful data model of three column kinds.
-* **Interoperable** — convertable with Kotlin data classes and collections.
+* **Interoperable** — convertable with Kotlin data classes and collections. This also means conversion to/from other libraries' data structures is usually quite straightforward!
 * **Generic** — can store objects of any type, not only numbers or strings.
-* **Typesafe** — on-the-fly generation of extension properties for type safe data access with Kotlin-style care for null safety.
+* **Typesafe** — on-the-fly [generation of extension properties](https://kotlin.github.io/dataframe/extensionpropertiesapi.html) for type safe data access with Kotlin-style care for null safety.
 * **Polymorphic** — type compatibility derives from column schema compatibility. You can define a function that requires a special subset of columns in a dataframe but doesn't care about other columns.
+  In notebooks this works out-of-the-box. In ordinary projects this requires casting (for now).
 
 Integrates with [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html). 
 Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
