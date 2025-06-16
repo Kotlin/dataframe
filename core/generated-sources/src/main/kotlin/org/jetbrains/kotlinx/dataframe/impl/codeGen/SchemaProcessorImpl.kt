@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 internal class SchemaProcessorImpl(
@@ -23,7 +24,7 @@ internal class SchemaProcessorImpl(
 
     private fun DataFrameSchema.getAllSuperMarkers() =
         registeredMarkers
-            .filter { it.isOpen && it.schema.compare(this).isSuperOrEqual() }
+            .filter { it.isOpen && it.schema.compare(this, ComparisonMode.STRICT_FOR_NESTED_SCHEMAS).isSuperOrEqual() }
 
     private fun List<Marker>.onlyLeafs(): List<Marker> {
         val skip = flatMap { it.allSuperMarkers.keys }.toSet()
