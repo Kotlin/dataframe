@@ -18,7 +18,7 @@ Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic natur
 * **Minimalistic** — simple, yet powerful data model of three column kinds.
 * **Interoperable** — convertable with Kotlin data classes and collections. This also means conversion to/from other libraries' data structures is usually quite straightforward!
 * **Generic** — can store objects of any type, not only numbers or strings.
-* **Typesafe** — on-the-fly generation of extension properties for type safe data access with Kotlin-style care for null safety.
+* **Typesafe** — on-the-fly [generation of extension properties](https://kotlin.github.io/dataframe/extensionpropertiesapi.html) for type safe data access with Kotlin-style care for null safety.
 * **Polymorphic** — type compatibility derives from column schema compatibility. You can define a function that requires a special subset of columns in a dataframe but doesn't care about other columns.
   In notebooks this works out-of-the-box. In ordinary projects this requires casting (for now).
 
