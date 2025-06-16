@@ -59,6 +59,9 @@ public class Excel : SupportedDataFrameFormat {
         DefaultReadExcelMethod(pathRepresentation)
 }
 
+private const val MESSAGE_1_1 = "Will be ERROR in 1.1."
+internal const val READ_EXCEL_OLD = "This function is only here for binary compatibility. $MESSAGE_1_1"
+
 internal class DefaultReadExcelMethod(path: String?) :
     AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_EXCEL)
 
@@ -84,6 +87,19 @@ private fun setWorkbookTempDirectory() {
         DefaultTempFileCreationStrategy(tempDir),
     )
 }
+
+@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    url: URL,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+): AnyFrame =
+    readExcel(url, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -128,6 +144,19 @@ public fun DataFrame.Companion.readExcel(
         )
     }
 }
+
+@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    file: File,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+): AnyFrame =
+    readExcel(file, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -174,6 +203,19 @@ public fun DataFrame.Companion.readExcel(
     }
 }
 
+@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    fileOrUrl: String,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+): AnyFrame =
+    readExcel(fileOrUrl, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
+
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -212,6 +254,19 @@ public fun DataFrame.Companion.readExcel(
         firstRowIsHeader,
         parseEmptyAsNull,
     )
+
+@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    inputStream: InputStream,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+): AnyFrame =
+    readExcel(inputStream, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -256,6 +311,19 @@ public fun DataFrame.Companion.readExcel(
         )
     }
 }
+
+@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    wb: Workbook,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    formattingOptions: FormattingOptions? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+): AnyFrame =
+    readExcel(wb, sheetName, skipRows, columns, formattingOptions, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
