@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
 import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 
 object Albums : Table() {
     val albumId: Column<Int> = integer("AlbumId").autoIncrement()
@@ -60,7 +59,7 @@ fun main() {
     // we use a NameNormalizer to let DataFrame generate the same accessors as in the Table
     // while keeping the correct column names
     schema.generateDataClasses(
-        name = "CustomersDf",
+        name = "DfCustomers",
         nameNormalizer = nameNormalizer,
     ).print()
 }
@@ -68,7 +67,7 @@ fun main() {
 // created by Customers.toDataFrameSchema()
 // The same can be done for the other tables
 @DataSchema
-data class CustomersDf(
+data class DfCustomers(
     @ColumnName("Address")
     val address: String?,
     @ColumnName("City")
