@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.LENIENT
-import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
+import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.isSupertypeOf
@@ -41,9 +41,10 @@ public sealed class ColumnSchema {
         override val nullable: Boolean = type.isMarkedNullable
         override val contentType: KType? = null
 
-        public fun compare(other: Value): CompareResult =
+        public fun compare(other: Value, comparisonMode: ComparisonMode = LENIENT): CompareResult =
             when {
                 type == other.type -> CompareResult.Equals
+                comparisonMode == STRICT -> CompareResult.None
                 type.isSubtypeOf(other.type) -> CompareResult.IsDerived
                 type.isSupertypeOf(other.type) -> CompareResult.IsSuper
                 else -> CompareResult.None
@@ -95,7 +96,7 @@ public sealed class ColumnSchema {
         if (kind != other.kind) return CompareResult.None
         if (this === other) return CompareResult.Equals
         return when (this) {
-            is Value -> compare(other as Value)
+            is Value -> compare(other as Value, comparisonMode)
             is Group -> compare(other as Group, comparisonMode)
             is Frame -> compare(other as Frame, comparisonMode)
         }

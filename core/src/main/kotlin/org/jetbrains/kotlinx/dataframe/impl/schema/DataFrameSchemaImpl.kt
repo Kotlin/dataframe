@@ -23,17 +23,21 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
         var result: CompareResult = Equals
 
         // check for each column in this schema if there is a column with the same name in the other schema
-        // - if so, those schemas for equality, taking comparisonMode into account
-        // - if not, consider the other schema derived from this (or unrelated if comparisonMode == STRICT)
+        // - if so, check those schemas for equality, taking comparisonMode into account
+        // - if not, consider the other schema derived from this (or unrelated (None) if comparisonMode == STRICT)
         this.columns.forEach { (thisColName, thisSchema) ->
             val otherSchema = other.columns[thisColName]
             result += when {
                 otherSchema != null -> {
-                    val comparison = thisSchema.compare(
-                        other = otherSchema,
-                        comparisonMode = if (comparisonMode == STRICT_FOR_NESTED_SCHEMAS) STRICT else comparisonMode,
-                    )
-                    if (comparison != Equals && comparisonMode == STRICT) None else comparison
+                    // increase comparisonMode strictness when dealing with nested schemas of FrameColumns or ColumnGroups
+                    val newComparisonMode =
+                        if (comparisonMode == STRICT_FOR_NESTED_SCHEMAS && thisSchema !is ColumnSchema.Value) {
+                            STRICT
+                        } else {
+                            comparisonMode
+                        }
+
+                    thisSchema.compare(other = otherSchema, comparisonMode = newComparisonMode)
                 }
 
                 else -> if (comparisonMode == STRICT) None else IsDerived
@@ -41,7 +45,7 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
             if (result == None) return None
         }
         // then check for each column in the other schema if there is a column with the same name in this schema
-        // if not, consider the other schema as super to this (or unrelated if comparisonMode == STRICT)
+        // if not, consider the other schema as super to this (or unrelated (None) if comparisonMode == STRICT)
         other.columns.forEach { (otherColName, _) ->
             if (this.columns[otherColName] != null) return@forEach
             result += if (comparisonMode == STRICT) None else IsSuper
