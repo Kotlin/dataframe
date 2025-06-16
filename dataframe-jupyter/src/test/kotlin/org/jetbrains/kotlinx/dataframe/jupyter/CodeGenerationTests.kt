@@ -1,3 +1,5 @@
+@file:Suppress("LocalVariableName")
+
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.intellij.lang.annotations.Language
