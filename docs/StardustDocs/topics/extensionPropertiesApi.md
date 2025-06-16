@@ -2,7 +2,7 @@
 
 When working with a [`DataFrame`](DataFrame.md), the most convenient and reliable way 
 to access its columns — including for operations and retrieving column values 
-in row expressions — is through auto-generated extension properties.
+in row expressions — is through *auto-generated extension properties*.
 They are generated based on a [dataframe schema](schemas.md),
 with the name and type of properties inferred from the name and type of the corresponding columns.
 It also works for all types of hierarchical dataframes.
@@ -10,11 +10,11 @@ It also works for all types of hierarchical dataframes.
 > The behavior of data schema generation differs between the 
 > [Compiler Plugin](Compiler-Plugin.md) and [Kotlin Notebook](gettingStartedKotlinNotebook.md).
 >
-> * In **Kotlin Notebook**, a schema is generated *only after cell execution* for 
+> * In **Kotlin Notebook**, a schema is generated **only after cell execution** for 
 > `DataFrame` variables defined within that cell.
-> * With the **Compiler Plugin**, a new schema is generated *after every operation*
+> * With the **Compiler Plugin**, a new schema is generated **after every operation**
 > — but support for all operations is still in progress. 
-> Retrieving the schema for `DataFrame` read from a file or URL is *not yet supported* either.
+> Retrieving the schema for `DataFrame` read from a file or URL is **not yet supported** either.
 >
 > This behavior may change in future releases. See the [example](#example) below that demonstrates these differences.
 {style="warning"}
@@ -64,7 +64,7 @@ Read the [`DataFrame`](DataFrame.md) from the CSV file:
 val df = DataFrame.readCsv("example.csv")
 ```
 
-*After cell execution* data schema and extensions for this `DataFrame` will be generated 
+**After cell execution** data schema and extensions for this `DataFrame` will be generated 
 so you can use extensions for accessing columns, 
 using it in operations inside the [Column Selector DSL](ColumnSelectors.md) 
 and [DataRow API](DataRow.md):
