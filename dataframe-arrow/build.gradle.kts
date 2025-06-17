@@ -30,6 +30,10 @@ dependencies {
     }
     testImplementation(libs.arrow.c.data)
     testImplementation(libs.duckdb.jdbc)
+
+    testImplementation(libs.arrow.driver.jdbc)
+    testImplementation(libs.h2db)
+    testImplementation(libs.embedded.postgresql)
 }
 
 kotlinPublications {

@@ -46,6 +46,8 @@ kotestAsserions = "6.0.0.M1"
 
 jsoup = "1.18.3"
 arrow = "18.1.0"
+arrow-adbc = "0.18.0"
+embedded-postgresql = "2.1.0"
 kodex = "0.4.4"
 simpleGit = "2.2.1"
 dependencyVersions = "0.51.0"
@@ -124,6 +126,11 @@ arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref 
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
 arrow-c-data = { group = "org.apache.arrow", name = "arrow-c-data", version.ref = "arrow" }
+
+
+# https://repo.maven.apache.org/maven2/org/apache/arrow/adbc/adbc-driver-jdbc/18.0.0/adbc-driver-jdbc-18.0.0.pom
+arrow-driver-jdbc = { group = "org.apache.arrow.adbc", name = "adbc-driver-jdbc", version.ref = "arrow-adbc" }
+embedded-postgresql = { group = "io.zonky.test", name = "embedded-postgres", version.ref = "embedded-postgresql" }
 
 geotools-main = { module = "org.geotools:gt-main", version.ref = "geotools" }
 geotools-shapefile = { module = "org.geotools:gt-shapefile", version.ref = "geotools" }

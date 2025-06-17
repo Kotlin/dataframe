@@ -25,9 +25,13 @@ import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
+import org.apache.arrow.vector.TimeStampMicroTZVector
 import org.apache.arrow.vector.TimeStampMicroVector
+import org.apache.arrow.vector.TimeStampMilliTZVector
 import org.apache.arrow.vector.TimeStampMilliVector
+import org.apache.arrow.vector.TimeStampNanoTZVector
 import org.apache.arrow.vector.TimeStampNanoVector
+import org.apache.arrow.vector.TimeStampSecTZVector
 import org.apache.arrow.vector.TimeStampSecVector
 import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.UInt1Vector
@@ -39,12 +43,16 @@ import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.ViewVarBinaryVector
 import org.apache.arrow.vector.ViewVarCharVector
+import org.apache.arrow.vector.complex.ListVector
 import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.util.DateUtility
+import org.apache.arrow.vector.util.DateUtility.getLocalDateTimeFromEpochMicro
+import org.apache.arrow.vector.util.DateUtility.getLocalDateTimeFromEpochMilli
+import org.apache.arrow.vector.util.DateUtility.getLocalDateTimeFromEpochNano
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -63,6 +71,7 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -197,9 +206,56 @@ private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
         }
     }
 
+private fun TimeStampNanoTZVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            getLocalDateTimeFromEpochNano(getObject(it), timeZone).toKotlinLocalDateTime()
+        }
+    }
+
+private fun TimeStampMicroTZVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            getLocalDateTimeFromEpochMicro(getObject(it), timeZone).toKotlinLocalDateTime()
+        }
+    }
+
+private fun TimeStampMilliTZVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            getLocalDateTimeFromEpochMilli(getObject(it), timeZone).toKotlinLocalDateTime()
+        }
+    }
+
+private fun TimeStampSecTZVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            val seconds = getObject(it)
+            val millis = TimeUnit.SECONDS.toMillis(seconds)
+            getLocalDateTimeFromEpochMilli(millis, timeZone).toKotlinLocalDateTime()
+        }
+    }
+
 private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> =
     range.map {
         getObject(it)
+    }
+
+private fun ListVector.values(range: IntRange): List<List<Any?>?> =
+    range.map {
+        if (isNull(it)) {
+            null
+        } else {
+            getObject(it)
+        }
     }
 
 private fun NullVector.values(range: IntRange): List<Nothing?> =
@@ -287,7 +343,14 @@ private fun List<Nothing?>.withTypeNullable(
 
 private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
     try {
-        val range = 0 until root.rowCount
+        val range = 0..<root.rowCount
+
+        // TODO
+        // most types can be read directly from Arrow
+        // some nested types need a recursive type map which we don't support yet
+        // so we just rely on DataFrame runtime inference instead
+        var infer = Infer.None
+
         val (list, type) = when (val vector = root.getVector(field)) {
             is VarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
@@ -349,16 +412,29 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
 
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeStampNanoTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
+            is TimeStampMicroTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
+            is TimeStampMilliTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
+            is TimeStampSecTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            else -> {
-                throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
-            }
+            is StructVector -> vector.values(range)
+                .withTypeNullable(field.isNullable, nullability)
+                .also { infer = Infer.Type }
+
+            is ListVector -> vector.values(range)
+                .withTypeNullable(field.isNullable, nullability)
+                .also { infer = Infer.Type }
+
+            else -> throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
         }
-        return DataColumn.createValueColumn(field.name, list, type, Infer.None)
-    } catch (unexpectedNull: NullabilityException) {
+
+        return DataColumn.createValueColumn(name = field.name, values = list, type = type, infer = infer)
+    } catch (_: NullabilityException) {
         throw IllegalArgumentException("Column `${field.name}` should be not nullable but has nulls")
     }
 }
