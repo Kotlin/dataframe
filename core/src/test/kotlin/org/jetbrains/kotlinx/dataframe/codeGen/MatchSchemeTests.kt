@@ -6,9 +6,19 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.generateCode
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.Equals
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsDerived
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsSuper
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.None
+import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.LENIENT
+import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
+import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
 import org.junit.Test
 
 class MatchSchemeTests {
@@ -98,5 +108,92 @@ class MatchSchemeTests {
     fun printSchema() {
         val res = df.generateCode(false, true)
         println(res)
+    }
+
+    @Test
+    fun `simple data schema comparison`() {
+        val scheme1 = dataFrameOf(
+            "a" to columnOf(1, 2, 3, null),
+            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
+        ).schema()
+
+        val scheme2 = dataFrameOf(
+            "a" to columnOf(1, 2, 3, 4),
+            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
+        ).schema()
+
+        val scheme3 = dataFrameOf(
+            "c" to columnOf(1, 2, 3, 4),
+        ).schema()
+
+        scheme1.compare(scheme1, LENIENT) shouldBe Equals
+        scheme2.compare(scheme2, LENIENT) shouldBe Equals
+        scheme1.compare(scheme2, LENIENT) shouldBe IsSuper
+        scheme2.compare(scheme1, LENIENT) shouldBe IsDerived
+        scheme1.compare(scheme3, LENIENT) shouldBe None
+
+        scheme1.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe Equals
+        scheme2.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe Equals
+        scheme1.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe IsSuper
+        scheme2.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe IsDerived
+        scheme1.compare(scheme3, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
+
+        scheme1.compare(scheme1, STRICT) shouldBe Equals
+        scheme2.compare(scheme2, STRICT) shouldBe Equals
+        scheme1.compare(scheme2, STRICT) shouldBe None
+        scheme2.compare(scheme1, STRICT) shouldBe None
+    }
+
+    @Test
+    fun `nested data schema comparison`() {
+        val scheme1 = dataFrameOf(
+            "a" to columnOf(
+                "b" to columnOf(1.0, 2.0, 3.0, null),
+            ),
+        ).schema()
+
+        val scheme2 = dataFrameOf(
+            "a" to columnOf(
+                "b" to columnOf(1.0, 2.0, 3.0, 4.0),
+            ),
+        ).schema()
+
+        val scheme3 = dataFrameOf(
+            "c" to columnOf(1, 2, 3, 4),
+        ).schema()
+
+        val scheme4 = dataFrameOf(
+            "a" to columnOf(
+                "b" to columnOf(1.0, 2.0, 3.0, null),
+            ),
+            "c" to columnOf(1, 2, 3, 4),
+        ).schema()
+
+        scheme1.compare(scheme1, LENIENT) shouldBe Equals
+        scheme2.compare(scheme2, LENIENT) shouldBe Equals
+        scheme1.compare(scheme2, LENIENT) shouldBe IsSuper
+        scheme2.compare(scheme1, LENIENT) shouldBe IsDerived
+        scheme1.compare(scheme3, LENIENT) shouldBe None
+
+        scheme1.compare(scheme4, LENIENT) shouldBe IsSuper
+        scheme4.compare(scheme1, LENIENT) shouldBe IsDerived
+
+        scheme1.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe Equals
+        scheme2.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe Equals
+        scheme1.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
+        scheme2.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
+        scheme1.compare(scheme3, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
+
+        scheme1.compare(scheme4, STRICT_FOR_NESTED_SCHEMAS) shouldBe IsSuper
+        scheme4.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe IsDerived
+        scheme2.compare(scheme4, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
+        scheme4.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
+
+        scheme1.compare(scheme1, STRICT) shouldBe Equals
+        scheme2.compare(scheme2, STRICT) shouldBe Equals
+        scheme1.compare(scheme2, STRICT) shouldBe None
+        scheme2.compare(scheme1, STRICT) shouldBe None
+        scheme1.compare(scheme3, STRICT) shouldBe None
+        scheme3.compare(scheme1, STRICT) shouldBe None
     }
 }

@@ -5940,7 +5940,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/io/FastDoubleParser {
 
 public final class org/jetbrains/kotlinx/dataframe/impl/schema/DataFrameSchemaImpl : org/jetbrains/kotlinx/dataframe/schema/DataFrameSchema {
 	public fun <init> (Ljava/util/Map;)V
-	public fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Z)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getColumns ()Ljava/util/Map;
 	public fun hashCode ()I
@@ -6636,18 +6636,20 @@ public final class org/jetbrains/kotlinx/dataframe/math/SumKt {
 }
 
 public abstract class org/jetbrains/kotlinx/dataframe/schema/ColumnSchema {
-	public fun <init> ()V
-	public final fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public final fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public static synthetic fun compare$default (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public fun equals (Ljava/lang/Object;)Z
 	public abstract fun getContentType ()Lkotlin/reflect/KType;
 	public abstract fun getKind ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
 	public abstract fun getNullable ()Z
 	public abstract fun getType ()Lkotlin/reflect/KType;
+	public fun hashCode ()I
 }
 
 public final class org/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Frame : org/jetbrains/kotlinx/dataframe/schema/ColumnSchema {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;ZLkotlin/reflect/KType;)V
-	public final fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Frame;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public final fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Frame;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public static synthetic fun compare$default (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Frame;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Frame;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public fun getContentType ()Lkotlin/reflect/KType;
 	public fun getKind ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
 	public fun getNullable ()Z
@@ -6657,7 +6659,8 @@ public final class org/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Frame : o
 
 public final class org/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Group : org/jetbrains/kotlinx/dataframe/schema/ColumnSchema {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lkotlin/reflect/KType;)V
-	public final fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Group;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public final fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Group;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public static synthetic fun compare$default (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Group;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Group;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public fun getContentType ()Lkotlin/reflect/KType;
 	public fun getKind ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
 	public fun getNullable ()Z
@@ -6667,7 +6670,8 @@ public final class org/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Group : o
 
 public final class org/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Value : org/jetbrains/kotlinx/dataframe/schema/ColumnSchema {
 	public fun <init> (Lkotlin/reflect/KType;)V
-	public final fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Value;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public final fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Value;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public static synthetic fun compare$default (Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Value;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema$Value;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public fun getContentType ()Lkotlin/reflect/KType;
 	public fun getKind ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
 	public fun getNullable ()Z
@@ -6692,9 +6696,22 @@ public final class org/jetbrains/kotlinx/dataframe/schema/CompareResult$Companio
 	public final fun compareNullability (ZZ)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/schema/CompareResultKt {
+	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/schema/ComparisonMode : java/lang/Enum {
+	public static final field LENIENT Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;
+	public static final field STRICT Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;
+	public static final field STRICT_FOR_NESTED_SCHEMAS Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/schema/DataFrameSchema {
-	public abstract fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Z)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
-	public static synthetic fun compare$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public abstract fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public static synthetic fun compare$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public abstract fun getColumns ()Ljava/util/Map;
 }
 
