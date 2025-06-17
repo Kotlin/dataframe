@@ -424,7 +424,6 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
 
             is StructVector -> vector.values(range)
                 .withTypeNullable(field.isNullable, nullability)
-                .also { infer = Infer.Type }
 
             is ListVector -> vector.values(range)
                 .withTypeNullable(field.isNullable, nullability)
