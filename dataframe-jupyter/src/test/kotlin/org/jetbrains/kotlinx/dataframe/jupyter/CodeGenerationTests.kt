@@ -70,4 +70,27 @@ class CodeGenerationTests : DataFrameJupyterTest() {
         df1.leaf.c
         """.checkCompilation()
     }
+
+    // https://github.com/Kotlin/dataframe/issues/1222
+    @Test
+    fun `reusing marker with nullable column`() {
+        @Language("kt")
+        val _1 = """
+            val df1 = dataFrameOf("group" to columnOf("a" to columnOf(1, null, 3)))
+            val df2 = dataFrameOf("group" to columnOf("a" to columnOf(1, 2, 3)))
+            df1.group.a
+            df2.group.a
+            """.checkCompilation()
+    }
+
+    @Test
+    fun `not reusing marker with non-nullable column`() {
+        @Language("kt")
+        val _1 = """
+            val df1 = dataFrameOf("group" to columnOf("a" to columnOf(1, 2, 3)))
+            val df2 = dataFrameOf("group" to columnOf("a" to columnOf(1, null, 3)))
+            df1.group.a
+            df2.group.a
+            """.checkCompilation()
+    }
 }
