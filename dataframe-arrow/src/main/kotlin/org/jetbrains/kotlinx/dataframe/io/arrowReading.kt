@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.apache.arrow.dataset.file.FileFormat
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
@@ -185,3 +186,17 @@ public fun DataFrame.Companion.readArrow(
  */
 public fun ArrowReader.toDataFrame(nullability: NullabilityOptions = NullabilityOptions.Infer): AnyFrame =
     DataFrame.Companion.readArrowImpl(this, nullability)
+
+/**
+ * Read [Parquet](https://parquet.apache.org/) data from existing [url] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
+ */
+public fun DataFrame.Companion.readParquet(
+    url: URL,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+): AnyFrame = readArrowDataset(url.toString(), fileFormat = FileFormat.PARQUET, nullability = nullability)
+
+public fun DataFrame.Companion.readArrowDataset(
+    vararg fileUri: String,
+    fileFormat: FileFormat,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+): AnyFrame = readArrowDatasetImpl(fileUri, fileFormat, nullability)

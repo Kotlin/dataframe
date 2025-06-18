@@ -6,6 +6,11 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
+import org.apache.arrow.dataset.file.FileFormat
+import org.apache.arrow.dataset.file.FileSystemDatasetFactory
+import org.apache.arrow.dataset.jni.DirectReservationListener
+import org.apache.arrow.dataset.jni.NativeMemoryPool
+import org.apache.arrow.dataset.scanner.ScanOptions
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BigIntVector
 import org.apache.arrow.vector.BitVector
@@ -55,6 +60,7 @@ import org.apache.arrow.vector.util.DateUtility.getLocalDateTimeFromEpochMilli
 import org.apache.arrow.vector.util.DateUtility.getLocalDateTimeFromEpochNano
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -65,6 +71,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.math.BigDecimal
@@ -244,9 +251,13 @@ private fun TimeStampSecTZVector.values(range: IntRange): List<LocalDateTime?> =
         }
     }
 
-private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> =
+// TODO, use recursive type-mapping instead of inference
+private fun StructVector.values(range: IntRange): List<AnyRow?> =
     range.map {
         getObject(it)
+            ?.mapValues { listOf(it.value) }
+            ?.toDataFrame()
+            ?.single()
     }
 
 private fun ListVector.values(range: IntRange): List<List<Any?>?> =
@@ -432,7 +443,7 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             else -> throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
         }
 
-        return DataColumn.createValueColumn(name = field.name, values = list, type = type, infer = infer)
+        return DataColumn.createByType(name = field.name, values = list, type = type, infer = infer)
     } catch (_: NullabilityException) {
         throw IllegalArgumentException("Column `${field.name}` should be not nullable but has nulls")
     }
@@ -469,19 +480,21 @@ internal fun DataFrame.Companion.readArrowImpl(
                 is ArrowFileReader -> {
                     reader.recordBlocks.forEach { block ->
                         reader.loadRecordBatch(block)
-                        val root = reader.vectorSchemaRoot
-                        val schema = root.schema
-                        val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                        add(df)
+                        reader.vectorSchemaRoot.use { root ->
+                            val schema = root.schema
+                            val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                            add(df)
+                        }
                     }
                 }
 
                 else -> {
-                    val root = reader.vectorSchemaRoot
-                    val schema = root.schema
-                    while (reader.loadNextBatch()) {
-                        val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                        add(df)
+                    reader.vectorSchemaRoot.use { root ->
+                        val schema = root.schema
+                        while (reader.loadNextBatch()) {
+                            val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                            add(df)
+                        }
                     }
                 }
             }
@@ -489,3 +502,51 @@ internal fun DataFrame.Companion.readArrowImpl(
         return flattened.concatKeepingSchema()
     }
 }
+
+internal fun DataFrame.Companion.readArrowDatasetImpl2(
+    fileUris: Array<out String>,
+    fileFormat: FileFormat,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+): AnyFrame =
+    RootAllocator().use { allocator ->
+        FileSystemDatasetFactory(
+            // allocator =
+            allocator,
+            // memoryPool =
+            NativeMemoryPool.createListenable(DirectReservationListener.instance()),
+            // format =
+            fileFormat,
+            // uris =
+            fileUris,
+        ).use { datasetFactory ->
+            datasetFactory.finish().use { dataset ->
+                dataset.newScan(ScanOptions(32_768)).use { scanner ->
+                    scanner.scanBatches().use { reader ->
+                        readArrowImpl(reader = reader, nullability = nullability)
+                    }
+                }
+            }
+        }
+    }
+
+internal fun DataFrame.Companion.readArrowDatasetImpl(
+    fileUris: Array<out String>,
+    fileFormat: FileFormat,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+): AnyFrame =
+    using {
+        val allocator = +RootAllocator()
+        val datasetFactory = +FileSystemDatasetFactory(
+            allocator,
+            NativeMemoryPool.createListenable(DirectReservationListener.instance()),
+            fileFormat,
+            fileUris,
+        )
+        val dataset = +datasetFactory.finish()
+        val scanner = +dataset.newScan(ScanOptions(32_768))
+        val reader = +scanner.scanBatches()
+
+        readArrowImpl(reader, nullability)
+    } catch { e: Exception ->
+        e.printStackTrace()
+    } finally { }

@@ -3,20 +3,11 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
-import io.zonky.test.db.postgres.junit.EmbeddedPostgresRules
-import io.zonky.test.db.postgres.junit.SingleInstancePostgresRule
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toJavaInstant
-import org.apache.arrow.adapter.jdbc.JdbcFieldInfo
-import org.apache.arrow.adapter.jdbc.JdbcToArrowConfigBuilder
-import org.apache.arrow.adapter.jdbc.JdbcToArrowUtils
-import org.apache.arrow.adbc.core.AdbcDriver
-import org.apache.arrow.adbc.driver.jdbc.JdbcConnection
-import org.apache.arrow.adbc.driver.jdbc.JdbcDriver
-import org.apache.arrow.adbc.driver.jdbc.JdbcQuirks
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.TimeStampMicroVector
 import org.apache.arrow.vector.TimeStampMilliVector
@@ -25,10 +16,8 @@ import org.apache.arrow.vector.TimeStampSecVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowFileWriter
-import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.ipc.ArrowStreamWriter
-import org.apache.arrow.vector.types.DateUnit
 import org.apache.arrow.vector.types.FloatingPointPrecision
 import org.apache.arrow.vector.types.TimeUnit
 import org.apache.arrow.vector.types.pojo.ArrowType
@@ -37,15 +26,11 @@ import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.ByteArrayReadableSeekableByteChannel
 import org.apache.arrow.vector.util.Text
-import org.duckdb.DuckDBConnection
-import org.duckdb.DuckDBResultSet
-import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.copy
@@ -56,26 +41,14 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
-import org.junit.Assert
-import org.junit.Rule
 import org.junit.Test
-import org.postgresql.ds.PGSimpleDataSource
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.math.BigDecimal
+import java.net.URI
 import java.net.URL
 import java.nio.channels.Channels
-import java.sql.Connection
-import java.sql.Date
-import java.sql.DriverManager
-import java.sql.Time
-import java.sql.Timestamp
-import java.sql.Types
 import java.util.Locale
-import java.util.UUID
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.typeOf
 
 class ArrowKtTest {
@@ -655,5 +628,25 @@ class ArrowKtTest {
         val ipcInputStream = ByteArrayInputStream(expected.saveArrowIPCToByteArray())
         val arrowStreamReader = ArrowStreamReader(ipcInputStream, RootAllocator())
         arrowStreamReader.toDataFrame() shouldBe expected
+    }
+
+    @Test
+    fun testReadParquet() {
+        val path = testResource("test.arrow.parquet").path
+        val dataFrame = DataFrame.readParquet(URI("file:$path").toURL())
+        dataFrame.rowsCount() shouldBe 300
+        assertEstimations(
+            exampleFrame = dataFrame,
+            expectedNullable = false,
+            hasNulls = false,
+            fromParquet = true,
+        )
+    }
+
+    @Test
+    fun testReadParquet2() {
+        val path = testResource("snappy.parquet").path
+        val dataFrame = DataFrame.readParquet(URI("file:$path").toURL())
+        dataFrame.print(columnTypes = true, borders = true)
     }
 }
