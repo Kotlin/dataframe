@@ -1,15 +1,11 @@
+@file:Suppress("SqlDialectInspection")
+
 package org.jetbrains.kotlinx.dataframe.io
 
-import org.apache.arrow.adapter.jdbc.JdbcFieldInfo
-import org.apache.arrow.adapter.jdbc.JdbcToArrowConfigBuilder
-import org.apache.arrow.adapter.jdbc.JdbcToArrowUtils
 import org.apache.arrow.adbc.core.AdbcDriver
 import org.apache.arrow.adbc.driver.jdbc.JdbcConnection
 import org.apache.arrow.adbc.driver.jdbc.JdbcDriver
-import org.apache.arrow.adbc.driver.jdbc.JdbcQuirks
 import org.apache.arrow.memory.RootAllocator
-import org.apache.arrow.vector.types.DateUnit
-import org.apache.arrow.vector.types.pojo.ArrowType
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.print
@@ -103,28 +99,27 @@ class ArrowAdbcTest {
         val url =
             "jdbc:h2:mem:test3;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"
 
-        val config = JdbcToArrowConfigBuilder()
-            .setArraySubTypeByColumnNameMap(
-                mapOf(
-                    "dateArrayCol" to JdbcFieldInfo(Types.ARRAY),
-                ),
-            ).build()
-
-        val quirks = JdbcQuirks.builder("h2")
-            .typeConverter {
-                if (it.jdbcType == Types.ARRAY) {
-                    ArrowType.Date(DateUnit.DAY)
-                } else {
-                    JdbcToArrowUtils.getArrowTypeFromJdbcType(it.fieldInfo, null)
-                }
-            }
-            .build()
+//        val config = JdbcToArrowConfigBuilder()
+//            .setArraySubTypeByColumnNameMap(
+//                mapOf(
+//                    "dateArrayCol" to JdbcFieldInfo(Types.ARRAY),
+//                ),
+//            ).build()
+//        val quirks = JdbcQuirks.builder("h2")
+//            .typeConverter {
+//                if (it.jdbcType == Types.ARRAY) {
+//                    ArrowType.Date(DateUnit.DAY)
+//                } else {
+//                    JdbcToArrowUtils.getArrowTypeFromJdbcType(it.fieldInfo, null)
+//                }
+//            }
+//            .build()
 
         val db = JdbcDriver(RootAllocator())
             .open(
                 buildMap {
                     AdbcDriver.PARAM_URI.set(this, url)
-                    put(JdbcDriver.PARAM_JDBC_QUIRKS, quirks)
+//                    put(JdbcDriver.PARAM_JDBC_QUIRKS, quirks)
                 },
             )
 

@@ -1,3 +1,5 @@
+@file:Suppress("SqlDialectInspection")
+
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.zonky.test.db.postgres.junit.EmbeddedPostgresRules
@@ -5,7 +7,6 @@ import io.zonky.test.db.postgres.junit.SingleInstancePostgresRule
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.mapToFrame
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -81,7 +82,7 @@ class DuckDbTest {
     @field:[JvmField Rule]
     val pg: SingleInstancePostgresRule = EmbeddedPostgresRules.singleInstance()
 
-    @Test // TODO
+    @Test
     fun `read postgres to duckdb to dataframe`() {
         val embeddedPg = pg.embeddedPostgres
         val dataSource = embeddedPg.postgresDatabase as PGSimpleDataSource
@@ -225,18 +226,13 @@ class DuckDbTest {
                 "ATTACH 'dbname=$dbname user=$username host=$host port=$port' AS db (TYPE postgres, SCHEMA 'public'); USE db;",
             )
 
-//            df1 = DataFrame.readSqlTable(connection, "table1", dbType = DuckDb)
-            df1 = DataFrame.readSqlQuery(connection, "SELECT * from table1", dbType = DuckDb)
-//            df2 = DataFrame.readSqlTable(connection, "table2", dbType = DuckDb)
-            df2 = DataFrame.readSqlQuery(connection, "SELECT * from table2", dbType = DuckDb)
+            df1 = DataFrame.readSqlTable(connection, "table1", dbType = DuckDb) // .cast<Table1>(true)
+//            df1 = DataFrame.readSqlQuery(connection, "SELECT * from table1", dbType = DuckDb)
+            df2 = DataFrame.readSqlTable(connection, "table2", dbType = DuckDb) // .cast<Table2>(true)
+//            df2 = DataFrame.readSqlQuery(connection, "SELECT * from table2", dbType = DuckDb)
         }
 
         df1.print(columnTypes = true, borders = true)
-        df1.mapToFrame {
-            expr { "colA"<Int>() + "colB"<Double>() } into "sum"
-            "sum" from { "colA"<Int>() + "colB"<Double>() }
-        }
-
         df2.print(columnTypes = true, borders = true)
     }
 }

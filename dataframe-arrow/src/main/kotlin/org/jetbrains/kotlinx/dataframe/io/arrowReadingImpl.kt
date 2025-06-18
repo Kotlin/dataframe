@@ -78,6 +78,7 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
+import java.sql.SQLException
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -547,6 +548,9 @@ internal fun DataFrame.Companion.readArrowDatasetImpl(
         val reader = +scanner.scanBatches()
 
         readArrowImpl(reader, nullability)
+    } catch { e: SQLException ->
+        e.printStackTrace()
     } catch { e: Exception ->
         e.printStackTrace()
-    } finally { }
+    } finally {
+    }
