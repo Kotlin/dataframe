@@ -79,7 +79,27 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = true)
     }
 
-    fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithConverter {
+    override fun process(groupBy: GroupBy<*, *>): CodeWithTypeCastGenerator {
+        val key = generate(
+            schema = groupBy.keys.schema(),
+            name = markerInterfacePrefix + "Keys",
+            isOpen = false,
+        )
+        val group = generate(
+            schema = groupBy.groups.schema.value,
+            name = markerInterfacePrefix + "Groups",
+            isOpen = false,
+        )
+
+        val keyTypeName = (key.typeCastGenerator as TypeCastGenerator.DataFrameApi).types.single()
+        val groupTypeName = (group.typeCastGenerator as TypeCastGenerator.DataFrameApi).types.single()
+
+        return CodeWithTypeCastGenerator(
+            declarations = key.declarations + "\n" + group.declarations,
+            typeCastGenerator = TypeCastGenerator.DataFrameApi(keyTypeName, groupTypeName),
+        )
+    }
+
     fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithTypeCastGenerator {
         val result = generator.generate(
             schema = schema,

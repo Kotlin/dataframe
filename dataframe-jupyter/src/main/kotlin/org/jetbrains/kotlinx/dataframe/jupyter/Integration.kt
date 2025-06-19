@@ -153,6 +153,17 @@ internal class Integration(private val notebook: Notebook, private val options: 
             null
         }
 
+    private fun KotlinKernelHost.updateGroupByVariable(
+        instance: GroupBy<*, *>,
+        property: KProperty<*>,
+        codeGen: ReplCodeGenerator,
+    ): VariableName? =
+        execute(
+            codeWithTypeCastGenerator = codeGen.process(instance),
+            property = property,
+            type = GroupBy::class.createStarProjectedType(false),
+        )
+
     override fun Builder.onLoaded() {
         if (version != null) {
             if (enableExperimentalCsv?.toBoolean() == true) {
@@ -291,6 +302,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
                     is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
                     is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
                     is ImportDataSchema -> updateImportDataSchemaVariable(instance, property)
+                    is GroupBy<*, *> -> updateGroupByVariable(instance, property, codeGen)
                     else -> error("${instance::class} should not be handled by Dataframe field handler")
                 }
             }
@@ -300,7 +312,8 @@ internal class Integration(private val notebook: Notebook, private val options: 
                     value is ColumnGroup<*> ||
                     value is AnyRow ||
                     value is AnyFrame ||
-                    value is ImportDataSchema
+                    value is ImportDataSchema ||
+                    value is GroupBy<*, *>
         })
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
