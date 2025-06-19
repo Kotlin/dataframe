@@ -15,7 +15,7 @@ public enum class InterfaceGenerationMode {
     None,
 }
 
-public data class CodeGenResult(val code: CodeWithConverter, val newMarkers: List<Marker>)
+public data class CodeGenResult(val code: CodeWithTypeCastGenerator, val newMarkers: List<Marker>)
 
 public interface CodeGenerator : ExtensionsCodeGenerator {
 
@@ -37,7 +37,7 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         interfaceMode: InterfaceGenerationMode,
         extensionProperties: Boolean,
         readDfMethod: DefaultReadDfMethod? = null,
-    ): CodeWithConverter
+    ): CodeWithTypeCastGenerator
 
     public companion object {
         public fun create(useFqNames: Boolean = true): CodeGenerator =
@@ -54,7 +54,7 @@ internal fun CodeGenerator.generate(
     markerClass: KClass<*>,
     interfaceMode: InterfaceGenerationMode,
     extensionProperties: Boolean,
-): CodeWithConverter =
+): CodeWithTypeCastGenerator =
     generate(
         MarkersExtractor.get(markerClass),
         interfaceMode,
@@ -64,4 +64,4 @@ internal fun CodeGenerator.generate(
 public inline fun <reified T> CodeGenerator.generate(
     interfaceMode: InterfaceGenerationMode,
     extensionProperties: Boolean,
-): CodeWithConverter = generate(T::class, interfaceMode, extensionProperties)
+): CodeWithTypeCastGenerator = generate(T::class, interfaceMode, extensionProperties)
