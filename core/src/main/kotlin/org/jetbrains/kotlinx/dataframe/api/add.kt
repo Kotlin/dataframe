@@ -150,6 +150,8 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
  * }
  * ```
  *
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
  * @param name name for a new column.
  * If it is empty, a unique column name will be generated.
  * Otherwise, it should be unique for original [DataFrame].
@@ -192,6 +194,8 @@ public inline fun <reified R, T> DataFrame<T>.add(
  * Also, you can use other methods such as [prev] and [next] to access other rows,
  * including [newValue][AddDataRow.newValue] to retrieve already computed values of this column
  * in previous rows.
+ *
+ * For more information: {@include [DocumentationUrls.Add]}.
  *
  * Returns a new [DataFrame] with the new column inserted at the given [path].
  * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
@@ -351,6 +355,8 @@ public class AddDsl<T>(
  * }
  * ```
  *
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
  * @param body An [AddDsl] expression used to define new columns and column groups.
  * @return A new [DataFrame] with the added columns.
  */
@@ -390,6 +396,8 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  *     else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
  * }
  * ```
+ *
+ * For more information: {@include [DocumentationUrls.Add]}.
  *
  * @param name name for a new column.
  * If it is empty, a unique column name will be generated.
