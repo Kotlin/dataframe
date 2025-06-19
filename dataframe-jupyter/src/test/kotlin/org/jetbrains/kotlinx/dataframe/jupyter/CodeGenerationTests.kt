@@ -1,5 +1,3 @@
-@file:Suppress("LocalVariableName")
-
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.intellij.lang.annotations.Language
@@ -56,7 +54,8 @@ class CodeGenerationTests : DataFrameJupyterTest() {
 
     @Test
     fun `interface without body compiled correctly`() {
-        """
+        @Language("kts")
+        val a = """
             val a = dataFrameOf("a")(1, 2, 3)
             val b = dataFrameOf("b")(1, 2, 3)
             val ab = dataFrameOf("a", "b")(1, 2)
@@ -66,26 +65,27 @@ class CodeGenerationTests : DataFrameJupyterTest() {
 
     @Test
     fun `nested schema with isOpen = false is ignored in marker generation`() {
-        """
-        val df = dataFrameOf("col" to listOf("a"), "leaf" to listOf(dataFrameOf("a", "b")(1, 2).first()))
-        val df1 = df.convert { leaf }.asFrame { it.add("c") { 3 } }
-        df1.leaf.c
+        @Language("kts")
+        val a = """
+            val df = dataFrameOf("col" to listOf("a"), "leaf" to listOf(dataFrameOf("a", "b")(1, 2).first()))
+            val df1 = df.convert { leaf }.asFrame { it.add("c") { 3 } }
+            df1.leaf.c
         """.checkCompilation()
     }
 
     // Issue #1222
     @Test
     fun `do not reuse marker with non-matching sub-schema`() {
-        @Language("kt")
-        val _1 = """
+        @Language("kts")
+        val a = """
             val df1 = dataFrameOf("group" to columnOf("a" to columnOf(1, null, 3)))
             val df2 = dataFrameOf("group" to columnOf("a" to columnOf(1, 2, 3)))
             df1.group.a
             df2.group.a
             """.checkCompilation()
 
-        @Language("kt")
-        val _2 = """
+        @Language("kts")
+        val b = """
             val df1 = dataFrameOf("group" to columnOf("a" to columnOf(1, 2, 3)))
             val df2 = dataFrameOf("group" to columnOf("a" to columnOf(1, null, 3)))
             df1.group.a
