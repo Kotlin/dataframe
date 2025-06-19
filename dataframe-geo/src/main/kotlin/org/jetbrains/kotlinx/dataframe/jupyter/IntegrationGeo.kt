@@ -65,8 +65,8 @@ internal class IntegrationGeo : JupyterIntegration() {
         val execution = FieldHandlerFactory.createUpdateExecution<GeoDataFrame<*>> { geo, kProperty ->
             // TODO rewrite better
             val generatedDf = execute(
-                codeWithConverter = replCodeGeneratorImpl.process(geo.df, kProperty),
-                "(${kProperty.name}.df as DataFrame<*>)",
+                codeWithTypeCastGenerator = replCodeGeneratorImpl.process(geo.df, kProperty),
+                expression = "(${kProperty.name}.df as DataFrame<*>)",
             )
             val name = execute("GeoDataFrame($generatedDf, ${kProperty.name}.crs)").name
             name
