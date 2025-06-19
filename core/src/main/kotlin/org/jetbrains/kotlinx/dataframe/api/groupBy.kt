@@ -115,4 +115,5 @@ public class ReducedGroupBy<T, G>(
 }
 
 @PublishedApi
-internal fun <T, G> GroupBy<T, G>.reduce(reducer: Selector<DataFrame<G>, DataRow<G>?>) = ReducedGroupBy(this, reducer)
+internal fun <T, G> GroupBy<T, G>.reduce(reducer: Selector<DataFrame<G>, DataRow<G>?>): ReducedGroupBy<T, G> =
+    ReducedGroupBy(this, reducer)

@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
@@ -40,6 +41,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         when (type.classifier) {
             DataFrame::class -> type.arguments[0].type?.jvmErasure
             DataRow::class -> type.arguments[0].type?.jvmErasure
+            GroupBy::class -> type.arguments[0].type?.jvmErasure
             else -> null
         }
 

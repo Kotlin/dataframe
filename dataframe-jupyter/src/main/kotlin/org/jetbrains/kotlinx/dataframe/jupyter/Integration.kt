@@ -28,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
@@ -152,6 +153,17 @@ internal class Integration(private val notebook: Notebook, private val options: 
         } else {
             null
         }
+
+    private fun KotlinKernelHost.updateGroupByVariable(
+        groupBy: GroupBy<*, *>,
+        property: KProperty<*>,
+        codeGen: ReplCodeGenerator,
+    ): VariableName? =
+        execute(
+            codeWithConverter = codeGen.process(groupBy.concat(), property),
+            property = property,
+            type = GroupBy::class.createStarProjectedType(false),
+        )
 
     override fun Builder.onLoaded() {
         if (version != null) {
@@ -283,12 +295,14 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
         addTypeConverter(object : FieldHandler {
             override val execution = FieldHandlerFactory.createUpdateExecution<Any> { instance, property ->
+                // TODO check #1245 here
                 when (instance) {
                     is AnyCol -> updateAnyColVariable(instance, property, codeGen)
                     is ColumnGroup<*> -> updateColumnGroupVariable(instance, property, codeGen)
                     is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
                     is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
                     is ImportDataSchema -> updateImportDataSchemaVariable(instance, property)
+                    is GroupBy<*, *> -> updateGroupByVariable(instance, property, codeGen)
                     else -> error("${instance::class} should not be handled by Dataframe field handler")
                 }
             }
@@ -298,7 +312,8 @@ internal class Integration(private val notebook: Notebook, private val options: 
                     value is ColumnGroup<*> ||
                     value is AnyRow ||
                     value is AnyFrame ||
-                    value is ImportDataSchema
+                    value is ImportDataSchema ||
+                    value is GroupBy<*, *>
         })
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {

@@ -92,4 +92,39 @@ class CodeGenerationTests : DataFrameJupyterTest() {
             df2.group.a
             """.checkCompilation()
     }
+
+    // Issue #1221
+    @Test
+    fun `GroupBy code generation`() {
+        @Language("kts")
+        val a = """
+            val ab = dataFrameOf("a", "b")(1, 2)
+            ab.groupBy { a }.aggregate { sum { b } into "bSum" }
+        """.checkCompilation()
+
+        @Language("kts")
+        val b = """
+            val ab = dataFrameOf("a", "b")(1, 2)
+            val grouped = ab.groupBy { a }
+            grouped.aggregate { sum { b } into "bSum" }
+        """.checkCompilation()
+
+        @Language("kts")
+        val c = """
+            val grouped = dataFrameOf("a", "b")(1, 2).groupBy("a")
+            grouped.aggregate { sum { b } into "bSum" }
+        """.checkCompilation()
+
+        @Language("kts")
+        val d = """
+            val grouped = dataFrameOf("a", "b")(1, 2).groupBy("a")
+            grouped.keys.a
+        """.checkCompilation()
+
+        @Language("kts")
+        val e = """
+            val grouped = dataFrameOf("a", "b")(1, 2).groupBy { "a"<Int>() named "k" }
+            grouped.keys.k
+        """.checkCompilation()
+    }
 }
