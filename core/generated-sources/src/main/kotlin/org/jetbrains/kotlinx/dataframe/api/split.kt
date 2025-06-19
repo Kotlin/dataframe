@@ -295,6 +295,8 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     vararg otherNames: KProperty<*>,
 ): DataFrame<T> = inward(listOf(firstName.columnName) + otherNames.map { it.columnName })
 
+@Refine
+@Interpretable("SplitIterableInward")
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inward(
     vararg names: String,
     noinline extraNamesGenerator: ColumnNamesGenerator<C>? = null,
@@ -306,6 +308,8 @@ public fun <T, C : DataFrame<R>, R> Split<T, C>.inward(
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
 ): DataFrame<T> = by { it.rows() }.inward(names.toList(), extraNamesGenerator)
 
+@Refine
+@Interpretable("SplitPairInward")
 public fun <T, A, B> Split<T, Pair<A, B>>.inward(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
 
