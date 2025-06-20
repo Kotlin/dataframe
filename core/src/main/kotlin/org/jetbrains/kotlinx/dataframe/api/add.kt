@@ -15,10 +15,12 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
@@ -26,58 +28,64 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
-/*
- * `add` operation adds new columns to DataFrame.
- */
-
 // region Add existing columns
 
 /**
- * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
+ * Adds new [columns] to the end of this [DataFrame] (at the top level).
  *
- * Original [DataFrame] is not modified.
+ * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
  *
- * @param columns columns to add
- * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
- * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
- * @return new [DataFrame] with added columns
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
+ * @param columns columns to add.
+ * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
+ * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
+ * @return new [DataFrame] with added columns.
  */
 public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
 
 /**
- * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
+ * Adds new [columns] to the end of this [DataFrame] (at the top level).
  *
- * Original [DataFrame] is not modified.
+ * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
  *
- * @param columns columns to add
- * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
- * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
- * @return new [DataFrame] with added columns
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
+ * @param columns columns to add.
+ * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
+ * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
+ * @return new [DataFrame] with added columns.
  */
 public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> =
     dataFrameOf(columns() + columns).cast()
 
 /**
- * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
+ * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
  *
- * Original [DataFrame] is not modified.
+ * Returns a new [DataFrame] with the columns from the specified
+ * [dataFrames] appended to the original list of [DataFrame.columns].
  *
- * @param dataFrames dataFrames to get columns from
- * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
- * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
- * @return new [DataFrame] with added columns
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
+ * @param dataFrames dataFrames to get columns from.
+ * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
+ * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
+ * @return new [DataFrame] with added columns.
  */
 public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
- * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
+ * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
  *
- * Original [DataFrame] is not modified.
+ * Returns a new [DataFrame] with the columns from the specified
+ * [dataFrames] appended to the original list of [DataFrame.columns].
  *
- * @param dataFrames dataFrames to get columns from
- * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
- * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
- * @return new [DataFrame] with added columns
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
+ * @param dataFrames dataFrames to get columns from.
+ * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
+ * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
+ * @return new [DataFrame] with added columns.
  */
 @JvmName("addAllFrames")
 public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> =
@@ -115,14 +123,43 @@ public interface AddDataRow<out T> : DataRow<T> {
 public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
 
 /**
- * Creates new column using row [expression] and adds it to the end of [DataFrame]
+ * Creates a new column using [AddExpression] and
+ * adds a new column to the end of this [DataFrame] (at the top level).
  *
- * Original [DataFrame] is not modified.
+ * An [AddExpression] allows to compute a value for each row in the new column
+ * based on the values from that row in the original [DataFrame].
+ * Also, you can use other methods such as [prev] and [next] to access other rows,
+ * including [newValue][AddDataRow.newValue] to retrieve already computed values of this column
+ * in previous rows.
  *
- * @param name name for a new column. If it is empty, a unique column name will be generated. Otherwise, it should be unique for original [DataFrame].
- * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for a new column
- * @param expression [AddExpression] that computes column value for every [DataRow]
- * @return new [DataFrame] with added column
+ * Returns a new [DataFrame] with the new column appended to the original list of [DataFrame.columns].
+ *
+ * ## Example
+ *
+ * ```kotlin
+ * // Add a new column "sum" that contains the sum of values from the "firstValue"
+ * // and "secondValue" columns for each row.
+ * val dfWithSum = df.add("sum") { firstValue + secondValue }
+ *
+ * // Add a "fibonacci" column with the Fibonacci sequence:
+ * // for the first two rows, the value is 1;
+ * // for subsequent rows, it's the sum of the two previous Fibonacci values.
+ * val dfWithFibonacci = df.add("fibonacci") {
+ *     if (index() < 2) 1
+ *     else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+ * }
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
+ * @param name name for a new column.
+ * If it is empty, a unique column name will be generated.
+ * Otherwise, it should be unique for original [DataFrame].
+ * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for a new column.
+ * Defaults to [Infer.Nulls].
+ * @param expression [AddExpression] that computes column value for every [DataRow] of a new column.
+ * @return new [DataFrame] with added column.
+ *
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
 @Refine
@@ -149,6 +186,38 @@ public inline fun <reified R, T> DataFrame<T>.add(
     noinline expression: AddExpression<T, R>,
 ): DataFrame<T> = add(column.path(), infer, expression)
 
+/**
+ * Creates a new column using [AddExpression] and inserts it at the specified [ColumnPath].
+ *
+ * An [AddExpression] allows to compute a value for each row in the new column
+ * based on the values from that row in the original [DataFrame].
+ * Also, you can use other methods such as [prev] and [next] to access other rows,
+ * including [newValue][AddDataRow.newValue] to retrieve already computed values of this column
+ * in previous rows.
+ *
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
+ * Returns a new [DataFrame] with the new column inserted at the given [path].
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ *
+ * ## Example
+ *
+ * ```kotlin
+ * // Add a new column "sum" inside the "info" column group (which will be created if it doesn't exist).
+ * // The column contains the sum of values from the "firstValue" and "secondValue" columns for each row.
+ * val dfWithSum = df.add(pathOf("info", "sum")) { firstValue + secondValue }
+ * ```
+ *
+ * @param path Target [ColumnPath] for the new column.
+ * If it points to a nested location,
+ * intermediate columns will be created if necessary.
+ * @param infer A value of [Infer] that specifies how to compute the column [type][BaseColumn.type] for the new column.
+ * Defaults to [Infer.Nulls].
+ * @param expression An [AddExpression] that computes the column value for every [DataRow] of the new column.
+ * @return A new [DataFrame] with the added column.
+ *
+ * @throws DuplicateColumnNamesException If the [DataFrame] already contains a column at the specified [path].
+ */
 public inline fun <reified R, T> DataFrame<T>.add(
     path: ColumnPath,
     infer: Infer = Infer.Nulls,
@@ -163,6 +232,10 @@ public inline fun <reified R, T> DataFrame<T>.add(
 
 // region Create and add several columns
 
+/**
+ * Receiver that is used by the [add] and [mapToFrame]
+ * for adding new columns and column groups based on [DataFrame] columns and row values.
+ */
 public class AddDsl<T>(
     @PublishedApi internal val df: DataFrame<T>,
 ) : ColumnsContainer<T> by df,
@@ -253,6 +326,40 @@ public class AddDsl<T>(
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 
+/**
+ * Creates new columns using the [AddDsl] builder.
+ *
+ * An [AddDsl] allows to add multiple new columns and column groups to a [DataFrame]
+ * using concise syntax based on `from`, `into` operations and [AddExpression]s.
+ *
+ * Returns a new [DataFrame] with the newly added columns.
+ *
+ * ## Example
+ *
+ * ```kotlin
+ * val dfWithAdded = df.add {
+ *     // Add new column "yearOfBirth" computed as 2021 minus value in "age" column
+ *     "yearOfBirth" from { 2021 - age }
+ *
+ *     // Add column "is adult" with result of age > 18
+ *     age > 18 into "is adult"
+ *
+ *     // Add column group "details"
+ *     group("details") {
+ *         // Add column "last name length" with length of lastName
+ *         name.lastName.length() into "last name length"
+ *
+ *         // Add column "full name" by combining firstName and lastName
+ *         "full name" from { name.firstName + " " + name.lastName }
+ *     }
+ * }
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
+ * @param body An [AddDsl] expression used to define new columns and column groups.
+ * @return A new [DataFrame] with the added columns.
+ */
 @Refine
 @Interpretable("AddWithDsl")
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
@@ -261,6 +368,47 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     return dataFrameOf(this@add.columns() + dsl.columns).cast()
 }
 
+/**
+ * Creates a new column using [AddExpression] and
+ * adds a new column to the end of each group (i.e., [DataFrame]s) of this [GroupBy] (at the top level).
+ *
+ * An [AddExpression] allows to compute a value for each row in the new column
+ * based on the values from that row in the original group [DataFrame]s.
+ * Also, you can use other methods such as [prev] and [next] to access other rows,
+ * including [newValue][AddDataRow.newValue] to retrieve already computed values of this column
+ * in previous rows.
+ *
+ * Returns a new [GroupBy] with the new column
+ * appended to each group [DataFrame] to the original list of [DataFrame.columns].
+ *
+ * ## Example
+ *
+ * ```kotlin
+ * // Add a new column "sum" that contains the sum of values from the "firstValue"
+ * // and "secondValue" columns for each row.
+ * val gbWithSum = gb.add("sum") { firstValue + secondValue }
+ *
+ * // Add a "fibonacci" column with the Fibonacci sequence:
+ * // for the first two rows, the value is 1;
+ * // for subsequent rows, it's the sum of the two previous Fibonacci values.
+ * val gbWithFibonacci = gb.add("fibonacci") {
+ *     if (index() < 2) 1
+ *     else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+ * }
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.Add]}.
+ *
+ * @param name name for a new column.
+ * If it is empty, a unique column name will be generated.
+ * Otherwise, it should be unique for original group [DataFrame]s.
+ * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for a new column.
+ * Defaults to [Infer.Nulls].
+ * @param expression [AddExpression] that computes column value for every [DataRow] of a new column.
+ * @return new [GroupBy] with added column.
+ *
+ * @throws DuplicateColumnNamesException if group [DataFrame]s already contains a column with given [name].
+ */
 @Refine
 @Interpretable("GroupByAdd")
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
