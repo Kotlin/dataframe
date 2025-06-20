@@ -16,8 +16,8 @@ repositories {
 
 dependencies {
     api(projects.core)
-    implementation(libs.mariadb)
     implementation(libs.kotlinLogging)
+    testImplementation(libs.mariadb)
     testImplementation(libs.sqlite)
     testImplementation(libs.postgresql)
     testImplementation(libs.mysql)
