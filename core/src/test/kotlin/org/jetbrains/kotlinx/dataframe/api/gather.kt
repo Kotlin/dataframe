@@ -187,4 +187,19 @@ class GatherTests {
             "b", 5,
         )
     }
+
+    @Test
+    fun `gather explode lists typed`() {
+        val df = dataFrameOf("list" to columnOf(listOf(1, 2, 3)))
+            .gather { "list"<List<Int>>() }
+            .explodeLists()
+            .mapValues { listOf(it) }
+            .into("key", "value")
+
+        df shouldBe dataFrameOf("key", "value")(
+            "list", listOf(1),
+            "list", listOf(2),
+            "list", listOf(3),
+        )
+    }
 }
