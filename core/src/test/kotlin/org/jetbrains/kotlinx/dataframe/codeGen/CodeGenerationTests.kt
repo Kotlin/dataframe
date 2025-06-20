@@ -115,11 +115,11 @@ class CodeGenerationTests : BaseTest() {
         val expectedConverter = "it.cast<$typeName>()"
 
         generated.declarations shouldBe expectedDeclaration
-        generated.converter("it") shouldBe expectedConverter
+        generated.typeCastGenerator("it") shouldBe expectedConverter
 
         val rowGenerated = codeGen.process(df[0], ::typedRow)
         rowGenerated.hasDeclarations shouldBe true
-        rowGenerated.hasConverter shouldBe true
+        rowGenerated.hasCaster shouldBe true
     }
 
     val row: AnyRow? = null
@@ -146,7 +146,7 @@ class CodeGenerationTests : BaseTest() {
         val expectedConverter = "it.cast<$typeName>()"
 
         generated.declarations shouldBe expectedDeclaration
-        generated.converter("it") shouldBe expectedConverter
+        generated.typeCastGenerator("it") shouldBe expectedConverter
     }
 
     @Test
@@ -191,7 +191,7 @@ class CodeGenerationTests : BaseTest() {
         val expectedConverter = "it.cast<$type2>()"
 
         generated.declarations shouldBe declaration1 + "\n" + declaration2
-        generated.converter("it") shouldBe expectedConverter
+        generated.typeCastGenerator("it") shouldBe expectedConverter
     }
 
     @Test
