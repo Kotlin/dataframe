@@ -2381,6 +2381,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/Gather {
 
 public final class org/jetbrains/kotlinx/dataframe/api/GatherKt {
 	public static final fun explodeLists (Lorg/jetbrains/kotlinx/dataframe/api/Gather;)Lorg/jetbrains/kotlinx/dataframe/api/Gather;
+	public static final fun explodeListsTyped (Lorg/jetbrains/kotlinx/dataframe/api/Gather;)Lorg/jetbrains/kotlinx/dataframe/api/Gather;
 	public static final fun gather (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/Gather;
 	public static final fun gather (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/Gather;
 	public static final fun gather (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/Gather;
