@@ -71,6 +71,19 @@ public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> =
         explode = true,
     )
 
+@JvmName("explodeListsTyped")
+@Interpretable("GatherExplodeLists")
+public fun <T, C, K, R> Gather<T, List<C>, K, R>.explodeLists(): Gather<T, C, K, R> =
+    Gather(
+        df = df,
+        columns = columns,
+        filter = filter,
+        keyType = keyType,
+        keyTransform = keyTransform,
+        valueTransform = valueTransform,
+        explode = true,
+    ) as Gather<T, C, K, R>
+
 @Interpretable("GatherMap")
 public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(
     noinline transform: (String) -> K,
