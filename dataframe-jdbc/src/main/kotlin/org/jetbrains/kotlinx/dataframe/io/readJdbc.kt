@@ -604,6 +604,8 @@ public fun ResultSet.readDataFrame(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [tableTypes] an optional list of table types, which must be from the list of table types
+ *   returned from [DatabaseMetaData.getTableTypes]; `null` returns all types. By default, it's `["TABLE"]`.
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  */
 public fun DataFrame.Companion.readAllSqlTables(
@@ -612,9 +614,10 @@ public fun DataFrame.Companion.readAllSqlTables(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    tableTypes: List<String>? = listOf("TABLE"),
 ): Map<String, AnyFrame> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
+        return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType, tableTypes)
     }
 }
 
@@ -628,6 +631,8 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
+ * @param [tableTypes] an optional list of table types, which must be from the list of table types
+ *   returned from [DatabaseMetaData.getTableTypes]; `null` returns all types. By default, it's `["TABLE"]`.
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  *
  * @see DriverManager.getConnection
@@ -638,12 +643,13 @@ public fun DataFrame.Companion.readAllSqlTables(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    tableTypes: List<String>? = listOf("TABLE"),
 ): Map<String, AnyFrame> {
     val metaData = connection.metaData
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    // exclude a system and other tables without data, but it looks like it is supported badly for many databases
-    val tables = metaData.getTables(catalogue, null, null, null)
+    // exclude system- and other tables without data, but it looks like it is supported badly for many databases
+    val tables = metaData.getTables(catalogue, null, null, tableTypes?.toTypedArray())
 
     val dataFrames = mutableMapOf<String, AnyFrame>()
 
@@ -665,6 +671,27 @@ public fun DataFrame.Companion.readAllSqlTables(
             val dataFrame = readSqlTable(connection, tableName, limit, inferNullability, dbType)
             dataFrames += tableName to dataFrame
             logger.debug { "Finished reading table: $tableName" }
+        }
+    }
+
+    // We may have no tables or filtered for the wrong table type, let's give a helpful error message
+    if (dataFrames.isEmpty()) {
+        val supportedTableTypes = metaData.tableTypes.let {
+            buildList { while (it.next()) add(it.getString("TABLE_TYPE")) }
+        }
+        if (tableTypes?.any { it !in supportedTableTypes } == true) {
+            val unsupportedTypes = tableTypes.filter { it !in supportedTableTypes }
+            throw IllegalArgumentException(
+                buildString {
+                    appendLine("Found no tables with type(s) $tableTypes.")
+                    if (unsupportedTypes.isNotEmpty()) {
+                        appendLine(
+                            "Table type(s) $unsupportedTypes are unsupported for ${determinedDbType::class.simpleName}.",
+                        )
+                    }
+                    appendLine("If this is unexpected, try adjusting `tableTypes=` to any of $supportedTableTypes.")
+                },
+            )
         }
     }
 
