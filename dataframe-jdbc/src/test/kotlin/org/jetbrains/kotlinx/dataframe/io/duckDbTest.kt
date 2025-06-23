@@ -45,7 +45,9 @@ import org.duckdb.DuckDBResultSetMetaData.type_to_int
 import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.inferType
+import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.DuckDb.toKType
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -60,6 +62,7 @@ import java.sql.Ref
 import java.sql.ResultSet
 import java.sql.RowId
 import java.sql.SQLXML
+import java.sql.Struct
 import java.sql.Time
 import java.sql.Timestamp
 import java.sql.Types
@@ -82,12 +85,24 @@ private const val URL = "jdbc:duckdb:"
 object DuckDb : DbType("duckdb") {
     override val driverClassName = "org.duckdb.DuckDBDriver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema =
-        ColumnSchema.Value(convertSqlTypeToKType(tableColumnMetadata))
+    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
+        val type = convertSqlTypeToKType(tableColumnMetadata)
 
+        return when {
+            type.isSubtypeOf(typeOf<Struct>()) -> ColumnSchema.Group(
+                DataFrameSchemaImpl(mapOf(tableColumnMetadata.name to ColumnSchema.Value(type))),
+                type,
+            )
+
+            else -> ColumnSchema.Value(type)
+        }
+    }
+
+    // TODO?
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean =
         tableMetadata.schemaName?.lowercase()?.contains("information_schema") == true ||
-            tableMetadata.schemaName?.lowercase()?.contains("system") == true
+            tableMetadata.schemaName?.lowercase()?.contains("system") == true ||
+            tableMetadata.name.lowercase().contains("system_")
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata =
         TableMetadata(
@@ -285,6 +300,38 @@ class DuckDbTest {
         }
 
         df.print(borders = true, columnTypes = true)
+        df.isNotEmpty() shouldBe true
+    }
+
+    // TODO!
+    @Test
+    fun `read all tables`() {
+        DriverManager.getConnection(URL).use { connection ->
+            connection.prepareStatement(
+                """
+                CREATE TABLE IF NOT EXISTS test_table (
+                    id INTEGER PRIMARY KEY,
+                    name VARCHAR,
+                    age INTEGER,
+                    salary DOUBLE,
+                    hire_date DATE
+                )
+                """.trimIndent(),
+            ).executeUpdate()
+
+            connection.prepareStatement(
+                """
+                INSERT INTO test_table (id, name, age, salary, hire_date)
+                VALUES 
+                    (1, 'John Doe', 30, 50000.00, '2020-01-15'),
+                    (2, 'Jane Smith', 28, 55000.00, '2021-03-20'),
+                    (3, 'Bob Johnson', 35, 65000.00, '2019-11-10'),
+                    (4, 'Alice Brown', 32, 60000.00, '2020-07-01')
+                """.trimIndent(),
+            ).executeUpdate()
+
+            DataFrame.readAllSqlTables(connection, "test_table", dbType = DuckDb).isNotEmpty() shouldBe true
+        }
     }
 
     /**
