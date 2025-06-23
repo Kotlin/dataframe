@@ -862,14 +862,17 @@ public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataF
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [tableTypes] an optional list of table types, which must be from the list of table types
+ *   returned from [DatabaseMetaData.getTableTypes]; `null` returns all types. By default, it's `["TABLE", "BASE TABLE"]`.
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
 public fun DataFrame.Companion.getSchemaForAllSqlTables(
     dbConfig: DbConnectionConfig,
     dbType: DbType? = null,
+    tableTypes: List<String>? = listOf("TABLE", "BASE TABLE"),
 ): Map<String, DataFrameSchema> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return getSchemaForAllSqlTables(connection, dbType)
+        return getSchemaForAllSqlTables(connection, dbType, tableTypes)
     }
 }
 
@@ -879,18 +882,20 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(
  * @param [connection] the database connection.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
+ * @param [tableTypes] an optional list of table types, which must be from the list of table types
+ *   returned from [DatabaseMetaData.getTableTypes]; `null` returns all types. By default, it's `["TABLE", "BASE TABLE"]`.
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
 public fun DataFrame.Companion.getSchemaForAllSqlTables(
     connection: Connection,
     dbType: DbType? = null,
+    tableTypes: List<String>? = listOf("TABLE", "BASE TABLE"),
 ): Map<String, DataFrameSchema> {
     val metaData = connection.metaData
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    val tableTypes = arrayOf("TABLE")
-    // exclude a system and other tables without data
-    val tables = metaData.getTables(null, null, null, tableTypes)
+    // exclude system- and other tables without data
+    val tables = metaData.getTables(null, null, null, tableTypes?.toTypedArray())
 
     val dataFrameSchemas = mutableMapOf<String, DataFrameSchema>()
 
@@ -901,6 +906,27 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(
             val tableName = jdbcTable.name
             val dataFrameSchema = getSchemaForSqlTable(connection, tableName, determinedDbType)
             dataFrameSchemas += tableName to dataFrameSchema
+        }
+    }
+
+    // We may have no tables or filtered for the wrong table type, let's give a helpful error message
+    if (dataFrameSchemas.isEmpty()) {
+        val supportedTableTypes = metaData.tableTypes.let {
+            buildList { while (it.next()) add(it.getString("TABLE_TYPE")) }
+        }
+        if (tableTypes?.any { it !in supportedTableTypes } == true) {
+            val unsupportedTypes = tableTypes.filter { it !in supportedTableTypes }
+            throw IllegalArgumentException(
+                buildString {
+                    appendLine("Found no tables with type(s) $tableTypes.")
+                    if (unsupportedTypes.isNotEmpty()) {
+                        appendLine(
+                            "Table type(s) $unsupportedTypes are unsupported for ${determinedDbType::class.simpleName}.",
+                        )
+                    }
+                    appendLine("If this is unexpected, try adjusting `tableTypes=` to any of $supportedTableTypes.")
+                },
+            )
         }
     }
 
