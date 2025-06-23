@@ -303,7 +303,6 @@ class DuckDbTest {
         df.isNotEmpty() shouldBe true
     }
 
-    // TODO!
     @Test
     fun `read all tables`() {
         DriverManager.getConnection(URL).use { connection ->
@@ -330,7 +329,7 @@ class DuckDbTest {
                 """.trimIndent(),
             ).executeUpdate()
 
-            DataFrame.readAllSqlTables(connection, "test_table", dbType = DuckDb).isNotEmpty() shouldBe true
+            DataFrame.readAllSqlTables(connection = connection, dbType = DuckDb).isNotEmpty() shouldBe true
         }
     }
 
