@@ -89,7 +89,7 @@ class MatchSchemeTests {
     fun `marker is reused`() {
         val codeGen = ReplCodeGenerator.create()
         codeGen.process(DataRecord::class)
-        codeGen.process(typed, ::typed).hasConverter shouldBe false
+        codeGen.process(typed, ::typed).hasCaster shouldBe false
         val generated = codeGen.process(df, ::df)
         generated.declarations.split("\n").size shouldBe 1
     }

@@ -3,15 +3,12 @@
 This is the core of the library, published as the `dataframe-core` package.
 It contains the DataFrame API and its implementation, as well as plenty of JUnit tests.
 
-I/O operations are split off into other modules, like [:dataframe-excel](../dataframe-excel),
-or [:dataframe-jdbc](../dataframe-jdbc), however, this is has not happened yet for all operations
-(see [Issue #100](https://github.com/Kotlin/dataframe/issues/100)).
+I/O operations are split off into other modules, like [:dataframe-excel](../dataframe-excel), [:dataframe-jdbc](../dataframe-jdbc), or [:dataframe-json](../dataframe-json).
 
 At the moment, these integrations are still part of the `:core` module:
 
 - (deprecated) csv/tsv
 - html
-- json
 
 ### Korro code samples
 
