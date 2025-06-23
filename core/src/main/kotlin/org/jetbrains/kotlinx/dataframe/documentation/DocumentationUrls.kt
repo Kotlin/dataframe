@@ -101,4 +101,7 @@ internal interface DocumentationUrls {
 
     /** [See `convert` on the documentation website.]({@include [Url]}/convert.html) */
     interface Convert
+
+    /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
+    interface Gather
 }
