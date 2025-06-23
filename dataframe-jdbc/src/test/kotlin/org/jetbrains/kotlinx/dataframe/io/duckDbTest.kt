@@ -24,10 +24,16 @@ import org.duckdb.DuckDBColumnType.SMALLINT
 import org.duckdb.DuckDBColumnType.STRUCT
 import org.duckdb.DuckDBColumnType.TIME
 import org.duckdb.DuckDBColumnType.TIMESTAMP
+import org.duckdb.DuckDBColumnType.TIMESTAMP_MS
+import org.duckdb.DuckDBColumnType.TIMESTAMP_NS
+import org.duckdb.DuckDBColumnType.TIMESTAMP_S
+import org.duckdb.DuckDBColumnType.TIMESTAMP_WITH_TIME_ZONE
+import org.duckdb.DuckDBColumnType.TIME_WITH_TIME_ZONE
 import org.duckdb.DuckDBColumnType.TINYINT
 import org.duckdb.DuckDBColumnType.UBIGINT
 import org.duckdb.DuckDBColumnType.UHUGEINT
 import org.duckdb.DuckDBColumnType.UINTEGER
+import org.duckdb.DuckDBColumnType.UNION
 import org.duckdb.DuckDBColumnType.UNKNOWN
 import org.duckdb.DuckDBColumnType.USMALLINT
 import org.duckdb.DuckDBColumnType.UTINYINT
@@ -36,6 +42,7 @@ import org.duckdb.DuckDBColumnType.VARCHAR
 import org.duckdb.DuckDBConnection
 import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.DuckDBResultSetMetaData.type_to_int
+import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.inferType
 import org.jetbrains.kotlinx.dataframe.api.print
@@ -44,6 +51,8 @@ import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.junit.Test
 import java.math.BigDecimal
+import java.math.BigInteger
+import java.sql.Blob
 import java.sql.Clob
 import java.sql.DriverManager
 import java.sql.NClob
@@ -54,11 +63,15 @@ import java.sql.SQLXML
 import java.sql.Time
 import java.sql.Timestamp
 import java.sql.Types
+import java.time.LocalDate
+import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.util.Date
+import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
@@ -69,8 +82,8 @@ private const val URL = "jdbc:duckdb:"
 object DuckDb : DbType("duckdb") {
     override val driverClassName = "org.duckdb.DuckDBDriver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? =
-        convertSqlTypeToKType(tableColumnMetadata)?.let { ColumnSchema.Value(it) }
+    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema =
+        ColumnSchema.Value(convertSqlTypeToKType(tableColumnMetadata))
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean =
         tableMetadata.schemaName?.lowercase()?.contains("information_schema") == true ||
@@ -86,49 +99,86 @@ object DuckDb : DbType("duckdb") {
     /**
      * Follows exactly [org.duckdb.DuckDBVector.getObject].
      *
-     * I commented out all types that are covered correctly by
-     * [org.jetbrains.kotlinx.dataframe.io.makeCommonSqlToKTypeMapping] at the moment, however, as the integration
-     * can still change, we can enable the full map for all [DuckDB types][DuckDBColumnType] exactly.
+     * I added a "// dataframe-jdbc" comment for all types that are covered correctly by
+     * [org.jetbrains.kotlinx.dataframe.io.makeCommonSqlToKTypeMapping] at the moment, however, to cover
+     * all nested types, we'll use a full type-map for all [DuckDB types][DuckDBColumnType] exactly.
      */
     @Suppress("ktlint:standard:blank-line-between-when-conditions")
-    private fun String.toKType(isNullable: Boolean): KType? {
+    internal fun String.toKType(isNullable: Boolean): KType {
         val sqlTypeName = this
         return when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
-            //            BOOLEAN -> typeOf<Boolean>()
+            BOOLEAN -> typeOf<Boolean>() // dataframe-jdbc
             TINYINT -> typeOf<Byte>()
             SMALLINT -> typeOf<Short>()
-            //            INTEGER -> typeOf<Int>()
-            //            BIGINT -> typeOf<Long>()
-            HUGEINT -> typeOf<java.math.BigInteger>()
-            UHUGEINT -> typeOf<java.math.BigInteger>()
+            INTEGER -> typeOf<Int>() // dataframe-jdbc
+            BIGINT -> typeOf<Long>() // dataframe-jdbc
+            HUGEINT -> typeOf<BigInteger>()
+            UHUGEINT -> typeOf<BigInteger>()
             UTINYINT -> typeOf<Short>()
             USMALLINT -> typeOf<Int>()
             UINTEGER -> typeOf<Long>()
-            UBIGINT -> typeOf<java.math.BigInteger>()
-            //            FLOAT -> typeOf<Float>()
-            //            DOUBLE -> typeOf<Double>()
-            //            DECIMAL -> typeOf<java.math.BigDecimal>()
-            TIME -> typeOf<java.time.LocalTime>()
-            //            TIME_WITH_TIME_ZONE -> typeOf<java.time.OffsetTime>()
-            DATE -> typeOf<java.time.LocalDate>()
-            //            TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S -> typeOf<java.sql.Timestamp>()
-            //            TIMESTAMP_WITH_TIME_ZONE -> typeOf<java.time.OffsetDateTime>()
-            JSON -> typeOf<org.duckdb.JsonNode>()
-            BLOB -> typeOf<java.sql.Blob>()
-            UUID -> typeOf<java.util.UUID>()
-            MAP -> typeOf<Map<Any?, Any?>>()
+            UBIGINT -> typeOf<BigInteger>()
+            FLOAT -> typeOf<Float>() // dataframe-jdbc
+            DOUBLE -> typeOf<Double>() // dataframe-jdbc
+            DECIMAL -> typeOf<BigDecimal>() // dataframe-jdbc
+            TIME -> typeOf<LocalTime>()
+            TIME_WITH_TIME_ZONE -> typeOf<OffsetTime>() // dataframe-jdbc
+            DATE -> typeOf<LocalDate>()
+            TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S -> typeOf<Timestamp>() // dataframe-jdbc
+            TIMESTAMP_WITH_TIME_ZONE -> typeOf<OffsetDateTime>() // dataframe-jdbc
+            JSON -> typeOf<JsonNode>()
+            BLOB -> typeOf<Blob>()
+            UUID -> typeOf<UUID>()
+            MAP -> {
+                val (key, value) = parseMapType(sqlTypeName)
+                Map::class.createType(
+                    listOf(
+                        KTypeProjection.invariant(key.toKType(false)),
+                        KTypeProjection.covariant(value.toKType(false)),
+                    ),
+                )
+            }
+
             LIST, ARRAY -> typeOf<java.sql.Array>() // TODO requires #1266 for specific types
-            STRUCT -> typeOf<java.sql.Struct>()
-            //            UNION -> typeOf<Any>()
-            //            VARCHAR -> typeOf<String>()
+            STRUCT -> typeOf<java.sql.Struct>() // TODO requires #1266 for specific types
+            UNION -> typeOf<Any>() // Cannot handle this in Kotlin
+            VARCHAR -> typeOf<String>()
             UNKNOWN, BIT, INTERVAL, ENUM -> typeOf<String>()
-            else -> return null
         }.withNullability(isNullable)
     }
 
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
-        DuckDBResultSetMetaData.TypeNameToType(tableColumnMetadata.sqlTypeName)
-            .toKType(tableColumnMetadata.isNullable)
+    // Parses "MAP(X, Y)" into "X" and "Y", taking parentheses into account
+    fun parseMapType(typeString: String): Pair<String, String> {
+        if (!typeString.startsWith("MAP(") || !typeString.endsWith(")")) {
+            error("invalid MAP type: $typeString")
+        }
+
+        val content = typeString.removeSurrounding("MAP(", ")")
+
+        // Find the comma that separates key and value types
+        var parenCount = 0
+        var commaIndex = -1
+        for (i in content.indices) {
+            when (content[i]) {
+                '(', '[', '{' -> parenCount++
+
+                ')', ']', '}' -> parenCount--
+
+                ',' -> if (parenCount == 0) {
+                    commaIndex = i
+                    break
+                }
+            }
+        }
+
+        if (commaIndex == -1) error("invalid MAP type: $typeString")
+        val keyType = content.take(commaIndex).trim()
+        val valueType = content.substring(commaIndex + 1).trim()
+        return Pair(keyType, valueType)
+    }
+
+    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType =
+        tableColumnMetadata.sqlTypeName.toKType(tableColumnMetadata.isNullable)
 }
 
 class DuckDbTest {
@@ -180,7 +230,7 @@ class DuckDbTest {
             if (kClass == Array::class) {
                 val typeParam = kClass.typeParameters[0].createType()
                 kClass.createType(
-                    arguments = listOf(kotlin.reflect.KTypeProjection.invariant(typeParam)),
+                    arguments = listOf(KTypeProjection.invariant(typeParam)),
                     nullable = isNullable,
                 )
             } else {
@@ -188,7 +238,7 @@ class DuckDbTest {
             }
 
         DuckDBColumnType.entries.map {
-            val mine = it.toKType(false)
+            val mine = it.name.toKType(false)
             val lyosha = createArrayTypeIfNeeded(jdbcTypeToKTypeMapping[type_to_int(it)] ?: String::class, false)
 
             Triple(it, mine, lyosha)
@@ -401,6 +451,9 @@ class DuckDbTest {
                     intlist_col INTEGER[],
                     stringlist_col VARCHAR[],
                     intstringmap_col MAP(INTEGER, VARCHAR),
+                    intstrinstinggmap_col MAP(INTEGER, MAP(VARCHAR, VARCHAR)),
+                    ijstruct_col STRUCT(i INTEGER, j VARCHAR),
+                    union_col UNION(num INTEGER, text VARCHAR),
                 )
                 """.trimIndent(),
             ).executeUpdate()
@@ -413,6 +466,9 @@ class DuckDbTest {
                     list_value(1, 2, 3),                     -- int list
                     list_value('a', 'ab', 'abc'),            -- string list
                     MAP { 1: 'value1', 200: 'value2' },      -- int string map
+                    MAP { 1: MAP { 'value1': 'a', 'value2': 'b' }, 200: MAP { 'value1': 'c', 'value2': 'd' } }, -- int string string map
+                    { 'i': 42, 'j': 'answer' },               -- struct
+                    union_value(num := 2),                    -- union
                 )
                 """.trimIndent(),
             ).executeUpdate()
