@@ -605,7 +605,7 @@ public fun ResultSet.readDataFrame(
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @param [tableTypes] an optional list of table types, which must be from the list of table types
- *   returned from [DatabaseMetaData.getTableTypes]; `null` returns all types. By default, it's `["TABLE"]`.
+ *   returned from [DatabaseMetaData.getTableTypes]; `null` returns all types. By default, it's `["TABLE", "BASE TABLE"]`.
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  */
 public fun DataFrame.Companion.readAllSqlTables(
@@ -614,7 +614,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    tableTypes: List<String>? = listOf("TABLE"),
+    tableTypes: List<String>? = listOf("TABLE", "BASE TABLE"),
 ): Map<String, AnyFrame> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType, tableTypes)
@@ -632,7 +632,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
  * @param [tableTypes] an optional list of table types, which must be from the list of table types
- *   returned from [DatabaseMetaData.getTableTypes]; `null` returns all types. By default, it's `["TABLE"]`.
+ *   returned from [DatabaseMetaData.getTableTypes]; `null` returns all types. By default, it's `["TABLE", "BASE TABLE"]`.
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  *
  * @see DriverManager.getConnection
@@ -643,7 +643,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    tableTypes: List<String>? = listOf("TABLE"),
+    tableTypes: List<String>? = listOf("TABLE", "BASE TABLE"),
 ): Map<String, AnyFrame> {
     val metaData = connection.metaData
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
