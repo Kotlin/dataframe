@@ -7,16 +7,18 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.GatherDocs.Grammar
-import org.jetbrains.kotlinx.dataframe.api.Update.UPDATE_OPERATION
-import org.jetbrains.kotlinx.dataframe.api.notNull
-import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import org.jetbrains.kotlinx.dataframe.documentation.*
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -92,12 +94,12 @@ internal interface GatherDocs {
      *
      * {@include [Indent]}
      * `| `__`.`__[**`valuesInto`**][Gather.valuesInto]**`(`**`valueColumn: `[`String`][String]**`)`**
-     * {@set [GATHER_OPERATION] [**`gather`**][gather]}{@comment The default name of the `update` operation function name.}
+     * {@set [GATHER_OPERATION] [**`gather`**][gather]}{@comment The default name of the `gather` operation function name.}
      */
     interface Grammar
 
     /*
-     * This argument providing the (clickable) name of the update-like function.
+     * This argument providing the (clickable) name of the gather-like function.
      * Note: If clickable, make sure to [alias][your type].
      */
     @Suppress("ClassName")
@@ -383,7 +385,6 @@ public fun <T, C, K, R> Gather<T, C, K, *>.mapValues(transform: (C) -> R): Gathe
         valueTransform = transform,
         explode = explode,
     )
-
 
 /**
  * An intermediate class used in the [gather] operation.
