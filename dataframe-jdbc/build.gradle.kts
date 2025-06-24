@@ -27,6 +27,7 @@ dependencies {
     testImplementation(libs.sl4jsimple)
     testImplementation(libs.jts)
     testImplementation(libs.duckdb.jdbc)
+    testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }

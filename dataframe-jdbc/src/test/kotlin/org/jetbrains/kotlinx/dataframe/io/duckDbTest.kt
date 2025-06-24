@@ -42,12 +42,19 @@ import org.duckdb.DuckDBColumnType.VARCHAR
 import org.duckdb.DuckDBConnection
 import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.DuckDBResultSetMetaData.type_to_int
+import org.duckdb.DuckDBStruct
 import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.inferType
 import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.single
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.DuckDb.toKType
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -62,7 +69,6 @@ import java.sql.Ref
 import java.sql.ResultSet
 import java.sql.RowId
 import java.sql.SQLXML
-import java.sql.Struct
 import java.sql.Time
 import java.sql.Timestamp
 import java.sql.Types
@@ -87,15 +93,7 @@ object DuckDb : DbType("duckdb") {
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
         val type = convertSqlTypeToKType(tableColumnMetadata)
-
-        return when {
-            type.isSubtypeOf(typeOf<Struct>()) -> ColumnSchema.Group(
-                DataFrameSchemaImpl(mapOf(tableColumnMetadata.name to ColumnSchema.Value(type))),
-                type,
-            )
-
-            else -> ColumnSchema.Value(type)
-        }
+        return ColumnSchema.Value(type)
     }
 
     // TODO?
@@ -145,16 +143,24 @@ object DuckDb : DbType("duckdb") {
             BLOB -> typeOf<Blob>()
             UUID -> typeOf<UUID>()
             MAP -> {
-                val (key, value) = parseMapType(sqlTypeName)
+                val (key, value) = parseMapTypes(sqlTypeName)
                 Map::class.createType(
                     listOf(
                         KTypeProjection.invariant(key.toKType(false)),
-                        KTypeProjection.covariant(value.toKType(false)),
+                        KTypeProjection.covariant(value.toKType(true)),
                     ),
                 )
             }
 
-            LIST, ARRAY -> typeOf<java.sql.Array>() // TODO requires #1266 for specific types
+            LIST, ARRAY -> {
+                // TODO requires #1266 and #1273 for specific types
+                //   val listType = parseListType(sqlTypeName)
+                //   Array::class.createType(
+                //       listOf(KTypeProjection.covariant(listType.toKType(true))),
+                //   )
+                typeOf<java.sql.Array>()
+            }
+
             STRUCT -> typeOf<java.sql.Struct>() // TODO requires #1266 for specific types
             UNION -> typeOf<Any>() // Cannot handle this in Kotlin
             VARCHAR -> typeOf<String>()
@@ -163,7 +169,7 @@ object DuckDb : DbType("duckdb") {
     }
 
     // Parses "MAP(X, Y)" into "X" and "Y", taking parentheses into account
-    fun parseMapType(typeString: String): Pair<String, String> {
+    fun parseMapTypes(typeString: String): Pair<String, String> {
         if (!typeString.startsWith("MAP(") || !typeString.endsWith(")")) {
             error("invalid MAP type: $typeString")
         }
@@ -175,9 +181,9 @@ object DuckDb : DbType("duckdb") {
         var commaIndex = -1
         for (i in content.indices) {
             when (content[i]) {
-                '(', '[', '{' -> parenCount++
+                '(' -> parenCount++
 
-                ')', ']', '}' -> parenCount--
+                ')' -> parenCount--
 
                 ',' -> if (parenCount == 0) {
                     commaIndex = i
@@ -190,6 +196,15 @@ object DuckDb : DbType("duckdb") {
         val keyType = content.take(commaIndex).trim()
         val valueType = content.substring(commaIndex + 1).trim()
         return Pair(keyType, valueType)
+    }
+
+    // Parses "X[]" and "X[123]" into "X", and "X[][]" into "X[]"
+    fun parseListType(typeString: String): String {
+        if (!typeString.endsWith("]")) {
+            error("invalid LIST/ARRAY type: $typeString")
+        }
+
+        return typeString.take(typeString.indexOfLast { it == '[' })
     }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType =
@@ -496,6 +511,7 @@ class DuckDbTest {
                     stringarray_col VARCHAR[3],
                     intlist_col INTEGER[],
                     stringlist_col VARCHAR[],
+                    stringlistlist_col VARCHAR[][],
                     intstringmap_col MAP(INTEGER, VARCHAR),
                     intstrinstinggmap_col MAP(INTEGER, MAP(VARCHAR, VARCHAR)),
                     ijstruct_col STRUCT(i INTEGER, j VARCHAR),
@@ -507,10 +523,11 @@ class DuckDbTest {
             connection.prepareStatement(
                 """
                 INSERT INTO table2 VALUES (
-                    array_value(1, 2, 3),                    -- int array
+                    array_value(1, 2, NULL),                    -- int array
                     array_value('a', 'ab', 'abc'),           -- string array
                     list_value(1, 2, 3),                     -- int list
                     list_value('a', 'ab', 'abc'),            -- string list
+                    list_value(list_value('a', 'ab'), list_value('abc'), NULL),            -- string list list
                     MAP { 1: 'value1', 200: 'value2' },      -- int string map
                     MAP { 1: MAP { 'value1': 'a', 'value2': 'b' }, 200: MAP { 'value1': 'c', 'value2': 'd' } }, -- int string string map
                     { 'i': 42, 'j': 'answer' },               -- struct
