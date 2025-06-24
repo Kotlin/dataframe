@@ -119,14 +119,14 @@ private interface CommonGatherDocs
 /**
  * @include [CommonGatherDocs]
  * @include [SelectingColumns.Dsl] {@include [SetGatherOperationArg]}
- * ### Examples:
+ * ### Examples
  * ```kotlin
  * // Gather `resultA` and `resultB` columns into a single "value" column,
  * // with the "series" column containing a key derived from the last letter
  * // of the corresponding original column name (i.e., 'A' or 'B').
  * df.gather { resultA and resultB }.mapKeys { it.last() }.into("series", "value")
  *
- * // Gather values of all `String` columns (at any depth)
+ * // Gather values of all `String` columns
  * // into a single "tag" column, omitting the key column.
  * df.gather { colsOf<String>() }.valuesInto("tag")
  * ```
@@ -146,7 +146,7 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
 /**
  * @include [CommonGatherDocs]
  * @include [SelectingColumns.ColumnNames] {@include [SetGatherOperationArg]}
- * ### Example:
+ * ### Example
  * ```kotlin
  * df.gather("resultA", "resultB").mapKeys { it.last() }.into("series", "value")
  * ```
@@ -186,7 +186,7 @@ public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): Gather<T, C
  * // Only values greater than `pValue` are included.
  * df.gather { resultA and resultB }.where { it >= pValue }.into("series", "value")
  *
- * // Gather values of all `String` columns (at any nesting level)
+ * // Gather values of all `String` columns
  * // into a single "tag" column, omitting the key column.
  * // Only non-empty strings are included.
  * df.gather { colsOf<String>() }.where { it.isNotEmpty() }.valuesInto("tag")
@@ -223,7 +223,7 @@ public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): 
  * ```kotlin
  * // Gather `resultA` and `resultB` columns into a single "value" column,
  * // with the "series" column containing a key.
- * // If these columns contain nullable `Double` values, `notNull` filters out nulls,
+ * // Assuming these columns contain nullable `Double` values, `notNull` filters out nulls,
  * // allowing subsequent transformations like `mapValues` to treat values as non-null `Double`.
  * df.gather { resultA and resultB }
  *   .notNull()
@@ -236,28 +236,35 @@ public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): 
 public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = where { it != null } as Gather<T, C, K, R>
 
 /**
- * Explode values.
+ * Explodes [List] values in the columns previously selected by [gather].
  *
- * A special case of [where].
+ * If not all values are lists (for example, if one column contains `Double` values and
+ * another contains `List<Double>`), only the list values will be exploded — non-list values remain unchanged.
  *
- * It's an intermediate step; returns a new [Gather] with filtered value columns.
+ * After explosion, operations like [where], [notNull], and [mapValues] are applied to individual list elements
+ * rather than to the lists themselves. To enable this, the resulting type should be explicitly specified using [cast].
  *
- * For more information: {@include [DocumentationUrls.Gather]}
+ * This is an intermediate step; returns a new [Gather] with exploded values.
  *
- * See [Grammar].
+ * For more information, see: {@include [DocumentationUrls.Gather]}
+ *
+ * See also: [Grammar].
  *
  * ### Example
  * ```kotlin
  * // Gather `resultA` and `resultB` columns into a single "value" column,
  * // with the "series" column containing a key.
- * // If these columns contain nullable `Double` values, `notNull` filters out nulls,
- * // allowing subsequent transformations like `mapValues` to treat values as non-null `Double`.
+ * // Assuming `resultA` contains `Double` values and `
+ * // resultB` contains `List<Double>` values,
+ * // `explodeLists` will apply only to values from `resultB`,
+ * // resulting in all gathered values being of type `Double`.
  * df.gather { resultA and resultB }
- *   .notNull()
+ *   .explodeLists()
+ *   .cast<Double>()
  *   .mapValues { (it + 0.5).toFloat() }
  *   .into("series", "value")
  * ```
- * @return A new [Gather] instance with only non-null values retained.
+ * @return A new [Gather] instance with exploded list values.
  */
 @Interpretable("GatherExplodeLists")
 public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> =
@@ -271,6 +278,31 @@ public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> =
         explode = true,
     )
 
+/**
+ * Explodes [List] values in the columns previously selected by [gather].
+ *
+ * After explosion, operations like [where], [notNull], and [mapValues] are applied to individual list elements
+ * instead of the lists themselves.
+ *
+ * This is an intermediate step; returns a new [Gather] with exploded values.
+ *
+ * For more information, see: {@include [DocumentationUrls.Gather]}
+ *
+ * See also: [Grammar].
+ *
+ * ### Example
+ * ```kotlin
+ * // Gather `resultA` and `resultB` columns into a single "value" column,
+ * // with the "series" column containing a key.
+ * // Assuming `resultA` and `resultB` contain `List<Double>` values,
+ * // `explodeLists` will produce individual `Double` elements.
+ * df.gather { resultA and resultB }
+ *   .explodeLists()
+ *   .mapValues { (it + 0.5).toFloat() }
+ *   .into("series", "value")
+ * ```
+ * @return A new [Gather] instance with exploded list values.
+ */
 @JvmName("explodeListsTyped")
 @Interpretable("GatherExplodeLists")
 public fun <T, C, K, R> Gather<T, List<C>, K, R>.explodeLists(): Gather<T, C, K, R> =
@@ -284,6 +316,27 @@ public fun <T, C, K, R> Gather<T, List<C>, K, R>.explodeLists(): Gather<T, C, K,
         explode = true,
     ) as Gather<T, C, K, R>
 
+/**
+ * Applies a [transform] to the gathering keys —
+ * that is, the names of the columns previously selected by [gather].
+ *
+ * This is an intermediate step; returns a new [Gather] with transformed keys.
+ *
+ * For more information, see: {@include [DocumentationUrls.Gather]}
+ *
+ * See also: [Grammar].
+ *
+ * ### Example
+ * ```kotlin
+ * // Gather `resultA` and `resultB` columns into a single "value" column,
+ * // with the "series" column containing a key derived from the last letter
+ * // of each original column name (i.e., 'A' or 'B').
+ * df.gather { resultA and resultB }
+ *   .mapKeys { it.last() }
+ *   .into("series", "value")
+ * ```
+ * @return A new [Gather] instance with transformed keys.
+ */
 @Interpretable("GatherMap")
 public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(
     noinline transform: (String) -> K,
@@ -298,6 +351,27 @@ public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(
         explode = explode,
     )
 
+/**
+ * Applies a [transform] to the values from the columns previously selected by [gather].
+ *
+ * This is an intermediate step; returns a new [Gather] with transformed values.
+ *
+ * For more information, see: {@include [DocumentationUrls.Gather]}
+ *
+ * See also: [Grammar].
+ *
+ * ### Example
+ * ```kotlin
+ * // Gather `resultA` and `resultB` columns into a single "value" column,
+ * // with the "series" column containing a key.
+ * // Assuming `resultA` and `resultB` contain `Double` values,
+ * // `mapValues` transforms each value using the provided expression.
+ * df.gather { resultA and resultB }
+ *   .mapValues { (it + 0.5).toFloat() }
+ *   .into("series", "value")
+ * ```
+ * @return A new [Gather] instance with transformed values.
+ */
 @Interpretable("GatherMap")
 public fun <T, C, K, R> Gather<T, C, K, *>.mapValues(transform: (C) -> R): Gather<T, C, K, R> =
     Gather(
@@ -310,6 +384,30 @@ public fun <T, C, K, R> Gather<T, C, K, *>.mapValues(transform: (C) -> R): Gathe
         explode = explode,
     )
 
+
+/**
+ * An intermediate class used in the [gather] operation.
+ *
+ * This class itself does not perform the reshaping — it serves as a transitional step
+ * before specifying how to structure the gathered data.
+ * It must be followed by one of the reshaping methods to produce a new [DataFrame] with the transformed layout.
+ *
+ * Use the following methods to complete the gathering:
+ * - [into] – reshapes into both key and value columns.
+ * - [keysInto] – reshapes into a single key column.
+ * - [valuesInto] – reshapes into a single value column.
+ *
+ * You can also configure the transformation using:
+ * - [where] / [notNull] – to filter gathered values.
+ * - [explodeLists] – to flatten list values.
+ * - [mapKeys] – to transform the generated keys.
+ * - [mapValues] – to transform the gathered values.
+ * - [cast] – to specify the resulting value type.
+ *
+ * This operation is the reverse of [pivot].
+ *
+ * See [Grammar][GatherDocs.Grammar] for more details.
+ */
 public class Gather<T, C, K, R>(
     @PublishedApi
     internal val df: DataFrame<T>,
@@ -326,6 +424,35 @@ public class Gather<T, C, K, R>(
     @PublishedApi
     internal val explode: Boolean = false,
 ) {
+    /**
+     * Casts the type of values in the columns previously selected by [gather]
+     * without modifying the values themselves.
+     *
+     * This is useful when the type cannot be automatically inferred and needs to be explicitly specified
+     * for further [Gather] operations such as [filter][Gather.where], [notNull][Gather.notNull],
+     * or [mapValues][Gather.mapValues].
+     * It does not affect the actual content of the values —
+     * only the type used for compile-time safety and transformation configuration.
+     *
+     * This is an intermediate step; returns a new [Gather] instance with an updated value type parameter.
+     *
+     * For more information, see: {@include [DocumentationUrls.Gather]}
+     *
+     * See also: [Grammar].
+     *
+     * ### Example
+     * ```kotlin
+     * // Gather all subcolumns in the "results" column group into a single "value" column,
+     * // with the "series" column containing a key.
+     * // After `cast`, values are treated as Float in `filter` and `mapValues`.
+     * df.gather { results.cols() }
+     *   .cast<Float>()
+     *   .filter { it > 0.05 }
+     *   .mapValues { (it + 0.5f).toDouble() }
+     *   .into("series", "value")
+     * ```
+     * @return A new [Gather] instance with the specified value type.
+     */
     @Interpretable("GatherChangeType")
     public fun <P> cast(): Gather<T, P, K, P> {
         // TODO: introduce GatherWithTransform to avoid this error
@@ -336,6 +463,35 @@ public class Gather<T, C, K, R>(
 
 // region into
 
+/**
+ * Reshapes the columns previously selected by [gather] into two new columns:
+ * [keyColumn], containing the original column names, and [valueColumn], containing the corresponding cell values.
+ *
+ * Returns a new [DataFrame] with the reshaped structure.
+ * The original gathered columns are removed from the result,
+ * while all other columns remain unchanged —
+ * except that their values are duplicated for each generated key-value pair.
+ *
+ * Resulting key and value values can be adjusted using [mapKeys] and [mapValues], respectively.
+ *
+ * For more information, see: {@include [DocumentationUrls.Gather]}
+ *
+ * See also: [Grammar].
+ *
+ * ### Example
+ * ```kotlin
+ * // Gather `resultA` and `resultB` columns into a single "value" column,
+ * // with the "series" column containing a key derived from the last letter
+ * // of the original column names (i.e., 'A' or 'B').
+ * df.gather { resultA and resultB }
+ *   .mapKeys { it.last() }
+ *   .into("series", "value")
+ * ```
+ *
+ * @param keyColumn The name of the column to store keys (original column names by default).
+ * @param valueColumn The name of the column to store gathered values.
+ * @return A new [DataFrame] with reshaped columns.
+ */
 @Refine
 @Interpretable("GatherInto")
 public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: String, valueColumn: String): DataFrame<T> =
@@ -357,6 +513,32 @@ public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: KProperty<K>, valueCo
 
 // region keysInto
 
+/**
+ * Reshapes the columns previously selected by [gather] into a new [keyColumn],
+ * containing the original column names. The value column is omitted.
+ *
+ * Returns a new [DataFrame] with the reshaped structure.
+ * The original gathered columns are removed from the result,
+ * while all other columns remain unchanged —
+ * except that their values are duplicated for each generated key.
+ *
+ * Resulting key values can be adjusted using [mapKeys].
+ *
+ * For more information, see: {@include [DocumentationUrls.Gather]}
+ *
+ * See also: [Grammar].
+ *
+ * ### Example
+ * ```kotlin
+ * // Gather names of all columns containing "series" in their name
+ * // into a single "seriesType" column, omitting the value column.
+ * df.gather { cols { it.name().contains("series") } }
+ *   .keysInto("seriesType")
+ * ```
+ *
+ * @param keyColumn The name of the column to store keys (original column names by default).
+ * @return A new [DataFrame] with reshaped columns.
+ */
 @Refine
 @Interpretable("GatherKeysInto")
 public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: String): DataFrame<T> = gatherImpl(keyColumn, null)
@@ -375,6 +557,32 @@ public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: KProperty<K>): Da
 
 // region valuesInto
 
+/**
+ * Reshapes the columns previously selected by [gather] into a new [valueColumn],
+ * containing the original column values. The key column is omitted.
+ *
+ * Returns a new [DataFrame] with the reshaped structure.
+ * The original gathered columns are removed from the result,
+ * while all other columns remain unchanged —
+ * except that their values are duplicated for each generated value.
+ *
+ * Resulting values can be adjusted using [mapValues].
+ *
+ * For more information, see: {@include [DocumentationUrls.Gather]}
+ *
+ * See also: [Grammar].
+ *
+ * ### Example
+ * ```kotlin
+ * // Gather values of all `String` columns
+ * // into a single "tag" column, omitting the key column.
+ * df.gather { colsOf<String>() }
+ *   .valuesInto("tag")
+ * ```
+ *
+ * @param valueColumn The name of the column to store gathered values.
+ * @return A new [DataFrame] with reshaped columns.
+ */
 @Refine
 @Interpretable("GatherValuesInto")
 public fun <T, C, K, R> Gather<T, C, K, R>.valuesInto(valueColumn: String): DataFrame<T> = gatherImpl(null, valueColumn)
