@@ -41,7 +41,6 @@ import org.duckdb.DuckDBColumnType.UUID
 import org.duckdb.DuckDBColumnType.VARCHAR
 import org.duckdb.DuckDBConnection
 import org.duckdb.DuckDBResultSetMetaData
-import org.duckdb.DuckDBResultSetMetaData.type_to_int
 import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.inferType
@@ -54,23 +53,14 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Blob
-import java.sql.Clob
 import java.sql.DriverManager
-import java.sql.NClob
-import java.sql.Ref
 import java.sql.ResultSet
-import java.sql.RowId
-import java.sql.SQLXML
-import java.sql.Time
 import java.sql.Timestamp
-import java.sql.Types
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
-import java.util.Date
 import java.util.UUID
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
@@ -204,78 +194,6 @@ object DuckDb : DbType("duckdb") {
 }
 
 class DuckDbTest {
-
-    @Test
-    fun `Type comparison`() {
-        val jdbcTypeToKTypeMapping = mapOf(
-            Types.BIT to Boolean::class,
-            Types.TINYINT to Int::class,
-            Types.SMALLINT to Int::class,
-            Types.INTEGER to Int::class,
-            Types.BIGINT to Long::class,
-            Types.FLOAT to Float::class,
-            Types.REAL to Float::class,
-            Types.DOUBLE to Double::class,
-            Types.NUMERIC to BigDecimal::class,
-            Types.DECIMAL to BigDecimal::class,
-            Types.CHAR to String::class,
-            Types.VARCHAR to String::class,
-            Types.LONGVARCHAR to String::class,
-            Types.DATE to Date::class,
-            Types.TIME to Time::class,
-            Types.TIMESTAMP to Timestamp::class,
-            Types.BINARY to ByteArray::class,
-            Types.VARBINARY to ByteArray::class,
-            Types.LONGVARBINARY to ByteArray::class,
-            Types.NULL to String::class,
-            Types.JAVA_OBJECT to Any::class,
-            Types.DISTINCT to Any::class,
-            Types.STRUCT to Any::class,
-            Types.ARRAY to Array::class,
-            Types.BLOB to ByteArray::class,
-            Types.CLOB to Clob::class,
-            Types.REF to Ref::class,
-            Types.DATALINK to Any::class,
-            Types.BOOLEAN to Boolean::class,
-            Types.ROWID to RowId::class,
-            Types.NCHAR to String::class,
-            Types.NVARCHAR to String::class,
-            Types.LONGNVARCHAR to String::class,
-            Types.NCLOB to NClob::class,
-            Types.SQLXML to SQLXML::class,
-            Types.REF_CURSOR to Ref::class,
-            Types.TIME_WITH_TIMEZONE to OffsetTime::class,
-            Types.TIMESTAMP_WITH_TIMEZONE to OffsetDateTime::class,
-        )
-
-        fun createArrayTypeIfNeeded(kClass: KClass<*>, isNullable: Boolean): KType =
-            if (kClass == Array::class) {
-                val typeParam = kClass.typeParameters[0].createType()
-                kClass.createType(
-                    arguments = listOf(KTypeProjection.invariant(typeParam)),
-                    nullable = isNullable,
-                )
-            } else {
-                kClass.createType(nullable = isNullable)
-            }
-
-        DuckDBColumnType.entries.map {
-            val mine = it.name.toKType(false)
-            val lyosha = createArrayTypeIfNeeded(jdbcTypeToKTypeMapping[type_to_int(it)] ?: String::class, false)
-
-            Triple(it, mine, lyosha)
-        }.partition { it.second == it.third }.let { (equal, notEqual) ->
-            println("Correct matches:")
-            for ((it, mine, lyosha) in equal) {
-                println("$it: duckdb: $mine, df: $lyosha")
-            }
-            println()
-            println("Incorrect matches:")
-            for ((it, mine, lyosha) in notEqual) {
-                println("$it: duckdb: $mine, df: $lyosha")
-            }
-        }
-    }
 
     @Test
     fun `read simple dataframe from DuckDB`() {
