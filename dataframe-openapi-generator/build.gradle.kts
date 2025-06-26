@@ -18,7 +18,7 @@ val jupyterApiTCRepo: String by project
 repositories {
     mavenLocal()
     mavenCentral()
-    maven(jupyterApiTCRepo)
+    if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
 }
 
 dependencies {

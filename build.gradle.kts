@@ -41,7 +41,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-    maven(jupyterApiTCRepo)
+    if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
 }
 
 configurations {
