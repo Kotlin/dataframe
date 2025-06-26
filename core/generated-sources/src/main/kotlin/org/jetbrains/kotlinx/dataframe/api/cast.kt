@@ -99,3 +99,5 @@ public fun <C> TransformableColumnSet<*>.cast(): TransformableColumnSet<C> = thi
 public fun <C> TransformableSingleColumn<*>.cast(): TransformableSingleColumn<C> = this as TransformableSingleColumn<C>
 
 public fun <C> ColumnReference<*>.cast(): ColumnReference<C> = this as ColumnReference<C>
+
+public fun <T, G> GroupBy<*, *>.cast(): GroupBy<T, G> = this as GroupBy<T, G>

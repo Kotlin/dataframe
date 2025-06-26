@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -161,10 +162,12 @@ public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFram
  */
 public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungroup { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.ungroup(vararg columns: AnyColumnReference): DataFrame<T> =
     ungroup { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.ungroup(vararg columns: KProperty<*>): DataFrame<T> = ungroup { columns.toColumnSet() }
 

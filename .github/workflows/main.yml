@@ -17,12 +17,12 @@ env:
   ALGOLIA_INDEX_NAME: prod_DATAFRAME_HELP
   ALGOLIA_KEY: ${{ secrets.ALGOLIA_KEY }}
   CONFIG_JSON_PRODUCT: Dataframe
-  CONFIG_JSON_VERSION: '0.15'
+  CONFIG_JSON_VERSION: '1.0'
 
 jobs:
   build-job:
     runs-on: ubuntu-latest
-    container: registry.jetbrains.team/p/writerside/builder/writerside-builder:2.1.1481-p3872-df
+    container: registry.jetbrains.team/p/writerside/builder/writerside-builder:2025.04.8412
     outputs:
       artifact: ${{ steps.generate-artifact.outputs.artifact }}
     steps:

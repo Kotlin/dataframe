@@ -50,6 +50,8 @@ internal annotation class ExcludeFromSources
  * @param stripReferences Whether to strip `[references]` from the HTML file. Default is `true`.
  *  This is useful when you want to include the HTML file in a website, where the references are not
  *  needed or would break.
+ * @param includeResizeScript Whether to include a script that helps height recalculation inside iFrames.
+ *  This is useful inside WriterSide. Default is `true`.
  */
 @Target(
     CLASS,
@@ -66,4 +68,8 @@ internal annotation class ExcludeFromSources
     TYPEALIAS,
     FILE,
 )
-internal annotation class ExportAsHtml(val theme: Boolean = true, val stripReferences: Boolean = true)
+internal annotation class ExportAsHtml(
+    val theme: Boolean = true,
+    val stripReferences: Boolean = true,
+    val includeResizeScript: Boolean = true,
+)

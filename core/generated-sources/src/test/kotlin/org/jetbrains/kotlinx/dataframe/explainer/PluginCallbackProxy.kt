@@ -29,7 +29,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.sessionId
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
-import org.jetbrains.kotlinx.dataframe.io.toHTML
+import org.jetbrains.kotlinx.dataframe.io.toHtml
 import java.io.File
 
 annotation class TransformDataFrameExpressions
@@ -122,7 +122,7 @@ object PluginCallbackProxy : PluginCallback {
         val destination = File("build/dataframes").also {
             it.mkdirs()
         }
-        output.writeHTML(File(destination, "$name.html"))
+        output.writeHtml(File(destination, "$name.html"))
         val korro = File("build/korroOutputLines").also {
             it.mkdirs()
         }
@@ -131,7 +131,7 @@ object PluginCallbackProxy : PluginCallback {
         File(korro, group).writeText(
             """
             
-            <dataFrame src="$group.html"/>
+            <inline-frame src="resources/$group.html" width="100%"/>
             """.trimIndent(),
         )
     }
@@ -150,7 +150,7 @@ object PluginCallbackProxy : PluginCallback {
         if (expressions.size == 1) {
             if (allow.any { expressions[0].source.contains(it) }) {
                 val expression = expressions[0]
-                data += convertToHTML(expression.df)
+                data += convertToHtml(expression.df)
             } else {
                 error("${expressions.joinToSource()} Sample without output or input (i.e. function returns some value)")
             }
@@ -158,7 +158,7 @@ object PluginCallbackProxy : PluginCallback {
             for ((i, expression) in expressions.withIndex()) {
                 when (i) {
                     0 -> {
-                        val table = convertToHTML(expression.df)
+                        val table = convertToHtml(expression.df)
                         val description = table.copy(
                             body =
                                 """
@@ -172,7 +172,7 @@ object PluginCallbackProxy : PluginCallback {
                     }
 
                     expressions.lastIndex -> {
-                        val table = convertToHTML(expression.df)
+                        val table = convertToHtml(expression.df)
                         val description = table.copy(
                             body =
                                 """
@@ -186,7 +186,7 @@ object PluginCallbackProxy : PluginCallback {
                     }
 
                     else -> {
-                        val table = convertToHTML(expression.df)
+                        val table = convertToHtml(expression.df)
                         val description = table.copy(
                             body =
                                 """
@@ -226,25 +226,25 @@ object PluginCallbackProxy : PluginCallback {
     }
 }
 
-private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
-    fun DataFrame<*>.toHTML() = toHTML(SamplesDisplayConfiguration, getFooter = WritersideFooter)
+private fun convertToHtml(dataframeLike: Any): DataFrameHtmlData {
+    fun DataFrame<*>.toHtml() = this@toHtml.toHtml(SamplesDisplayConfiguration, getFooter = WritersideFooter)
 
-    fun FormattedFrame<*>.toHTML1() = toHTML(SamplesDisplayConfiguration)
+    fun FormattedFrame<*>.toHtml1() = toHtml(SamplesDisplayConfiguration)
 
     return when (dataframeLike) {
-        is Pivot<*> -> dataframeLike.frames().toDataFrame().toHTML()
+        is Pivot<*> -> dataframeLike.frames().toDataFrame().toHtml()
 
-        is ReducedPivot<*> -> dataframeLike.values().toDataFrame().toHTML()
+        is ReducedPivot<*> -> dataframeLike.values().toDataFrame().toHtml()
 
-        is PivotGroupBy<*> -> dataframeLike.frames().toHTML()
+        is PivotGroupBy<*> -> dataframeLike.frames().toHtml()
 
-        is ReducedPivotGroupBy<*> -> dataframeLike.values().toHTML()
+        is ReducedPivotGroupBy<*> -> dataframeLike.values().toHtml()
 
-        is SplitWithTransform<*, *, *> -> dataframeLike.into().toHTML()
+        is SplitWithTransform<*, *, *> -> dataframeLike.into().toHtml()
 
-        is Merge<*, *, *> -> dataframeLike.into("merged").toHTML()
+        is Merge<*, *, *> -> dataframeLike.into("merged").toHtml()
 
-        is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
+        is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHtml()
 
         is Update<*, *> ->
             dataframeLike.df.let {
@@ -259,21 +259,21 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
                 it.with {
                     background(rgb(152, 251, 152))
                 }
-            }.toHTML1()
+            }.toHtml1()
 
         is Convert<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
 
-        is FormattedFrame<*> -> dataframeLike.toHTML1()
+        is FormattedFrame<*> -> dataframeLike.toHtml1()
 
-        is GroupBy<*, *> -> dataframeLike.toDataFrame().toHTML()
+        is GroupBy<*, *> -> dataframeLike.toDataFrame().toHtml()
 
-        is AnyFrame -> dataframeLike.toHTML()
+        is AnyFrame -> dataframeLike.toHtml()
 
-        is AnyCol -> dataframeLike.toDataFrame().toHTML()
+        is AnyCol -> dataframeLike.toDataFrame().toHtml()
 
-        is DataRow<*> -> dataframeLike.toDataFrame().toHTML()
+        is DataRow<*> -> dataframeLike.toDataFrame().toHtml()
 
-        is Split<*, *> -> dataframeLike.toDataFrame().toHTML()
+        is Split<*, *> -> dataframeLike.toDataFrame().toHtml()
 
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }
@@ -314,29 +314,29 @@ private fun convertToDescription(dataframeLike: Any): String =
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }.escapeHtmlForIFrame()
 
-internal fun String.escapeHtmlForIFrame(): String {
-    val str = this
-    return buildString {
-        for (c in str) {
-            when {
-                c.code > 127 || c == '\'' || c == '\\' -> {
-                    append("&#")
-                    append(c.code)
-                    append(';')
-                }
+internal fun String.escapeHtmlForIFrame(): String =
+    buildString {
+        for (c in this@escapeHtmlForIFrame) {
+            when (c) {
+                '<' -> append("&lt;")
 
-                c == '"' -> append("&quot;")
+                '>' -> append("&gt;")
 
-                c == '<' -> append("&amp;lt;")
+                '&' -> append("&amp;")
 
-                c == '>' -> append("&amp;gt;")
+                '"' -> append("&quot;")
 
-                c == '&' -> append("&amp;")
+                '\'' -> append("&#39;")
+
+                '\\' -> append("&#92;")
 
                 else -> {
-                    append(c)
+                    if (c.code > 127) {
+                        append("&#${c.code};")
+                    } else {
+                        append(c)
+                    }
                 }
             }
         }
     }
-}

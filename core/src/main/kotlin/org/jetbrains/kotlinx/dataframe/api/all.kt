@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.owner
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -300,6 +301,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::columnGroup.`[allCols][KProperty.allCols]`() }`
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
 
@@ -482,24 +484,29 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] \ \{ myColumn \}}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.allColsAfter(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsAfter(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] ("myColumn")} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsAfter(column: String): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] (myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
         columnGroup(this).allColsAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsAfter(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
@@ -703,24 +710,29 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] \ \{ myColumn \}}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.allColsFrom(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] ("pathTo"["myColumn"])} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsFrom(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] ("myColumn")} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsFrom(column: String): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] (myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsFrom(column: AnyColumnReference): ColumnSet<*> =
         columnGroup(this).allColsFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
@@ -923,24 +935,29 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] \ \{ myColumn \}}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.allColsBefore(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsBefore(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] ("myColumn")} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsBefore(column: String): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] (myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
         columnGroup(this).allColsBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsBefore(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
@@ -1144,24 +1161,29 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] \ \{ myColumn \}}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.allColsUpTo(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] ("pathTo"["myColumn"])} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsUpTo(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] ("myColumn")} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsUpTo(column: String): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] (myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsUpTo(column: AnyColumnReference): ColumnSet<*> =
         columnGroup(this).allColsUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.allColsUpTo(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 

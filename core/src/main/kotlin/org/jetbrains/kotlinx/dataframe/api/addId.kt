@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 
 // region DataColumn
 
@@ -16,6 +17,7 @@ public fun AnyCol.addId(columnName: String = "id"): AnyFrame = toDataFrame().add
 
 // region DataFrame
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.addId(column: ColumnAccessor<Int>): DataFrame<T> = insert(column) { index() }.at(0)
 

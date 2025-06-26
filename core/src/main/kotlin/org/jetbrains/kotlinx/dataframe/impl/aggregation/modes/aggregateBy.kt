@@ -112,7 +112,7 @@ internal inline fun <T, reified V : R, R> Aggregator<V & Any, R>.aggregateByOrNu
 ): DataRow<T>? =
     data.getOrNull(
         indexOfAggregationResult(
-            values = data.asSequence().map { it[column] },
+            values = data.asSequence().map { column.getValue(it) },
             valueType = typeOf<V>(),
         ),
     )

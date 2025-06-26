@@ -145,7 +145,7 @@ val clearSamplesOutputs by tasks.creating {
 
     doFirst {
         delete {
-            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets"))
+            val generatedSnippets = fileTree(file("../docs/StardustDocs/resources/snippets"))
                 .exclude("**/manual/**", "**/kdocs/**")
             delete(generatedSnippets)
         }
@@ -155,7 +155,7 @@ val clearSamplesOutputs by tasks.creating {
 val addSamplesToGit by tasks.creating(GitTask::class) {
     directory = file(".")
     command = "add"
-    args = listOf("-A", "../docs/StardustDocs/snippets")
+    args = listOf("-A", "../docs/StardustDocs/resources/snippets")
 }
 
 val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
@@ -218,7 +218,7 @@ val processKDocsMain by creatingRunKodexTask(processKDocsMainSources) {
     outputReadOnly = false
 
     exportAsHtml {
-        dir = file("../docs/StardustDocs/snippets/kdocs")
+        dir = file("../docs/StardustDocs/resources/snippets/kdocs")
     }
     finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
 }
@@ -315,9 +315,6 @@ korro {
 
         funSuffix("_properties") {
             replaceText("NAME", "Properties")
-        }
-        funSuffix("_accessors") {
-            replaceText("NAME", "Accessors")
         }
         funSuffix("_strings") {
             replaceText("NAME", "Strings")

@@ -13,15 +13,6 @@ df.getColumn { age }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-
-df.getColumn { age }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -41,15 +32,6 @@ Return top-level column by column name or [column selector](ColumnSelectors.md) 
 
 ```kotlin
 df.getColumnOrNull { age }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-
-df.getColumnOrNull(age)
 ```
 
 </tab>
@@ -75,15 +57,6 @@ df.getColumnGroup { name }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-
-df.getColumnGroup(name)
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -102,16 +75,6 @@ Return list of selected columns.
 <tab title="Properties">
 
 ```kotlin
-df.getColumns { age and name }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-
 df.getColumns { age and name }
 ```
 

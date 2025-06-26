@@ -51,19 +51,6 @@ campaigns.innerJoinWith(visits) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.innerJoinWith(visits) {
-    right[date] in startDate()..endDate()
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -73,7 +60,7 @@ campaigns.innerJoinWith(visits) {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.joinWith.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.joinWith.html" width="100%"/>
 <!---END-->
 
 #### Filter join
@@ -91,19 +78,6 @@ campaigns.filterJoinWith(visits) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.filterJoinWith(visits) {
-    right[date] in startDate()..endDate()
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -113,7 +87,7 @@ campaigns.filterJoinWith(visits) {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.filterJoinWith.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.filterJoinWith.html" width="100%"/>
 <!---END-->
 
 #### Left join
@@ -129,19 +103,6 @@ campaigns.leftJoinWith(visits) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.leftJoinWith(visits) {
-    right[date] in startDate()..endDate()
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -151,7 +112,7 @@ campaigns.leftJoinWith(visits) {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.leftJoinWith.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.leftJoinWith.html" width="100%"/>
 <!---END-->
 
 #### Right join
@@ -167,19 +128,6 @@ campaigns.rightJoinWith(visits) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.rightJoinWith(visits) {
-    right[date] in startDate()..endDate()
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -189,7 +137,7 @@ campaigns.rightJoinWith(visits) {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.rightJoinWith.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.rightJoinWith.html" width="100%"/>
 <!---END-->
 
 #### Full join
@@ -205,19 +153,6 @@ campaigns.fullJoinWith(visits) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.fullJoinWith(visits) {
-    right[date] in startDate()..endDate()
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -227,7 +162,7 @@ campaigns.fullJoinWith(visits) {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.fullJoinWith.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.fullJoinWith.html" width="100%"/>
 <!---END-->
 
 #### Exclude join
@@ -245,19 +180,6 @@ campaigns.excludeJoinWith(visits) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.excludeJoinWith(visits) {
-    right[date] in startDate()..endDate()
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -267,7 +189,7 @@ campaigns.excludeJoinWith(visits) {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.excludeJoinWith.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.excludeJoinWith.html" width="100%"/>
 <!---END-->
 
 #### Cross join
@@ -280,7 +202,7 @@ It can also be called cross product of two [`DataFrame`](DataFrame.md) objects.
 campaigns.joinWith(visits) { true }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.crossProduct.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.crossProduct.html" width="100%"/>
 <!---END-->
 
 ### Difference from join
@@ -293,7 +215,7 @@ campaigns.joinWith(visits) { true }
 df1.innerJoin(df2, "index", "age")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerColumns.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerColumns.html" width="100%"/>
 <!---END-->
 
 Columns that were used in the condition: `index`, `age` - are present only once. Numerical suffix is used to disambiguate columns that are not used in the condition.
@@ -305,7 +227,7 @@ Compare it to an equivalent `joinWith`:
 df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerValues.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerValues.html" width="100%"/>
 <!---END-->
 
 Here columns from both [`DataFrame`](DataFrame.md) objects are presented as is.
@@ -320,7 +242,7 @@ df1.leftJoin(df2, "index", "age")
 df1.leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareLeft.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareLeft.html" width="100%"/>
 <!---END-->
 
 <!---FUN compareRight-->
@@ -330,6 +252,6 @@ df1.rightJoin(df2, "index", "age")
 df1.rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareRight.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareRight.html" width="100%"/>
 <!---END-->
 

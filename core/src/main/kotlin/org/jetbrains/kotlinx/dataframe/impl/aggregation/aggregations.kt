@@ -95,7 +95,7 @@ internal fun <T, V> AggregateInternalDsl<T>.withExpr(type: KType, path: ColumnPa
     val values = df.rows().map {
         val value = expression(it, it)
         if (value is AnyColumnReference) {
-            it[value]
+            value.getValue(it)
         } else {
             value
         }

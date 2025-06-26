@@ -79,13 +79,12 @@ private fun <T> OnHeapDataset.Companion.create(
     dataframe: DataFrame<T>,
     yColumn: ColumnSelector<T, Number>,
 ): OnHeapDataset {
-    val x by column<FloatArray>("X")
 
     fun extractX(): Array<FloatArray> =
         dataframe.remove(yColumn)
-            .convert { colsAtAnyDepth { !it.isColumnGroup() } }.toFloat()
-            .merge { colsAtAnyDepth().colsOf<Float>() }.by { it.toFloatArray() }.into(x)
-            .getColumn(x).toTypedArray()
+            .convert { colsAtAnyDepth().filter { !it.isColumnGroup() } }.toFloat()
+            .merge { colsAtAnyDepth().colsOf<Float>() }.by { it.toFloatArray() }.into("X")
+            .getColumn("X").cast<FloatArray>().toTypedArray()
 
     fun extractY(): FloatArray = dataframe.get(yColumn).toFloatArray()
 

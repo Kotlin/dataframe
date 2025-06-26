@@ -17,21 +17,6 @@ val df = emptyDataFrame<Any>()
 
 ### dataFrameOf
 
-Returns a [`DataFrame`](DataFrame.md) with given column names and values.
-
-<!---FUN createDataFrameOf-->
-
-```kotlin
-// DataFrame with 2 columns and 3 rows
-val df = dataFrameOf("name", "age")(
-    "Alice", 15,
-    "Bob", 20,
-    "Charlie", 100,
-)
-```
-
-<!---END-->
-
 <!---FUN createDataFrameOfPairs-->
 
 ```kotlin
@@ -73,16 +58,17 @@ val df = dataFrameOf(name, age)
 
 <!---END-->
 
-<!---FUN createDataFrameFromNamesAndValues-->
+Returns a [`DataFrame`](DataFrame.md) with given column names and values.
+
+<!---FUN createDataFrameOf-->
 
 ```kotlin
-val names = listOf("name", "age")
-val values = listOf(
+// DataFrame with 2 columns and 3 rows
+val df = dataFrameOf("name", "age")(
     "Alice", 15,
     "Bob", 20,
-    "Charlie", 22,
+    "Charlie", 100,
 )
-val df = dataFrameOf(names, values)
 ```
 
 <!---END-->
@@ -125,20 +111,6 @@ val df = dataFrameOf(names).fill(15, true)
 
 ### toDataFrame
 
-Creates a [`DataFrame`](DataFrame.md) from an `Iterable<DataColumn>`:
-
-<!---FUN createDataFrameFromIterable-->
-
-```kotlin
-val name by columnOf("Alice", "Bob", "Charlie")
-val age by columnOf(15, 20, 22)
-
-listOf(name, age).toDataFrame()
-```
-
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromIterable.html"/>
-<!---END-->
-
 `DataFrame` from `Map<String, List<*>>`:
 
 <!---FUN createDataFrameFromMap-->
@@ -150,7 +122,7 @@ val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15,
 map.toDataFrame()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html" width="100%"/>
 <!---END-->
 
 Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
@@ -185,7 +157,7 @@ val files = listOf(File("data.csv"), File("data1.csv"))
 val df = files.toDataFrame(columnName = "data")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html" width="100%"/>
 <!---END-->
 
 Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
@@ -277,6 +249,6 @@ val col by columnOf(1, 2, 3)
 peek(dataFrameOf(col), dataFrameOf(col))
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.duplicatedColumns.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.duplicatedColumns.html" width="100%"/>
 <!---END-->
 

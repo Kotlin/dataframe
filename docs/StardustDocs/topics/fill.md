@@ -8,6 +8,8 @@ Replace missing values.
 
 Replaces `null` values with given value or expression. 
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN fillNulls-->
 
 ```kotlin
@@ -16,12 +18,14 @@ df.fillNulls { colsOf<Int?>() }.with { -1 }
 df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNulls.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNulls.html" width="100%"/>
 <!---END-->
 
 ## fillNaNs
 
 Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with given value or expression.
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN fillNaNs-->
 
@@ -29,12 +33,14 @@ Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with giv
 df.fillNaNs { colsOf<Double>() }.withZero()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNaNs.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNaNs.html" width="100%"/>
 <!---END-->
 
 ## fillNA
 
 Replaces [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, and `Float.NaN`) with given value or expression.
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN fillNA-->
 
@@ -42,5 +48,5 @@ Replaces [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, and `Float.NaN`) w
 df.fillNA { weight }.with { -1 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNA.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNA.html" width="100%"/>
 <!---END-->

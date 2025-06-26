@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /**
@@ -342,11 +343,13 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface KPropertyColsPredicateDocs
 
     /** @include [KPropertyColsPredicateDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).cols(predicate)
 
     /** @include [KPropertyColsPredicateDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun KProperty<*>.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         cols(predicate)

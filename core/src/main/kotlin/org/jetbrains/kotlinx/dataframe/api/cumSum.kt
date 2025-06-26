@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.math.cumSumImpl
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -129,6 +130,7 @@ public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = def
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: ColumnReference<Number?>,
@@ -139,6 +141,7 @@ public fun <T> DataFrame<T>.cumSum(
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: KProperty<Number?>,
@@ -153,7 +156,7 @@ public fun <T> DataFrame<T>.cumSum(
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) {
         // TODO keep at any depth?
-        colsAtAnyDepth { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isNumber() }.cast()
     }
 
 // endregion
@@ -180,6 +183,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean =
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: ColumnReference<Number?>,
@@ -190,6 +194,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: KProperty<Number?>,
@@ -204,7 +209,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) {
         // TODO keep at any depth?
-        colsAtAnyDepth { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isNumber() }.cast()
     }
 
 // endregion

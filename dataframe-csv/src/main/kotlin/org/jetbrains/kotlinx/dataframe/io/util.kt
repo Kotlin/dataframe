@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
-import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentationCsv.ExcludeFromSources
 
 /** [\["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"\]][DEFAULT_DELIM_NULL_STRINGS] */
 @ExcludeFromSources

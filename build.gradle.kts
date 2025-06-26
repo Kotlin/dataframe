@@ -154,6 +154,7 @@ val modulesUsingJava11 = with(projects) {
         dataframeJupyter,
         dataframeGeo,
         examples.ideaExamples.titanic,
+        tests,
     )
 }.map { it.path }
 
@@ -188,14 +189,14 @@ allprojects {
     afterEvaluate {
         try {
             configure<KtlintExtension> {
-                version = "1.4.1"
+                version = "1.6.0"
                 // rules are set up through .editorconfig
             }
         } catch (_: UnknownDomainObjectException) {
             logger.warn("Could not set ktlint config on :${this.name}")
         }
 
-        // set the java toolchain version to 11 for all subprojects for CI stability
+        // set the java toolchain version to 21 for all subprojects for CI stability
         extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(21)
 
         // Attempts to configure buildConfig for each sub-project that uses it

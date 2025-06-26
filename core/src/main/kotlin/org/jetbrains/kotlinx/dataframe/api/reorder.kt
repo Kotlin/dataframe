@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.reorderImpl
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -26,10 +27,12 @@ public data class Reorder<T, C>(
 @Interpretable("Reorder")
 public fun <T, C> DataFrame<T>.reorder(selector: ColumnsSelector<T, C>): Reorder<T, C> = Reorder(this, selector, false)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.reorder(vararg columns: ColumnReference<C>): Reorder<T, C> =
     reorder { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.reorder(vararg columns: KProperty<C>): Reorder<T, C> = reorder { columns.toColumnSet() }
 

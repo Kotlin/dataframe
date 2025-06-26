@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.ROW_PERCENTILE
 import org.jetbrains.kotlinx.dataframe.util.ROW_PERCENTILE_OR_NULL
 import kotlin.experimental.ExperimentalTypeInference
@@ -163,6 +164,7 @@ public fun <T> DataFrame<T>.percentileFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileFor(percentile, skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
     percentile: Double,
@@ -170,6 +172,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileFor(percentile, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
     percentile: Double,
@@ -224,18 +227,21 @@ public fun <T> DataFrame<T>.percentileOrNull(
 ): Any? =
     Aggregators.percentileCommon<Comparable<Any>?>(percentile, skipNaN).aggregateAll(this) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
     percentile: Double,
     vararg columns: ColumnReference<C>,
 ): C & Any = percentileOrNull(percentile, *columns).suggestIfNull("percentile")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
     percentile: Double,
     vararg columns: ColumnReference<C>,
 ): C? = percentileOrNull<T, C>(percentile) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.percentile(
     percentile: Double,
@@ -245,6 +251,7 @@ public fun <T, C> DataFrame<T>.percentile(
     where C : Comparable<C & Any>?, C : Number? =
     percentileOrNull(percentile, *columns, skipNaN = skipNaN).suggestIfNull("percentile")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.percentileOrNull(
     percentile: Double,
@@ -254,18 +261,21 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
     where C : Comparable<C & Any>?, C : Number? =
     percentileOrNull(percentile, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
     percentile: Double,
     vararg columns: KProperty<C>,
 ): C & Any = percentileOrNull(percentile, *columns).suggestIfNull("percentile")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
     percentile: Double,
     vararg columns: KProperty<C>,
 ): C? = percentileOrNull<T, C>(percentile) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.percentile(
     percentile: Double,
@@ -275,6 +285,7 @@ public fun <T, C> DataFrame<T>.percentile(
     where C : Comparable<C & Any>?, C : Number? =
     percentileOrNull(percentile, *columns, skipNaN = skipNaN).suggestIfNull("percentile")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.percentileOrNull(
     percentile: Double,
@@ -328,6 +339,7 @@ public fun <T> DataFrame<T>.percentileBy(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileByOrNull(percentile, column, skipNaN).suggestIfNull("percentileBy")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileBy(
     percentile: Double,
@@ -335,6 +347,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileB
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileByOrNull(percentile, column, skipNaN).suggestIfNull("percentileBy")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileBy(
     percentile: Double,
@@ -354,6 +367,7 @@ public fun <T> DataFrame<T>.percentileByOrNull(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T>? = percentileByOrNull(percentile, column.toColumnOf<Comparable<Any>?>(), skipNaN)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileByOrNull(
     percentile: Double,
@@ -361,6 +375,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileB
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T>? = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateByOrNull(this, column)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileByOrNull(
     percentile: Double,
@@ -387,6 +402,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
 public fun <T> Grouped<T>.percentileFor(percentile: Double, vararg columns: String): DataFrame<T> =
     percentileFor(percentile) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
     percentile: Double,
@@ -394,6 +410,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentileFor(percentile, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
     percentile: Double,
@@ -417,6 +434,7 @@ public fun <T> Grouped<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentile(percentile, name, skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
     percentile: Double,
@@ -425,6 +443,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentile(percentile, name, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
     percentile: Double,
@@ -449,6 +468,7 @@ public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.percent
     crossinline rowExpression: RowExpression<G, R>,
 ): ReducedGroupBy<T, G> = reduce { percentileByOrNull(percentile, skipNaN, rowExpression) }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.percentileBy(
     percentile: Double,
@@ -462,6 +482,7 @@ public fun <T, G> GroupBy<T, G>.percentileBy(
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedGroupBy<T, G> = percentileBy(percentile, column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.percentileBy(
     percentile: Double,
@@ -493,6 +514,7 @@ public fun <T> Pivot<T>.percentileFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileFor(percentile, separate, skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
     percentile: Double,
@@ -501,6 +523,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
     percentile: Double,
@@ -521,6 +544,7 @@ public fun <T> Pivot<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentile(percentile, skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
     percentile: Double,
@@ -528,6 +552,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentile(percentile, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
     percentile: Double,
@@ -547,6 +572,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.percentileBy(
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivot<T> = reduce { percentileByOrNull(percentile, skipNaN, rowExpression) }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.percentileBy(
     percentile: Double,
@@ -560,6 +586,7 @@ public fun <T> Pivot<T>.percentileBy(
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivot<T> = percentileBy(percentile, column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.percentileBy(
     percentile: Double,
@@ -590,6 +617,7 @@ public fun <T> PivotGroupBy<T>.percentileFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentileFor(percentile, separate, skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
     percentile: Double,
@@ -598,6 +626,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
     percentile: Double,
@@ -618,6 +647,7 @@ public fun <T> PivotGroupBy<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentile(percentile, skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
     percentile: Double,
@@ -625,6 +655,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentile(percentile, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
     percentile: Double,
@@ -644,6 +675,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percenti
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivotGroupBy<T> = reduce { percentileByOrNull(percentile, skipNaN, rowExpression) }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.percentileBy(
     percentile: Double,
@@ -657,6 +689,7 @@ public fun <T> PivotGroupBy<T>.percentileBy(
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivotGroupBy<T> = percentileBy(percentile, column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.percentileBy(
     percentile: Double,

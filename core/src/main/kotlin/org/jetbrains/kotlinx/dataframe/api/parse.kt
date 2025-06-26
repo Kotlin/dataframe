@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
 import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY
 import java.time.format.DateTimeFormatter
@@ -37,10 +38,12 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: Colum
 public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
@@ -208,7 +211,7 @@ public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataCol
 
 public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
     parse(options) {
-        colsAtAnyDepth { !it.isColumnGroup() }
+        colsAtAnyDepth().filter { !it.isColumnGroup() }
     }
 
 /**

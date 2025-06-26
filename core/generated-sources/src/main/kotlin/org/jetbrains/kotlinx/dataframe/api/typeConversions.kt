@@ -30,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asValues
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
@@ -263,6 +264,7 @@ public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): Valu
 public inline fun <reified T> Iterable<T>.toValueColumn(column: ColumnAccessor<T>): ValueColumn<T> =
     toValueColumn(column.name())
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): ValueColumn<T> =
     toValueColumn(column.columnName)
@@ -367,6 +369,7 @@ public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataCol
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
     DataColumn.createByType(ref.name(), asList()).forceResolve()
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): DataColumn<T> =
     DataColumn.createByType(property.columnName, asList()).forceResolve()
@@ -401,6 +404,7 @@ public fun <T> DataFrame<T>.asGroupBy(groupedColumnName: String): GroupBy<T, T> 
     return asGroupBy { groups.cast() }
 }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFrame<G>>): GroupBy<T, G> {
     val groups = getFrameColumn(groupedColumn.name()).castFrameColumn<G>()

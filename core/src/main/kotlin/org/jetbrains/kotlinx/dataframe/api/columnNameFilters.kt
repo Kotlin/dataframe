@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -193,6 +194,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameContains][KProperty.colsNameContains]`("my") }`
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.colsNameContains(
         text: CharSequence,
@@ -260,6 +262,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameContains][KProperty.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.colsNameContains(regex: Regex): TransformableColumnSet<*> =
         columnGroup(this).colsNameContains(regex)
@@ -402,6 +405,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameStartsWith][KProperty.colsNameStartsWith]`("order-") }`
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.colsNameStartsWith(
         prefix: CharSequence,
@@ -490,6 +494,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameEndsWith][KProperty.colsNameEndsWith]`("-order") }`
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.colsNameEndsWith(
         suffix: CharSequence,

@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -160,6 +161,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER]}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         colGroup.ensureIsColumnGroup()
@@ -167,6 +169,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.colGroup(colGroup: ColumnAccessor<DataRow<C>>): SingleColumn<DataRow<C>> =
         this.ensureIsColumnGroup().transformSingle {
@@ -181,6 +184,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
@@ -188,6 +192,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> String.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
@@ -195,6 +200,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
@@ -202,6 +208,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> ColumnPath.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
@@ -283,6 +290,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
@@ -290,6 +298,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(name: String): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(name).ensureIsColumnGroup()
@@ -386,6 +395,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
@@ -393,6 +403,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(path).ensureIsColumnGroup()
@@ -429,6 +440,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> colGroup(property: KProperty<DataRow<C>>): SingleColumn<DataRow<C>> =
         columnGroup(property).ensureIsColumnGroup()
@@ -436,6 +448,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER]}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> colGroup(property: KProperty<C>): SingleColumn<DataRow<C>> =
         columnGroup(property).ensureIsColumnGroup()
@@ -445,6 +458,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.colGroup(property: KProperty<DataRow<C>>): SingleColumn<DataRow<C>> =
         colGroup<C>(property.name)
@@ -452,6 +466,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.colGroup(property: KProperty<C>): SingleColumn<DataRow<C>> =
         colGroup<C>(property.name)
@@ -461,6 +476,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
@@ -468,6 +484,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
@@ -477,6 +494,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> String.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
@@ -484,6 +502,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> String.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
@@ -493,6 +512,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
@@ -500,6 +520,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
@@ -509,6 +530,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> ColumnPath.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
@@ -516,6 +538,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> ColumnPath.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
@@ -601,6 +624,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
@@ -608,6 +632,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(index: Int): SingleColumn<DataRow<C>> = columnGroup(this).colGroup<C>(index)
 

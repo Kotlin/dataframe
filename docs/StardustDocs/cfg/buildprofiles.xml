@@ -13,9 +13,10 @@
         <algolia-api-key>bce9ba6ce7419efe813d671244d3bf6a</algolia-api-key>
         <search-scopes-provider>https://www.jetbrains.com/search/json/</search-scopes-provider>
         <generate-sitemap-url-prefix>https://kotlin.github.io/dataframe/</generate-sitemap-url-prefix>
-        <analytics-head-script-file>resize-iframes.js</analytics-head-script-file>
+        <analytics-head-script-file>google-search.html</analytics-head-script-file>
         <enable-browser-edits>true</enable-browser-edits>
         <browser-edits-url>https://github.com/Kotlin/dataframe/edit/master/docs/StardustDocs/</browser-edits-url>
+        <include-in-head>include-head.html</include-in-head>
     </variables>
     <sitemap change-frequency="monthly"/>
     <build-profile instance="d">

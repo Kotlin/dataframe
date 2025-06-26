@@ -11,9 +11,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
-private val defaultExplodeColumns: ColumnsSelector<*, *> = { colsAtAnyDepth { it.isList() || it.isFrameColumn() } }
+private val defaultExplodeColumns: ColumnsSelector<*, *> = {
+    colsAtAnyDepth().filter { it.isList() || it.isFrameColumn() }
+}
 
 // region explode DataFrame
 @Refine
@@ -26,10 +29,12 @@ public fun <T> DataFrame<T>.explode(
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
@@ -46,10 +51,12 @@ public fun <T> DataRow<T>.explode(
 public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataRow<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataRow<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }

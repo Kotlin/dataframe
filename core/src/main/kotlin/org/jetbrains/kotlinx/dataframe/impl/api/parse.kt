@@ -41,6 +41,7 @@ import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.net.URI
 import java.net.URL
 import java.text.ParsePosition
 import java.time.format.DateTimeFormatter
@@ -240,7 +241,7 @@ internal object Parsers : GlobalParserOptions {
         toJavaLocalDateTimeOrNull(formatter) // since we accept a Java DateTimeFormatter
             ?.toKotlinLocalDateTime()
 
-    private fun String.toUrlOrNull(): URL? = if (isUrl(this)) catchSilent { URL(this) } else null
+    private fun String.toUrlOrNull(): URL? = if (isUrl(this)) catchSilent { URI(this).toURL() } else null
 
     private fun String.toBooleanOrNull() =
         when (uppercase(Locale.getDefault())) {
@@ -680,7 +681,7 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
             col.isFrameColumn() -> {
                 col.map {
                     it.parseImpl(options) {
-                        colsAtAnyDepth { !it.isColumnGroup() }
+                        colsAtAnyDepth().filter { !it.isColumnGroup() }
                     }
                 }
             }

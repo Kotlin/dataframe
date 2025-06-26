@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.columnValues
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.remainingColumnsSelector
 import org.jetbrains.kotlinx.dataframe.impl.valuesImpl
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -29,6 +30,7 @@ public fun <T> DataFrame<T>.valuesNotNull(byRow: Boolean = false): Sequence<Any>
 
 // region GroupBy
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> Grouped<T>.values(
     vararg columns: AnyColumnReference,
@@ -57,12 +59,14 @@ public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = fa
 
 public fun <T, G> ReducedGroupBy<T, G>.values(): DataFrame<G> = values(groupBy.remainingColumnsSelector())
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: AnyColumnReference): DataFrame<G> =
     values { columns.toColumnSet() }
 
 public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: String): DataFrame<G> = values { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: KProperty<*>): DataFrame<G> =
     values { columns.toColumnSet() }
@@ -81,6 +85,7 @@ public fun <T> Pivot<T>.values(
     columns: ColumnsForAggregateSelector<T, *>,
 ): DataRow<T> = delegate { values(dropNA, distinct, separate, columns) }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> Pivot<T>.values(
     vararg columns: AnyColumnReference,
@@ -96,6 +101,7 @@ public fun <T> Pivot<T>.values(
     separate: Boolean = false,
 ): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> Pivot<T>.values(
     vararg columns: KProperty<*>,
@@ -120,6 +126,7 @@ public fun <T> Pivot<T>.values(
 public fun <T> ReducedPivot<T>.values(separate: Boolean = false): DataRow<T> =
     pivot.delegate { reduce(reducer).values(separate = separate) }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ReducedPivot<T>.values(vararg columns: AnyColumnReference, separate: Boolean = false): DataRow<T> =
     values(separate) { columns.toColumnSet() }
@@ -127,6 +134,7 @@ public fun <T> ReducedPivot<T>.values(vararg columns: AnyColumnReference, separa
 public fun <T> ReducedPivot<T>.values(vararg columns: String, separate: Boolean = false): DataRow<T> =
     values(separate) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataRow<T> =
     values(separate) { columns.toColumnSet() }
@@ -146,6 +154,7 @@ public fun <T> PivotGroupBy<T>.values(
     separate: Boolean = false,
 ): DataFrame<T> = values(dropNA, distinct, separate, remainingColumnsSelector())
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> PivotGroupBy<T>.values(
     vararg columns: AnyColumnReference,
@@ -161,6 +170,7 @@ public fun <T> PivotGroupBy<T>.values(
     separate: Boolean = false,
 ): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> PivotGroupBy<T>.values(
     vararg columns: KProperty<*>,
@@ -183,6 +193,7 @@ public fun <T> PivotGroupBy<T>.values(
 public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFrame<T> =
     values(separate, pivot.remainingColumnsSelector())
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ReducedPivotGroupBy<T>.values(
     vararg columns: AnyColumnReference,
@@ -192,6 +203,7 @@ public fun <T> ReducedPivotGroupBy<T>.values(
 public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<T> =
     values(separate) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<T> =
     values(separate) { columns.toColumnSet() }

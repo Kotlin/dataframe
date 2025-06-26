@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.fir.dataframe.services.classpath
 
 import java.io.File
 import java.net.JarURLConnection
+import java.net.URI
 import java.net.URL
 
 // Based on an implementation in com.intellij.openapi.application.PathManager.getResourceRoot
@@ -58,7 +59,7 @@ private fun splitJarUrl(url: String): Pair<String, String>? {
 
     if (jarPath.startsWith(FILE_PROTOCOL)) {
         try {
-            jarPath = URL(jarPath).toFileOrNull()!!.path.replace('\\', '/')
+            jarPath = URI(jarPath).toURL().toFileOrNull()!!.path.replace('\\', '/')
         } catch (e: Exception) {
             jarPath = jarPath.substring(FILE_PROTOCOL.length)
             if (jarPath.startsWith(SCHEME_SEPARATOR)) {

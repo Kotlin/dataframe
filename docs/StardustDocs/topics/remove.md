@@ -8,23 +8,13 @@ Returns [`DataFrame`](DataFrame.md) without selected columns.
 remove { columns }
 ```
 
-See [Column Selectors](ColumnSelectors.md)
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN remove-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.remove { name and weight }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val weight by column<Int?>()
-
 df.remove { name and weight }
 ```
 
@@ -36,5 +26,5 @@ df.remove("name", "weight")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html" width="100%"/>
 <!---END-->

@@ -9,6 +9,8 @@ corr { columns1 }
     .with { columns2 } | .withItself()
 ```
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 To compute pairwise correlation between all columns in the [`DataFrame`](DataFrame.md) use `corr` without arguments:
 
 ```kotlin
@@ -19,7 +21,7 @@ The function is available for numeric- and `Boolean` columns.
 `Boolean` values are converted into `1` for `true` and `0` for `false`.
 All other columns are ignored.
 
-If a [`ColumnGroup`](DataColumn.md#columngroup) instance is passed as target column for correlation,
+If a [`ColumnGroup`](DataColumn.md#columngroup) instance is passed as the target column for correlation,
 it will be unpacked into suitable nested columns.
 
 The resulting [`DataFrame`](DataFrame.md) will have `n1` rows and `n2+1` columns,

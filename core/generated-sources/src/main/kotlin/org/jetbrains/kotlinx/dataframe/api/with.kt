@@ -44,7 +44,7 @@ public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression
         val value = reducer(this)?.let {
             val value = expression(it, it)
             if (value is AnyColumnReference) {
-                it[value]
+                value.getValue(it)
             } else {
                 value
             }

@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideFooter
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideStyle
 import org.jetbrains.kotlinx.dataframe.io.read
-import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
+import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
 import org.junit.Test
 import java.io.File
 
@@ -21,8 +21,8 @@ class OtherSamples {
     }
 
     private fun writeTable(df: AnyFrame, name: String) {
-        val dir = File("../docs/StardustDocs/snippets/manual").also { it.mkdirs() }
-        val html = df.toStandaloneHTML(getFooter = WritersideFooter) + WritersideStyle
-        html.writeHTML(File(dir, "$name.html"))
+        val dir = File("../docs/StardustDocs/resources/snippets/manual").also { it.mkdirs() }
+        val html = df.toStandaloneHtml(getFooter = WritersideFooter) + WritersideStyle
+        html.writeHtml(File(dir, "$name.html"))
     }
 }

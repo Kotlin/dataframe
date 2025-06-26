@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.RGBColor
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.excludeJoinWith
@@ -36,7 +35,7 @@ import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.renderValueForHtml
-import org.jetbrains.kotlinx.dataframe.io.toHTML
+import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.ChainedCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
@@ -140,7 +139,7 @@ class JoinWith : TestBase() {
     )
 
     private fun AnyFrame.toColoredHTML() =
-        toHTML(
+        toHtml(
             getFooter = { null },
             cellRenderer = renderer,
             configuration = SamplesDisplayConfiguration.copy(
@@ -229,114 +228,6 @@ class JoinWith : TestBase() {
                     ),
                 ),
         )
-    }
-
-    @TransformDataFrameExpressions
-    @Test
-    fun joinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
-
-            campaigns.innerJoinWith(visits) {
-                right[date] in startDate()..endDate()
-            }
-            // SampleEnd
-        }
-        val coloredResult = coloredCampaigns.innerJoinWith(coloredVisits, joinExpression = joinExpression)
-        snippetOutput(coloredResult, result)
-    }
-
-    @TransformDataFrameExpressions
-    @Test
-    fun filterJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
-
-            campaigns.filterJoinWith(visits) {
-                right[date] in startDate()..endDate()
-            }
-            // SampleEnd
-        }
-        val coloredResult = coloredCampaigns.filterJoinWith(coloredVisits, joinExpression = joinExpression)
-        snippetOutput(coloredResult, result)
-    }
-
-    @TransformDataFrameExpressions
-    @Test
-    fun leftJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
-
-            campaigns.leftJoinWith(visits) {
-                right[date] in startDate()..endDate()
-            }
-            // SampleEnd
-        }
-        val coloredResult = coloredCampaigns.leftJoinWith(coloredVisits, joinExpression = joinExpression)
-        snippetOutput(coloredResult, result)
-    }
-
-    @TransformDataFrameExpressions
-    @Test
-    fun rightJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
-
-            campaigns.rightJoinWith(visits) {
-                right[date] in startDate()..endDate()
-            }
-            // SampleEnd
-        }
-        val coloredResult = coloredCampaigns.rightJoinWith(coloredVisits, joinExpression = joinExpression)
-        snippetOutput(coloredResult, result)
-    }
-
-    @TransformDataFrameExpressions
-    @Test
-    fun fullJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
-
-            campaigns.fullJoinWith(visits) {
-                right[date] in startDate()..endDate()
-            }
-            // SampleEnd
-        }
-        val coloredResult = coloredCampaigns.fullJoinWith(coloredVisits, joinExpression = joinExpression)
-        snippetOutput(coloredResult, result)
-    }
-
-    @TransformDataFrameExpressions
-    @Test
-    fun excludeJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
-
-            campaigns.excludeJoinWith(visits) {
-                right[date] in startDate()..endDate()
-            }
-            // SampleEnd
-        }
-        val coloredResult = coloredCampaigns.excludeJoinWith(coloredVisits, joinExpression = joinExpression)
-        snippetOutput(coloredResult, result)
     }
 
     @TransformDataFrameExpressions

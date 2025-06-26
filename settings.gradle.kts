@@ -11,6 +11,7 @@ include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
 include("plugins:expressions-converter")
 include("plugins:kotlin-dataframe")
+include("plugins:public-api-modifier")
 include("tests")
 include("dataframe-json")
 include("dataframe-arrow")
@@ -19,12 +20,17 @@ include("dataframe-excel")
 include("dataframe-jdbc")
 include("dataframe-csv")
 include("dataframe-jupyter")
+include("dataframe-geo")
+include("dataframe-openapi-generator")
 include("core")
+include("dataframe-compiler-plugin-core")
 
 include("examples:idea-examples:titanic")
 include("examples:idea-examples:movies")
 include("examples:idea-examples:youtube")
 include("examples:idea-examples:json")
+include("examples:idea-examples:unsupported-data-sources")
+includeBuild("examples/kotlin-dataframe-plugin-example")
 
 val jupyterApiTCRepo: String by settings
 
@@ -44,9 +50,3 @@ pluginManagement {
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
-include("dataframe-excel")
-include("core")
-include("dataframe-openapi-generator")
-include("dataframe-geo")
-include("plugins:public-api-modifier")
-include("dataframe-compiler-plugin-core")

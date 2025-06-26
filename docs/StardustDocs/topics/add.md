@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns [`DataFrame`](DataFrame.md) which contains all columns from original [`DataFrame`](DataFrame.md) followed by newly added columns. 
+Returns [`DataFrame`](DataFrame.md) which contains all columns from the original [`DataFrame`](DataFrame.md) followed by newly added columns. 
 Original [`DataFrame`](DataFrame.md) is not modified.
 
 `add` appends columns to the end of the dataframe by default.
@@ -25,16 +25,6 @@ df.add("year of birth") { 2021 - age }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val yearOfBirth by column<Int>("year of birth")
-
-df.add(yearOfBirth) { 2021 - age }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -42,7 +32,7 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.add.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.add.html" width="100%"/>
 <!---END-->
 
 See [row expressions](DataRow.md#row-expressions)
@@ -59,7 +49,7 @@ df.add("fibonacci") {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addRecurrent.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addRecurrent.html" width="100%"/>
 <!---END-->
 
 ## Create and add several columns to [`DataFrame`](DataFrame.md)
@@ -97,30 +87,6 @@ df.add {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val yob = column<Int>("year of birth")
-val lastNameLength = column<Int>("last name length")
-val age by column<Int>()
-val isAdult = column<Boolean>("is adult")
-val fullName = column<String>("full name")
-val name by columnGroup()
-val details by columnGroup()
-val firstName by name.column<String>()
-val lastName by name.column<String>()
-
-df.add {
-    yob from 2021 - age
-    age gt 18 into isAdult
-    details from {
-        lastName.length() into lastNameLength
-        fullName from { firstName() + " " + lastName() }
-    }
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -135,7 +101,7 @@ df.add {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addMany.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addMany.html" width="100%"/>
 <!---END-->
 
 ### Create columns using intermediate result
@@ -161,20 +127,6 @@ Use the following approach to add multiple columns by calling the given API only
 ```kotlin
 val personWithCityInfo = df.add {
     val cityInfo = city.map { queryCityInfo(it) }
-    "cityInfo" {
-        cityInfo.map { it.location } into CityInfo::location
-        cityInfo.map { it.population } into "population"
-    }
-}
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val personWithCityInfo = df.add {
-    val cityInfo = city().map { queryCityInfo(it) }
     "cityInfo" {
         cityInfo.map { it.location } into CityInfo::location
         cityInfo.map { it.population } into "population"
@@ -209,7 +161,7 @@ df.add(score)
 df + score
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addExisting.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addExisting.html" width="100%"/>
 <!---END-->
 
 ## Add all columns from another [`DataFrame`](DataFrame.md)
@@ -220,7 +172,7 @@ df + score
 df.add(df1, df2)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html" width="100%"/>
 <!---END-->
 
 ## addId

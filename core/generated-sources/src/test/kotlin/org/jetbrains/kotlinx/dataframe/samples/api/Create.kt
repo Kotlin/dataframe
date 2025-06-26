@@ -114,20 +114,6 @@ class Create : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun columnAccessorComputed_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val firstName by name.column<String>()
-        val lastName by name.column<String>()
-
-        val fullName by column { firstName() + " " + lastName() }
-
-        df[fullName]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun columnAccessorComputed_strings() {
         // SampleStart
 
@@ -334,35 +320,6 @@ class Create : TestBase() {
         // DataFrame with 2 columns
         map.toDataFrame()
         // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun createDataFrameFromIterable() {
-        // SampleStart
-        val name by columnOf("Alice", "Bob", "Charlie")
-        val age by columnOf(15, 20, 22)
-
-        listOf(name, age).toDataFrame()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun createDataFrameFromNamesAndValues() {
-        // SampleStart
-        val names = listOf("name", "age")
-        val values = listOf(
-            "Alice", 15,
-            "Bob", 20,
-            "Charlie", 22,
-        )
-        val df = dataFrameOf(names, values)
-        // SampleEnd
-        df.columnNames() shouldBe listOf("name", "age")
-        df.rowsCount() shouldBe 3
-        df["name"].type() shouldBe typeOf<String>()
-        df["age"].type() shouldBe typeOf<Int>()
     }
 
     @Test

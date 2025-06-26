@@ -5,14 +5,16 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithTypeCastGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
+import org.jetbrains.kotlinx.dataframe.codeGen.TypeCastGenerator
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -43,9 +45,9 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             else -> null
         }
 
-    override fun process(row: AnyRow, property: KProperty<*>?): CodeWithConverter = process(row.df(), property)
+    override fun process(row: AnyRow, property: KProperty<*>?): CodeWithTypeCastGenerator = process(row.df(), property)
 
-    override fun process(df: AnyFrame, property: KProperty<*>?): CodeWithConverter {
+    override fun process(df: AnyFrame, property: KProperty<*>?): CodeWithTypeCastGenerator {
         var targetSchema = df.schema()
 
         if (property != null) {
@@ -65,7 +67,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                         // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
                         val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
-                            return CodeWithConverter.EMPTY
+                            return CodeWithTypeCastGenerator.EMPTY
                         }
                         // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
                         targetSchema = columnSchema
@@ -77,11 +79,32 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = true)
     }
 
-    fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithConverter {
+    override fun process(groupBy: GroupBy<*, *>): CodeWithTypeCastGenerator {
+        val key = generate(
+            schema = groupBy.keys.schema(),
+            name = markerInterfacePrefix + "Keys",
+            isOpen = false,
+        )
+        val group = generate(
+            schema = groupBy.groups.schema.value,
+            name = markerInterfacePrefix + "Groups",
+            isOpen = false,
+        )
+
+        val keyTypeName = (key.typeCastGenerator as TypeCastGenerator.DataFrameApi).types.single()
+        val groupTypeName = (group.typeCastGenerator as TypeCastGenerator.DataFrameApi).types.single()
+
+        return CodeWithTypeCastGenerator(
+            declarations = key.declarations + "\n" + group.declarations,
+            typeCastGenerator = TypeCastGenerator.DataFrameApi(keyTypeName, groupTypeName),
+        )
+    }
+
+    fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithTypeCastGenerator {
         val result = generator.generate(
             schema = schema,
             name = name,
-            fields = false,
+            fields = true,
             extensionProperties = true,
             isOpen = isOpen,
             visibility = MarkerVisibility.IMPLICIT_PUBLIC,

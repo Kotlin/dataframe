@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -28,6 +29,7 @@ public inline fun <T, reified R> DataFrame<T>.insert(
     noinline expression: RowExpression<T, R>,
 ): InsertClause<T> = insert(mapToColumn(name, infer, expression))
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: ColumnAccessor<R>,
@@ -35,6 +37,7 @@ public inline fun <T, reified R> DataFrame<T>.insert(
     noinline expression: RowExpression<T, R>,
 ): InsertClause<T> = insert(column.name(), infer, expression)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: KProperty<R>,
@@ -59,9 +62,11 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> =
     df.insertImpl(columnPath + column.name, column)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
 
@@ -79,9 +84,11 @@ public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T>
 
 public fun <T> InsertClause<T>.after(column: String): DataFrame<T> = df.add(this.column).move(this.column).after(column)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> InsertClause<T>.after(column: ColumnAccessor<*>): DataFrame<T> = after(column.path())
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> InsertClause<T>.after(column: KProperty<*>): DataFrame<T> = after(column.columnName)
 

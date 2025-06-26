@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.ROW_MEDIAN
 import org.jetbrains.kotlinx.dataframe.util.ROW_MEDIAN_OR_NULL
 import kotlin.experimental.ExperimentalTypeInference
@@ -145,12 +146,14 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
 public fun <T> DataFrame<T>.medianFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
     vararg columns: KProperty<C>,
@@ -190,14 +193,17 @@ public fun <T> DataFrame<T>.median(vararg columns: String, skipNaN: Boolean = sk
 public fun <T> DataFrame<T>.medianOrNull(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Any? =
     Aggregators.medianCommon<Comparable<Any>?>(skipNaN).aggregateAll(this) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(vararg columns: ColumnReference<C>): C & Any =
     medianOrNull(*columns).suggestIfNull("median")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianOrNull(vararg columns: ColumnReference<C>): C? =
     medianOrNull<T, C> { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.median(
     vararg columns: ColumnReference<C>,
@@ -206,6 +212,7 @@ public fun <T, C> DataFrame<T>.median(
     where C : Comparable<C & Any>?, C : Number? =
     medianOrNull(*columns, skipNaN = skipNaN).suggestIfNull("median")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.medianOrNull(
     vararg columns: ColumnReference<C>,
@@ -213,14 +220,17 @@ public fun <T, C> DataFrame<T>.medianOrNull(
 ): Double?
     where C : Comparable<C & Any>?, C : Number? = medianOrNull(skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(vararg columns: KProperty<C>): C & Any =
     medianOrNull(*columns).suggestIfNull("median")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianOrNull(vararg columns: KProperty<C>): C? =
     medianOrNull<T, C> { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.median(
     vararg columns: KProperty<C>,
@@ -229,6 +239,7 @@ public fun <T, C> DataFrame<T>.median(
     where C : Comparable<C & Any>?, C : Number? =
     medianOrNull(*columns, skipNaN = skipNaN).suggestIfNull("median")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.medianOrNull(
     vararg columns: KProperty<C>,
@@ -272,12 +283,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
 public fun <T> DataFrame<T>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
     column: KProperty<C>,
@@ -292,12 +305,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrN
 public fun <T> DataFrame<T>.medianByOrNull(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T>? =
     medianByOrNull(column.toColumnOf<Comparable<Any>?>(), skipNaN)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T>? = Aggregators.medianCommon<C>(skipNaN).aggregateByOrNull(this, column)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
     column: KProperty<C>,
@@ -321,12 +336,14 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
 
 public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
     vararg columns: KProperty<C>,
@@ -347,6 +364,7 @@ public fun <T> Grouped<T>.median(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = median(name, skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
     vararg columns: ColumnReference<C>,
@@ -354,6 +372,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = median(name, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
     vararg columns: KProperty<C>,
@@ -375,6 +394,7 @@ public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.medianB
     crossinline rowExpression: RowExpression<G, R>,
 ): ReducedGroupBy<T, G> = reduce { medianByOrNull(skipNaN, rowExpression) }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianBy(
     column: ColumnReference<C>,
@@ -384,6 +404,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianB
 public fun <T, G> GroupBy<T, G>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedGroupBy<T, G> =
     medianBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianBy(
     column: KProperty<C>,
@@ -409,6 +430,7 @@ public fun <T> Pivot<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(separate, skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
     vararg columns: ColumnReference<C>,
@@ -416,6 +438,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(separate, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
     vararg columns: KProperty<C>,
@@ -431,12 +454,14 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
 public fun <T> Pivot<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     median(skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = median(skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
     vararg columns: KProperty<C>,
@@ -453,6 +478,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.medianBy(
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivot<T> = reduce { medianByOrNull(skipNaN, rowExpression) }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
     column: ColumnReference<C>,
@@ -462,6 +488,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
 public fun <T> Pivot<T>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivot<T> =
     medianBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
     column: KProperty<C>,
@@ -486,6 +513,7 @@ public fun <T> PivotGroupBy<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(separate, skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
     vararg columns: ColumnReference<C>,
@@ -493,6 +521,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(separate, skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
     vararg columns: KProperty<C>,
@@ -508,12 +537,14 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
 public fun <T> PivotGroupBy<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     median(skipNaN) { columns.toComparableColumns() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = median(skipNaN) { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
     vararg columns: KProperty<C>,
@@ -530,6 +561,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianBy
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivotGroupBy<T> = reduce { medianByOrNull(skipNaN, rowExpression) }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.medianBy(
     column: ColumnReference<C>,
@@ -539,6 +571,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.medianBy
 public fun <T> PivotGroupBy<T>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivotGroupBy<T> =
     medianBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.medianBy(
     column: KProperty<C>,

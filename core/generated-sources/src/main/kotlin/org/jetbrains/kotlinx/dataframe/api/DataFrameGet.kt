@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 public fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> =
@@ -87,14 +88,17 @@ public fun <T> DataFrame<T>.properties(): ColumnsScope<T> = this
 public fun <T> ColumnsContainer<T>.getColumn(name: String): AnyCol =
     getColumnOrNull(name) ?: throw IllegalArgumentException("Column not found: '$name'")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<DataFrame<R>>): FrameColumn<R> =
     getColumnOrNull(column)?.asFrameColumn() ?: throw IllegalArgumentException("FrameColumn not found: '$column'")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<DataRow<R>>): ColumnGroup<R> =
     getColumnOrNull(column)?.asColumnGroup() ?: throw IllegalArgumentException("ColumnGroup not found: '$column'")
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<R>): DataColumn<R> =
     getColumnOrNull(column) ?: throw IllegalArgumentException("Column not found: '$column'")
@@ -116,10 +120,12 @@ public fun <T> ColumnsContainer<T>.getColumnGroup(index: Int): ColumnGroup<*> = 
 
 public fun <T> ColumnsContainer<T>.getColumnGroup(name: String): ColumnGroup<*> = getColumn(name).asColumnGroup()
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnsContainer<T>.getColumnGroup(column: KProperty<*>): ColumnGroup<*> =
     getColumnGroup(column.columnName)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnReference<DataRow<C>>): ColumnGroup<C> =
     getColumn(column)
@@ -134,6 +140,7 @@ public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnSelector<T, D
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGroup<*>? =
     getColumnOrNull(name)?.asColumnGroup()
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(column: KProperty<*>): ColumnGroup<*>? =
     getColumnGroupOrNull(column.columnName)
@@ -142,15 +149,19 @@ public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(column: KProperty<*>): C
 
 // region containsColumn
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <C> ColumnsContainer<*>.containsColumn(column: ColumnReference<C>): Boolean = getColumnOrNull(column) != null
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun ColumnsContainer<*>.containsColumn(column: KProperty<*>): Boolean = containsColumn(column.columnName)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public operator fun ColumnsContainer<*>.contains(column: AnyColumnReference): Boolean = containsColumn(column)
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public operator fun ColumnsContainer<*>.contains(column: KProperty<*>): Boolean = containsColumn(column)
 

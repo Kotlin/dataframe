@@ -10,7 +10,7 @@ replace { columns }
 columnExpression: DataFrame.(DataColumn) -> DataColumn
 ```
 
-See [column selectors](ColumnSelectors.md)
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN replace-->
 
@@ -20,7 +20,7 @@ df.replace { colsOf<String?>() }.with { it.lowercase() }
 df.replace { age }.with { 2021 - age named "year" }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.replace.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.replace.html" width="100%"/>
 <!---END-->
 
 <tip>

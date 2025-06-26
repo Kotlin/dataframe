@@ -11,27 +11,18 @@ The rows in the resulting [`DataFrame`](DataFrame.md) are in the same order as t
 df.distinct()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinct.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.distinct.html" width="100%"/>
 <!---END-->
 
 If columns are specified, resulting [`DataFrame`](DataFrame.md) will have only given columns with distinct values.
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN distinctColumns-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.distinct { age and name }
-// same as
-df.select { age and name }.distinct()
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
 df.distinct { age and name }
 // same as
 df.select { age and name }.distinct()
@@ -47,31 +38,20 @@ df.select("age", "name").distinct()
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctColumns.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctColumns.html" width="100%"/>
 <!---END-->
 
 ## distinctBy
 
 Keep only the first row for every group of rows grouped by some condition.
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN distinctBy-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.distinctBy { age and name }
-// same as
-df.groupBy { age and name }.mapToRows { group.first() }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-val firstName by name.column<String>()
-
 df.distinctBy { age and name }
 // same as
 df.groupBy { age and name }.mapToRows { group.first() }
@@ -87,5 +67,5 @@ df.groupBy("age", "name").mapToRows { group.first() }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctBy.html" width="100%"/>
 <!---END-->

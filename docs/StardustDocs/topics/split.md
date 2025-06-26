@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-This operation splits every value in the given columns into several values,
+This operation splits every value in the given columns into several values 
 and optionally spreads them horizontally or vertically.
 
 ```text
@@ -15,10 +15,12 @@ df.split { columns }
 splitter = DataRow.(T) -> Iterable<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
-The following types of columns can be split without any _splitter_ configuration:
-* `String`: split by `,` and trim
-* `List`: split into elements
-* [`DataFrame`](DataFrame.md): split into rows
+The following types of columns can be split easily:
+* `String`: for instance, by `","`
+* `List`: splits into elements, no `by` required!
+* [`DataFrame`](DataFrame.md): splits into rows, no `by` required!
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 ## Split in place
 
@@ -35,16 +37,6 @@ df.split { name.firstName }.by { it.asIterable() }.inplace()
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val firstName by name.column<String>()
-
-df.split { firstName }.by { it.asIterable() }.inplace()
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -52,7 +44,7 @@ df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitInplace.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitInplace.html" width="100%"/>
 <!---END-->
 
 ## Split horizontally
@@ -80,16 +72,6 @@ df.split { name.lastName }.by { it.asIterable() }.into("char1", "char2")
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val lastName by name.column<String>()
-
-df.split { lastName }.by { it.asIterable() }.into("char1", "char2")
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -97,7 +79,7 @@ df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html" width="100%"/>
 <!---END-->
 
 <!---FUN split1-->
@@ -106,18 +88,6 @@ df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "
 
 ```kotlin
 df.split { name.lastName }
-    .by { it.asIterable() }.default(' ')
-    .inward { "char$it" }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val lastName by name.column<String>()
-
-df.split { lastName }
     .by { it.asIterable() }.default(' ')
     .inward { "char$it" }
 ```
@@ -132,7 +102,7 @@ df.split { "name"["lastName"]<String>() }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html" width="100%"/>
 <!---END-->
 
 `String` columns can also be split into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) patterns:
@@ -147,7 +117,7 @@ merged.split { name }
     .inward("firstName", "lastName")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex1.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex1.html" width="100%"/>
 <!---END-->
 
 [`FrameColumn`](DataColumn.md#framecolumn) can be split into columns:
@@ -192,18 +162,6 @@ df.split { name }.by { it.values() }.intoRows()
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val firstName by name.column<String>()
-
-df.split { firstName }.by { it.asIterable() }.intoRows()
-
-df.split { name }.by { it.values() }.intoRows()
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -213,7 +171,7 @@ df.split { colGroup("name") }.by { it.values() }.intoRows()
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html" width="100%"/>
 <!---END-->
 
 Equals to `split { column }...inplace().explode { column }`. See [`explode`](explode.md) for details.

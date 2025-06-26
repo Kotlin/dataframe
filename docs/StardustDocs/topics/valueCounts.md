@@ -10,6 +10,8 @@ valueCounts(sort = true, ascending = false, dropNA = false)
      [ { columns } ]
 ```
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 **Parameters:**
 * `sort: Boolean = true` — sort by count
 * `ascending: Boolean = false` — sort in ascending order
@@ -24,5 +26,5 @@ df.city.valueCounts()
 df.valueCounts { name and city }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.valueCounts.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.valueCounts.html" width="100%"/>
 <!---END-->

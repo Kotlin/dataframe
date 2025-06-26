@@ -119,6 +119,12 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
             ),
         )
 
+    @Test
+    fun quickstart() =
+        exampleTest(
+            dir = "quickstart",
+        )
+
     private fun doTest(
         notebookPath: String,
         replacer: CodeReplacer,

@@ -10,6 +10,8 @@ cumSum(skipNA = true) [ { columns } ]
 
 Returns a [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md) containing the cumulative sum.
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 **Parameters:**
 * `skipNA` — when `true`, ignores [`NA` values](nanAndNa.md#na) (`null` or `NaN`). 
   When `false`, all values after first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).

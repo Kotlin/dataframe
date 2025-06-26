@@ -25,16 +25,6 @@ df.insert("year of birth") { 2021 - age }.after { age }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val year = column<Int>("year of birth")
-val age by column<Int>()
-
-df.insert(year) { 2021 - age }.after { age }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -42,7 +32,7 @@ df.insert("year of birth") { 2021 - "age"<Int>() }.after("age")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.insert.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.insert.html" width="100%"/>
 <!---END-->
 
 Insert previously created column:
@@ -54,5 +44,5 @@ val score by columnOf(4, 5, 3, 5, 4, 5, 3)
 df.insert(score).at(2)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.insertColumn.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.insertColumn.html" width="100%"/>
 <!---END-->

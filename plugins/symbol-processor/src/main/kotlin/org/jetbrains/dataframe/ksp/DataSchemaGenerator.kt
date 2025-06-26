@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
 import java.net.MalformedURLException
+import java.net.URI
 import java.net.URL
 import java.sql.Connection
 import java.sql.DriverManager
@@ -76,7 +77,7 @@ class DataSchemaGenerator(
     private fun ImportDataSchema.toStatement(file: KSFile, logger: KSPLogger): ImportDataSchemaStatement? {
         val url = if (isUrl(path)) {
             try {
-                URL(this.path)
+                URI(this.path).toURL()
             } catch (exception: MalformedURLException) {
                 logger.error("'${this.path}' is not valid URL: ${exception.message}", file)
                 return null
@@ -88,7 +89,7 @@ class DataSchemaGenerator(
                     origin = file,
                     name = name,
                     // URL better to make nullable or make hierarchy here
-                    dataSource = CodeGeneratorDataSource(this.path, URL("http://example.com/pages/")),
+                    dataSource = CodeGeneratorDataSource(this.path, URI("http://example.com/pages/").toURL()),
                     visibility = visibility.toMarkerVisibility(),
                     normalizationDelimiters = normalizationDelimiters.toList(),
                     withDefaultPath = withDefaultPath,

@@ -15,16 +15,6 @@ df[df.age, df.weight]
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val weight by column<Int?>()
-
-df[age, weight]
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -32,7 +22,7 @@ df["age", "weight"]
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnsByName.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnsByName.html" width="100%"/>
 <!---END-->
 
 See [DataFrame indexing](indexing.md)
@@ -48,17 +38,6 @@ df.select { age and weight }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val weight by column<Int?>()
-
-df.select { age and weight }
-df.select(age, weight)
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -67,7 +46,7 @@ df.select("age", "weight")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.select.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.select.html" width="100%"/>
 <!---END-->
 
 See [column selectors](ColumnSelectors.md)

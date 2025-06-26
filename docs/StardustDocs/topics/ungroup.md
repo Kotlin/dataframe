@@ -10,7 +10,7 @@ ungroup { columns }
 
 **Reverse operation:** [`group`](group.md)
 
-See [column selectors](ColumnSelectors.md)
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN ungroup-->
 
@@ -20,5 +20,5 @@ See [column selectors](ColumnSelectors.md)
 df.ungroup { name }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.ungroup.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.ungroup.html" width="100%"/>
 <!---END-->

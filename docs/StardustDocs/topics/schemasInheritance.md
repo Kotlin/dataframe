@@ -18,7 +18,7 @@ New schema interface for `filtered` variable will be derived from previously gen
 interface DataFrameType1 : DataFrameType
 ```
 
-Extension properties for data access are generated only for new and overriden members of `DataFrameType1` interface:
+Extension properties for data access are generated only for new and overridden members of `DataFrameType1` interface:
 
 ```kotlin
 val ColumnsContainer<DataFrameType1>.age: DataColumn<Int> get() = this["age"] as DataColumn<Int>

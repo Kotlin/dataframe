@@ -505,10 +505,10 @@ class RenderingTests : JupyterReplTestCase() {
                 }
             }
             val df = dataFrameOf("urls", "person")(
-                URL("https://example.com/a"), Person("Alice", 10), 
-                URL("https://example.com/b"), Person("Bob", 11),
-                URL("https://example.com/a"), Person("Nick", 12),
-                URL("https://example.com/b"), Person("Guy", 13),
+                URI("https://example.com/a").toURL(), Person("Alice", 10), 
+                URI("https://example.com/b").toURL(), Person("Bob", 11),
+                URI("https://example.com/a").toURL(), Person("Nick", 12),
+                URI("https://example.com/b").toURL(), Person("Guy", 13),
             )
             val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("urls"), listOf("person")), listOf(false, true))
             KotlinNotebookPluginUtils.convertToDataFrame(res)
@@ -524,10 +524,10 @@ class RenderingTests : JupyterReplTestCase() {
         val json = executeScriptAndParseDataframeResult(
             """
             val df = dataFrameOf("urls", "id")(
-                URL("https://example.com/a"), 1, 
-                URL("https://example.com/b"), 2,
-                URL("https://example.com/a"), 2,
-                URL("https://example.com/b"), 1,
+                URI("https://example.com/a").toURL(), 1, 
+                URI("https://example.com/b").toURL(), 2,
+                URI("https://example.com/a").toURL(), 2,
+                URI("https://example.com/b").toURL(), 1,
             )
             val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id"), listOf("urls")), listOf(true, true))
             KotlinNotebookPluginUtils.convertToDataFrame(res)
@@ -545,10 +545,10 @@ class RenderingTests : JupyterReplTestCase() {
         val json = executeScriptAndParseDataframeResult(
             """
             val df = dataFrameOf("urls")(
-                URL("https://example.com/a"),
-                URL("https://example.com/c"),
-                URL("https://example.com/b"),
-                URL("https://example.com/d")
+                URI("https://example.com/a").toURL(),
+                URI("https://example.com/c").toURL(),
+                URI("https://example.com/b").toURL(),
+                URI("https://example.com/d").toURL()
             )
             val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("urls")), listOf(false))
             KotlinNotebookPluginUtils.convertToDataFrame(res)

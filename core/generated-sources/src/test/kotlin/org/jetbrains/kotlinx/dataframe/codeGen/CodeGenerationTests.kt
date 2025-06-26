@@ -103,18 +103,23 @@ class CodeGenerationTests : BaseTest() {
         val expectedDeclaration =
             """
             @DataSchema
-            interface $typeName { }
+            interface $typeName {
+                val age: Int
+                val city: String?
+                val name: String
+                val weight: Int?
+            }
             
             """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
 
         generated.declarations shouldBe expectedDeclaration
-        generated.converter("it") shouldBe expectedConverter
+        generated.typeCastGenerator("it") shouldBe expectedConverter
 
         val rowGenerated = codeGen.process(df[0], ::typedRow)
         rowGenerated.hasDeclarations shouldBe true
-        rowGenerated.hasConverter shouldBe true
+        rowGenerated.hasCaster shouldBe true
     }
 
     val row: AnyRow? = null
@@ -129,14 +134,19 @@ class CodeGenerationTests : BaseTest() {
         val expectedDeclaration =
             """
             @DataSchema
-            interface $typeName { }
+            interface $typeName {
+                val age: Int
+                val city: String?
+                val name: String
+                val weight: Int?
+            }
             
             """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
 
         generated.declarations shouldBe expectedDeclaration
-        generated.converter("it") shouldBe expectedConverter
+        generated.typeCastGenerator("it") shouldBe expectedConverter
     }
 
     @Test
@@ -149,7 +159,10 @@ class CodeGenerationTests : BaseTest() {
         val declaration1 =
             """
             @DataSchema(isOpen = false)
-            interface $type1 { }
+            interface $type1 {
+                val city: String?
+                val name: String
+            }
             
             val $dfName<$type1>.city: $dataCol<$stringName?> @JvmName("${type1}_city") get() = this["city"] as $dataCol<$stringName?>
             val $dfRowName<$type1>.city: $stringName? @JvmName("${type1}_city") get() = this["city"] as $stringName?
@@ -161,7 +174,11 @@ class CodeGenerationTests : BaseTest() {
         val declaration2 =
             """
             @DataSchema
-            interface $type2 { }
+            interface $type2 {
+                val age: Int
+                val nameAndCity: _DataFrameType1
+                val weight: Int?
+            }
             
             val $dfName<$type2>.age: $dataCol<$intName> @JvmName("${type2}_age") get() = this["age"] as $dataCol<$intName>
             val $dfRowName<$type2>.age: $intName @JvmName("${type2}_age") get() = this["age"] as $intName
@@ -174,7 +191,7 @@ class CodeGenerationTests : BaseTest() {
         val expectedConverter = "it.cast<$type2>()"
 
         generated.declarations shouldBe declaration1 + "\n" + declaration2
-        generated.converter("it") shouldBe expectedConverter
+        generated.typeCastGenerator("it") shouldBe expectedConverter
     }
 
     @Test

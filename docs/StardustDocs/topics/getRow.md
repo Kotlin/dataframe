@@ -10,7 +10,7 @@ Get single [`DataRow`](DataRow.md) by [index](indexing.md):
 df[2]
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByIndex.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByIndex.html" width="100%"/>
 <!---END-->
 
 Get single [`DataRow`](DataRow.md) by [row condition](DataRow.md#row-conditions):
@@ -28,22 +28,6 @@ df.maxByOrNull { weight }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val weight by column<Int?>()
-val name by columnGroup()
-val firstName by name.column<String>()
-
-df.single { age() == 45 }
-df.first { weight() != null }
-df.minBy(age)
-df.maxBy { firstName().length }
-df.maxByOrNull { weight() }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -55,5 +39,5 @@ df.maxByOrNull("weight")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByCondition.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByCondition.html" width="100%"/>
 <!---END-->

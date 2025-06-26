@@ -165,6 +165,13 @@ class PivotTests {
             .pivot { key }
             .groupBy { name }
             .default("-")
+            .with { value() } shouldBe res
+
+        // special case that looks very odd, but kept it for compatibility
+        typed
+            .pivot { key }
+            .groupBy { name }
+            .default("-")
             .with { value } shouldBe res
         df
             .pivot { key }
@@ -180,7 +187,7 @@ class PivotTests {
             .pivot(key)
             .groupBy(name)
             .default("-")
-            .with { value } shouldBe res
+            .with { value() } shouldBe res
         typed
             .groupBy { name }
             .pivot { key }
@@ -276,7 +283,7 @@ class PivotTests {
         val leafColumns = pivoted.getColumnsWithPaths {
             all()
                 .drop(1)
-                .colsAtAnyDepth { !it.isColumnGroup() }
+                .colsAtAnyDepth().filter { !it.isColumnGroup() }
         }
         leafColumns.size shouldBe typed.name.countDistinct() * typed.key.countDistinct() - 1
         leafColumns.forEach { it.path.size shouldBe 2 }
@@ -337,7 +344,7 @@ class PivotTests {
 //        nullGroup.columnTypes() shouldBe listOf(typeOf<Comparable<*>?>(), typeOf<KClass<Any>?>())
         nullGroup.columnTypes() shouldBe listOf(nothingType(true), nothingType(true))
 
-        val cols = pivotedDf.getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }
+        val cols = pivotedDf.getColumnsWithPaths { colsAtAnyDepth().filter { !it.isColumnGroup() } }
         cols.size shouldBe 2 * typed.name.countDistinct() * typed.key.countDistinct() - 2
 
         cols.forEach {

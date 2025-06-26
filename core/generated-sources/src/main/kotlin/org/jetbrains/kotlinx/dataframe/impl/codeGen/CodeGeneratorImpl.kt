@@ -9,11 +9,12 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenResult
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithTypeCastGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
@@ -28,23 +29,29 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
+import org.jetbrains.kotlinx.dataframe.codeGen.TypeCastGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.toSnakeCase
 import org.jetbrains.kotlinx.dataframe.keywords.HardKeywords
 import org.jetbrains.kotlinx.dataframe.keywords.ModifierKeywords
+import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
 internal fun Iterable<Marker>.filterRequiredForSchema(schema: DataFrameSchema) =
-    filter { it.isOpen && it.schema.compare(schema).isSuperOrEqual() }
+    filter { it.isOpen && it.schema.compare(schema, ComparisonMode.STRICT_FOR_NESTED_SCHEMAS).isSuperOrEqual() }
 
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 
-internal fun createCodeWithConverter(code: String, markerName: String) =
-    CodeWithConverter(code) { "$it.cast<$markerName>()" }
+/**
+ * Simple utility function that creates a [CodeWithTypeCastGenerator] using [code] and [TypeCastGenerator.DataFrameApi],
+ * meaning it uses the [cast] functions of DataFrame.
+ */
+internal fun createCodeWithTypeCastGenerator(code: String, vararg targetTypeNames: String) =
+    CodeWithTypeCastGenerator(code, TypeCastGenerator.DataFrameApi(*targetTypeNames))
 
 private val letterCategories = setOf(
     CharCategory.UPPERCASE_LETTER,
@@ -364,9 +371,9 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         return declarations.joinToString("\n")
     }
 
-    override fun generate(marker: IsolatedMarker): CodeWithConverter {
+    override fun generate(marker: IsolatedMarker): CodeWithTypeCastGenerator {
         val code = generateExtensionProperties(marker)
-        return createCodeWithConverter(code, marker.name)
+        return createCodeWithTypeCastGenerator(code, marker.name)
     }
 
     protected fun renderTopLevelDeclarationVisibility(marker: IsolatedMarker) =
@@ -392,7 +399,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         interfaceMode: InterfaceGenerationMode,
         extensionProperties: Boolean,
         readDfMethod: DefaultReadDfMethod?,
-    ): CodeWithConverter {
+    ): CodeWithTypeCastGenerator {
         val code = when (interfaceMode) {
             NoFields, WithFields ->
                 generateInterface(
@@ -408,7 +415,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             None -> if (extensionProperties) generateExtensionProperties(marker) else ""
         }
 
-        return createCodeWithConverter(code, marker.name)
+        return createCodeWithTypeCastGenerator(code, marker.name)
     }
 
     private fun generateTypeAlias(marker: Marker): Code {
@@ -478,7 +485,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
                 declarations.add(generateExtensionProperties(itMarker, withNullable = false))
             }
         }
-        val code = createCodeWithConverter(declarations.joinToString("\n\n"), marker.name)
+        val code = createCodeWithTypeCastGenerator(declarations.joinToString("\n\n"), marker.name)
         return CodeGenResult(code, context.generatedMarkers)
     }
 
@@ -557,7 +564,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         }
 }
 
-public fun CodeWithConverter.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =
+public fun CodeWithTypeCastGenerator.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =
     declarations.toStandaloneSnippet(packageName, additionalImports)
 
 public fun Code.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =

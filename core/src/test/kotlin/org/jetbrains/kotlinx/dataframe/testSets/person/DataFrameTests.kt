@@ -932,7 +932,7 @@ class DataFrameTests : BaseTest() {
         df["e"].kind() shouldBe ColumnKind.Group
         df.getColumnGroup("d").columnNames() shouldBe listOf("f")
         df.getColumnGroup("e").getColumnGroup("g").columnNames() shouldBe listOf("h")
-        val cols = df.getColumns { colsAtAnyDepth { !it.isColumnGroup() } }
+        val cols = df.getColumns { colsAtAnyDepth().filter { !it.isColumnGroup() } }
         cols.size shouldBe 5
         cols.forEach {
             it.toList() shouldBe expected
@@ -1176,8 +1176,9 @@ class DataFrameTests : BaseTest() {
             .split { others }.intoRows()
             .add(sum) { name.length + other().length }
 
-        val matrix = src.pivot { other }.groupBy { name }.with { sum }
+        val matrix = src.pivot { other }.groupBy { name }.with { sum() }
         matrix.getColumnGroup(other.name()).ncol shouldBe names.size
+        matrix.getColumnGroup(other.name())["Alice"].type() shouldBe typeOf<List<Int>>()
     }
 
     @Test
@@ -2181,6 +2182,14 @@ class DataFrameTests : BaseTest() {
     fun `split inplace`() {
         val split = typed.split { name }.by { it.toCharArray().asIterable() }.inplace()
         split["name"] shouldBe typed.name.map { it.toCharArray().toList() }
+    }
+
+    @Test
+    fun `split iterable inplace`() {
+        val df = dataFrameOf("a" to listOf(listOf(1), null)).split { "a"<List<Int>?>() }.inplace()
+
+        df["a"].type() shouldBe typeOf<List<Int>>()
+        df["a"].values() shouldBe listOf(listOf(1), emptyList())
     }
 
     @Test

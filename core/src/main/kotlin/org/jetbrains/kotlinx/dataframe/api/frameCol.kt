@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -160,6 +161,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColReferenceDocs] {@set [CommonFrameColDocs.RECEIVER]}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         frameCol.ensureIsFrameColumn()
@@ -167,6 +169,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColReferenceDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.frameCol(
         frameCol: ColumnAccessor<DataFrame<C>>,
@@ -183,6 +186,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColReferenceDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.frameCol(
         frameCol: ColumnAccessor<DataFrame<C>>,
@@ -191,6 +195,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColReferenceDocs] {@set [CommonFrameColDocs.RECEIVER] "myColumnGroup".}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> String.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
@@ -198,6 +203,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColReferenceDocs] {@set [CommonFrameColDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
@@ -205,6 +211,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColReferenceDocs] {@set [CommonFrameColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> ColumnPath.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
@@ -427,6 +434,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> frameCol(property: KProperty<DataFrame<C>>): SingleColumn<DataFrame<C>> =
         frameColumn(property).ensureIsFrameColumn()
@@ -434,6 +442,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER]}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> frameCol(property: KProperty<List<C>>): SingleColumn<DataFrame<C>> =
         frameColumn(property).ensureIsFrameColumn()
@@ -443,6 +452,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.frameCol(property: KProperty<DataFrame<C>>): SingleColumn<DataFrame<C>> =
         frameCol<C>(property.name)
@@ -450,6 +460,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.frameCol(property: KProperty<List<C>>): SingleColumn<DataFrame<C>> =
         frameCol<C>(property.name)
@@ -457,6 +468,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
@@ -466,6 +478,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
@@ -475,6 +488,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> String.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
@@ -482,6 +496,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER] "myColumnGroup".}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> String.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
@@ -491,6 +506,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
@@ -498,6 +514,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
@@ -507,6 +524,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> ColumnPath.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
@@ -514,6 +532,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> ColumnPath.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
@@ -600,6 +619,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.frameCol(index: Int): SingleColumn<DataFrame<*>> = frameCol<Any?>(index)
 
@@ -607,6 +627,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [FrameColIndexDocs] {@set [CommonFrameColDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(index: Int): SingleColumn<DataFrame<C>> = columnGroup(this).frameCol<C>(index)
 

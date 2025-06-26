@@ -15,8 +15,9 @@ import org.jetbrains.kotlinx.dataframe.impl.api.formatImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.linearGradient
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
-import org.jetbrains.kotlinx.dataframe.io.toHTML
-import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
+import org.jetbrains.kotlinx.dataframe.io.toHtml
+import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -27,10 +28,12 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
 
 public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?> = format { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> =
     format { columns.toColumnSet() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> =
     format { columns.toColumnSet() }
@@ -120,14 +123,14 @@ public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val forma
     /**
      * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
      */
-    public fun toHTML(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
-        df.toHTML(getDisplayConfiguration(configuration))
+    public fun toHtml(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
+        df.toHtml(getDisplayConfiguration(configuration))
 
     /**
      * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
      */
-    public fun toStandaloneHTML(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
-        df.toStandaloneHTML(getDisplayConfiguration(configuration))
+    public fun toStandaloneHtml(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
+        df.toStandaloneHtml(getDisplayConfiguration(configuration))
 
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration =
         configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)

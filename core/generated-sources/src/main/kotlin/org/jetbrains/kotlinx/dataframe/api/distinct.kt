@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.indices
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -71,6 +72,7 @@ public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFra
  * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
  * .
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> =
     distinct {
@@ -112,6 +114,7 @@ public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = dis
  * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
  * .
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFrame<T> =
     distinct { columns.toColumnSet() }
@@ -132,6 +135,7 @@ public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFr
  * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
  * .
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
@@ -170,6 +174,7 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = d
  * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
  * .
  */
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): DataFrame<T> =
     distinctBy { columns.toColumnSet() }

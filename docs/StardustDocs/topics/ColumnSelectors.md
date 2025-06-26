@@ -18,24 +18,24 @@ df.gather { colsOf<Number>() }.into("key", "value")
 df.move { name.firstName and name.lastName }.after { city }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsUsages.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsUsages.html" width="100%"/>
 <!---END-->
 
 #### Full DSL Grammar {collapsible="true"}
 
 **Definitions**
 
-<dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html" width="100%"/>
 
 <tabs>
     <tab title="Directly in the DSL">
-        <dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar.html"/>
+        <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar.html" width="100%"/>
 </tab>
     <tab title="On a Column Set">
-        <dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html"/>
+        <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html" width="100%"/>
 </tab>
     <tab title="On a Column Group">
-        <dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"/>
+        <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html" width="100%"/>
 </tab>
 </tabs>
 
@@ -49,9 +49,9 @@ or `ColumnSet` that adheres to the optional given condition. If no column adhere
 `NoSuchElementException` is thrown.
 
 ##### Col {collapsible="true"}
-`col(name)`, `col(5)`, `this[5]`
+`col(name)`, `col(5)`
 
-Creates a [ColumnAccessor](DataColumn.md#column-accessors) (or `SingleColumn`) for a column with the given 
+Creates a [ColumnAccessor](DataColumn.md) (or `SingleColumn`) for a column with the given 
 argument from the top-level or specified [column group](DataColumn.md#columngroup). The argument can be either an 
 index (`Int`) or a reference to a column (`String`, `ColumnPath`, `KProperty`, or `ColumnAccessor`;
 any [AccessApi](apiLevels.md)).
@@ -59,7 +59,7 @@ any [AccessApi](apiLevels.md)).
 ##### Value Col, Frame Col, Col Group {collapsible="true"}
 `valueCol(name)`, `valueCol(5)`, `frameCol(name)`, `frameCol(5)`, `colGroup(name)`, `colGroup(5)`
 
-Creates a [ColumnAccessor](DataColumn.md#column-accessors) (or `SingleColumn`) for a 
+Creates a [ColumnAccessor](DataColumn.md) (or `SingleColumn`) for a 
 [value column](DataColumn.md#valuecolumn) / [frame column](DataColumn.md#framecolumn) / 
 [column group](DataColumn.md#columngroup) with the given argument from the top-level or
 specified [column group](DataColumn.md#columngroup). The argument can be either an index (`Int`) or a reference
@@ -451,43 +451,7 @@ df.select { name..age }
 df.select { name.allCols() }
 
 // traversal of columns at any depth from here excluding ColumnGroups
-df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-// by column name
-val name by columnGroup()
-df.select { it[name] }
-df.select { name }
-
-// by column path
-val firstName by name.column<String>()
-df.select { firstName }
-
-// with a new name
-df.select { name named "Full Name" }
-
-// converted
-df.select { firstName.map { it.lowercase() } }
-
-// column arithmetics
-val age by column<Int>()
-df.select { 2021 - age }
-
-// two columns
-df.select { name and age }
-
-// range of columns
-df.select { name..age }
-
-// all columns of ColumnGroup
-df.select { name.allCols() }
-
-// traversal of columns at any depth from here excluding ColumnGroups
-df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
+df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
 ```
 
 </tab>
@@ -520,11 +484,11 @@ df.select { "name".."age" }
 df.select { "name".allCols() }
 
 // traversal of columns at any depth from here excluding ColumnGroups
-df.select { "name".colsAtAnyDepth { !it.isColumnGroup() } }
+df.select { "name".colsAtAnyDepth().filter { !it.isColumnGroup() } }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectors.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectors.html" width="100%"/>
 <!---END-->
 
 **Select columns by column index:**
@@ -542,7 +506,7 @@ df.select { cols(0, 1, 3) }
 df.select { cols(1..4) }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnsSelectorByIndices.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnsSelectorByIndices.html" width="100%"/>
 <!---END-->
 
 **Other column selectors:**
@@ -585,13 +549,13 @@ df.select {
 }
 
 // traversal of columns at any depth from here excluding ColumnGroups
-df.select { colsAtAnyDepth { !it.isColumnGroup() } }
+df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 
 // traversal of columns at any depth from here including ColumnGroups
 df.select { colsAtAnyDepth() }
 
 // traversal of columns at any depth with condition
-df.select { colsAtAnyDepth { it.name().contains(":") } }
+df.select { colsAtAnyDepth().filter() { it.name().contains(":") } }
 
 // traversal of columns at any depth to find columns of given type
 df.select { colsAtAnyDepth().colsOf<String>() }
@@ -603,7 +567,7 @@ df.select { allExcept { colsOf<String>() } }
 df.select { take(2) and col(3) }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsMisc.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsMisc.html" width="100%"/>
 <!---END-->
 
 **Modify the set of selected columns:**
@@ -612,22 +576,22 @@ df.select { take(2) and col(3) }
 
 ```kotlin
 // first/last n value- and frame columns in column set
-df.select { colsAtAnyDepth { !it.isColumnGroup() }.take(3) }
-df.select { colsAtAnyDepth { !it.isColumnGroup() }.takeLast(3) }
+df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.take(3) }
+df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.takeLast(3) }
 
 // all except first/last n value- and frame columns in column set
-df.select { colsAtAnyDepth { !it.isColumnGroup() }.drop(3) }
-df.select { colsAtAnyDepth { !it.isColumnGroup() }.dropLast(3) }
+df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.drop(3) }
+df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.dropLast(3) }
 
 // filter column set by condition
-df.select { colsAtAnyDepth { !it.isColumnGroup() }.filter { it.name().startsWith("year") } }
+df.select { colsAtAnyDepth().filter { !it.isColumnGroup() && it.name().startsWith("year") } }
 
 // exclude columns from column set
-df.select { colsAtAnyDepth { !it.isColumnGroup() }.except { age } }
+df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.except { age } }
 
 // keep only unique columns
 df.select { (colsOf<Int>() and age).distinct() }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html" width="100%"/>
 <!---END-->

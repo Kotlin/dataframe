@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
+import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
 import org.junit.Ignore
 import org.junit.Test
 import java.awt.Desktop
@@ -17,7 +17,7 @@ class HtmlRenderingTests : BaseTest() {
 
     fun AnyFrame.browse() {
         val file = File("temp.html") // File.createTempFile("df_rendering", ".html")
-        file.writeText(toStandaloneHTML().toString())
+        file.writeText(toStandaloneHtml().toString())
         val uri = file.toURI()
         val desktop = Desktop.getDesktop()
         desktop.browse(uri)
@@ -33,7 +33,7 @@ class HtmlRenderingTests : BaseTest() {
     fun `render url`() {
         val address = "http://www.google.com"
         val df = dataFrameOf("url")(address).parse()
-        val html = df.toStandaloneHTML().toString()
+        val html = df.toStandaloneHtml().toString()
         html shouldContain "href"
         html.findNthSubstring(address, 2) shouldNotBe -1
     }
