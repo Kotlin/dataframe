@@ -599,7 +599,7 @@ df.select { (colsOf<Int>() and age).distinct() }
 
 ### Column Resolvers
 
-`ColumnResolver` is the base type used to access columns within the **Columns Selection DSL**,  
+`ColumnsResolver` is the base type used to resolve columns within the **Columns Selection DSL**,  
 as well as the return type of columns selection expressions.
 
 All functions described above for selecting columns in various ways return a `ColumnResolver` of a specific kind:
@@ -607,16 +607,16 @@ All functions described above for selecting columns in various ways return a `Co
 - **`SingleColumn`** — resolves to a single [`DataColumn`](DataColumn.md).
 - **`ColumnAccessor`** — a specialized `SingleColumn` with a defined path and type argument.  
   It can also be renamed during selection.
-  - **`ColumnPath`** — a wrapper for [`DataColumn`](DataColumn.md) path
-    in [`DataFrame`](DataFrame.md) also can serve as a `ColumnAccessor`.
+  - **`ColumnPath`** — a wrapper for a [`DataColumn`](DataColumn.md) path
+    in a [`DataFrame`](DataFrame.md) also can serve as a `ColumnAccessor`.
 ```kotlin
 // Select all columns from the group by path "group2"/"info":
-df.select { pathOf("group2", "info").cols() }
+df.select { pathOf("group2", "info").allCols() }
 // For each selected column, place it under its ancestor group
 // from two levels up in the column path hierarchy:
 df.group { colsAtAnyDepth().colsOf<String>() }
 .into { it.path.dropLast(2) }
 ```
-- **`ColumnSet`** — resolves to a list of [`DataColumn`s](DataColumn.md).
+- **`ColumnSet`** — resolves to an ordered list of [`DataColumn`s](DataColumn.md).
 
 
