@@ -3,9 +3,9 @@ package org.jetbrains.dataframe.gradle
 import com.google.devtools.ksp.gradle.KspTaskJvm
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
 import org.gradle.api.logging.LogLevel
+import org.gradle.api.tasks.TaskProvider
 import org.gradle.internal.logging.services.DefaultLoggingManager
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.withType
@@ -37,9 +37,9 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             }
 
             val generationTasks = extension.schemas.map {
-                createTask(target, extension, appliedPlugin, it)
+                registerTask(target, extension, appliedPlugin, it)
             }
-            val generateAll = target.tasks.create("generateDataFrames") {
+            val generateAll = target.tasks.register("generateDataFrames") {
                 group = GROUP
                 dependsOn(*generationTasks.toTypedArray())
             }
@@ -52,12 +52,12 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         }
     }
 
-    private fun createTask(
+    private fun registerTask(
         target: Project,
         extension: SchemaGeneratorExtension,
         appliedPlugin: AppliedPlugin?,
         schema: Schema,
-    ): Task {
+    ): TaskProvider<GenerateDataSchemaTask> {
         val interfaceName = getInterfaceName(schema)
 
         fun propertyError(property: String): Nothing {
@@ -124,7 +124,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val defaultPath = schema.defaultPath ?: extension.defaultPath ?: true
         val delimiters = schema.withNormalizationBy ?: extension.withNormalizationBy ?: setOf('\t', ' ', '_')
 
-        return target.tasks.create("generateDataFrame$interfaceName", GenerateDataSchemaTask::class.java) {
+        return target.tasks.register("generateDataFrame$interfaceName", GenerateDataSchemaTask::class.java) {
             (logging as? DefaultLoggingManager)?.setLevelInternal(LogLevel.QUIET)
             group = GROUP
             data.set(schema.data)

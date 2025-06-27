@@ -17,7 +17,7 @@ dataframe = "1.0.0-dev-6538"
 korro = "0.1.6"
 
 binaryCompatibilityValidator = "0.17.0"
-kover = "0.8.3"
+kover = "0.9.1"
 deephavenCsv = "0.15.0"
 fastDoubleParser = "2.0.1"
 commonsCsv = "1.12.0"
