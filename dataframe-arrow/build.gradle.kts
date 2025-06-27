@@ -2,7 +2,7 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
         alias(binary.compatibility.validator)
     }

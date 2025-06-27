@@ -104,4 +104,10 @@ internal interface DocumentationUrls {
 
     /** [See `convert` on the documentation website.]({@include [Url]}/corr.html) */
     interface Corr
+
+    /** [See `add` on the documentation website.]({@include [Url]}/add.html) */
+    interface Add
+
+    /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
+    interface Gather
 }
