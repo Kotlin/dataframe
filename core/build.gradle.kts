@@ -13,7 +13,7 @@ plugins {
         alias(publisher)
         alias(serialization)
         alias(korro)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
         alias(kodex)
         alias(simpleGit)

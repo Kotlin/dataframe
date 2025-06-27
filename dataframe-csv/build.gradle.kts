@@ -6,7 +6,7 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
         alias(kodex)
         alias(binary.compatibility.validator)
