@@ -8,6 +8,7 @@ import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.api.provider.Provider
 import org.gradle.build.event.BuildEventsListenerRegistry
 import org.gradle.internal.service.DefaultServiceRegistry
+import org.gradle.internal.service.scopes.Scope
 import org.gradle.internal.service.scopes.ServiceScope
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.tooling.events.OperationCompletionListener
@@ -35,14 +36,14 @@ internal fun addBuildEventsListenerRegistryMock(project: Project) {
         stateValue.set(enumClass.enumConstants[0])
 
         // add service and set state so that future mutations are not allowed
-        projectScopeServices.add(BuildEventsListenerRegistry::class.java, BuildEventsListenerRegistryMock)
+        projectScopeServices.add(BuildEventsListenerRegistryMock::class.java, BuildEventsListenerRegistryMock)
         stateValue.set(enumClass.enumConstants[1])
     } catch (e: Throwable) {
         throw RuntimeException(e)
     }
 }
 
-@ServiceScope
+@ServiceScope(Scope.Project::class)
 object BuildEventsListenerRegistryMock : BuildEventsListenerRegistry {
     override fun onTaskCompletion(listener: Provider<out OperationCompletionListener>?) = Unit
 }
