@@ -8,6 +8,7 @@ import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.api.provider.Provider
 import org.gradle.build.event.BuildEventsListenerRegistry
 import org.gradle.internal.service.DefaultServiceRegistry
+import org.gradle.internal.service.scopes.ServiceScope
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.tooling.events.OperationCompletionListener
 import java.lang.reflect.Field
@@ -41,6 +42,7 @@ internal fun addBuildEventsListenerRegistryMock(project: Project) {
     }
 }
 
+@ServiceScope
 object BuildEventsListenerRegistryMock : BuildEventsListenerRegistry {
     override fun onTaskCompletion(listener: Provider<out OperationCompletionListener>?) = Unit
 }
