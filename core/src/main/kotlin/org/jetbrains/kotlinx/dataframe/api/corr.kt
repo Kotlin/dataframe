@@ -112,7 +112,7 @@ internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typ
 public data class Corr<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>)
 
 /**
- * Computes the correlation matrix between all suitable columns in this [DataFrame],
+ * Computes the pearson correlation between all suitable columns in this [DataFrame],
  * including nested columns at any depth.
  *
  * The result is a square correlation matrix represented by a [DataFrame],
@@ -262,7 +262,7 @@ public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: ColumnReference<R>): D
     with { otherColumns.toColumnSet() }
 
 /**
- * Calculates pairwise correlations between the columns
+ * Calculates Pearson pairwise correlations between the columns
  * previously selected with [corr].
  *
  * Returns a square correlation matrix represented by a [DataFrame],
