@@ -22,8 +22,11 @@ plugins {
         alias(dokka)
 //        alias(kover)
         alias(ktlint)
-        alias(korro) apply false
-        alias(kodex) apply false
+
+        // TODO cannot define korro and kodex here due to leaking them kotlin-compiler-embeddable into the build classpath
+        // alias(korro) apply false
+        // alias(kodex) apply false
+
         alias(simpleGit) apply false
         alias(dependencyVersions)
         alias(buildconfig) apply false
@@ -155,6 +158,7 @@ val modulesUsingJava11 = with(projects) {
         dataframeGeo,
         examples.ideaExamples.titanic,
         tests,
+        plugins.dataframeGradlePlugin,
     )
 }.map { it.path }
 

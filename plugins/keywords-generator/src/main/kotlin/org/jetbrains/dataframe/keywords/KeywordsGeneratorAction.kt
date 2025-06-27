@@ -8,6 +8,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.jetbrains.kotlin.com.intellij.psi.tree.TokenSet
+import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.lexer.KtKeywordToken
 import org.jetbrains.kotlin.lexer.KtTokens
 import java.io.File
@@ -21,6 +22,7 @@ abstract class KeywordsGeneratorAction : WorkAction<KeywordsGeneratorAction.Para
     private val taskPackageName = "org.jetbrains.kotlinx.dataframe.keywords"
 
     override fun execute() {
+        println("Generating keywords using Kotlin compiler: ${KotlinCompilerVersion.getVersion()}")
         parameters.srcDir.deleteRecursively()
         generateKeywordEnums()
     }

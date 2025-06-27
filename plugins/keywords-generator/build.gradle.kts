@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalBuildToolsApi::class, ExperimentalKotlinGradlePluginApi::class)
+
+import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `java-gradle-plugin`
@@ -7,7 +10,6 @@ plugins {
     id("com.github.gmazzo.buildconfig") version "5.5.1"
 }
 
-val kotlinCompilerVersion: String by project
 val kotlinPoetVersion: String by project
 
 repositories {
@@ -17,11 +19,11 @@ repositories {
 buildConfig {
     packageName = "org.jetbrains.kotlinx.dataframe"
     className = "BuildConfig"
-    buildConfigField("kotlinCompilerVersion", kotlinCompilerVersion)
+    buildConfigField("kotlinCompilerVersion", kotlin.compilerVersion.get())
 }
 
 dependencies {
-    compileOnly(kotlin("compiler-embeddable", kotlinCompilerVersion))
+    compileOnly(kotlin("compiler-embeddable", kotlin.compilerVersion.get()))
     implementation("com.squareup:kotlinpoet:$kotlinPoetVersion")
 }
 

@@ -8,7 +8,6 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.internal.logging.services.DefaultLoggingManager
 import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
