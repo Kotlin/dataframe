@@ -96,14 +96,6 @@ internal interface GatherDocs {
      * `| `__`.`__[**`valuesInto`**][Gather.valuesInto]**`(`**`valueColumn: `[`String`][String]**`)`**
      */
     interface Grammar
-
-    /*
-     * This argument providing the (clickable) name of the gather-like function.
-     * Note: If clickable, make sure to [alias][your type].
-     */
-    @Suppress("ClassName")
-    @ExcludeFromSources
-    interface GATHER_OPERATION
 }
 
 /** {@set [SelectingColumns.OPERATION] [gather][gather]} */
