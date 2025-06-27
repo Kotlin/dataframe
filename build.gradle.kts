@@ -155,6 +155,7 @@ val modulesUsingJava11 = with(projects) {
         dataframeGeo,
         examples.ideaExamples.titanic,
         tests,
+        plugins.dataframeGradlePlugin,
     )
 }.map { it.path }
 
@@ -204,6 +205,7 @@ allprojects {
             configure<BuildConfigExtension> {
                 packageName = "org.jetbrains.kotlinx.dataframe"
                 className = "BuildConfig"
+                buildConfigField("KOTLIN_VERSION", libs.versions.kotlin.asProvider().get())
                 buildConfigField("VERSION", "${project.version}")
                 buildConfigField("DEBUG", findProperty("kotlin.dataframe.debug")?.toString()?.toBoolean() ?: false)
             }
