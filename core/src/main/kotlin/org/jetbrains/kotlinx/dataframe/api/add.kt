@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
@@ -123,14 +124,21 @@ public interface AddDataRow<out T> : DataRow<T> {
 public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
 
 /**
- * Creates a new column using [AddExpression] and
+ * With an [AddExpression], you define the value that each row in the new column should have.
+ * This can be based on values from the same row in the original [DataFrame].
+ *
+ * You can also use functions like [prev] and [next] to access other rows, and combine them with
+ * [newValue][AddDataRow.newValue] to reference values already computed in the new column.
+ * For example, use `prev().newValue()` to access the new column value from the previous row.
+ */
+@ExcludeFromSources
+internal interface AddExpressionDocs
+
+/**
+ * Creates a new column using an [AddExpression] and
  * adds a new column to the end of this [DataFrame] (at the top level).
  *
- * An [AddExpression] allows to compute a value for each row in the new column
- * based on the values from that row in the original [DataFrame].
- * Also, you can use other methods such as [prev] and [next] to access other rows,
- * including [newValue][AddDataRow.newValue] to retrieve already computed values of this column
- * in previous rows.
+ * {@include [AddExpressionDocs]}
  *
  * Returns a new [DataFrame] with the new column appended to the original list of [DataFrame.columns].
  *
@@ -189,11 +197,7 @@ public inline fun <reified R, T> DataFrame<T>.add(
 /**
  * Creates a new column using [AddExpression] and inserts it at the specified [ColumnPath].
  *
- * An [AddExpression] allows to compute a value for each row in the new column
- * based on the values from that row in the original [DataFrame].
- * Also, you can use other methods such as [prev] and [next] to access other rows,
- * including [newValue][AddDataRow.newValue] to retrieve already computed values of this column
- * in previous rows.
+ * {@include [AddExpressionDocs]}
  *
  * For more information: {@include [DocumentationUrls.Add]}.
  *
@@ -344,6 +348,9 @@ public class AddDsl<T>(
  *     // Add column "is adult" with result of age > 18
  *     age > 18 into "is adult"
  *
+ *     // Add new column "role" using expression
+ *     expr { if ( department == "IT") "developer" else "analyst" } into "role"
+ *
  *     // Add column group "details"
  *     group("details") {
  *         // Add column "last name length" with length of lastName
@@ -372,11 +379,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * Creates a new column using [AddExpression] and
  * adds a new column to the end of each group (i.e., [DataFrame]s) of this [GroupBy] (at the top level).
  *
- * An [AddExpression] allows to compute a value for each row in the new column
- * based on the values from that row in the original group [DataFrame]s.
- * Also, you can use other methods such as [prev] and [next] to access other rows,
- * including [newValue][AddDataRow.newValue] to retrieve already computed values of this column
- * in previous rows.
+ * {@include [AddExpressionDocs]}
  *
  * Returns a new [GroupBy] with the new column
  * appended to each group [DataFrame] to the original list of [DataFrame.columns].
