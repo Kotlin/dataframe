@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -16,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.corrImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import  org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
