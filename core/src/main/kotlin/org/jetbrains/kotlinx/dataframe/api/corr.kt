@@ -16,23 +16,30 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.corrImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import  org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 /**
- * Calculates the correlation between values in the specified [columns\].
+ * Calculates the Pearson pairwise correlation between values in the specified [columns\].
  *
  * This function does not compute the correlation immediately.
  * Instead, it defines the primary set of columns
  * and returns a [Corr] instance that allows configuring how the correlation should be computed.
  *
+ * The function is available for numeric- and [Boolean] columns.
+ * [Boolean] values are converted into 1 for true and 0 for false.
+ * All other columns are ignored.
+ * If a [ColumnGroup] instance is passed as the target column for correlation,
+ * it will be unpacked into suitable nested columns.
+ *
  * The [Corr] object provides two methods to perform correlation calculations:
  * - [with][Corr.with] — computes correlations between the initially selected columns and a second set of columns.
  * - [withItself][Corr.withItself] — computes pairwise correlations within the initially selected columns.
  *
- * Each method returns a square or rectangular correlation matrix represented as a [DataFrame],
+ * Each method returns a square or rectangular correlation matrix represented by a [DataFrame],
  * where rows and columns correspond to the selected column sets,
- * and each cell contains the correlation coefficient between the corresponding pair of columns.
+ * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
  *
  * To compute correlations between all suitable columns in the [DataFrame], use [DataFrame.corr()][DataFrame.corr].
  *
@@ -92,7 +99,7 @@ internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typ
  * It must be followed by one of the computation methods to produce a correlation [DataFrame].
  *
  * The resulting [DataFrame] is a correlation matrix where rows correspond to one set of columns,
- * columns to the other set, and each cell contains the correlation coefficient
+ * columns to the other set, and each cell contains the Pearson correlation coefficient
  * between the respective pair of columns.
  *
  * Use the following methods to perform the computation:
@@ -108,11 +115,13 @@ public data class Corr<T, C>(internal val df: DataFrame<T>, internal val columns
  * Computes the correlation matrix between all suitable columns in this [DataFrame],
  * including nested columns at any depth.
  *
- * The result is a square correlation matrix represented as a [DataFrame],
+ * The result is a square correlation matrix represented by a [DataFrame],
  * where both rows and columns correspond to the original columns,
- * and each cell contains the correlation coefficient between the respective pair of columns.
+ * and each cell contains the Pearson correlation coefficient between the respective pair of columns.
  *
- * Only columns suitable for correlation (e.g., numeric types) are included in the result.
+ * The function is available for numeric- and [Boolean] columns.
+ * [Boolean] values are converted into 1 for true and 0 for false.
+ * All other columns are ignored.
  *
  * For more information, see: {@include [DocumentationUrls.Corr]}
  *
@@ -126,6 +135,12 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
 /**
  * {@include [CommonCorrDocs]}
  * @include [SelectingColumns.Dsl] {@include [SetCorrOperationArg]}
+ *
+ * The function is available for numeric- and [Boolean] columns.
+ * [Boolean] values are converted into 1 for true and 0 for false.
+ * All other columns are ignored.
+ * If a [ColumnGroup] instance is passed as the target column for correlation,
+ * it will be unpacked into suitable nested columns.
  *
  * ### Examples
  * ```kotlin
@@ -144,6 +159,12 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
 /**
  * {@include [CommonCorrDocs]}
  * @include [SelectingColumns.ColumnNames] {@include [SetCorrOperationArg]}
+ *
+ * The function is available for numeric- and [Boolean] columns.
+ * [Boolean] values are converted into 1 for true and 0 for false.
+ * All other columns are ignored.
+ * If a [ColumnGroup] instance is passed as the target column for correlation,
+ * it will be unpacked into suitable nested columns.
  *
  * ### Examples
  * ```kotlin
@@ -171,9 +192,9 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  * Calculates the correlation of specified [columns][otherColumns]
  * with values in the columns previously selected with [corr].
  *
- * Returns a correlation matrix represented as a [DataFrame],
+ * Returns a correlation matrix represented by a [DataFrame],
  * where rows and columns correspond to the selected column sets,
- * and each cell contains the correlation coefficient between the corresponding pair of columns.
+ * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
  *
  * Check out [Grammar].
  *
@@ -244,9 +265,9 @@ public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: ColumnReference<R>): D
  * Calculates pairwise correlations between the columns
  * previously selected with [corr].
  *
- * Returns a square correlation matrix represented as a [DataFrame],
+ * Returns a square correlation matrix represented by a [DataFrame],
  * where both rows and columns correspond to the selected columns,
- * and each cell contains the correlation coefficient between the respective pair of columns.
+ * and each cell contains the Pearson correlation coefficient between the respective pair of columns.
  *
  * Check out [Grammar].
  *
