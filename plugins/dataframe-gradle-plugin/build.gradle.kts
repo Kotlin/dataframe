@@ -21,7 +21,7 @@ dependencies {
     implementation(projects.dataframeOpenapiGenerator)
 
     implementation(libs.kotlin.gradle.plugin.api)
-    implementation(libs.kotlin.gradle.plugin)
+    compileOnly(libs.kotlin.gradle.plugin)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
     implementation(libs.ksp.gradle)
@@ -100,7 +100,7 @@ val integrationTestConfiguration by configurations.creating {
     extendsFrom(configurations.testImplementation.get())
 }
 
-val integrationTestTask = task<Test>("integrationTest") {
+val integrationTestTask = tasks.register<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
