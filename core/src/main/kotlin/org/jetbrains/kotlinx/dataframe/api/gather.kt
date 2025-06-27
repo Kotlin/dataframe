@@ -61,12 +61,12 @@ import kotlin.reflect.typeOf
 internal interface GatherDocs {
 
     /**
-     * ## {@get [GATHER_OPERATION]} Operation Grammar
+     * ## [gather][gather] Operation Grammar
      * {@include [LineBreak]}
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * **[`gather`][gather]****`  {  `**`columnsSelector: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * [**`gather`**][gather]**`  {  `**`columnsSelector: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`explodeLists`**][Gather.explodeLists]**`() `**`]`
@@ -94,7 +94,6 @@ internal interface GatherDocs {
      *
      * {@include [Indent]}
      * `| `__`.`__[**`valuesInto`**][Gather.valuesInto]**`(`**`valueColumn: `[`String`][String]**`)`**
-     * {@set [GATHER_OPERATION] [**`gather`**][gather]}{@comment The default name of the `gather` operation function name.}
      */
     interface Grammar
 
@@ -173,7 +172,7 @@ public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): Gather<T, C
  * Filter values in columns previously selected by [gather] using a [filter][RowValueFilter].
  *
  * [RowValueFilter] provides each value as a lambda argument, allowing you
- * to filter rows using a Boolean condition.
+ * to filter rows using a [Boolean] condition.
  *
  * It's an intermediate step; returns a new [Gather] with filtered value columns.
  *
@@ -238,7 +237,9 @@ public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): 
 public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = where { it != null } as Gather<T, C, K, R>
 
 /**
- * Explodes [List] values in the columns previously selected by [gather].
+ * Explodes [List] values — i.e., splits each list into individual elements,
+ * creating a separate row for each element, and duplicating all other columns —
+ * in the columns previously selected by [gather].
  *
  * If not all values are lists (for example, if one column contains `Double` values and
  * another contains `List<Double>`), only the list values will be exploded — non-list values remain unchanged.
@@ -319,7 +320,7 @@ public fun <T, C, K, R> Gather<T, List<C>, K, R>.explodeLists(): Gather<T, C, K,
     ) as Gather<T, C, K, R>
 
 /**
- * Applies a [transform] to the gathering keys —
+ * Applies [transform] to the gathering keys —
  * that is, the names of the columns previously selected by [gather].
  *
  * This is an intermediate step; returns a new [Gather] with transformed keys.
@@ -354,7 +355,7 @@ public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(
     )
 
 /**
- * Applies a [transform] to the values from the columns previously selected by [gather].
+ * Applies [transform] to the values from the columns previously selected by [gather].
  *
  * This is an intermediate step; returns a new [Gather] with transformed values.
  *
@@ -473,7 +474,8 @@ public class Gather<T, C, K, R>(
  * while all other columns remain unchanged —
  * except that their values are duplicated for each generated key-value pair.
  *
- * Resulting key and value values can be adjusted using [mapKeys] and [mapValues], respectively.
+ * Key and value values can be adjusted beforehand
+ * using [mapKeys] and [mapValues], respectively.
  *
  * For more information, see: {@include [DocumentationUrls.Gather]}
  *
@@ -536,9 +538,9 @@ public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: KProperty<K>, valueCo
  * df.gather { cols { it.name().contains("series") } }
  *   .keysInto("seriesType")
  * ```
- *
  * @param keyColumn The name of the column to store keys (original column names by default).
  * @return A new [DataFrame] with reshaped columns.
+ * @see [valuesInto]
  */
 @Refine
 @Interpretable("GatherKeysInto")
@@ -583,6 +585,7 @@ public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: KProperty<K>): Da
  *
  * @param valueColumn The name of the column to store gathered values.
  * @return A new [DataFrame] with reshaped columns.
+ * @see [keysInto]
  */
 @Refine
 @Interpretable("GatherValuesInto")
