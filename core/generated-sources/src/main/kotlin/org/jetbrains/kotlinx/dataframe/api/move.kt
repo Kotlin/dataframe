@@ -786,7 +786,9 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
 /**
  * Moves columns, previously selected with [move] into a new position specified by a
  * given column path within the [DataFrame].
- * If there are non-existent column groups on this path, they will be created.
+ *
+ * If the specified path is partially or fully missing — that is, if any segment of the path
+ * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -843,7 +845,9 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  * Moves columns, previously selected with [move] into a new position specified by a
  * given column path within the [DataFrame].
  * Provides selected column indices.
- * If there are non-existent column groups on this path, they will be created.
+ *
+ * If the specified path is partially or fully missing — that is, if any segment of the path
+ * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -926,7 +930,9 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
  * Moves columns, previously selected with [move] under a new or
  * an existing column group specified by a
  * column path within the [DataFrame].
- * If there are non-existent column groups on this path, they will be created.
+ *
+ * If the specified path is partially or fully missing — that is, if any segment of the path
+ * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
  * See [Selecting Columns][SelectingColumns].
  *
