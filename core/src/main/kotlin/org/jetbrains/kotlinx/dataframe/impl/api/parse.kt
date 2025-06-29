@@ -49,6 +49,7 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.Temporal
 import java.time.temporal.TemporalQuery
 import java.util.Locale
+import java.util.UUID
 import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -61,6 +62,8 @@ import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+
+
 
 private val logger = KotlinLogging.logger { }
 
@@ -491,6 +494,15 @@ internal object Parsers : GlobalParserOptions {
         posixParserToDoubleWithOptions,
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
+        //UUID
+        stringParser<UUID> {str ->
+            try{
+                UUID.fromString(str)
+            } catch(e: IllegalArgumentException){
+                null
+            }
+        },
+
         // BigInteger
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
         // BigDecimal

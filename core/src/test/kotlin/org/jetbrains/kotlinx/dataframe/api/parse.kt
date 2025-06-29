@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -18,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.util.Locale
+import java.util.UUID
 import kotlin.random.Random
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
@@ -480,6 +482,27 @@ class ParseTests {
 
         df.parse()
     }
+
+    @Test
+    fun `parse valid UUID`() {
+        val uuidString = "550e8400-e29b-41d4-a716-446655440000"
+        val column by columnOf(uuidString)
+        val parsed = column.parse()
+
+        parsed.type() shouldBe typeOf<UUID>()
+        (parsed[0] as UUID).toString() shouldBe uuidString
+    }
+
+    @Test
+    fun `parse invalid UUID`(){
+            val invalidUUID = "this is not a UUID"
+            val column = columnOf(invalidUUID)
+            val parsed = column.tryParse() // tryParse as string is not formatted.
+
+            parsed.type() shouldNotBe typeOf<UUID>()
+            parsed.type() shouldBe typeOf<String>()
+    }
+
 
     /**
      * Asserts that all elements of the iterable are equal to each other
