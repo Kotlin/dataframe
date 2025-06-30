@@ -100,7 +100,7 @@ val integrationTestConfiguration by configurations.creating {
     extendsFrom(configurations.testImplementation.get())
 }
 
-val integrationTestTask = task<Test>("integrationTest") {
+val integrationTestTask = tasks.register<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
