@@ -16,6 +16,8 @@ fun runGradleBuild(
     buildFile.writeText(build(buildDir))
     val settingsFile = File(buildDir, "settings.gradle.kts")
     settingsFile.writeText(settingsGradle(buildDir))
+    val propertiesFile = File(buildDir, "gradle.properties")
+    propertiesFile.writeText("ksp.useKSP2=false")
     return Build(buildDir, gradleRunner(buildDir, task).build())
 }
 
