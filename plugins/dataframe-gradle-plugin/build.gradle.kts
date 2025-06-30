@@ -1,7 +1,7 @@
 plugins {
     `kotlin-dsl`
-    `java-gradle-plugin`
     `maven-publish`
+    alias(libs.plugins.buildconfig)
     alias(libs.plugins.plugin.publish)
     alias(libs.plugins.ktlint)
 }
@@ -14,26 +14,34 @@ repositories {
 
 group = "org.jetbrains.kotlinx.dataframe"
 
+buildscript {
+    dependencies {
+        classpath(embeddedKotlin("gradle-plugin"))
+    }
+}
+
 dependencies {
     api(libs.kotlin.reflect)
     implementation(projects.dataframe)
     // experimental
     implementation(projects.dataframeOpenapiGenerator)
 
+    compileOnly(embeddedKotlin("gradle-plugin"))
     implementation(libs.kotlin.gradle.plugin.api)
-    compileOnly(libs.kotlin.gradle.plugin)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
     implementation(libs.ksp.gradle)
     implementation(libs.ksp.api)
 
-    testImplementation(libs.junit)
+    testImplementation(gradleTestKit())
+    testImplementation(embeddedKotlin("test"))
+    testImplementation(embeddedKotlin("test-junit"))
     testImplementation(libs.kotestAssertions)
     testImplementation(libs.android.gradle.api)
     testImplementation(libs.android.gradle)
+    testImplementation(embeddedKotlin("gradle-plugin"))
     testImplementation(libs.ktor.server.netty)
     testImplementation(libs.h2db)
-    testImplementation(gradleApi())
 }
 
 tasks.withType<ProcessResources> {
@@ -98,6 +106,10 @@ sourceSets {
 
 val integrationTestConfiguration by configurations.creating {
     extendsFrom(configurations.testImplementation.get())
+}
+
+tasks.pluginUnderTestMetadata {
+    pluginClasspath.from(integrationTestConfiguration)
 }
 
 val integrationTestTask = tasks.register<Test>("integrationTest") {
