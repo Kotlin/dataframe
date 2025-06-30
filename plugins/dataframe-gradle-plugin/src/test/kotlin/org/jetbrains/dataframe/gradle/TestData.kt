@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe.gradle
 
+import org.jetbrains.kotlinx.dataframe.BuildConfig
+
 object TestData {
 
     val csvSample =
@@ -15,5 +17,5 @@ object TestData {
 
     val jsonName = "test.json"
 
-    val kotlinVersion = "1.6.0"
+    val kotlinVersion = BuildConfig.KOTLIN_VERSION
 }
