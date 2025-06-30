@@ -110,4 +110,7 @@ internal interface DocumentationUrls {
 
     /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
     interface Gather
+
+    /** [See `filter` on the documentation website.]({@include [Url]}/filter.html) */
+    interface Filter
 }

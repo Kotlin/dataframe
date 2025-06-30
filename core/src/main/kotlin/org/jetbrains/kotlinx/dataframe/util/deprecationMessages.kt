@@ -110,6 +110,9 @@ internal const val CONVERT_TO_URL_REPLACE = "convertToUrl()"
 internal const val TO_URL = "This function is replaced by `toUrl()`. $MESSAGE_1_0"
 internal const val TO_URL_REPLACE = "toUrl()"
 
+internal const val FILTER_BY = "This function  is deprecated in favor of `filter { }`. $MESSAGE_1_0"
+internal const val FILTER_BY_REPLACE = "filter { column }"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
