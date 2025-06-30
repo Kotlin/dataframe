@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe.gradle
 
+import com.google.devtools.ksp.gradle.KspAATask
+import com.google.devtools.ksp.gradle.KspTask
 import com.google.devtools.ksp.gradle.KspTaskJvm
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -8,13 +10,12 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.internal.logging.services.DefaultLoggingManager
 import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.BaseKotlinCompile
 import java.io.File
 import java.net.URL
 import java.nio.file.Path
@@ -43,10 +44,15 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 group = GROUP
                 dependsOn(*generationTasks.toTypedArray())
             }
-            tasks.withType(KspTaskJvm::class.java).configureEach {
+            tasks.withType(KspTask::class.java).configureEach {
                 dependsOn(generateAll)
+                dependsOn(*generationTasks.toTypedArray())
             }
-            tasks.withType<KotlinCompile> {
+            tasks.withType(KspAATask::class.java).configureEach {
+                dependsOn(generateAll)
+                dependsOn(*generationTasks.toTypedArray())
+            }
+            tasks.withType(BaseKotlinCompile::class.java).configureEach {
                 dependsOn(generateAll)
             }
         }
