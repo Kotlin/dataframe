@@ -21,7 +21,7 @@ dependencies {
     implementation(projects.dataframeOpenapiGenerator)
 
     implementation(libs.kotlin.gradle.plugin.api)
-    compileOnly(libs.kotlin.gradle.plugin)
+    implementation(libs.kotlin.gradle.plugin)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
     implementation(libs.ksp.gradle)

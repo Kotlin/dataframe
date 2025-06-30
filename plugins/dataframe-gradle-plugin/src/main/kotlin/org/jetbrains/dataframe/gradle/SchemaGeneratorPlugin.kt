@@ -45,7 +45,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             tasks.withType(KspTaskJvm::class.java).configureEach {
                 dependsOn(generateAll)
             }
-            tasks.withType<KotlinCompile> {
+            tasks.withType(KotlinCompile::class.java).configureEach {
                 dependsOn(generateAll)
             }
         }
