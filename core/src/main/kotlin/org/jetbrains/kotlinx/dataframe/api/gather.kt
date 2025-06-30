@@ -204,7 +204,7 @@ public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): 
  * Filters out `null` values from the columns previously selected by [gather],
  * keeping only non-null entries.
  *
- * A special case of [where].
+ * A special case of [Gather.where].
  *
  * It's an intermediate step; returns a new [Gather] with filtered value columns.
  *
