@@ -24,6 +24,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.FILTER_BY
+import org.jetbrains.kotlinx.dataframe.util.FILTER_BY_REPLACE
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -55,7 +57,6 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  * For more information, see: {@include [DocumentationUrls.Filter]}
  *
  * See also:
- *  - [filterBy], which filters rows based on the values in a given [Boolean] column.
  *  - [drop][DataFrame.drop], which drops rows based on values within the row.
  *  - [distinct][DataFrame.distinct], which filters rows with duplicated values.
  *
@@ -109,6 +110,7 @@ internal interface FilterByDocs
  *               Only rows where the value in this column is `true` will be included.
  * @return A new [DataFrame] containing only the rows where the selected column is `true`.
  */
+@Deprecated(message = FILTER_BY, replaceWith = ReplaceWith(FILTER_BY_REPLACE), level = DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFrame<T> =
     getRows(getColumn(column).toList().getTrueIndices())
 
@@ -126,12 +128,16 @@ public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFr
  *               Only rows where the value in this column is `true` will be included.
  * @return A new [DataFrame] containing only the rows where the specified column is `true`.
  */
+@Suppress("DEPRECATION_ERROR")
+@Deprecated(message = FILTER_BY, replaceWith = ReplaceWith(FILTER_BY_REPLACE), level = DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.filterBy(column: String): DataFrame<T> = filterBy { column.toColumnOf() }
 
+@Suppress("DEPRECATION_ERROR")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.filterBy(column: ColumnReference<Boolean>): DataFrame<T> = filterBy { column }
 
+@Suppress("DEPRECATION_ERROR")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.filterBy(column: KProperty<Boolean>): DataFrame<T> = filterBy { column.toColumnAccessor() }
