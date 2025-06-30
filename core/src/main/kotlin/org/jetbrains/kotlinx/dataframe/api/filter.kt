@@ -14,9 +14,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
 import org.jetbrains.kotlinx.dataframe.indices
@@ -25,6 +28,12 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
+/**
+ * Returns a new [DataColumn] containing only the elements that match the given [predicate].
+ *
+ * @param predicate the condition used to filter the elements in the DataColumn.
+ * @return a new DataColumn containing elements that satisfy the predicate.
+ */
 public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
     indices
         .filter { predicate(get(it)) }
@@ -34,15 +43,89 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
 
 // region DataFrame
 
+/**
+ * Filters the rows of this [DataFrame] based on the provided [RowFilter].
+ * Returns a new [DataFrame] containing only the rows that satisfy the given [predicate].
+ *
+ * A [RowFilter] provides each row as a lambda argument, allowing you to define filtering logic
+ * using a [Boolean] condition.
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * For more information, see: {@include [DocumentationUrls.Filter]}
+ *
+ * See also:
+ *  - [filterBy], which filters rows based on the values in a given [Boolean] column.
+ *  - [drop][DataFrame.drop], which drops rows based on values within the row.
+ *  - [distinct][DataFrame.distinct], which filters rows with duplicated values.
+ *
+ * ### Example
+ * ```kotlin
+ * // Select rows where the value in the "age" column is greater than 18
+ * // and the "name/firstName" column starts with 'A'
+ * df.filter { age > 18 && name.firstName.startsWith("A") }
+ * ```
+ *
+ * @param predicate A lambda that takes a row (twice for compatibility) and returns `true`
+ * if the row should be included in the result.
+ * @return A new [DataFrame] containing only the rows that satisfy the predicate.
+ */
 public inline fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
     indices().filter {
         val row = get(it)
         predicate(row, row)
     }.let { get(it) }
 
+/**
+ * Filters the rows of this [DataFrame] based on the [Boolean] values in the specified [column].
+ *
+ * Returns a new [DataFrame] containing only the rows where the value in the given [column] is `true`.
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * For more information, see: {@include [DocumentationUrls.Filter]}
+ *
+ * See also: [filter], which allows filtering rows based on values within the row.
+ *
+ * ### This Gather Overload
+ */
+@ExcludeFromSources
+internal interface FilterByDocs
+
+/**
+ * {@include [FilterByDocs]}
+ * {@include [SelectingColumns.Dsl]}
+ *
+ * ### Examples
+ * ```kotlin
+ * // Filter rows by the "isHappy" column
+ * df.filterBy { isHappy }
+ *
+ * // Filter rows by a single `Boolean` column
+ * df.filterBy { colsOf<Boolean>().single() }
+ * ```
+ *
+ * @param column A [ColumnSelector] that selects the Boolean column to use for filtering.
+ *               Only rows where the value in this column is `true` will be included.
+ * @return A new [DataFrame] containing only the rows where the selected column is `true`.
+ */
 public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFrame<T> =
     getRows(getColumn(column).toList().getTrueIndices())
 
+/**
+ * {@include [FilterByDocs]}
+ * {@include [SelectingColumns.ColumnNames]}
+ *
+ * ### Example
+ * ```kotlin
+ * // Filter rows by the "isHappy" column
+ * df.filterBy("isHappy")
+ * ```
+ *
+ * @param column The name of the `Boolean` column to use for filtering.
+ *               Only rows where the value in this column is `true` will be included.
+ * @return A new [DataFrame] containing only the rows where the specified column is `true`.
+ */
 public fun <T> DataFrame<T>.filterBy(column: String): DataFrame<T> = filterBy { column.toColumnOf() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
