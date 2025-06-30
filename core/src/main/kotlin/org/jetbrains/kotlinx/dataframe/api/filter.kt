@@ -57,6 +57,7 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  * See also:
  *  - [filterBy], which filters rows based on the values in a given [Boolean] column.
  *  - [drop][DataFrame.drop], which drops rows based on values within the row.
+ *  - [distinct][DataFrame.distinct], which filters rows with duplicated values.
  *
  * ### Example
  * ```kotlin
