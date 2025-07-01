@@ -63,8 +63,6 @@ import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
 
-
-
 private val logger = KotlinLogging.logger { }
 
 internal interface StringParser<T> {
@@ -494,15 +492,21 @@ internal object Parsers : GlobalParserOptions {
         posixParserToDoubleWithOptions,
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
-        //UUID
-        stringParser<UUID> {str ->
-            try{
-                UUID.fromString(str)
-            } catch(e: IllegalArgumentException){
+        // UUID
+        stringParser<UUID> { str ->
+
+            val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+
+            if (uuidRegex.matches(str)) {
+                try {
+                    UUID.fromString(str)
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            } else {
                 null
             }
         },
-
         // BigInteger
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
         // BigDecimal
