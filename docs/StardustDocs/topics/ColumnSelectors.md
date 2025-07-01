@@ -45,33 +45,34 @@ df.move { name.firstName and name.lastName }.after { city }
 `first {}`, `firstCol()`, `last {}`, `lastCol()`, `single {}`, `singleCol()`
 
 Returns the first, last, or single column from the top-level, specified [column group](DataColumn.md#columngroup), 
-or `ColumnSet` that adheres to the optional given condition. If no column adheres to the given condition,
+or [`ColumnSet`](#column-resolvers) that adheres to the optional given condition. If no column adheres to the given condition,
 `NoSuchElementException` is thrown.
 
 ##### Col {collapsible="true"}
 `col(name)`, `col(5)`
 
-Creates a [ColumnAccessor](DataColumn.md) (or `SingleColumn`) for a column with the given 
+Creates a [`ColumnAccessor`](#column-resolvers) (or [`SingleColumn`](#column-resolvers)) for a column with the given 
 argument from the top-level or specified [column group](DataColumn.md#columngroup). The argument can be either an 
-index (`Int`) or a reference to a column (`String`, `ColumnPath`, `KProperty`, or `ColumnAccessor`;
+index (`Int`) or a reference to a column (`String`, [`ColumnPath`](#column-resolvers), or 
+[`ColumnAccessor`](#column-resolvers);
 any [AccessApi](apiLevels.md)).
 
 ##### Value Col, Frame Col, Col Group {collapsible="true"}
 `valueCol(name)`, `valueCol(5)`, `frameCol(name)`, `frameCol(5)`, `colGroup(name)`, `colGroup(5)`
 
-Creates a [ColumnAccessor](DataColumn.md) (or `SingleColumn`) for a 
+Creates a [`ColumnAccessor`](DataColumn.md) (or `SingleColumn`) for a 
 [value column](DataColumn.md#valuecolumn) / [frame column](DataColumn.md#framecolumn) / 
 [column group](DataColumn.md#columngroup) with the given argument from the top-level or
 specified [column group](DataColumn.md#columngroup). The argument can be either an index (`Int`) or a reference
-to a column (`String`, `ColumnPath`, `KProperty`, or `ColumnAccessor`; any [AccessApi](apiLevels.md)).
-The functions can be both typed and untyped (in case you're supplying a column name, -path, or index).
+to a column (`String`, [`ColumnPath`](#column-resolvers), or [`ColumnAccessor`](#column-resolvers); any [AccessApi](apiLevels.md)).
+The functions can be both typed and untyped (in case you're supplying a column name, path, or index).
 These functions throw an `IllegalArgumentException` if the column found is not the right kind.
 
 ##### Cols {collapsible="true"}
 `cols {}`, `cols()`, `cols(colA, colB)`, `cols(1, 5)`, `cols(1..5)`, `[{}]`, `colSet[1, 3]`
 
-Creates a subset of columns (`ColumnSet`) from the top-level, specified [column group](DataColumn.md#columngroup),
-or `ColumnSet`.
+Creates a subset of columns ([`ColumnSet`](#column-resolvers)) from the top-level, specified [column group](DataColumn.md#columngroup),
+or [`ColumnSet`](#column-resolvers).
 You can use either a `ColumnFilter`, or any of the `vararg` overloads for any [AccessApi](apiLevels.md).
 The function can be both typed and untyped (in case you're supplying a column name, -path, or index (range)).
 
@@ -80,36 +81,36 @@ Note that you can also use the `[]` operator for most overloads of `cols` to ach
 ##### Range of Columns {collapsible="true"}
 `colA.."colB"`
 
-Creates a `ColumnSet` containing all columns from `colA` to `colB` (inclusive) from the top-level.
+Creates a [`ColumnSet`](#column-resolvers) containing all columns from `colA` to `colB` (inclusive) from the top-level.
 Columns inside [column groups](DataColumn.md#columngroup) are also supported
 (as long as they share the same direct parent), as well as any combination of [AccessApi](apiLevels.md).
 
 ##### Value Columns, Frame Columns, Column Groups {collapsible="true"}
 `valueCols {}`, `valueCols()`, `frameCols {}`, `frameCols()`, `colGroups {}`, `colGroups()`
 
-Creates a subset of columns (`ColumnSet`) from the top-level, specified [column group](DataColumn.md#columngroup),
-or `ColumnSet` containing only [value columns](DataColumn.md#valuecolumn) / [frame columns](DataColumn.md#framecolumn) / 
+Creates a subset of columns ([`ColumnSet`](#column-resolvers)) from the top-level, specified [column group](DataColumn.md#columngroup),
+or [`ColumnSet`](#column-resolvers) containing only [value columns](DataColumn.md#valuecolumn) / [frame columns](DataColumn.md#framecolumn) / 
 [column groups](DataColumn.md#columngroup) that adhere to the optional condition.
 
 ##### Cols of Kind {collapsible="true"}
 `colsOfKind(Value, Frame) {}`, `colsOfKind(Group, Frame)`
 
-Creates a subset of columns (`ColumnSet`) from the top-level, specified [column group](DataColumn.md#columngroup),
-or `ColumnSet` containing only columns of the specified kind(s) that adhere to the optional condition.
+Creates a subset of columns ([`ColumnSet`](#column-resolvers)) from the top-level, specified [column group](DataColumn.md#columngroup),
+or [`ColumnSet`](#column-resolvers) containing only columns of the specified kind(s) that adhere to the optional condition.
 
 ##### All (Cols) {collapsible="true"}
 `all()`, `allCols()`
 
-Creates a `ColumnSet` containing all columns from the top-level, specified [column group](DataColumn.md#columngroup),
-or `ColumnSet`. This is the opposite of [`none()`](ColumnSelectors.md#none) and equivalent to
+Creates a [`ColumnSet`](#column-resolvers) containing all columns from the top-level, specified [column group](DataColumn.md#columngroup),
+or [`ColumnSet`](#column-resolvers). This is the opposite of [`none()`](ColumnSelectors.md#none) and equivalent to
 [`cols()`](ColumnSelectors.md#cols) without filter.
 Note, on [column groups](DataColumn.md#columngroup), `all` is named `allCols` instead to avoid confusion.
 
 ##### All (Cols) After, -Before, -From, -Up To {collapsible="true"}
 `allAfter(colA)`, `allBefore(colA)`, `allColsFrom(colA)`, `allColsUpTo(colA)`
 
-Creates a `ColumnSet` containing a subset of columns from the top-level, 
-specified [column group](DataColumn.md#columngroup), or `ColumnSet`.
+Creates a [`ColumnSet`](#column-resolvers) containing a subset of columns from the top-level, 
+specified [column group](DataColumn.md#columngroup), or [`ColumnSet`](#column-resolvers).
 The subset includes:
 - `all(Cols)Before(colA)`: All columns before the specified column, excluding that column.
 - `all(Cols)After(colA)`: All columns after the specified column, excluding that column.
@@ -123,10 +124,10 @@ On `ColumnSets` they are a `ColumnFilter` instead.
 ##### Cols at any Depth {collapsible="true"}
 `colsAtAnyDepth {}`, `colsAtAnyDepth()`
 
-Creates a `ColumnSet` containing all columns from the top-level, specified [column group](DataColumn.md#columngroup),
-or `ColumnSet` at any depth if they satisfy the optional given predicate. This means that columns (of all three kinds!)
+Creates a [`ColumnSet`](#column-resolvers) containing all columns from the top-level, specified [column group](DataColumn.md#columngroup),
+or [`ColumnSet`](#column-resolvers) at any depth if they satisfy the optional given predicate. This means that columns (of all three kinds!)
 nested inside [column groups](DataColumn.md#columngroup) are also included.
-This function can also be followed by another `ColumnSet` filter-function like `colsOf<>()`, `single()`,
+This function can also be followed by another [`ColumnSet`](#column-resolvers) filter-function like `colsOf<>()`, `single()`,
 or `valueCols()`.
 
 **For example:**
@@ -165,8 +166,8 @@ All value columns at any depth nested under a column group named "myColGroup":
 ##### Cols in Groups {collapsible="true"}
 `colsInGroups {}`, `colsInGroups()`
 
-Creates a `ColumnSet` containing all columns that are nested in the [column groups](DataColumn.md#columngroup) at 
-the top-level, specified [column group](DataColumn.md#columngroup), or `ColumnSet` adhering to an optional predicate.
+Creates a [`ColumnSet`](#column-resolvers) containing all columns that are nested in the [column groups](DataColumn.md#columngroup) at 
+the top-level, specified [column group](DataColumn.md#columngroup), or [`ColumnSet`](#column-resolvers) adhering to an optional predicate.
 This is useful if you want to select all columns that are "one level down".
 
 This function used to be called `children()` in the past.
@@ -186,28 +187,28 @@ or with filter:
 
 `df.select { colsInGroups { "user" in it.name } }`
 
-Similarly, you can take the columns inside all [column groups](DataColumn.md#columngroup) in a `ColumnSet`:
+Similarly, you can take the columns inside all [column groups](DataColumn.md#columngroup) in a [`ColumnSet`](#column-resolvers):
 
 `df.select { colGroups { "my" in it.name }.colsInGroups() }`
 
 ##### Take (Last) (Cols) (While) {collapsible="true"}
 `take(5)`, `takeLastCols(2)`, `takeLastWhile {}`, `takeColsWhile {}`,
 
-Creates a `ColumnSet` containing the first / last `n` columns from the top-level, 
-specified [column group](DataColumn.md#columngroup), or `ColumnSet` or those that adhere to the given condition.
+Creates a [`ColumnSet`](#column-resolvers) containing the first / last `n` columns from the top-level, 
+specified [column group](DataColumn.md#columngroup), or [`ColumnSet`](#column-resolvers) or those that adhere to the given condition.
 Note, to avoid ambiguity, `take` is called `takeCols` when called on a [column group](DataColumn.md#columngroup).
 
 ##### Drop (Last) (Cols) (While) {collapsible="true"}
 `drop(5)`, `dropLastCols(2)`, `dropLastWhile {}`, `dropColsWhile {}`
 
-Creates a `ColumnSet` without the first / last `n` columns from the top-level,
-specified [column group](DataColumn.md#columngroup), or `ColumnSet` or those that adhere to the given condition.
+Creates a [`ColumnSet`](#column-resolvers) without the first / last `n` columns from the top-level,
+specified [column group](DataColumn.md#columngroup), or [`ColumnSet`](#column-resolvers) or those that adhere to the given condition.
 Note, to avoid ambiguity, `drop` is called `dropCols` when called on a [column group](DataColumn.md#columngroup).
 
 ##### Select from [Column Group](DataColumn.md#columngroup) {collapsible="true"}
 `colGroupA.select {}`, `"colGroupA" {}`
 
-Creates a `ColumnSet` containing the columns selected by a `ColumnsSelector` relative to the specified
+Creates a [`ColumnSet`](#column-resolvers) containing the columns selected by a `ColumnsSelector` relative to the specified
 [column group](DataColumn.md#columngroup). In practice, this means you're opening a new selection DSL scope inside a 
 [column group](DataColumn.md#columngroup) and selecting columns from there.
 The selected columns are referenced individually and "unpacked" from their parent
@@ -242,14 +243,14 @@ This function is best explained in parts:
 
 **On Column Sets:** `except {}`
 
-This function can be explained the easiest with a `ColumnSet`.
+This function can be explained the easiest with a [`ColumnSet`](#column-resolvers).
 Let's say we want all `Int` columns apart from `age` and `height`.
 
 We can do:
 
 `df.select { colsOf<Int>() except (age and height) }`
 
-which will 'subtract' the `ColumnSet` created by `age and height` from the `ColumnSet` created by
+which will 'subtract' the [`ColumnSet`](#column-resolvers) created by `age and height` from the [`ColumnSet`](#column-resolvers) created by
 [`colsOf<Int>()`](ColumnSelectors.md#cols-of).
 
 This operation can also be used to exclude columns that are originally in [column groups](DataColumn.md#columngroup).
@@ -261,7 +262,7 @@ For instance, excluding `userData.age`:
 Note that the selection of columns to exclude from column sets is always done relative to the outer scope.
 Use the [Extension Properties API](extensionPropertiesApi.md) to prevent scoping issues if possible.
 
-> Special case: If a column that needs to be removed appears multiple times in the `ColumnSet`,
+> Special case: If a column that needs to be removed appears multiple times in the [`ColumnSet`](#column-resolvers),
 > it is excepted each time it is encountered (including inside [Column Groups](DataColumn.md#columngroup)).
 > You could say the receiver `ColumnSet` is [simplified](ColumnSelectors.md#simplify) before the operation is performed:
 >
@@ -319,8 +320,8 @@ or:
 ##### Column Name Filters {collapsible="true"}
 `nameContains()`, `colsNameContains()`, `nameStartsWith()`, `colsNameEndsWith()`
 
-Creates a `ColumnSet` containing columns from the top-level, specified [column group](DataColumn.md#columngroup),
-or `ColumnSet` that have names that satisfy the given function. These functions accept a `String` as argument, as
+Creates a [`ColumnSet`](#column-resolvers) containing columns from the top-level, specified [column group](DataColumn.md#columngroup),
+or [`ColumnSet`](#column-resolvers) that have names that satisfy the given function. These functions accept a `String` as argument, as
 well as an optional `ignoreCase` parameter. For the `nameContains` variant, you can also pass a `Regex` as an argument.
 Note, on [column groups](DataColumn.md#columngroup), the functions have names starting with `cols` to avoid
 ambiguity.
@@ -328,15 +329,15 @@ ambiguity.
 ##### (Cols) Without Nulls {collapsible="true"}
 `withoutNulls()`, `colsWithoutNulls()`
 
-Creates a `ColumnSet` containing columns from the top-level, specified [column group](DataColumn.md#columngroup),
-or `ColumnSet` that have no `null` values. This is a shorthand for `cols { !it.hasNulls() }`.
+Creates a [`ColumnSet`](#column-resolvers) containing columns from the top-level, specified [column group](DataColumn.md#columngroup),
+or [`ColumnSet`](#column-resolvers) that have no `null` values. This is a shorthand for `cols { !it.hasNulls() }`.
 Note, to avoid ambiguity, `withoutNulls` is called `colsWithoutNulls` when called on a
 [column group](DataColumn.md#columngroup).
 
 ##### Distinct {collapsible="true"}
 `colSet.distinct()`
 
-Returns a new `ColumnSet` from the specified `ColumnSet` containing only distinct columns (by path).
+Returns a new [`ColumnSet`](#column-resolvers) from the specified [`ColumnSet`](#column-resolvers) containing only distinct columns (by path).
 This is useful when you've selected the same column multiple times but only want it once.
 
 This does not cover the case where a column is selected individually and through its enclosing
@@ -348,7 +349,7 @@ For this, you'll need to [rename](ColumnSelectors.md#rename) one of the columns.
 ##### None {collapsible="true"}
 `none()`
 
-Creates an empty `ColumnSet`, essentially selecting no columns at all.
+Creates an empty [`ColumnSet`](#column-resolvers), essentially selecting no columns at all.
 This is the opposite of [`all()`](ColumnSelectors.md#all-cols).
 
 This function mostly exists for completeness, but can be useful in some very specific cases.
@@ -356,22 +357,22 @@ This function mostly exists for completeness, but can be useful in some very spe
 ##### Cols Of {collapsible="true"}
 `colsOf<T>()`, `colsOf<T> {}`
 
-Creates a `ColumnSet` containing columns from the top-level, specified [column group](DataColumn.md#columngroup),
-or `ColumnSet` that are a subtype of the specified type `T` and adhere to the optional condition.
+Creates a [`ColumnSet`](#column-resolvers) containing columns from the top-level, specified [column group](DataColumn.md#columngroup),
+or [`ColumnSet`](#column-resolvers) that are a subtype of the specified type `T` and adhere to the optional condition.
 
 ##### Simplify {collapsible="true"}
 `colSet.simplify()`
 
-Returns a new `ColumnSet` from the specified `ColumnSet` in 'simplified' form.
-This function simplifies the structure of the `ColumnSet` by removing columns that are already present in
+Returns a new [`ColumnSet`](#column-resolvers) from the specified [`ColumnSet`](#column-resolvers) in 'simplified' form.
+This function simplifies the structure of the [`ColumnSet`](#column-resolvers) by removing columns that are already present in
 [column groups](DataColumn.md#columngroup), returning only these groups, 
 plus columns not belonging in any of the groups.
 
-In other words, this means that if a column in the `ColumnSet` is inside a [column group](DataColumn.md#columngroup) 
-in the `ColumnSet`, it will not be included in the result.
+In other words, this means that if a column in the [`ColumnSet`](#column-resolvers) is inside a [column group](DataColumn.md#columngroup) 
+in the [`ColumnSet`](#column-resolvers), it will not be included in the result.
 
 It's useful in combination with [`colsAtAnyDepth {}`](ColumnSelectors.md#cols-at-any-depth), as that function can
-create a `ColumnSet` containing both a column and the [column group](DataColumn.md#columngroup) it's in.
+create a [`ColumnSet`](#column-resolvers) containing both a column and the [column group](DataColumn.md#columngroup) it's in.
 
 In the past, was named `top()` and `roots()`, but these names have been deprecated.
 
@@ -382,13 +383,13 @@ In the past, was named `top()` and `roots()`, but these names have been deprecat
 ##### Filter {collapsible="true"}
 `colSet.filter {}`
 
-Returns a new `ColumnSet` from the specified `ColumnSet` containing only columns that satisfy the given condition.
+Returns a new [`ColumnSet`](#column-resolvers) from the specified [`ColumnSet`](#column-resolvers) containing only columns that satisfy the given condition.
 This function behaves the same as [`cols {}` and `[{}]`](ColumnSelectors.md#cols), but only exists on column sets.
 
 ##### And {collapsible="true"}
 `colSet and colB`
 
-Creates a `ColumnSet` containing the columns from both the left and right side of the function. This allows
+Creates a [`ColumnSet`](#column-resolvers) containing the columns from both the left and right side of the function. This allows
 you to combine selections or simply select multiple columns at once.
 
 Any combination of [AccessApi](apiLevels.md) can be used on either side of the `and` operator.
@@ -595,3 +596,27 @@ df.select { (colsOf<Int>() and age).distinct() }
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html" width="100%"/>
 <!---END-->
+
+### Column Resolvers
+
+`ColumnsResolver` is the base type used to resolve columns within the **Columns Selection DSL**,  
+as well as the return type of columns selection expressions.
+
+All functions described above for selecting columns in various ways return a `ColumnResolver` of a specific kind:
+
+- **`SingleColumn`** — resolves to a single [`DataColumn`](DataColumn.md).
+- **`ColumnAccessor`** — a specialized `SingleColumn` with a defined path and type argument.  
+  It can also be renamed during selection.
+  - **`ColumnPath`** — a wrapper for a [`DataColumn`](DataColumn.md) path
+    in a [`DataFrame`](DataFrame.md) also can serve as a `ColumnAccessor`.
+```kotlin
+// Select all columns from the group by path "group2"/"info":
+df.select { pathOf("group2", "info").allCols() }
+// For each selected column, place it under its ancestor group
+// from two levels up in the column path hierarchy:
+df.group { colsAtAnyDepth().colsOf<String>() }
+.into { it.path.dropLast(2) }
+```
+- **`ColumnSet`** — resolves to an ordered list of [`DataColumn`s](DataColumn.md).
+
+
