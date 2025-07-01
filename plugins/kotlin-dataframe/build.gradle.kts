@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import org.jetbrains.kotlin.gradle.tasks.BaseKotlinCompile
 
 plugins {
     id("java")
@@ -121,4 +120,14 @@ kotlinPublications {
         description = "Data processing in Kotlin"
         packageName = artifactId
     }
+}
+
+// Disabling all tests before removing the compiler plugin here
+// because we're moving to the Kotlin repo: #1290
+tasks.filter {
+    ":plugins:kotlin-dataframe" in it.path &&
+        "test" in it.name.lowercase()
+}.forEach {
+    println("disabling compiler plugin test task: ${it.path}. See #1290")
+    it.onlyIf { false }
 }
