@@ -533,7 +533,7 @@ public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
-) = toHtml(configuration, cellRenderer, getFooter)
+): DataFrameHtmlData = toHtml(configuration, cellRenderer, getFooter)
 
 @Deprecated(TO_STANDALONE_HTML, ReplaceWith(TO_STANDALONE_HTML_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.toStandaloneHTML(
