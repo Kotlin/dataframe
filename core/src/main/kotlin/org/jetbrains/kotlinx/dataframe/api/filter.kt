@@ -58,7 +58,7 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  *
  * See also:
  *  - [drop][DataFrame.drop], which drops rows based on values within the row.
- *  - [distinct][DataFrame.distinct], which filters rows with duplicated values.
+ *  - [distinct][DataFrame.distinct], which filters out rows with duplicated values.
  *
  * ### Example
  * ```kotlin
@@ -77,57 +77,10 @@ public inline fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T>
         predicate(row, row)
     }.let { get(it) }
 
-/**
- * Filters the rows of this [DataFrame] based on the [Boolean] values in the specified [column].
- *
- * Returns a new [DataFrame] containing only the rows where the value in the given [column] is `true`.
- *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
- *
- * For more information, see: {@include [DocumentationUrls.Filter]}
- *
- * See also: [filter], which allows filtering rows based on values within the row.
- *
- * ### This Gather Overload
- */
-@ExcludeFromSources
-internal interface FilterByDocs
-
-/**
- * {@include [FilterByDocs]}
- * {@include [SelectingColumns.Dsl]}
- *
- * ### Examples
- * ```kotlin
- * // Filter rows by the "isHappy" column
- * df.filterBy { isHappy }
- *
- * // Filter rows by a single `Boolean` column
- * df.filterBy { colsOf<Boolean>().single() }
- * ```
- *
- * @param column A [ColumnSelector] that selects the Boolean column to use for filtering.
- *               Only rows where the value in this column is `true` will be included.
- * @return A new [DataFrame] containing only the rows where the selected column is `true`.
- */
 @Deprecated(message = FILTER_BY, replaceWith = ReplaceWith(FILTER_BY_REPLACE), level = DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFrame<T> =
     getRows(getColumn(column).toList().getTrueIndices())
 
-/**
- * {@include [FilterByDocs]}
- * {@include [SelectingColumns.ColumnNames]}
- *
- * ### Example
- * ```kotlin
- * // Filter rows by the "isHappy" column
- * df.filterBy("isHappy")
- * ```
- *
- * @param column The name of the `Boolean` column to use for filtering.
- *               Only rows where the value in this column is `true` will be included.
- * @return A new [DataFrame] containing only the rows where the specified column is `true`.
- */
 @Suppress("DEPRECATION_ERROR")
 @Deprecated(message = FILTER_BY, replaceWith = ReplaceWith(FILTER_BY_REPLACE), level = DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.filterBy(column: String): DataFrame<T> = filterBy { column.toColumnOf() }
