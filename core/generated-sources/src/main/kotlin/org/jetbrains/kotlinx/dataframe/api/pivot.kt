@@ -268,7 +268,8 @@ public class ReducedPivot<T>(
 }
 
 @PublishedApi
-internal fun <T> Pivot<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>) = ReducedPivot(this, reducer)
+internal fun <T> Pivot<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>): ReducedPivot<T> =
+    ReducedPivot(this, reducer)
 
 @PublishedApi
 internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -> DataFrame<T>): DataRow<T> =
