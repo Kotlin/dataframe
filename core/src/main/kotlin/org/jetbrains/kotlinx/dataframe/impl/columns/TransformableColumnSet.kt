@@ -22,8 +22,8 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  * @see [TransformableSingleColumn]
  * @see [SingleColumn]
  */
-public interface TransformableColumnSet<out C> : ColumnSet<C> {
-    public fun transformResolve(
+internal interface TransformableColumnSet<out C> : ColumnSet<C> {
+    fun transformResolve(
         context: ColumnResolutionContext,
         transformer: ColumnsResolverTransformer,
     ): List<ColumnWithPath<C>>
@@ -43,8 +43,8 @@ public interface TransformableColumnSet<out C> : ColumnSet<C> {
  * @see [TransformableColumnSet]
  * @see [ColumnsResolver]
  */
-public interface TransformableSingleColumn<out C> : SingleColumn<C> {
-    public fun transformResolveSingle(
+internal interface TransformableSingleColumn<out C> : SingleColumn<C> {
+    fun transformResolveSingle(
         context: ColumnResolutionContext,
         transformer: ColumnsResolverTransformer,
     ): ColumnWithPath<C>?
@@ -55,10 +55,11 @@ public interface TransformableSingleColumn<out C> : SingleColumn<C> {
  * This contains implementations for both [transform][ColumnSet.transform] and
  * [transformSingle][SingleColumn.transformSingle] and can be passed around.
  */
-public interface ColumnsResolverTransformer {
-    public fun transform(columnsResolver: ColumnsResolver<*>): ColumnsResolver<*>
+@PublishedApi
+internal interface ColumnsResolverTransformer {
+    fun transform(columnsResolver: ColumnsResolver<*>): ColumnsResolver<*>
 
-    public fun transformSet(columnSet: ColumnSet<*>): ColumnsResolver<*>
+    fun transformSet(columnSet: ColumnSet<*>): ColumnsResolver<*>
 
-    public fun transformSingle(singleColumn: SingleColumn<*>): ColumnsResolver<*>
+    fun transformSingle(singleColumn: SingleColumn<*>): ColumnsResolver<*>
 }

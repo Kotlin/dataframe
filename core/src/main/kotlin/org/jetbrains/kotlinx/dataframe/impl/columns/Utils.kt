@@ -199,6 +199,7 @@ internal inline fun <A, B> ColumnsResolver<A>.transform(
                 .resolve(context)
                 .let(converter)
 
+        @Suppress("UNCHECKED_CAST")
         override fun transformResolve(
             context: ColumnResolutionContext,
             transformer: ColumnsResolverTransformer,

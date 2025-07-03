@@ -19,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -176,7 +175,7 @@ public interface FirstColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("First0")
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
+    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.first(condition)) }
             .singleOrNullWithTransformerImpl()
@@ -188,7 +187,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     @Interpretable("First1")
-    public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         asSingleColumn().firstCol(condition)
 
     /**
@@ -198,7 +197,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
      */
     @Interpretable("First2")
-    public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().first(condition)
 
     /**
@@ -206,7 +205,7 @@ public interface FirstColumnsSelectionDsl {
      * @set [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun String.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 
     /**
@@ -218,7 +217,7 @@ public interface FirstColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun KProperty<*>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 
     /**
@@ -226,7 +225,7 @@ public interface FirstColumnsSelectionDsl {
      * @set [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[firstCol][ColumnPath.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnPath.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 }
 
