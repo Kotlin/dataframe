@@ -113,4 +113,7 @@ internal interface DocumentationUrls {
 
     /** [See `filter` on the documentation website.]({@include [Url]}/filter.html) */
     interface Filter
+
+    /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
+    interface Explode
 }
