@@ -46,7 +46,6 @@ public fun AnyFrame.countDistinct(): Int = countDistinct { all() }
  */
 internal interface CountDistinctDocs
 
-
 /**
  * {@include [CountDistinctDocs]}
  * {@include [SelectingColumns.Dsl]}
