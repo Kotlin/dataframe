@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
@@ -53,7 +54,10 @@ class AtAnyDepth : TestBase() {
     fun `first, last, and single`() {
         listOf(
             dfGroup.select { name.firstName.firstName },
-            dfGroup.select { first { col -> col.any { it == "Alice" } }.atAnyDepthImpl() },
+            dfGroup.select {
+                (first { col -> col.any { it == "Alice" } } as TransformableSingleColumn<*>)
+                    .atAnyDepthImpl()
+            },
             dfGroup.select { colsAtAnyDepth().first { col -> col.any { it == "Alice" } } },
             dfGroup.select { colsAtAnyDepth().filter { col -> col.any { it == "Alice" } }.first() },
             dfGroup.select { colsAtAnyDepth().last { col -> col.any { it == "Alice" } } },

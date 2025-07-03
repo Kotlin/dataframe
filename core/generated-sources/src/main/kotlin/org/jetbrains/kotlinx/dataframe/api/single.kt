@@ -204,7 +204,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_SET_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
+    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
         singleInternal(condition)
 
     /**
@@ -236,7 +236,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
     @Interpretable("Single0")
-    public fun <C> ColumnSet<C>.single(): TransformableSingleColumn<C> = singleInternal { true }
+    public fun <C> ColumnSet<C>.single(): SingleColumn<C> = singleInternal { true }
 
     /**
      * ## Single (Col)
@@ -270,7 +270,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_PLAIN_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         asSingleColumn().singleCol(condition)
 
     /**
@@ -300,7 +300,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
     @Interpretable("Single1")
-    public fun ColumnsSelectionDsl<*>.single(): TransformableSingleColumn<*> = asSingleColumn().singleCol { true }
+    public fun ColumnsSelectionDsl<*>.single(): SingleColumn<*> = asSingleColumn().singleCol { true }
 
     /**
      * ## Single (Col)
@@ -334,7 +334,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().single(condition)
 
     /**
@@ -364,8 +364,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
     @Interpretable("Single2")
-    public fun SingleColumn<DataRow<*>>.singleCol(): TransformableSingleColumn<*> =
-        this.ensureIsColumnGroup().asColumnSet().single()
+    public fun SingleColumn<DataRow<*>>.singleCol(): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().single()
 
     /**
      * ## Single (Col)
@@ -398,7 +397,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun String.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun String.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 
     /**
@@ -427,7 +426,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
-    public fun String.singleCol(): TransformableSingleColumn<*> = columnGroup(this).singleCol()
+    public fun String.singleCol(): SingleColumn<*> = columnGroup(this).singleCol()
 
     /**
      * ## Single (Col)
@@ -459,7 +458,7 @@ public interface SingleColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun KProperty<*>.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 
     /**
@@ -488,7 +487,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
-    public fun ColumnPath.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnPath.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 }
 
