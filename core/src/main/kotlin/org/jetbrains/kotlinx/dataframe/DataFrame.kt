@@ -68,6 +68,11 @@ public interface DataFrame<out T> :
 
     // region rows
 
+    /**
+     * Returns the total number of rows of this [DataFrame].
+     *
+     * @return The number of rows in the [DataFrame].
+     */
     public fun rowsCount(): Int
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
