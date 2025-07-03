@@ -18,10 +18,18 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.FILTER_BY
+import org.jetbrains.kotlinx.dataframe.util.FILTER_BY_REPLACE
 import kotlin.reflect.KProperty
 
 // region DataColumn
 
+/**
+ * Returns a new [DataColumn] containing only the elements that match the given [predicate].
+ *
+ * @param predicate the condition used to filter the elements in the DataColumn.
+ * @return a new DataColumn containing elements that satisfy the predicate.
+ */
 public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
     indices
         .filter { predicate(get(it)) }
@@ -31,21 +39,52 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
 
 // region DataFrame
 
+/**
+ * Filters the rows of this [DataFrame] based on the provided [RowFilter].
+ * Returns a new [DataFrame] containing only the rows that satisfy the given [predicate].
+ *
+ * A [RowFilter] provides each row as a lambda argument, allowing you to define filtering logic
+ * using a [Boolean] condition.
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * For more information, see: [See `filter` on the documentation website.](https://kotlin.github.io/dataframe/filter.html)
+ *
+ * See also:
+ *  - [drop][DataFrame.drop], which drops rows based on values within the row.
+ *  - [distinct][DataFrame.distinct], which filters out rows with duplicated values.
+ *
+ * ### Example
+ * ```kotlin
+ * // Select rows where the value in the "age" column is greater than 18
+ * // and the "name/firstName" column starts with 'A'
+ * df.filter { age > 18 && name.firstName.startsWith("A") }
+ * ```
+ *
+ * @param predicate A lambda that takes a row (twice for compatibility) and returns `true`
+ * if the row should be included in the result.
+ * @return A new [DataFrame] containing only the rows that satisfy the predicate.
+ */
 public inline fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
     indices().filter {
         val row = get(it)
         predicate(row, row)
     }.let { get(it) }
 
+@Deprecated(message = FILTER_BY, replaceWith = ReplaceWith(FILTER_BY_REPLACE), level = DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFrame<T> =
     getRows(getColumn(column).toList().getTrueIndices())
 
+@Suppress("DEPRECATION_ERROR")
+@Deprecated(message = FILTER_BY, replaceWith = ReplaceWith(FILTER_BY_REPLACE), level = DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.filterBy(column: String): DataFrame<T> = filterBy { column.toColumnOf() }
 
+@Suppress("DEPRECATION_ERROR")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.filterBy(column: ColumnReference<Boolean>): DataFrame<T> = filterBy { column }
 
+@Suppress("DEPRECATION_ERROR")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.filterBy(column: KProperty<Boolean>): DataFrame<T> = filterBy { column.toColumnAccessor() }

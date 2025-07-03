@@ -137,14 +137,16 @@ public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, Column
 // region filters
 
 /**
- * ## Row Filter
+ * A lambda expression that evaluates a row of the [DataFrame]
+ * and returns a [Boolean] indicating whether the row should be included in the result.
  *
- * [RowFilter] is a lambda function expecting a [Boolean] result given an instance of [DataRow]`<T>` as context
- * (`this` and `it`).
+ * The lambda has access to the [`DataRow<T>`][DataRow] both as `this` and as `it`,
+ * enabling concise and readable conditions.
  *
- * Return `true` if the row should be included in the result.
+ * Commonly used in operations such as [filter][org.jetbrains.kotlinx.dataframe.api.filter],
+ * [drop][org.jetbrains.kotlinx.dataframe.api.drop], and others.
  *
- * Shorthand for:
+ * Equivalent to:
  * ```kotlin
  * DataRow<T>.(it: DataRow<T>) -> Boolean
  * ```
