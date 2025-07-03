@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
@@ -259,27 +258,27 @@ public class AddDsl<T>(
     internal inline fun <reified R> add(
         name: String,
         infer: Infer = Infer.Nulls,
-        noinline expression: RowExpression<T, R>,
+        noinline expression: AddExpression<T, R>,
     ): Boolean = add(df.mapToColumn(name, infer, expression))
 
     public inline fun <reified R> expr(
         infer: Infer = Infer.Nulls,
-        noinline expression: RowExpression<T, R>,
+        noinline expression: AddExpression<T, R>,
     ): DataColumn<R> = df.mapToColumn("", infer, expression)
 
     @Interpretable("From")
-    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean =
+    public inline infix fun <reified R> String.from(noinline expression: AddExpression<T, R>): Boolean =
         add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean =
+    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: AddExpression<T, R>): Boolean =
         name().from(expression)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean =
+    public inline infix fun <reified R> KProperty<R>.from(noinline expression: AddExpression<T, R>): Boolean =
         add(name, Infer.Nulls, expression)
 
     public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
@@ -417,7 +416,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     name: String,
     infer: Infer = Infer.Nulls,
-    noinline expression: RowExpression<G, R>,
+    noinline expression: AddExpression<G, R>,
 ): GroupBy<T, G> = updateGroups { add(name, infer, expression) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -425,7 +424,7 @@ public inline fun <reified R, T, G> GroupBy<T, G>.add(
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     column: ColumnAccessor<G>,
     infer: Infer = Infer.Nulls,
-    noinline expression: RowExpression<G, R>,
+    noinline expression: AddExpression<G, R>,
 ): GroupBy<T, G> = add(column.name(), infer, expression)
 
 public class AddGroup<T>(internal val body: AddDsl<T>.() -> Unit)
