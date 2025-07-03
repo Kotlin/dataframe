@@ -328,6 +328,8 @@ public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = wher
  *   .mapValues { (it + 0.5).toFloat() }
  *   .into("series", "value")
  * ```
+ *
+ * @see [explode]
  * @return A new [Gather] instance with exploded list values.
  */
 @Interpretable("GatherExplodeLists")
@@ -365,6 +367,8 @@ public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> =
  *   .mapValues { (it + 0.5).toFloat() }
  *   .into("series", "value")
  * ```
+ *
+ * @see [explode]
  * @return A new [Gather] instance with exploded list values.
  */
 @JvmName("explodeListsTyped")
