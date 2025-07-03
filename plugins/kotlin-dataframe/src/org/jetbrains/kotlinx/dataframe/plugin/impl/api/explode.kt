@@ -16,11 +16,11 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
 internal class Explode0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.dropEmpty: Boolean by arg(defaultValue = Present(true))
     val Arguments.receiver: PluginDataFrameSchema by dataFrame()
-    val Arguments.selector: ColumnsResolver? by arg(defaultValue = Present(null))
+    val Arguments.columns: ColumnsResolver? by arg(defaultValue = Present(null))
     override val Arguments.startingSchema get() = receiver
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        val columns = selector ?: object : ColumnsResolver {
+        val columns = columns ?: object : ColumnsResolver {
             override fun resolve(df: PluginDataFrameSchema): List<ColumnWithPathApproximation> {
                 return df.flatten(includeFrames = false).filter {
                     val column = it.column

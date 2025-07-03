@@ -25,13 +25,13 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
 
 /**
  * Splits list-like values in the specified [\columns] and spreads them vertically —
- * that is, adds a separate row for each element (one value per row).
+ * that is, it adds a separate row for each element (one value per row).
  * Values in all other columns are duplicated to preserve row context.
  *
  * If no [\columns] are specified, all columns (at any depth) containing
  * [List] or [DataFrame] values will be exploded.
  *
- * If [dropEmpty] is `true`, rows with empty lists or DataFrames will be removed.
+ * If [dropEmpty] is `true`, rows with empty lists or [DataFrame]s will be removed.
  * If `false`, such rows will be exploded into `null` values.
  *
  * Returns a new [DataFrame] with exploded columns.
@@ -117,7 +117,7 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
 
 /**
  * Splits list-like values in the specified [\columns] of this [DataRow] and spreads them vertically —
- * that is, adds a separate row for each element (one value per row)
+ * that is, it adds a separate row for each element (one value per row)
  * and combine them into new [DataFrame].
  * Values in all other columns are duplicated to preserve row context.
  *
@@ -201,7 +201,7 @@ public fun <T, C> DataRow<T>.explode(vararg columns: KProperty<C>, dropEmpty: Bo
 
 /**
  * Splits list-like values in this [DataColumn] and spreads them vertically —
- * that is, adds a separate row for each element (one value per row).
+ * that is, it adds a separate row for each element (one value per row).
  *
  * Returns a new [DataColumn] with the exploded values.
  * The resulting column will have a new type (`List<T>` → `T`).
