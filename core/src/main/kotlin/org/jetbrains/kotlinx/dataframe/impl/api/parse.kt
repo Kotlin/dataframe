@@ -56,6 +56,8 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
@@ -426,6 +428,7 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     internal val parsersOrder = listOf(
         // Int
         stringParser<Int> { it.toIntOrNull() },
@@ -491,6 +494,21 @@ internal object Parsers : GlobalParserOptions {
         posixParserToDoubleWithOptions,
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
+        // UUID
+        stringParser<Uuid> { str ->
+
+            val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+
+            if (uuidRegex.matches(str)) {
+                try {
+                    Uuid.parse(str)
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            } else {
+                null
+            }
+        },
         // BigInteger
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
         // BigDecimal
