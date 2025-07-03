@@ -49,7 +49,6 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.Temporal
 import java.time.temporal.TemporalQuery
 import java.util.Locale
-import java.util.UUID
 import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -57,6 +56,8 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
@@ -427,6 +428,7 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     internal val parsersOrder = listOf(
         // Int
         stringParser<Int> { it.toIntOrNull() },
@@ -493,13 +495,13 @@ internal object Parsers : GlobalParserOptions {
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
         // UUID
-        stringParser<UUID> { str ->
+        stringParser<Uuid> { str ->
 
             val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 
             if (uuidRegex.matches(str)) {
                 try {
-                    UUID.fromString(str)
+                    Uuid.parse(str)
                 } catch (e: IllegalArgumentException) {
                     null
                 }

@@ -19,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.util.Locale
-import java.util.UUID
 import kotlin.random.Random
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
@@ -30,6 +29,8 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 
@@ -483,26 +484,27 @@ class ParseTests {
         df.parse()
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     @Test
-    fun `parse valid UUID`() {
-        val uuidString = "550e8400-e29b-41d4-a716-446655440000"
-        val column by columnOf(uuidString)
+    fun `parse valid Uuid`() {
+        val validUUID = "550e8400-e29b-41d4-a716-446655440000"
+        val column by columnOf(validUUID)
         val parsed = column.parse()
 
-        parsed.type() shouldBe typeOf<UUID>()
-        (parsed[0] as UUID).toString() shouldBe uuidString
+        parsed.type() shouldBe typeOf<Uuid>()
+        (parsed[0] as Uuid).toString() shouldBe validUUID // Change UUID to Uuid
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     @Test
-    fun `parse invalid UUID`(){
-            val invalidUUID = "this is not a UUID"
-            val column = columnOf(invalidUUID)
-            val parsed = column.tryParse() // tryParse as string is not formatted.
+    fun `parse invalid Uuid`() {
+        val invalidUUID = "this is not a UUID"
+        val column = columnOf(invalidUUID)
+        val parsed = column.tryParse() // tryParse as string is not formatted.
 
-            parsed.type() shouldNotBe typeOf<UUID>()
-            parsed.type() shouldBe typeOf<String>()
+        parsed.type() shouldNotBe typeOf<Uuid>()
+        parsed.type() shouldBe typeOf<String>()
     }
-
 
     /**
      * Asserts that all elements of the iterable are equal to each other
