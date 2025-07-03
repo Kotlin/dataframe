@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -242,7 +241,7 @@ public interface FirstColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("First0")
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
+    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.first(condition)) }
             .singleOrNullWithTransformerImpl()
@@ -276,7 +275,7 @@ public interface FirstColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.last]
      */
     @Interpretable("First1")
-    public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         asSingleColumn().firstCol(condition)
 
     /**
@@ -308,7 +307,7 @@ public interface FirstColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.last]
      */
     @Interpretable("First2")
-    public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().first(condition)
 
     /**
@@ -339,7 +338,7 @@ public interface FirstColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
      */
-    public fun String.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun String.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 
     /**
@@ -374,7 +373,7 @@ public interface FirstColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun KProperty<*>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 
     /**
@@ -405,7 +404,7 @@ public interface FirstColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
      */
-    public fun ColumnPath.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnPath.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 }
 
