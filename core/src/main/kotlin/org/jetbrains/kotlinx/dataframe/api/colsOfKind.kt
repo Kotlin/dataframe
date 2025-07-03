@@ -118,7 +118,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
+    ): ColumnSet<*> =
         columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
             filter = filter,
@@ -134,7 +134,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
+    ): ColumnSet<*> =
         asSingleColumn().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
             filter = filter,
@@ -150,7 +150,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
+    ): ColumnSet<*> =
         this.ensureIsColumnGroup().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
             filter = filter,
@@ -166,7 +166,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
      * @include [CommonColsOfKindDocs]
@@ -180,7 +180,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
      * @include [CommonColsOfKindDocs]
@@ -192,7 +192,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     // endregion
 }

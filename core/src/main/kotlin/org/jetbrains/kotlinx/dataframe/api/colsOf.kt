@@ -183,7 +183,7 @@ public interface ColsOfColumnsSelectionDsl {
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): TransformableColumnSet<C> =
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<C> =
     colsOfInternal(type, filter)
 
 /**
@@ -197,9 +197,8 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
 @Interpretable("ColsOf1")
-public inline fun <reified C> ColumnSet<*>.colsOf(
-    noinline filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = colsOf(typeOf<C>(), filter)
+public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: ColumnFilter<C> = { true }): ColumnSet<C> =
+    colsOf(typeOf<C>(), filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -209,10 +208,8 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> ColumnsSelectionDsl<*>.colsOf(
-    type: KType,
-    filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = asSingleColumn().colsOf(type, filter)
+public fun <C> ColumnsSelectionDsl<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<C> =
+    asSingleColumn().colsOf(type, filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -225,7 +222,7 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
 @Interpretable("ColsOf0")
 public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
     noinline filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = asSingleColumn().colsOf(typeOf<C>(), filter)
+): ColumnSet<C> = asSingleColumn().colsOf(typeOf<C>(), filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -237,10 +234,8 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> SingleColumn<DataRow<*>>.colsOf(
-    type: KType,
-    filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = ensureIsColumnGroup().colsOfInternal(type, filter)
+public fun <C> SingleColumn<DataRow<*>>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<C> =
+    ensureIsColumnGroup().colsOfInternal(type, filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -255,7 +250,7 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
 @Interpretable("ColsOf2")
 public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
     noinline filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = colsOf(typeOf<C>(), filter)
+): ColumnSet<C> = colsOf(typeOf<C>(), filter)
 
 /**
  * If this [ColumnsResolver] is a [SingleColumn], it
