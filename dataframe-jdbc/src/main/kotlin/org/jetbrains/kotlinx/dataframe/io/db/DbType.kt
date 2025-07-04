@@ -2,7 +2,10 @@ package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import java.sql.DatabaseMetaData
 import java.sql.ResultSet
 import kotlin.reflect.KType
 
@@ -20,6 +23,19 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @return The JDBC driver class name as a [String].
      */
     public abstract val driverClassName: String
+
+    /**
+     * The table type(s) (`TABLE_TYPE`) of ordinary tables in the SQL database, used by
+     * [getSchemaForAllSqlTables], and [readAllSqlTables] as a filter when querying the database
+     * for all the tables it has using [DatabaseMetaData.getTables].
+     *
+     * This is usually "TABLE" or "BASE TABLE", which is what [tableTypes] is set to by default,
+     * but it can be overridden to any custom list of table types, or `null` to let the JDBC integration
+     * return all types of tables.
+     *
+     * See [DatabaseMetaData.getTableTypes] for all supported table types of your specific database.
+     */
+    public open val tableTypes: List<String>? = listOf("TABLE", "BASE TABLE")
 
     /**
      * Returns a [ColumnSchema] produced from [tableColumnMetadata].
