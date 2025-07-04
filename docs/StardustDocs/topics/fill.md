@@ -4,6 +4,8 @@
 
 Replace missing values.
 
+Related operations: [update](update.md)
+
 ## fillNulls
 
 Replaces `null` values with given value or expression. 

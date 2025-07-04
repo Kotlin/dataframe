@@ -22,3 +22,6 @@ df.ungroup { name }
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.ungroup.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [group](group.md), [flatten](flatten.md)

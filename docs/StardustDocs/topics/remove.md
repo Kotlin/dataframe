@@ -28,3 +28,6 @@ df.remove("name", "weight")
 </tab></tabs>
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [add](add.md), [select](select.md)

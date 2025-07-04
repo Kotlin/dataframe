@@ -69,6 +69,8 @@ df.pivot { "city" then "name"["firstName"] }
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html" width="100%"/>
 <!---END-->
 
+Related operations: [gather](gather.md)
+
 ## pivot + groupBy
 
 To create a matrix table that is expanded both horizontally and vertically,

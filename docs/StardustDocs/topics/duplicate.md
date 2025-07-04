@@ -15,3 +15,6 @@ Returns [`DataFrame`](DataFrame.md) where rows that satisfy to the given [condit
 ```text
 DataFrame.duplicateRows(n) [ { rowCondition } ]: DataFrame
 ```
+
+
+Related operations: [append](append.md)

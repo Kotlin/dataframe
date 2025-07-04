@@ -34,3 +34,6 @@ df.convertTo<MySchema> {
 ```
 
 <!---END-->
+
+
+Related operations: [cast](cast.md)

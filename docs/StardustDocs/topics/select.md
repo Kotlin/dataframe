@@ -50,3 +50,6 @@ df.select("age", "weight")
 <!---END-->
 
 See [column selectors](ColumnSelectors.md)
+
+
+Related operations: [remove](remove.md)

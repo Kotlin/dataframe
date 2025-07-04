@@ -93,6 +93,8 @@ frameColumn.concat()
 
 If you want to take the union of columns (not rows) from several [`DataFrame`](DataFrame.md) objects, see [`add`](add.md).
 
+Related operations: [join](join.md)
+
 ## Schema unification
 
 If input [`DataFrame`](DataFrame.md) objects have different schemas, every column in the resulting [`DataFrame`](DataFrame.md) 

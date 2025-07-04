@@ -22,6 +22,8 @@ The following types of columns can be split easily:
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
+Related operations: [merge](merge.md)
+
 ## Split in place
 
 Stores split values as lists in their original columns.

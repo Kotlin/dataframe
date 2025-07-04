@@ -8,4 +8,7 @@ The resulting type of the column will be the nearest common supertype of all col
 ```text
 inferType [ { columns } ]
 ```
+
+
+Related operations: [parse](parse.md)
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.

@@ -108,3 +108,6 @@ df.excludeJoin(other, "name", "city")
 </tab></tabs>
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Join.joinSpecial.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [concat](concat.md)

@@ -27,3 +27,6 @@ df.group { all() }.into { it.type().toString() }.print()
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.group.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [ungroup](ungroup.md), [flatten](flatten.md)

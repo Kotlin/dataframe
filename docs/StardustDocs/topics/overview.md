@@ -68,16 +68,89 @@ This means you can define a function on an interface with some set of columns
 
 **Basics:**
 
-```kotlin
-val df = DataFrame.readCsv("titanic.csv", delimiter = ';')
-```
+<tabs>
+<tab title="File">
 
 ```kotlin
-// filter rows
-val someSurvivors = df.filter { survived && home.endsWith("NY") && age in 10..20 }
-    
+import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.io.*
+
+@DataSchema
+data class Titanic(
+    val age: Double?,
+    val boat: String?,
+    val body: Int?,
+    val cabin: String?,
+    val embarked: String?,
+    val fare: Double?,
+    val homedest: String?,
+    val name: String,
+    val parch: Int?,
+    val pclass: Int,
+    val sex: String?,
+    val sibsp: Int?,
+    val survived: Int,
+    val ticket: String
+)
+
+fun main() {
+    val df = DataFrame.readCsv(
+        "https://raw.githubusercontent.com/Kotlin/dataframe/refs/heads/master/data/titanic.csv",
+        delimiter = ';'
+    )
+        .cast<Titanic>()
+        .convert { survived }.with { it == 1 }
+        .convert { age }.toInt()
+
+    val someSurvivors = df.filter {
+        survived && homedest.orEmpty().endsWith("NY") && (age?.let { it in 10..20 } ?: false)
+    }
+
+    // add column
+    val withBirthYearColumn = df.add("birthYear") { 
+        age?.let { 1912 - it } 
+    }
+
+    // sort rows
+    val sortedByAge = df.sortByDesc { age }
+
+    // aggregate data
+    val aggregated = df.groupBy { pclass }.aggregate {
+        maxBy { age }.name into "oldest person"
+        count { survived } into "survived"
+    }
+}
+```
+
+</tab>
+<tab title="Notebook">
+
+```kotlin
+val raw = DataFrame.readCsv(
+    "https://raw.githubusercontent.com/Kotlin/dataframe/refs/heads/master/data/titanic.csv", 
+    delimiter = ';'
+)
+```
+
+Next cell:
+
+```kotlin
+val df = raw
+    .convert { survived }.with { it == 1 }
+    .convert { age }.toInt()
+```
+
+Next cell:
+
+```kotlin
+val someSurvivors = df.filter {
+    survived && homedest.orEmpty().endsWith("NY") && (age?.let { it in 10..20 } ?: false)
+}
+
 // add column
-val withBirthYearColumn = df.add("birthYear") { 1912 - age }
+val withBirthYearColumn = df.add("birthYear") { age?.let { 1912 - it } }
 
 // sort rows
 val sortedByAge = df.sortByDesc { age }
@@ -88,6 +161,9 @@ val aggregated = df.groupBy { pclass }.aggregate {
     count { survived } into "survived"
 }
 ```
+
+</tab>
+</tabs>
 
 The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
 

@@ -97,6 +97,9 @@ DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
 
 <!---END-->
 
+
+Related operations: [convert](convert.md), [inferType](inferType.md)
+
 For `locale`, this means that the one being used by the parser is defined as:
 
 ↪ The locale given as function argument directly, or in `parserOptions`, if it is not `null`, else

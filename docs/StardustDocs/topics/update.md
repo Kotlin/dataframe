@@ -85,3 +85,6 @@ df.update { name }.asFrame { select { lastName } }
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateAsFrame.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [convert](convert.md), [fill](fill.md)

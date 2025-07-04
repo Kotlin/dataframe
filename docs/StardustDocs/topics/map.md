@@ -91,3 +91,6 @@ df.mapToFrame {
 </tab></tabs>
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapMany.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [add](add.md)

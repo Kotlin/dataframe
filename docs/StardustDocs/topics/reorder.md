@@ -61,6 +61,8 @@ df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html" width="100%"/>
 <!---END-->
 
+Related operations: [move](move.md)
+
 ## reorderColumnsBy
 
 Reorders all columns

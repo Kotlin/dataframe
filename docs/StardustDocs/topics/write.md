@@ -221,3 +221,6 @@ On executing you should get two warnings:
 and
 
 > Column "isHappy" is not described in the target schema and was ignored
+
+
+Related operations: [read](read.md)

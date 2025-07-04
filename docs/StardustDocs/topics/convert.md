@@ -116,3 +116,6 @@ dataFrameOf("value")("1", "2") // note that values are strings; conversion is do
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToValueClass.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [update](update.md), [parse](parse.md), [unfold](unfold.md)

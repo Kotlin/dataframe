@@ -4,6 +4,8 @@
 
 Splits list-like values in given columns and spreads them vertically. Values in other columns are duplicated.
 
+**Reverse operation:** [`implode`](implode.md)
+
 ```text
 explode(dropEmpty = true) [ { columns } ]
 ```
@@ -17,8 +19,6 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 * [`DataFrame`](DataFrame.md)
 * [`FrameColumn`](DataColumn.md#framecolumn)
 * `DataColumn<Collection>`
-
-**Reverse operation:** [`implode`](implode.md)
 
 Exploded columns will change their types:
 * `List<T>` to `T`
