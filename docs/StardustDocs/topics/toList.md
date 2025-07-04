@@ -15,6 +15,8 @@ Data class properties are matched with [`DataFrame`](DataFrame.md) columns by na
 
 To export [`DataFrame`](DataFrame.md) into specific type of data class, use `toListOf`:
 
+Related operations: [toMap](toMap.md)
+
 ## toListOf
 
 Converts [`DataFrame`](DataFrame.md) into a [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of instances of given data class.

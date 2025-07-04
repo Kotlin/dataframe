@@ -75,3 +75,6 @@ df.merge { name.firstName and name.lastName }.by(",").intoList()
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeIntoList.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [split](split.md)

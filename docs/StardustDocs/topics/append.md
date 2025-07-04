@@ -7,3 +7,6 @@ df.append (
     "John", 17, 
     "Bill", 30)
 ```
+
+
+Related operations: [duplicate](duplicate.md)

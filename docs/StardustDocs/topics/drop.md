@@ -4,6 +4,8 @@
 
 Removes all rows that satisfy [row condition](DataRow.md#row-conditions)
 
+**Related operations**: [filter](filter.md), [distinct](distinct.md)
+
 <!---FUN dropWhere-->
 <tabs>
 <tab title="Properties">

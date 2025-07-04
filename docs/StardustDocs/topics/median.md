@@ -68,3 +68,6 @@ The following automatic type conversions are performed for the `median` operatio
 | Double -> Double                 | null                   |
 | Float -> Double                  | null                   |
 | Nothing -> Nothing               | null                   |
+
+
+Related operations: [mean](mean.md), [std](std.md)

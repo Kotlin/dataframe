@@ -57,3 +57,6 @@ pivoted.gather { "London".."Tokyo" }
 ```
 
 <!---END-->
+
+
+Related operations: [pivot](pivot.md)

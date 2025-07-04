@@ -59,3 +59,6 @@ The following automatic type conversions are performed for the `mean` operation:
 | Float -> Double                                                            | Double.NaN             |
 | Number -> Conversion([Common number type](numberUnification.md)) -> Double | Double.NaN             |
 | Nothing -> Double                                                          | Double.NaN             |
+
+
+Related operations: [median](median.md), [std](std.md)

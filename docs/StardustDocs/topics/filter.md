@@ -22,3 +22,5 @@ df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 </tab></tabs>
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.filter.html" width="100%"/>
 <!---END-->
+
+Related operations: [drop](drop.md), [distinct](distinct.md)

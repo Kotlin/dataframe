@@ -46,3 +46,6 @@ df.flatten()
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.flattenAll.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [group](group.md), [ungroup](ungroup.md)

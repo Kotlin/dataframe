@@ -12,3 +12,6 @@ df.reverse()
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.reverse.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [sortBy](sortBy.md), [shuffle](shuffle.md)

@@ -60,6 +60,8 @@ df.rename("age").into {
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.RenameToCamelCase-->
 
+Related operations: [move](move.md)
+
 ## renameToCamelCase
 
 A special case of `rename` that renames all column names in a DataFrame to "camelCase" format.

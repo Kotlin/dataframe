@@ -41,6 +41,8 @@ df.select("age", "name").distinct()
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctColumns.html" width="100%"/>
 <!---END-->
 
+Related operations: [filter](filter.md), [drop](drop.md)
+
 ## distinctBy
 
 Keep only the first row for every group of rows grouped by some condition.

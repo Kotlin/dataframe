@@ -46,3 +46,6 @@ df.insert(score).at(2)
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.insertColumn.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [replace](replace.md)

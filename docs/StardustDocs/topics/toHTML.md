@@ -8,6 +8,8 @@ that can be found in project resources.
 
 Depending on your environment there can be different ways to use result of `toHtml` functions
 
+Related operations: [format](format.md)
+
 ## IntelliJ IDEA
 
 ### Working with result

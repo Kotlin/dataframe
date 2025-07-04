@@ -29,3 +29,6 @@ df.implode { name and age and weight and isHappy }
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.implode.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [explode](explode.md)

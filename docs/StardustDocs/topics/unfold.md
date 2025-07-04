@@ -58,3 +58,6 @@ df.rename { response.data }.into("description")
 ```
 
 <!---END-->
+
+
+Related operations: [convert](convert.md)

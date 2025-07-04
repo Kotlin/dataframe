@@ -35,3 +35,6 @@ df.pivot { name.firstName }.groupBy { name.lastName }.count()
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.countAggregation.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [countDistinct](countDistinct.md), [valueCounts](valueCounts.md)

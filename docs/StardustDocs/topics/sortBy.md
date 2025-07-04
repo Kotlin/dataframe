@@ -33,6 +33,8 @@ df.sortBy { "weight".nullsLast() }
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html" width="100%"/>
 <!---END-->
 
+Related operations: [shuffle](shuffle.md), [reverse](reverse.md)
+
 ## sortByDesc
 
 Returns [`DataFrame`](DataFrame.md) sorted by one or several columns in descending order.

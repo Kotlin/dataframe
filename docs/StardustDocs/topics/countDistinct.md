@@ -31,3 +31,6 @@ df.countDistinct()
 ```
 
 <!---END-->
+
+
+Related operations: [count](count.md), [valueCounts](valueCounts.md)

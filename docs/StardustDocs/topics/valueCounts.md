@@ -28,3 +28,6 @@ df.valueCounts { name and city }
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.valueCounts.html" width="100%"/>
 <!---END-->
+
+
+Related operations: [count](count.md), [countDistinct](countDistinct.md)

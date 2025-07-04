@@ -5,3 +5,6 @@ Converts [`DataFrame`](DataFrame.md) into `Map<String, List<*>>` from column nam
 ```
 toMap()
 ```
+
+
+Related operations: [toList](toList.md)
