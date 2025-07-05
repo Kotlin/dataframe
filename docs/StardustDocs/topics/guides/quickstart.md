@@ -349,7 +349,7 @@ Ready to go deeper? Check out what’s next:
 
 - 🛠️ **[Browse the operations overview](operations.md)** to learn what Kotlin DataFrame can do.
 
-- 🧠 **Understand the design** and core concepts in the [library overview](overview.md).
+- 🧠 **Understand the design** and core concepts in the [library overview](concepts.md).
 
 - 🔤 **[Learn more about Extension Properties](extensionPropertiesApi.md)**  
   and make working with your data both convenient and type-safe.

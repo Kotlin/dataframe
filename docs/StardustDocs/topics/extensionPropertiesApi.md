@@ -104,7 +104,7 @@ See the [](quickstart.md) in Kotlin Notebook with basic Extension Properties API
 <tab title="Compiler Plugin">
 
 For now, if you read [`DataFrame`](DataFrame.md) from a file or URL, you need to define its schema manually. 
-You can do it quickly with [`generate..()` methods](DataSchema-Data-Classes-Generation.md).
+You can do it quickly with [`generate..()` methods](DataSchemaGenerationMethods.md).
 
 Define schemas:
 ```kotlin

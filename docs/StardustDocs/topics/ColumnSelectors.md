@@ -260,7 +260,7 @@ For instance, excluding `userData.age`:
 `df.select { colsAtAnyDepth { "a" in it.name() } except userData.age }`
 
 Note that the selection of columns to exclude from column sets is always done relative to the outer scope.
-Use the [Extension Properties API](extensionPropertiesApi.md) to prevent scoping issues if possible.
+Use the [Extension Properties API](concepts/extensionPropertiesApi.md) to prevent scoping issues if possible.
 
 > Special case: If a column that needs to be removed appears multiple times in the [`ColumnSet`](#column-resolvers),
 > it is excepted each time it is encountered (including inside [Column Groups](DataColumn.md#columngroup)).
@@ -392,11 +392,11 @@ This function behaves the same as [`cols {}` and `[{}]`](ColumnSelectors.md#cols
 Creates a [`ColumnSet`](#column-resolvers) containing the columns from both the left and right side of the function. This allows
 you to combine selections or simply select multiple columns at once.
 
-Any combination of [AccessApi](apiLevels.md) can be used on either side of the `and` operator.
+Any combination of [AccessApi](concepts/apiLevels.md) can be used on either side of the `and` operator.
 
 Note, while you can write `col1 and col2 and col3...`, it may be more concise to use
 [`cols(col1, col2, col3...)`](ColumnSelectors.md#cols) instead. The only downside is that you can't mix
-[Access APIs](apiLevels.md) with that notation.
+[Access APIs](concepts/apiLevels.md) with that notation.
 
 ##### Rename {collapsible="true"}
 `colA named "colB"`, `colA into namedColAccessor`
@@ -404,7 +404,7 @@ Note, while you can write `col1 and col2 and col3...`, it may be more concise to
 Renaming a column in the Columns Selection DSL is done by calling the infix functions 
 `named` or `into`.
 They behave exactly the same, so it's up to contextual preference which one to use.
-Any combination of [Access API](apiLevels.md) can be used to specify the column to rename 
+Any combination of [Access API](concepts/apiLevels.md) can be used to specify the column to rename 
 and which name should be used instead.
 
 ##### Expr (Column Expression) {collapsible="true"}

@@ -16,7 +16,7 @@ In the Kotlin DataFrame library, we provide two different ways to access columns
 
 Here's a list of all APIs in order of increasing safety.
 
-* [**String API**](stringApi.md) <br/>
+* **String API** <br/>
   Columns are accessed by `string` representing their name. Type-checking is done at runtime, name-checking too.
 
 * [**Extension Properties API**](extensionPropertiesApi.md) <br/>
@@ -80,7 +80,7 @@ The `titanic.csv` file can be found [here](https://github.com/Kotlin/dataframe/b
 
 # Comparing APIs
 
-The [String API](stringApi.md) is the simplest and unsafest of them all. The main advantage of it is that it can be
+The String API is the simplest and unsafest of them all. The main advantage of it is that it can be
 used at any time, including when accessing new columns in chain calls. So we can write something like:
 
 ```kotlin
