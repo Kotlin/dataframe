@@ -20,6 +20,7 @@
         <toc-element topic="gettingStartedJupyterNotebook.md"/>
         <toc-element topic="gettingStartedDatalore.md"/>
         <toc-element topic="gettingStartedGradleAdvanced.md"/>
+        <toc-element topic="Modules.md"/>
     </toc-element>
     <toc-element topic="overview.md">
         <toc-element topic="apiLevels.md">
