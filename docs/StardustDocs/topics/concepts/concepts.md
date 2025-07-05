@@ -18,9 +18,9 @@ understand key concepts, motivation, and the overall structure of the library.
 <show-structure depth="3"/>
 
 
-## What is Dataframe
+## What is a dataframe
 
-Dataframe is an abstraction for working with structured data. 
+A *dataframe* is an abstraction for working with structured data. 
 Essentially, it’s a 2-dimensional table with labeled columns of potentially different types. 
 You can think of it like a spreadsheet or SQL table, or a dictionary of series objects.
 

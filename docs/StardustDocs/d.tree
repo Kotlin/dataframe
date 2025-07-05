@@ -21,7 +21,7 @@
         <toc-element topic="gettingStartedDatalore.md"/>
         <toc-element topic="gettingStartedGradleAdvanced.md"/>
     </toc-element>
-    <toc-element topic="concepts.md">
+    <toc-element topic="concepts.md" accepts-web-file-names="overview.html">
         <toc-element topic="apiLevels.md"/>
         <toc-element topic="types.md">
             <toc-element topic="DataFrame.md"/>
