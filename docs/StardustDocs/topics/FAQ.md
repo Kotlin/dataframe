@@ -123,6 +123,8 @@ you now have a more flexible and powerful alternative.
 Annotate your Kotlin class with [`@DataSchema`](Compiler-Plugin.md#dataschema-declarations),  
 and the plugin will automatically generate type-safe extension properties 
 for your [`DataFrame`](DataFrame.md).
+Or alternatively, call [`toDataFrame()`](createDataFrame.md#todataframe) on a list of Kotlin or Java objects, 
+and the resulting `DataFrame` will have schema according to their properties or getters.
 
 See [compiler plugin examples](Compiler-Plugin.md#examples).
 
@@ -146,6 +148,10 @@ with hierarchical structure — using `FrameColumn`
 
 Both [dataframe schemas](schemas.md) and [extension properties](extensionPropertiesApi.md)
 fully support nested data structures, allowing type-safe access and transformations at any depth.
+
+See [](hierarchical.md) for more information.
+
+Also, you can transform your data into grouped structures using [`groupBy`](groupBy.md) or [`pivot`](pivot.md).
 
 ## Does Kotlin DataFrame support OpenAPI schemas?
 
