@@ -41,9 +41,9 @@ public inline fun <reified T> AnyFrame.castTo(
 ): DataFrame<T> = cast<T>(verify = verify)
 
 /**
- * With the compiler plugin, schema marker T of DataFrame can be a local type.
- * You cannot refer to it directly from your code, like a type argument for cast.
- * The example below shows a situation where you'd need to cast DataFrame<*> to DataFrame<plugin generated local type>.
+ * With the compiler plugin, schema marker `T` of `DataFrame` can be a local type.
+ * You cannot refer to it directly from your code, like making it a type argument for `cast`.
+ * The example below shows a situation where you'd need to cast `DataFrame<*>` to `DataFrame<plugin generated local type>`.
  * This function helps by inferring type from [schemaFrom]
  * ```
  *
