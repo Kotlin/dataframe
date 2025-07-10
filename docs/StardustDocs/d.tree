@@ -22,12 +22,16 @@
         <toc-element topic="gettingStartedGradleAdvanced.md"/>
         <toc-element topic="Modules.md"/>
     </toc-element>
-    <toc-element topic="overview.md">
-        <toc-element topic="apiLevels.md">
-            <toc-element topic="stringApi.md"/>
-            <toc-element topic="extensionPropertiesApi.md"/>
+    <toc-element topic="concepts.md" accepts-web-file-names="overview.html">
+        <toc-element topic="apiLevels.md"/>
+        <toc-element topic="types.md">
+            <toc-element topic="DataFrame.md"/>
+            <toc-element topic="DataColumn.md"/>
+            <toc-element topic="DataRow.md"/>
         </toc-element>
         <toc-element topic="hierarchical.md"/>
+        <toc-element topic="nanAndNa.md"/>
+        <toc-element topic="numberUnification.md"/>
         <toc-element topic="schemas.md">
             <toc-element topic="schemasGradle.md"/>
             <toc-element topic="schemasJupyter.md"/>
@@ -37,20 +41,16 @@
             <toc-element topic="schemasImportSqlGradle.md"/>
             <toc-element topic="schemasImportOpenApiGradle.md"/>
             <toc-element topic="schemasImportOpenApiJupyter.md"/>
+            <toc-element topic="DataSchemaGenerationGradle.md"/>
         </toc-element>
     </toc-element>
-    <toc-element topic="types.md">
-        <toc-element topic="DataFrame.md"/>
-        <toc-element topic="DataColumn.md"/>
-        <toc-element topic="DataRow.md"/>
-    </toc-element>
+    <toc-element topic="extensionPropertiesApi.md"/>
+    <toc-element topic="DataSchemaGenerationMethods.md"/>
     <toc-element topic="Compiler-Plugin.md">
         <toc-element topic="staticInterpretation.md"/>
         <toc-element topic="dataSchema.md"/>
         <toc-element topic="compilerPluginExamples.md"/>
     </toc-element>
-    <toc-element topic="nanAndNa.md"/>
-    <toc-element topic="numberUnification.md"/>
     <toc-element topic="operations.md">
         <toc-element topic="create.md">
             <toc-element topic="createColumn.md" toc-title="DataColumn"/>
@@ -200,8 +200,6 @@
             <toc-element topic="jupyterRendering.md"/>
         </toc-element>
     </toc-element>
-    <toc-element topic="DataSchema-Data-Classes-Generation.md">
-        <toc-element topic="gradleReference.md"/>
-    </toc-element>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
+    <toc-element topic="Support.md"/>
 </instance-profile>
