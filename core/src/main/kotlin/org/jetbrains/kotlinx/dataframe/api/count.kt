@@ -40,16 +40,13 @@ public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int =
 /**
  * Returns the number of columns in this [DataRow].
  *
- * For more information: {@include [DocumentationUrls.Count]}
- *
  * @return the number of columns in this row.
+ * @see [columnsCount].
  */
 public fun AnyRow.count(): Int = columnsCount()
 
 /**
  * Counts the number of elements in the current row that satisfy the given [predicate].
- *
- * For more information: {@include [DocumentationUrls.Count]}
  *
  * @param predicate A predicate function to test each element.
  * The predicate should return `true` for elements to be counted.
@@ -110,7 +107,7 @@ public inline fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().
  *
  * This is equivalent to applying `.aggregate { count() }`, but more efficient.
  *
- * See also common [aggregate][Grouped.aggregate].
+ * See also [DataFrame.groupBy] and common [aggregate][Grouped.aggregate].
  *
  * For more information: {@include [DocumentationUrls.Count]}
  *
@@ -143,7 +140,7 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
  *
  * This is equivalent to calling `.aggregate { count(predicate) }`, but more efficient.
  *
- * See also: common [aggregate][Grouped.aggregate].
+ * See also [DataFrame.groupBy] and common [aggregate][Grouped.aggregate].
  *
  * For more information: {@include [DocumentationUrls.Count]}
  *
@@ -186,6 +183,7 @@ public inline fun <T> Grouped<T>.count(
  * This is equivalent to calling `.aggregate { count() }`, but more efficient.
  *
  * See also:
+ * - [pivot].
  * - common [aggregate][Pivot.aggregate].
  * - [pivotCounts][DataFrame.pivotCounts] shortcut.
  *
@@ -223,6 +221,7 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
  * This is equivalent to calling `.aggregate { count(predicate) }`, but more efficient.
  *
  * See also:
+ * - [pivot].
  * - common [aggregate][Pivot.aggregate].
  * - [pivotCounts][DataFrame.pivotCounts] shortcut.
  *
@@ -261,6 +260,7 @@ public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataR
  * This is equivalent to calling `.aggregate { count() }`, but more efficient.
  *
  * See also:
+ *  - [pivot], [DataFrame.groupBy], [Pivot.groupBy] and [GroupBy.pivot].
  *  - common [aggregate][PivotGroupBy.aggregate];
  *  - [GroupBy.pivotCounts] shortcut.
  *
@@ -297,6 +297,7 @@ public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() defau
  * This is equivalent to calling `.aggregate { count() }`, but more efficient.
  *
  * See also:
+ *  - [pivot], [DataFrame.groupBy], [Pivot.groupBy] and [GroupBy.pivot].
  *  - common [aggregate][PivotGroupBy.aggregate];
  *  - [GroupBy.pivotCounts] shortcut.
  *
@@ -314,8 +315,7 @@ public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() defau
  */
 public inline fun <T> PivotGroupBy<T>.count(crossinline predicate: RowFilter<T>): DataFrame<T> =
     aggregate {
-        count(predicate) default
-            0
+        count(predicate) default 0
     }
 
 // endregion

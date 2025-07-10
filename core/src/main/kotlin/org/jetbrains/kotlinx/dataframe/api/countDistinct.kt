@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -31,7 +32,7 @@ import kotlin.reflect.KProperty
 public fun AnyFrame.countDistinct(): Int = countDistinct { all() }
 
 /**
- * Returns number of distinct combinations of values in selected [columns] in this [DataFrame].
+ * Returns number of distinct combinations of values in selected [columns\] in this [DataFrame].
  *
  * Compares values in the selected columns and returns
  * the number of unique values combinations.
@@ -44,6 +45,7 @@ public fun AnyFrame.countDistinct(): Int = countDistinct { all() }
  *
  * ### This [countDistinct] overload
  */
+@ExcludeFromSources
 internal interface CountDistinctDocs
 
 /**
