@@ -132,7 +132,7 @@ dependencies {
 
 ## Core Kotlin DataFrame modules {id="core-modules"}
 
-### `dataframe-core`
+#### `dataframe-core`
 
 The core [DataFrame](DataFrame.md) API and its implementation.  
 Includes all core functionality for working with data structures, expressions, schema management, and operations.
@@ -372,7 +372,7 @@ dependencies {
 
 These modules are experimental and may be unstable.
 
-### `dataframe-geo`
+#### `dataframe-geo`
 
 Provides a new API for working with geospatial data, 
 including reading and writing geospatial formats (GeoJSON, Shapefile), 
@@ -414,7 +414,7 @@ dependencies {
 </tab>
 </tabs>
 
-### `dataframe-openapi`
+#### `dataframe-openapi`
 
 Provides functionality to support auto-generated data schemas from OpenAPI 3.0.0 specifications.  
 This module is a companion to [`dataframe-openapi-generator`](#dataframe-openapi-generator):
@@ -452,7 +452,7 @@ dependencies {
 </tab>
 </tabs>
 
-### `dataframe-openapi-generator`
+#### `dataframe-openapi-generator`
 
 Provides the logic and tooling necessary to import OpenAPI 3.0.0 specifications  
 as auto-generated data schemas for Kotlin DataFrame.  
@@ -495,7 +495,7 @@ dependencies {
 
 <!-- TODO improve compiler plugin setup after release--->
 
-## `kotlin.plugin.dataframe` — Kotlin DataFrame Compiler Plugin {id="kotlin.plugin.dataframe"}
+#### `kotlin.plugin.dataframe` — Kotlin DataFrame Compiler Plugin {id="kotlin.plugin.dataframe"}
 
 The Kotlin DataFrame compiler plugin enables support for [extension properties](extensionPropertiesApi.md)  
 in Gradle projects, allowing you to work with dataframes in a name- and type-safe manner.
@@ -506,12 +506,13 @@ and usage instructions for Gradle projects.
 Published as a Kotlin official plugin.
 [Source code is available in the Kotlin repository](https://github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe).
 
-## `kotlinx.dataframe` – Gradle Plugin {id="kotlinx.dataframe"}
+#### `kotlinx.dataframe` – Gradle Plugin {id="kotlinx.dataframe"}
 
-The Gradle plugin allows generating [data schemas](schemas.md) for external resources  
-using Gradle, so you can use them seamlessly in your project.
+The Gradle plugin allows generating [data schemas](schemas.md) from samples of data  
+(of supported formats) like JSON, CSV, Excel files, or URLs, as well as from data fetched from SQL databases  
+using Gradle.
 
-See the [Gradle Plugin Reference](gradleReference.md) for installation  
+See the [Gradle Plugin Reference](DataSchemaGenerationGradle.md) for installation  
 and usage instructions in Gradle projects.
 
 > By default, the Gradle plugin also applies the [KSP plugin](#ksp-plugin).
@@ -537,10 +538,11 @@ plugins {
 </tabs> 
 
 
-## `kotlinx.dataframe:symbol-processor-all` – KSP Plugin {id="ksp-plugin"}
+#### `kotlinx.dataframe:symbol-processor-all` – KSP Plugin {id="ksp-plugin"}
 
-The KSP plugin allows generating [data schemas](schemas.md) from external resources  
-using Kotlin Symbol Processing (KSP). 
+The Gradle plugin allows generating [data schemas](schemas.md) from samples of data  
+(of supported formats) like JSON, CSV, Excel files, or URLs, as well as from data fetched from SQL databases  
+using Kotlin Symbol Processing (KSP).
 This is useful for projects where you prefer or require schema generation at the source level.
 
 See [Data Schemas in Gradle Projects](schemasGradle.md) for usage details.
