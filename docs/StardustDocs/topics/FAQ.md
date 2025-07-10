@@ -167,8 +167,8 @@ for details and examples.
 Yes — the experimental `dataframe-geo` module provides functionality for working with geospatial data,  
 including support for reading and writing GeoJSON and Shapefile formats, as well as tools for manipulating geometry types.
 
-See the [GeoDataFrame Guide](https://kotlin.github.io/kandy/geo-plotting-guide.html)  
-for details and examples with beautiful [Kandy](https://kotlin.github.io/kandy) geo visualizations.
+See the [GeoDataFrame Guide](https://kotlin.github.io/kandy/geo-plotting-guide.html) for details 
+and examples with beautiful [Kandy](https://kotlin.github.io/kandy) geo visualizations.
 
 ## What is the difference between Compiler Plugin, Gradle Plugin, and KSP Plugin?
 
