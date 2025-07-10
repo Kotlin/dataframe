@@ -8,6 +8,8 @@ Returns [`DataFrame`](DataFrame.md) without selected columns.
 remove { columns }
 ```
 
+Related operations: [](addRemove.md)
+
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN remove-->

@@ -5,6 +5,8 @@
 Creates [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/), [DataFrame](DataFrame.md) or [DataColumn](DataColumn.md) 
 with values computed from rows of original [DataFrame](DataFrame.md).
 
+**Related operations**: [](addRemove.md)
+
 **Map into `List`:**
 
 ```text

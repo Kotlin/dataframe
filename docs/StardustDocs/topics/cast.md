@@ -7,6 +7,8 @@ Changes the type argument of the [`DataFrame`](DataFrame.md) instance without ch
 cast<T>(verify = false)
 ```
 
+Related operations: [](adjustSchema.md)
+
 **Parameters:**
 * `verify: Boolean = false` —
   when `true`, the function throws an exception if the [`DataFrame`](DataFrame.md) instance doesn't match the given schema. 
