@@ -9,7 +9,8 @@ If you haven’t found an answer to yours, feel free to ask it on:
 
 ## What is Kotlin DataFrame?
 
-**Kotlin DataFrame** is a Kotlin library for working with tabular data.  
+**Kotlin DataFrame** is an official open-source Kotlin framework written in pure 
+Kotlin for working with tabular data.  
 Its goal is to reconcile Kotlin’s static typing with the dynamic nature of data,  
 providing a flexible and convenient idiomatic DSL for working with data in Kotlin.
 
@@ -28,7 +29,7 @@ Yes — Kotlin DataFrame can be used in Android projects.
 There is no dedicated Android artifact yet, but you can include the standard **JVM artifact**  
 by setting up a [custom Gradle configuration](gettingStartedGradleAdvanced.md).
 
-## How to start with Kotlin DataFrame
+## How to start with Kotlin DataFrame ?
 
 If you're new to Kotlin DataFrame, the [Quickstart guide](quickstart.md) is the perfect place to begin —  
 it gives a brief yet comprehensive introduction to the basics of working with DataFrame.
@@ -173,7 +174,7 @@ for details and examples with beautiful [Kandy](https://kotlin.github.io/kandy) 
 
 All these plugins relate to working with [dataframe schemas](schemas.md), but they serve different purposes:
 
-- **[Gradle Plugin](gradleReference.md)** and **[KSP Plugin](https://github.com/Kotlin/dataframe/tree/master/plugins/symbol-processor)** 
+- **[Gradle Plugin](DataSchemaGenerationGradle.md)** and **[KSP Plugin](https://github.com/Kotlin/dataframe/tree/master/plugins/symbol-processor)** 
  are used to **generate data schemas** from external sources as part of the Gradle build process.
 
     - **Gradle Plugin**: You declare the data source in your `build.gradle.kts` file  
@@ -204,6 +205,4 @@ To report bugs or suggest improvements, open an issue on the
 You’re also welcome to ask questions or discuss anything related to Kotlin DataFrame in the  
 [#datascience](https://slack-chats.kotlinlang.org/c/datascience) channel on Kotlin Slack.  
 If you’re not yet a member, you can 
-[request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up?_gl=1*1ssyqy3*_gcl_au*MTk5NzUwODYzOS4xNzQ2NzkxMDMz*FPAU*MTk5NzUwODYzOS4xNzQ2NzkxMDMz*_ga*MTE0ODQ1MzY3OS4xNzM4OTY1NzM3*_ga_9J976DJZ68*czE3NTE1NDUxODUkbzIyNyRnMCR0MTc1MTU0NTE4NSRqNjAkbDAkaDA.).
-
-
+[request an invitation](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up?_gl=1*1ssyqy3*_gcl_au*MTk5NzUwODYzOS4xNzQ2NzkxMDMz*FPAU*MTk5NzUwODYzOS4xNzQ2NzkxMDMz*_ga*MTE0ODQ1MzY3OS4xNzM4OTY1NzM3*_ga_9J976DJZ68*czE3NTE1NDUxODUkbzIyNyRnMCR0MTc1MTU0NTE4NSRqNjAkbDAkaDA.).
