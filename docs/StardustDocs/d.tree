@@ -92,73 +92,61 @@
             </toc-element>
         </toc-element>
         <toc-element topic="modify.md">
-            <toc-element topic="sliceRows.md">
-                <toc-element topic="xs.md"/>
-            </toc-element>
+            <toc-element topic="add.md"/>
+            <toc-element topic="adjustSchema.md"/>
+            <toc-element topic="append.md"/>
+            <toc-element topic="cast.md"/>
+            <toc-element topic="concat.md"/>
+            <toc-element topic="convert.md"/>
+            <toc-element topic="convertTo.md"/>
+            <toc-element topic="distinct.md"/>
+            <toc-element topic="drop.md"/>
+            <toc-element topic="duplicate.md"/>
+            <toc-element topic="explode.md"/>
+            <toc-element topic="fill.md"/>
+            <toc-element topic="filter.md"/>
+            <toc-element topic="flatten.md"/>
+            <toc-element topic="gather.md"/>
+            <toc-element topic="group.md"/>
+            <toc-element topic="groupBy.md"/>
+            <toc-element topic="implode.md"/>
+            <toc-element topic="inferType.md"/>
+            <toc-element topic="insert.md"/>
+            <toc-element topic="join.md"/>
+            <toc-element topic="joinWith.md"/>
+            <toc-element topic="map.md"/>
+            <toc-element topic="merge.md"/>
+            <toc-element topic="move.md"/>
+            <toc-element topic="parse.md"/>
+            <toc-element topic="pivot.md"/>
+            <toc-element topic="remove.md"/>
+            <toc-element topic="rename.md"/>
+            <toc-element topic="reorder.md"/>
+            <toc-element topic="replace.md"/>
+            <toc-element topic="reverse.md"/>
             <toc-element topic="select.md"/>
-            <toc-element topic="filterRows.md">
-                <toc-element topic="filter.md"/>
-                <toc-element topic="drop.md"/>
-                <toc-element topic="distinct.md"/>
-            </toc-element>
-            <toc-element topic="reorderRows.md">
-                <toc-element topic="sortBy.md"/>
-                <toc-element topic="shuffle.md"/>
-                <toc-element topic="reverse.md"/>
-            </toc-element>
-            <toc-element topic="groupByConcat.md">
-                <toc-element topic="groupBy.md"/>
-                <toc-element topic="concat.md"/>
-            </toc-element>
-            <toc-element topic="updateConvert.md">
-                <toc-element topic="update.md">
-                    <toc-element topic="fill.md"/>
-                </toc-element>
-                <toc-element topic="convert.md">
-                    <toc-element topic="parse.md"/>
-                    <toc-element topic="unfold.md"/>
-                </toc-element>
-                <toc-element topic="inferType.md"/>
-            </toc-element>
-            <toc-element topic="splitMerge.md">
-                <toc-element topic="split.md"/>
-                <toc-element topic="merge.md"/>
-            </toc-element>
-            <toc-element topic="addRemove.md">
-                <toc-element topic="add.md"/>
-                <toc-element topic="map.md"/>
-                <toc-element topic="remove.md"/>
-            </toc-element>
-            <toc-element topic="moveRename.md">
-                <toc-element topic="move.md"/>
-                <toc-element topic="rename.md"/>
-                <toc-element topic="reorder.md"/>
-            </toc-element>
-            <toc-element topic="groupUngroupFlatten.md">
-                <toc-element topic="group.md"/>
-                <toc-element topic="ungroup.md"/>
-                <toc-element topic="flatten.md"/>
-            </toc-element>
-            <toc-element topic="insertReplace.md">
-                <toc-element topic="insert.md"/>
-                <toc-element topic="replace.md"/>
-            </toc-element>
-            <toc-element topic="explodeImplode.md">
-                <toc-element topic="explode.md"/>
-                <toc-element topic="implode.md"/>
-            </toc-element>
-            <toc-element topic="pivotGather.md">
-                <toc-element topic="pivot.md"/>
-                <toc-element topic="gather.md"/>
-            </toc-element>
-            <toc-element topic="appendDuplicate.md">
-                <toc-element topic="append.md"/>
-                <toc-element topic="duplicate.md"/>
-            </toc-element>
-            <toc-element topic="adjustSchema.md">
-                <toc-element topic="cast.md"/>
-                <toc-element topic="convertTo.md"/>
-            </toc-element>
+            <toc-element topic="shuffle.md"/>
+            <toc-element topic="sliceRows.md"/>
+            <toc-element topic="sortBy.md"/>
+            <toc-element topic="split.md"/>
+            <toc-element topic="toList.md"/>
+            <toc-element topic="unfold.md"/>
+            <toc-element topic="ungroup.md"/>
+            <toc-element topic="update.md"/>
+            <toc-element topic="xs.md"/>
+            <toc-element topic="addRemove.md" hidden="true"/>
+            <toc-element topic="sliceRows.md" hidden="true"/>
+            <toc-element topic="filterRows.md" hidden="true"/>
+            <toc-element topic="reorderRows.md" hidden="true"/>
+            <toc-element topic="groupByConcat.md" hidden="true"/>
+            <toc-element topic="updateConvert.md" hidden="true"/>
+            <toc-element topic="splitMerge.md" hidden="true"/>
+            <toc-element topic="moveRename.md" hidden="true"/>
+            <toc-element topic="groupUngroupFlatten.md" hidden="true"/>
+            <toc-element topic="insertReplace.md" hidden="true"/>
+            <toc-element topic="explodeImplode.md" hidden="true"/>
+            <toc-element topic="pivotGather.md" hidden="true"/>
+            <toc-element topic="appendDuplicate.md" hidden="true"/>
         </toc-element>
         <toc-element toc-title="Statistics">
             <toc-element topic="summaryStatistics.md">

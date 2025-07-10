@@ -15,6 +15,8 @@ merge { columns }
 merger: (DataRow).List<T> -> Any
 ```
 
+**Related operations**: [](splitMerge.md)
+
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN merge-->

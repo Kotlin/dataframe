@@ -1,8 +1,10 @@
-[//]: # (title: drop)
+[//]: # (title: drop / dropNulls / dropNaNs / dropNA)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
 Removes all rows that satisfy [row condition](DataRow.md#row-conditions)
+
+**Related operations**: [](filterRows.md)
 
 <!---FUN dropWhere-->
 <tabs>

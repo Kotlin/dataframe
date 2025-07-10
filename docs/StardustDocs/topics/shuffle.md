@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with randomly reordered rows.
 
+**Related operations**: [](reorderRows.md)
+
 <!---FUN shuffle-->
 
 ```kotlin
