@@ -131,7 +131,7 @@ dataframes {
 }
 ```
 
-See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
+See [reference](DataSchemaGenerationGradle.md) and [examples](DataSchemaGenerationGradle.md#examples) for more details.
 
 </tab>
 </tabs>

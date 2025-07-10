@@ -1,4 +1,4 @@
-[//]: # (title: Gradle plugin reference)
+[//]: # (title: Data Shemas Generation in Gradle)
 
 This page describes the Gradle plugin that generates `@DataSchema` from data samples.
 ```Kotlin
