@@ -489,7 +489,20 @@ class ParseTests {
     fun `parse valid Uuid`() {
         val validUUID = "550e8400-e29b-41d4-a716-446655440000"
         val column by columnOf(validUUID)
+        val parsed = column.parse(ParserOptions(parseExperimentalUuid = true))
+
+        parsed.type() shouldBe typeOf<Uuid>()
+        (parsed[0] as Uuid).toString() shouldBe validUUID // Change UUID to Uuid
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    @Test
+    fun `parse valid Uuid with GlobalParserOptions`() {
+        val validUUID = "550e8400-e29b-41d4-a716-446655440000"
+        val column by columnOf(validUUID)
+        DataFrame.parser.parseExperimentalUuid = true
         val parsed = column.parse()
+        DataFrame.parser.resetToDefault()
 
         parsed.type() shouldBe typeOf<Uuid>()
         (parsed[0] as Uuid).toString() shouldBe validUUID // Change UUID to Uuid
@@ -500,6 +513,20 @@ class ParseTests {
     fun `parse invalid Uuid`() {
         val invalidUUID = "this is not a UUID"
         val column = columnOf(invalidUUID)
+        // tryParse as string is not formatted.
+        val parsed = column.tryParse(
+            ParserOptions(parseExperimentalUuid = true),
+        )
+
+        parsed.type() shouldNotBe typeOf<Uuid>()
+        parsed.type() shouldBe typeOf<String>()
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    @Test
+    fun `do not parse Uuid by default`() {
+        val validUUID = "550e8400-e29b-41d4-a716-446655440000"
+        val column = columnOf(validUUID)
         val parsed = column.tryParse() // tryParse as string is not formatted.
 
         parsed.type() shouldNotBe typeOf<Uuid>()
