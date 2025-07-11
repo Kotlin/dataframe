@@ -201,4 +201,5 @@
     </toc-element>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
     <toc-element topic="Support.md"/>
+    <toc-element topic="DataSources.md"/>
 </instance-profile>
