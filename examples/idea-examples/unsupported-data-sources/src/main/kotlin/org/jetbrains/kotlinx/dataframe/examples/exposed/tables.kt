@@ -59,7 +59,7 @@ fun main() {
     // we use a NameNormalizer to let DataFrame generate the same accessors as in the Table
     // while keeping the correct column names
     schema.generateDataClasses(
-        name = "DfCustomers",
+        markerName = "DfCustomers",
         nameNormalizer = nameNormalizer,
     ).print()
 }

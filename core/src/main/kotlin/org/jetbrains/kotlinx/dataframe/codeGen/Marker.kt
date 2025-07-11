@@ -4,6 +4,13 @@ import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 
+/**
+ * Which type of visibility the marker (generated class-like code declaration)
+ * will have:
+ * - [INTERNAL][INTERNAL]: "internal"
+ * - [IMPLICIT_PUBLIC][IMPLICIT_PUBLIC]: ""
+ * - [EXPLICIT_PUBLIC][EXPLICIT_PUBLIC]: "public"
+ */
 public enum class MarkerVisibility {
     INTERNAL,
     IMPLICIT_PUBLIC,
