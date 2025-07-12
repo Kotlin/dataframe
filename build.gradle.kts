@@ -63,6 +63,7 @@ dependencies {
 
     // experimental, so not included by default:
     // api(projects.dataframeOpenapi)
+    // api(projects.dataframeSpring)
 
 //    kover(projects.core)
 //    kover(projects.dataframeArrow)
