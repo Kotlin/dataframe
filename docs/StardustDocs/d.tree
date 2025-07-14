@@ -32,19 +32,19 @@
         <toc-element topic="hierarchical.md"/>
         <toc-element topic="nanAndNa.md"/>
         <toc-element topic="numberUnification.md"/>
-        <toc-element topic="schemas.md">
-            <toc-element topic="schemasGradle.md"/>
-            <toc-element topic="schemasJupyter.md"/>
-            <toc-element topic="schemasInheritance.md"/>
-            <toc-element topic="schemasCustom.md"/>
-            <toc-element topic="schemasExternalJupyter.md"/>
-            <toc-element topic="schemasImportSqlGradle.md"/>
-            <toc-element topic="schemasImportOpenApiGradle.md"/>
-            <toc-element topic="schemasImportOpenApiJupyter.md"/>
-            <toc-element topic="DataSchemaGenerationGradle.md"/>
-        </toc-element>
     </toc-element>
     <toc-element topic="extensionPropertiesApi.md"/>
+    <toc-element topic="schemas.md">
+        <toc-element topic="schemasGradle.md"/>
+        <toc-element topic="schemasJupyter.md"/>
+        <toc-element topic="schemasInheritance.md"/>
+        <toc-element topic="schemasCustom.md"/>
+        <toc-element topic="schemasExternalJupyter.md"/>
+        <toc-element topic="schemasImportSqlGradle.md"/>
+        <toc-element topic="schemasImportOpenApiGradle.md"/>
+        <toc-element topic="schemasImportOpenApiJupyter.md"/>
+        <toc-element topic="DataSchemaGenerationGradle.md"/>
+    </toc-element>
     <toc-element topic="DataSchemaGenerationMethods.md"/>
     <toc-element topic="Compiler-Plugin.md">
         <toc-element topic="staticInterpretation.md"/>
