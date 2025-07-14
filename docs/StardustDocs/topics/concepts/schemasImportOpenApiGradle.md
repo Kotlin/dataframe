@@ -2,6 +2,11 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
+> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated in future releases.
+>
+> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugin.
+{style="warning"}
+
 <warning>
 OpenAPI 3.0.0 schema support is marked as experimental. It might change or be removed in the future.
 </warning>

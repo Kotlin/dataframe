@@ -172,6 +172,14 @@ and examples with beautiful [Kandy](https://kotlin.github.io/kandy) geo visualiz
 
 ## What is the difference between Compiler Plugin, Gradle Plugin, and KSP Plugin?
 
+> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated 
+> in future releases.
+> The KSP plugin doesn't work for now.
+>
+> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead 
+> of relying on the plugins.
+{style="warning"}
+
 All these plugins relate to working with [dataframe schemas](schemas.md), but they serve different purposes:
 
 - **[Gradle Plugin](DataSchemaGenerationGradle.md)** and **[KSP Plugin](https://github.com/Kotlin/dataframe/tree/master/plugins/symbol-processor)** 
