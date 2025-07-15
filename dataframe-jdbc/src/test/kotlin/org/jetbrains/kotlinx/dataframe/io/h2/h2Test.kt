@@ -33,6 +33,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
+import org.jetbrains.kotlinx.dataframe.io.withReadOnlyConnection
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test5;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
@@ -1147,5 +1148,20 @@ class JdbcTest {
         val saleDataSchema1 = dataSchemas1[1]
         saleDataSchema1.columns.size shouldBe 3
         saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
+    }
+
+    @Test
+    fun `withReadOnlyConnection sets readOnly and rolls back after execution`() {
+        val config = DbConnectionConfig("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", readOnly = true)
+
+        var wasExecuted = false
+        val result = withReadOnlyConnection(config) { conn ->
+            wasExecuted = true
+            conn.autoCommit shouldBe false
+            42
+        }
+
+        wasExecuted shouldBe true
+        result shouldBe 42
     }
 }

@@ -22,6 +22,7 @@ import java.sql.Ref
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
 import java.sql.RowId
+import java.sql.SQLException
 import java.sql.SQLXML
 import java.sql.Time
 import java.sql.Timestamp
@@ -104,13 +105,105 @@ public data class TableColumnMetadata(
 public data class TableMetadata(val name: String, val schemaName: String?, val catalogue: String?)
 
 /**
- * Represents the configuration for a database connection.
+ * Represents the configuration for an internally managed JDBC database connection.
  *
- * @property [url] the URL of the database. Keep it in the following form jdbc:subprotocol:subnam
- * @property [user] the username used for authentication (optional, default is empty string).
- * @property [password] the password used for authentication (optional, default is empty string).
+ * This class defines connection parameters used by the library to create a `Connection`
+ * when the user does not provide one explicitly. It is designed for safe, read-only access by default.
+ *
+ * @property url The JDBC URL of the database, e.g., `"jdbc:postgresql://localhost:5432/mydb"`.
+ *               Must follow the standard format: `jdbc:subprotocol:subname`.
+ *
+ * @property user The username used for authentication.
+ *                Optional, default is an empty string.
+ *
+ * @property password The password used for authentication.
+ *                    Optional, default is an empty string.
+ *
+ * @property readOnly If `true` (default), the library will create the connection in read-only mode.
+ *                    This enables the following behavior:
+ *                    - `Connection.setReadOnly(true)`
+ *                    - `Connection.setAutoCommit(false)`
+ *                    - automatic `rollback()` at the end of execution
+ *
+ *                    If `false`, the connection will be created with JDBC defaults (usually read-write),
+ *                    but the library will still reject any queries that appear to modify data
+ *                    (e.g. contain `INSERT`, `UPDATE`, `DELETE`, etc.).
+ *
+ * Note: Connections created using this configuration are managed entirely by the library.
+ * Users do not have access to the underlying `Connection` instance and cannot commit or close it manually.
+ *
+ * ### Examples:
+ *
+ * ```kotlin
+ * // Safe read-only connection (default)
+ * val config = DbConnectionConfig("jdbc:sqlite::memory:")
+ * val df = DataFrame.readSqlQuery(config, "SELECT * FROM books")
+ *
+ * // Explicitly allow JDBC defaults (still protected against mutations)
+ * val config = DbConnectionConfig(
+ *     url = "jdbc:sqlite::memory:",
+ *     readOnly = false
+ * )
+ * ```
  */
-public data class DbConnectionConfig(val url: String, val user: String = "", val password: String = "")
+public data class DbConnectionConfig(
+    val url: String,
+    val user: String = "",
+    val password: String = "",
+    val readOnly: Boolean = true
+)
+
+/**
+ * Executes the given block with a managed JDBC connection created from [DbConnectionConfig].
+ *
+ * If [DbConnectionConfig.readOnly] is `true` (default), the connection will be:
+ * - explicitly marked as read-only
+ * - used with auto-commit disabled
+ * - rolled back after execution to prevent unintended modifications
+ *
+ * This utility guarantees proper closing of the connection and safe rollback in read-only mode.
+ * It should be used when the user does not manually manage JDBC connections.
+ *
+ * @param dbConfig The configuration used to create the connection.
+ * @param dbType Optional database type (not used here but can be passed through for logging or future extensions).
+ * @param block A lambda with receiver that runs with an open and managed [Connection].
+ * @return The result of the [block] execution.
+ */
+internal inline fun <T> withReadOnlyConnection(
+    dbConfig: DbConnectionConfig,
+    dbType: DbType? = null,
+    block: (Connection) -> T
+): T {
+    val connection = DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
+
+    val originalAutoCommit = connection.autoCommit
+    val originalReadOnly = connection.isReadOnly
+
+    return connection.use { conn ->
+        try {
+            if (dbConfig.readOnly) {
+                conn.autoCommit = false
+                conn.isReadOnly = true
+            }
+
+            block(conn)
+        } finally {
+            if (dbConfig.readOnly) {
+                try {
+                    conn.rollback()
+                } catch (e: SQLException) {
+                    logger.warn(e) {
+                        "Failed to rollback read-only transaction (url=${dbConfig.url})"
+                    }
+                }
+            }
+
+            // Restore original settings (relevant in pooled environments)
+            conn.autoCommit = originalAutoCommit
+            conn.isReadOnly = originalReadOnly
+        }
+    }
+}
 
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
@@ -124,6 +217,15 @@ public data class DbConnectionConfig(val url: String, val user: String = "", val
  * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
  *                           Default is `true` for strict validation.
  * @return the DataFrame containing the data from the SQL table.
+ *
+ * ### Default Behavior:
+ * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * - explicitly set as read-only via `Connection.setReadOnly(true)`
+ * - used with `autoCommit = false`
+ * - automatically rolled back after reading, ensuring no changes to the database
+ *
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * and only permits safe `SELECT` operations internally.
  */
 public fun DataFrame.Companion.readSqlTable(
     dbConfig: DbConnectionConfig,
@@ -132,10 +234,8 @@ public fun DataFrame.Companion.readSqlTable(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
-): AnyFrame {
-    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlTable(connection, tableName, limit, inferNullability, dbType, strictValidation)
-    }
+): AnyFrame = withReadOnlyConnection(dbConfig, dbType) { conn ->
+    readSqlTable(conn, tableName, limit, inferNullability, dbType, strictValidation)
 }
 
 /**
@@ -203,6 +303,15 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
  *                           Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
+ *
+ * ### Default Behavior:
+ * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * - explicitly set as read-only via `Connection.setReadOnly(true)`
+ * - used with `autoCommit = false`
+ * - automatically rolled back after reading, ensuring no changes to the database
+ *
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * and only permits safe `SELECT` operations internally.
  */
 
 public fun DataFrame.Companion.readSqlQuery(
@@ -212,10 +321,8 @@ public fun DataFrame.Companion.readSqlQuery(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
-): AnyFrame {
-    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, strictValidation)
-    }
+): AnyFrame = withReadOnlyConnection(dbConfig, dbType) { conn ->
+    readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, strictValidation)
 }
 
 /**
@@ -281,6 +388,15 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
  * Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
+ *
+ * ### Default Behavior:
+ * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * - explicitly set as read-only via `Connection.setReadOnly(true)`
+ * - used with `autoCommit = false`
+ * - automatically rolled back after reading, ensuring no changes to the database
+ *
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * and only permits safe `SELECT` operations internally.
  */
 public fun DbConnectionConfig.readDataFrame(
     sqlQueryOrTableName: String,
@@ -605,6 +721,15 @@ public fun ResultSet.readDataFrame(
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
+ *
+ * ### Default Behavior:
+ * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * - explicitly set as read-only via `Connection.setReadOnly(true)`
+ * - used with `autoCommit = false`
+ * - automatically rolled back after reading, ensuring no changes to the database
+ *
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * and only permits safe `SELECT` operations internally.
  */
 public fun DataFrame.Companion.readAllSqlTables(
     dbConfig: DbConnectionConfig,
@@ -612,10 +737,8 @@ public fun DataFrame.Companion.readAllSqlTables(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-): Map<String, AnyFrame> {
-    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
-    }
+): Map<String, AnyFrame> = withReadOnlyConnection(dbConfig, dbType) { connection ->
+    readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
 }
 
 /**
@@ -679,15 +802,22 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @return the [DataFrameSchema] object representing the schema of the SQL table
+ *
+ * ### Default Behavior:
+ * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * - explicitly set as read-only via `Connection.setReadOnly(true)`
+ * - used with `autoCommit = false`
+ * - automatically rolled back after reading, ensuring no changes to the database
+ *
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * and only permits safe `SELECT` operations internally.
  */
 public fun DataFrame.Companion.getSchemaForSqlTable(
     dbConfig: DbConnectionConfig,
     tableName: String,
     dbType: DbType? = null,
-): DataFrameSchema {
-    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return getSchemaForSqlTable(connection, tableName, dbType)
-    }
+): DataFrameSchema = withReadOnlyConnection(dbConfig, dbType) { connection ->
+    getSchemaForSqlTable(connection, tableName, dbType)
 }
 
 /**
@@ -727,15 +857,22 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @return the schema of the SQL query as a [DataFrameSchema] object.
+ *
+ * ### Default Behavior:
+ * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * - explicitly set as read-only via `Connection.setReadOnly(true)`
+ * - used with `autoCommit = false`
+ * - automatically rolled back after reading, ensuring no changes to the database
+ *
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * and only permits safe `SELECT` operations internally.
  */
 public fun DataFrame.Companion.getSchemaForSqlQuery(
     dbConfig: DbConnectionConfig,
     sqlQuery: String,
     dbType: DbType? = null,
-): DataFrameSchema {
-    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return getSchemaForSqlQuery(connection, sqlQuery, dbType)
-    }
+): DataFrameSchema = withReadOnlyConnection(dbConfig, dbType) { connection ->
+    getSchemaForSqlQuery(connection, sqlQuery, dbType)
 }
 
 /**
@@ -771,6 +908,15 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [DbConnectionConfig].
  * @return the schema of the SQL query as a [DataFrameSchema] object.
+ *
+ * ### Default Behavior:
+ * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * - explicitly set as read-only via `Connection.setReadOnly(true)`
+ * - used with `autoCommit = false`
+ * - automatically rolled back after reading, ensuring no changes to the database
+ *
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * and only permits safe `SELECT` operations internally.
  */
 public fun DbConnectionConfig.getDataFrameSchema(
     sqlQueryOrTableName: String,
@@ -836,14 +982,21 @@ public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataF
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
+ *
+ * ### Default Behavior:
+ * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * - explicitly set as read-only via `Connection.setReadOnly(true)`
+ * - used with `autoCommit = false`
+ * - automatically rolled back after reading, ensuring no changes to the database
+ *
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * and only permits safe `SELECT` operations internally.
  */
 public fun DataFrame.Companion.getSchemaForAllSqlTables(
     dbConfig: DbConnectionConfig,
     dbType: DbType? = null,
-): Map<String, DataFrameSchema> {
-    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return getSchemaForAllSqlTables(connection, dbType)
-    }
+): Map<String, DataFrameSchema> = withReadOnlyConnection(dbConfig, dbType) { connection ->
+    getSchemaForAllSqlTables(connection, dbType)
 }
 
 /**
