@@ -370,6 +370,24 @@ public fun Connection.readDataFrame(
         )
     }
 
+private val FORBIDDEN_PATTERNS_REGEX = listOf(
+    ";", // Separator for SQL statements
+    "--", // Single-line comments
+    "/\\*", // Start of multi-line comments
+    "\\*/", // End of multi-line comments
+    "\\bDROP\\b", // DROP as a full word
+    "\\bDELETE\\b", // DELETE as a full word
+    "\\bINSERT\\b", // INSERT as a full word
+    "\\bUPDATE\\b", // UPDATE as a full word
+    "\\bEXEC\\b", // EXEC as a full word
+    "\\bEXECUTE\\b", // EXECUTE as a full word
+    "\\bCREATE\\b", // CREATE as a full word
+    "\\bALTER\\b", // ALTER as a full word
+    "\\bGRANT\\b", // GRANT as a full word
+    "\\bREVOKE\\b", // REVOKE as a full word
+    "\\bMERGE\\b", // MERGE as a full word
+).map { Regex(it, RegexOption.IGNORE_CASE) }
+
 /**
  * Checks if a given string contains forbidden patterns or keywords.
  * Logs a clear and friendly message if any forbidden pattern is found.
@@ -409,33 +427,11 @@ public fun Connection.readDataFrame(
  * - Inline or multi-line comments (`--` or `/* */`) are restricted to prevent potential SQL injection attacks.
  * - Multiple SQL statements separated by semicolons (`;`) are not allowed to prevent the execution of unintended commands.
  */
-private fun containsForbiddenPatterns(input: String): Boolean {
-    // List of forbidden standalone patterns or commands
-    val forbiddenPatterns = listOf(
-        ";", // Separator for SQL statements
-        "--", // Single-line comments
-        "/\\*", // Start of multi-line comments
-        "\\*/", // End of multi-line comments
-        "\\bDROP\\b", // DROP as a full word
-        "\\bDELETE\\b", // DELETE as a full word
-        "\\bINSERT\\b", // INSERT as a full word
-        "\\bUPDATE\\b", // UPDATE as a full word
-        "\\bEXEC\\b", // EXEC as a full word
-        "\\bEXECUTE\\b", // EXECUTE as a full word
-        "\\bCREATE\\b", // CREATE as a full word
-        "\\bALTER\\b", // ALTER as a full word
-        "\\bGRANT\\b", // GRANT as a full word
-        "\\bREVOKE\\b", // REVOKE as a full word
-        "\\bMERGE\\b", // MERGE as a full word
-    )
-
-    // Use regular expressions to match reserved words only as separate entities
-    for (pattern in forbiddenPatterns) {
-        val regex = Regex(pattern, RegexOption.IGNORE_CASE)
+private fun hasForbiddenPatterns(input: String): Boolean {
+    for (regex in FORBIDDEN_PATTERNS_REGEX) {
         if (regex.containsMatchIn(input)) {
             logger.error {
-                "Validation failed: The input contains a forbidden element matching '$pattern'. " +
-                    "Please review the input: '$input'."
+                "Validation failed: The input contains a forbidden element matching '${regex.pattern}'. Please review the input: '$input'."
             }
             return true
         }
@@ -460,7 +456,7 @@ private fun isValidSqlQuery(sqlQuery: String): Boolean {
     }
 
     // Validate against forbidden patterns
-    if (containsForbiddenPatterns(normalizedSqlQuery)) {
+    if (hasForbiddenPatterns(normalizedSqlQuery)) {
         return false
     }
 
@@ -496,7 +492,7 @@ private fun isValidTableName(tableName: String): Boolean {
     logger.warn { "Validating SQL table name: '$tableName'" }
 
     // Validate against forbidden patterns
-    if (containsForbiddenPatterns(normalizedTableName)) {
+    if (hasForbiddenPatterns(normalizedTableName)) {
         return false
     }
 
