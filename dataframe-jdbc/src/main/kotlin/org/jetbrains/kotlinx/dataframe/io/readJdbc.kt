@@ -426,7 +426,7 @@ private fun containsForbiddenPatterns(input: String): Boolean {
         "\\bALTER\\b", // ALTER as a full word
         "\\bGRANT\\b", // GRANT as a full word
         "\\bREVOKE\\b", // REVOKE as a full word
-        "\\bMERGE\\b" // MERGE as a full word
+        "\\bMERGE\\b", // MERGE as a full word
     )
 
     // Use regular expressions to match reserved words only as separate entities
@@ -442,7 +442,6 @@ private fun containsForbiddenPatterns(input: String): Boolean {
     }
     return false
 }
-
 
 /**
  * Validates if the SQL query is safe and starts with SELECT.
