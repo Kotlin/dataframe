@@ -793,6 +793,27 @@ class JdbcTest {
     }
 
     @Test
+    fun `read from table with column name containing the reserved SQL keywords`() {
+        @Language("SQL")
+        val createAlterTableQuery = """
+            CREATE TABLE HELLO_ALTER (
+            id INT PRIMARY KEY,
+            last_update TEXT
+            )
+            """
+
+        @Language("SQL")
+        val selectFromWeirdTableSQL = """SELECT last_update from HELLO_ALTER"""
+
+        try {
+            connection.createStatement().execute(createAlterTableQuery)
+            DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL).rowsCount() shouldBe 0
+        } finally {
+            connection.createStatement().execute("DROP TABLE IF EXISTS HELLO_ALTER")
+        }
+    }
+
+    @Test
     fun `read from non-existing jdbc url`() {
         shouldThrow<SQLException> {
             DataFrame.readSqlTable(DriverManager.getConnection("ddd"), "WrongTableName")

@@ -370,35 +370,68 @@ public fun Connection.readDataFrame(
         )
     }
 
+private val FORBIDDEN_PATTERNS_REGEX = listOf(
+    ";", // Separator for SQL statements
+    "--", // Single-line comments
+    "/\\*", // Start of multi-line comments
+    "\\*/", // End of multi-line comments
+    "\\bDROP\\b", // DROP as a full word
+    "\\bDELETE\\b", // DELETE as a full word
+    "\\bINSERT\\b", // INSERT as a full word
+    "\\bUPDATE\\b", // UPDATE as a full word
+    "\\bEXEC\\b", // EXEC as a full word
+    "\\bEXECUTE\\b", // EXECUTE as a full word
+    "\\bCREATE\\b", // CREATE as a full word
+    "\\bALTER\\b", // ALTER as a full word
+    "\\bGRANT\\b", // GRANT as a full word
+    "\\bREVOKE\\b", // REVOKE as a full word
+    "\\bMERGE\\b", // MERGE as a full word
+).map { Regex(it, RegexOption.IGNORE_CASE) }
+
 /**
  * Checks if a given string contains forbidden patterns or keywords.
  * Logs a clear and friendly message if any forbidden pattern is found.
+ *
+ * ### Forbidden SQL Examples:
+ * 1. **Single-line comment** (using `--`):
+ *    - `SELECT * FROM Sale WHERE amount = 100.0 -- AND id = 5`
+ *
+ * 2. **Multi-line comment** (using `/* */`):
+ *    - `SELECT * FROM Customer /* Possible malicious comment */ WHERE id = 1`
+ *
+ * 3. **Multiple statements separated by semicolon (`;`)**:
+ *    - `SELECT * FROM Sale WHERE amount = 500.0; DROP TABLE Customer`
+ *
+ * 4. **Potentially malicious SQL with single quotes for injection**:
+ *    - `SELECT * FROM Sale WHERE id = 1 AND amount = 100.0 OR '1'='1`
+ *
+ * 5. **Usage of dangerous commands like `DROP`, `DELETE`, `ALTER`, etc.**:
+ *    - `DROP TABLE Customer; SELECT * FROM Sale`
+ *
+ * ### Allowed SQL Examples:
+ * 1. Query with names containing reserved words as parts of identifiers:
+ *    - `SELECT last_update FROM HELLO_ALTER`
+ *
+ * 2. Query with fully valid syntax:
+ *    - `SELECT id, name FROM Customers WHERE age > 25`
+ *
+ * 3. Query with identifiers resembling commands but not in forbidden contexts:
+ *    - `SELECT id, amount FROM TRANSACTION_DROP`
+ *
+ * 4. Query with case-insensitive identifiers:
+ *    - `select Id, Name from Hello_Table`
+ *
+ * ### Key Notes:
+ * - Reserved keywords like `DROP`, `DELETE`, `ALTER`, etc., are forbidden **only when they appear as standalone commands**.
+ * - Reserved words as parts of table or column names (e.g., `HELLO_ALTER`, `myDropTable`) **are allowed**.
+ * - Inline or multi-line comments (`--` or `/* */`) are restricted to prevent potential SQL injection attacks.
+ * - Multiple SQL statements separated by semicolons (`;`) are not allowed to prevent the execution of unintended commands.
  */
-private fun containsForbiddenPatterns(input: String): Boolean {
-    // List of forbidden patterns or commands
-    val forbiddenPatterns = listOf(
-        ";", // Separator for SQL statements
-        "--", // Single-line comments
-        "/*", // Start of multi-line comments
-        "*/", // End of multi-line comments
-        "DROP",
-        "DELETE",
-        "INSERT",
-        "UPDATE",
-        "EXEC",
-        "EXECUTE",
-        "CREATE",
-        "ALTER",
-        "GRANT",
-        "REVOKE",
-        "MERGE",
-    )
-
-    for (pattern in forbiddenPatterns) {
-        if (input.contains(pattern)) {
+private fun hasForbiddenPatterns(input: String): Boolean {
+    for (regex in FORBIDDEN_PATTERNS_REGEX) {
+        if (regex.containsMatchIn(input)) {
             logger.error {
-                "Validation failed: The input contains a forbidden element '$pattern'. " +
-                    "Please review the input: '$input'."
+                "Validation failed: The input contains a forbidden element matching '${regex.pattern}'. Please review the input: '$input'."
             }
             return true
         }
@@ -408,7 +441,7 @@ private fun containsForbiddenPatterns(input: String): Boolean {
 
 /**
  * Validates if the SQL query is safe and starts with SELECT.
- * Ensures proper syntax structure, checks for balanced quotes, and disallows dangerous commands or patterns.
+ * Ensures a proper syntax structure, checks for balanced quotes, and disallows dangerous commands or patterns.
  */
 private fun isValidSqlQuery(sqlQuery: String): Boolean {
     val normalizedSqlQuery = sqlQuery.trim().uppercase()
@@ -423,7 +456,7 @@ private fun isValidSqlQuery(sqlQuery: String): Boolean {
     }
 
     // Validate against forbidden patterns
-    if (containsForbiddenPatterns(normalizedSqlQuery)) {
+    if (hasForbiddenPatterns(normalizedSqlQuery)) {
         return false
     }
 
@@ -459,7 +492,7 @@ private fun isValidTableName(tableName: String): Boolean {
     logger.warn { "Validating SQL table name: '$tableName'" }
 
     // Validate against forbidden patterns
-    if (containsForbiddenPatterns(normalizedTableName)) {
+    if (hasForbiddenPatterns(normalizedTableName)) {
         return false
     }
 
