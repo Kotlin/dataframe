@@ -2,6 +2,11 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
+> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated in future releases.
+>
+> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugin.
+{style="warning"}
+
 Each SQL database contains the metadata for all the tables. 
 This metadata could be used for the schema generation.
 
