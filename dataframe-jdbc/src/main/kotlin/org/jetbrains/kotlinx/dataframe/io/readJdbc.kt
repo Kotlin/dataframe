@@ -150,7 +150,7 @@ public data class DbConnectionConfig(
     val url: String,
     val user: String = "",
     val password: String = "",
-    val readOnly: Boolean = true
+    val readOnly: Boolean = true,
 )
 
 /**
@@ -172,7 +172,7 @@ public data class DbConnectionConfig(
 internal inline fun <T> withReadOnlyConnection(
     dbConfig: DbConnectionConfig,
     dbType: DbType? = null,
-    block: (Connection) -> T
+    block: (Connection) -> T,
 ): T {
     val connection = DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
 
@@ -234,9 +234,10 @@ public fun DataFrame.Companion.readSqlTable(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
-): AnyFrame = withReadOnlyConnection(dbConfig, dbType) { conn ->
-    readSqlTable(conn, tableName, limit, inferNullability, dbType, strictValidation)
-}
+): AnyFrame =
+    withReadOnlyConnection(dbConfig, dbType) { conn ->
+        readSqlTable(conn, tableName, limit, inferNullability, dbType, strictValidation)
+    }
 
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
@@ -321,9 +322,10 @@ public fun DataFrame.Companion.readSqlQuery(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
-): AnyFrame = withReadOnlyConnection(dbConfig, dbType) { conn ->
-    readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, strictValidation)
-}
+): AnyFrame =
+    withReadOnlyConnection(dbConfig, dbType) { conn ->
+        readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, strictValidation)
+    }
 
 /**
  * Converts the result of an SQL query to the DataFrame.
@@ -737,9 +739,10 @@ public fun DataFrame.Companion.readAllSqlTables(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-): Map<String, AnyFrame> = withReadOnlyConnection(dbConfig, dbType) { connection ->
-    readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
-}
+): Map<String, AnyFrame> =
+    withReadOnlyConnection(dbConfig, dbType) { connection ->
+        readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
+    }
 
 /**
  * Reads all non-system tables from a database and returns them
@@ -816,9 +819,10 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     dbConfig: DbConnectionConfig,
     tableName: String,
     dbType: DbType? = null,
-): DataFrameSchema = withReadOnlyConnection(dbConfig, dbType) { connection ->
-    getSchemaForSqlTable(connection, tableName, dbType)
-}
+): DataFrameSchema =
+    withReadOnlyConnection(dbConfig, dbType) { connection ->
+        getSchemaForSqlTable(connection, tableName, dbType)
+    }
 
 /**
  * Retrieves the schema for an SQL table using the provided database connection.
@@ -871,9 +875,10 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(
     dbConfig: DbConnectionConfig,
     sqlQuery: String,
     dbType: DbType? = null,
-): DataFrameSchema = withReadOnlyConnection(dbConfig, dbType) { connection ->
-    getSchemaForSqlQuery(connection, sqlQuery, dbType)
-}
+): DataFrameSchema =
+    withReadOnlyConnection(dbConfig, dbType) { connection ->
+        getSchemaForSqlQuery(connection, sqlQuery, dbType)
+    }
 
 /**
  * Retrieves the schema of an SQL query result using the provided database connection.
@@ -995,9 +1000,10 @@ public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataF
 public fun DataFrame.Companion.getSchemaForAllSqlTables(
     dbConfig: DbConnectionConfig,
     dbType: DbType? = null,
-): Map<String, DataFrameSchema> = withReadOnlyConnection(dbConfig, dbType) { connection ->
-    getSchemaForAllSqlTables(connection, dbType)
-}
+): Map<String, DataFrameSchema> =
+    withReadOnlyConnection(dbConfig, dbType) { connection ->
+        getSchemaForAllSqlTables(connection, dbType)
+    }
 
 /**
  * Retrieves the schemas of all non-system tables in the database using the provided database connection.
