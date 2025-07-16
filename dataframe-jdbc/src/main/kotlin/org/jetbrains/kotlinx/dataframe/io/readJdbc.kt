@@ -558,6 +558,11 @@ private fun hasForbiddenPatterns(input: String): Boolean {
 }
 
 /**
+ * Allowed list of SQL operators
+ */
+private val ALLOWED_SQL_OPERATORS = listOf("SELECT", "WITH", "VALUES", "TABLE")
+
+/**
  * Validates if the SQL query is safe and starts with SELECT.
  * Ensures a proper syntax structure, checks for balanced quotes, and disallows dangerous commands or patterns.
  */
@@ -567,9 +572,11 @@ private fun isValidSqlQuery(sqlQuery: String): Boolean {
     // Log the query being validated
     logger.warn { "Validating SQL query: '$sqlQuery'" }
 
-    // Ensure the query starts with "SELECT"
-    if (!normalizedSqlQuery.startsWith("SELECT")) {
-        logger.error { "Validation failed: The SQL query must start with 'SELECT'. Given query: '$sqlQuery'." }
+    // Ensure the query starts from one of the allowed SQL operators
+    if (ALLOWED_SQL_OPERATORS.none { normalizedSqlQuery.startsWith(it) }) {
+        logger.error {
+            "Validation failed: The SQL query must start with one of: $ALLOWED_SQL_OPERATORS. Given query: '$sqlQuery'."
+        }
         return false
     }
 
