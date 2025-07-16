@@ -139,7 +139,7 @@ public data class TableMetadata(val name: String, val schemaName: String?, val c
  * val config = DbConnectionConfig("jdbc:sqlite::memory:")
  * val df = DataFrame.readSqlQuery(config, "SELECT * FROM books")
  *
- * // Explicitly allow JDBC defaults (still protected against mutations)
+ * // Use default JDBC connection settings (still protected against mutations)
  * val config = DbConnectionConfig(
  *     url = "jdbc:sqlite::memory:",
  *     readOnly = false
@@ -164,9 +164,9 @@ public data class DbConnectionConfig(
  * This utility guarantees proper closing of the connection and safe rollback in read-only mode.
  * It should be used when the user does not manually manage JDBC connections.
  *
- * @param dbConfig The configuration used to create the connection.
- * @param dbType Optional database type (not used here but can be passed through for logging or future extensions).
- * @param block A lambda with receiver that runs with an open and managed [Connection].
+ * @param [dbConfig] The configuration used to create the connection.
+ * @param [dbType] Optional database type (not used here but can be passed through for logging or future extensions).
+ * @param [block] A lambda with receiver that runs with an open and managed [Connection].
  * @return The result of the [block] execution.
  */
 internal inline fun <T> withReadOnlyConnection(
