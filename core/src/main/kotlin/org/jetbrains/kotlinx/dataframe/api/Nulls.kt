@@ -534,6 +534,8 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllN
  * This overload operates on all columns in the [DataFrame].
  * @include [DropNA.WhereAllNAParam]
  */
+@Refine
+@Interpretable("DropNa1")
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { all() }
 
 /**
