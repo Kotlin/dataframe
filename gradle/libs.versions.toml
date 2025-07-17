@@ -9,7 +9,7 @@ kotlin = "2.2.0" # needs jupyter compatibility with Kotlin 2.1 to update
 kotlinpoet = "2.2.0"
 
 dokka = "2.0.0"
-libsPublisher = "2.2.0-rc3-dev-57"
+libsPublisher = "2.2.0-dev-61"
 
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
