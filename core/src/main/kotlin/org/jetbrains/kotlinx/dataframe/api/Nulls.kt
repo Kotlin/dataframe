@@ -383,6 +383,15 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: Co
     }
 }
 
+@Refine
+@Interpretable("DropNulls0")
+@Deprecated(
+    "DataFrame conventional name for filterNot* functions is drop*",
+    ReplaceWith("dropNulls(columns = columns)"),
+    DeprecationLevel.ERROR,
+)
+public fun <T> DataFrame<T>.filterNotNull(columns: ColumnsSelector<T, *>): DataFrame<T> = dropNulls(columns = columns)
+
 /**
  * @include [CommonDropNullsFunctionDoc]
  * This overload operates on all columns in the [DataFrame].
