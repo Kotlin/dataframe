@@ -27,7 +27,7 @@ df.drop { it["weight"] == null || it["city"] == null }
 
 ## dropNulls
 
-Remove rows with `null` values
+Remove rows with `null` values. This is a DataFrame equivalent of `filterNotNull`.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
