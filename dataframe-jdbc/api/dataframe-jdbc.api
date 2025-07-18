@@ -122,6 +122,7 @@ public abstract class org/jetbrains/kotlinx/dataframe/io/db/DbType {
 	public abstract fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
 	public final fun getDbTypeInJdbcUrl ()Ljava/lang/String;
 	public abstract fun getDriverClassName ()Ljava/lang/String;
+	public fun getTableTypes ()Ljava/util/List;
 	public abstract fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
 	public fun sqlQueryLimit (Ljava/lang/String;I)Ljava/lang/String;
 	public static synthetic fun sqlQueryLimit$default (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;

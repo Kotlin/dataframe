@@ -808,8 +808,9 @@ public fun DataFrame.Companion.readAllSqlTables(
     val metaData = connection.metaData
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    // exclude a system and other tables without data, but it looks like it is supported badly for many databases
-    val tables = metaData.getTables(catalogue, null, null, arrayOf("TABLE"))
+    // exclude system- and other tables without data (it looks like it is supported badly for many databases)
+    val tableTypes = determinedDbType.tableTypes?.toTypedArray()
+    val tables = metaData.getTables(catalogue, null, null, tableTypes)
 
     val dataFrames = mutableMapOf<String, AnyFrame>()
 
@@ -1060,8 +1061,8 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(
     val metaData = connection.metaData
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    val tableTypes = arrayOf("TABLE")
-    // exclude a system and other tables without data
+    // exclude system- and other tables without data
+    val tableTypes = determinedDbType.tableTypes?.toTypedArray()
     val tables = metaData.getTables(null, null, null, tableTypes)
 
     val dataFrameSchemas = mutableMapOf<String, DataFrameSchema>()
