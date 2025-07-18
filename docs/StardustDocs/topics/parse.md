@@ -44,6 +44,7 @@ df.parse { age and weight }
 * `URL` (`java.net`)
 * [`Double` (with optional locale settings)](#parsing-doubles)
 * `Boolean`
+* `Uuid` ([`kotlin.uuid.Uuid`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/)) (requires `parseExperimentalUuid = true`) 
 * `BigDecimal`
 * `JSON` (arrays and objects) (requires the `org.jetbrains.kotlinx:dataframe-json` dependency)
 
@@ -71,6 +72,8 @@ Available parser options:
   * Empty set by global default; parsing can result in any supported type
 * `useFastDoubleParser: Boolean` is used to enable or disable the [new fast double parser](#parsing-doubles)
   * Enabled by global default
+* `parseExperimentalUuid: Boolean` is used to enable or disable parsing to the experimental [`kotlin.uuid.Uuid` class](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/).
+  * Disabled by global default
 
 <!---FUN parseWithOptions-->
 
