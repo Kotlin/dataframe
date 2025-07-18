@@ -116,4 +116,7 @@ internal interface DocumentationUrls {
 
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     interface Explode
+
+    /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschema-data-classes-generation.html) */
+    interface DataSchemaGeneration
 }
