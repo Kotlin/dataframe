@@ -7,6 +7,9 @@ DataRow.duplicate(n): DataFrame
 
 Returns [`FrameColumn`](DataColumn.md#framecolumn) with original [`DataFrame`](DataFrame.md) repeated `n` times. 
 Resulting [`FrameColumn`](DataColumn.md#framecolumn) will have an empty [`name`](DataColumn.md#properties).
+
+**Related operations**: [](appendDuplicate.md)
+
 ```text
 DataFrame.duplicate(n): FrameColumn
 ```

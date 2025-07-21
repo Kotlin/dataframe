@@ -19,8 +19,6 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import kotlin.reflect.typeOf
 
 @Check
@@ -93,10 +91,6 @@ public fun <C> ColumnSet<*>.cast(): ColumnSet<C> = this as ColumnSet<C>
 public fun <C> ColumnsResolver<*>.cast(): ColumnsResolver<C> = this as ColumnsResolver<C>
 
 public fun <C> SingleColumn<*>.cast(): SingleColumn<C> = this as SingleColumn<C>
-
-public fun <C> TransformableColumnSet<*>.cast(): TransformableColumnSet<C> = this as TransformableColumnSet<C>
-
-public fun <C> TransformableSingleColumn<*>.cast(): TransformableSingleColumn<C> = this as TransformableSingleColumn<C>
 
 public fun <C> ColumnReference<*>.cast(): ColumnReference<C> = this as ColumnReference<C>
 

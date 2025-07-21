@@ -4,6 +4,8 @@
 
 Returns a [`DataFrame`](DataFrame.md) with the union of rows from several given [`DataFrame`](DataFrame.md) objects.
 
+**Related operations**: [](multipleDataFrames.md)
+
 `concat` is available for:
 
 [`DataFrame`](DataFrame.md):

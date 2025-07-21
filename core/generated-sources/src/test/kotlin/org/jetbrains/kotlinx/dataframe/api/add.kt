@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -32,5 +33,29 @@ class AddTests {
     fun `add with generic function`() {
         val df = dataFrameOf("a")(1).addValue(2)
         df["value"].type() shouldBe typeOf<List<Any?>>()
+    }
+
+    @Test
+    fun `fibonacci simple add`() {
+        val df = DataFrame.empty(10).add("fibonacci") {
+            if (index() < 2) 1 else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+        }
+
+        df["fibonacci"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
+    }
+
+    @Test
+    fun `fibonacci add dsl`() {
+        val df = DataFrame.empty(10).add {
+            "fibonacci1" from {
+                if (index() < 2) 1 else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+            }
+            expr {
+                if (index() < 2) 1 else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+            } into "fibonacci2"
+        }
+
+        df["fibonacci1"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
+        df["fibonacci2"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
     }
 }

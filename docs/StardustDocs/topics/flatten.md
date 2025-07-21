@@ -11,6 +11,8 @@ flatten  [ { columns } ]
 Columns will keep their original names after flattening.
 Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
 
+**Related operations**: [](groupUngroupFlatten.md)
+
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN flatten-->

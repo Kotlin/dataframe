@@ -964,6 +964,15 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: Co
     }
 }
 
+@Refine
+@Interpretable("DropNulls0")
+@Deprecated(
+    "DataFrame conventional name for filterNot* functions is drop*",
+    ReplaceWith("dropNulls(columns = columns)"),
+    DeprecationLevel.ERROR,
+)
+public fun <T> DataFrame<T>.filterNotNull(columns: ColumnsSelector<T, *>): DataFrame<T> = dropNulls(columns = columns)
+
 /**
  * ## The Drop Nulls Operation
  *
@@ -1256,6 +1265,8 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllN
  *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
  */
+@Refine
+@Interpretable("DropNa1")
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { all() }
 
 /**

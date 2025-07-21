@@ -725,7 +725,7 @@ internal fun Instant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDate
 
 internal fun Instant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
 
-internal val defaultTimeZone = TimeZone.currentSystemDefault()
+internal val defaultTimeZone get() = TimeZone.currentSystemDefault()
 
 internal fun Number.toBigDecimal(): BigDecimal =
     when (this) {

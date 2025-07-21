@@ -53,31 +53,6 @@ Setup library dependency:
 implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
 ```
 
-Plugin is released as a dev version, available in this maven repository:
-
-```kotlin
-maven("https://packages.jetbrains.team/maven/p/kt/dev/")
-```
-
-Setup repositories for dependencies in `build.gradle.kts`:
-```kotlin
-repositories {
-    maven("https://packages.jetbrains.team/maven/p/kt/dev/")
-    mavenCentral()
-}
-```
-
-Setup repositories for plugins in `settings.gradle.kts`
-```kotlin
-pluginManagement {
-    repositories {
-        maven("https://packages.jetbrains.team/maven/p/kt/dev/")
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-```
-
 Add this line to `gradle.properties`: 
 ```properties
 kotlin.incremental=false

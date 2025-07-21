@@ -20,6 +20,8 @@ The following types of columns can be split easily:
 * `List`: splits into elements, no `by` required!
 * [`DataFrame`](DataFrame.md): splits into rows, no `by` required!
 
+**Related operations**: [](splitMerge.md)
+
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 ## Split in place
