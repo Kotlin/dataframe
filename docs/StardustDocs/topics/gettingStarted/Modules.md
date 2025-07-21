@@ -508,6 +508,11 @@ Published as a Kotlin official plugin.
 
 #### `kotlinx.dataframe` – Gradle Plugin {id="kotlinx.dataframe"}
 
+> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated in future releases.
+>
+> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugin.
+{style="warning"}
+
 The Gradle plugin allows generating [data schemas](schemas.md) from samples of data  
 (of supported formats) like JSON, CSV, Excel files, or URLs, as well as from data fetched from SQL databases  
 using Gradle.
@@ -516,6 +521,7 @@ See the [Gradle Plugin Reference](DataSchemaGenerationGradle.md) for installatio
 and usage instructions in Gradle projects.
 
 > By default, the Gradle plugin also applies the [KSP plugin](#ksp-plugin).
+
 
 <tabs>
 <tab title="Kotlin DSL">
@@ -539,6 +545,11 @@ plugins {
 
 
 #### `kotlinx.dataframe:symbol-processor-all` – KSP Plugin {id="ksp-plugin"}
+
+> Doesn't work for now.
+> 
+> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugin.
+{style="warning"}
 
 The Gradle plugin allows generating [data schemas](schemas.md) from samples of data  
 (of supported formats) like JSON, CSV, Excel files, or URLs, as well as from data fetched from SQL databases  

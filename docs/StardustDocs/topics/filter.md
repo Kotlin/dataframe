@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with rows that satisfy [row condition](DataRow.md#row-conditions)
 
+**Related operations**: [](filterRows.md)
+
 <!---FUN filter-->
 <tabs>
 <tab title="Properties">

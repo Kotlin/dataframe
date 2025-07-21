@@ -1,8 +1,10 @@
-[//]: # (title: drop)
+[//]: # (title: drop / dropNulls / dropNaNs / dropNA)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
 Removes all rows that satisfy [row condition](DataRow.md#row-conditions)
+
+**Related operations**: [](filterRows.md)
 
 <!---FUN dropWhere-->
 <tabs>
@@ -25,7 +27,7 @@ df.drop { it["weight"] == null || it["city"] == null }
 
 ## dropNulls
 
-Remove rows with `null` values
+Remove rows with `null` values. This is a DataFrame equivalent of `filterNotNull`.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
