@@ -142,6 +142,8 @@ internal object Parsers : GlobalParserOptions {
     override val skipTypes: Set<KType>
         get() = skipTypesSet
 
+    override var parseExperimentalUuid: Boolean = false
+
     override fun addDateTimePattern(pattern: String) {
         formatters.add(DateTimeFormatter.ofPattern(pattern))
     }
@@ -180,6 +182,7 @@ internal object Parsers : GlobalParserOptions {
             .let { formatters.add(it) }
 
         useFastDoubleParser = true
+        parseExperimentalUuid = false
         _locale = null
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }
@@ -428,6 +431,8 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
+    private val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+
     @OptIn(ExperimentalUuidApi::class)
     internal val parsersOrder = listOf(
         // Int
@@ -494,20 +499,25 @@ internal object Parsers : GlobalParserOptions {
         posixParserToDoubleWithOptions,
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
-        // UUID
-        stringParser<Uuid> { str ->
+        // Uuid
+        stringParserWithOptions<Uuid> { options ->
+            val parser = { str: String ->
+                val parseExperimentalUuid = options?.parseExperimentalUuid ?: this.parseExperimentalUuid
+                when {
+                    !parseExperimentalUuid -> null
 
-            val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+                    uuidRegex.matches(str) -> {
+                        try {
+                            Uuid.parse(str)
+                        } catch (_: IllegalArgumentException) {
+                            null
+                        }
+                    }
 
-            if (uuidRegex.matches(str)) {
-                try {
-                    Uuid.parse(str)
-                } catch (e: IllegalArgumentException) {
-                    null
+                    else -> null
                 }
-            } else {
-                null
             }
+            parser
         },
         // BigInteger
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
