@@ -16,6 +16,8 @@ Similar to [add](add.md), but supports column positioning.
 
 Create new column based on existing columns and insert it into [`DataFrame`](DataFrame.md):
 
+**Related operations**: [](insertReplace.md)
+
 <!---FUN insert-->
 <tabs>
 <tab title="Properties">

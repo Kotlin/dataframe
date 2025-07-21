@@ -2,6 +2,11 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
+> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated in future releases.
+>
+> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugin.
+{style="warning"}
+
 In Gradle projects, the Kotlin DataFrame library provides
 
 1. Annotation processing for generation of extension properties
@@ -131,7 +136,7 @@ dataframes {
 }
 ```
 
-See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
+See [reference](DataSchemaGenerationGradle.md) and [examples](DataSchemaGenerationGradle.md#examples) for more details.
 
 </tab>
 </tabs>

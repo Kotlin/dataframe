@@ -253,8 +253,8 @@ kotlinPublications {
     fairDokkaJars = false
 
     sonatypeSettings(
-        project.findProperty("kds.sonatype.user") as String?,
-        project.findProperty("kds.sonatype.password") as String?,
+        project.findProperty("kds.sonatype.central.username") as String?,
+        project.findProperty("kds.sonatype.central.password") as String?,
         "dataframe project, v. ${project.version}",
     )
 

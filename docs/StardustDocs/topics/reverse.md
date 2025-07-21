@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with rows in reversed order.
 
+**Related operations**: [](reorderRows.md)
+
 <!---FUN reverse-->
 
 ```kotlin
