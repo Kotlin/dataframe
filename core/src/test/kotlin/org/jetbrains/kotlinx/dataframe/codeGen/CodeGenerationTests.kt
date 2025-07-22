@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
-import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
 import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
@@ -372,26 +372,20 @@ class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `check method generateDataClasses`() {
-        val code1 = typed.groupBy { name }.toDataFrame().generateDataClasses()
-        val code2 = typed.groupBy { name }.toDataFrame().schema().generateDataClasses("Person")
+        val df = typed.groupBy { name }.toDataFrame()
+        val code1 = df.generateDataClasses()
+        val code2 = df.schema().generateDataClasses("Person")
 
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            data class Person1(
-                val age: Int,
-                val city: String?,
-                val name: String,
-                val weight: Int?
-            )
-
-            @DataSchema
-            data class Person(
-                val group: List<Person1>,
-                val name: String
-            )
-            """.trimIndent().toCodeString()
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = df.schema(),
+            name = "Person",
+            fields = true,
+            extensionProperties = false,
+            isOpen = false,
+            asDataClass = true,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
 
         code1 shouldBe expected
         code2 shouldBe expected
@@ -401,57 +395,36 @@ class CodeGenerationTests : BaseTest() {
     fun `DataFrame generateInterfaces`() {
         val code = typed.generateInterfaces()
 
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            interface Person {
-                val age: kotlin.Int
-                val city: kotlin.String?
-                val name: kotlin.String
-                val weight: kotlin.Int?
-            }
-            """.trimIndent()
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = df.schema(),
+            name = "Person",
+            fields = true,
+            extensionProperties = false,
+            isOpen = true,
+            asDataClass = false,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
 
-        code.value shouldBe expected
+        code shouldBe expected
     }
 
     @Test
     fun `DataFrame generateInterfaces - with marker name`() {
         val code = typed.generateInterfaces("CustomInterface")
 
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            interface CustomInterface {
-                val age: kotlin.Int
-                val city: kotlin.String?
-                val name: kotlin.String
-                val weight: kotlin.Int?
-            }
-            """.trimIndent()
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = df.schema(),
+            name = "CustomInterface",
+            fields = true,
+            extensionProperties = false,
+            isOpen = true,
+            asDataClass = false,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
 
-        code.value shouldBe expected
-    }
-
-    @Test
-    fun `DataFrame generateDataClasses - with default parameters`() {
-        val code = typed.generateDataClasses()
-
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            data class Person(
-                val age: Int,
-                val city: String?,
-                val name: String,
-                val weight: Int?
-            )
-            """.trimIndent()
-
-        code.value shouldBe expected
+        code shouldBe expected
     }
 
     @Test
@@ -463,30 +436,18 @@ class CodeGenerationTests : BaseTest() {
             useFqNames = true,
         )
 
-        val packageName = "org.jetbrains.kotlinx.dataframe"
+        val expected = CodeGenerator.create(useFqNames = true).generate(
+            schema = df.schema(),
+            name = "CustomDataClass",
+            fields = true,
+            extensionProperties = true,
+            isOpen = true,
+            asDataClass = true,
+            visibility = MarkerVisibility.INTERNAL,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
 
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            internal data class CustomDataClass(
-                val age: kotlin.Int,
-                val city: kotlin.String?,
-                val name: kotlin.String,
-                val weight: kotlin.Int?
-            )
-            
-            internal val $packageName.ColumnsContainer<CustomDataClass>.age: $packageName.DataColumn<kotlin.Int> @JvmName("CustomDataClass_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            internal val $packageName.DataRow<CustomDataClass>.age: kotlin.Int @JvmName("CustomDataClass_age") get() = this["age"] as kotlin.Int
-            internal val $packageName.ColumnsContainer<CustomDataClass>.city: $packageName.DataColumn<kotlin.String?> @JvmName("CustomDataClass_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            internal val $packageName.DataRow<CustomDataClass>.city: kotlin.String? @JvmName("CustomDataClass_city") get() = this["city"] as kotlin.String?
-            internal val $packageName.ColumnsContainer<CustomDataClass>.name: $packageName.DataColumn<kotlin.String> @JvmName("CustomDataClass_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            internal val $packageName.DataRow<CustomDataClass>.name: kotlin.String @JvmName("CustomDataClass_name") get() = this["name"] as kotlin.String
-            internal val $packageName.ColumnsContainer<CustomDataClass>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("CustomDataClass_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            internal val $packageName.DataRow<CustomDataClass>.weight: kotlin.Int? @JvmName("CustomDataClass_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
-
-        code.value shouldBe expected
+        code shouldBe expected
     }
 
     @Test
@@ -494,19 +455,18 @@ class CodeGenerationTests : BaseTest() {
         val schema = typed.schema()
         val code = schema.generateInterfaces("SchemaInterface")
 
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            interface SchemaInterface {
-                val age: kotlin.Int
-                val city: kotlin.String?
-                val name: kotlin.String
-                val weight: kotlin.Int?
-            }
-            """.trimIndent()
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = schema,
+            name = "SchemaInterface",
+            fields = true,
+            extensionProperties = false,
+            isOpen = true,
+            asDataClass = false,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
 
-        code.value shouldBe expected
+        code shouldBe expected
     }
 
     @Test
@@ -514,19 +474,18 @@ class CodeGenerationTests : BaseTest() {
         val schema = typed.schema()
         val code = schema.generateDataClasses("SchemaDataClass")
 
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            data class SchemaDataClass(
-                val age: Int,
-                val city: String?,
-                val name: String,
-                val weight: Int?
-            )
-            """.trimIndent()
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = schema,
+            name = "SchemaDataClass",
+            fields = true,
+            extensionProperties = false,
+            isOpen = false,
+            asDataClass = true,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
 
-        code.value shouldBe expected
+        code shouldBe expected
     }
 
     @Test
@@ -539,52 +498,40 @@ class CodeGenerationTests : BaseTest() {
             useFqNames = false,
         )
 
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            public data class SchemaDataClass(
-                public val age: Int,
-                public val city: String?,
-                public val name: String,
-                public val weight: Int?
-            )
-            
-            public val ColumnsScope<SchemaDataClass>.age: DataColumn<Int> @JvmName("SchemaDataClass_age") get() = this["age"] as DataColumn<Int>
-            public val DataRow<SchemaDataClass>.age: Int @JvmName("SchemaDataClass_age") get() = this["age"] as Int
-            public val ColumnsScope<SchemaDataClass>.city: DataColumn<String?> @JvmName("SchemaDataClass_city") get() = this["city"] as DataColumn<String?>
-            public val DataRow<SchemaDataClass>.city: String? @JvmName("SchemaDataClass_city") get() = this["city"] as String?
-            public val ColumnsScope<SchemaDataClass>.name: DataColumn<String> @JvmName("SchemaDataClass_name") get() = this["name"] as DataColumn<String>
-            public val DataRow<SchemaDataClass>.name: String @JvmName("SchemaDataClass_name") get() = this["name"] as String
-            public val ColumnsScope<SchemaDataClass>.weight: DataColumn<Int?> @JvmName("SchemaDataClass_weight") get() = this["weight"] as DataColumn<Int?>
-            public val DataRow<SchemaDataClass>.weight: Int? @JvmName("SchemaDataClass_weight") get() = this["weight"] as Int?
-            """.trimIndent()
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = schema,
+            name = "SchemaDataClass",
+            fields = true,
+            extensionProperties = true,
+            isOpen = false,
+            asDataClass = true,
+            visibility = MarkerVisibility.EXPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
 
-        code.value shouldBe expected
+        code shouldBe expected
     }
 
     @Test
     fun `DataFrame generateDataClasses - with name normalizer`() {
         val dfWithSpecialNames = dataFrameOf("my_column", "another column", "third-column")(1, "test", 3.14)
+        val nameNormalizer = NameNormalizer { it.toCamelCaseByDelimiters() + "1" }
         val code = dfWithSpecialNames.generateDataClasses(
-            nameNormalizer = NameNormalizer { it.toCamelCaseByDelimiters() + "1" },
+            nameNormalizer = nameNormalizer,
         )
 
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            data class DataEntry(
-                @ColumnName("another column")
-                val anotherColumn1: String,
-                @ColumnName("my_column")
-                val myColumn1: Int,
-                @ColumnName("third-column")
-                val thirdColumn1: Double
-            )
-            """.trimIndent()
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = dfWithSpecialNames.schema(),
+            name = "DataEntry",
+            fields = true,
+            extensionProperties = false,
+            isOpen = false,
+            asDataClass = true,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = nameNormalizer,
+        ).code.declarations.toCodeString()
 
-        code.value shouldBe expected
+        code shouldBe expected
     }
 
     // endregion

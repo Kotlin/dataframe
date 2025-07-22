@@ -293,7 +293,7 @@ internal fun DataFrameSchema.generateCodeImpl(
         name = markerName,
         fields = true,
         extensionProperties = extensionProperties,
-        isOpen = false,
+        isOpen = !asDataClass,
         visibility = visibility,
         asDataClass = asDataClass,
         fieldNameNormalizer = nameNormalizer,
