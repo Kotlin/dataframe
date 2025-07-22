@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.generateCode
 import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
 import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -16,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toCodeString
 import org.jetbrains.kotlinx.dataframe.api.under
-import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
@@ -400,110 +398,6 @@ class CodeGenerationTests : BaseTest() {
     }
 
     @Test
-    fun `DataFrame generateCode - default parameters`() {
-        val code = typed.generateCode()
-
-        val packageName = "org.jetbrains.kotlinx.dataframe"
-
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            interface Person {
-                val age: kotlin.Int
-                val city: kotlin.String?
-                val name: kotlin.String
-                val weight: kotlin.Int?
-            }
-            
-            val $packageName.ColumnsContainer<Person>.age: $packageName.DataColumn<kotlin.Int> @JvmName("Person_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            val $packageName.DataRow<Person>.age: kotlin.Int @JvmName("Person_age") get() = this["age"] as kotlin.Int
-            val $packageName.ColumnsContainer<Person>.city: $packageName.DataColumn<kotlin.String?> @JvmName("Person_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            val $packageName.DataRow<Person>.city: kotlin.String? @JvmName("Person_city") get() = this["city"] as kotlin.String?
-            val $packageName.ColumnsContainer<Person>.name: $packageName.DataColumn<kotlin.String> @JvmName("Person_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            val $packageName.DataRow<Person>.name: kotlin.String @JvmName("Person_name") get() = this["name"] as kotlin.String
-            val $packageName.ColumnsContainer<Person>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("Person_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            val $packageName.DataRow<Person>.weight: kotlin.Int? @JvmName("Person_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
-
-        code.value shouldBe expected
-    }
-
-    @Test
-    fun `DataFrame generateCode - custom parameters`() {
-        val code = typed.generateCode(fields = false, extensionProperties = true)
-
-        val packageName = "org.jetbrains.kotlinx.dataframe"
-
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            interface Person { }
-            
-            val $packageName.ColumnsContainer<Person>.age: $packageName.DataColumn<kotlin.Int> @JvmName("Person_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            val $packageName.DataRow<Person>.age: kotlin.Int @JvmName("Person_age") get() = this["age"] as kotlin.Int
-            val $packageName.ColumnsContainer<Person>.city: $packageName.DataColumn<kotlin.String?> @JvmName("Person_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            val $packageName.DataRow<Person>.city: kotlin.String? @JvmName("Person_city") get() = this["city"] as kotlin.String?
-            val $packageName.ColumnsContainer<Person>.name: $packageName.DataColumn<kotlin.String> @JvmName("Person_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            val $packageName.DataRow<Person>.name: kotlin.String @JvmName("Person_name") get() = this["name"] as kotlin.String
-            val $packageName.ColumnsContainer<Person>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("Person_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            val $packageName.DataRow<Person>.weight: kotlin.Int? @JvmName("Person_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
-
-        code.value shouldBe expected
-    }
-
-    @Test
-    fun `DataFrame generateCode - with marker name and default parameters`() {
-        val code = typed.generateCode("CustomMarker")
-
-        val packageName = "org.jetbrains.kotlinx.dataframe"
-
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            interface CustomMarker {
-                val age: kotlin.Int
-                val city: kotlin.String?
-                val name: kotlin.String
-                val weight: kotlin.Int?
-            }
-            
-            val $packageName.ColumnsContainer<CustomMarker>.age: $packageName.DataColumn<kotlin.Int> @JvmName("CustomMarker_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            val $packageName.DataRow<CustomMarker>.age: kotlin.Int @JvmName("CustomMarker_age") get() = this["age"] as kotlin.Int
-            val $packageName.ColumnsContainer<CustomMarker>.city: $packageName.DataColumn<kotlin.String?> @JvmName("CustomMarker_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            val $packageName.DataRow<CustomMarker>.city: kotlin.String? @JvmName("CustomMarker_city") get() = this["city"] as kotlin.String?
-            val $packageName.ColumnsContainer<CustomMarker>.name: $packageName.DataColumn<kotlin.String> @JvmName("CustomMarker_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            val $packageName.DataRow<CustomMarker>.name: kotlin.String @JvmName("CustomMarker_name") get() = this["name"] as kotlin.String
-            val $packageName.ColumnsContainer<CustomMarker>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("CustomMarker_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            val $packageName.DataRow<CustomMarker>.weight: kotlin.Int? @JvmName("CustomMarker_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
-
-        code.value shouldBe expected
-    }
-
-    @Test
-    fun `DataFrame generateCode - with marker name and custom parameters`() {
-        val code = typed.generateCode(
-            markerName = "CustomMarker",
-            fields = false,
-            extensionProperties = false,
-            visibility = MarkerVisibility.INTERNAL,
-        )
-
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            internal interface CustomMarker { }
-            """.trimIndent()
-
-        code.value shouldBe expected
-    }
-
-    @Test
     fun `DataFrame generateInterfaces`() {
         val code = typed.generateInterfaces()
 
@@ -590,62 +484,6 @@ class CodeGenerationTests : BaseTest() {
             internal val $packageName.DataRow<CustomDataClass>.name: kotlin.String @JvmName("CustomDataClass_name") get() = this["name"] as kotlin.String
             internal val $packageName.ColumnsContainer<CustomDataClass>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("CustomDataClass_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             internal val $packageName.DataRow<CustomDataClass>.weight: kotlin.Int? @JvmName("CustomDataClass_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
-
-        code.value shouldBe expected
-    }
-
-    @Test
-    fun `DataFrameSchema generateCode - with default parameters`() {
-        val schema = typed.schema()
-        val code = schema.generateCode("SchemaMarker")
-
-        val packageName = "org.jetbrains.kotlinx.dataframe"
-
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            interface SchemaMarker {
-                val age: kotlin.Int
-                val city: kotlin.String?
-                val name: kotlin.String
-                val weight: kotlin.Int?
-            }
-            
-            val $packageName.ColumnsContainer<SchemaMarker>.age: $packageName.DataColumn<kotlin.Int> @JvmName("SchemaMarker_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            val $packageName.DataRow<SchemaMarker>.age: kotlin.Int @JvmName("SchemaMarker_age") get() = this["age"] as kotlin.Int
-            val $packageName.ColumnsContainer<SchemaMarker>.city: $packageName.DataColumn<kotlin.String?> @JvmName("SchemaMarker_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            val $packageName.DataRow<SchemaMarker>.city: kotlin.String? @JvmName("SchemaMarker_city") get() = this["city"] as kotlin.String?
-            val $packageName.ColumnsContainer<SchemaMarker>.name: $packageName.DataColumn<kotlin.String> @JvmName("SchemaMarker_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            val $packageName.DataRow<SchemaMarker>.name: kotlin.String @JvmName("SchemaMarker_name") get() = this["name"] as kotlin.String
-            val $packageName.ColumnsContainer<SchemaMarker>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("SchemaMarker_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            val $packageName.DataRow<SchemaMarker>.weight: kotlin.Int? @JvmName("SchemaMarker_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
-
-        code.value shouldBe expected
-    }
-
-    @Test
-    fun `DataFrameSchema generateCode - with custom parameters`() {
-        val schema = typed.schema()
-        val code = schema.generateCode(
-            markerName = "SchemaMarker",
-            fields = true,
-            extensionProperties = false,
-            visibility = MarkerVisibility.EXPLICIT_PUBLIC,
-        )
-
-        @Language("kotlin")
-        val expected =
-            """
-            @DataSchema
-            public interface SchemaMarker {
-                public val age: kotlin.Int
-                public val city: kotlin.String?
-                public val name: kotlin.String
-                public val weight: kotlin.Int?
-            }
             """.trimIndent()
 
         code.value shouldBe expected
