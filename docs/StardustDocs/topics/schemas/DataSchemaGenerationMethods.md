@@ -1,4 +1,4 @@
-# Data Schemas Generation From Existing DataFrame
+# Data Schemas Generation Methods
 
 <web-summary>
 Generate useful Kotlin definitions based on your DataFrame structure.
@@ -164,7 +164,7 @@ val customers: List<Customer> = df.cast<Customer>().toList()
 
 <!---END-->
 
-## generateCode
+## generateCode {id="generate-code"}
 
 ```kotlin
 inline fun <reified T> DataFrame<T>.generateCode(

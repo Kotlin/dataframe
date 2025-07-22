@@ -1,4 +1,4 @@
-[//]: # (title: Data Shemas Generation in Gradle)
+[//]: # (title: Gradle Plugin (deprecated))
 
 > The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated in future releases.
 >

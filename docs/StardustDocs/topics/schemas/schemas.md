@@ -1,22 +1,24 @@
 [//]: # (title: Data Schemas)
 
-The Kotlin DataFrame library provides typed data access via 
-[generation of extension properties](extensionPropertiesApi.md) for type 
-[`DataFrame<T>`](DataFrame.md) (as well as [`DataRow<T>`](DataRow.md)), where
-`T` is a marker class that represents `DataSchema` of [`DataFrame`](DataFrame.md).
+The Kotlin DataFrame library provides typed data access via
+[generation of extension properties](extensionPropertiesApi.md) for the type
+[`DataFrame<T>`](DataFrame.md) (as well as for [`DataRow<T>`](DataRow.md)), where
+`T` is a marker class representing the `DataSchema` of the [`DataFrame`](DataFrame.md).
 
-Schema of [`DataFrame`](DataFrame.md) is a mapping from column names to column types of [`DataFrame`](DataFrame.md).
-Data schema can be interpreted as a Kotlin interface or class. If the dataframe is hierarchical -  contains 
-[column group](DataColumn.md#columngroup) or [column of dataframes](DataColumn.md#framecolumn), data schema
-takes it into account and there is a separate class for each column group or inner `DataFrame`.
+A *schema* of a [`DataFrame`](DataFrame.md) is a mapping from column names to column types.  
+This data schema can be expressed as a Kotlin class or interface.  
+If the DataFrame is hierarchical — contains a [column group](DataColumn.md#columngroup) or a
+[column of dataframes](DataColumn.md#framecolumn) — the data schema reflects this structure,
+with a separate class representing the schema of each column group or nested `DataFrame`.
 
-For example, consider a simple hierarchical dataframe from
+For example, consider a simple hierarchical DataFrame from
 <resource src="example.csv"></resource>.
 
-This dataframe consists of two columns: `name`, which is a `String` column, and `info`,
-which is a [**column group**](DataColumn.md#columngroup) containing two nested
-[value columns](DataColumn.md#valuecolumn) —
-`age` of type `Int`, and `height` of type `Double`.
+This DataFrame consists of two columns:
+- `name`, which is a `String` column
+- `info`, which is a [column group](DataColumn.md#columngroup) containing two nested [value columns](DataColumn.md#valuecolumn):
+    - `age` of type `Int`
+    - `height` of type `Double`
 
 <table>
   <thead>
@@ -44,7 +46,7 @@ which is a [**column group**](DataColumn.md#columngroup) containing two nested
   </tbody>
 </table>
 
-Data schema corresponding to this dataframe can be represented like this :
+The data schema corresponding to this DataFrame can be represented as:
 
 ```kotlin
 // Data schema of the "info" column group
@@ -54,7 +56,7 @@ data class Info(
     val height: Float
 )
 
-// Data schema of the entire dataframe
+// Data schema of the entire DataFrame
 @DataSchema
 data class Person(
     val info: Info,
@@ -62,11 +64,12 @@ data class Person(
 )
 ```
 
-[Extension properties](extensionPropertiesApi.md) for the `DataFrame<Person>`
-are generated according to this schema and can be used for accessing columns and usage in operations:
+[Extension properties](extensionPropertiesApi.md) for `DataFrame<Person>`  
+are generated based on this schema and allow accessing columns
+or using them in operations:
 
 ```kotlin
-// Assuming `df` has type DataFrame<Person>
+// Assuming `df` has type `DataFrame<Person>`
 
 // Get "age" column from "info" group
 df.info.age
@@ -74,37 +77,64 @@ df.info.age
 // Select "name" and "height" columns
 df.select { name and info.height }
 
-// Filter rows by age value
-df.filter { age >= 18}
+// Filter rows by "age"
+df.filter { age >= 18 }
 ```
 
+See [](extensionPropertiesApi.md) for more information.
 
-## Popular use cases with Data Schemas
 
-Here's a list of the most popular use cases with Data Schemas.
+## Schemas retrieving
 
-* [**Data Schemas in Gradle projects**](schemasGradle.md) <br/>
-  If you are developing a server application and building it with Gradle.
+Defining a data schema manually can be difficult, especially for dataframes with many columns or deeply nested structures, and may lead to mistakes in column names or types. Kotlin DataFrame provides several methods for generating data schemas.
 
-* [**DataSchema workflow in Jupyter**](schemasJupyter.md) <br/>
-  If you prefer Notebooks.
+* [**`generate..()` methods**](DataSchemaGenerationMethods.md) are extensions for [`DataFrame`](DataFrame.md) that generate a code string representing its `DataSchema`.
 
-* [**Schema inheritance**](schemasInheritance.md) <br/>
-  It's worth knowing how to reuse Data Schemas generated earlier.
+* [**Kotlin DataFrame Compiler Plugin**](Compiler-Plugin.md) **cannot automatically infer** a 
+data schema from external sources such as files or URLs.
+However, it **can** infer the schema if you construct the [`DataFrame`](DataFrame.md) 
+manually — that is, by explicitly declaring the columns using the API.
+It will also **automatically update** the schema during operations that modify the structure of the DataFrame.
 
-* [**Custom Data Schemas**](schemasCustom.md) <br/> 
-  Sometimes it is necessary to create your own scheme.
+> For best results when working with the Compiler Plugin, it's recommended to 
+> generate the initial schema using one of 
+> the [`generate..()` methods](DataSchemaGenerationMethods.md).
+> Once generated, the Compiler Plugin will automatically keep the schema up to date 
+> after any operations that change the structure of the DataFrame.
 
-* [**Use external Data Schemas in Jupyter**](schemasExternalJupyter.md) <br/>
-  Sometimes it is convenient to extract reusable code from Jupyter Notebook into the Kotlin JVM library.
-  Schema interfaces should also be extracted if this code uses Custom Data Schemas.
+### Plugins
 
-* [**Schema Definitions from SQL Databases in Gradle Project**](schemasImportSqlGradle.md) <br/>
-  When you need to take data from the SQL database.
+> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated in future releases.  
+> The KSP plugin is currently non-functional.
+>
+> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugins.  
+{style="warning"}
 
-* [**Import OpenAPI 3.0.0 Schemas (Experimental) in Gradle Project**](schemasImportOpenApiGradle.md) <br/>
-  When you need to take data from the endpoint with OpenAPI Schema.
+* The [Gradle plugin](Gradle-Plugin.md) allows generating a data schema automatically by specifying a source file path in the Gradle build script.
 
-* [**Import Data Schemas, e.g. from OpenAPI 3.0.0 (Experimental), in Jupyter**](schemasImportOpenApiJupyter.md) <br/>
-  Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasImportOpenApiGradle.md), 
-  you can also do this in Jupyter Notebooks.
+* The KSP plugin allows generating a data schema automatically using 
+[Kotlin Symbol Processing](https://kotlinlang.org/docs/ksp-overview.html) by specifying 
+a source file path in your code file.
+
+## Extension properties generation
+
+Once you have a data schema, you can generate [extension properties](extensionPropertiesApi.md).
+
+The easiest and most convenient way is to use the [**Kotlin DataFrame Compiler Plugin**](Compiler-Plugin.md), 
+which generates extension properties on the fly for declared data schemas 
+and automatically keeps them up to date after operations 
+that modify the structure of the [`DataFrame`](DataFrame.md).
+
+> Extension properties generation was deprecated from the Gradle plugin in favor of the Compiler Plugin.  
+> {style="warning"}
+
+* When using Kotlin DataFrame inside [Kotlin Notebook](gettingStartedKotlinNotebook.md), 
+the schema and extension properties
+are generated automatically after each cell execution for all `DataFrame` variables declared in that cell.
+See [extension properties example in Kotlin Notebook](extensionPropertiesApi.md#example).
+
+> Compiler Plugin is coming to Kotlin Notebook soon.
+
+* If you're not using the Compiler Plugin, you can still generate extension properties for a [`DataFrame`](DataFrame.md)
+  using the [`generateCode`](DataSchemaGenerationMethods.md#generate-code) method.
+
