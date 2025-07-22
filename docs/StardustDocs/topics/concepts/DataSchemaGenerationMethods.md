@@ -44,7 +44,8 @@ Useful when you want to:
 * `markerName`: `String?` — The base name to use for generated data classes.  
   If `null`, uses the `T` type argument of `DataFrame` simple name.  
   Default: `null`.
-* `extensionProperties`: `Boolean` – Whether to generate extension properties in addition to `interface` declarations.  
+* `extensionProperties`: `Boolean` – Whether to generate [extension properties](extensionPropertiesApi.md)
+  in addition to `interface` declarations.  
   Useful if you don't use the [compiler plugin](Compiler-Plugin.md), otherwise they are not needed;
   the [compiler plugin](Compiler-Plugin.md), [notebooks](schemasJupyter.md),
   and older [Gradle/KSP plugin](schemasGradle.md) generate them automatically.
@@ -61,7 +62,7 @@ Useful when you want to:
 ### Returns {id="generateDataClasses-returns"}
 
 * `CodeString` – A value class wrapper for `String`, containing  
-  the generated Kotlin code of `data class` declarations and optionally extension properties.
+  the generated Kotlin code of `data class` declarations and optionally [extension properties](extensionPropertiesApi.md).
 
 ### Examples {id="generateDataClasses-examples"}
 
@@ -118,7 +119,8 @@ in cases where the schema cannot be inferred automatically from the source.
 * `markerName`: `String?` — The base name to use for generated interfaces.  
   If `null`, uses the `T` type argument of `DataFrame` simple name.  
   Default: `null`.
-* `extensionProperties`: `Boolean` – Whether to generate extension properties in addition to `interface` declarations.  
+* `extensionProperties`: `Boolean` – Whether to generate [extension properties](extensionPropertiesApi.md)
+  in addition to `interface` declarations.  
   Useful if you don't use the [compiler plugin](Compiler-Plugin.md), otherwise they are not needed;
   the [compiler plugin](Compiler-Plugin.md), [notebooks](schemasJupyter.md),
   and older [Gradle/KSP plugin](schemasGradle.md) generate them automatically.
@@ -135,7 +137,7 @@ in cases where the schema cannot be inferred automatically from the source.
 ### Returns {id="generateInterfaces-returns"}
 
 * `CodeString` – A value class wrapper for `String`, containing  
-  the generated Kotlin code of `@DataSchema` interfaces without extension properties.
+  the generated Kotlin code of `@DataSchema` interfaces without [extension properties](extensionPropertiesApi.md).
 
 ### Examples {id="generateInterfaces-examples"}
 
