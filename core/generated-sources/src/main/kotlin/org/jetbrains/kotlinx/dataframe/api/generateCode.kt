@@ -44,7 +44,7 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
  * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin and older Gradle/KSP plugin generate them automatically.
+ *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
  *   Default is `false`.
  * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
  * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
@@ -91,7 +91,7 @@ public fun <T> DataFrame<T>.generateInterfaces(
  * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin and older Gradle/KSP plugin generate them automatically.
+ *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
  *   Default is `false`.
  * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
  * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
@@ -140,7 +140,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
  * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin and older Gradle/KSP plugin generate them automatically.
+ *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
  *   Default is `false`.
  * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
  * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
@@ -190,7 +190,7 @@ public fun <T> DataFrame<T>.generateDataClasses(
  * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin and older Gradle/KSP plugin generate them automatically.
+ *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
  *   Default is `false`.
  * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
  * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
@@ -240,7 +240,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
  * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin and older Gradle/KSP plugin generate them automatically.
+ *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
  *   Default is `false`.
  * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
  * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
@@ -294,7 +294,7 @@ public fun DataFrameSchema.generateInterfaces(
  * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin and older Gradle/KSP plugin generate them automatically.
+ *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
  *   Default is `false`.
  * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
  * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
