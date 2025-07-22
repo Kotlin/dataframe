@@ -65,7 +65,7 @@ private interface Params {
      * @param extensionProperties Whether to generate [extension properties (column accessors)][ExtensionPropertiesApi]
      *   in addition to data schema declarations (markers).
      *   Useful if you don't use the compiler plugin, otherwise they are not needed;
-     *   the compiler plugin and older Gradle/KSP plugin generate them automatically.
+     *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
      *   Default is `false`.
      */
     interface ExtensionProperties
