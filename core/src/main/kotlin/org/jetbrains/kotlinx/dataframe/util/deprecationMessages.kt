@@ -180,6 +180,15 @@ internal const val SINGLE_COL_REPLACE = "this.allCols().filter(condition).single
 internal const val SINGLE_PLAIN_REPLACE = "this.cols().filter(condition).single()"
 internal const val SINGLE_SET_REPLACE = "this.filter(condition).single()"
 
+internal const val GENERATE_CODE =
+    "This function has been deprecated in favor of the more explicit `generateInterfaces()`. The `fields` parameter has also been removed. Use `CodeGenerator` explicitly, if you need it. $MESSAGE_1_1"
+
+internal const val GENERATE_CODE_REPLACE1 = "this.generateInterfaces(extensionProperties = extensionProperties)"
+internal const val GENERATE_CODE_REPLACE2 =
+    "this.generateInterfaces(markerName = markerName, extensionProperties = extensionProperties, visibility = visibility)"
+
+internal const val GENERATE_INTERFACES = "This function is just here for binary compatibility. $MESSAGE_1_1"
+
 // endregion
 
 // region keep across releases
