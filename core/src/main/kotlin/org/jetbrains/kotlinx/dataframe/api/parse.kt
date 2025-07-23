@@ -20,6 +20,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * ### Global Parser Options
@@ -77,6 +79,10 @@ public interface GlobalParserOptions {
     /**
      * Whether to allow parsing UUIDs to the experimental [kotlin.uuid.Uuid] type.
      * By default, this is false and UUIDs are not recognized.
+     *
+     * NOTE: Interacting with a [Uuid][Uuid] in your code might require
+     * `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
+     * In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
      */
     public var parseExperimentalUuid: Boolean
 }
@@ -109,6 +115,9 @@ public interface GlobalParserOptions {
  * @param useFastDoubleParser whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter.
  * @param parseExperimentalUuid whether to allow parsing UUIDs to the experimental [kotlin.uuid.Uuid] type.
  *   By default, this is false and UUIDs are not recognized.
+ *   NOTE: Interacting with a [Uuid][Uuid] in your code might require
+ *   `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
+ *   In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
  */
 public class ParserOptions(
     public val locale: Locale? = null,
