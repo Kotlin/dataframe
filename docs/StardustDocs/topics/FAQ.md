@@ -174,8 +174,9 @@ and examples with beautiful [Kandy](https://kotlin.github.io/kandy) geo visualiz
 
 > The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated 
 > in future releases.
-> 
-> The KSP plugin is **not compatible with Kotlin 2.1 or newer**.
+>
+> The KSP plugin is **not compatible with [KSP2](https://github.com/google/ksp?tab=readme-ov-file#ksp2-is-here)**
+> and may **not work properly with Kotlin 2.1 or newer**.
 >
 > At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead 
 > of relying on the plugins. 
