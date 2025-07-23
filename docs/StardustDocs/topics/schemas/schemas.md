@@ -84,11 +84,14 @@ df.filter { age >= 18 }
 See [](extensionPropertiesApi.md) for more information.
 
 
-## Schemas retrieving
+## Schema Retrieving
 
-Defining a data schema manually can be difficult, especially for dataframes with many columns or deeply nested structures, and may lead to mistakes in column names or types. Kotlin DataFrame provides several methods for generating data schemas.
+Defining a data schema manually can be difficult, especially for dataframes with many columns or deeply nested 
+structures, and may lead to mistakes in column names or types. 
+Kotlin DataFrame provides several methods for generating data schemas.
 
-* [**`generate..()` methods**](DataSchemaGenerationMethods.md) are extensions for [`DataFrame`](DataFrame.md) that generate a code string representing its `DataSchema`.
+* [**`generate..()` methods**](DataSchemaGenerationMethods.md) are extensions for [`DataFrame`](DataFrame.md) 
+(or for its [`schema`](schema.md)) that generate a code string representing its `DataSchema`.
 
 * [**Kotlin DataFrame Compiler Plugin**](Compiler-Plugin.md) **cannot automatically infer** a 
 data schema from external sources such as files or URLs.
@@ -116,7 +119,7 @@ It will also **automatically update** the schema during operations that modify t
 [Kotlin Symbol Processing](https://kotlinlang.org/docs/ksp-overview.html) by specifying 
 a source file path in your code file.
 
-## Extension properties generation
+## Extension Properties Generation
 
 Once you have a data schema, you can generate [extension properties](extensionPropertiesApi.md).
 
