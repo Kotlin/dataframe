@@ -141,6 +141,7 @@ See [extension properties example in Kotlin Notebook](extensionPropertiesApi.md#
 
 > Compiler Plugin is coming to Kotlin Notebook soon.
 
-* If you're not using the Compiler Plugin, you can still generate extension properties for a [`DataFrame`](DataFrame.md)
-  using the [`generateCode`](DataSchemaGenerationMethods.md#generate-code) method.
-
+* If you're not using the Compiler Plugin, you can still generate 
+[extension properties](extensionPropertiesApi.md) for a [`DataFrame`](DataFrame.md)
+manually by calling one of the [`generate..()` methods](DataSchemaGenerationMethods.md) 
+with the `extensionProperties = true` argument.
