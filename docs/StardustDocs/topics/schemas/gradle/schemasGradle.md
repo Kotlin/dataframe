@@ -136,7 +136,7 @@ dataframes {
 }
 ```
 
-See [reference](DataSchemaGenerationGradle.md) and [examples](DataSchemaGenerationGradle.md#examples) for more details.
+See [reference](Gradle-Plugin.md) and [examples](Gradle-Plugin.md#examples) for more details.
 
 </tab>
 </tabs>

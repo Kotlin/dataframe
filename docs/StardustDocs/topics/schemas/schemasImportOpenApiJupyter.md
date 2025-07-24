@@ -1,4 +1,4 @@
-[//]: # (title: Import Data Schemas, e.g. from OpenAPI, in Jupyter)
+[//]: # (title: Import Data Schemas, e.g. from OpenAPI, in Kotlin Notebook)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
@@ -7,7 +7,7 @@ OpenAPI 3.0.0 schema support is marked as experimental. It might change or be re
 </warning>
 
 Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasImportOpenApiGradle.md),
-you can also do this in Jupyter Notebooks.
+you can also do this in Kotlin Notebook.
 This requires enabling the `enableExperimentalOpenApi` setting, like:
 ```
 %use dataframe(..., enableExperimentalOpenApi=true)

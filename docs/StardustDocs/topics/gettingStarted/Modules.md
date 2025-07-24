@@ -517,7 +517,7 @@ The Gradle plugin allows generating [data schemas](schemas.md) from samples of d
 (of supported formats) like JSON, CSV, Excel files, or URLs, as well as from data fetched from SQL databases  
 using Gradle.
 
-See the [Gradle Plugin Reference](DataSchemaGenerationGradle.md) for installation  
+See the [Gradle Plugin Reference](Gradle-Plugin.md) for installation  
 and usage instructions in Gradle projects.
 
 > By default, the Gradle plugin also applies the [KSP plugin](#ksp-plugin).
