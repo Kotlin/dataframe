@@ -62,7 +62,7 @@ internal inline fun <T, C> FormatClause<T, C>.formatImpl(
     return FormattedFrame(df) { row, col ->
         val oldAttributes = oldFormatter?.invoke(FormattingDSL, row, col.cast())
         if (columns == null || columns.contains(col.name())) {
-            val value = row[col] as C
+            val value = row[col.name] as C
             if (filter == null || filter(row, value)) {
                 oldAttributes and formatter(FormattingDSL, row.cast(), col.cast())
             } else {

@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
@@ -546,6 +547,9 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
  * By default, cell content is formatted as text
  * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
  *
+ * To change the formatting of certain cells or columns in the dataframe,
+ * use [DataFrame.format].
+ *
  * The [DataFrameHtmlData] be saved as an *.html file and displayed in the browser.
  * If you save it as a file and find it in the project tree,
  * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA will automatically reload the file content when it's updated
@@ -560,6 +564,10 @@ public fun <T> DataFrame<T>.toStandaloneHtml(
 /**
  * By default, cell content is formatted as text
  * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+ *
+ * To change the formatting of certain cells or columns in the dataframe,
+ * use [DataFrame.format].
+ *
  * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
  */
 public fun <T> DataFrame<T>.toHtml(

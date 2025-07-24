@@ -8,6 +8,11 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.MergedAttributes
 import org.jetbrains.kotlinx.dataframe.impl.api.SingleAttribute
 import org.jetbrains.kotlinx.dataframe.impl.api.encode
@@ -22,11 +27,90 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
+/**
+ * Formats the specified [columns\] or cells within the [DataFrame] such that
+ * they have specific attributes applied to them when rendering the dataframe to HTML.
+ *
+ * This function does not immediately produce a [FormattedFrame], but instead it selects the columns to be formatted
+ * and returns a [FormatClause] which serves as an intermediate step.
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * See [Selecting Columns][FormatSelectingColumns].
+ *
+ * The [FormatClause] allows to further narrow down the selection to individual cells
+ * by selecting only certain rows, using [where][FormatClause.where],
+ * and then finally specify how to format the cells using
+ * [with][FormatClause.with] or [perRowCol][FormatClause.perRowCol].
+ *
+ * Check out the [Grammar].
+ *
+ * For more information: {@include [DocumentationUrls.Format]}
+ */
+internal interface FormatDocs {
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetFormatOperationArg]}
+     */
+    interface FormatSelectingColumns
+
+    /**
+     * ## Format Operation Grammar
+     * {@include [LineBreak]}
+     * {@include [DslGrammarLink]}
+     * {@include [LineBreak]}
+     *
+     * TODO
+     */
+    interface Grammar
+}
+
+/** {@set [SelectingColumns.OPERATION] [format][format]} */
+@ExcludeFromSources
+private interface SetFormatOperationArg
+
+/**
+ * @include [FormatDocs]
+ * ### This Format Overload
+ */
+@ExcludeFromSources
+private interface CommonFormatDocs
+
 // region format
 
+/**
+ * @include [CommonFormatDocs]
+ * @include [SelectingColumns.Dsl] {@include [SetFormatOperationArg]}
+ * ### Examples:
+ * TODO example
+ *
+ * @param [columns\] The [columns-selector][ColumnsSelector] used to select the columns to be formatted.
+ *   If unspecified, all columns will be formatted.
+ */
 public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> = FormatClause(this, columns)
 
+/**
+ * @include [CommonFormatDocs]
+ * @include [SelectingColumns.ColumnNames] {@include [SetFormatOperationArg]}
+ * ### Examples:
+ * TODO example
+ *
+ * @param [columns\] The names of the columns to be formatted.
+ *   If unspecified, all columns will be formatted.
+ */
 public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?> = format { columns.toColumnSet() }
+
+/**
+ * @include [CommonFormatDocs]
+ *
+ * This simply formats all columns. Optionally, you can specify which columns to format using a
+ * [columns-selector][ColumnsSelector] or by [column names][String].
+ *
+ * ### Examples:
+ * TODO example
+ */
+public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -38,15 +122,14 @@ public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): Forma
 public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> =
     format { columns.toColumnSet() }
 
-public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)
-
 // endregion
 
 public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>): FormattedFrame<T> =
     formatImpl(formatter)
 
+@Suppress("UNCHECKED_CAST")
 public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> =
-    formatImpl { row, col -> formatter(row[col]) }
+    formatImpl { row, col -> formatter(row[col.name] as C) }
 
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> =
     FormatClause(filter = filter, df = df, columns = columns, oldFormatter = oldFormatter)
@@ -119,14 +202,19 @@ public object FormattingDSL {
 
 public typealias RowColFormatter<T, C> = FormattingDSL.(DataRow<T>, DataColumn<C>) -> CellAttributes?
 
+/**
+ * A wrapper around a [DataFrame][df] with HTML formatting data.
+ */
 public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val formatter: RowColFormatter<T, *>? = null) {
     /**
+     * todo copy from toHtml
      * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
      */
     public fun toHtml(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
         df.toHtml(getDisplayConfiguration(configuration))
 
     /**
+     * todo copy from toStandaloneHtml
      * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
      */
     public fun toStandaloneHtml(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
@@ -136,6 +224,23 @@ public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val forma
         configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)
 }
 
+/**
+ * An intermediate class used in the [format] operation.
+ *
+ * This class itself does nothing—it is just a transitional step before specifying
+ * how to format the selected columns.
+ * It must be followed by one of the positioning methods
+ * to produce a new [FormattedFrame]; a [DataFrame] with HTML formatting data.
+ *
+ * Use the following function to filter the rows to format:
+ * - [where][FormatClause.where] – filters the rows to format using a [RowValueFilter].
+ *
+ * Use the following functions to finalize the formatting:
+ * - [with][FormatClause.with] – Specifies how to format the cells using a [CellFormatter].
+ * - [perRowCol][FormatClause.perRowCol] – Specifies how to format each cell individually using a [RowColFormatter].
+ *
+ * See [Grammar][TODO] for more details.
+ */
 public class FormatClause<T, C>(
     internal val df: DataFrame<T>,
     internal val columns: ColumnsSelector<T, C>? = null,
