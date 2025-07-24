@@ -11,6 +11,8 @@ move { columns }
 pathSelector: DataFrame.(DataColumn) -> ColumnPath
 ```
 
+**Related operations**: [](moveRename.md)
+
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 Can be used to change column hierarchy by providing `ColumnPath` for every moved column.

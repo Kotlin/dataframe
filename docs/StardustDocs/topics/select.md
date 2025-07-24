@@ -49,4 +49,6 @@ df.select("age", "weight")
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.select.html" width="100%"/>
 <!---END-->
 
+**Related operations**: [remove](remove.md)
+
 See [column selectors](ColumnSelectors.md)
