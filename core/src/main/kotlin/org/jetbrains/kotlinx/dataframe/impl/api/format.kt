@@ -3,8 +3,8 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.api.CellAttributes
 import org.jetbrains.kotlinx.dataframe.api.FormatClause
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
-import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
-import org.jetbrains.kotlinx.dataframe.api.RGBColor
+import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
+import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -24,10 +24,10 @@ internal fun encRgb(r: Short, g: Short, b: Short): String = "#${encHex(r)}${encH
 
 internal fun encHex(v: Short): String = "${(v / 16).toString(16)}${(v % 16).toString(16)}"
 
-internal fun RGBColor.encode() = encRgb(r, g, b)
+internal fun RgbColor.encode() = encRgb(r, g, b)
 
-internal fun componentWise(color1: RGBColor, color2: RGBColor, f: (Short, Short) -> Short) =
-    RGBColor(
+internal fun componentWise(color1: RgbColor, color2: RgbColor, f: (Short, Short) -> Short) =
+    RgbColor(
         f(color1.r, color2.r),
         f(color1.g, color2.g),
         f(color1.b, color2.b),
@@ -36,18 +36,19 @@ internal fun componentWise(color1: RGBColor, color2: RGBColor, f: (Short, Short)
 internal fun linearGradient(
     x: Double,
     minValue: Double,
-    minColor: RGBColor,
+    minColor: RgbColor,
     maxValue: Double,
-    maxColor: RGBColor,
-): RGBColor {
+    maxColor: RgbColor,
+): RgbColor {
     if (x < minValue) return minColor
     if (x > maxValue) return maxColor
     val t = (x - minValue) / (maxValue - minValue)
-    return componentWise(minColor, maxColor) { cmin, cmax ->
-        (cmin + t * (cmax - cmin)).toInt().toShort()
+    return componentWise(minColor, maxColor) { cMin, cMax ->
+        (cMin + t * (cMax - cMin)).toInt().toShort()
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 internal inline fun <T, C> FormatClause<T, C>.formatImpl(
     crossinline formatter: RowColFormatter<T, C>,
 ): FormattedFrame<T> {
@@ -60,11 +61,11 @@ internal inline fun <T, C> FormatClause<T, C>.formatImpl(
             null
         }
     return FormattedFrame(df) { row, col ->
-        val oldAttributes = oldFormatter?.invoke(FormattingDSL, row, col.cast())
+        val oldAttributes = oldFormatter?.invoke(FormattingDsl, row, col.cast())
         if (columns == null || columns.contains(col.name())) {
             val value = row[col.name] as C
-            if (filter == null || filter(row, value)) {
-                oldAttributes and formatter(FormattingDSL, row.cast(), col.cast())
+            if (filter(row, value)) {
+                oldAttributes and formatter(FormattingDsl, row.cast(), col.cast())
             } else {
                 oldAttributes
             }

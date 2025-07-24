@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
-import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
+import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
@@ -186,7 +186,7 @@ internal fun AnyFrame.toHtmlData(
                 val html =
                     formatter.format(downsizeBufferedImageIfNeeded(value, renderConfig), cellRenderer, renderConfig)
                 val style = renderConfig.cellFormatter
-                    ?.invoke(FormattingDSL, it, col)
+                    ?.invoke(FormattingDsl, it, col)
                     ?.attributes()
                     ?.ifEmpty { null }
                     ?.joinToString(";") { "${it.first}:${it.second}" }
