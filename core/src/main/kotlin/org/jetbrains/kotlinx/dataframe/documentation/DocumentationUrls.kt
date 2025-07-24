@@ -26,6 +26,9 @@ internal interface DocumentationUrls {
     /** [See Column Selectors on the documentation website.]({@include [Url]}/columnselectors.html) */
     interface ColumnSelectors
 
+    /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
+    interface CompilerPlugin
+
     interface DataRow {
         /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
         interface RowExpressions
@@ -116,4 +119,7 @@ internal interface DocumentationUrls {
 
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     interface Explode
+
+    /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
+    interface DataSchemaGeneration
 }
