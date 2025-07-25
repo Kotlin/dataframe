@@ -1,4 +1,4 @@
-[//]: # (title: Get started with Kotlin DataFrame)
+[//]: # (title: Setup Kotlin DataFrame)
 
 The Kotlin DataFrame library gives you the power to manipulate data in your Kotlin projects. 
 

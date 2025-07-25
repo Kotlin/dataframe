@@ -14,7 +14,7 @@
         </toc-element>
     </toc-element>
 
-    <toc-element topic="gettingStarted.md" accepts-web-file-names="installation.html">
+    <toc-element topic="setup.md" accepts-web-file-names="installation.html">
         <toc-element topic="gettingStartedKotlinNotebook.md"/>
         <toc-element topic="gettingStartedGradle.md"/>
         <toc-element topic="gettingStartedJupyterNotebook.md"/>
