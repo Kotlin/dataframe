@@ -16,8 +16,8 @@ This guide shows how to quickly get started with **Kotlin DataFrame**:
 you'll learn how to load data, perform basic transformations, and build a simple plot using Kandy.
 
 We recommend [starting with **Kotlin Notebook**](gettingStartedKotlinNotebook.md) for the best beginner experience —
-everything works out of the box,
-including interactivity and rich DataFrame and plots rendering.  
+everything works out of the box, including interactivity and rich DataFrame and plots rendering.  
+
 You can instantly see the results of each operation: view the contents of your DataFrames after every transformation,
 inspect individual rows and columns, and explore data step-by-step in a live and interactive way.
 

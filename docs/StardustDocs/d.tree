@@ -9,6 +9,7 @@
     <toc-element topic="Home.topic"/>
     <toc-element topic="Guides-And-Examples.md">
         <toc-element topic="quickstart.md"/>
+        <toc-element topic="migratingFromPandas.md"/>
         <toc-element topic="Kotlin-DataFrame-Features-in-Kotlin-Notebook.md">
             <toc-element topic="Trobleshooting.md"/>
         </toc-element>
