@@ -546,7 +546,8 @@ plugins {
 
 #### `kotlinx.dataframe:symbol-processor-all` – KSP Plugin {id="ksp-plugin"}
 
-> Doesn't work for now.
+> The KSP plugin is **not compatible with [KSP2](https://github.com/google/ksp?tab=readme-ov-file#ksp2-is-here)**
+> and may **not work properly with Kotlin 2.1 or newer**.
 > 
 > At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugin.
 {style="warning"}
