@@ -6,10 +6,11 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
-import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
+import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
@@ -185,7 +186,7 @@ internal fun AnyFrame.toHtmlData(
                 val html =
                     formatter.format(downsizeBufferedImageIfNeeded(value, renderConfig), cellRenderer, renderConfig)
                 val style = renderConfig.cellFormatter
-                    ?.invoke(FormattingDSL, it, col)
+                    ?.invoke(FormattingDsl, it, col)
                     ?.attributes()
                     ?.ifEmpty { null }
                     ?.joinToString(";") { "${it.first}:${it.second}" }
@@ -546,6 +547,9 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
  * By default, cell content is formatted as text
  * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
  *
+ * To change the formatting of certain cells or columns in the dataframe,
+ * use [DataFrame.format].
+ *
  * The [DataFrameHtmlData] be saved as an *.html file and displayed in the browser.
  * If you save it as a file and find it in the project tree,
  * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA will automatically reload the file content when it's updated
@@ -560,6 +564,10 @@ public fun <T> DataFrame<T>.toStandaloneHtml(
 /**
  * By default, cell content is formatted as text
  * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+ *
+ * To change the formatting of certain cells or columns in the dataframe,
+ * use [DataFrame.format].
+ *
  * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
  */
 public fun <T> DataFrame<T>.toHtml(
@@ -597,8 +605,10 @@ public fun <T> DataFrame<T>.toHtml(
 }
 
 /**
- * Container for HTML page data in the form of a String
- * Can be used to compose rendered dataframe tables with additional HTML elements
+ * Container for HTML data, often containing a dataframe table.
+ *
+ * It can be used to compose rendered dataframe tables with additional HTML elements,
+ * or to simply print the HTML or write it to file.
  */
 public class DataFrameHtmlData(
     @Language("css") public val style: String = "",
@@ -735,6 +745,9 @@ public class DataFrameHtmlData(
 }
 
 /**
+ * A collection of settings for rendering dataframes as HTML tables or native
+ * Kotlin Notebook table output.
+ *
  * @param rowsLimit null to disable rows limit
  * @param cellContentLimit -1 to disable content trimming
  * @param enableFallbackStaticTables true to add additional pure HTML table that will be visible only if JS  is disabled;

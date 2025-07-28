@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -67,6 +69,9 @@ public class Update<T, C>(
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `[ `__`.`__[**`at`**][Update.at]**`(`**[`rowIndices`][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`notNull`**][Update.notNull]**`()`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[**`with`**][Update.with]**`  {  `**[`rowExpression`][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
@@ -611,25 +616,21 @@ internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>)
     return { thisExp(this, it) && other(this, it) }
 }
 
-/** ## Not Null
+/**
+ * ## Not Null
+ * Filters the update-selection to only include cells where the value is not null.
  *
- * Selects only the rows where the values in the selected columns are not null.
- *
- * Shorthand for: [update][org.jetbrains.kotlinx.dataframe.api.update]` { ... }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { it != null }`
- *
- * For example:
- *
- * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Number][Number]`?>() }.`[notNull][org.jetbrains.kotlinx.dataframe.api.notNull]`().`[perCol][org.jetbrains.kotlinx.dataframe.api.Update.perCol]`  {  `[mean][org.jetbrains.kotlinx.dataframe.api.mean]`() }`
- *
- * ### Optional
- * Provide an [expression] to update the rows with.
- * This combines [with][org.jetbrains.kotlinx.dataframe.api.Update.with] with [notNull][org.jetbrains.kotlinx.dataframe.api.notNull].
+ * This is shorthand for `.`[where][Update.where]` { it != null }`.
  *
  * For example:
  *
- * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { city }.`[notNull][org.jetbrains.kotlinx.dataframe.api.Update.notNull]` { it.`[toUpperCase][String.toUpperCase]`() }`
+ * `df.`[update][update]` { `[colsOf][colsOf]`<`[Int][Int]`?>() }.`[notNull][notNull]`().`[perRowCol][Update.perRowCol]` { row, col ->`
  *
- * @param expression Optional [Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample] to update the rows with. */
+ * &nbsp;&nbsp;&nbsp;&nbsp;`row[col] / col.`[mean][DataColumn.mean]`(skipNA = true)`
+ *
+ * `}`
+ */
+@Suppress("UNCHECKED_CAST")
 @Interpretable("UpdateNotNullDefault")
 public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } as Update<T, C>
 
