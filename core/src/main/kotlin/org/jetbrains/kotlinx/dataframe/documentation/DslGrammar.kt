@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 /**
  * ## DSL Grammar
  *
- * If you've come across notations like **`a(`** `(`**`b`**` | [`**`c, .. `**`] )` **`)`**
+ * If you've come across notations like **`a(`**` (`**`b`**` | [`**`c, .. `**`] ) `**`)`**
  * either in the KDocs or on the website and would like some further explanation
  * for what it means, you've come to the right place.
  *

@@ -52,19 +52,20 @@ internal fun linearGradient(
 internal inline fun <T, C> FormatClause<T, C>.formatImpl(
     crossinline formatter: RowColFormatter<T, C>,
 ): FormattedFrame<T> {
+    val clause = this
     val columns =
-        if (columns != null) {
-            df.getColumnsWithPaths(columns)
+        if (clause.columns != null) {
+            clause.df.getColumnsWithPaths(clause.columns)
                 .mapNotNull { if (it.depth == 0) it.name else null }
                 .toSet()
         } else {
             null
         }
-    return FormattedFrame(df) { row, col ->
-        val oldAttributes = oldFormatter?.invoke(FormattingDsl, row, col.cast())
+    return FormattedFrame(clause.df) { row, col ->
+        val oldAttributes = clause.oldFormatter?.invoke(FormattingDsl, row, col.cast())
         if (columns == null || columns.contains(col.name())) {
             val value = row[col.name] as C
-            if (filter(row, value)) {
+            if (clause.filter(row, value)) {
                 oldAttributes and formatter(FormattingDsl, row.cast(), col.cast())
             } else {
                 oldAttributes
