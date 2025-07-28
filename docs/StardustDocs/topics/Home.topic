@@ -29,6 +29,7 @@
             <title>Featured topics</title>
             <a href="Kotlin-DataFrame-Features-in-Kotlin-Notebook.md"/>
             <a href="Compiler-Plugin.md"/>
+            <a href="Data-Sources.md"/>
             <a href="readSqlDatabases.md"/>
         </secondary>
 
