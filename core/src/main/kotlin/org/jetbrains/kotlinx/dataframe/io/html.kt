@@ -605,8 +605,10 @@ public fun <T> DataFrame<T>.toHtml(
 }
 
 /**
- * Container for HTML page data in the form of a String
- * Can be used to compose rendered dataframe tables with additional HTML elements
+ * Container for HTML data, often containing a dataframe table.
+ *
+ * It can be used to compose rendered dataframe tables with additional HTML elements,
+ * or to simply print the HTML or write it to file.
  */
 public class DataFrameHtmlData(
     @Language("css") public val style: String = "",
@@ -743,6 +745,9 @@ public class DataFrameHtmlData(
 }
 
 /**
+ * A collection of settings for rendering dataframes as HTML tables or native
+ * Kotlin Notebook table output.
+ *
  * @param rowsLimit null to disable rows limit
  * @param cellContentLimit -1 to disable content trimming
  * @param enableFallbackStaticTables true to add additional pure HTML table that will be visible only if JS  is disabled;
