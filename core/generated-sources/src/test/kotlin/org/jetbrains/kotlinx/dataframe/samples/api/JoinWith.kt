@@ -8,10 +8,10 @@ import kotlinx.datetime.toJavaLocalDate
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
+import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.JoinedDataRow
-import org.jetbrains.kotlinx.dataframe.api.RGBColor
+import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
@@ -73,7 +73,7 @@ class JoinWith : TestBase() {
         LocalDate(2023, 7, 10), 2,
     ).cast<Visits>()
 
-    class ColoredValue<T>(val value: T, val backgroundColor: RGBColor, val textColor: RGBColor) {
+    class ColoredValue<T>(val value: T, val backgroundColor: RgbColor, val textColor: RgbColor) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
@@ -108,18 +108,18 @@ class JoinWith : TestBase() {
             colsAtAnyDepth().colsOf<ColoredValue<*>?>()
         }.with(Infer.Type) { it?.value }
 
-    private fun <T> T.colored(background: RGBColor, text: RGBColor) = ColoredValue(this, background, text)
+    private fun <T> T.colored(background: RgbColor, text: RgbColor) = ColoredValue(this, background, text)
 
-    private fun <T> T.winter(background: RGBColor = RGBColor(179, 205, 224), text: RGBColor = RGBColor(0, 0, 51)) =
+    private fun <T> T.winter(background: RgbColor = RgbColor(179, 205, 224), text: RgbColor = RgbColor(0, 0, 51)) =
         ColoredValue(this, background, text)
 
-    private fun <T> T.spring(background: RGBColor = RGBColor(204, 235, 197), text: RGBColor = RGBColor(0, 51, 0)) =
+    private fun <T> T.spring(background: RgbColor = RgbColor(204, 235, 197), text: RgbColor = RgbColor(0, 51, 0)) =
         ColoredValue(this, background, text)
 
-    private fun <T> T.summer(background: RGBColor = RGBColor(176, 224, 230), text: RGBColor = RGBColor(25, 25, 112)) =
+    private fun <T> T.summer(background: RgbColor = RgbColor(176, 224, 230), text: RgbColor = RgbColor(25, 25, 112)) =
         ColoredValue(this, background, text)
 
-    private fun <T> T.autumn(background: RGBColor = RGBColor(221, 160, 221), text: RGBColor = RGBColor(85, 26, 139)) =
+    private fun <T> T.autumn(background: RgbColor = RgbColor(221, 160, 221), text: RgbColor = RgbColor(85, 26, 139)) =
         ColoredValue(this, background, text)
 
     private val coloredCampaigns = dataFrameOf("name", "startDate", "endDate")(
@@ -134,7 +134,7 @@ class JoinWith : TestBase() {
         LocalDate(2023, 1, 10).winter(), 1.winter(),
         LocalDate(2023, 1, 20).winter(), 2.winter(),
         LocalDate(2023, 4, 15).spring(), 1.spring(),
-        LocalDate(2023, 5, 1).colored(FormattingDSL.white, FormattingDSL.black), 3.colored(FormattingDSL.white, FormattingDSL.black),
+        LocalDate(2023, 5, 1).colored(FormattingDsl.white, FormattingDsl.black), 3.colored(FormattingDsl.white, FormattingDsl.black),
         LocalDate(2023, 7, 10).summer(), 2.summer(),
     )
 
