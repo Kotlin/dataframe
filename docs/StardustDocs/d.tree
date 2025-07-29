@@ -187,8 +187,23 @@
             <toc-element topic="jupyterRendering.md"/>
         </toc-element>
     </toc-element>
-    <toc-element topic="Data-Sources.md" hidden="true">
-        <toc-element topic="Integrations.md" hidden="true"/>
+    <toc-element topic="Data-Sources.md">
+        <toc-element topic="JSON.md">
+            <toc-element topic="OpenAPI.md"/>
+        </toc-element>
+        <toc-element topic="CSV-TSV.md"/>
+        <toc-element topic="Excel.md"/>
+        <toc-element topic="ApacheArrow.md"/>
+        <toc-element topic="SQL.md">
+            <toc-element topic="PostgreSQL.md"/>
+            <toc-element topic="MySQL.md"/>
+            <toc-element topic="Microsoft-SQL-Server.md"/>
+            <toc-element topic="SQLite.md"/>
+            <toc-element topic="H2.md"/>
+            <toc-element topic="MariaDB.md"/>
+            <toc-element topic="Custom-SQL-Source.md"/>
+        </toc-element>
+        <toc-element topic="Integrations.md"/>
     </toc-element>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
     <toc-element topic="Support.md"/>
