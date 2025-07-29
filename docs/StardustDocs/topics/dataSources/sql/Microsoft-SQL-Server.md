@@ -50,9 +50,12 @@ The actual Maven Central driver version could be found
 
 ## Read
 
-[`DataFrame`](DataFrame.md) can be loaded from an MS SQL database using various methods:
-[`readSqlTable`](readSqlDatabases.md), [`readSqlQuery`](readSqlDatabases.md),
-[`readResultSet`](readSqlDatabases.md), and [`readAllSqlTables`](readSqlDatabases.md).
+[`DataFrame`](DataFrame.md) can be loaded from a database in several ways:  
+a user can read data from a SQL table by given name ([`readSqlTable`](readSqlDatabases.md)),  
+as a result of a user-defined SQL query ([`readSqlQuery`](readSqlDatabases.md)),  
+or from a given `ResultSet` ([`readResultSet`](readSqlDatabases.md)).  
+It is also possible to load all data from non-system tables, each into a separate `DataFrame` ([`readAllSqlTables`](readSqlDatabases.md)).
+
 See [](readSqlDatabases.md) for more details.
 
 ```kotlin
