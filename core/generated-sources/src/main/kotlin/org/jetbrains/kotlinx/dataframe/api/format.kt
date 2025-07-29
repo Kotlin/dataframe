@@ -166,6 +166,9 @@ internal interface FormatDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`perRowCol`**][FormatClause.perRowCol]**`  {  `**[rowColFormatter][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RowColFormatterDef]**` }`**
      *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`linearBg`**][FormatClause.linearBg]**`(`**`from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
+     *
      * `[ `__`.`__[**format**][FormattedFrame.format]` ↺ ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -267,21 +270,6 @@ internal interface FormatDocs {
          * `color: `[RgbColor][RgbColor]
          */
         interface RgbColorDef
-
-        /** [cellFormatter][CellFormatterDef] */
-        interface CellFormatterRef
-
-        /** [rowColFormatter][RowColFormatterDef] */
-        interface RowColFormatterRef
-
-        /** [FormattingDsl][FormattingDslGrammarDef] */
-        interface FormattingDslGrammarRef
-
-        /** [cellAttributes][CellAttributesDef] */
-        interface CellAttributesRef
-
-        /** [color][RgbColorDef] */
-        interface RgbColorRef
     }
 }
 
@@ -332,7 +320,15 @@ internal interface FormatDocs {
  *
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  * ### Examples:
- * TODO example
+ * ```kt
+ * df.format().with { background(white) and textColor(black) and bold }
+ *   .format { temperature }.linearBg(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)
+ *   .format { age }.notNull().perRowCol { row, col ->
+ *     textColor(
+ *       linear(row[col.name()], col.min() to green, col.max() to red)
+ *     )
+ *   }.toStandaloneHtml().openInBrowser()
+ * ```
  *
  * @param [columns] The [columns-selector][ColumnsSelector] used to select the columns to be formatted.
  *   If unspecified, all columns will be formatted.
@@ -871,7 +867,8 @@ public object FormattingDsl {
      * For example:
      * ```kt
      * df.format { temperature }.with { value ->
-     *     background(linear(value, -20 to blue, 40 to red)) and textColor(black)
+     *     background(linear(value, -20 to blue, 40 to red)) and
+     *       textColor(black)
      * }
      * ```
      *
