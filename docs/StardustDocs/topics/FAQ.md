@@ -27,7 +27,7 @@ To stay updated on progress, subscribe to the
 Yes — Kotlin DataFrame can be used in Android projects.
 
 There is no dedicated Android artifact yet, but you can include the standard **JVM artifact**  
-by setting up a [custom Gradle configuration](gettingStartedGradleAdvanced.md).
+by setting up a [custom Gradle configuration](SetupAndroid.md).
 
 ## How to start with Kotlin DataFrame ?
 
@@ -41,7 +41,7 @@ to explore various use cases and deepen your understanding of Kotlin DataFrame.
 
 For the best experience, Kotlin DataFrame is most effective in an interactive environment.
 
-- **[Kotlin Notebook](gettingStartedKotlinNotebook.md)** is ideal for exploring Kotlin DataFrame.  
+- **[Kotlin Notebook](SetupKotlinNotebook.md)** is ideal for exploring Kotlin DataFrame.  
   Everything works out of the box — interactivity, rich rendering of DataFrames and plots.  
   You can instantly see the results of each operation, view the contents of your DataFrames after every transformation,  
   inspect individual rows and columns, and explore data step-by-step in a live and interactive way.  
@@ -109,7 +109,7 @@ in a **type-safe** and **name-safe** way.
 
 They are generated automatically when working with Kotlin DataFrame in:
 
-- [Kotlin Notebook](gettingStartedKotlinNotebook.md), where extension properties are generated 
+- [Kotlin Notebook](SetupKotlinNotebook.md), where extension properties are generated 
 after each cell execution.
 - A Kotlin project in [IntelliJ IDEA](https://www.jetbrains.com/idea/) with the
   [](Compiler-Plugin.md) enabled, where the properties are generated at compile time.

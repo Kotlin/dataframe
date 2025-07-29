@@ -1,4 +1,4 @@
-# Get started with Kotlin DataFrame in Kotlin Notebook
+# Setup Kotlin DataFrame in Kotlin Notebook
 
 <web-summary>
 Use Kotlin DataFrame directly in Kotlin Notebook — write code, explore results, and refine your analysis step by step in a live environment.
@@ -14,22 +14,23 @@ Follow a step-by-step introduction to Kotlin DataFrame in Kotlin Notebook: setup
 </link-summary>
 
 
-[Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html) is an interactive environment  
-integrated into [IntelliJ IDEA](https://www.jetbrains.com/idea/), designed for fast, iterative, 
-and visual data exploration with Kotlin.  
+[Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html) is an interactive environment
+integrated into [IntelliJ IDEA](https://www.jetbrains.com/idea/) (and can be easily added in
+[Android Studio](https://developer.android.com/studio)), designed for fast, iterative,
+and visual data exploration with Kotlin.
 
-The Kotlin Notebook plugin transforms IntelliJ IDEA into a powerful data science workspace,  
-combining Kotlin’s strong language features with live code execution, 
-interactive data exploration, and rich visualizations
+The Kotlin Notebook plugin transforms IntelliJ IDEA into a powerful data science workspace,
+combining Kotlin’s strong language features with live code execution,
+interactive data exploration, and rich visualizations.
 
 It’s perfect for working with Kotlin DataFrame — letting you write code, view results instantly,
 and refine your analysis step by step.
 
 
-## Create Kotlin Notebook
+## Create a Kotlin notebook
 
 <tip>
-Before version 2025.1, Kotlin Notebook is unavailable in IntelliJ IDEA Community Edition  
+Before version 2025.1, Kotlin Notebook is unavailable in IntelliJ IDEA Community Edition
 and not bundled in IntelliJ IDEA Ultimate Edition by default.
 </tip>
 
@@ -78,7 +79,7 @@ Or use the latest stable version of Kotlin DataFrame
 
 ## Hello World
 
-Let’s create your first Kotlin DataFrame in the notebook — a simple "Hello, World!" style example:
+Let’s create your first [`DataFrame`](DataFrame.md) in the notebook — a simple "Hello, World!" style example:
 
 ```kotlin
 val df = dataFrameOf(

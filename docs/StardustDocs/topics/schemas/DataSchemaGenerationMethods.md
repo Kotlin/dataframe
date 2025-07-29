@@ -47,7 +47,7 @@ Useful when you want to:
 * `extensionProperties`: `Boolean` – Whether to generate [extension properties](extensionPropertiesApi.md)
   in addition to `interface` declarations.  
   Useful if you don't use the [compiler plugin](Compiler-Plugin.md), otherwise they are not needed;
-  the [compiler plugin](Compiler-Plugin.md), [notebooks](gettingStartedKotlinNotebook.md),
+  the [compiler plugin](Compiler-Plugin.md), [notebooks](SetupKotlinNotebook.md),
   and older [Gradle/KSP plugin](schemasGradle.md) generate them automatically.
   Default: `false`.
 * `visibility`: `MarkerVisibility` – Visibility modifier for the generated declarations.  
@@ -122,7 +122,7 @@ in cases where the schema cannot be inferred automatically from the source.
 * `extensionProperties`: `Boolean` – Whether to generate [extension properties](extensionPropertiesApi.md)
   in addition to `interface` declarations.  
   Useful if you don't use the [compiler plugin](Compiler-Plugin.md), otherwise they are not needed;
-  the [compiler plugin](Compiler-Plugin.md), [notebooks](gettingStartedKotlinNotebook.md),
+  the [compiler plugin](Compiler-Plugin.md), [notebooks](SetupKotlinNotebook.md),
   and older [Gradle/KSP plugin](schemasGradle.md) generate them automatically.
   Default: `false`.
 * `visibility`: `MarkerVisibility` – Visibility modifier for the generated declarations.  

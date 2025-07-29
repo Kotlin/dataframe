@@ -134,7 +134,7 @@ that modify the structure of the [`DataFrame`](DataFrame.md).
 > Extension properties generation was deprecated from the Gradle plugin in favor of the Compiler Plugin.  
 > {style="warning"}
 
-* When using Kotlin DataFrame inside [Kotlin Notebook](gettingStartedKotlinNotebook.md), 
+* When using Kotlin DataFrame inside [Kotlin Notebook](SetupKotlinNotebook.md), 
 the schema and extension properties
 are generated automatically after each cell execution for all `DataFrame` variables declared in that cell.
 See [extension properties example in Kotlin Notebook](extensionPropertiesApi.md#example).

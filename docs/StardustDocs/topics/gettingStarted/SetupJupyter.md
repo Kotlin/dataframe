@@ -1,4 +1,4 @@
-[//]: # (title: Get started with Kotlin DataFrame on Jupyter Notebook)
+[//]: # (title: Setup Kotlin DataFrame in Jupyter)
 
 ## Jupyter Notebook
 

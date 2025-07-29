@@ -1,4 +1,4 @@
-[//]: # (title: Get started with Kotlin DataFrame on Gradle with custom configuration)
+[//]: # (title: Setup Kotlin DataFrame on Android)
 
 ## Gradle
 

@@ -14,12 +14,12 @@
         </toc-element>
     </toc-element>
 
-    <toc-element topic="setup.md" accepts-web-file-names="installation.html">
-        <toc-element topic="gettingStartedKotlinNotebook.md"/>
-        <toc-element topic="gettingStartedGradle.md"/>
-        <toc-element topic="gettingStartedJupyterNotebook.md"/>
-        <toc-element topic="gettingStartedDatalore.md"/>
-        <toc-element topic="gettingStartedGradleAdvanced.md"/>
+    <toc-element topic="Setup.md" accepts-web-file-names="installation.html">
+        <toc-element topic="SetupKotlinNotebook.md"/>
+        <toc-element topic="SetupGradle.md"/>
+        <toc-element topic="SetupJupyter.md"/>
+        <toc-element topic="SetupDatalore.md"/>
+        <toc-element topic="SetupAndroid.md"/>
         <toc-element topic="Modules.md"/>
     </toc-element>
     <toc-element topic="concepts.md" accepts-web-file-names="overview.html">
