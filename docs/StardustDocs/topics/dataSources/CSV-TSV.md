@@ -39,3 +39,14 @@ You can write a [`DataFrame`](DataFrame.md) to a CSV file using the [`writeCsv()
 ```kotlin
 df.writeCsv("example.csv")
 ```
+
+## Deephaven CSV
+
+The [`dataframe-csv`](Modules.md#dataframe-csv) module uses the high-performance
+[Deephaven CSV library](https://github.com/deephaven/deephaven-csv) under the hood
+for fast and efficient CSV reading and writing.
+
+If you're working with large CSV files, you can adjust the parser manually
+by [configuring Deephaven-specific parameters](https://kotlin.github.io/dataframe/read.html#unlocking-deephaven-csv-features)
+to get the best performance for your use case.
+
