@@ -17,6 +17,8 @@ import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
+import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.documentation.ExportAsHtml
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
@@ -30,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
+import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent.Companion.media
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
@@ -166,6 +169,9 @@ internal interface FormatDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`perRowCol`**][FormatClause.perRowCol]**`  {  `**[rowColFormatter][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RowColFormatterDef]**` }`**
      *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`linearBg`**][FormatClause.linearBg]**`(`**`from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
+     *
      * `[ `__`.`__[**format**][FormattedFrame.format]` ↺ ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -267,21 +273,6 @@ internal interface FormatDocs {
          * `color: `[RgbColor][RgbColor]
          */
         interface RgbColorDef
-
-        /** [cellFormatter][CellFormatterDef] */
-        interface CellFormatterRef
-
-        /** [rowColFormatter][RowColFormatterDef] */
-        interface RowColFormatterRef
-
-        /** [FormattingDsl][FormattingDslGrammarDef] */
-        interface FormattingDslGrammarRef
-
-        /** [cellAttributes][CellAttributesDef] */
-        interface CellAttributesRef
-
-        /** [color][RgbColorDef] */
-        interface RgbColorRef
     }
 }
 
@@ -332,7 +323,14 @@ internal interface FormatDocs {
  *
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  * ### Examples:
- * TODO example
+ * ```kt
+ * df.format { temperature }.linearBg(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)
+ *   .format { age }.notNull().perRowCol { row, col ->
+ *     textColor(
+ *       linear(col[row], col.min() to green, col.max() to red)
+ *     )
+ *   }.toStandaloneHtml().openInBrowser()
+ * ```
  *
  * @param [columns] The [columns-selector][ColumnsSelector] used to select the columns to be formatted.
  *   If unspecified, all columns will be formatted.
@@ -364,7 +362,15 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
  * Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
  * ### Examples:
- * TODO example
+ * ```kt
+ * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }
+ *   .format("age").notNull().perRowCol { row, col ->
+ *     col as DataColumn<Int>
+ *     textColor(
+ *       linear(col[row], col.min() to green, col.max() to red)
+ *     )
+ *   }.toStandaloneHtml().openInBrowser()
+ * ```
  *
  * @param [columns] The names of the columns to be formatted.
  *   If unspecified, all columns will be formatted.
@@ -398,7 +404,15 @@ public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?
  * [columns-selector][ColumnsSelector] or by [column names][String].
  *
  * ### Examples:
- * TODO example
+ * ```kt
+ * df.format().with { background(white) and textColor(black) and bold }
+ *   .format { temperature }.linearBg(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)
+ *   .format { age }.notNull().perRowCol { row, col ->
+ *     textColor(
+ *       linear(col[row], col.min() to green, col.max() to red)
+ *     )
+ *   }.toStandaloneHtml().openInBrowser()
+ * ```
  */
 public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)
 
@@ -459,7 +473,15 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  *
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  * ### Examples:
- * TODO example
+ * ```kt
+ * df.format().with { background(white) and textColor(black) and bold }
+ *   .format { temperature }.linearBg(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)
+ *   .format { age }.notNull().perRowCol { row, col ->
+ *     textColor(
+ *       linear(col[row], col.min() to green, col.max() to red)
+ *     )
+ *   }.toStandaloneHtml().openInBrowser()
+ * ```
  *
  * @param [columns] The [columns-selector][ColumnsSelector] used to select the columns to be formatted.
  *   If unspecified, all columns will be formatted.
@@ -492,7 +514,15 @@ public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): Form
  * Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
  * ### Examples:
- * TODO example
+ * ```kt
+ * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }
+ *   .format("age").notNull().perRowCol { row, col ->
+ *     col as DataColumn<Int>
+ *     textColor(
+ *       linear(col[row], col.min() to green, col.max() to red)
+ *     )
+ *   }.toStandaloneHtml().openInBrowser()
+ * ```
  *
  * @param [columns] The names of the columns to be formatted.
  *   If unspecified, all columns will be formatted.
@@ -527,7 +557,16 @@ public fun <T> FormattedFrame<T>.format(vararg columns: String): FormatClause<T,
  * [columns-selector][ColumnsSelector] or by [column names][String].
  *
  * ### Examples:
- * TODO example
+ * ```kt
+ * df.format { temperature }.with { textColor(linear(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)) }
+ *   .format { age }.notNull().perRowCol { row, col ->
+ *     textColor(
+ *       linear(col[row], col.min() to green, col.max() to red)
+ *     )
+ *   }
+ *   .format().with { background(white) and bold }
+ *   .toStandaloneHtml().openInBrowser()
+ * ```
  */
 public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(df, null, formatter)
 
@@ -545,17 +584,60 @@ public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(
  * Both the cell value (`it: `[C][C]) and its row (`this: `[DataRow][DataRow]`<`[T][T]`>`) are available.
  *
  * ### Examples using [where]:
- * TODO
+ * ```kt
+ * df.format { temperature }
+ *   .where { it !in -10..40 }
+ *   .with { background(red) }
+ * ```
  *
  * Check out the full [Grammar][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> =
     FormatClause(filter = this.filter and filter, df = df, columns = columns, oldFormatter = oldFormatter)
 
+/**
+ * Only format the selected columns at given row indices.
+ *
+ * Accepts either a [Collection]<[Int]>, an [IntRange], or just `vararg `[Int] indices.
+ *
+ * ### Examples using [at][org.jetbrains.kotlinx.dataframe.api.at]
+ * ```kt
+ * df.format()
+ *   .at(df.indices().step(2).toList())
+ *   .with { background(lightGray) }
+ * ```
+ * Check out the full [Grammar][FormatDocs.Grammar].
+ */
 public fun <T, C> FormatClause<T, C>.at(rowIndices: Collection<Int>): FormatClause<T, C> = where { index in rowIndices }
 
+/**
+ * Only format the selected columns at given row indices.
+ *
+ * Accepts either a [Collection]<[Int]>, an [IntRange], or just `vararg `[Int] indices.
+ *
+ * ### Examples using [at][org.jetbrains.kotlinx.dataframe.api.at]
+ * ```kt
+ * df.format { colsOf<String?>() }
+ *   .at(0, 3, 4)
+ *   .with { background(lightGray) }
+ * ```
+ * Check out the full [Grammar][FormatDocs.Grammar].
+ */
 public fun <T, C> FormatClause<T, C>.at(vararg rowIndices: Int): FormatClause<T, C> = at(rowIndices.toSet())
 
+/**
+ * Only format the selected columns at given row indices.
+ *
+ * Accepts either a [Collection]<[Int]>, an [IntRange], or just `vararg `[Int] indices.
+ *
+ * ### Examples using [at][org.jetbrains.kotlinx.dataframe.api.at]
+ * ```kt
+ * df.format { cols(2..7) }
+ *   .at(2..7)
+ *   .with { background(lightGray) }
+ * ```
+ * Check out the full [Grammar][FormatDocs.Grammar].
+ */
 public fun <T, C> FormatClause<T, C>.at(rowRange: IntRange): FormatClause<T, C> = where { index in rowRange }
 
 /**
@@ -563,13 +645,12 @@ public fun <T, C> FormatClause<T, C>.at(rowRange: IntRange): FormatClause<T, C> 
  *
  * This is shorthand for `.`[where][FormatClause.where]` { it != null }`.
  *
- * For example:
- *
- * `df.`[format][format]` { `[colsOf][colsOf]`<`[Int][Int]`?>() }.`[notNull][notNull]`().`[perRowCol][FormatClause.perRowCol]` { row, col ->`
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;[linearBg][FormattingDsl.linearBg]`(row[col], col.`[min][DataColumn.min]`() to `[red][FormattingDsl.red]`, col.`[max][DataColumn.max]`() to `[green][FormattingDsl.green]`)`
- *
- * `}`
+ * ### Examples using [notNull]:
+ * ```kt
+ * df.format { colsOf<Int?>() }.notNull().perRowCol { row, col ->
+ *     linearBg(col[row], col.min() to red, col.max() to green)
+ * }
+ * ```
  */
 @Suppress("UNCHECKED_CAST")
 public fun <T, C> FormatClause<T, C?>.notNull(): FormatClause<T, C> = where { it != null } as FormatClause<T, C>
@@ -603,7 +684,11 @@ public fun <T, C> FormatClause<T, C?>.notNull(): FormatClause<T, C> = where { it
  * Use [attr][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
  *
  * ### Examples using [perRowCol]:
- * TODO
+ * ```kt
+ * df.format { colsOf<Int>() }.perRowCol { row, col ->
+ *     linearBg(col[row], col.min() to red, col.max() to green)
+ * }
+ * ```
  *
  * Check out the full [Grammar][FormatDocs.Grammar].
  */
@@ -633,7 +718,11 @@ public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>)
  * Use [attr][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
  *
  * ### Examples using [with]:
- * TODO
+ * ```kt
+ * df.format()
+ *   .at(df.indices().step(2).toList())
+ *   .with { background(lightGray) and bold and textColor(black) }
+ * ```
  *
  * Check out the full [Grammar][FormatDocs.Grammar].
  */
@@ -666,7 +755,9 @@ public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): Formatte
  * Use [attr][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
  *
  * ### Examples using [notNull]:
- * TODO
+ * ```kt
+ * df.format().notNull { bold and textColor(black) }
+ * ```
  *
  * Check out the full [Grammar][FormatDocs.Grammar].
  */
@@ -689,7 +780,14 @@ public fun <T, C> FormatClause<T, C?>.notNull(formatter: CellFormatter<C>): Form
  * See also [with][FormatClause.with], [background][FormattingDsl.background], and [linear][FormattingDsl.linear].
  *
  * ### Examples using [linearBg]:
- * TODO
+ * ```kt
+ * df.format { temperature }.linearBg(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)
+ *   .format { age }.notNull().perRowCol { row, col ->
+ *     textColor(
+ *       linear(col[row], col.min() to green, col.max() to red)
+ *     )
+ *   }.toStandaloneHtml().openInBrowser()
+ * ```
  *
  * Check out the full [Grammar][FormatDocs.Grammar].
  *
@@ -871,7 +969,8 @@ public object FormattingDsl {
      * For example:
      * ```kt
      * df.format { temperature }.with { value ->
-     *     background(linear(value, -20 to blue, 40 to red)) and textColor(black)
+     *     background(linear(value, -20 to blue, 40 to red)) and
+     *       textColor(black)
      * }
      * ```
      *
@@ -965,22 +1064,40 @@ public typealias CellFormatter<C> = FormattingDsl.(cell: C) -> CellAttributes?
 public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val formatter: RowColFormatter<T, *>? = null) {
 
     /**
-     * todo copy from toHtml
-     * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
+     * Returns a [DataFrameHtmlData] without additional definitions.
+     * Can be rendered in Jupyter kernel (Notebook) environments or other environments that already have
+     * CSS- and script definitions for DataFrame.
+     * Use [toStandaloneHtml] if you need the [DataFrameHtmlData] to include CSS- and script definitions.
+     *
+     * By default, cell content is formatted as text
+     * Use [RenderedContent.media][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+     *
+     * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
+     *   Default: [DisplayConfiguration.DEFAULT].
+     * @see toStandaloneHtml
      */
     public fun toHtml(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
         df.toHtml(getDisplayConfiguration(configuration))
 
     /**
-     * todo copy from toStandaloneHtml
-     * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
+     * Returns a [DataFrameHtmlData] with CSS- and script definitions for DataFrame.
+     *
+     * The [DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
+     * If you save it as a file and find it in the project tree,
+     * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure)
+     * feature of IntelliJ IDEA will automatically reload the file content when it's updated.
+     *
+     * By default, cell content is formatted as text
+     * Use [RenderedContent.media][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+     *
+     * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
+     *   Default: [DisplayConfiguration.DEFAULT].
+     * @see toHtml
      */
     public fun toStandaloneHtml(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
         df.toStandaloneHtml(getDisplayConfiguration(configuration))
 
-    /**
-     *
-     */
+    /** Applies this formatter to the given [configuration] and returns a new instance. */
     @Suppress("UNCHECKED_CAST")
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration =
         configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)

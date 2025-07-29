@@ -550,9 +550,10 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
  * To change the formatting of certain cells or columns in the dataframe,
  * use [DataFrame.format].
  *
- * The [DataFrameHtmlData] be saved as an *.html file and displayed in the browser.
+ * The [DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
  * If you save it as a file and find it in the project tree,
- * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA will automatically reload the file content when it's updated
+ * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure)
+ * feature of IntelliJ IDEA will automatically reload the file content when it's updated.
  * @return DataFrameHtmlData with table script and css definitions
  */
 public fun <T> DataFrame<T>.toStandaloneHtml(
