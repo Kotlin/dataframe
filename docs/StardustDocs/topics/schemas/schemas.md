@@ -20,7 +20,7 @@ This DataFrame consists of two columns:
     - `age` of type `Int`
     - `height` of type `Double`
 
-<table>
+<table width="705">
   <thead>
     <tr>
       <th>name</th>

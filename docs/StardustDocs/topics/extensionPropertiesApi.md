@@ -29,7 +29,7 @@ which is a [**column group**](DataColumn.md#columngroup) containing two nested
 [value columns](DataColumn.md#valuecolumn) — 
 `age` of type `Int`, and `height` of type `Double`.
 
-<table>
+<table width="705">
   <thead>
     <tr>
       <th>name</th>
