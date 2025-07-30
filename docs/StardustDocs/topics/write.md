@@ -144,9 +144,10 @@ Add dependency:
 implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
 ```
 
-<warning>
-Make sure to follow [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide when using Java 9+
-</warning>
+> Make sure to follow an
+> [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) 
+> guide when using Java 9+
+> {style = "warning"}
 
 [`DataFrame`](DataFrame.md) supports writing [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
 and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
