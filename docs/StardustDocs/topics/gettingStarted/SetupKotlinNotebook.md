@@ -14,7 +14,7 @@ Follow a step-by-step introduction to Kotlin DataFrame in Kotlin Notebook: setup
 </link-summary>
 
 
-[Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html) is an interactive environment
+[**Kotlin Notebook**](https://kotlinlang.org/docs/kotlin-notebook-overview.html) is an interactive environment
 integrated into [IntelliJ IDEA](https://www.jetbrains.com/idea/) (and can be easily added in
 [Android Studio](https://developer.android.com/studio)), designed for fast, iterative,
 and visual data exploration with Kotlin.
@@ -100,13 +100,13 @@ You will see the content of this `DataFrame` rendered as an interactive table di
 
 ## Next Steps
 
-* Once you’ve successfully set up Kotlin DataFrame in Kotlin Notebook,  
+* Once you’ve successfully set up Kotlin DataFrame in Kotlin Notebook,
 you can move on to the [](quickstart.md)
-  which walks you through the basics of working with DataFrames inside a notebook.
+which walks you through the basics of working with Kotlin DataFrame inside a notebook.
 
-* For more advanced use cases, explore our collection of  
-[detailed guides and real-world examples](Guides-And-Examples.md), 
+* For more advanced use cases, explore our collection of
+[detailed guides and real-world examples](Guides-And-Examples.md),
 showcasing how Kotlin DataFrame can help with a variety of data tasks.
 
-* Discover powerful [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)that 
+* Discover powerful [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)that
 make exploring and understanding your data easier and more effective.

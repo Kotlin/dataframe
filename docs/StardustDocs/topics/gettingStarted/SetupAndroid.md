@@ -1,30 +1,36 @@
 [//]: # (title: Setup Kotlin DataFrame on Android)
 
-## Gradle
+<web-summary>
+Integrate Kotlin DataFrame into your Android app using the standard JVM dependency and simple Gradle configuration.
+</web-summary>
 
-The Kotlin DataFrame library is published to Maven Central,
-so you can add the following line to your Kotlin DSL
-buildscript to depend on it:
+<card-summary>
+Set up Kotlin DataFrame in Android — configure it easily using Gradle and start working with structured data.
+</card-summary>
 
-### General configuration
+<link-summary>
+How to use Kotlin DataFrame in your Android project with Gradle setup and compiler plugin support.
+</link-summary>
+
+> See an [Android project example](https://github.com/Kotlin/dataframe/tree/master/examples/android-example).
+
+Kotlin DataFrame doesn't provide a dedicated Android artifact yet, 
+but you can add the Kotlin DataFrame JVM dependency to your Android project with minimal configuration:
 
 <tabs>
 <tab title="Kotlin DSL">
 
 ```kotlin
-plugins {
-    id("org.jetbrains.kotlinx.dataframe") version "%dataFrameVersion%"
-}
-
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
 }
 
-// Below only applies to Android projects
 android {
+    // Requires Android 0+, i.e. SDK version 26 or higher.
     defaultConfig {
-        minSdk = 26 // Android O+
+        minSdk = 26 
     }
+    // Requires Java 8 or higher
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -62,19 +68,16 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 <tab title="Groovy DSL">
 
 ```groovy
-plugins {
-    id "org.jetbrains.kotlinx.dataframe" version "%dataFrameVersion%"
-}
-
 dependencies {
     implementation 'org.jetbrains.kotlinx:dataframe:%dataFrameVersion%'
 }
 
-// Below only applies to Android projects
 android {
+    // Requires Android 0+, i.e. SDK version 26 or higher.
     defaultConfig {
-        minSdk 26 // Android O+
+        minSdk 26
     }
+    // Requires Java 8 or higher
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -91,6 +94,7 @@ android {
                 "META-INF/LICENSE.md",
                 "META-INF/NOTICE.md",
                 "META-INF/LGPL-3.0.txt",
+                "META-INF/thirdparty-LICENSE",
             ]
             excludes += [
                 "META-INF/kotlin-jupyter-libraries/libraries.json",
@@ -107,38 +111,32 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 ```
 
 </tab>
-
 </tabs>
 
-Note that it's better to use the same version for a library and plugin to avoid unpredictable errors.
-After plugin configuration, you can try it out, for [example](schemasGradle.md#annotation-processing).
+This setup adds the [general Kotlin DataFrame dependency](Modules.md#dataframe-general), 
+which includes the [core API and implementation](Modules.md#dataframe-core) 
+as well as all [IO modules](Modules.md#io-modules) 
+(excluding [experimental ones](Modules.md#experimental-modules)).
+For flexible configuration, see [Custom configuration](SetupCustomGradle.md).
 
-### Custom configuration
+## Kotlin DataFrame Compiler Plugin
 
-If you want to avoid adding unnecessary dependencies, you can choose from the following artifacts:
+[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enables automatic generation 
+of [extension properties](extensionPropertiesApi.md) and updates [data schemas](schemas.md) 
+on-the-fly in Android projects, making development with Kotlin DataFrame 
+faster, more convenient, and fully type- and name-safe.
+
+> Requires Kotlin 2.2.20-Beta1 or higher.  
+> { style = "note" }
+
+To enable the plugin in your Gradle project, add it to the `plugins` section:
 
 <tabs>
 <tab title="Kotlin DSL">
 
 ```kotlin
-dependencies {
-    // Artifact containing all APIs and implementations
-    implementation("org.jetbrains.kotlinx:dataframe-core:%dataFrameVersion%")
-    // Optional formats support
-    implementation("org.jetbrains.kotlinx:dataframe-json:%dataFrameVersion%")
-    implementation("org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%")
-    implementation("org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%")
-    implementation("org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%")
-    implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%")
-
-    // experimental
-    implementation("org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%")
-    
-    // experimental
-    // This artifact is only needed to directly call functions that generate @DataSchema code from OpenAPI specifications
-    // It's used by Gradle and KSP plugins internally.
-    // Your project needs dataframe-openapi to use generated code
-    implementation("org.jetbrains.kotlinx:dataframe-openapi-generator:%dataFrameVersion%")
+plugins {
+    kotlin("plugin.dataframe") version "2.2.20-Beta1"
 }
 ```
 
@@ -147,88 +145,28 @@ dependencies {
 <tab title="Groovy DSL">
 
 ```groovy
-dependencies {
-    // Artifact containing all APIs and implementations
-    implementation 'org.jetbrains.kotlinx:dataframe-core:%dataFrameVersion%'
-    // Optional formats support 
-    implementation 'org.jetbrains.kotlinx:dataframe-json:%dataFrameVersion%'
-    implementation 'org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%'
-    implementation 'org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%'
-    implementation 'org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%'
-    implementation 'org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%'
-
-    // experimental
-    implementation 'org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%'
-
-    // experimental
-    // This artifact is only needed to directly call functions that generate @DataSchema code from OpenAPI specifications
-    // It's used by Gradle and KSP plugins internally.
-    // Your project needs dataframe-openapi to use generated code
-    implementation 'org.jetbrains.kotlinx:dataframe-openapi-generator:%dataFrameVersion%'
+plugins {
+    id 'org.jetbrains.kotlin.plugin.dataframe' version '2.2.20-Beta1'
 }
 ```
 
 </tab>
-
 </tabs>
 
-<note>
-`dataframe-json` is included with `dataframe-csv` and `dataframe-excel` by default. This is to interact with
-JSON structures inside CSV and Excel files. If you don't need this functionality, you can exclude it like:
-```kts
-implementation("org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%") {
-    exclude("org.jetbrains.kotlinx", "dataframe-json")
-}
-```
-</note>
+Due to [this issue](https://youtrack.jetbrains.com/issue/KT-66735), incremental compilation must be disabled for now. 
+Add the following line to your `gradle.properties` file:
 
-#### Linter configuration
-
-We provide a Gradle plugin that generates interfaces with your data.
-If you're using any sort of linter, it might complain about them generated sources.
-
-Use a configuration similar to this to prevent your linter from complaining about the 
-formatting of the generated sources.
-
-<tabs>
-<tab title="Kotlin DSL">
-
-```kotlin
-// Exclusions for `kotlinter`, if you use it:
-tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-}
+```properties
+kotlin.incremental=false
 ```
 
-</tab>
+## Next Steps
 
-<tab title="Groovy DSL">
-
-```groovy
-// Exclusions for `kotlinter`, if you use it:
-tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-}
-```
-
-</tab>
-<tab title=".editorconfig">
-
-```editorconfig
-[{**/*.Generated.kt,**/*$Extensions.kt}]
-ktlint = disabled
-```
-
-</tab>
-
-</tabs>
+* Once Kotlin DataFrame is set up in your Android project, continue with the [](quickstart.md) 
+to learn the basics of working with DataFrames.
+* Explore [detailed guides and real-world examples](Guides-And-Examples.md) 
+to see how Kotlin DataFrame helps in different data tasks.
+* Check out the 
+[Android project example](https://github.com/Kotlin/dataframe/tree/master/examples/android-example) 
+and more [IDEA examples on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples).
+* Learn more about the [compiler plugin](Compiler-Plugin.md).

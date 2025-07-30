@@ -1,13 +1,39 @@
 [//]: # (title: Setup Kotlin DataFrame on Datalore)
 
-## Datalore
+<web-summary>
+Set up Kotlin DataFrame on Datalore —
+a cloud-based platform with Kotlin notebook support for collaborative data analysis.
+</web-summary>
 
-To start with the Kotlin DataFrame library in Datalore, create a Kotlin notebook first:
+<card-summary>
+Set up Kotlin DataFrame on Datalore —
+a cloud-based platform with Kotlin notebook support for collaborative data analysis.
+</card-summary>
 
-![Installation in Datalore](datalore-1.png)
+<link-summary>
+Set up Kotlin DataFrame on Datalore —
+a cloud-based platform with Kotlin notebook support for collaborative data analysis.
+</link-summary>
 
-As the notebook you've created is a Jupyter Notebook, you can follow the instructions
-in the [previous section](SetupJupyter.md) to use the Kotlin DataFrame library.
-The simplest way of doing this is shown in the screenshot:
+[**Datalore**](https://www.jetbrains.com/datalore/) is a free data analysis platform 
+with [Kotlin Jupyter notebooks](https://github.com/Kotlin/kotlin-jupyter) support. 
+It's perfect for collaboration and sharing.
 
-![Datalore notebook](datalore-2.png)
+To get started with Kotlin DataFrame on Datalore, first create a Kotlin notebook:
+
+<img src="dataloreCreateNotebook.png" alt="Installation on Datalore" width="705"/>
+
+To use Kotlin DataFrame in the notebook with the Kotlin Jupyter Kernel, 
+follow the same steps as described in the [Setup in Kotlin Notebook](SetupKotlinNotebook.md). 
+The easiest way is shown in this screenshot:
+
+<img src="dataloreSetupNotebook.png" alt="Datalore notebook" width="705"/>
+
+## Next Steps
+
+* Once you’ve successfully set up Kotlin DataFrame on Datalore,
+you can move on to the [](quickstart.md) to learn the basics of working 
+with Kotlin DataFrame inside a notebook.
+* For more advanced use cases, explore our collection of 
+[detailed guides and real-world examples](Guides-And-Examples.md), 
+showcasing how Kotlin DataFrame can help with a variety of data tasks.

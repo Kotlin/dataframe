@@ -1,45 +1,28 @@
 [//]: # (title: Setup Kotlin DataFrame in Jupyter)
 
-## Jupyter Notebook
+<web-summary>
+Run Kotlin DataFrame inside Jupyter notebooks using the Kotlin Jupyter kernel — ideal for interactive data exploration and analysis.
+</web-summary>
 
-You can use the Kotlin DataFrame library in Jupyter Notebook and in Jupyter Lab.
-To start,
-install the latest version of [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter#installation)
-and start your favorite Jupyter client from
-the command line, for example:
+<card-summary>
+Use Kotlin DataFrame in Jupyter with the Kotlin kernel — an easy way to explore, clean, and analyze data interactively.
+</card-summary>
 
-```shell
-jupyter notebook
-```
+<link-summary>
+How to set up Kotlin DataFrame in Jupyter using the Kotlin Jupyter kernel for interactive data work.
+</link-summary>
 
-In the notebook, you only have to write a single line to start using the Kotlin DataFrame library:
+[Kotlin Jupyter kernel](https://github.com/Kotlin/kotlin-jupyter) allows you to run Kotlin code 
+in interactive [Jupyter notebooks](https://jupyter.org). 
+Kotlin DataFrame is fully integrated and works seamlessly within these environments.
 
-```text
-%use dataframe
-```
+To use Kotlin DataFrame in a Jupyter notebook with the Kotlin Jupyter Kernel, 
+follow the same steps as described in the [Setup in Kotlin Notebook](SetupKotlinNotebook.md).
 
-In this case, the version bundled with the kernel will be used.
-If you want always to use the latest version, add another magic before `%use dataframe`:
+## Next Steps
 
-```text
-%useLatestDescriptors
-%use dataframe
-```
-
-If you want to use a specific version of the Kotlin DataFrame library, you can specify it in brackets:
-
-```text
-%use dataframe(%dataFrameVersion%)
-```
-
-After loading, all essential types will be already imported, so you can start using the Kotlin DataFrame library. Enjoy!
-
-```kotlin
-val df = DataFrame.read("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
-df // the last expression in the cell is displayed
-```
-
-When the previous cell with variable declaration is executed, `DataFrame` provides a data schema API based on data:
-```kotlin
-df.filter { stargazers_count > 50 }
-```
+* Once you’ve successfully set up Kotlin DataFrame in Jupyter, you can move on to the [](quickstart.md) 
+to learn the basics of working with Kotlin DataFrame inside a notebook.
+* For more advanced use cases, explore our collection of 
+[detailed guides and real-world examples](Guides-And-Examples.md), 
+showcasing how Kotlin DataFrame can help with a variety of data tasks.
