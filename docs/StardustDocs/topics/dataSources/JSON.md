@@ -16,7 +16,7 @@ Kotlin DataFrame supports reading from and writing to JSON files.
 
 Requires the [`dataframe-json` module](Modules.md#dataframe-json), 
 which is included by default in the general [`dataframe`](Modules.md#dataframe-general) 
-artifact and in [`%use dataframe`](gettingStartedKotlinNotebook.md#integrate-kotlin-dataframe) 
+artifact and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) 
 for Kotlin Notebook.
 
 > Kotlin DataFrame is suitable only for working with table-like structured JSON — 

@@ -17,7 +17,7 @@ Kotlin DataFrame supports reading from and writing to Excel files in both `.xls`
 
 Requires the [`dataframe-excel` module](Modules.md#dataframe-excel), 
 which is included by default in the general [`dataframe`](Modules.md#dataframe-general) 
-artifact and in [`%use dataframe`](gettingStartedKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.
+artifact and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.
 
 ## Read
 

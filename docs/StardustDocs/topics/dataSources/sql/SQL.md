@@ -16,7 +16,7 @@ Kotlin DataFrame supports reading from SQL databases using JDBC.
 
 Requires the [`dataframe-jdbc` module](Modules.md#dataframe-jdbc),
 which is included by default in the general [`dataframe` artifact](Modules.md#dataframe-general)
-and in [`%use dataframe`](gettingStartedKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.
+and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.
 You’ll also need a JDBC driver for the specific database.
 
 ## Supported databases
