@@ -148,7 +148,9 @@
 <resource src="org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers.Graph.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.ForHtml.html"></resource>
 <resource src="extensionPropertiesApi1.html"></resource>
+<resource src="formatExample.html"></resource>
 <resource src="quickstart.ipynb"></resource>
 <resource src="notebook_test_quickstart_6.html"></resource>
 <resource src="notebook_test_quickstart_11.html"></resource>

@@ -171,7 +171,7 @@ internal fun AnyFrame.toHtmlData(
         }
         val renderConfig = configuration.copy(decimalFormat = format)
         val contents = values.map {
-            val value = it[col]
+            val value = col[it]
             val content = value.toDataFrameLikeOrNull()
             if (content != null) {
                 val df = content.df()
@@ -179,7 +179,7 @@ internal fun AnyFrame.toHtmlData(
                     HtmlContent("", null)
                 } else {
                     val id = nextTableId()
-                    queue.add(RenderingQueueItem(df, id, content.configuration(defaultConfiguration)))
+                    queue += RenderingQueueItem(df, id, content.configuration(defaultConfiguration))
                     DataFrameReference(id, df.size)
                 }
             } else {
@@ -189,6 +189,21 @@ internal fun AnyFrame.toHtmlData(
                     ?.invoke(FormattingDsl, it, col)
                     ?.attributes()
                     ?.ifEmpty { null }
+                    ?.flatMap {
+                        if (it.first == "color") {
+                            // override all --text-color* variables that
+                            // are used to color text of .numbers, .null, etc., inside DataFrame
+                            listOf(
+                                it,
+                                "--text-color" to "${it.second} !important",
+                                "--text-color-dark" to "${it.second} !important",
+                                "--text-color-pale" to "${it.second} !important",
+                                "--text-color-medium" to "${it.second} !important",
+                            )
+                        } else {
+                            listOf(it)
+                        }
+                    }
                     ?.joinToString(";") { "${it.first}:${it.second}" }
                 HtmlContent(html, style)
             }
@@ -207,7 +222,7 @@ internal fun AnyFrame.toHtmlData(
     }
 
     val rootId = nextTableId()
-    queue.add(RenderingQueueItem(this, rootId, defaultConfiguration))
+    queue += RenderingQueueItem(this, rootId, defaultConfiguration)
     while (!queue.isEmpty()) {
         val (nextDf, nextId, configuration) = queue.pop()
         val rowsLimit = if (nextId == rootId) configuration.rowsLimit else configuration.nestedRowsLimit
@@ -550,9 +565,10 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
  * To change the formatting of certain cells or columns in the dataframe,
  * use [DataFrame.format].
  *
- * The [DataFrameHtmlData] be saved as an *.html file and displayed in the browser.
+ * The [DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
  * If you save it as a file and find it in the project tree,
- * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA will automatically reload the file content when it's updated
+ * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure)
+ * feature of IntelliJ IDEA will automatically reload the file content when it's updated.
  * @return DataFrameHtmlData with table script and css definitions
  */
 public fun <T> DataFrame<T>.toStandaloneHtml(

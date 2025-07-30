@@ -79,42 +79,48 @@ internal interface FormatDocs {
      * {@include [LineBreak]}
      * {@include [DslGrammarLink]}
      *
-     * ### Definitions:
-     * {@include [CellFormatterDef]}
-     * {@include [LineBreak]}
-     * {@include [RowColFormatterDef]}
-     *
-     * ### Notation:
-     *
-     * [**format**][DataFrame.format]**`  {  `**[`columns`][SelectingColumns]**` }`**
-     *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`where`**][FormatClause.where]**`  {  `**[`filter`][SelectingRows.RowValueCondition]`: `[`RowValueFilter`][RowValueFilter]**`  }  `**`]`
-     *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`at`**][FormatClause.at]**`(`**`rowIndices: `[Collection][Collection]`<`[Int][Int]`> | `[IntRange][IntRange]` | `**`vararg`**` `[Int][Int]**`)`**` ]`
-     *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`notNull`**][FormatClause.notNull]**`()`**` ]`
-     *
-     * {@include [Indent]}
-     * __`.`__[**`with`**][FormatClause.with]**`  {  `**{@include [CellFormatterRef]}**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`notNull`**][FormatClause.notNull]**`  {  `**{@include [CellFormatterRef]}**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`perRowCol`**][FormatClause.perRowCol]**`  {  `**{@include [RowColFormatterRef]}**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`linearBg`**][FormatClause.linearBg]**`(`**`from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
-     *
-     * `\[ `__`.`__[**format**][FormattedFrame.format]` ↺ \]`
-     * {@include [LineBreak]}
-     * {@include [FormattingDslGrammarDef]}
+     * @include [ForHtml]
      */
-    @ExportAsHtml
     interface Grammar {
+
+        /**
+         * ### Definitions:
+         * {@include [CellFormatterDef]}
+         * {@include [LineBreak]}
+         * {@include [RowColFormatterDef]}
+         *
+         * ### Notation:
+         *
+         * [**format**][DataFrame.format]**`  {  `**[`columns`][SelectingColumns]**` }`**
+         *
+         * {@include [Indent]}
+         * `\[ `__`.`__[**`where`**][FormatClause.where]**`  {  `**[`filter`][SelectingRows.RowValueCondition]`: `[`RowValueFilter`][RowValueFilter]**`  }  `**`]`
+         *
+         * {@include [Indent]}
+         * `\[ `__`.`__[**`at`**][FormatClause.at]**`(`**`rowIndices: `[Collection][Collection]`<`[Int][Int]`> | `[IntRange][IntRange]` | `**`vararg`**` `[Int][Int]**`)`**` ]`
+         *
+         * {@include [Indent]}
+         * `\[ `__`.`__[**`notNull`**][FormatClause.notNull]**`()`**` ]`
+         *
+         * {@include [Indent]}
+         * __`.`__[**`with`**][FormatClause.with]**`  {  `**{@include [CellFormatterRef]}**` }`**
+         *
+         * {@include [Indent]}
+         * `| `__`.`__[**`notNull`**][FormatClause.notNull]**`  {  `**{@include [CellFormatterRef]}**` }`**
+         *
+         * {@include [Indent]}
+         * `| `__`.`__[**`perRowCol`**][FormatClause.perRowCol]**`  {  `**{@include [RowColFormatterRef]}**` }`**
+         *
+         * {@include [Indent]}
+         * `| `__`.`__[**`linearBg`**][FormatClause.linearBg]**`(`**`from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
+         *
+         * `\[ `__`.`__[**format**][FormattedFrame.format]` ↺ \]`
+         * {@include [LineBreak]}
+         * {@include [FormattingDslGrammarDef]}
+         */
+        @ExportAsHtml
+        @ExcludeFromSources
+        interface ForHtml
 
         /**
          * ## Formatting DSL Grammar

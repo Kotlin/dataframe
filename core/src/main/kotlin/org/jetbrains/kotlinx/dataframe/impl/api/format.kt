@@ -56,7 +56,7 @@ internal inline fun <T, C> FormatClause<T, C>.formatImpl(
     val columns =
         if (clause.columns != null) {
             clause.df.getColumnsWithPaths(clause.columns)
-                .mapNotNull { if (it.depth == 0) it.name else null }
+                .mapNotNull { if (it.depth == 0) it.name else null } // TODO Causes #1356
                 .toSet()
         } else {
             null
