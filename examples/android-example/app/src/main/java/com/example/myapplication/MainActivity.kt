@@ -54,6 +54,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun DefaultDataFrameScreenPreview() {
+    val df = dataFrameOf(
+        "name" to listOf("Andrei", "Nikita", "Jolan"),
+        "age" to listOf(22, 16, 37)
+    ).cast<Person>()
+    DataFrameScreen(df)
+}
+
 @Composable
 fun DataFrameScreen(df: DataFrame<Person>) {
     Column(
@@ -85,6 +95,16 @@ fun DataFrameScreen(df: DataFrame<Person>) {
 
         DataFrameTable(df.filter { age >= 20 })
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultDataFrameTablePreview() {
+    val df = dataFrameOf(
+        "name" to listOf("Andrei", "Nikita", "Jolan"),
+        "age" to listOf(22, 16, 37)
+    ).cast<Person>()
+    DataFrameTable(df)
 }
 
 @Composable

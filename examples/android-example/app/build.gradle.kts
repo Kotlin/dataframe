@@ -77,5 +77,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // TODO update version
     implementation("org.jetbrains.kotlinx:dataframe:1.0.0-dev-7831")
 }
