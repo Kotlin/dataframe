@@ -19,7 +19,8 @@
         <toc-element topic="SetupGradle.md" accepts-web-file-names="gettingstartedgradle.html"/>
         <toc-element topic="SetupJupyter.md" accepts-web-file-names="gettingstartedjupyternotebook.html"/>
         <toc-element topic="SetupDatalore.md" accepts-web-file-names="gettingstarteddatalore.html"/>
-        <toc-element topic="SetupAndroid.md" accepts-web-file-names="gettingstartedgradleadvanced.html"/>
+        <toc-element topic="SetupAndroid.md"/>
+        <toc-element topic="SetupCustomGradle.md" accepts-web-file-names="gettingstartedgradleadvanced.html"/>
         <toc-element topic="Modules.md"/>
     </toc-element>
     <toc-element topic="concepts.md" accepts-web-file-names="overview.html">
@@ -209,5 +210,4 @@
     <toc-element topic="Support.md"/>
     <toc-element topic="FAQ.md"/>
     <toc-element topic="Migration-From-Plugins.md"/>
-    <toc-element topic="SetupCustomGradle.md"/>
 </instance-profile>
