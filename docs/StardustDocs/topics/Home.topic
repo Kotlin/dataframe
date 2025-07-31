@@ -19,7 +19,7 @@
 
         <primary>
             <title>First steps</title>
-            <a href="gettingStartedKotlinNotebook.md"/>
+            <a href="SetupKotlinNotebook.md"/>
             <a href="concepts.md"/>
             <a href="operations.md"/>
             <a href="read.md">Reading from files: CSV, JSON, ApacheArrow</a>

@@ -17,7 +17,7 @@ Kotlin DataFrame supports reading from and writing to Apache Arrow files.
 
 Requires the [`dataframe-arrow` module](Modules.md#dataframe-arrow), which is included by 
 default in the general [`dataframe`](Modules.md#dataframe-general) artifact 
-and in [`%use dataframe`](gettingStartedKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.
+and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.
 
 > Make sure to follow the 
 > [Apache Arrow Java compatibility guide](https://arrow.apache.org/docs/java/install.html#java-compatibility) 

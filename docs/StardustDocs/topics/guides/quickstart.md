@@ -15,7 +15,7 @@ Learn the basics of Kotlin DataFrame: reading data, applying transformations, an
 This guide shows how to quickly get started with **Kotlin DataFrame**:  
 you'll learn how to load data, perform basic transformations, and build a simple plot using Kandy.
 
-We recommend [starting with **Kotlin Notebook**](gettingStartedKotlinNotebook.md) for the best beginner experience —
+We recommend [starting with **Kotlin Notebook**](SetupKotlinNotebook.md) for the best beginner experience —
 everything works out of the box,
 including interactivity and rich DataFrame and plots rendering.  
 You can instantly see the results of each operation: view the contents of your DataFrames after every transformation,
@@ -36,7 +36,7 @@ To start working with Kotlin DataFrame in a notebook, run the cell with the next
 ```
 
 This will load all necessary DataFrame dependencies (of the latest stable version) and all imports, as well as DataFrame
-rendering. Learn more [here](gettingStartedKotlinNotebook.md#integrate-kotlin-dataframe).
+rendering. Learn more [here](SetupKotlinNotebook.md#integrate-kotlin-dataframe).
 
 ## Read DataFrame
 

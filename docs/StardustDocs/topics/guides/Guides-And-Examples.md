@@ -86,7 +86,7 @@ Explore our extensive collection of practical examples and real-world analytics 
   — a practical example of working with deeply nested, hierarchical DataFrames using GitHub data.
 
 * [Netflix Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/netflix/netflix.ipynb)
-  — explore TV shows and movies from Netflix with the powerful Kotlin Dataframe API and beautiful
+  — explore TV shows and movies from Netflix with the powerful Kotlin DataFrame API and beautiful
   [Kandy](https://kotlin.github.io/kandy/) visualizations.
 
 * [Top-12 German Companies Financial Analyze](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/top_12_german_companies)
@@ -96,7 +96,7 @@ Explore our extensive collection of practical examples and real-world analytics 
   — basic Kotlin DataFrame operations on data from [movielens](https://movielens.org/).
 
 * [YouTube Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/youtube/Youtube.ipynb)
-  — explore YouTube videos with YouTube REST API and Kotlin Dataframe.
+  — explore YouTube videos with YouTube REST API and Kotlin DataFrame.
 
 * [IMDb SQL Database Example](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb)
   — analyze IMDb data stored in MariaDB using Kotlin DataFrame
