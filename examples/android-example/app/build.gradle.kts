@@ -78,5 +78,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // TODO update version
-    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-dev-7831")
+    // Core Kotlin DataFrame API & JSON IO.
+    // See custom Gradle setup:
+    // https://kotlin.github.io/dataframe/setupcustomgradle.html
+    implementation("org.jetbrains.kotlinx:dataframe-core:1.0.0-dev-7831")
+    implementation("org.jetbrains.kotlinx:dataframe-json:1.0.0-dev-7831")
 }
