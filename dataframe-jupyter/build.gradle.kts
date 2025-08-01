@@ -17,11 +17,17 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
     api(projects.dataframe)
 
+    // logger, need it for apache poi
+    implementation(libs.log4j.core)
+    implementation(libs.log4j.api)
+
     testImplementation(libs.junit)
     testImplementation(libs.serialization.json)
+
     // experimental
     testImplementation(projects.dataframeOpenapiGenerator)
     testImplementation(projects.dataframeOpenapi)
