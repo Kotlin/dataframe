@@ -62,6 +62,9 @@ internal interface DocumentationUrls {
         interface FillNA
     }
 
+    /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
+    interface Format
+
     /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
     interface NanAndNa {
 
