@@ -19,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
-import org.jetbrains.kotlinx.dataframe.documentation.ExportAsHtml
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.api.MergedAttributes
@@ -213,82 +212,6 @@ internal interface FormatDocs {
      * `| `[**`linear`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
      */
     interface Grammar {
-
-        /**
-         * ### Definitions:
-         * `cellFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(cell: C) -> `[CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]`?`
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         *
-         * `rowColFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<T>, col: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<C>) -> `[CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]`?`
-         *
-         * ### Notation:
-         *
-         * [**format**][DataFrame.format]**`  {  `**[`columns`][SelectingColumns]**` }`**
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         * `[ `__`.`__[**`where`**][FormatClause.where]**`  {  `**[`filter`][SelectingRows.RowValueCondition]`: `[`RowValueFilter`][RowValueFilter]**`  }  `**`]`
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         * `[ `__`.`__[**`at`**][FormatClause.at]**`(`**`rowIndices: `[Collection][Collection]`<`[Int][Int]`> | `[IntRange][IntRange]` | `**`vararg`**` `[Int][Int]**`)`**` ]`
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         * `[ `__`.`__[**`notNull`**][FormatClause.notNull]**`()`**` ]`
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         * __`.`__[**`with`**][FormatClause.with]**`  {  `**[cellFormatter][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellFormatterDef]**` }`**
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         * `| `__`.`__[**`notNull`**][FormatClause.notNull]**`  {  `**[cellFormatter][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellFormatterDef]**` }`**
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         * `| `__`.`__[**`perRowCol`**][FormatClause.perRowCol]**`  {  `**[rowColFormatter][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RowColFormatterDef]**` }`**
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         * `| `__`.`__[**`linearBg`**][FormatClause.linearBg]**`(`**`from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
-         *
-         * `[ `__`.`__[**format**][FormattedFrame.format]` ↺ ]`
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         *
-         * ## Formatting DSL Grammar
-         *
-         * ### Definitions:
-         * `cellAttributes: `[CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         *
-         * `color: `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]
-         *
-         * ### Notation:
-         * _- Returning [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]_:
-         *
-         * [cellAttributes][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]` `[**`and`**][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `[cellAttributes][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]
-         *
-         * `| `[**`italic`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.italic]`  |  `[**`bold`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]`  |  `[**`underline`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.underline]
-         *
-         * `| `[**`background`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]**`(`**[color][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
-         *
-         * `| `[**`background`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]**`(`**`r: `[Short][Short]**`,`**` g: `[Short][Short]**`,`**` b: `[Short][Short]**`)`**
-         *
-         * `| `[**`linearBg`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linearBg]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
-         *
-         * `| `[**`textColor`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]**`(`**[color][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
-         *
-         * `| `[**`textColor`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]**`(`**`r: `[Short][Short]**`,`**` g: `[Short][Short]**`,`**` b: `[Short][Short]**`)`**
-         *
-         * `| `[**`attr`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr]**`(`**`name: `[String][String]**`,`**` value: `[String][String]**`)`**
-         *
-         * _- Returning [RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]:_
-         *
-         * [**`black`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`  |  `[**`white`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`  |  `[**`green`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.green]`  |  `[**`red`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.red]`  |  `[**`blue`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue]`  |  `[**`gray`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.gray]`  |  `[**`darkGray`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.darkGray]`  |  `[**`lightGray`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.lightGray]
-         *
-         * `| `[**`rgb`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb]**`(`**`r: `[Short][Short]**`,`**` g: `[Short][Short]**`,`**` b: `[Short][Short]**`)`**
-         *
-         * `| `[**`linear`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
-         */
-        @ExportAsHtml
-        interface ForHtml
 
         /**
          * ## Formatting DSL Grammar
