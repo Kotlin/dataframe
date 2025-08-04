@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.UNIFIED_SIMILAR_CS_API
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -70,6 +71,13 @@ public inline fun <T, R> DataColumn<T>.mapIndexed(
 
 public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = rows().map { transform(it, it) }
 
+public inline fun <T, reified R> DataFrame<T>.mapToColumn(
+    name: String,
+    infer: Infer = Infer.Nulls,
+    noinline body: AddExpression<T, R>,
+): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, body)
+
+@Deprecated(UNIFIED_SIMILAR_CS_API, replaceWith = ReplaceWith("expr(name, infer, body)", "org.jetbrains.kotlinx.dataframe.api.Infer"))
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     name: String,
     infer: Infer = Infer.Nulls,
@@ -92,7 +100,8 @@ public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
 
-public fun <T, R> ColumnsContainer<T>.mapToColumn(
+@PublishedApi
+internal fun <T, R> ColumnsContainer<T>.mapToColumn(
     name: String,
     type: KType,
     infer: Infer = Infer.Nulls,

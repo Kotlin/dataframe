@@ -189,6 +189,7 @@ internal const val GENERATE_CODE_REPLACE2 =
 
 internal const val GENERATE_INTERFACES = "This function is just here for binary compatibility. $MESSAGE_1_1"
 
+internal const val UNIFIED_SIMILAR_CS_API = "Deprecated duplicated functionality. $MESSAGE_1_1"
 // endregion
 
 // region keep across releases
