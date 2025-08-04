@@ -3,12 +3,10 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
@@ -39,7 +37,6 @@ import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.flatten
-import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.group
@@ -55,7 +52,6 @@ import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.length
-import org.jetbrains.kotlinx.dataframe.api.linearBg
 import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
@@ -67,7 +63,6 @@ import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.merge
-import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.named
@@ -1307,40 +1302,6 @@ class Modify : TestBase() {
             val mean = it.data.cast<Int>().mean()
             "age [mean = $mean]"
         }
-        // SampleEnd
-    }
-
-    @Test
-    fun formatExample_properties() {
-        // SampleStart
-        df
-            .format().with { bold and textColor(black) }
-            .format { isHappy }.with { background(if (it) green else red) }
-            .format { weight }.notNull().linearBg(50 to FormattingDsl.blue, 90 to FormattingDsl.red)
-            .format { age }.perRowCol { row, col ->
-                textColor(
-                    linear(value = col[row], from = col.min() to blue, to = col.max() to green)
-                )
-            }
-            .toStandaloneHtml()
-        // SampleEnd
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    @Test
-    fun formatExample_strings() {
-        // SampleStart
-        df
-            .format().with { bold and textColor(black) }
-            .format("isHappy").with { background(if (it as Boolean) green else red) }
-            .format("weight").notNull().with { linearBg(it as Int, 50 to blue, 90 to red) }
-            .format("age").perRowCol { row, col ->
-                col as DataColumn<Int>
-                textColor(
-                    linear(value = col[row], from = col.min() to blue, to = col.max() to green)
-                )
-            }
-            .toStandaloneHtml()
         // SampleEnd
     }
 }
