@@ -19,4 +19,12 @@ class FilterTests : ColumnsSelectionDslTests() {
         df.select { all().filter { true } } shouldBe df.select { all() }
         df.select { all().filter { false } } shouldBe df.select { none() }
     }
+
+    @Test
+    fun `filter column group`() {
+        listOf(
+            df.select { name },
+            df.select { colsAtAnyDepth().colGroups().filter { it.data.containsColumn("firstName") } }
+        )
+    }
 }

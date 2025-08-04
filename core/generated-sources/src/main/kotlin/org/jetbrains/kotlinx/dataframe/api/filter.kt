@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -8,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroupWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -180,6 +182,25 @@ public interface FilterColumnsSelectionDsl {
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): ColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>).cast()
+
+    /**
+     * ## Filter [ColumnSet]
+     *
+     * #### For example:
+     * ```kotlin
+     * df.convert {
+     *  colsAtAnyDepth().colGroups()
+     *    .filter { it.data.containsColumn("myCol")
+     * }.with { ... }
+     * ```
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("filterColumnGroups")
+    public fun ColumnSet<AnyRow>.filter(predicate: Predicate<ColumnGroupWithPath<*>>): ColumnSet<*> =
+        colsInternal { columnWithPath ->
+            columnWithPath.isColumnGroup() &&
+                predicate(ColumnGroupWithPath(columnWithPath, columnWithPath.path))
+        }
 }
 
 // endregion
