@@ -69,7 +69,7 @@ internal interface ExplodeDocs
  *
  * @param dropEmpty If `true`, removes rows with empty lists or DataFrames.
  *                  If `false`, such rows will be exploded into `null` values.
- * @param columns The [ColumnsSelector] used to select columns to explode.
+ * @param selector The [ColumnsSelector] used to select columns to explode.
  *                If not specified, all applicable columns will be exploded.
  * @return A new [DataFrame] with exploded columns.
  */
@@ -77,8 +77,8 @@ internal interface ExplodeDocs
 @Interpretable("Explode0")
 public fun <T> DataFrame<T>.explode(
     dropEmpty: Boolean = true,
-    columns: ColumnsSelector<T, *> = defaultExplodeColumns,
-): DataFrame<T> = explodeImpl(dropEmpty, columns)
+    selector: ColumnsSelector<T, *> = defaultExplodeColumns,
+): DataFrame<T> = explodeImpl(dropEmpty, selector)
 
 /**
  * {@include [ExplodeDocs]}
