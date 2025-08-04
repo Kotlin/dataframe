@@ -2128,6 +2128,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ExprColumnsS
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/FilterColumnsSelectionDsl {
 	public fun filter (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public fun filterColumnGroups (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/FilterColumnsSelectionDsl$Grammar {
@@ -5068,6 +5069,16 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/columns/ColumnGr
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun kind ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
 	public abstract fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/columns/ColumnGroupWithPath {
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)V
+	public final fun depth ()I
+	public final fun getData ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
+	public final fun getDepth ()I
+	public final fun getName ()Ljava/lang/String;
+	public final fun getParentName ()Ljava/lang/String;
+	public final fun getPath ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 }
 
 public class org/jetbrains/kotlinx/dataframe/columns/ColumnKind : java/lang/Enum {
