@@ -13,7 +13,7 @@ plugins {
 group = "org.jetbrains.kotlinx"
 
 repositories {
-    // geo repository should come before Maven Central
+    // osgeo repository should come before Maven Central
     maven("https://repo.osgeo.org/repository/release")
     mavenCentral()
     mavenLocal()

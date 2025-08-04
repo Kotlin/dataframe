@@ -28,6 +28,8 @@ dependencies {
     implementation(projects.dataframeGeo)
     implementation(projects.dataframeJupyter)
 
+    implementation(libs.geotools.referencing) { excludeJaiCore() }
+
     // logger, need it for geotools
     implementation(libs.log4j.core)
     implementation(libs.log4j.api)
