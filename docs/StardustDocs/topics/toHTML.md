@@ -2,17 +2,21 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Render-->
 
-DataFrame can be rendered to HTML.
+`DataFrame` instances can be rendered to HTML.
 Rendering of hierarchical tables in HTML is supported by JS and CSS definitions
 that can be found in project resources.
 
-Depending on your environment there can be different ways to use result of `toHtml` functions
+Dataframes can also be formatted before being converted to HTML.
+See [](format.md) for how to do this.
+
+Depending on your environment, there can be different ways to use the result of `toHtml` functions.
 
 ## IntelliJ IDEA
 
-### Working with result
+### Working with the result
 
-The following function produces HTML that includes JS and CSS definitions. It can be displayed in the browser and has parameters for customization.
+The following function produces HTML that includes JS and CSS definitions.
+It can be displayed in the browser and has parameters for customization.
 
 <!---FUN useRenderingResult-->
 
@@ -26,7 +30,9 @@ df.toStandaloneHtml(DisplayConfiguration(rowsLimit = null)).writeHtml(Path("/pat
 
 ### Composing multiple tables
 
-`toHtml` and `toStandaloneHtml` return composable `DataFrameHtmlData`. You can use it to include additional scripts, elements, styles on final page or just merge together multiple tables.
+`toHtml` and `toStandaloneHtml` return composable `DataFrameHtmlData`,
+which you can use to include additional scripts, elements,
+or styles at the end of the page or just to merge multiple tables into one HTML snippet.
 
 <!---FUN composeTables-->
 
@@ -44,7 +50,8 @@ listOf(df1, df2, df3).fold(DataFrameHtmlData.tableDefinitions()) { acc, df -> ac
 
 ### Configuring display for individual output
 
-`toHtml` is useful if you want to configure how a single cell is displayed. To configure the display for the entire notebook, please refer to [Jupyter Notebooks](jupyterRendering.md) section.
+`toHtml` is useful if you want to configure how a single cell is displayed.
+To configure the display for the entire notebook, please refer to the [](jupyterRendering.md) section.
 
 <!---FUN configureCellOutput-->
 
