@@ -55,7 +55,7 @@ internal class IntegrationGeo : JupyterIntegration() {
         }
 
         render<GeoDataFrame<*>> {
-            println("GeoDataFrame with ${it.crs} CRS and inner dataframe:")
+            println("GeoDataFrame with ${it.crs?.name?.code} CRS and inner dataframe:")
             it.df
         }
 
@@ -72,7 +72,7 @@ internal class IntegrationGeo : JupyterIntegration() {
             val generatedDf = execute(
                 codeWithTypeCastGenerator = replCodeGeneratorImpl.process(geo.df, kProperty),
                 expression = "(${kProperty.name}.df as DataFrame<*>)",
-            ).let { "`" + it.toString() + "`" }
+            ).let { "`$it`" }
             val name = execute("GeoDataFrame($generatedDf, ${kProperty.name}.crs)").name
             name
         }

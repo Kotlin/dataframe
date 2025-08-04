@@ -17,7 +17,6 @@ repositories {
     mavenCentral()
 }
 
-
 dependencies {
     api(projects.dataframe)
 
