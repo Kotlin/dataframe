@@ -227,6 +227,11 @@ public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annot
 	public abstract fun isOpen ()Z
 }
 
+public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annotations/DataSchemaSource : java/lang/annotation/Annotation {
+	public abstract fun qualifier ()Ljava/lang/String;
+	public abstract fun source ()Ljava/lang/String;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/annotations/DataSchemaVisibility : java/lang/Enum {
 	public static final field EXPLICIT_PUBLIC Lorg/jetbrains/kotlinx/dataframe/annotations/DataSchemaVisibility;
 	public static final field IMPLICIT_PUBLIC Lorg/jetbrains/kotlinx/dataframe/annotations/DataSchemaVisibility;
@@ -6189,6 +6194,12 @@ public final class org/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData$Companio
 	public static synthetic fun tableDefinitions$default (Lorg/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData$Companion;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData;
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/DataFrameProvider {
+	public abstract fun default ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public abstract fun getSchemaKType ()Lkotlin/reflect/KType;
+	public abstract fun read (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/DisplayConfiguration {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration$Companion;
 	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Ljava/lang/String;ZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -6303,6 +6314,12 @@ public final class org/jetbrains/kotlinx/dataframe/io/RendererDecimalFormat {
 public final class org/jetbrains/kotlinx/dataframe/io/RendererDecimalFormat$Companion {
 	public final fun fromPrecision-VVLz-gw (I)Ljava/lang/String;
 	public final fun of-VVLz-gw (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/SchemaReader {
+	public abstract fun accepts (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun default (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public abstract fun read (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/StringKt {
