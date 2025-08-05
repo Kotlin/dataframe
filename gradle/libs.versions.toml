@@ -45,7 +45,7 @@ junit-platform = "1.11.3"
 kotestAsserions = "6.0.0.M1"
 
 jsoup = "1.18.3"
-arrow = "18.1.0"
+arrow = "18.3.0"
 kodex = "0.4.4"
 simpleGit = "2.2.1"
 dependencyVersions = "0.52.0"
@@ -54,7 +54,7 @@ shadow = "8.3.5"
 android-gradle-api = "7.3.1" # need to revise our tests to update
 ktor = "3.0.1" # needs jupyter compatibility with Kotlin 2.1 to update
 kotlin-compile-testing = "0.7.1"
-duckdb = "1.1.3"
+duckdb = "1.2.2.0"
 buildconfig = "5.6.7"
 benchmark = "0.4.12"
 
@@ -124,6 +124,7 @@ arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref 
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
 arrow-c-data = { group = "org.apache.arrow", name = "arrow-c-data", version.ref = "arrow" }
+arrow-dataset = { group = "org.apache.arrow", name = "arrow-dataset", version.ref = "arrow" }
 
 geotools-main = { module = "org.geotools:gt-main", version.ref = "geotools" }
 geotools-shapefile = { module = "org.geotools:gt-shapefile", version.ref = "geotools" }
