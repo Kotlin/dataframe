@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -179,6 +181,8 @@ public data class Corr<T, C>(internal val df: DataFrame<T>, internal val columns
  *
  * @return A square correlation matrix as a [DataFrame], where both rows and columns correspond to the original columns.
  */
+@Refine
+@Interpretable("DataFrameCorr")
 public fun <T> DataFrame<T>.corr(): DataFrame<T> =
     corr {
         colsAtAnyDepth().filter { it.isSuitableForCorr() }
