@@ -58,13 +58,16 @@ a column corresponds to values of other columns:
 <tab title="Properties">
 
 ```kotlin
+val ageMin = df.age.min()
+val ageMax = df.age.max()
+
 df
     .format().with { bold and textColor(black) and background(white) }
     .format { isHappy }.with { background(if (it) green else red) }
     .format { weight }.notNull().linearBg(50 to FormattingDsl.blue, 90 to FormattingDsl.red)
     .format { age }.perRowCol { row, col ->
         textColor(
-            linear(value = col[row], from = col.min() to blue, to = col.max() to green),
+            linear(value = col[row], from = ageMin to blue, to = ageMax to green),
         )
     }
 ```
@@ -73,6 +76,9 @@ df
 <tab title="Strings">
 
 ```kotlin
+val ageMin = df.min { "age"<Int>() }
+val ageMax = df.max { "age"<Int>() }
+
 df
     .format().with { bold and textColor(black) and background(white) }
     .format("isHappy").with {
@@ -82,7 +88,7 @@ df
     .format("age").perRowCol { row, col ->
         col as DataColumn<Int>
         textColor(
-            linear(value = col[row], from = col.min() to blue, to = col.max() to green),
+            linear(value = col[row], from = ageMin to blue, to = ageMax to green),
         )
     }
 ```

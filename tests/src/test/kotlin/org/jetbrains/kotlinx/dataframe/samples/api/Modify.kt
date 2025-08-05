@@ -50,6 +50,9 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
     @Test
     fun formatExample_strings() {
         // SampleStart
+        val ageMin = df.min { "age"<Int>() }
+        val ageMax = df.max { "age"<Int>() }
+
         df
             .format().with { bold and textColor(black) and background(white) }
             .format("isHappy").with {
@@ -59,7 +62,7 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
             .format("age").perRowCol { row, col ->
                 col as DataColumn<Int>
                 textColor(
-                    linear(value = col[row], from = col.min() to blue, to = col.max() to green),
+                    linear(value = col[row], from = ageMin to blue, to = ageMax to green),
                 )
             }
             // SampleEnd
@@ -69,13 +72,16 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
     @Test
     fun formatExample_properties() {
         // SampleStart
+        val ageMin = df.age.min()
+        val ageMax = df.age.max()
+
         df
             .format().with { bold and textColor(black) and background(white) }
             .format { isHappy }.with { background(if (it) green else red) }
             .format { weight }.notNull().linearBg(50 to FormattingDsl.blue, 90 to FormattingDsl.red)
             .format { age }.perRowCol { row, col ->
                 textColor(
-                    linear(value = col[row], from = col.min() to blue, to = col.max() to green),
+                    linear(value = col[row], from = ageMin to blue, to = ageMax to green),
                 )
             }
             // SampleEnd

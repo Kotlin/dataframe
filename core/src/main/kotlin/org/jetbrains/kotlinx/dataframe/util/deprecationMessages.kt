@@ -113,6 +113,12 @@ internal const val TO_URL_REPLACE = "toUrl()"
 internal const val FILTER_BY = "This function is deprecated in favor of `filter { }`. $MESSAGE_1_0"
 internal const val FILTER_BY_REPLACE = "filter { column }"
 
+internal const val FORMATTING_DSL = "Replaced by `FormattingDsl`. $MESSAGE_1_0"
+internal const val FORMATTING_DSL_REPLACE = "FormattingDsl"
+
+internal const val RGB_COLOR = "Replaced by `RgbColor`. $MESSAGE_1_0"
+internal const val RGB_COLOR_REPLACE = "RgbColor"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1

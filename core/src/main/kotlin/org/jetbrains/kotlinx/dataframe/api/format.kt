@@ -40,6 +40,10 @@ import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent.Companion.media
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.FORMATTING_DSL
+import org.jetbrains.kotlinx.dataframe.util.FORMATTING_DSL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.RGB_COLOR
+import org.jetbrains.kotlinx.dataframe.util.RGB_COLOR_REPLACE
 import kotlin.reflect.KProperty
 
 // region docs
@@ -831,5 +835,23 @@ public class FormatClause<T, C>(
     override fun toString(): String =
         "FormatClause(df=$df, columns=$columns, oldFormatter=$oldFormatter, filter=$filter)"
 }
+
+// endregion
+
+// region Deprecated
+
+@Deprecated(
+    message = FORMATTING_DSL,
+    replaceWith = ReplaceWith(FORMATTING_DSL_REPLACE),
+    level = DeprecationLevel.ERROR,
+)
+public typealias FormattingDSL = FormattingDsl
+
+@Deprecated(
+    message = RGB_COLOR,
+    replaceWith = ReplaceWith(RGB_COLOR_REPLACE),
+    level = DeprecationLevel.ERROR,
+)
+public typealias RGBColor = RgbColor
 
 // endregion
