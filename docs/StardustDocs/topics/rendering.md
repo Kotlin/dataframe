@@ -1,6 +1,7 @@
 [//]: # (title: Rendering)
 
-This section describes APIs that you can use to render DataFrame types and configure display.
+This section describes APIs that you can use to render DataFrame types and configure how they are displayed.
 
-* [`toHTML`](toHTML.md) — operation for rendering DataFrame object to an HTML table
+* [`toHtml`](toHTML.md) — an operation for rendering DataFrame objects to an HTML table
+* [`format`](format.md) — an operation to apply visual attributes to cells before rendering to HTML
 * [`Jupyter Notebooks`](jupyterRendering.md) — configuration specific to notebook environments
