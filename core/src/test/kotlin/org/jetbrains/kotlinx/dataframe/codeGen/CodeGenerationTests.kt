@@ -6,8 +6,10 @@ import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
+import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -16,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
+import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.Person
 import org.junit.Test
@@ -115,11 +118,11 @@ class CodeGenerationTests : BaseTest() {
         val expectedConverter = "it.cast<$typeName>()"
 
         generated.declarations shouldBe expectedDeclaration
-        generated.converter("it") shouldBe expectedConverter
+        generated.typeCastGenerator("it") shouldBe expectedConverter
 
         val rowGenerated = codeGen.process(df[0], ::typedRow)
         rowGenerated.hasDeclarations shouldBe true
-        rowGenerated.hasConverter shouldBe true
+        rowGenerated.hasCaster shouldBe true
     }
 
     val row: AnyRow? = null
@@ -146,7 +149,7 @@ class CodeGenerationTests : BaseTest() {
         val expectedConverter = "it.cast<$typeName>()"
 
         generated.declarations shouldBe expectedDeclaration
-        generated.converter("it") shouldBe expectedConverter
+        generated.typeCastGenerator("it") shouldBe expectedConverter
     }
 
     @Test
@@ -191,7 +194,7 @@ class CodeGenerationTests : BaseTest() {
         val expectedConverter = "it.cast<$type2>()"
 
         generated.declarations shouldBe declaration1 + "\n" + declaration2
-        generated.converter("it") shouldBe expectedConverter
+        generated.typeCastGenerator("it") shouldBe expectedConverter
     }
 
     @Test
@@ -349,28 +352,6 @@ class CodeGenerationTests : BaseTest() {
     }
 
     @Test
-    fun `check method generateDataClasses`() {
-        val code = typed.groupBy { name }.toDataFrame().generateDataClasses()
-
-        code shouldBe
-            """
-            @DataSchema
-            data class Person1(
-                val age: Int,
-                val city: String?,
-                val name: String,
-                val weight: Int?
-            )
-
-            @DataSchema
-            data class Person(
-                val group: List<Person1>,
-                val name: String
-            )
-            """.trimIndent().toCodeString()
-    }
-
-    @Test
     fun `check name normalization for generated data classes`() {
         dataFrameOf("my_name")(1).generateDataClasses() shouldBe
             """
@@ -386,4 +367,172 @@ class CodeGenerationTests : BaseTest() {
     fun patterns() {
         """^[\d]""".toRegex().matches("3fds")
     }
+
+    // region Tests for generateX functions
+
+    @Test
+    fun `check method generateDataClasses`() {
+        val df = typed.groupBy { name }.toDataFrame()
+        val code1 = df.generateDataClasses()
+        val code2 = df.schema().generateDataClasses("Person")
+
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = df.schema(),
+            name = "Person",
+            fields = true,
+            extensionProperties = false,
+            isOpen = false,
+            asDataClass = true,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
+
+        code1 shouldBe expected
+        code2 shouldBe expected
+    }
+
+    @Test
+    fun `DataFrame generateInterfaces`() {
+        val code = typed.generateInterfaces()
+
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = df.schema(),
+            name = "Person",
+            fields = true,
+            extensionProperties = false,
+            isOpen = true,
+            asDataClass = false,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
+
+        code shouldBe expected
+    }
+
+    @Test
+    fun `DataFrame generateInterfaces - with marker name`() {
+        val code = typed.generateInterfaces("CustomInterface")
+
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = df.schema(),
+            name = "CustomInterface",
+            fields = true,
+            extensionProperties = false,
+            isOpen = true,
+            asDataClass = false,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
+
+        code shouldBe expected
+    }
+
+    @Test
+    fun `DataFrame generateDataClasses - with custom parameters`() {
+        val code = typed.generateDataClasses(
+            markerName = "CustomDataClass",
+            extensionProperties = true,
+            visibility = MarkerVisibility.INTERNAL,
+            useFqNames = true,
+        )
+
+        val expected = CodeGenerator.create(useFqNames = true).generate(
+            schema = df.schema(),
+            name = "CustomDataClass",
+            fields = true,
+            extensionProperties = true,
+            isOpen = true,
+            asDataClass = true,
+            visibility = MarkerVisibility.INTERNAL,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
+
+        code shouldBe expected
+    }
+
+    @Test
+    fun `DataFrameSchema generateInterfaces`() {
+        val schema = typed.schema()
+        val code = schema.generateInterfaces("SchemaInterface")
+
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = schema,
+            name = "SchemaInterface",
+            fields = true,
+            extensionProperties = false,
+            isOpen = true,
+            asDataClass = false,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
+
+        code shouldBe expected
+    }
+
+    @Test
+    fun `DataFrameSchema generateDataClasses - with default parameters`() {
+        val schema = typed.schema()
+        val code = schema.generateDataClasses("SchemaDataClass")
+
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = schema,
+            name = "SchemaDataClass",
+            fields = true,
+            extensionProperties = false,
+            isOpen = false,
+            asDataClass = true,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
+
+        code shouldBe expected
+    }
+
+    @Test
+    fun `DataFrameSchema generateDataClasses - with custom parameters`() {
+        val schema = typed.schema()
+        val code = schema.generateDataClasses(
+            markerName = "SchemaDataClass",
+            extensionProperties = true,
+            visibility = MarkerVisibility.EXPLICIT_PUBLIC,
+            useFqNames = false,
+        )
+
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = schema,
+            name = "SchemaDataClass",
+            fields = true,
+            extensionProperties = true,
+            isOpen = false,
+            asDataClass = true,
+            visibility = MarkerVisibility.EXPLICIT_PUBLIC,
+            fieldNameNormalizer = NameNormalizer.default,
+        ).code.declarations.toCodeString()
+
+        code shouldBe expected
+    }
+
+    @Test
+    fun `DataFrame generateDataClasses - with name normalizer`() {
+        val dfWithSpecialNames = dataFrameOf("my_column", "another column", "third-column")(1, "test", 3.14)
+        val nameNormalizer = NameNormalizer { it.toCamelCaseByDelimiters() + "1" }
+        val code = dfWithSpecialNames.generateDataClasses(
+            nameNormalizer = nameNormalizer,
+        )
+
+        val expected = CodeGenerator.create(useFqNames = false).generate(
+            schema = dfWithSpecialNames.schema(),
+            name = "DataEntry",
+            fields = true,
+            extensionProperties = false,
+            isOpen = false,
+            asDataClass = true,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            fieldNameNormalizer = nameNormalizer,
+        ).code.declarations.toCodeString()
+
+        code shouldBe expected
+    }
+
+    // endregion
 }

@@ -12,6 +12,8 @@ reorder { columns }
 columnExpression: DataColumn.(DataColumn) -> Value
 ```
 
+**Related operations**: [](moveRename.md)
+
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN reorder-->

@@ -1218,11 +1218,6 @@ class DataFrameSymbolProcessorTest {
 
                             fun resolved() {
                                 JetBrains
-                                JetBrains1
-                                JetBrains2
-                                JetBrains3
-                                JetBrains4
-                                JetBrains5
                             }
                             """.trimIndent(),
                         ),
@@ -1268,11 +1263,11 @@ class DataFrameSymbolProcessorTest {
             )
             println(result.kspGeneratedFiles)
             result.inspectLines("MetricsNoKeyValue.Generated.kt") {
-//            (('1'..'5') + "").forEach { nr ->
-//                it.forAtLeastOne {
-//                    it shouldContain "JetBrains$nr"
-//                }
-//            }
+                (('1'..'3') + "").forEach { nr ->
+                    it.forAtLeastOne {
+                        it shouldContain "MetricsNoKeyValue$nr"
+                    }
+                }
             }
         }
 
