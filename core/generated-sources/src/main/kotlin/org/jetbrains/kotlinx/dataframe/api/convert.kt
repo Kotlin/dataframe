@@ -587,7 +587,7 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
  * df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
  * ```
  *
- * @param [expression] The [Data Frame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
+ * @param [expression] The [DataFrame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
  */
 @Refine
 @Interpretable("ConvertAsFrame")
