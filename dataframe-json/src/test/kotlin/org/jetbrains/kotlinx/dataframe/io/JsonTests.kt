@@ -1075,7 +1075,7 @@ class JsonTests {
     }
 
     @Test
-    fun `json with metadata frame column`() {
+    fun `json with metadataframe column`() {
         val df = DataFrame.readJson(testJson("repositories"))
         val jsonStr = df.toJsonWithMetadata(df.rowsCount()).trimIndent()
         val json = parseJsonStr(jsonStr)
