@@ -145,7 +145,7 @@ Yes, Kotlin DataFrame is designed to work with hierarchical data.
 
 You can read JSON or any other nested format into a [`DataFrame`](DataFrame.md)
 with hierarchical structure — using `FrameColumn` 
-(a column of data frames) and `ColumnGroup` (a column with nested subcolumns).
+(a column of dataframes) and `ColumnGroup` (a column with nested subcolumns).
 
 Both [dataframe schemas](schemas.md) and [extension properties](extensionPropertiesApi.md)
 fully support nested data structures, allowing type-safe access and transformations at any depth.
