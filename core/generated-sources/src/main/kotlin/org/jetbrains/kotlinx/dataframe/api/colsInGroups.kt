@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.util.COLS_IN_GROUPS
 import org.jetbrains.kotlinx.dataframe.util.COLS_IN_GROUPS_REPLACE
@@ -148,7 +147,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet] containing the cols.
      */
     private interface ColsInGroupsDocs {
 
@@ -202,14 +201,14 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnSet<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun ColumnSet<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         transform { it.flatMap { it.cols().filter { predicate(it) } } }
 
     /**
@@ -256,9 +255,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
-    public fun ColumnSet<*>.colsInGroups(): TransformableColumnSet<*> = transform { it.flatMap { it.cols() } }
+    public fun ColumnSet<*>.colsInGroups(): ColumnSet<*> = transform { it.flatMap { it.cols() } }
 
     /**
      * ## Cols in Groups
@@ -306,14 +305,14 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         asSingleColumn().colsInGroups(predicate)
 
     /**
@@ -360,9 +359,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
-    public fun ColumnsSelectionDsl<*>.colsInGroups(): TransformableColumnSet<*> = asSingleColumn().colsInGroups()
+    public fun ColumnsSelectionDsl<*>.colsInGroups(): ColumnSet<*> = asSingleColumn().colsInGroups()
 
     /**
      * ## Cols in Groups
@@ -410,14 +409,14 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
 
     /**
@@ -464,9 +463,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
-    public fun SingleColumn<DataRow<*>>.colsInGroups(): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.colsInGroups(): ColumnSet<*> =
         ensureIsColumnGroup().allColumnsInternal().colsInGroups()
 
     /**
@@ -513,14 +512,14 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun String.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun String.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 
     /**
@@ -567,9 +566,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
-    public fun String.colsInGroups(): TransformableColumnSet<*> = columnGroup(this).colsInGroups()
+    public fun String.colsInGroups(): ColumnSet<*> = columnGroup(this).colsInGroups()
 
     /**
      * ## Cols in Groups
@@ -617,11 +616,11 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun KProperty<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 
     /**
@@ -668,14 +667,14 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnPath.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun ColumnPath.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 
     /**
@@ -722,9 +721,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the cols.
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
-    public fun ColumnPath.colsInGroups(): TransformableColumnSet<*> = columnGroup(this).colsInGroups()
+    public fun ColumnPath.colsInGroups(): ColumnSet<*> = columnGroup(this).colsInGroups()
 }
 
 // endregion

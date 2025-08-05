@@ -199,6 +199,8 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
  *
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
  */
+@Refine
+@Interpretable("SelectString")
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
 
 /**
@@ -475,6 +477,7 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
+    @Interpretable("StringSelect")
     public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
 
     /**
@@ -523,6 +526,7 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
+    @Interpretable("ColumnPathSelect")
     public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
 }
 

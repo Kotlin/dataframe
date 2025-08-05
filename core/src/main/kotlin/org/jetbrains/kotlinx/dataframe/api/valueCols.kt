@@ -112,7 +112,7 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ValueCols0")
-    public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         valueColumnsInternal(filter)
 
     /**
@@ -124,9 +124,8 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     @Interpretable("ValueCols1")
-    public fun ColumnsSelectionDsl<*>.valueCols(
-        filter: Predicate<ValueColumn<*>> = { true },
-    ): TransformableColumnSet<*> = asSingleColumn().valueColumnsInternal(filter)
+    public fun ColumnsSelectionDsl<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
+        asSingleColumn().valueColumnsInternal(filter)
 
     /**
      * @include [CommonValueColsDocs]
@@ -137,9 +136,8 @@ public interface ValueColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     @Interpretable("ValueCols2")
-    public fun SingleColumn<DataRow<*>>.valueCols(
-        filter: Predicate<ValueColumn<*>> = { true },
-    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().valueColumnsInternal(filter)
+    public fun SingleColumn<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
+        this.ensureIsColumnGroup().valueColumnsInternal(filter)
 
     /**
      * @include [CommonValueColsDocs]
@@ -149,7 +147,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]`() }`
      */
-    public fun String.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun String.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         columnGroup(this).valueCols(filter)
 
     /**
@@ -164,7 +162,7 @@ public interface ValueColsColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         columnGroup(this).valueCols(filter)
 
     /**
@@ -173,7 +171,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`() }`
      */
-    public fun ColumnPath.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun ColumnPath.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         columnGroup(this).valueCols(filter)
 }
 

@@ -8,7 +8,7 @@ with the name and type of properties inferred from the name and type of the corr
 It also works for all types of hierarchical dataframes.
 
 > The behavior of data schema generation differs between the 
-> [Compiler Plugin](Compiler-Plugin.md) and [Kotlin Notebook](gettingStartedKotlinNotebook.md).
+> [Compiler Plugin](Compiler-Plugin.md) and [Kotlin Notebook](SetupKotlinNotebook.md).
 >
 > * In **Kotlin Notebook**, a schema is generated **only after cell execution** for 
 > `DataFrame` variables defined within that cell.
@@ -29,7 +29,7 @@ which is a [**column group**](DataColumn.md#columngroup) containing two nested
 [value columns](DataColumn.md#valuecolumn) — 
 `age` of type `Int`, and `height` of type `Double`.
 
-<table>
+<table width="705">
   <thead>
     <tr>
       <th>name</th>
@@ -104,7 +104,7 @@ See the [](quickstart.md) in Kotlin Notebook with basic Extension Properties API
 <tab title="Compiler Plugin">
 
 For now, if you read [`DataFrame`](DataFrame.md) from a file or URL, you need to define its schema manually. 
-You can do it quickly with [`generate..()` methods](DataSchema-Data-Classes-Generation.md).
+You can do it quickly with [`generate..()` methods](DataSchemaGenerationMethods.md).
 
 Define schemas:
 ```kotlin

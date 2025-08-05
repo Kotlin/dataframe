@@ -19,6 +19,8 @@ interface JoinDsl: LeftDataFrame {
 
 `joinColumns` is a [column selector](ColumnSelectors.md) that defines column mapping for join:
 
+Related operations: [](multipleDataFrames.md)
+
 <!---FUN joinWithMatch-->
 <tabs>
 <tab title="Properties">

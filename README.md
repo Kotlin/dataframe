@@ -42,7 +42,7 @@ Explore [**documentation**](https://kotlin.github.io/dataframe) for details.
 You could find the following articles there:
 
 * [Guides and Examples](https://kotlin.github.io/dataframe/guides-and-examples.html)
-* [Get started with Kotlin DataFrame](https://kotlin.github.io/dataframe/gettingstarted.html)
+* [Get started with Kotlin DataFrame](https://kotlin.github.io/dataframe/setup.html)
 * [Working with Data Schemas](https://kotlin.github.io/dataframe/schemas.html)
 * [Setup compiler plugin in Gradle project](https://kotlin.github.io/dataframe/compiler-plugin.html)
 * [Full list of all supported operations](https://kotlin.github.io/dataframe/operations.html)
@@ -61,7 +61,7 @@ Check out this [notebook with new features](examples/notebooks/feature_overviews
 ## Setup
 
 > For more detailed instructions on how to get started with Kotlin DataFrame, refer to the
-> [Getting Started](https://kotlin.github.io/dataframe/gettingstarted.html).
+> [Getting Started](https://kotlin.github.io/dataframe/setup.html).
 
 ### Kotlin Notebook
 

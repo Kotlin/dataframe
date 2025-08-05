@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.dropWhile
 import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.filterBy
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.gather
@@ -321,22 +320,6 @@ class Access : TestBase() {
     fun filter_strings() {
         // SampleStart
         df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun filterBy_properties() {
-        // SampleStart
-        df.filterBy { isHappy }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun filterBy_strings() {
-        // SampleStart
-        df.filterBy("isHappy")
         // SampleEnd
     }
 

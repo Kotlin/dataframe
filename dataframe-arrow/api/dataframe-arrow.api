@@ -35,6 +35,14 @@ public final class org/jetbrains/kotlinx/dataframe/io/ArrowReadingKt {
 	public static synthetic fun readArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/nio/channels/ReadableByteChannel;Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[BLorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readParquet (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[Ljava/io/File;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;J)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readParquet (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;J)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readParquet (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[Ljava/net/URL;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;J)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readParquet (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[Ljava/nio/file/Path;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;J)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readParquet$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[Ljava/io/File;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;JILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readParquet$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;JILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readParquet$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[Ljava/net/URL;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;JILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readParquet$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[Ljava/nio/file/Path;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;JILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toDataFrame (Lorg/apache/arrow/vector/ipc/ArrowReader;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun toDataFrame$default (Lorg/apache/arrow/vector/ipc/ArrowReader;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
@@ -53,14 +61,15 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/io/ArrowWriter :
 	public abstract fun getMismatchSubscriber ()Lkotlin/jvm/functions/Function1;
 	public abstract fun getMode ()Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;
 	public abstract fun getTargetSchema ()Lorg/apache/arrow/vector/types/pojo/Schema;
-	public abstract fun saveArrowFeatherToByteArray ()[B
-	public abstract fun saveArrowIPCToByteArray ()[B
-	public abstract fun writeArrowFeather (Ljava/io/File;)V
-	public abstract fun writeArrowFeather (Ljava/io/OutputStream;)V
-	public abstract fun writeArrowFeather (Ljava/nio/channels/WritableByteChannel;)V
-	public abstract fun writeArrowIPC (Ljava/io/File;Z)V
-	public abstract fun writeArrowIPC (Ljava/io/OutputStream;)V
-	public abstract fun writeArrowIPC (Ljava/nio/channels/WritableByteChannel;)V
+	public fun saveArrowFeatherToByteArray ()[B
+	public fun saveArrowIPCToByteArray ()[B
+	public fun writeArrowFeather (Ljava/io/File;)V
+	public fun writeArrowFeather (Ljava/io/OutputStream;)V
+	public fun writeArrowFeather (Ljava/nio/channels/WritableByteChannel;)V
+	public fun writeArrowIPC (Ljava/io/File;Z)V
+	public fun writeArrowIPC (Ljava/io/OutputStream;)V
+	public fun writeArrowIPC (Ljava/nio/channels/WritableByteChannel;)V
+	public static synthetic fun writeArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;Ljava/io/File;ZILjava/lang/Object;)V
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/ArrowWriter$Companion {

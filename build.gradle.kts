@@ -20,10 +20,13 @@ plugins {
         alias(publisher)
         alias(serialization) apply false
         alias(dokka)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
-        alias(korro) apply false
-        alias(kodex) apply false
+
+        // TODO cannot define korro and kodex here due to leaking them kotlin-compiler-embeddable into the build classpath
+        // alias(korro) apply false
+        // alias(kodex) apply false
+
         alias(simpleGit) apply false
         alias(dependencyVersions)
         alias(buildconfig) apply false
@@ -41,7 +44,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-    maven(jupyterApiTCRepo)
+    if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
 }
 
 configurations {
@@ -61,15 +64,15 @@ dependencies {
     // experimental, so not included by default:
     // api(projects.dataframeOpenapi)
 
-    kover(projects.core)
-    kover(projects.dataframeArrow)
-    kover(projects.dataframeExcel)
-    kover(projects.dataframeOpenapi)
-    kover(projects.dataframeJdbc)
-    kover(projects.dataframeCsv)
-    kover(projects.dataframeJson)
-    kover(projects.plugins.kotlinDataframe)
-    kover(projects.dataframeJupyter)
+//    kover(projects.core)
+//    kover(projects.dataframeArrow)
+//    kover(projects.dataframeExcel)
+//    kover(projects.dataframeOpenapi)
+//    kover(projects.dataframeJdbc)
+//    kover(projects.dataframeCsv)
+//    kover(projects.dataframeJson)
+//    kover(projects.plugins.kotlinDataframe)
+//    kover(projects.dataframeJupyter)
 }
 
 enum class Version : Comparable<Version> {
@@ -155,6 +158,7 @@ val modulesUsingJava11 = with(projects) {
         dataframeGeo,
         examples.ideaExamples.titanic,
         tests,
+        plugins.dataframeGradlePlugin,
     )
 }.map { it.path }
 
@@ -204,6 +208,7 @@ allprojects {
             configure<BuildConfigExtension> {
                 packageName = "org.jetbrains.kotlinx.dataframe"
                 className = "BuildConfig"
+                buildConfigField("KOTLIN_VERSION", libs.versions.kotlin.asProvider().get())
                 buildConfigField("VERSION", "${project.version}")
                 buildConfigField("DEBUG", findProperty("kotlin.dataframe.debug")?.toString()?.toBoolean() ?: false)
             }
@@ -248,8 +253,8 @@ kotlinPublications {
     fairDokkaJars = false
 
     sonatypeSettings(
-        project.findProperty("kds.sonatype.user") as String?,
-        project.findProperty("kds.sonatype.password") as String?,
+        project.findProperty("kds.sonatype.central.username") as String?,
+        project.findProperty("kds.sonatype.central.password") as String?,
         "dataframe project, v. ${project.version}",
     )
 

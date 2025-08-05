@@ -5,6 +5,8 @@
 Removes duplicate rows.
 The rows in the resulting [`DataFrame`](DataFrame.md) are in the same order as they were in the original [`DataFrame`](DataFrame.md).
 
+Related operations: [](filterRows.md)
+
 <!---FUN distinct-->
 
 ```kotlin

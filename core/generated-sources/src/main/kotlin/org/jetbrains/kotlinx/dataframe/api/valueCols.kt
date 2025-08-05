@@ -179,7 +179,7 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Interpretable("ValueCols0")
-    public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         valueColumnsInternal(filter)
 
     /**
@@ -215,9 +215,8 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Interpretable("ValueCols1")
-    public fun ColumnsSelectionDsl<*>.valueCols(
-        filter: Predicate<ValueColumn<*>> = { true },
-    ): TransformableColumnSet<*> = asSingleColumn().valueColumnsInternal(filter)
+    public fun ColumnsSelectionDsl<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
+        asSingleColumn().valueColumnsInternal(filter)
 
     /**
      * ## Value Columns
@@ -252,9 +251,8 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Interpretable("ValueCols2")
-    public fun SingleColumn<DataRow<*>>.valueCols(
-        filter: Predicate<ValueColumn<*>> = { true },
-    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().valueColumnsInternal(filter)
+    public fun SingleColumn<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
+        this.ensureIsColumnGroup().valueColumnsInternal(filter)
 
     /**
      * ## Value Columns
@@ -288,7 +286,7 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun String.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun String.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         columnGroup(this).valueCols(filter)
 
     /**
@@ -327,7 +325,7 @@ public interface ValueColsColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         columnGroup(this).valueCols(filter)
 
     /**
@@ -360,7 +358,7 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun ColumnPath.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
+    public fun ColumnPath.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         columnGroup(this).valueCols(filter)
 }
 

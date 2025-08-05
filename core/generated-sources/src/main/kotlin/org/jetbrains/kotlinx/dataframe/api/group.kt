@@ -301,8 +301,8 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  * Groups columns, previously selected with [group], into a new or existing column group
  * within the [DataFrame] by specifying its path via [ColumnsSelectionDsl] expression.
  *
- * If the specified path refers to a non-existent column group, it will be created automatically,
- * including any missing intermediate segments.
+ * If the specified path is partially or fully missing — that is, if any segment of the path
+ * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
  * See [Selecting Columns][SelectingColumns].
  *
