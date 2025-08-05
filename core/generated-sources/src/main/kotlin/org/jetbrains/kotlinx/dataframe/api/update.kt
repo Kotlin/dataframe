@@ -491,13 +491,13 @@ public inline fun <T, C, R : C?> Update<T, C>.with(crossinline expression: Updat
  *
  * Updates selected [column group][ColumnGroup] as a [DataFrame] with the given [expression].
  *
- * Provide a new value for every selected data frame using a [dataframe expression][org.jetbrains.kotlinx.dataframe.DataFrameExpression].
+ * Provide a new value for every selected dataframe using a [dataframe expression][org.jetbrains.kotlinx.dataframe.DataFrameExpression].
  *
  * For example:
  *
  * `df.`[update][update]` { name }.`[asFrame][asFrame]` { `[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { lastName } }`
  *
- * @param [expression] The [Data Frame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
+ * @param [expression] The [DataFrame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
  */
 public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     asFrameImpl(expression)
