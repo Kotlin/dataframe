@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -114,6 +116,8 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
+@Refine
+@Interpretable("DataFrameCumSum")
 public fun <T, C : Number?> DataFrame<T>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<T, C>,
@@ -167,6 +171,8 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
+@Refine
+@Interpretable("GroupByCumSum")
 public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<G, C>,
