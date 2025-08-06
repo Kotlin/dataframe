@@ -18,7 +18,7 @@ and [tests/.../samples/api](../tests/src/test/kotlin/org/jetbrains/kotlinx/dataf
 and they are copied over to Markdown files in [docs/StardustDocs/topics](../docs/StardustDocs/topics)
 by [Korro](https://github.com/devcrocod/korro).
 
-### Explainer dataframes
+### ~~Explainer dataframes~~ NOTE: This is being moved to [tests](../tests)
 
 Aside from code samples, `@TransformDataFrameExpressions` annotated test functions also generate sample
 dataframe HTML files that can be used as iFrames on the documentation website.

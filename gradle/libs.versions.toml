@@ -62,7 +62,7 @@ geotools = "32.1"
 jai-core = "1.1.3"
 jts = "1.20.0"
 
-kandy = "0.8.1-dev-66"
+kandy = "0.8.1-dev-73"
 exposed = "1.0.0-beta-2"
 
 # check the versions down in the [libraries] section too!
