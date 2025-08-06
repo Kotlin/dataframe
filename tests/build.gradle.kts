@@ -42,8 +42,14 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
-    testImplementation(libs.kandy)
-    testImplementation(libs.kandy.samples.utils)
+    testImplementation(libs.kandy) {
+        // TODO remove when kandy uses version of DF with `FormatDsl`
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
+    testImplementation(libs.kandy.samples.utils) {
+        // TODO remove when kandy uses version of DF with `FormatDsl`
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
@@ -65,6 +71,7 @@ korro {
         include("docs/StardustDocs/topics/read.md")
         include("docs/StardustDocs/topics/write.md")
         include("docs/StardustDocs/topics/rename.md")
+        include("docs/StardustDocs/topics/format.md")
         include("docs/StardustDocs/topics/guides/*.md")
     }
 

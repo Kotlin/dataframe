@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.apache.arrow.dataset.file.FileFormat
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
@@ -16,6 +17,7 @@ import java.nio.channels.Channels
 import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
+import java.nio.file.Path
 
 public class ArrowFeather : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
@@ -35,6 +37,8 @@ public class ArrowFeather : SupportedDataFrameFormat {
 }
 
 private const val READ_ARROW_FEATHER = "readArrowFeather"
+
+internal const val ARROW_PARQUET_DEFAULT_BATCH_SIZE = 32768L
 
 private class DefaultReadArrowMethod(path: String?) :
     AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_ARROW_FEATHER)
@@ -185,3 +189,55 @@ public fun DataFrame.Companion.readArrow(
  */
 public fun ArrowReader.toDataFrame(nullability: NullabilityOptions = NullabilityOptions.Infer): AnyFrame =
     DataFrame.Companion.readArrowImpl(this, nullability)
+
+/**
+ * Read [Parquet](https://parquet.apache.org/) data from existing [urls] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
+ */
+public fun DataFrame.Companion.readParquet(
+    vararg urls: URL,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+    batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
+): AnyFrame =
+    readArrowDatasetImpl(
+        urls.map {
+            it.toString()
+        }.toTypedArray(),
+        FileFormat.PARQUET,
+        nullability,
+        batchSize,
+    )
+
+/**
+ * Read [Parquet](https://parquet.apache.org/) data from existing [strUrls] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
+ */
+public fun DataFrame.Companion.readParquet(
+    vararg strUrls: String,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+    batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
+): AnyFrame = readArrowDatasetImpl(arrayOf(*strUrls), FileFormat.PARQUET, nullability, batchSize)
+
+/**
+ * Read [Parquet](https://parquet.apache.org/) data from existing [paths] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
+ */
+public fun DataFrame.Companion.readParquet(
+    vararg paths: Path,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+    batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
+): AnyFrame = readArrowDatasetImpl(paths.map { "file:$it" }.toTypedArray(), FileFormat.PARQUET, nullability, batchSize)
+
+/**
+ * Read [Parquet](https://parquet.apache.org/) data from existing [files] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
+ */
+public fun DataFrame.Companion.readParquet(
+    vararg files: File,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+    batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
+): AnyFrame =
+    readArrowDatasetImpl(
+        files.map {
+            "file:${it.toPath()}"
+        }.toTypedArray(),
+        FileFormat.PARQUET,
+        nullability,
+        batchSize,
+    )

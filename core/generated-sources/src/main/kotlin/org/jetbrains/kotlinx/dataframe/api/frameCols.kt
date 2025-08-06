@@ -179,9 +179,8 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Interpretable("FrameCols0")
-    public fun ColumnSet<*>.frameCols(
-        filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = frameColumnsInternal(filter)
+    public fun ColumnSet<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
+        frameColumnsInternal(filter)
 
     /**
      * ## Frame Columns
@@ -218,7 +217,7 @@ public interface FrameColsColumnsSelectionDsl {
     @Interpretable("FrameCols1")
     public fun ColumnsSelectionDsl<*>.frameCols(
         filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = asSingleColumn().frameColumnsInternal(filter)
+    ): ColumnSet<DataFrame<*>> = asSingleColumn().frameColumnsInternal(filter)
 
     /**
      * ## Frame Columns
@@ -255,7 +254,7 @@ public interface FrameColsColumnsSelectionDsl {
     @Interpretable("FrameCols2")
     public fun SingleColumn<DataRow<*>>.frameCols(
         filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = this.ensureIsColumnGroup().frameColumnsInternal(filter)
+    ): ColumnSet<DataFrame<*>> = this.ensureIsColumnGroup().frameColumnsInternal(filter)
 
     /**
      * ## Frame Columns
@@ -289,7 +288,7 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun String.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
+    public fun String.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)
 
     /**
@@ -328,9 +327,8 @@ public interface FrameColsColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.frameCols(
-        filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
+    public fun KProperty<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
+        columnGroup(this).frameCols(filter)
 
     /**
      * ## Frame Columns
@@ -362,9 +360,8 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun ColumnPath.frameCols(
-        filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
+    public fun ColumnPath.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
+        columnGroup(this).frameCols(filter)
 }
 
 /**

@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -672,6 +673,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
+    @Interpretable("Col")
     public fun col(name: String): ColumnAccessor<*> = column<Any?>(name)
 
     /**
@@ -724,6 +726,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
+    @Interpretable("ColUntyped")
     public fun <C> col(name: String): ColumnAccessor<C> = column(name)
 
     /**
@@ -992,6 +995,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
+    @Interpretable("StringNestedColUntyped")
     public fun String.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
@@ -1044,6 +1048,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
+    @Interpretable("StringNestedCol")
     public fun <C> String.col(name: String): ColumnAccessor<C> =
         columnGroup(this)
             .ensureIsColumnGroup()
@@ -1210,6 +1215,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
+    @Interpretable("ColumnPathColUntyped")
     public fun ColumnPath.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
@@ -1262,6 +1268,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
+    @Interpretable("ColumnPathCol")
     public fun <C> ColumnPath.col(name: String): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(name)
 

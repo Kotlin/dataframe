@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import kotlin.reflect.typeOf
 
 // region ColumnsSelectionDsl
 
@@ -65,6 +66,6 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>,
-): DataColumn<R> = mapToColumn(name, infer, expression)
+): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, expression)
 
 // endregion

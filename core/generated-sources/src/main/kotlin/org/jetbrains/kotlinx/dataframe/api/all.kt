@@ -225,7 +225,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("All0")
-    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allColumnsInternal() as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.all(): ColumnSet<C> = allColumnsInternal().cast()
 
     /**
      * ## All (Cols)
@@ -276,7 +276,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Interpretable("All1")
-    public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> = asSingleColumn().allColumnsInternal()
+    public fun ColumnsSelectionDsl<*>.all(): ColumnSet<*> = asSingleColumn().allColumnsInternal()
 
     /**
      * ## All (Cols)
@@ -327,8 +327,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Interpretable("All2")
-    public fun SingleColumn<DataRow<*>>.allCols(): TransformableColumnSet<*> =
-        ensureIsColumnGroup().allColumnsInternal()
+    public fun SingleColumn<DataRow<*>>.allCols(): ColumnSet<*> = ensureIsColumnGroup().allColumnsInternal()
 
     /**
      * ## All (Cols)
@@ -378,7 +377,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.allExcept]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun String.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
+    public fun String.allCols(): ColumnSet<*> = columnGroup(this).allCols()
 
     /**
      * ## All (Cols)
@@ -430,7 +429,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
+    public fun KProperty<*>.allCols(): ColumnSet<*> = columnGroup(this).allCols()
 
     /**
      * ## All (Cols)
@@ -480,7 +479,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.allExcept]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun ColumnPath.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
+    public fun ColumnPath.allCols(): ColumnSet<*> = columnGroup(this).allCols()
 
     // endregion
 

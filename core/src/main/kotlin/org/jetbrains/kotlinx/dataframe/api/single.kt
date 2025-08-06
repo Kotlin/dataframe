@@ -142,7 +142,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_SET_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
+    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
         singleInternal(condition)
 
     /**
@@ -153,7 +153,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
      */
     @Interpretable("Single0")
-    public fun <C> ColumnSet<C>.single(): TransformableSingleColumn<C> = singleInternal { true }
+    public fun <C> ColumnSet<C>.single(): SingleColumn<C> = singleInternal { true }
 
     /**
      * @include [CommonSingleDocs]
@@ -167,7 +167,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_PLAIN_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         asSingleColumn().singleCol(condition)
 
     /**
@@ -177,7 +177,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  { nameStartsWith("year").`[single][ColumnsSelectionDsl.single]`() }`
      */
     @Interpretable("Single1")
-    public fun ColumnsSelectionDsl<*>.single(): TransformableSingleColumn<*> = asSingleColumn().singleCol { true }
+    public fun ColumnsSelectionDsl<*>.single(): SingleColumn<*> = asSingleColumn().singleCol { true }
 
     /**
      * @include [CommonSingleDocs]
@@ -191,7 +191,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().single(condition)
 
     /**
@@ -201,8 +201,7 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
      */
     @Interpretable("Single2")
-    public fun SingleColumn<DataRow<*>>.singleCol(): TransformableSingleColumn<*> =
-        this.ensureIsColumnGroup().asColumnSet().single()
+    public fun SingleColumn<DataRow<*>>.singleCol(): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().single()
 
     /**
      * @include [CommonSingleDocs]
@@ -214,7 +213,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun String.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun String.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 
     /**
@@ -222,7 +221,7 @@ public interface SingleColumnsSelectionDsl {
      * @set [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("year").`[singleCol][String.singleCol]`() }`
      */
-    public fun String.singleCol(): TransformableSingleColumn<*> = columnGroup(this).singleCol()
+    public fun String.singleCol(): SingleColumn<*> = columnGroup(this).singleCol()
 
     /**
      * @include [CommonSingleDocs]
@@ -233,7 +232,7 @@ public interface SingleColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun KProperty<*>.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 
     /**
@@ -241,7 +240,7 @@ public interface SingleColumnsSelectionDsl {
      * @set [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[singleCol][ColumnPath.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
+    public fun ColumnPath.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 }
 

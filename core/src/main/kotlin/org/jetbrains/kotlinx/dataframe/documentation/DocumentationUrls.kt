@@ -29,6 +29,9 @@ internal interface DocumentationUrls {
     /** [See Extension Properties API on the documentation website.]({@include [Url]}/extensionpropertiesapi.html) */
     interface ExtensionPropertiesApi
 
+    /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
+    interface CompilerPlugin
+
     interface DataRow {
         /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
         interface RowExpressions
@@ -122,4 +125,10 @@ internal interface DocumentationUrls {
 
     /** [See `countDistinct` on the documentation website.]({@include [Url]}/countdistinct.html) */
     interface CountDistinct
+
+    /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
+    interface Explode
+
+    /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
+    interface DataSchemaGeneration
 }

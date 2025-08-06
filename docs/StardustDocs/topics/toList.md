@@ -9,6 +9,8 @@ of data class instances by current [`DataFrame`](DataFrame.md) type argument.
 toList()
 ```
 
+**More info**: [](collectionsInterop.md)
+
 Type of data class is defined by current type argument of [`DataFrame`](DataFrame.md). If this type argument is not data class, exception will be thrown.
 
 Data class properties are matched with [`DataFrame`](DataFrame.md) columns by name. If property type differs from column type [type conversion](convert.md) will be performed. If no automatic type conversion was found, exception will be thrown. 

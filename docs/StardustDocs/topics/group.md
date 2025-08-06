@@ -11,7 +11,7 @@ group { columns }
 groupNameExpression = DataColumn.(DataColumn) -> String
 ```
 
-**Reverse operation:** [`ungroup`](ungroup.md)
+**Reverse operation:** [`ungroup`](ungroup.md), [`flatten`](flatten.md)
 
 It is a special case of [`move`](move.md) operation.
 

@@ -19,8 +19,8 @@
 
         <primary>
             <title>First steps</title>
-            <a href="gettingStartedKotlinNotebook.md"/>
-            <a href="overview.md"/>
+            <a href="SetupKotlinNotebook.md"/>
+            <a href="concepts.md"/>
             <a href="operations.md"/>
             <a href="read.md">Reading from files: CSV, JSON, ApacheArrow</a>
         </primary>
@@ -29,9 +29,9 @@
             <title>Featured topics</title>
             <a href="Kotlin-DataFrame-Features-in-Kotlin-Notebook.md"/>
             <a href="Compiler-Plugin.md"/>
+            <a href="Data-Sources.md"/>
             <a href="readSqlDatabases.md"/>
         </secondary>
-
 
     </section-starting-page>
 

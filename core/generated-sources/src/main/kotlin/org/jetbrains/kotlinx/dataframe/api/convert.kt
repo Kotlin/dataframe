@@ -589,6 +589,8 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
  *
  * @param [expression] The [Data Frame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
  */
+@Refine
+@Interpretable("ConvertAsFrame")
 public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
     expression: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
 ): DataFrame<T> = asColumn { expression(this, it.asColumnGroup()).asColumnGroup(it.name()) }
@@ -649,7 +651,7 @@ public inline fun <T, C, R> Convert<T, C>.asColumn(
  * ```kotlin
  * // Convert values in all columns to `String` and add their column name to the end
  * df.convert { all() }.perRowCol { row, col ->
- *    row[col].toString() + col.name()
+ *    col[row].toString() + col.name()
  * }
  * ```
  *

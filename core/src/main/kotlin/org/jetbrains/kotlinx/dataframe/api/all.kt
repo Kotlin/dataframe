@@ -266,7 +266,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("All0")
-    public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allColumnsInternal() as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.all(): ColumnSet<C> = allColumnsInternal().cast()
 
     /**
      * @include [CommonAllDocs]
@@ -275,7 +275,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * `df.`[select][DataFrame.select]`  {  `[all][ColumnsSelectionDsl.all]`() }`
      */
     @Interpretable("All1")
-    public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> = asSingleColumn().allColumnsInternal()
+    public fun ColumnsSelectionDsl<*>.all(): ColumnSet<*> = asSingleColumn().allColumnsInternal()
 
     /**
      * @include [CommonAllDocs]
@@ -284,8 +284,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      */
     @Interpretable("All2")
-    public fun SingleColumn<DataRow<*>>.allCols(): TransformableColumnSet<*> =
-        ensureIsColumnGroup().allColumnsInternal()
+    public fun SingleColumn<DataRow<*>>.allCols(): ColumnSet<*> = ensureIsColumnGroup().allColumnsInternal()
 
     /**
      * @include [CommonAllDocs]
@@ -293,7 +292,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[select][DataFrame.select]` { "myGroupCol".`[allCols][String.allCols]`() }`
      */
-    public fun String.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
+    public fun String.allCols(): ColumnSet<*> = columnGroup(this).allCols()
 
     /**
      * @include [CommonAllDocs]
@@ -303,7 +302,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
+    public fun KProperty<*>.allCols(): ColumnSet<*> = columnGroup(this).allCols()
 
     /**
      * @include [CommonAllDocs]
@@ -311,7 +310,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroup"].`[allCols][ColumnPath.allCols]`() }`
      */
-    public fun ColumnPath.allCols(): TransformableColumnSet<*> = columnGroup(this).allCols()
+    public fun ColumnPath.allCols(): ColumnSet<*> = columnGroup(this).allCols()
 
     // endregion
 

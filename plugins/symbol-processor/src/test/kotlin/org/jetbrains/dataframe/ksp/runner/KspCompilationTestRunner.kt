@@ -2,11 +2,13 @@
 
 package org.jetbrains.dataframe.ksp.runner
 
+import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspArgs
+import com.tschuchort.compiletesting.kspProcessorOptions
 import com.tschuchort.compiletesting.kspSourcesDir
 import com.tschuchort.compiletesting.symbolProcessorProviders
+import com.tschuchort.compiletesting.useKsp2
 import org.jetbrains.dataframe.ksp.DataFrameSymbolProcessorProvider
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import java.io.ByteArrayOutputStream
@@ -15,7 +17,7 @@ import java.nio.file.Paths
 
 @Suppress("unused")
 internal class KotlinCompileTestingCompilationResult(
-    val delegate: KotlinCompilation.Result,
+    val delegate: JvmCompilationResult,
     val successfulCompilation: Boolean,
     val kspGeneratedFiles: List<File>,
     val outputSourceDirs: List<File>,
@@ -43,8 +45,14 @@ internal object KspCompilationTestRunner {
             classpaths = params.classpath,
             tempDir = compilationDir,
         )
-        kspCompilation.kspArgs.putAll(params.options)
-        kspCompilation.symbolProcessorProviders = listOf(DataFrameSymbolProcessorProvider())
+        kspCompilation.kspProcessorOptions.putAll(params.options)
+
+        // We don't support KSP2, but because we target Kotlin 2.2 the tests only work if I set them up like this.
+        kspCompilation.useKsp2()
+        kspCompilation.kspProcessorOptions["ksp.useKSP2"] = "false"
+        kspCompilation.kspProcessorOptions["useKSP2"] = "false"
+
+        kspCompilation.symbolProcessorProviders = mutableListOf(DataFrameSymbolProcessorProvider())
         kspCompilation.compile().also {
             println(it.messages)
             if (it.exitCode == KotlinCompilation.ExitCode.COMPILATION_ERROR) {

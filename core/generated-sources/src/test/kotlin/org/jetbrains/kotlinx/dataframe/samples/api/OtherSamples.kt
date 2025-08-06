@@ -12,7 +12,9 @@ import java.io.File
 
 // To display code together with a table, we can use TransformDataFrameExpressions annotation together with korro
 // This class provides an ability to save only a table that can be embedded anywhere in the documentation
-class OtherSamples {
+
+@Deprecated("This can now be reproduced with 'sample dataframes' in the 'tests' module.")
+class OtherSamples : TestBase() {
 
     @Test
     fun example() {

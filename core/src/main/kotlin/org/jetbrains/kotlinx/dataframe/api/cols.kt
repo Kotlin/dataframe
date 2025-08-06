@@ -244,12 +244,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetColsPredicateDocs] */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C> = { true }): TransformableColumnSet<C> =
-        colsInternal(predicate as ColumnFilter<*>) as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C> = { true }): ColumnSet<C> =
+        colsInternal(predicate as ColumnFilter<*>).cast()
 
     /** @include [ColumnSetColsPredicateDocs] */
-    public operator fun <C> ColumnSet<C>.get(predicate: ColumnFilter<C> = { true }): TransformableColumnSet<C> =
-        cols(predicate)
+    public operator fun <C> ColumnSet<C>.get(predicate: ColumnFilter<C> = { true }): ColumnSet<C> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -270,11 +269,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnsSelectionDslColsPredicateDocs
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
-    public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         this.asSingleColumn().colsInternal(predicate)
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
-    public operator fun ColumnsSelectionDsl<*>.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public operator fun ColumnsSelectionDsl<*>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         cols(predicate)
 
     /**
@@ -295,15 +294,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface SingleColumnAnyRowColsPredicateDocs
 
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
-    public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal(predicate)
 
     /**
      * @include [SingleColumnAnyRowColsPredicateDocs]
      */
-    public operator fun SingleColumn<DataRow<*>>.get(
-        predicate: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = cols(predicate)
+    public operator fun SingleColumn<DataRow<*>>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+        cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -320,11 +318,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface StringColsPredicateDocs
 
     /** @include [StringColsPredicateDocs] */
-    public fun String.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).cols(predicate)
+    public fun String.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = columnGroup(this).cols(predicate)
 
     /** @include [StringColsPredicateDocs] */
-    public operator fun String.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> = cols(predicate)
+    public operator fun String.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -345,14 +342,13 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyColsPredicateDocs] */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun KProperty<*>.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).cols(predicate)
 
     /** @include [KPropertyColsPredicateDocs] */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun KProperty<*>.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        cols(predicate)
+    public operator fun KProperty<*>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -367,12 +363,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnPathPredicateDocs
 
     /** @include [ColumnPathPredicateDocs] */
-    public fun ColumnPath.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).cols(predicate)
+    public fun ColumnPath.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = columnGroup(this).cols(predicate)
 
     /** @include [ColumnPathPredicateDocs] */
-    public operator fun ColumnPath.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        cols(predicate)
+    public operator fun ColumnPath.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
 
     // endregion
 
