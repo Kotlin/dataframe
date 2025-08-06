@@ -2217,6 +2217,9 @@ public final class org/jetbrains/kotlinx/dataframe/api/FormatClause {
 
 public final class org/jetbrains/kotlinx/dataframe/api/FormatKt {
 	public static final fun and (Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;)Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
+	public static final fun at (Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;Ljava/util/Collection;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
+	public static final fun at (Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
+	public static final fun at (Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;[I)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
 	public static final fun format (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
 	public static final fun format (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
 	public static final fun format (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
@@ -2224,7 +2227,10 @@ public final class org/jetbrains/kotlinx/dataframe/api/FormatKt {
 	public static final fun format (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
 	public static final fun format (Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
 	public static final fun format (Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
+	public static final fun format (Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
 	public static final fun linearBg (Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;Lkotlin/Pair;Lkotlin/Pair;)Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;
+	public static final fun notNull (Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
+	public static final fun notNull (Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;
 	public static final fun perRowCol (Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;Lkotlin/jvm/functions/Function3;)Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;
 	public static final fun where (Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;
 	public static final fun with (Lorg/jetbrains/kotlinx/dataframe/api/FormatClause;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;
@@ -2240,26 +2246,26 @@ public final class org/jetbrains/kotlinx/dataframe/api/FormattedFrame {
 	public static synthetic fun toStandaloneHtml$default (Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/api/FormattingDSL {
-	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/api/FormattingDSL;
+public final class org/jetbrains/kotlinx/dataframe/api/FormattingDsl {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/api/FormattingDsl;
 	public final fun attr (Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
-	public final fun background (Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;)Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
+	public final fun background (Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;)Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
 	public final fun background (SSS)Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
-	public final fun getBlack ()Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
-	public final fun getBlue ()Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
+	public final fun getBlack ()Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
+	public final fun getBlue ()Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
 	public final fun getBold ()Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
-	public final fun getDarkGray ()Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
-	public final fun getGray ()Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
-	public final fun getGreen ()Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
+	public final fun getDarkGray ()Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
+	public final fun getGray ()Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
+	public final fun getGreen ()Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
 	public final fun getItalic ()Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
-	public final fun getLightGray ()Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
-	public final fun getRed ()Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
+	public final fun getLightGray ()Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
+	public final fun getRed ()Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
 	public final fun getUnderline ()Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
-	public final fun getWhite ()Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
-	public final fun linear (Ljava/lang/Number;Lkotlin/Pair;Lkotlin/Pair;)Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
+	public final fun getWhite ()Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
+	public final fun linear (Ljava/lang/Number;Lkotlin/Pair;Lkotlin/Pair;)Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
 	public final fun linearBg (Ljava/lang/Number;Lkotlin/Pair;Lkotlin/Pair;)Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
-	public final fun rgb (SSS)Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
-	public final fun textColor (Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;)Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
+	public final fun rgb (SSS)Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
+	public final fun textColor (Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;)Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
 	public final fun textColor (SSS)Lorg/jetbrains/kotlinx/dataframe/api/CellAttributes;
 }
 
@@ -3764,21 +3770,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/PrintKt {
 	public static final fun print-XIlnkTk (Ljava/lang/String;)V
 }
 
-public final class org/jetbrains/kotlinx/dataframe/api/RGBColor {
-	public fun <init> (SSS)V
-	public final fun component1 ()S
-	public final fun component2 ()S
-	public final fun component3 ()S
-	public final fun copy (SSS)Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;SSSILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/RGBColor;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getB ()S
-	public final fun getG ()S
-	public final fun getR ()S
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/ReducedGroupBy {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/jvm/functions/Function2;)V
 	public final fun getGroupBy ()Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
@@ -3920,6 +3911,21 @@ public final class org/jetbrains/kotlinx/dataframe/api/ReverseKt {
 	public static final fun reverse (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static final fun reverse (Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public static final fun reverse (Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/api/RgbColor {
+	public fun <init> (SSS)V
+	public final fun component1 ()S
+	public final fun component2 ()S
+	public final fun component3 ()S
+	public final fun copy (SSS)Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;SSSILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/RgbColor;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getB ()S
+	public final fun getG ()S
+	public final fun getR ()S
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/SchemaKt {
