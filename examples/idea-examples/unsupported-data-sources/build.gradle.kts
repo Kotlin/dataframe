@@ -25,6 +25,14 @@ dependencies {
     implementation(libs.exposed.json)
     implementation(libs.exposed.money)
 
+    // Hibernate + H2 + HikariCP (for Hibernate example)
+    implementation(libs.hibernate.core)
+    implementation(libs.hibernate.hikaricp)
+    implementation(libs.hikaricp)
+
+    implementation(libs.h2db)
+    implementation(libs.sl4jsimple)
+
     // (kotlin) spark support
     implementation(libs.kotlin.spark)
     compileOnly(libs.spark)
