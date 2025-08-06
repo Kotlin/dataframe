@@ -1,7 +1,7 @@
 # Custom integrations with unsupported data sources
 
 <web-summary>
-Examples of how to integrate Kotlin DataFrame with other dataframeworks like Exposed, Spark, or Multik.
+Examples of how to integrate Kotlin DataFrame with other data frameworks like Exposed, Spark, or Multik.
 </web-summary>
 
 <card-summary>
@@ -15,7 +15,7 @@ How to connect Kotlin DataFrame with data sources like Exposed, Apache Spark, or
 Some data sources are not officially supported in the Kotlin DataFrame API yet —
 but you can still integrate them easily using custom code.
 
-Below is a list of example integrations with other dataframeworks.
+Below is a list of example integrations with other data frameworks.
 These examples demonstrate how to bridge Kotlin DataFrame with external libraries or APIs.
 
 - [Kotlin Exposed](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/exposed)

@@ -14,7 +14,7 @@ Spelling and naming rules for using "Kotlin DataFrame", "dataframe", and `DataFr
 
 While reading Kotlin DataFrame documentation, you may come across several similar terms referring to different concepts:
 
-* **Kotlin DataFrame** — the name of the official library.
+* **Kotlin DataFrame** (or just "DataFrame") — the name of the official library.
 * *dataframe* — a general term for data in a tabular (frame) format.
 * [`DataFrame`](DataFrame.md) — a Kotlin type or its instance that represents a wrapper around a dataframe.
 
