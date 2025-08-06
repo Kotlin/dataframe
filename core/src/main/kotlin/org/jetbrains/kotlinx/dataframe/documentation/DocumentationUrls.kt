@@ -131,4 +131,7 @@ internal interface DocumentationUrls {
 
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
     interface DataSchemaGeneration
+
+    /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
+    interface Format
 }
