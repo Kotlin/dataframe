@@ -102,7 +102,7 @@ fun setStyles(sheet: Sheet) {
 // Create a workbook (or use existing)
 val wb = WorkbookFactory.create(true)
 
-// Create different sheets from different data frames in the workbook
+// Create different sheets from different dataframes in the workbook
 val allPersonsSheet = df.writeExcel(wb, sheetName = "allPersons")
 val happyPersonsSheet =
     df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")

@@ -153,7 +153,7 @@ class CodeGenerationTests : BaseTest() {
     }
 
     @Test
-    fun `generate marker interface for nested data frame`() {
+    fun `generate marker interface for nested dataframe`() {
         val property = ::df
         val grouped = df.move { name and city }.under("nameAndCity")
         val generated = ReplCodeGenerator.create().process(grouped, property)

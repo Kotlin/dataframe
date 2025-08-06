@@ -1977,7 +1977,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `render nested data frames to string`() {
+    fun `render nested dataframes to string`() {
         val rendered = typed
             .drop(1)
             .groupBy { name }
