@@ -758,14 +758,18 @@ public typealias CellFormatter<C> = FormattingDsl.(cell: C) -> CellAttributes?
  *
  * Call [toHtml] or [toStandaloneHtml] to get the HTML representation of the [DataFrame].
  *
+ * In Jupyter kernel (Kotlin Notebook) environments, you can often output this class directly.
+ * Use [toHtml] or [toStandaloneHtml] when this produces unexpected results.
+ *
  * You can apply further formatting to this [FormattedFrame] by calling [format()][FormattedFrame.format] once again.
  */
 public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val formatter: RowColFormatter<T, *>? = null) {
 
     /**
      * Returns a [DataFrameHtmlData] without additional definitions.
-     * Can be rendered in Jupyter kernel (Notebook) environments or other environments that already have
+     * Can be rendered in Jupyter kernel (Kotlin Notebook) environments or other environments that already have
      * CSS- and script definitions for DataFrame.
+     *
      * Use [toStandaloneHtml] if you need the [DataFrameHtmlData] to include CSS- and script definitions.
      *
      * By default, cell content is formatted as text
@@ -781,6 +785,8 @@ public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val forma
     /**
      * Returns a [DataFrameHtmlData] with CSS- and script definitions for DataFrame.
      *
+     * Use [toHtml] if you don't need the [DataFrameHtmlData] to include CSS- and script definitions.
+     *
      * The [DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
      * If you save it as a file and find it in the project tree,
      * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure)
@@ -788,6 +794,10 @@ public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val forma
      *
      * By default, cell content is formatted as text
      * Use [RenderedContent.media][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+     *
+     * __NOTE:__ In Kotlin Notebook, output [FormattedFrame] directly, or use [toHtml],
+     * as that environment already has CSS- and script definitions for DataFrame.
+     * Using [toStandaloneHtml] might produce unexpected results.
      *
      * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
      *   Default: [DisplayConfiguration.DEFAULT].
