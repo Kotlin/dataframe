@@ -29,6 +29,7 @@ Kotlin DataFrame provides out-of-the-box support for the most common SQL databas
 - [SQLite](SQLite.md)
 - [H2](H2.md)
 - [MariaDB](MariaDB.md)
+- [DuckDB](DuckDB.md)
 
 You can also define a [Custom SQL Source](Custom-SQL-Source.md)
 to work with any other JDBC-compatible database.

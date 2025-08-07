@@ -73,12 +73,14 @@ korro {
         include("docs/StardustDocs/topics/rename.md")
         include("docs/StardustDocs/topics/format.md")
         include("docs/StardustDocs/topics/guides/*.md")
+        include("docs/StardustDocs/topics/dataSources/sql/*.md")
     }
 
     samples = fileTree(project.projectDir) {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
     }
 
     groupSamples {
