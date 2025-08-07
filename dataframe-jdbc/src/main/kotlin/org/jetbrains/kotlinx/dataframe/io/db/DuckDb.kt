@@ -132,7 +132,7 @@ public object DuckDb : DbType("duckdb") {
                 Map::class.createType(
                     listOf(
                         KTypeProjection.invariant(key.toKType(false)),
-                        KTypeProjection.covariant(value.toKType(true)),
+                        KTypeProjection.invariant(value.toKType(true)),
                     ),
                 )
             }
@@ -141,7 +141,7 @@ public object DuckDb : DbType("duckdb") {
                 // TODO requires #1266 and #1273 for specific types
                 //   val listType = parseListType(sqlTypeName)
                 //   Array::class.createType(
-                //       listOf(KTypeProjection.covariant(listType.toKType(true))),
+                //       listOf(KTypeProjection.invariant(listType.toKType(true))),
                 //   )
                 typeOf<Array>()
             }
