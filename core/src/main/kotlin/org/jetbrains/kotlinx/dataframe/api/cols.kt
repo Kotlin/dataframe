@@ -21,6 +21,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_COLS
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_COLS_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
@@ -244,8 +247,12 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetColsPredicateDocs] */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C> = { true }): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C>): ColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>).cast()
+
+    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun <C> ColumnSet<C>.cols(): ColumnSet<C> =
+        cols { true }
 
     /** @include [ColumnSetColsPredicateDocs] */
     public operator fun <C> ColumnSet<C>.get(predicate: ColumnFilter<C> = { true }): ColumnSet<C> = cols(predicate)
@@ -269,8 +276,12 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnsSelectionDslColsPredicateDocs
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
-    public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.asSingleColumn().colsInternal(predicate)
+
+    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun ColumnsSelectionDsl<*>.cols(): ColumnSet<*> =
+        cols { true }
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
     public operator fun ColumnsSelectionDsl<*>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
@@ -294,8 +305,12 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface SingleColumnAnyRowColsPredicateDocs
 
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
-    public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal(predicate)
+
+    @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun SingleColumn<DataRow<*>>.cols(): ColumnSet<*> =
+        cols { true }
 
     /**
      * @include [SingleColumnAnyRowColsPredicateDocs]
@@ -318,7 +333,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface StringColsPredicateDocs
 
     /** @include [StringColsPredicateDocs] */
-    public fun String.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = columnGroup(this).cols(predicate)
+    public fun String.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
+
+    @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun String.cols(): ColumnSet<*> = cols { true }
 
     /** @include [StringColsPredicateDocs] */
     public operator fun String.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
@@ -363,7 +381,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnPathPredicateDocs
 
     /** @include [ColumnPathPredicateDocs] */
-    public fun ColumnPath.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = columnGroup(this).cols(predicate)
+    public fun ColumnPath.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
+
+    @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun ColumnPath.cols(): ColumnSet<*> = cols { true }
 
     /** @include [ColumnPathPredicateDocs] */
     public operator fun ColumnPath.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
