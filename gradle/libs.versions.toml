@@ -1,6 +1,6 @@
 [versions]
 ksp = "2.2.0-2.0.2"
-kotlinJupyter = "0.13.0-481-1"
+kotlinJupyter = "0.15.0-574"
 
 ktlint = "12.3.0"
 
