@@ -1,6 +1,6 @@
 [versions]
 ksp = "2.2.0-2.0.2"
-kotlinJupyter = "0.13.0-481-1"
+kotlinJupyter = "0.15.0-574"
 
 ktlint = "12.3.0"
 
@@ -33,7 +33,7 @@ mysql = "9.1.0"
 postgresql = "42.7.4"
 sqlite = "3.47.1.0"
 jtsCore = "1.19.0"
-kotlinDatetime = "0.6.1"
+kotlinDatetime = "0.7.1-0.6.x-compat"
 openapi = "2.1.24"
 kotlinLogging = "7.0.3"
 sl4j = "2.0.16"
