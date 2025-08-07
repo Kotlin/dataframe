@@ -84,9 +84,11 @@ public fun extractDBTypeFromUrl(url: String?): DbType {
 
             MsSql.dbTypeInJdbcUrl in url -> MsSql
 
+            DuckDb.dbTypeInJdbcUrl in url -> DuckDb
+
             else -> throw IllegalArgumentException(
                 "Unsupported database type in the url: $url. " +
-                    "Only H2, MariaDB, MySQL, MSSQL, SQLite and PostgreSQL are supported!",
+                    "Only H2, MariaDB, MySQL, MSSQL, SQLite, PostgreSQL, and DuckDB are supported!",
             )
         }
     } else {
