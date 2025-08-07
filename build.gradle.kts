@@ -155,7 +155,7 @@ kotlin {
 val modulesUsingJava11 = with(projects) {
     setOf(
         dataframeJupyter,
-        dataframeGeo,
+        dataframeGeoJupyter,
         examples.ideaExamples.titanic,
         tests,
         plugins.dataframeGradlePlugin,

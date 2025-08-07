@@ -8,3 +8,4 @@
 .kotlin
 build
 .ipynb_checkpoints
+local.properties

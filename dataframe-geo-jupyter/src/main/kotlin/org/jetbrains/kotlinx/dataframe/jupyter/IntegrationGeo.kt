@@ -54,6 +54,11 @@ internal class IntegrationGeo : JupyterIntegration() {
             useSchema<WithMultiLineStringGeometry>()
         }
 
+        render<GeoDataFrame<*>> {
+            println("GeoDataFrame with ${it.crs?.name?.code} CRS and inner dataframe:")
+            it.df
+        }
+
         val replCodeGeneratorImpl = ReplCodeGeneratorImpl()
         replCodeGeneratorImpl.process(WithGeometry::class)
         replCodeGeneratorImpl.process(WithPolygonGeometry::class)
@@ -67,7 +72,7 @@ internal class IntegrationGeo : JupyterIntegration() {
             val generatedDf = execute(
                 codeWithTypeCastGenerator = replCodeGeneratorImpl.process(geo.df, kProperty),
                 expression = "(${kProperty.name}.df as DataFrame<*>)",
-            )
+            ).let { "`$it`" }
             val name = execute("GeoDataFrame($generatedDf, ${kProperty.name}.crs)").name
             name
         }
