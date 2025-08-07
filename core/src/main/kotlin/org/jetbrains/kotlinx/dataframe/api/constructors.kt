@@ -261,6 +261,24 @@ public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
 
 public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
 
+/**
+ * Example:
+ * ```
+ * val columnGroup = columnOf(
+ *   "a" to columnOf("a1", "a2", "a3"),
+ *   "b" to columnOf(1, 2, 3),
+ * )
+ * ```
+ */
+@Refine
+@Interpretable("ColumnOfPairs")
+public fun columnOf(vararg columns: Pair<String, AnyBaseCol>): ColumnGroup<*> =
+    dataFrameOf(
+        columns.map { (name, col) ->
+            col.rename(name)
+        },
+    ).asColumnGroup()
+
 public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
 public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> =
@@ -284,15 +302,6 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
         allColsMakesColGroup = true,
     ).forceResolve()
 
-@Refine
-@Interpretable("ColumnOfPairs")
-public fun columnOf(vararg columns: Pair<String, AnyBaseCol>): ColumnGroup<*> =
-    dataFrameOf(
-        columns.map { (name, col) ->
-            col.rename(name)
-        },
-    ).asColumnGroup()
-
 // endregion
 
 // region create DataFrame
@@ -314,6 +323,18 @@ public fun dataFrameOf(columns: Iterable<AnyBaseCol>): DataFrame<*> {
     return DataFrameImpl<Unit>(cols, nrow)
 }
 
+/**
+ * Example:
+ * ```
+ * val df = dataFrameOf(
+ *     "a" to columnOf(1, 2),
+ *     "b" to columnOf(1.0, 2.0),
+ *     "group" to columnOf(
+ *         "nestedA" to columnOf("42", "abc"),
+ *     )
+ * )
+ * ```
+ */
 @Refine
 @JvmName("dataFrameOfColumns")
 @Interpretable("DataFrameOfPairs")
