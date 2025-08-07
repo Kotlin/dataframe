@@ -21,7 +21,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeOpenApi"
         artifactId = project.name
-        description = "OpenAPI support for Kotlin Dataframe"
+        description = "OpenAPI support for Kotlin DataFrame"
         packageName = artifactId
     }
 }

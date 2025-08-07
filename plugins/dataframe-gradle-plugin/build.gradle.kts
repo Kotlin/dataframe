@@ -80,14 +80,14 @@ gradlePlugin {
         create("schemaGeneratorPlugin") {
             id = "org.jetbrains.kotlinx.dataframe"
             implementationClass = "org.jetbrains.dataframe.gradle.ConvenienceSchemaGeneratorPlugin"
-            displayName = "Kotlin Dataframe gradle plugin"
+            displayName = "Kotlin DataFrame gradle plugin"
             description = "Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
         }
         create("deprecatedSchemaGeneratorPlugin") {
             id = "org.jetbrains.kotlin.plugin.dataframe"
             implementationClass = "org.jetbrains.dataframe.gradle.DeprecatingSchemaGeneratorPlugin"
-            displayName = "Kotlin Dataframe gradle plugin"
+            displayName = "Kotlin DataFrame gradle plugin"
             description =
                 "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")

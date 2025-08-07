@@ -719,7 +719,7 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `create data frame from map column`() {
+    fun `create dataframe from map column`() {
         val df = dataFrameOf(typed.name, typed2.nameAndCity)
         df.rowsCount() shouldBe typed.rowsCount()
     }

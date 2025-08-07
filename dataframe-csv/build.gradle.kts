@@ -152,7 +152,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeCsv"
         artifactId = project.name
-        description = "CSV support for Kotlin Dataframe"
+        description = "CSV support for Kotlin DataFrame"
         packageName = artifactId
     }
 }

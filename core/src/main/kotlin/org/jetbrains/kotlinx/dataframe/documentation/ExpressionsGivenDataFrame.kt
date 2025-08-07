@@ -8,14 +8,14 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression as DfDataFrameExpress
 
 /**
  * ## Expressions Given DataFrame
- * Expressing values using a "Data Frame Expression" can occur exclusively in a
+ * Expressing values using a "DataFrame Expression" can occur exclusively in a
  * {@include [DataFrameExpressionLink]}.
  */
 internal interface ExpressionsGivenDataFrame {
 
     interface OPERATION
 
-    /** Provide a new value for every selected data frame using a [dataframe expression][DfDataFrameExpression]. */
+    /** Provide a new value for every selected dataframe using a [dataframe expression][DfDataFrameExpression]. */
     interface DataFrameExpression {
 
         /**
@@ -28,6 +28,6 @@ internal interface ExpressionsGivenDataFrame {
         interface WithExample
     }
 
-    /** [Data Frame Expression][DataFrameExpression] */
+    /** [DataFrame Expression][DataFrameExpression] */
     interface DataFrameExpressionLink
 }

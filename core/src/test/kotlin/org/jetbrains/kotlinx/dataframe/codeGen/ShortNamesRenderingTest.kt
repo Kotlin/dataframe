@@ -77,7 +77,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     }
 
     @Test
-    fun `data frame`() {
+    fun `dataframe`() {
         fields.keys.asClue {
             fields["f"]!!.renderAccessorFieldType() shouldBe
                 "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
@@ -125,7 +125,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     }
 
     @Test
-    fun `data frame column`() {
+    fun `dataframe column`() {
         fields.keys.asClue {
             fields["f"]!!.renderColumnType() shouldBe
                 "DataColumn<DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>>"

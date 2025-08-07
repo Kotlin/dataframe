@@ -3,7 +3,7 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="d"
-                 name="Dataframe"
+                 name="DataFrame"
                  status="release"
                  start-page="Home.topic">
     <toc-element topic="Home.topic"/>
@@ -33,6 +33,7 @@
         <toc-element topic="hierarchical.md"/>
         <toc-element topic="nanAndNa.md"/>
         <toc-element topic="numberUnification.md"/>
+        <toc-element topic="spellingConventions.md"/>
     </toc-element>
     <toc-element topic="extensionPropertiesApi.md"/>
     <toc-element topic="schemas.md">

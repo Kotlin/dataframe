@@ -35,7 +35,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeJDBC"
         artifactId = project.name
-        description = "JDBC support for Kotlin Dataframe"
+        description = "JDBC support for Kotlin DataFrame"
         packageName = artifactId
     }
 }
