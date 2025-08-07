@@ -251,8 +251,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
         colsInternal(predicate as ColumnFilter<*>).cast()
 
     @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
-    public fun <C> ColumnSet<C>.cols(): ColumnSet<C> =
-        cols { true }
+    public fun <C> ColumnSet<C>.cols(): ColumnSet<C> = cols { true }
 
     /** @include [ColumnSetColsPredicateDocs] */
     public operator fun <C> ColumnSet<C>.get(predicate: ColumnFilter<C> = { true }): ColumnSet<C> = cols(predicate)
@@ -280,8 +279,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
         this.asSingleColumn().colsInternal(predicate)
 
     @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
-    public fun ColumnsSelectionDsl<*>.cols(): ColumnSet<*> =
-        cols { true }
+    public fun ColumnsSelectionDsl<*>.cols(): ColumnSet<*> = cols { true }
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
     public operator fun ColumnsSelectionDsl<*>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
@@ -309,8 +307,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
         this.ensureIsColumnGroup().colsInternal(predicate)
 
     @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
-    public fun SingleColumn<DataRow<*>>.cols(): ColumnSet<*> =
-        cols { true }
+    public fun SingleColumn<DataRow<*>>.cols(): ColumnSet<*> = cols { true }
 
     /**
      * @include [SingleColumnAnyRowColsPredicateDocs]
