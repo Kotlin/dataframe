@@ -28,6 +28,7 @@ Below you'll find a list of supported sources along with instructions on how to 
     - [SQLite](SQLite.md)
     - [H2](H2.md)
     - [MariaDB](MariaDB.md)
+    - [DuckDB](DuckDB.md)
     - [Custom SQL Source](Custom-SQL-Source.md)
 - [Custom integrations with unsupported data sources](Integrations.md)
 
