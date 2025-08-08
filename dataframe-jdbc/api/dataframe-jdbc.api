@@ -128,6 +128,15 @@ public abstract class org/jetbrains/kotlinx/dataframe/io/db/DbType {
 	public static synthetic fun sqlQueryLimit$default (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/io/db/DuckDb : org/jetbrains/kotlinx/dataframe/io/db/DbType {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/DuckDb;
+	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
+	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
+	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun getDriverClassName ()Ljava/lang/String;
+	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
+}
+
 public class org/jetbrains/kotlinx/dataframe/io/db/H2 : org/jetbrains/kotlinx/dataframe/io/db/DbType {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Companion;
 	public static final field MODE_MARIADB Ljava/lang/String;
