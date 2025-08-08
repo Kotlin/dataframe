@@ -1,8 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.inferType
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.db.MsSql
 import java.sql.Connection
@@ -127,4 +130,27 @@ internal fun inferNullability(connection: Connection) {
     // end testing `readResultSet` method
 
     connection.createStatement().execute("DROP TABLE TestTable1")
+}
+
+/**
+ * Helper to check whether the provided schema matches the inferred schema.
+ *
+ * It must hold that all types in the provided schema are equal or super to
+ * the corresponding types in the inferred schema.
+ */
+@Suppress("INVISIBLE_REFERENCE")
+fun AnyFrame.assertInferredTypesMatchSchema() {
+    withClue({
+        """
+        |Inferred schema must be <: Provided schema
+        |
+        |Inferred Schema: 
+        |${inferType().schema().toString().lines().joinToString("\n|")}
+        |
+        |Provided Schema:
+        |${schema().toString().lines().joinToString("\n|")}
+        """.trimMargin()
+    }) {
+        schema().compare(inferType().schema()).isSuperOrEqual() shouldBe true
+    }
 }
