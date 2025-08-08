@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -16,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
+import org.jetbrains.kotlinx.dataframe.io.ColType.String
 import org.jetbrains.kotlinx.dataframe.util.APACHE_CSV
 import org.jetbrains.kotlinx.dataframe.util.AS_URL
 import org.jetbrains.kotlinx.dataframe.util.AS_URL_IMPORT
@@ -59,6 +59,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.time.Instant
 
 @Deprecated(message = APACHE_CSV, level = DeprecationLevel.WARNING)
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
