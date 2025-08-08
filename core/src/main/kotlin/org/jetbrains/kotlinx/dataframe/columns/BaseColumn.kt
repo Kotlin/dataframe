@@ -18,6 +18,8 @@ import kotlin.reflect.KType
  * Column operations that doesn't clash by signature with [DataFrame] operations can be defined for [BaseColumn]
  *
  * @param T type of values contained in column.
+ * @see [org.jetbrains.kotlinx.dataframe.api.columnOf]
+ * @see [org.jetbrains.kotlinx.dataframe.DataColumn.createByType]
  */
 public interface BaseColumn<out T> : ColumnReference<T> {
 
