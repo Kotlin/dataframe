@@ -286,7 +286,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
         import("java.net.URL")
         import("java.net.URI")
         import("java.io.File")
-        import("kotlinx.datetime.Instant")
+        import("kotlin.time.Instant")
         import("kotlinx.datetime.LocalDateTime")
         import("kotlinx.datetime.LocalDate")
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")

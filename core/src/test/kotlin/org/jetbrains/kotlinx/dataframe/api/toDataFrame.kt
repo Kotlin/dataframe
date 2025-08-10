@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -5,7 +7,6 @@ import io.kotest.matchers.shouldBe
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
@@ -26,6 +27,8 @@ import java.time.temporal.Temporal
 import kotlin.collections.toTypedArray
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 class CreateDataFrameTests {
 

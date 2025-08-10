@@ -1,6 +1,7 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.jetbrains.kotlinx.dataframe.api
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -64,6 +65,8 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * See also [parse] — a specialized form of the [convert] operation that parses [String] columns

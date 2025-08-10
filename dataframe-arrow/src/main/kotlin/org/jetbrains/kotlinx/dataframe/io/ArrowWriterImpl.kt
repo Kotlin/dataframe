@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.jetbrains.kotlinx.dataframe.io
 
 import kotlinx.datetime.TimeZone
@@ -55,6 +57,7 @@ import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.values
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import kotlin.time.ExperimentalTime
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -237,7 +240,7 @@ internal class ArrowWriterImpl(
             is DateDayVector ->
                 column.convertToLocalDate()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toEpochDays()) }
+                        value?.also { vector.set(i, value.toEpochDays().toInt()) }
                             ?: vector.setNull(i)
                     }
 

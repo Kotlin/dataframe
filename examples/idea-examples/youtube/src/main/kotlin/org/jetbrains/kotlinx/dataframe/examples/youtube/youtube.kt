@@ -6,10 +6,11 @@
     "StatisticsResponse",
     "src/main/resources/statisticsResponse.json",
 )
+@file:OptIn(ExperimentalTime::class)
 
 package org.jetbrains.kotlinx.dataframe.examples.youtube
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -19,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.io.read
 import java.net.URL
+import kotlin.time.ExperimentalTime
 
 fun load(path: String) = DataRow.read("$basePath/$path&key=$apiKey")
 

@@ -1,6 +1,7 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.jetbrains.kotlinx.dataframe.io
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -59,6 +60,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Deprecated(message = APACHE_CSV, level = DeprecationLevel.WARNING)
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {

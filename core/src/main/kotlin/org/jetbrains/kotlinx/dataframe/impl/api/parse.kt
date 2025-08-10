@@ -1,12 +1,12 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.format.DateTimeComponents
-import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
@@ -56,6 +56,9 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
+import kotlin.time.toKotlinInstant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
@@ -439,11 +442,11 @@ internal object Parsers : GlobalParserOptions {
         stringParser<Int> { it.toIntOrNull() },
         // Long
         stringParser<Long> { it.toLongOrNull() },
-        // kotlinx.datetime.Instant
+        // kotlin.time.Instant
         stringParser<Instant> {
             it.toInstantOrNull()
         },
-        // java.time.Instant, will be skipped if kotlinx.datetime.Instant is already checked
+        // java.time.Instant, will be skipped if kotlin.time.Instant is already checked
         stringParser<JavaInstant>(coveredBy = setOf(typeOf<Instant>())) {
             it.toJavaInstantOrNull()
         },

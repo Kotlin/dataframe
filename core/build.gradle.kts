@@ -365,6 +365,7 @@ kotlin {
 tasks.withType<KotlinCompile> {
     compilerOptions {
         optIn.addAll("kotlin.RequiresOptIn")
+        optIn.addAll("kotlin.time.ExperimentalTime")
         freeCompilerArgs.addAll("-Xinline-classes")
         freeCompilerArgs.addAll("-Xjvm-default=all")
     }

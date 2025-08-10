@@ -1,4 +1,5 @@
 @file:JvmName("ReadDelimDeephavenKt")
+@file:OptIn(ExperimentalTime::class)
 
 package org.jetbrains.kotlinx.dataframe.impl.io
 
@@ -19,7 +20,6 @@ import io.deephaven.csv.parsers.Parser
 import io.deephaven.csv.parsers.Parsers
 import io.deephaven.csv.reading.CsvReader
 import io.deephaven.csv.util.CsvReaderException
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -49,6 +49,8 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Implementation to read delimiter-separated data from an [InputStream] based on the Deephaven CSV library.
