@@ -15,7 +15,7 @@ class ColsTests : ColumnsSelectionDslTests() {
     @Test
     fun `cols exceptions`() {
         shouldThrow<IllegalArgumentException> {
-            df.select { "age".cols() }
+            df.select { "age".allCols() }
         }
         shouldThrow<IllegalArgumentException> {
             df.select { cols("non-existent") }
@@ -43,17 +43,17 @@ class ColsTests : ColumnsSelectionDslTests() {
     fun `cols and get with predicate`() {
         listOf(
             df.select { cols(name, age, city, weight, isHappy) },
-            df.select { all().cols() },
-            df.select { cols() },
+            df.select { all().all() },
+            df.select { all() },
             df.select { all() },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name },
             df.select { name }.select { all() },
-            df.select { name }.select { cols() },
-            df.select { name }.select { cols().all() },
-            df.select { name }.select { all().cols() },
+            df.select { name }.select { all() },
+            df.select { name }.select { all().all() },
+            df.select { name }.select { all().all() },
         ).shouldAllBeEqual()
 
         listOf(
