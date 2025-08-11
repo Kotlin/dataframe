@@ -2,13 +2,13 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels-->
 
-By nature, data frames are dynamic objects;
+By nature, dataframes are dynamic objects;
 column labels depend on the input source and new columns can be added
 or deleted while wrangling.
 Kotlin, in contrast, is a statically typed language where all types are defined and verified
 ahead of execution.
 
-That's why creating a flexible, handy, and, at the same time, safe API to a data frame is tricky.
+That's why creating a flexible, handy, and, at the same time, safe API to a dataframe is tricky.
 
 In the Kotlin DataFrame library, we provide two different ways to access columns
 
