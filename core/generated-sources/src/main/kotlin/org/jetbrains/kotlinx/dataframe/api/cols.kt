@@ -16,6 +16,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_COLS
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_COLS_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
@@ -419,8 +423,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.all]
      * @see [ColumnsSelectionDsl.filter] */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C> = { true }): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C>): ColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>).cast()
+
+    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_REPLACE), DeprecationLevel.ERROR)
+    public fun <C> ColumnSet<C>.cols(): ColumnSet<C> = cols { true }
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -571,8 +578,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.all] */
-    public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.asSingleColumn().colsInternal(predicate)
+
+    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_REPLACE), DeprecationLevel.ERROR)
+    public fun ColumnsSelectionDsl<*>.cols(): ColumnSet<*> = cols { true }
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -723,8 +733,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
-    public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal(predicate)
+
+    @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun SingleColumn<DataRow<*>>.cols(): ColumnSet<*> = cols { true }
 
     /**
      * ## Cols
@@ -869,7 +882,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      */
-    public fun String.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = columnGroup(this).cols(predicate)
+    public fun String.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
+
+    @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun String.cols(): ColumnSet<*> = cols { true }
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1149,7 +1165,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      */
-    public fun ColumnPath.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = columnGroup(this).cols(predicate)
+    public fun ColumnPath.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
+
+    @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun ColumnPath.cols(): ColumnSet<*> = cols { true }
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
