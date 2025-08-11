@@ -3,6 +3,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.aggregate
+import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
@@ -411,7 +412,7 @@ class Analyze : TestBase() {
         df.max { name.firstName and name.lastName }
         df.sum { age and weight }
         df.mean { cols(1, 3).asNumbers() }
-        df.median<_, String> { name.cols().cast() }
+        df.median<_, String> { name.allCols().cast() }
         // SampleEnd
     }
 
@@ -429,7 +430,7 @@ class Analyze : TestBase() {
         df.sum { "age"<Int>() and "weight"<Int?>() }
 
         df.mean { cols(1, 3).asNumbers() }
-        df.median<_, String> { name.cols().cast() }
+        df.median<_, String> { name.allCols().cast() }
         // SampleEnd
     }
 
@@ -441,7 +442,7 @@ class Analyze : TestBase() {
         df.maxFor { name.firstName and name.lastName }
         df.sumFor { age and weight }
         df.meanFor { cols(1, 3).asNumbers() }
-        df.medianFor { name.cols().asComparable() }
+        df.medianFor { name.allCols().asComparable() }
         // SampleEnd
     }
 
@@ -466,7 +467,7 @@ class Analyze : TestBase() {
         df.sum(age, weight)
 
         df.mean { cols(1, 3).asNumbers() }
-        df.median<_, String> { name.cols().cast() }
+        df.median<_, String> { name.allCols().cast() }
         // SampleEnd
     }
 
@@ -482,7 +483,7 @@ class Analyze : TestBase() {
         df.sumFor { "age"<Int>() and "weight"<Int?>() }
 
         df.meanFor { cols(1, 3).asNumbers() }
-        df.medianFor { name.cols().asComparable() }
+        df.medianFor { name.allCols().asComparable() }
         // SampleEnd
     }
 

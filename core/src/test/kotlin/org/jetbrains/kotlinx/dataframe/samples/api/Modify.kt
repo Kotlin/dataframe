@@ -373,7 +373,7 @@ class Modify : TestBase() {
 
         // name.firstName -> firstName
         // name.lastName -> lastName
-        df.move { name.cols() }.toTop()
+        df.move { name.allCols() }.toTop()
 
         // a.b.e -> be
         // c.d.e -> de
