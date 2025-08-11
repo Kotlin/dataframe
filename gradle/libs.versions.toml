@@ -33,7 +33,8 @@ mysql = "9.1.0"
 postgresql = "42.7.4"
 sqlite = "3.47.1.0"
 jtsCore = "1.19.0"
-kotlinDatetime = "0.7.1-0.6.x-compat"
+kotlinDatetimeCompat = "0.7.1-0.6.x-compat"
+kotlinDatetime = "0.7.1"
 openapi = "2.1.24"
 kotlinLogging = "7.0.3"
 sl4j = "2.0.16"
@@ -105,6 +106,7 @@ kandy-samples-utils = { group = "org.jetbrains.kotlinx", name = "kandy-samples-u
 
 poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "poi" }
 kotlin-datetimeJvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime-jvm", version.ref = "kotlinDatetime" }
+kotlin-datetimeJvm-compat = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime-jvm", version.ref = "kotlinDatetimeCompat" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
