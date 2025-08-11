@@ -119,6 +119,12 @@ internal const val FORMATTING_DSL_REPLACE = "FormattingDsl"
 internal const val RGB_COLOR = "Replaced by `RgbColor`. $MESSAGE_1_0"
 internal const val RGB_COLOR_REPLACE = "RgbColor"
 
+internal const val COLS_TO_ALL = "This `cols()` overload will be removed in favor of `all()`. $MESSAGE_1_0"
+internal const val COLS_TO_ALL_REPLACE = "this.all()"
+
+internal const val COLS_TO_ALL_COLS = "This `cols()` overload will be removed in favor of `allCols()`. $MESSAGE_1_0"
+internal const val COLS_TO_ALL_COLS_REPLACE = "this.allCols()"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -213,10 +219,4 @@ internal const val ALL_COLS_EXCEPT_REPLACE = "this.allColsExcept { other }"
 internal const val ALL_COLS_EXCEPT_REPLACE_VARARG = "this.allColsExcept { others.toColumnSet() }"
 internal const val EXCEPT_REPLACE = "this.except { other }"
 internal const val EXCEPT_REPLACE_VARARG = "this.except { others.toColumnSet() }"
-
-internal const val COLS_TO_ALL = "This `cols()` overload will be removed in favor of `all()`. $MESSAGE_1_0"
-internal const val COLS_TO_ALL_REPLACE = "this.all()"
-
-internal const val COLS_TO_ALL_COLS = "This `cols()` overload will be removed in favor of `allCols()`. $MESSAGE_1_0"
-internal const val COLS_TO_ALL_COLS_REPLACE = "this.allCols()"
 // endregion

@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL
 import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_COLS
 import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_COLS_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
@@ -250,7 +251,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C>): ColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>).cast()
 
-    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_REPLACE), DeprecationLevel.ERROR)
     public fun <C> ColumnSet<C>.cols(): ColumnSet<C> = cols { true }
 
     /** @include [ColumnSetColsPredicateDocs] */
@@ -278,7 +279,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.asSingleColumn().colsInternal(predicate)
 
-    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_REPLACE), DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.cols(): ColumnSet<*> = cols { true }
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
