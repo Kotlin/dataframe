@@ -59,12 +59,12 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                 ?.takeIf { it.findAnnotation<DataSchema>() != null }
                 ?.let { registeredMarkers[it] ?: MarkersExtractor.get(it) }
             if (currentMarker != null) {
-                // we need to make sure that the property's marker type is open in order to let derived data frames be assignable to it
+                // we need to make sure that the property's marker type is open in order to let derived dataframes be assignable to it
                 if (currentMarker.isOpen) {
                     val columnSchema = currentMarker.schema
-                    // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
+                    // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual dataframe type
                     if (wasProcessedBefore || columnSchema == targetSchema) {
-                        // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
+                        // property scheme is valid for current dataframe, but we should also check that all compatible open markers are implemented by it
                         val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
                             return CodeWithTypeCastGenerator.EMPTY
