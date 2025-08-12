@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.impl.api.encode
 import org.jetbrains.kotlinx.dataframe.impl.api.linearGradient
+import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -33,7 +34,7 @@ class FormattingTests : BaseTest() {
 
         val formatter = formattedFrame.formatter!!
         for (row in 0 until typed.nrow) {
-            FormattingDsl.formatter(typed[row], typed.age)!!.attributes().size shouldBe
+            FormattingDsl.formatter(typed[row], typed.age.addPath())!!.attributes().size shouldBe
                 if (typed[row].age > 10) 3 else 2
         }
 
@@ -48,12 +49,12 @@ class FormattingTests : BaseTest() {
             .formatter!!
 
         for (row in 0 until typed.nrow step 2) {
-            FormattingDsl.formatter(typed[row], typed.age)!!.attributes() shouldBe
+            FormattingDsl.formatter(typed[row], typed.age.addPath())!!.attributes() shouldBe
                 listOf("background-color" to gray.encode())
         }
 
         for (row in 1 until typed.nrow step 2) {
-            FormattingDsl.formatter(typed[row], typed.age)!!.attributes() shouldBe
+            FormattingDsl.formatter(typed[row], typed.age.addPath())!!.attributes() shouldBe
                 listOf("background-color" to linearGradient(typed[row].age.toDouble(), 20.0, green, 80.0, red).encode())
         }
     }
