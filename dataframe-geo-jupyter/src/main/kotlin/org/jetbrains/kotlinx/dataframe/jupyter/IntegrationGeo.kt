@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.jupyter.api.FieldHandler
 import org.jetbrains.kotlinx.jupyter.api.FieldHandlerExecution
 import org.jetbrains.kotlinx.jupyter.api.libraries.FieldHandlerFactory
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
+import org.jetbrains.kotlinx.jupyter.api.outputs.display
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
@@ -55,7 +56,7 @@ internal class IntegrationGeo : JupyterIntegration() {
         }
 
         render<GeoDataFrame<*>> {
-            println("GeoDataFrame with ${it.crs?.name?.code} CRS and inner dataframe:")
+            notebook.display("GeoDataFrame with ${it.crs?.name?.code} CRS and inner dataframe:")
             it.df
         }
 
