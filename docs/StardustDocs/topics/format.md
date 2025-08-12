@@ -43,6 +43,22 @@ See [](#grammar) for everything that's available.
 The `format` function can be repeated as many times as needed and, to view the result, you can call
 [`toHtml()`/`toStandaloneHtml()`](toHTML.md).
 
+Specifying a [column group](DataColumn.md#columngroup) makes all of its inner columns
+be formatted in the same way unless overridden.
+
+Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
+override certain attributes inherited from its outer group.
+
+Specifying a [frame column](DataColumn.md#framecolumn) at the moment does nothing
+([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+[](convert.md) each nested [`DataFrame`](DataFrame.md) to a `FormattedFrame` instead:
+
+```kotlin
+df.convert { myFrameCol }.with {
+    it.format { someCol }.with { background(green) }
+}.toStandaloneHtml()
+```
+
 #### Grammar {collapsible="true"}
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.ForHtml.html" width="100%"/>
@@ -63,6 +79,8 @@ val ageMax = df.age.max()
 
 df
     .format().with { bold and textColor(black) and background(white) }
+    .format { name }.with { underline }
+    .format { name.lastName }.with { italic }
     .format { isHappy }.with { background(if (it) green else red) }
     .format { weight }.notNull().linearBg(50 to FormattingDsl.blue, 90 to FormattingDsl.red)
     .format { age }.perRowCol { row, col ->
@@ -81,6 +99,8 @@ val ageMax = df.max { "age"<Int>() }
 
 df
     .format().with { bold and textColor(black) and background(white) }
+    .format("name").with { underline }
+    .format { "name"["lastName"] }.with { italic }
     .format("isHappy").with {
         background(if (it as Boolean) green else red)
     }
