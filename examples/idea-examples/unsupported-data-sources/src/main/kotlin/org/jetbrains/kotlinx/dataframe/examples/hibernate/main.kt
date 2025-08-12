@@ -4,7 +4,9 @@ import jakarta.persistence.Tuple
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaDelete
 import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Expression
 import jakarta.persistence.criteria.Root
+import org.hibernate.FlushMode
 import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -48,11 +50,11 @@ private fun SessionFactory.insertSampleData() {
         val artist2 = ArtistsEntity(name = "Queen")
         session.persist(artist1)
         session.persist(artist2)
+        session.flush()
 
-        session.persist(AlbumsEntity(title = "High Voltage", artistId = 1))
-        session.persist(AlbumsEntity(title = "Back in Black", artistId = 1))
-        session.persist(AlbumsEntity(title = "A Night at the Opera", artistId = 2))
-
+        session.persist(AlbumsEntity(title = "High Voltage", artistId = artist1.artistId!!))
+        session.persist(AlbumsEntity(title = "Back in Black", artistId = artist1.artistId!!))
+        session.persist(AlbumsEntity(title = "A Night at the Opera", artistId = artist2.artistId!!))
         // customers we'll analyze using DataFrame
         session.persist(
             CustomersEntity(
@@ -82,14 +84,14 @@ private fun SessionFactory.insertSampleData() {
 }
 
 private fun SessionFactory.loadCustomersAsDataFrame(): DataFrame<DfCustomers> {
-    return withSession { session ->
+    return withReadOnlyTransaction { session ->
         val criteriaBuilder: CriteriaBuilder = session.criteriaBuilder
         val criteriaQuery: CriteriaQuery<CustomersEntity> = criteriaBuilder.createQuery(CustomersEntity::class.java)
         val root: Root<CustomersEntity> = criteriaQuery.from(CustomersEntity::class.java)
         criteriaQuery.select(root)
 
         session.createQuery(criteriaQuery)
-            .list()
+            .resultList
             .map { c ->
                 DfCustomers(
                     address = c.address,
@@ -111,6 +113,12 @@ private fun SessionFactory.loadCustomersAsDataFrame(): DataFrame<DfCustomers> {
     }
 }
 
+/** DTO used for aggregation projection. */
+private data class CountryCountDto(
+    val country: String,
+    val customerCount: Long,
+)
+
 /**
  * **Hibernate + Criteria API:**
  * - ✅ Database-level aggregation (efficient)
@@ -119,26 +127,29 @@ private fun SessionFactory.loadCustomersAsDataFrame(): DataFrame<DfCustomers> {
  * - ❌ Limited to SQL-like operations
  */
 private fun SessionFactory.countCustomersPerCountryWithHibernate() {
-    withSession { session ->
-        val criteriaBuilder: CriteriaBuilder = session.criteriaBuilder
-        val query: CriteriaQuery<Tuple> = criteriaBuilder.createTupleQuery()
-        val root: Root<CustomersEntity> = query.from(CustomersEntity::class.java)
+    withReadOnlyTransaction { session ->
+        val cb = session.criteriaBuilder
+        val cq: CriteriaQuery<CountryCountDto> = cb.createQuery(CountryCountDto::class.java)
+        val root: Root<CustomersEntity> = cq.from(CustomersEntity::class.java)
 
-        // Select country and count of customers, grouped by country, ordered by count DESC
-        query.multiselect(
-            root.get<String>("country").alias("country"),
-            criteriaBuilder.count(root.get<Long>("customerId")).alias("customerCount")
-        )
-        query.groupBy(root.get<String>("country"))
-        query.orderBy(
-            criteriaBuilder.desc(criteriaBuilder.count(root.get<Long>("customerId")))
-        )
+        val countryPath = root.get<String>("country")
+        val idPath = root.get<Long>("customerId")
 
-        val results = session.createQuery(query).list()
-        results.forEach { tuple ->
-            val country = tuple.get("country", String::class.java)
-            val count = tuple.get("customerCount", Long::class.java)
-            println("$country: $count customers")
+        val countExpr = cb.count(idPath)
+
+        cq.select(
+            cb.construct(
+                CountryCountDto::class.java,
+                countryPath,  // country
+                countExpr,    // customerCount
+            ),
+        )
+        cq.groupBy(countryPath)
+        cq.orderBy(cb.desc(countExpr))
+
+        val results = session.createQuery(cq).resultList
+        results.forEach { dto ->
+            println("${dto.country}: ${dto.customerCount} customers")
         }
     }
 }
@@ -183,18 +194,18 @@ private fun SessionFactory.replaceCustomersFromDataFrame(df: DataFrame<DfCustome
 private fun DataRow<DfCustomers>.toCustomersEntity(): CustomersEntity {
     return CustomersEntity(
         customerId = null, // let DB generate
-        firstName = this["FirstName"] as String,
-        lastName = this["LastName"] as String,
-        company = this["Company"] as String?,
-        address = this["Address"] as String?,
-        city = this["City"] as String?,
-        state = this["State"] as String?,
-        country = this["Country"] as String?,
-        postalCode = this["PostalCode"] as String?,
-        phone = this["Phone"] as String?,
-        fax = this["Fax"] as String?,
-        email = this["Email"] as String,
-        supportRepId = this["SupportRepId"] as Int?,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        company = this.company,
+        address = this.address,
+        city = this.city,
+        state = this.state,
+        country = this.country,
+        postalCode = this.postalCode,
+        phone = this.phone,
+        fax = this.fax,
+        email = this.email,
+        supportRepId = this.supportRepId,
     )
 }
 
@@ -214,6 +225,25 @@ private inline fun SessionFactory.withTransaction(block: (session: org.hibernate
         }
     }
 }
+
+/** Read-only transaction helper for SELECT queries to minimize overhead. */
+private inline fun <T> SessionFactory.withReadOnlyTransaction(block: (session: org.hibernate.Session) -> T): T {
+    return withSession { session ->
+        session.beginTransaction()
+        // Minimize overhead for read operations
+        session.isDefaultReadOnly = true
+        session.hibernateFlushMode = FlushMode.MANUAL
+        try {
+            val result = block(session)
+            session.transaction.commit()
+            result
+        } catch (e: Exception) {
+            session.transaction.rollback()
+            throw e
+        }
+    }
+}
+
 
 private fun buildSessionFactory(): SessionFactory {
     // Load configuration from resources/hibernate/hibernate.cfg.xml
