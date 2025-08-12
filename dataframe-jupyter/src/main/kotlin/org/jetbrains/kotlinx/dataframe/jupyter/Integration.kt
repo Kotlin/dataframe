@@ -69,6 +69,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
     private val enableExperimentalCsv = options["enableExperimentalCsv"]
     private val enableExperimentalOpenApi = options["enableExperimentalOpenApi"]
+    private val enableExperimentalGeo = options["enableExperimentalGeo"]
 
     private fun KotlinKernelHost.updateImportDataSchemaVariable(
         importDataSchema: ImportDataSchema,
@@ -167,6 +168,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
         if (version != null) {
             if (enableExperimentalCsv?.toBoolean() == true) {
                 println("CSV module is already enabled by default now.")
+            }
+            if (enableExperimentalGeo?.toBoolean() == true) {
+                println("dataframe-geo module was extracted into separate descriptor: %use dataframe-geo")
             }
             if (enableExperimentalOpenApi?.toBoolean() == true) {
                 println("Enabling experimental OpenAPI 3.0.0 module: dataframe-openapi")
