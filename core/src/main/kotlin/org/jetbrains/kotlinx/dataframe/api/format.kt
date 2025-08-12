@@ -14,8 +14,10 @@ import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linearBg
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
@@ -66,8 +68,20 @@ import kotlin.reflect.KProperty
  *
  * You can continue formatting the [FormattedFrame] by calling [format][FormattedFrame.format] on it again.
  *
+ * Specifying a [column group][ColumnGroup] makes all of its inner columns to be formatted in the same way unless
+ * overridden.
+ *
  * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
  * override certain attributes inherited from its outer group.
+ *
+ * Specifying a [frame column][FrameColumn] at the moment does nothing
+ * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+ * convert each nested [DataFrame] to a [FormattedFrame] instead:
+ * ```kt
+ * df.convert { myFrameCol }.with {
+ *     it.format { someCol }.with { background(green) }
+ * }.toStandaloneHtml()
+ * ```
  *
  * Check out the [Grammar].
  *
