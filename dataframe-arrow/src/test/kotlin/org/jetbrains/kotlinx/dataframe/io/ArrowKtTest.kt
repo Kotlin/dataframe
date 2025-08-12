@@ -7,6 +7,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toJavaInstant
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.TimeStampMicroVector
 import org.apache.arrow.vector.TimeStampMilliVector
@@ -54,7 +55,6 @@ import java.nio.file.FileSystems
 import java.sql.DriverManager
 import java.util.Locale
 import kotlin.reflect.typeOf
-import kotlin.time.toJavaInstant
 
 internal class ArrowKtTest {
 

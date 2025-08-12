@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.examples.multik
 
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.Month
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -13,6 +12,7 @@ import org.jetbrains.kotlinx.multik.api.mk
 import org.jetbrains.kotlinx.multik.api.rand
 import org.jetbrains.kotlinx.multik.ndarray.data.D3Array
 import org.jetbrains.kotlinx.multik.ndarray.data.D4Array
+import java.time.Month.JULY
 
 /**
  * DataFrames can store anything inside, including Multik ndarrays.
@@ -52,7 +52,7 @@ fun main() {
     // now when we want to check and visualize the T1-weighted MRI scan
     // for that one healthy patient in July, we can do:
     val scan = results
-        .single { scanDate.month == Month.JULY && diagnosis == "Healthy" }
+        .single { scanDate.month == JULY && diagnosis == "Healthy" }
         .t1WeightedMri
 
     // easy :)

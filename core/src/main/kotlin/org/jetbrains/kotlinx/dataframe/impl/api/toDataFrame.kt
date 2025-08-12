@@ -52,8 +52,7 @@ private val valueTypes = setOf(
     kotlin.time.Duration::class,
     kotlinx.datetime.LocalDate::class,
     kotlinx.datetime.LocalDateTime::class,
-    kotlinx.datetime.Instant::class, // #1350
-    kotlin.time.Instant::class,
+    kotlinx.datetime.Instant::class,
     kotlinx.datetime.TimeZone::class,
     kotlinx.datetime.DateTimePeriod::class,
     kotlinx.datetime.DateTimeUnit::class,

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -63,8 +64,6 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
-import kotlin.time.Instant
-import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * See also [parse] — a specialized form of the [convert] operation that parses [String] columns
@@ -119,7 +118,7 @@ internal interface ConvertDocs {
      * * [Byte], [Short], [Char];
      * * [Int], [Long], [Float], [Double];
      * * [BigDecimal], [BigInteger];
-     * * [LocalDateTime], [LocalDate], [LocalTime], [Instant] ([kotlinx.datetime][DeprecatedInstant], [kotlin.time][Instant] and [java.time][java.time.Instant]),
+     * * [LocalDateTime], [LocalDate], [LocalTime], [Instant] ( (kotlinx.datetime and [java.time]),
      * * [URL], [IMG], [IFRAME].
      */
     interface SupportedTypes
@@ -323,8 +322,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
  * - [asFrame][Convert.asFrame] – converts [column groups][ColumnGroup] as a [DataFrame] with the given expression.
  * - [toStr], [toInt], [toLong], [toDouble], [toFloat], [toBigDecimal],
  *   [toBigInteger], [toBoolean] – convert to standard types.
- * - [toLocalDateTime], [toLocalDate], [toLocalTime] – convert to kotlinx.datetime types.
- * - [toInstant] – convert to kotlin.time.Instant.
+ * - [toLocalDateTime], [toLocalDate], [toLocalTime], [toInstant] – convert to kotlinx.datetime types.
  * - [toUrl], [toIFrame], [toImg] – convert to special types.
  * - [toDataFrames] – converts a column of lists into separate DataFrames.
  *
