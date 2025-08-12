@@ -69,9 +69,6 @@ dependencies {
     implementation(libs.fastDoubleParser)
 
     api(libs.kotlin.datetimeJvm)
-    // don't export xxx-0.6.x-compat
-    implementation(libs.kotlin.datetimeJvm.compat)
-
     implementation(libs.kotlinpoet)
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
