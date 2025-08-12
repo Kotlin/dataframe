@@ -4,15 +4,13 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.plus
-import kotlinx.datetime.toJavaInstant
-import kotlinx.datetime.toKotlinInstant
+import kotlinx.datetime.toStdlibInstant
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
@@ -29,10 +27,14 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaInstant
+import kotlin.time.toKotlinInstant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 class ParseTests {
     @Test
@@ -154,19 +156,23 @@ class ParseTests {
 
     @Test
     fun `parse instant`() {
-        columnOf("2022-01-23T04:29:40Z").parse().type shouldBe typeOf<Instant>()
-        columnOf("2022-01-23T04:29:40+01:00").parse().type shouldBe typeOf<Instant>()
+        columnOf("2022-01-23T04:29:40Z").parse().type shouldBe typeOf<DeprecatedInstant>()
+        columnOf("2022-01-23T04:29:40+01:00").parse().type shouldBe typeOf<DeprecatedInstant>()
+
+        val options = ParserOptions(parseExperimentalInstant = true)
+        columnOf("2022-01-23T04:29:40Z").parse(options).type shouldBe typeOf<StdlibInstant>()
+        columnOf("2022-01-23T04:29:40+01:00").parse(options).type shouldBe typeOf<StdlibInstant>()
 
         columnOf("2022-01-23T04:29:40").parse().type shouldBe typeOf<LocalDateTime>()
     }
 
     @Test
     fun `can parse instants`() {
-        val instantParser = Parsers[typeOf<Instant>()]!!.applyOptions(null)
+        val deprecatedInstantParser = Parsers[typeOf<DeprecatedInstant>()]!!.applyOptions(null)
         val javaInstantParser = Parsers[typeOf<JavaInstant>()]!!.applyOptions(null)
 
         // from the kotlinx-datetime tests, java instants treat leap seconds etc. like this
-        fun parseInstantLikeJavaDoesOrNull(input: String): Instant? =
+        fun parseInstantLikeJavaDoesOrNull(input: String): StdlibInstant? =
             catchSilent {
                 DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET.parseOrNull(input)?.apply {
                     when {
@@ -187,9 +193,9 @@ class ParseTests {
                 for (second in listOf(0..5, 58..62).flatten()) {
                     val input = "2020-03-16T$hour:${formatTwoDigits(minute)}:${formatTwoDigits(second)}Z"
 
-                    val myParserRes = instantParser(input) as Instant?
+                    val myParserRes = deprecatedInstantParser(input) as DeprecatedInstant?
                     val myJavaParserRes = javaInstantParser(input) as JavaInstant?
-                    val instantRes = catchSilent { Instant.parse(input) }
+                    val instantRes = catchSilent { DeprecatedInstant.parse(input) }
                     val instantLikeJava = parseInstantLikeJavaDoesOrNull(input)
                     val javaInstantRes = catchSilent { JavaInstant.parse(input) }
 
@@ -199,7 +205,7 @@ class ParseTests {
 
                     myJavaParserRes shouldBe javaInstantRes
 
-                    myParserRes?.toJavaInstant() shouldBe instantLikeJava?.toJavaInstant()
+                    myParserRes?.toStdlibInstant()?.toJavaInstant() shouldBe instantLikeJava?.toJavaInstant()
                     instantLikeJava?.toJavaInstant() shouldBe myJavaParserRes
                     myJavaParserRes shouldBe javaInstantRes
                 }
