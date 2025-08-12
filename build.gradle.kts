@@ -157,6 +157,7 @@ val modulesUsingJava11 = with(projects) {
         dataframeJupyter,
         dataframeGeoJupyter,
         examples.ideaExamples.titanic,
+        examples.ideaExamples.unsupportedDataSources,
         tests,
         plugins.dataframeGradlePlugin,
     )
