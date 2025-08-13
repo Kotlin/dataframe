@@ -5,9 +5,11 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.CellAttributes
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
+import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.format
@@ -24,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
+import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -161,7 +164,11 @@ internal fun AnyFrame.toHtmlData(
     val scripts = mutableListOf<String>()
     val queue = LinkedList<RenderingQueueItem>()
 
-    fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int?, configuration: DisplayConfiguration): ColumnDataForJs {
+    fun AnyFrame.columnToJs(
+        col: ColumnWithPath<*>,
+        rowsLimit: Int?,
+        configuration: DisplayConfiguration,
+    ): ColumnDataForJs {
         val values = if (rowsLimit != null) rows().take(rowsLimit) else rows()
         val scale = if (col.isNumber()) col.asNumbers().scale() else 1
         val format = if (scale > 0) {
@@ -170,23 +177,40 @@ internal fun AnyFrame.toHtmlData(
             RendererDecimalFormat.of("%e")
         }
         val renderConfig = configuration.copy(decimalFormat = format)
-        val contents = values.map {
-            val value = col[it]
-            val content = value.toDataFrameLikeOrNull()
-            if (content != null) {
-                val df = content.df()
+        val contents = values.map { row ->
+            val value = col[row]
+            val dfLikeContent = value.toDataFrameLikeOrNull()
+            if (dfLikeContent != null) {
+                val df = dfLikeContent.df()
                 if (df.isEmpty()) {
                     HtmlContent("", null)
                 } else {
                     val id = nextTableId()
-                    queue += RenderingQueueItem(df, id, content.configuration(defaultConfiguration))
+                    queue += RenderingQueueItem(df, id, dfLikeContent.configuration(defaultConfiguration))
                     DataFrameReference(id, df.size)
                 }
             } else {
-                val html =
-                    formatter.format(downsizeBufferedImageIfNeeded(value, renderConfig), cellRenderer, renderConfig)
-                val style = renderConfig.cellFormatter
-                    ?.invoke(FormattingDsl, it, col)
+                val html = formatter.format(
+                    value = downsizeBufferedImageIfNeeded(value, renderConfig),
+                    renderer = cellRenderer,
+                    configuration = renderConfig,
+                )
+
+                val formatter = renderConfig.cellFormatter
+                    ?: return@map HtmlContent(html, null)
+
+                // ask formatter for all attributes defined for this cell or any of its parents (outer column groups)
+                val parentCols = col.path.indices
+                    .map { i -> col.path.take(i + 1) }
+                    .dropLast(1)
+                    .map { ColumnWithPath(this@toHtmlData[it], it) }
+                val parentAttributes = parentCols
+                    .map { formatter(FormattingDsl, row, it) }
+                    .reduceOrNull(CellAttributes?::and)
+
+                val cellAttributes = formatter(FormattingDsl, row, col)
+
+                val style = (parentAttributes and cellAttributes)
                     ?.attributes()
                     ?.ifEmpty { null }
                     ?.flatMap {
@@ -204,12 +228,16 @@ internal fun AnyFrame.toHtmlData(
                             listOf(it)
                         }
                     }
-                    ?.joinToString(";") { "${it.first}:${it.second}" }
+                    ?.toMap() // removing duplicate keys, allowing only the final one to be applied
+                    ?.entries
+                    ?.joinToString(";") { "${it.key}:${it.value}" }
                 HtmlContent(html, style)
             }
         }
         val nested = if (col is ColumnGroup<*>) {
-            col.columns().map { col.columnToJs(it, rowsLimit, configuration) }
+            col.columns().map {
+                col.columnToJs(it.addParentPath(col.path), rowsLimit, configuration)
+            }
         } else {
             emptyList()
         }
@@ -226,7 +254,9 @@ internal fun AnyFrame.toHtmlData(
     while (!queue.isEmpty()) {
         val (nextDf, nextId, configuration) = queue.pop()
         val rowsLimit = if (nextId == rootId) configuration.rowsLimit else configuration.nestedRowsLimit
-        val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it, rowsLimit, configuration) }
+        val preparedColumns = nextDf.columns().map {
+            nextDf.columnToJs(it.addPath(), rowsLimit, configuration)
+        }
         val js = tableJs(preparedColumns, nextId, rootId, nextDf.nrow)
         scripts.add(js)
     }
