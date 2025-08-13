@@ -19,7 +19,7 @@ class SingleTests : ColumnsSelectionDslTests() {
             df.select { Person::age.singleCol() }
         }
         shouldThrow<NoSuchElementException> {
-            df.select { cols().filter { false }.single() }
+            df.select { all().filter { false }.single() }
         }
         shouldThrow<IllegalArgumentException> {
             df.select { single() }
@@ -32,7 +32,7 @@ class SingleTests : ColumnsSelectionDslTests() {
             singleDf.select { name },
             singleDf.select { single() },
             singleDf.select { all().single() },
-            df.select { cols().filter { it.name().startsWith("n") }.single() },
+            df.select { all().filter { it.name().startsWith("n") }.single() },
         ).shouldAllBeEqual()
 
         listOf(

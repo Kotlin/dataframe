@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     api(projects.core)
+    compileOnly(libs.duckdb.jdbc)
     implementation(libs.kotlinLogging)
     testImplementation(libs.mariadb)
     testImplementation(libs.sqlite)
@@ -26,6 +27,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)
     testImplementation(libs.jts)
+    testImplementation(libs.duckdb.jdbc)
+    testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
@@ -35,7 +38,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeJDBC"
         artifactId = project.name
-        description = "JDBC support for Kotlin Dataframe"
+        description = "JDBC support for Kotlin DataFrame"
         packageName = artifactId
     }
 }

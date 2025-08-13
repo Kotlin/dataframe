@@ -21,6 +21,7 @@ include("dataframe-jdbc")
 include("dataframe-csv")
 include("dataframe-jupyter")
 include("dataframe-geo")
+include("dataframe-geo-jupyter")
 include("dataframe-openapi-generator")
 include("core")
 include("dataframe-compiler-plugin-core")
@@ -31,6 +32,7 @@ include("examples:idea-examples:youtube")
 include("examples:idea-examples:json")
 include("examples:idea-examples:unsupported-data-sources")
 includeBuild("examples/kotlin-dataframe-plugin-example")
+includeBuild("examples/android-example")
 
 val jupyterApiTCRepo: String by settings
 

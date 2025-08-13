@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
@@ -15,7 +14,10 @@ import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linearBg
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
@@ -58,6 +60,21 @@ import kotlin.reflect.KProperty
  * [with][FormatClause.with], [perRowCol][FormatClause.perRowCol], or [linearBg][FormatClause.linearBg].
  *
  * You can continue formatting the [FormattedFrame] by calling [format][FormattedFrame.format] on it again.
+ *
+ * Specifying a [column group][ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * overridden.
+ *
+ * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
+ * override certain attributes inherited from its outer group.
+ *
+ * Specifying a [frame column][FrameColumn] at the moment does nothing
+ * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+ * convert each nested [DataFrame] to a [FormattedFrame] instead:
+ * ```kt
+ * df.convert { myFrameCol }.with {
+ *     it.format { someCol }.with { background(green) }
+ * }.toStandaloneHtml()
+ * ```
  *
  * Check out the [Grammar].
  *
@@ -148,7 +165,7 @@ internal interface FormatDocs {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `rowColFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<T>, col: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<C>) -> `[CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]`?`
+     * `rowColFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<T>, col: `[ColumnWithPath][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath]`<C>) -> `[CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]`?`
      *
      * ### Notation:
      *
@@ -262,7 +279,7 @@ internal interface FormatDocs {
         interface CellFormatterDef
 
         /**
-         * `rowColFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[DataRow][DataRow]`<T>, col: `[DataColumn][DataColumn]`<C>) -> `[CellAttributes][CellAttributes]`?`
+         * `rowColFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[DataRow][DataRow]`<T>, col: `[ColumnWithPath][ColumnWithPath]`<C>) -> `[CellAttributes][CellAttributes]`?`
          */
         interface RowColFormatterDef
 
@@ -299,6 +316,21 @@ internal interface FormatDocs {
  * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
  *
  * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
+ *
+ * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * overridden.
+ *
+ * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
+ * override certain attributes inherited from its outer group.
+ *
+ * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+ * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * ```kt
+ * df.convert { myFrameCol }.with {
+ *     it.format { someCol }.with { background(green) }
+ * }.toStandaloneHtml()
+ * ```
  *
  * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
@@ -357,6 +389,21 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
  *
  * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
  *
+ * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * overridden.
+ *
+ * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
+ * override certain attributes inherited from its outer group.
+ *
+ * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+ * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * ```kt
+ * df.convert { myFrameCol }.with {
+ *     it.format { someCol }.with { background(green) }
+ * }.toStandaloneHtml()
+ * ```
+ *
  * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
@@ -396,6 +443,21 @@ public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?
  * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
  *
  * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
+ *
+ * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * overridden.
+ *
+ * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
+ * override certain attributes inherited from its outer group.
+ *
+ * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+ * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * ```kt
+ * df.convert { myFrameCol }.with {
+ *     it.format { someCol }.with { background(green) }
+ * }.toStandaloneHtml()
+ * ```
  *
  * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
@@ -449,6 +511,21 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
  *
  * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
+ *
+ * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * overridden.
+ *
+ * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
+ * override certain attributes inherited from its outer group.
+ *
+ * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+ * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * ```kt
+ * df.convert { myFrameCol }.with {
+ *     it.format { someCol }.with { background(green) }
+ * }.toStandaloneHtml()
+ * ```
  *
  * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
@@ -509,6 +586,21 @@ public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): Form
  *
  * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
  *
+ * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * overridden.
+ *
+ * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
+ * override certain attributes inherited from its outer group.
+ *
+ * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+ * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * ```kt
+ * df.convert { myFrameCol }.with {
+ *     it.format { someCol }.with { background(green) }
+ * }.toStandaloneHtml()
+ * ```
+ *
  * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
@@ -550,6 +642,21 @@ public fun <T> FormattedFrame<T>.format(vararg columns: String): FormatClause<T,
  *
  * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
  *
+ * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * overridden.
+ *
+ * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
+ * override certain attributes inherited from its outer group.
+ *
+ * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+ * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * ```kt
+ * df.convert { myFrameCol }.with {
+ *     it.format { someCol }.with { background(green) }
+ * }.toStandaloneHtml()
+ * ```
+ *
  * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
@@ -570,7 +677,7 @@ public fun <T> FormattedFrame<T>.format(vararg columns: String): FormatClause<T,
  *   .toStandaloneHtml().openInBrowser()
  * ```
  */
-public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(df, null, formatter)
+public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(df = df, oldFormatter = formatter)
 
 // endregion
 
@@ -665,7 +772,7 @@ public fun <T, C> FormatClause<T, C?>.notNull(): FormatClause<T, C> = where { it
  * Creates a new [FormattedFrame] that uses the specified [RowColFormatter] to format the selected cells of the dataframe.
  *
  * You need to specify [formatter]: A lambda function expecting a [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes] or `null` given an instance of
- * [DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[T][T]`>` and [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[C][C]`>`.
+ * [DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[T][T]`>` and [ColumnWithPath][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath]`<`[C][C]`>`.
  *
  * This is similar to a [RowColumnExpression][org.jetbrains.kotlinx.dataframe.RowColumnExpression], except that you also have access
  * to the [FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormattingDsl] in the context.
@@ -730,7 +837,7 @@ public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>)
  */
 @Suppress("UNCHECKED_CAST")
 public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> =
-    formatImpl { row, col -> formatter(row[col.name] as C) }
+    formatImpl { row, col -> formatter(col[row] as C) }
 
 /**
  * Creates a new [FormattedFrame] that uses the specified [CellFormatter] to format selected non-null cells of the dataframe.
@@ -1011,7 +1118,7 @@ public object FormattingDsl {
 
 /**
  * A lambda function expecting a [CellAttributes] or `null` given an instance of
- * [DataRow][DataRow]`<`[T][T]`>` and [DataColumn][DataColumn]`<`[C][C]`>`.
+ * [DataRow][DataRow]`<`[T][T]`>` and [ColumnWithPath][ColumnWithPath]`<`[C][C]`>`.
  *
  * This is similar to a [RowColumnExpression], except that you also have access
  * to the [FormattingDsl] in the context.
@@ -1031,7 +1138,7 @@ public object FormattingDsl {
  *
  * Use [attr][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
  */
-public typealias RowColFormatter<T, C> = FormattingDsl.(row: DataRow<T>, col: DataColumn<C>) -> CellAttributes?
+public typealias RowColFormatter<T, C> = FormattingDsl.(row: DataRow<T>, col: ColumnWithPath<C>) -> CellAttributes?
 
 /**
  * A lambda function expecting a [CellAttributes] or `null` given an instance of a cell: [C] of the dataframe.
@@ -1141,7 +1248,7 @@ public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val forma
  */
 public class FormatClause<T, C>(
     internal val df: DataFrame<T>,
-    internal val columns: ColumnsSelector<T, C>? = null,
+    internal val columns: ColumnsSelector<T, C> = { all().cast() },
     internal val oldFormatter: RowColFormatter<T, C>? = null,
     internal val filter: RowValueFilter<T, C> = { true },
 ) {

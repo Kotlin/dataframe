@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.net.URL
 
 /**
- * Reader that can read a data frame from a URL. It tries to guess the format based on the given [formats] and returns
+ * Reader that can read a dataframe from a URL. It tries to guess the format based on the given [formats] and returns
  * [DfReadResult.Success], or returns [DfReadResult.Error] if it fails.
  */
 public val CodeGenerator.Companion.urlDfReader: (url: URL, formats: List<SupportedFormat>) -> DfReadResult

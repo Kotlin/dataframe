@@ -119,6 +119,12 @@ internal const val FORMATTING_DSL_REPLACE = "FormattingDsl"
 internal const val RGB_COLOR = "Replaced by `RgbColor`. $MESSAGE_1_0"
 internal const val RGB_COLOR_REPLACE = "RgbColor"
 
+internal const val COLS_TO_ALL = "This `cols()` overload will be removed in favor of `all()`. $MESSAGE_1_0"
+internal const val COLS_TO_ALL_REPLACE = "this.all()"
+
+internal const val COLS_TO_ALL_COLS = "This `cols()` overload will be removed in favor of `allCols()`. $MESSAGE_1_0"
+internal const val COLS_TO_ALL_COLS_REPLACE = "this.allCols()"
+
 internal const val CONVERT_TO_INSTANT =
     "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Either migrate to kotlin.time.Instant and use convertToStdlibInstant() or use convertToDeprecatedInstant(). $MESSAGE_1_0 and migrated to kotlin.time.Instant in 1.1."
 internal const val CONVERT_TO_INSTANT_REPLACE = "this.convertToDeprecatedInstant()"
