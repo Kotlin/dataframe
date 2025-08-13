@@ -86,7 +86,7 @@ class ParseTests {
             parsed.type() shouldBe typeOf<LocalDateTime>()
             with(parsed[0]) {
                 month shouldBe Month.JUNE
-                dayOfMonth shouldBe 3
+                day shouldBe 3
                 year shouldBe 2008
                 hour shouldBe 13
                 minute shouldBe 5
@@ -95,8 +95,8 @@ class ParseTests {
 
             dateTime.convertToLocalDateTime(pattern, locale) shouldBe parsed
             with(dateTime.toDataFrame()) {
-                convert { dateTime }.toLocalDateTime(pattern)[dateTime] shouldBe parsed
-                parse(ParserOptions(dateTimePattern = pattern))[dateTime] shouldBe parsed
+                convert { dateTime }.toLocalDateTime(pattern)[dateTime.name] shouldBe parsed
+                parse(ParserOptions(dateTimePattern = pattern))[dateTime.name] shouldBe parsed
             }
 
             DataFrame.parser.addDateTimePattern(pattern)
