@@ -10,6 +10,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.plus
+import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toStdlibInstant
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
@@ -50,14 +51,14 @@ class ParseTests {
             parsed.type() shouldBe typeOf<LocalDate>()
             with(parsed[0]) {
                 month shouldBe Month.JANUARY
-                dayOfMonth shouldBe 1
+                day shouldBe 1
                 year shouldBe 2020
             }
 
             date.convertToLocalDate(pattern) shouldBe parsed
             with(date.toDataFrame()) {
-                convert { date }.toLocalDate(pattern)[date] shouldBe parsed
-                parse(ParserOptions(dateTimePattern = pattern))[date] shouldBe parsed
+                convert { date }.toLocalDate(pattern)[date.name] shouldBe parsed
+                parse(ParserOptions(dateTimePattern = pattern))[date.name] shouldBe parsed
             }
 
             DataFrame.parser.addDateTimePattern(pattern)
@@ -169,6 +170,8 @@ class ParseTests {
     @Test
     fun `can parse instants`() {
         val deprecatedInstantParser = Parsers[typeOf<DeprecatedInstant>()]!!.applyOptions(null)
+        val stdlibInstantParser = Parsers[typeOf<StdlibInstant>()]!!
+            .applyOptions(ParserOptions(parseExperimentalInstant = true))
         val javaInstantParser = Parsers[typeOf<JavaInstant>()]!!.applyOptions(null)
 
         // from the kotlinx-datetime tests, java instants treat leap seconds etc. like this
@@ -193,21 +196,35 @@ class ParseTests {
                 for (second in listOf(0..5, 58..62).flatten()) {
                     val input = "2020-03-16T$hour:${formatTwoDigits(minute)}:${formatTwoDigits(second)}Z"
 
-                    val myParserRes = deprecatedInstantParser(input) as DeprecatedInstant?
-                    val myJavaParserRes = javaInstantParser(input) as JavaInstant?
-                    val instantRes = catchSilent { DeprecatedInstant.parse(input) }
-                    val instantLikeJava = parseInstantLikeJavaDoesOrNull(input)
+                    val deprecatedParserRes = deprecatedInstantParser(input) as DeprecatedInstant?
+                    val javaParserRes = javaInstantParser(input) as JavaInstant?
+                    val stdlibParserRes = stdlibInstantParser(input) as StdlibInstant?
+
+                    val deprecatedInstantRes = catchSilent { DeprecatedInstant.parse(input) }
+                    val stdlibInstantRes = catchSilent { StdlibInstant.parse(input) }
+
+                    val stdlibInstantLikeJava = parseInstantLikeJavaDoesOrNull(input)
                     val javaInstantRes = catchSilent { JavaInstant.parse(input) }
 
+                    javaParserRes?.toKotlinInstant() shouldBe stdlibParserRes
+
                     // our parser has a fallback mechanism built in, like this
-                    myParserRes shouldBe (instantRes ?: javaInstantRes?.toKotlinInstant())
-                    myParserRes shouldBe instantLikeJava
+                    deprecatedParserRes shouldBe (
+                        deprecatedInstantRes ?: javaInstantRes?.toKotlinInstant()?.toDeprecatedInstant()
+                    )
+                    deprecatedParserRes shouldBe stdlibInstantLikeJava?.toDeprecatedInstant()
 
-                    myJavaParserRes shouldBe javaInstantRes
+                    stdlibParserRes shouldBe (stdlibInstantRes ?: javaInstantRes?.toKotlinInstant())
+                    stdlibParserRes shouldBe stdlibInstantLikeJava
 
-                    myParserRes?.toStdlibInstant()?.toJavaInstant() shouldBe instantLikeJava?.toJavaInstant()
-                    instantLikeJava?.toJavaInstant() shouldBe myJavaParserRes
-                    myJavaParserRes shouldBe javaInstantRes
+                    javaParserRes shouldBe javaInstantRes
+
+                    deprecatedParserRes?.toStdlibInstant()?.toJavaInstant() shouldBe (
+                        stdlibInstantLikeJava?.toJavaInstant()
+                    )
+                    stdlibParserRes?.toJavaInstant() shouldBe stdlibInstantLikeJava?.toJavaInstant()
+                    stdlibInstantLikeJava?.toJavaInstant() shouldBe javaParserRes
+                    javaParserRes shouldBe javaInstantRes
                 }
             }
         }
