@@ -55,6 +55,8 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
 
         df
             .format().with { bold and textColor(black) and background(white) }
+            .format("name").with { underline }
+            .format { "name"["lastName"] }.with { italic }
             .format("isHappy").with {
                 background(if (it as Boolean) green else red)
             }
@@ -77,6 +79,8 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
 
         df
             .format().with { bold and textColor(black) and background(white) }
+            .format { name }.with { underline }
+            .format { name.lastName }.with { italic }
             .format { isHappy }.with { background(if (it) green else red) }
             .format { weight }.notNull().linearBg(50 to FormattingDsl.blue, 90 to FormattingDsl.red)
             .format { age }.perRowCol { row, col ->
