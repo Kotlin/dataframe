@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -20,6 +19,10 @@ import org.jetbrains.kotlinx.dataframe.util.APACHE_CSV
 import org.jetbrains.kotlinx.dataframe.util.AS_URL
 import org.jetbrains.kotlinx.dataframe.util.AS_URL_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.AS_URL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_TYPE_DEPRECATED_INSTANT
+import org.jetbrains.kotlinx.dataframe.util.COL_TYPE_DEPRECATED_INSTANT_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_TYPE_INSTANT
+import org.jetbrains.kotlinx.dataframe.util.COL_TYPE_INSTANT_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.READ_CSV
@@ -59,6 +62,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 @Deprecated(message = APACHE_CSV, level = DeprecationLevel.WARNING)
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
@@ -329,12 +334,28 @@ public enum class ColType {
     LocalTime,
     LocalDateTime,
     String,
+
+    @Deprecated(
+        message = COL_TYPE_INSTANT,
+        replaceWith = ReplaceWith(COL_TYPE_INSTANT_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
     Instant,
     Duration,
     Url,
     JsonArray,
     JsonObject,
     Char,
+
+    @Deprecated(
+        message = COL_TYPE_DEPRECATED_INSTANT,
+        replaceWith = ReplaceWith(COL_TYPE_DEPRECATED_INSTANT_REPLACE),
+        level = DeprecationLevel.WARNING,
+    )
+    DeprecatedInstant,
+
+    /** Temporary, will be renamed to [Instant] in 1.1+ */
+    StdlibInstant,
     ;
 
     public companion object {
@@ -352,21 +373,44 @@ public fun ColType.toType(): KClass<*> = toKType().classifier as KClass<*>
 public fun ColType.toKType(): KType =
     when (this) {
         ColType.Int -> typeOf<Int>()
+
         ColType.Long -> typeOf<Long>()
+
         ColType.Double -> typeOf<Double>()
+
         ColType.Boolean -> typeOf<Boolean>()
+
         ColType.BigDecimal -> typeOf<BigDecimal>()
+
         ColType.BigInteger -> typeOf<BigInteger>()
+
         ColType.LocalDate -> typeOf<LocalDate>()
+
         ColType.LocalTime -> typeOf<LocalTime>()
+
         ColType.LocalDateTime -> typeOf<LocalDateTime>()
+
         ColType.String -> typeOf<String>()
-        ColType.Instant -> typeOf<Instant>()
+
+        ColType.DeprecatedInstant -> typeOf<DeprecatedInstant>()
+
+        ColType.StdlibInstant -> typeOf<StdlibInstant>()
+
         ColType.Duration -> typeOf<Duration>()
+
         ColType.Url -> typeOf<URL>()
+
         ColType.JsonArray -> typeOf<DataFrame<*>>()
+
         ColType.JsonObject -> typeOf<DataRow<*>>()
+
         ColType.Char -> typeOf<Char>()
+
+        else -> {
+            // can't reference ColType.Instant directly because of the deprecation cycle
+            require(this.name == "Instant") { "Unknown column type: $this" }
+            typeOf<DeprecatedInstant>()
+        }
     }
 
 @Deprecated(
