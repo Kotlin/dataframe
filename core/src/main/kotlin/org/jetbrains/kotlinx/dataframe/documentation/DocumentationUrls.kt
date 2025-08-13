@@ -26,6 +26,9 @@ internal interface DocumentationUrls {
     /** [See Column Selectors on the documentation website.]({@include [Url]}/columnselectors.html) */
     interface ColumnSelectors
 
+    /** [See Extension Properties API on the documentation website.]({@include [Url]}/extensionpropertiesapi.html) */
+    interface ExtensionPropertiesApi
+
     /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
     interface CompilerPlugin
 
@@ -61,9 +64,6 @@ internal interface DocumentationUrls {
         /** [See `fillNA` on the documentation website.]({@include [Url]}/fill.html#fillna) */
         interface FillNA
     }
-
-    /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
-    interface Format
 
     /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
     interface NanAndNa {
@@ -120,9 +120,18 @@ internal interface DocumentationUrls {
     /** [See `filter` on the documentation website.]({@include [Url]}/filter.html) */
     interface Filter
 
+    /** [See `count` on the documentation website.]({@include [Url]}/count.html) */
+    interface Count
+
+    /** [See `countDistinct` on the documentation website.]({@include [Url]}/countdistinct.html) */
+    interface CountDistinct
+
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     interface Explode
 
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
     interface DataSchemaGeneration
+
+    /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
+    interface Format
 }

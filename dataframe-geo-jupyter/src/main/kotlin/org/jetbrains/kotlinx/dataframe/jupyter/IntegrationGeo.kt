@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.jupyter.api.FieldHandler
 import org.jetbrains.kotlinx.jupyter.api.FieldHandlerExecution
 import org.jetbrains.kotlinx.jupyter.api.libraries.FieldHandlerFactory
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
+import org.jetbrains.kotlinx.jupyter.api.outputs.display
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
@@ -54,6 +55,11 @@ internal class IntegrationGeo : JupyterIntegration() {
             useSchema<WithMultiLineStringGeometry>()
         }
 
+        render<GeoDataFrame<*>> {
+            notebook.display("GeoDataFrame with ${it.crs?.name?.code} CRS and inner dataframe:")
+            it.df
+        }
+
         val replCodeGeneratorImpl = ReplCodeGeneratorImpl()
         replCodeGeneratorImpl.process(WithGeometry::class)
         replCodeGeneratorImpl.process(WithPolygonGeometry::class)
@@ -67,7 +73,7 @@ internal class IntegrationGeo : JupyterIntegration() {
             val generatedDf = execute(
                 codeWithTypeCastGenerator = replCodeGeneratorImpl.process(geo.df, kProperty),
                 expression = "(${kProperty.name}.df as DataFrame<*>)",
-            )
+            ).let { "`$it`" }
             val name = execute("GeoDataFrame($generatedDf, ${kProperty.name}.crs)").name
             name
         }

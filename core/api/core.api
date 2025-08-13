@@ -909,6 +909,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsAtAnyDep
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl {
+	public fun cols (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Ljava/lang/String;I[I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -923,6 +924,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsS
 	public fun cols (Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lkotlin/reflect/KProperty;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lkotlin/reflect/KProperty;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public fun cols (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;I[I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -930,6 +932,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsS
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;I[I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -937,9 +940,11 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsS
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I[I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;I[I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -947,12 +952,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsS
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun cols (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
-	public static synthetic fun cols$default (Lorg/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static synthetic fun cols$default (Lorg/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
-	public static synthetic fun cols$default (Lorg/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
-	public static synthetic fun cols$default (Lorg/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
-	public static synthetic fun cols$default (Lorg/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
-	public static synthetic fun cols$default (Lorg/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun colsUnTyped (Ljava/lang/String;I[I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun colsUnTyped (Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun colsUnTyped (Ljava/lang/String;Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;

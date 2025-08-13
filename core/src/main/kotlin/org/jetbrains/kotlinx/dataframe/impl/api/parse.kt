@@ -4,7 +4,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
@@ -217,13 +216,7 @@ internal object Parsers : GlobalParserOptions {
         }
 
     private fun String.toInstantOrNull(): StdlibInstant? =
-        // low chance throwing exception, thanks to using parseOrNull instead of parse
-        catchSilent {
-            // Default format used by Instant.parse
-            DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET
-                .parseOrNull(this)
-                ?.toInstantUsingOffset()
-        }
+        StdlibInstant.parseOrNull(this)
             // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
             ?: toJavaInstantOrNull()?.toKotlinInstant()
 
@@ -310,7 +303,7 @@ internal object Parsers : GlobalParserOptions {
         }
 
     private fun String.toDurationOrNull(): Duration? =
-        if (Duration.canParse(this)) {
+        if (Duration.canParse(this)) { // TODO, migrate to `Duration.parseOrNull()` in Kotlin 2.3.0+
             catchSilent { Duration.parse(this) } // will likely succeed
         } else {
             null

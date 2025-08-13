@@ -16,6 +16,7 @@ import java.net.URL
 import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.reflect.KType
+import kotlin.reflect.KVariance
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
@@ -89,7 +90,12 @@ internal fun renderType(type: KType?): String {
                 append(name)
                 if (type.arguments.isNotEmpty()) {
                     val arguments = type.arguments.joinToString {
-                        renderType(it.type)
+                        when (it.variance) {
+                            null -> "*"
+                            KVariance.INVARIANT -> renderType(it.type)
+                            KVariance.IN -> "in ${renderType(it.type)}"
+                            KVariance.OUT -> "out ${renderType(it.type)}"
+                        }
                     }
                     append("<$arguments>")
                 }

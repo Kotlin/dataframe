@@ -8,9 +8,10 @@ import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.columns.depth
+import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
+import org.jetbrains.kotlinx.dataframe.path
 
 internal class SingleAttribute(val key: String, val value: String) : CellAttributes {
     override fun attributes() = listOf(key to value)
@@ -53,25 +54,17 @@ internal inline fun <T, C> FormatClause<T, C>.formatImpl(
     crossinline formatter: RowColFormatter<T, C>,
 ): FormattedFrame<T> {
     val clause = this
-    val columns =
-        if (clause.columns != null) {
-            clause.df.getColumnsWithPaths(clause.columns)
-                .mapNotNull { if (it.depth == 0) it.name else null } // TODO Causes #1356
-                .toSet()
-        } else {
-            null
-        }
+    val columns = clause.df.getColumnPaths(UnresolvedColumnsPolicy.Skip, clause.columns).toSet()
+
     return FormattedFrame(clause.df) { row, col ->
         val oldAttributes = clause.oldFormatter?.invoke(FormattingDsl, row, col.cast())
-        if (columns == null || columns.contains(col.name())) {
-            val value = row[col.name] as C
+        if (col.path in columns) {
+            val value = col[row] as C
             if (clause.filter(row, value)) {
-                oldAttributes and formatter(FormattingDsl, row.cast(), col.cast())
-            } else {
-                oldAttributes
+                return@FormattedFrame oldAttributes and formatter(FormattingDsl, row.cast(), col.cast())
             }
-        } else {
-            oldAttributes
         }
+
+        oldAttributes
     }
 }

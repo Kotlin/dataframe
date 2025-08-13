@@ -41,7 +41,7 @@ dataFrameOf("a|b|c", "a|d|e")(0, 0)
 
 // name.firstName -> firstName
 // name.lastName -> lastName
-df.move { name.cols() }.toTop()
+df.move { name.allCols() }.toTop()
 
 // a.b.e -> be
 // c.d.e -> de

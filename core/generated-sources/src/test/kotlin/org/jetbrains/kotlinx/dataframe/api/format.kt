@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.red
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb
@@ -13,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.weight
-import org.junit.Ignore
 import org.junit.Test
 
 class FormatTests : TestBase() {
@@ -24,7 +22,7 @@ class FormatTests : TestBase() {
         val html = formatted.toHtml().toString()
 
         // Should contain CSS background-color styling
-        html shouldContain "background-color:#ff0000"
+        (html.split("background-color:#ff0000").size - 1) shouldBe 7
         // Format operation should produce a FormattedFrame
         formatted::class.simpleName shouldBe "FormattedFrame"
     }
@@ -34,7 +32,7 @@ class FormatTests : TestBase() {
         val formatted = df.format { age }.with { textColor(blue) }
         val html = formatted.toHtml().toString()
 
-        html shouldContain "color:#0000ff"
+        (html.split("color:#0000ff").size - 1) shouldBe 14
         formatted::class.simpleName shouldBe "FormattedFrame"
     }
 
@@ -43,10 +41,10 @@ class FormatTests : TestBase() {
         val formatted = df.format { age }.with { background(white) and textColor(black) and bold }
         val html = formatted.toHtml().toString()
 
-        html shouldContain "background-color:#ffffff"
-        html shouldContain "color"
-        html shouldContain "font-weight"
-        html shouldContain "bold"
+        (html.split("background-color:#ffffff").size - 1) shouldBe 7
+        (html.split("color:#000000").size - 1) shouldBe 14
+        (html.split("font-weight:bold").size - 1) shouldBe 7
+        (html.split("font-weight:bold").size - 1) shouldBe 7
     }
 
     @Test
@@ -54,23 +52,42 @@ class FormatTests : TestBase() {
         val formatted = df.format { age }.with { italic and underline }
         val html = formatted.toHtml().toString()
 
-        html shouldContain "font-style"
-        html shouldContain "italic"
-        html shouldContain "text-decoration"
-        html shouldContain "underline"
+        (html.split("font-style:italic").size - 1) shouldBe 7
+        (html.split("font-style:italic").size - 1) shouldBe 7
+        (html.split("text-decoration:underline").size - 1) shouldBe 7
+        (html.split("text-decoration:underline").size - 1) shouldBe 7
     }
 
-    // TODO #1356
-    @Ignore
     @Test
-    fun `format with italic and underline in nested group`() {
+    fun `format with italic and underline nested in group`() {
         val formatted = df.format { name.firstName }.with { italic and underline }
         val html = formatted.toHtml().toString()
 
-        html shouldContain "font-style"
-        html shouldContain "italic"
-        html shouldContain "text-decoration"
-        html shouldContain "underline"
+        (html.split("font-style:italic").size - 1) shouldBe 7
+        (html.split("font-style:italic").size - 1) shouldBe 7
+        (html.split("text-decoration:underline").size - 1) shouldBe 7
+        (html.split("text-decoration:underline").size - 1) shouldBe 7
+    }
+
+    @Test
+    fun `format with italic and underline for entire group`() {
+        val formatted = df
+            .format().with { background(white) }
+            .format { age }.with { background(blue) and textColor(white) }
+            .format { name }.with { background(green) }
+            .format { name.firstName }.with { italic and underline }
+            .format { name.colsOf<String>() }.where { it.startsWith("C") }.with { background(red) }
+
+        val html = formatted.toHtml().toString()
+
+        (html.split("background-color:#ffffff").size - 1) shouldBe 21
+        (html.split("background-color:#00ff00").size - 1) shouldBe 16
+        (html.split("background-color:#0000ff").size - 1) shouldBe 7
+        (html.split("background-color:#ff0000").size - 1) shouldBe 5
+        (html.split("font-style:italic").size - 1) shouldBe 7
+        (html.split("font-style:italic").size - 1) shouldBe 7
+        (html.split("text-decoration:underline").size - 1) shouldBe 7
+        (html.split("text-decoration:underline").size - 1) shouldBe 7
     }
 
     @Test
@@ -80,7 +97,7 @@ class FormatTests : TestBase() {
         val html = formatted.toHtml().toString()
 
         // Custom color should be applied
-        html shouldContain "background-color:#8040c0"
+        (html.split("background-color:#8040c0").size - 1) shouldBe 7
     }
 
     @Test
@@ -158,13 +175,13 @@ class FormatTests : TestBase() {
         val formatted = df.format { age }.linearBg(15 to blue, 45 to red)
         val html = formatted.toHtml().toString()
 
-        html shouldContain "background-color:#0000ff"
-        html shouldContain "background-color:#2a00d4"
-        html shouldContain "background-color:#d4002a"
-        html shouldContain "background-color:#7f007f"
-        html shouldContain "background-color:#2a00d4"
-        html shouldContain "background-color:#7f007f"
-        html shouldContain "background-color:#ff0000"
+        (html.split("background-color:#0000ff").size - 1) shouldBe 1
+        (html.split("background-color:#2a00d4").size - 1) shouldBe 2
+        (html.split("background-color:#d4002a").size - 1) shouldBe 1
+        (html.split("background-color:#7f007f").size - 1) shouldBe 2
+        (html.split("background-color:#2a00d4").size - 1) shouldBe 2
+        (html.split("background-color:#7f007f").size - 1) shouldBe 2
+        (html.split("background-color:#ff0000").size - 1) shouldBe 1
         formatted::class.simpleName shouldBe "FormattedFrame"
     }
 
@@ -175,13 +192,13 @@ class FormatTests : TestBase() {
         }
         val html = formatted.toHtml().toString()
 
-        html shouldContain "color:#0000ff"
-        html shouldContain "color:#2a00d4"
-        html shouldContain "color:#d4002a"
-        html shouldContain "color:#7f007f"
-        html shouldContain "color:#2a00d4"
-        html shouldContain "color:#7f007f"
-        html shouldContain "color:#ff0000"
+        (html.split("color:#0000ff").size - 1) shouldBe 2
+        (html.split("color:#2a00d4").size - 1) shouldBe 4
+        (html.split("color:#d4002a").size - 1) shouldBe 2
+        (html.split("color:#7f007f").size - 1) shouldBe 4
+        (html.split("color:#2a00d4").size - 1) shouldBe 4
+        (html.split("color:#7f007f").size - 1) shouldBe 4
+        (html.split("color:#ff0000").size - 1) shouldBe 2
         formatted::class.simpleName shouldBe "FormattedFrame"
     }
 

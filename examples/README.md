@@ -1,8 +1,10 @@
-# Examples of Kotlin Dataframe
+# Examples of Kotlin DataFrame
 
 ### Idea examples
 * [plugin example](kotlin-dataframe-plugin-example) IDEA project with a 
 [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
+* [android example](android-example) A minimal Android project showcasing integration with Kotlin DataFrame.
+Also includes [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html).
 * [movies](idea-examples/movies) Using extension properties [Access API](https://kotlin.github.io/dataframe/apilevels.html) to perform a data cleaning task
 * [titanic](idea-examples/titanic)
 * [youtube](idea-examples/youtube)
@@ -11,15 +13,15 @@
 and how to transform the result of an SQL query into a DataFrame.
 * [unsupported-data-sources](idea-examples/unsupported-data-sources) Showcases of how to use DataFrame with
   (momentarily) unsupported data libraries such as [Spark](https://spark.apache.org/) and [Exposed](https://github.com/JetBrains/Exposed).
-They show how to convert to and from Kotlin Dataframe and their respective tables.
+They show how to convert to and from Kotlin DataFrame and their respective tables.
   * **JetBrains Exposed**: See the [exposed folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/exposed)
-    for an example of using Kotlin Dataframe with [Exposed](https://github.com/JetBrains/Exposed).
+    for an example of using Kotlin DataFrame with [Exposed](https://github.com/JetBrains/Exposed).
   * **Apache Spark**: See the [spark folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/spark)
-    for an example of using Kotlin Dataframe with [Spark](https://spark.apache.org/).
+    for an example of using Kotlin DataFrame with [Spark](https://spark.apache.org/).
   * **Spark (with Kotlin Spark API)**: See the [kotlinSpark folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/kotlinSpark)
     for an example of using Kotlin DataFrame with the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
   * **Multik**: See the [multik folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/multik)
-    for an example of using Kotlin Dataframe with [Multik](https://github.com/Kotlin/multik).
+    for an example of using Kotlin DataFrame with [Multik](https://github.com/Kotlin/multik).
 
 
 ### Notebook examples
@@ -33,11 +35,11 @@ complex problems where need to think. This notebook will show you how to solve t
 Dataframe in a laconic, beautiful style.
 ___
 * movies ([notebook](notebooks/movies/movies.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/89IMYb1zbHZxHfwAta6eKP)) &ndash;
-In this notebook you can see the basic operations of the Kotlin Dataframe on data from [movielens](https://movielens.org/).
+In this notebook you can see the basic operations of the Kotlin DataFrame on data from [movielens](https://movielens.org/).
 You can take the data from the [link](https://grouplens.org/datasets/movielens/latest/).
 ___
 * netflix ([notebook](notebooks/netflix/netflix.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/xSJ4rx49hcH71pPnFgZBCq)) &ndash;
-Explore TV shows and movies from Netflix with the powerful Kotlin Dataframe API and beautiful
+Explore TV shows and movies from Netflix with the powerful Kotlin DataFrame API and beautiful
 visualizations from [lets-plot](https://github.com/JetBrains/lets-plot-kotlin).
 ___
 * github ([notebook](notebooks/github/github.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/P9n6jYL4mmY1gx3phz5TsX)) &ndash;
@@ -50,10 +52,10 @@ ___
   Analyze key financial metrics for several major German companies.
 ___
 * wine ([notebook](notebooks/wine/WineNetWIthKotlinDL.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/aK9vYHH8pCA8H1KbKB5WsI)) &ndash;
-  Wine. Kotlin Dataframe. KotlinDL. What came out of this can be seen in this notebook.
+  Wine. Kotlin DataFrame. KotlinDL. What came out of this can be seen in this notebook.
 ___
 * youtube ([notebook](notebooks/youtube/Youtube.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/uXH0VfIM6qrrmwPJnLBi0j)) &ndash;
-Explore YouTube videos with YouTube REST API and Kotlin Dataframe 
+Explore YouTube videos with YouTube REST API and Kotlin DataFrame 
 
 ___
 * imdb sql database ([notebook](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb)) &ndash; In this notebook, we use Kotlin DataFrame and Kandy library to analyze data from [IMDB](https://datasets.imdbws.com/) (SQL dump for the MariaDB database with the name "imdb" could be downloaded by this [link](https://drive.google.com/file/d/10HnOu0Yem2Tkz_34SfvDoHTVqF_8b4N7/view?usp=sharing)).
