@@ -70,7 +70,7 @@ df.convert { name }.asColumn { col ->
 * `LocalDateTime` (kotlinx.datetime and java.time)
 * `LocalDate` (kotlinx.datetime and java.time)
 * `LocalTime` (kotlinx.datetime and java.time)
-* `Instant` (kotlinx.datetime and java.time)
+* `Instant` (kotlinx.datetime, kotlin.time, and java.time)
 
 <!---FUN convertTo-->
 
