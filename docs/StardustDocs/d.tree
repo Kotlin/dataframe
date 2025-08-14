@@ -12,6 +12,7 @@
         <toc-element topic="Kotlin-DataFrame-Features-in-Kotlin-Notebook.md">
             <toc-element topic="Trobleshooting.md"/>
         </toc-element>
+        <toc-element topic="Guide-for-backend-SQL-developers.md"/>
     </toc-element>
 
     <toc-element topic="Setup.md" accepts-web-file-names="gettingstarted">
