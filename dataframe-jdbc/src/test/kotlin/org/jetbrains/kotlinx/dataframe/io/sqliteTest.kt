@@ -9,12 +9,12 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
+import java.io.File
+import java.nio.file.Files
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import kotlin.reflect.typeOf
-
-private const val DATABASE_URL = "jdbc:sqlite::memory:"
 
 @DataSchema
 interface CustomerSQLite {
@@ -50,11 +50,20 @@ interface CustomerOrderSQLite {
 class SqliteTest {
     companion object {
         private lateinit var connection: Connection
+        // we are using a temporary file because we need to test requests with DBConnectionConfig,
+        // which creates a connection under the hood and need to have access to the shared SQLite database
+        private lateinit var testDbFile: File
+        private lateinit var DATABASE_URL: String
 
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
+            testDbFile = Files.createTempFile("dataframe_sqlite_test_", ".db").toFile()
+            testDbFile.deleteOnExit() // if fails
+
+            DATABASE_URL = "jdbc:sqlite:${testDbFile.absolutePath}"
             connection = DriverManager.getConnection(DATABASE_URL)
+
 
             @Language("SQL")
             val createCustomersTableQuery = """
@@ -129,10 +138,15 @@ class SqliteTest {
         fun tearDownClass() {
             try {
                 connection.close()
-            } catch (e: SQLException) {
-                e.printStackTrace()
+                if (::testDbFile.isInitialized && testDbFile.exists()) {
+                    testDbFile.delete()
+                }
+            } catch (e: Exception) {
+                // Log, but not fail
+                println("Warning: Could not clean up test database file: ${e.message}")
             }
         }
+
     }
 
     @Test
@@ -160,9 +174,34 @@ class SqliteTest {
     }
 
     @Test
-    fun `read from sql query`() {
-        @Language("SQL")
-        val sqlQuery = """
+    fun `read from tables with DBConnectionConfig`() {
+        val customerTableName = "Customers"
+
+        val dbConnectionConfig = DbConnectionConfig(DATABASE_URL)
+
+        val df = DataFrame.readSqlTable(dbConnectionConfig, customerTableName).cast<CustomerSQLite>()
+        val result = df.filter { it[CustomerSQLite::name] == "John Doe" }
+        result[0][2] shouldBe 30
+
+        val schema = DataFrame.getSchemaForSqlTable(dbConnectionConfig, customerTableName)
+        schema.columns["id"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["name"]!!.type shouldBe typeOf<String?>()
+        schema.columns["salary"]!!.type shouldBe typeOf<Double>()
+        schema.columns["profilePicture"]!!.type shouldBe typeOf<ByteArray?>()
+
+        val orderTableName = "Orders"
+        val df2 = DataFrame.readSqlTable(dbConnectionConfig, orderTableName).cast<OrderSQLite>()
+        val result2 = df2.filter { it[OrderSQLite::totalAmount] > 10 }
+        result2[0][2] shouldBe "2023-07-21"
+
+        val schema2 = DataFrame.getSchemaForSqlTable(dbConnectionConfig, orderTableName)
+        schema2.columns["id"]!!.type shouldBe typeOf<Int?>()
+        schema2.columns["customerName"]!!.type shouldBe typeOf<String?>()
+        schema2.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
+    }
+
+    @Language("SQL")
+    private val sqlQuery = """
             SELECT
                 c.id AS customerId,
                 c.name AS customerName,
@@ -177,11 +216,28 @@ class SqliteTest {
             INNER JOIN Orders o ON c.name = o.customerName
             """
 
+    @Test
+    fun `read from sql query`() {
         val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerOrderSQLite>()
         val result = df.filter { it[CustomerOrderSQLite::customerSalary] > 1 }
         result[0][3] shouldBe 2500.5
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        schema.columns["customerId"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
+        schema.columns["customerAge"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
+    }
+
+    @Test
+    fun `read from sql query with DBConnectionConfig`() {
+        val dbConnectionConfig = DbConnectionConfig(DATABASE_URL)
+
+        val df = DataFrame.readSqlQuery(dbConnectionConfig, sqlQuery).cast<CustomerOrderSQLite>()
+        val result = df.filter { it[CustomerOrderSQLite::customerSalary] > 1 }
+        result[0][3] shouldBe 2500.5
+
+        val schema = DataFrame.getSchemaForSqlQuery(dbConnectionConfig, sqlQuery = sqlQuery)
         schema.columns["customerId"]!!.type shouldBe typeOf<Int?>()
         schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema.columns["customerAge"]!!.type shouldBe typeOf<Int?>()

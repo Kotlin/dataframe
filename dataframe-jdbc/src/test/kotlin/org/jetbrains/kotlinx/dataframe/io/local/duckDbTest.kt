@@ -31,7 +31,6 @@ import org.jetbrains.kotlinx.dataframe.io.readResultSet
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.junit.Ignore
 import org.junit.Test
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -624,12 +623,35 @@ class DuckDbTest {
         }
     }
 
-    // TODO Issue #1365
-    @Ignore
     @Test
     fun `change read mode`() {
-        val config = DbConnectionConfig("jdbc:duckdb:", readOnly = true)
+        // Test in-memory database (cannot be read-only)
+        val config = DbConnectionConfig("jdbc:duckdb:")
         val df = config.readDataFrame("SELECT 1, 2, 3")
         df.values().toList() shouldBe listOf(1, 2, 3)
+    }
+
+    @Test
+    fun `change read mode with persistent database`() {
+        // Test read-only mode with a temporary file
+        val tempDir = kotlin.io.path.createTempDirectory("duckdb-test-")
+        val dbPath = tempDir.resolve("test.duckdb")
+        try {
+            // First, create the database with actual data using plain JDBC to allow DDL/DML
+            DriverManager.getConnection("jdbc:duckdb:${dbPath.toAbsolutePath()}").use { connection ->
+                connection.createStatement().use { st ->
+                    st.executeUpdate("CREATE TABLE test_data(col1 INTEGER, col2 INTEGER, col3 INTEGER)")
+                    st.executeUpdate("INSERT INTO test_data VALUES (1, 2, 3)")
+                }
+            }
+
+            // Now test read-only access via our API
+            val config = DbConnectionConfig("jdbc:duckdb:${dbPath.toAbsolutePath()}", readOnly = true)
+            val df = config.readDataFrame("SELECT col1, col2, col3 FROM test_data")
+            df.values().toList() shouldBe listOf(1, 2, 3)
+        } finally {
+            java.nio.file.Files.deleteIfExists(dbPath)
+            java.nio.file.Files.deleteIfExists(tempDir)
+        }
     }
 }

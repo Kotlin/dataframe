@@ -1,11 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import java.sql.Connection
 import java.sql.DatabaseMetaData
+import java.sql.DriverManager
 import java.sql.ResultSet
 import kotlin.reflect.KType
 
@@ -75,4 +78,22 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @return A new SQL query with the limit clause added.
      */
     public open fun sqlQueryLimit(sqlQuery: String, limit: Int = 1): String = "$sqlQuery LIMIT $limit"
+
+    /**
+     * Creates a database connection using the provided configuration.
+     * This method is only called when working with DbConnectionConfig (internally managed connections).
+     *
+     * Some databases (like [Sqlite]) require read-only mode to be set during connection creation
+     * rather than after the connection is established.
+     *
+     * @param [dbConfig] The database configuration containing URL, credentials, and read-only flag.
+     * @return A configured [Connection] instance.
+     */
+    public open fun createConnection(dbConfig: DbConnectionConfig): Connection {
+        val connection = DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
+        if (dbConfig.readOnly) {
+            connection.isReadOnly = true
+        }
+        return connection
+    }
 }

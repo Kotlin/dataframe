@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.duckdb.DuckDBColumnType
 import org.duckdb.DuckDBColumnType.ARRAY
 import org.duckdb.DuckDBColumnType.BIGINT
@@ -39,6 +40,7 @@ import org.duckdb.DuckDBColumnType.VARCHAR
 import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.DuckDb.convertSqlTypeToKType
@@ -49,7 +51,9 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Array
 import java.sql.Blob
+import java.sql.Connection
 import java.sql.DatabaseMetaData
+import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.Struct
 import java.sql.Timestamp
@@ -57,12 +61,15 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
+import java.util.Properties
 import java.util.UUID
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Represents the [DuckDB](http://duckdb.org/) database type.
@@ -216,4 +223,39 @@ public object DuckDb : DbType("duckdb") {
             tables.getString("TABLE_SCHEM"),
             tables.getString("TABLE_CAT"),
         )
+
+    /**
+     * Creates a database connection using the provided configuration.
+     *
+     * DuckDB does not support changing read-only status after connection creation,
+     * but supports read-only mode through connection parameters.
+     *
+     * @param [dbConfig] The database configuration containing URL, credentials, and read-only flag.
+     * @return A configured [java.sql.Connection] instance.
+     */
+    override fun createConnection(dbConfig: DbConnectionConfig): Connection {
+        val properties = Properties().apply {
+            dbConfig.user.takeIf { it.isNotEmpty() }?.let { setProperty("user", it) }
+            dbConfig.password.takeIf { it.isNotEmpty() }?.let { setProperty("password", it) }
+
+            // Handle DuckDB limitation: in-memory databases cannot be opened in read-only mode
+            if (dbConfig.readOnly && !dbConfig.url.isInMemoryDuckDb()) {
+                setProperty("access_mode", "read_only")
+            } else if (dbConfig.readOnly) {
+                logger.warn {
+                    "Cannot create read-only in-memory DuckDB database (url=${dbConfig.url}). " +
+                        "In-memory databases require write access for initialization. Connection will be created without read-only mode."
+                }
+            }
+        }
+
+        return DriverManager.getConnection(dbConfig.url, properties)
+    }
+
+    /**
+     * Checks if the DuckDB URL represents an in-memory database.
+     * In-memory DuckDB URLs are either "jdbc:duckdb:" or "jdbc:duckdb:" followed only by whitespace.
+     */
+    private fun String.isInMemoryDuckDb(): Boolean =
+        this == "jdbc:duckdb:" || matches("jdbc:duckdb:\\s*$".toRegex())
 }
