@@ -18,7 +18,6 @@ class ValidFieldNameOfTest {
             Case("mañana", "mañana", false), // Latin letter with diacritic
             Case("Δelta", "Δelta", false), // Greek uppercase letter
             Case("__name", "__name", false),
-
             // needs quoting due to rules
             Case("_", "_", true), // all underscores
             Case("__", "__", true), // all underscores
@@ -42,19 +41,17 @@ class ValidFieldNameOfTest {
             Case("a*b", "a*b", true),
             Case("a(b)c", "a(b)c", true), // parentheses are quoted, not replaced
             Case("{x}", "{x}", true), // braces are quoted, not replaced
-
             // quoting due to non-letter symbol categories
             Case("😀", "😀", true), // emoji
             Case("你好", "你好", true), // CJK: category OTHER_LETTER -> quote
             Case("क", "क", true), // Devanagari OTHER_LETTER -> quote
             Case("a\tb", "a\tb", true), // tab (CONTROL) -> quote, not replaced
             Case("a\u200Bb", "a\u200Bb", true), // zero-width space (FORMAT) -> quote
-
             // precise replacement tests when quoting is needed
             Case("<name>", "{name}", true), // < > -> { }
-            Case("a::b", "a - b", true), // :: ->  - 
-            Case("a:b", "a - b", true), // : ->  - 
-            Case("a: b", "a - b", true), // :  ->  - 
+            Case("a::b", "a - b", true), // :: ->  -
+            Case("a:b", "a - b", true), // : ->  -
+            Case("a: b", "a - b", true), // :  ->  -
             Case("a.b", "a b", true), // . -> space
             Case("a/b", "a-b", true), // / -> -
             Case("a[b]", "a{b}", true), // [ ] -> { }
@@ -76,7 +73,6 @@ class ValidFieldNameOfTest {
             Case("x>y", "x}y", true),
             Case("a.b.c", "a b c", true),
             Case("a/b/c", "a-b-c", true),
-
             // extra heavy special-symbol cases
             Case("::", " - ", true),
             Case(":::", " -  - ", true),
@@ -86,7 +82,6 @@ class ValidFieldNameOfTest {
             Case("x`;;`y", "x'  'y", true),
             Case("a:::b", "a -  - b", true),
             Case("..a..", "  a  ", true),
-
             // already quoted stays as-is and does not need quoting
             Case("`already quoted`", "`already quoted`", false),
         )
