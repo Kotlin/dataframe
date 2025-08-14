@@ -447,7 +447,7 @@ class Analyze : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun columnsFor_aсcessors() {
+    fun columnsFor_accessors() {
         // SampleStart
         val name by columnGroup()
         val firstName by name.column<String>()
