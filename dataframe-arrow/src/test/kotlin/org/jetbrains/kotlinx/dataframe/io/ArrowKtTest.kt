@@ -48,12 +48,11 @@ import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.net.URI
 import java.net.URL
 import java.nio.channels.Channels
-import java.nio.file.FileSystems
 import java.sql.DriverManager
 import java.util.Locale
+import kotlin.io.path.toPath
 import kotlin.reflect.typeOf
 
 internal class ArrowKtTest {
@@ -658,9 +657,11 @@ internal class ArrowKtTest {
 
     @Test
     fun testReadParquetPath() {
-        val resourceLocation = testResource("test.arrow.parquet").path
-        val resourcePath = FileSystems.getDefault().getPath(resourceLocation)
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
         val dataFrame = DataFrame.readParquet(resourcePath)
+
         dataFrame.rowsCount() shouldBe 300
         assertEstimations(
             exampleFrame = dataFrame,
@@ -672,9 +673,11 @@ internal class ArrowKtTest {
 
     @Test
     fun testReadParquetFile() {
-        val resourceLocation = testResource("test.arrow.parquet").path
-        val resourcePath = FileSystems.getDefault().getPath(resourceLocation)
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
         val dataFrame = DataFrame.readParquet(resourcePath.toFile())
+
         dataFrame.rowsCount() shouldBe 300
         assertEstimations(
             exampleFrame = dataFrame,
@@ -686,9 +689,11 @@ internal class ArrowKtTest {
 
     @Test
     fun testReadParquetStringPath() {
-        val resourceLocation = testResource("test.arrow.parquet").path
-        val resourcePath = FileSystems.getDefault().getPath(resourceLocation)
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
         val dataFrame = DataFrame.readParquet("$resourcePath")
+
         dataFrame.rowsCount() shouldBe 300
         assertEstimations(
             exampleFrame = dataFrame,
@@ -700,10 +705,12 @@ internal class ArrowKtTest {
 
     @Test
     fun testReadParquetUrl() {
-        val resourceLocation = testResource("test.arrow.parquet").path
-        val resourcePath = FileSystems.getDefault().getPath(resourceLocation)
-        val fileUrl = URI.create("file:$resourcePath").toURL()
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+        val fileUrl = resourcePath.toUri().toURL()
+
         val dataFrame = DataFrame.readParquet(fileUrl)
+
         dataFrame.rowsCount() shouldBe 300
         assertEstimations(
             exampleFrame = dataFrame,
@@ -715,9 +722,11 @@ internal class ArrowKtTest {
 
     @Test
     fun testReadMultipleParquetFiles() {
-        val resourceLocation = testResource("test.arrow.parquet").path
-        val resourcePath = FileSystems.getDefault().getPath(resourceLocation)
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
         val dataFrame = DataFrame.readParquet(resourcePath, resourcePath, resourcePath)
+
         dataFrame.rowsCount() shouldBe 900
     }
 }

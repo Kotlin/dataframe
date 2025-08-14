@@ -223,7 +223,15 @@ public fun DataFrame.Companion.readParquet(
     vararg paths: Path,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
     batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
-): AnyFrame = readArrowDatasetImpl(paths.map { "file:$it" }.toTypedArray(), FileFormat.PARQUET, nullability, batchSize)
+): AnyFrame =
+    readArrowDatasetImpl(
+        paths.map {
+            it.toUri().toString()
+        }.toTypedArray(),
+        FileFormat.PARQUET,
+        nullability,
+        batchSize,
+    )
 
 /**
  * Read [Parquet](https://parquet.apache.org/) data from existing [files] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
@@ -235,7 +243,7 @@ public fun DataFrame.Companion.readParquet(
 ): AnyFrame =
     readArrowDatasetImpl(
         files.map {
-            "file:${it.toPath()}"
+            it.toURI().toString()
         }.toTypedArray(),
         FileFormat.PARQUET,
         nullability,

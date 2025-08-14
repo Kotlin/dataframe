@@ -432,12 +432,12 @@ private fun resolveArrowDatasetUris(fileUris: Array<String>): Array<String> =
                 tempFile.deleteOnExit()
                 url.openStream().use { input ->
                     Files.copy(input, tempFile.toPath())
-                    "file:${tempFile.toPath()}"
+                    tempFile.toURI().toString()
                 }
             }
 
             !it.startsWith("file:", true) && File(it).exists() -> {
-                "file:$it"
+                File(it).toURI().toString()
             }
 
             else -> it
