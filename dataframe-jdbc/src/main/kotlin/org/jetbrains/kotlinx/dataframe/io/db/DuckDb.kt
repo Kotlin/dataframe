@@ -256,6 +256,5 @@ public object DuckDb : DbType("duckdb") {
      * Checks if the DuckDB URL represents an in-memory database.
      * In-memory DuckDB URLs are either "jdbc:duckdb:" or "jdbc:duckdb:" followed only by whitespace.
      */
-    private fun String.isInMemoryDuckDb(): Boolean =
-        this == "jdbc:duckdb:" || matches("jdbc:duckdb:\\s*$".toRegex())
+    private fun String.isInMemoryDuckDb(): Boolean = this == "jdbc:duckdb:" || matches("jdbc:duckdb:\\s*$".toRegex())
 }

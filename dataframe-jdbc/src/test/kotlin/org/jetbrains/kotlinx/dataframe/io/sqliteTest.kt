@@ -13,7 +13,6 @@ import java.io.File
 import java.nio.file.Files
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.SQLException
 import kotlin.reflect.typeOf
 
 @DataSchema
@@ -50,10 +49,13 @@ interface CustomerOrderSQLite {
 class SqliteTest {
     companion object {
         private lateinit var connection: Connection
-        // we are using a temporary file because we need to test requests with DBConnectionConfig,
-        // which creates a connection under the hood and need to have access to the shared SQLite database
+
+        /**
+         * We are using a temporary file because we need to test requests with DBConnectionConfig,
+         * which creates a connection under the hood and need to have access to the shared SQLite database
+         */
         private lateinit var testDbFile: File
-        private lateinit var DATABASE_URL: String
+        private lateinit var databaseUrl: String
 
         @BeforeClass
         @JvmStatic
@@ -61,9 +63,8 @@ class SqliteTest {
             testDbFile = Files.createTempFile("dataframe_sqlite_test_", ".db").toFile()
             testDbFile.deleteOnExit() // if fails
 
-            DATABASE_URL = "jdbc:sqlite:${testDbFile.absolutePath}"
-            connection = DriverManager.getConnection(DATABASE_URL)
-
+            databaseUrl = "jdbc:sqlite:${testDbFile.absolutePath}"
+            connection = DriverManager.getConnection(databaseUrl)
 
             @Language("SQL")
             val createCustomersTableQuery = """
@@ -146,7 +147,6 @@ class SqliteTest {
                 println("Warning: Could not clean up test database file: ${e.message}")
             }
         }
-
     }
 
     @Test
@@ -177,7 +177,7 @@ class SqliteTest {
     fun `read from tables with DBConnectionConfig`() {
         val customerTableName = "Customers"
 
-        val dbConnectionConfig = DbConnectionConfig(DATABASE_URL)
+        val dbConnectionConfig = DbConnectionConfig(databaseUrl)
 
         val df = DataFrame.readSqlTable(dbConnectionConfig, customerTableName).cast<CustomerSQLite>()
         val result = df.filter { it[CustomerSQLite::name] == "John Doe" }
@@ -231,7 +231,7 @@ class SqliteTest {
 
     @Test
     fun `read from sql query with DBConnectionConfig`() {
-        val dbConnectionConfig = DbConnectionConfig(DATABASE_URL)
+        val dbConnectionConfig = DbConnectionConfig(databaseUrl)
 
         val df = DataFrame.readSqlQuery(dbConnectionConfig, sqlQuery).cast<CustomerOrderSQLite>()
         val result = df.filter { it[CustomerOrderSQLite::customerSalary] > 1 }

@@ -32,8 +32,8 @@ public object Sqlite : DbType("sqlite") {
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 
-    override fun createConnection(dbConfig: DbConnectionConfig): Connection {
-        return if (dbConfig.readOnly) {
+    override fun createConnection(dbConfig: DbConnectionConfig): Connection =
+        if (dbConfig.readOnly) {
             try {
                 // Use SQLiteConfig to set read-only mode before a connection establishment
                 val configClass = Class.forName("org.sqlite.SQLiteConfig")
@@ -49,6 +49,4 @@ public object Sqlite : DbType("sqlite") {
         } else {
             DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
         }
-    }
-
 }
