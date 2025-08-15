@@ -247,6 +247,8 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
             .replace("\\", "\\\\")
             .replace("$", "\\\$")
             .replace("\"", "\\\"")
+            .replace("\n", "\\n")
+            .replace("\r", "\\r")
 
     private fun String.removeQuotes() = this.removeSurrounding("`")
 

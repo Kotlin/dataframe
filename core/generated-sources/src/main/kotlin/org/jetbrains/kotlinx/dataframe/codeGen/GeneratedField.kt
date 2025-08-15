@@ -130,6 +130,8 @@ public class ValidFieldName private constructor(private val identifier: String, 
                     .replace("`", "'")
                     .replace(";", " ")
                     .replace("\\", " ")
+                    .replace("\n", " ")
+                    .replace("\r", " ")
             }
 
             return ValidFieldName(result, needsQuote)
