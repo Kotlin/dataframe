@@ -37,6 +37,8 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 // non-standard value types (not supertypes, but exact types)
 private val valueTypes = setOf(
@@ -52,7 +54,8 @@ private val valueTypes = setOf(
     kotlin.time.Duration::class,
     kotlinx.datetime.LocalDate::class,
     kotlinx.datetime.LocalDateTime::class,
-    kotlinx.datetime.Instant::class,
+    DeprecatedInstant::class,
+    StdlibInstant::class,
     kotlinx.datetime.TimeZone::class,
     kotlinx.datetime.DateTimePeriod::class,
     kotlinx.datetime.DateTimeUnit::class,

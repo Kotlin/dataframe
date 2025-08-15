@@ -7,7 +7,11 @@ import org.jetbrains.kotlinx.jupyter.testkit.ReplProvider
 abstract class DataFrameJupyterTest :
     JupyterReplTestCase(
         ReplProvider.forLibrariesTesting(
-            setOf("dataframe", "dataframe-jupyter"),
+            libraries = setOf("dataframe", "dataframe-jupyter"),
+            extraCompilerArguments = listOf(
+                "-Xopt-in=kotlin.time.ExperimentalTime",
+                "-Xopt-in=kotlin.uuid.ExperimentalUuidApi",
+            ),
         ),
     )
 

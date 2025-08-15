@@ -237,7 +237,7 @@ internal class ArrowWriterImpl(
             is DateDayVector ->
                 column.convertToLocalDate()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toEpochDays()) }
+                        value?.also { vector.set(i, value.toEpochDays().toInt()) }
                             ?: vector.setNull(i)
                     }
 
