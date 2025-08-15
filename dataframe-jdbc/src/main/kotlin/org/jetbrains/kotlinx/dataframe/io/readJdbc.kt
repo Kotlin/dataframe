@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.math.BigDecimal
@@ -174,16 +175,13 @@ internal inline fun <T> withReadOnlyConnection(
     dbType: DbType? = null,
     block: (Connection) -> T,
 ): T {
-    val connection = DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
-
-    val originalAutoCommit = connection.autoCommit
-    val originalReadOnly = connection.isReadOnly
+    val actualDbType = dbType ?: extractDBTypeFromUrl(dbConfig.url)
+    val connection = actualDbType.createConnection(dbConfig)
 
     return connection.use { conn ->
         try {
             if (dbConfig.readOnly) {
                 conn.autoCommit = false
-                conn.isReadOnly = true
             }
 
             block(conn)
@@ -197,10 +195,6 @@ internal inline fun <T> withReadOnlyConnection(
                     }
                 }
             }
-
-            // Restore original settings (relevant in pooled environments)
-            conn.autoCommit = originalAutoCommit
-            conn.isReadOnly = originalReadOnly
         }
     }
 }

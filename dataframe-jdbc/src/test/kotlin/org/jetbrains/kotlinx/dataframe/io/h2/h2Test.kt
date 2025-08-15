@@ -1173,7 +1173,7 @@ class JdbcTest {
 
     @Test
     fun `withReadOnlyConnection sets readOnly and rolls back after execution`() {
-        val config = DbConnectionConfig("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", readOnly = true)
+        val config = DbConnectionConfig("jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1", readOnly = true)
 
         var wasExecuted = false
         val result = withReadOnlyConnection(config) { conn ->
