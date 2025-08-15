@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.sqlite.SQLiteConfig
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
@@ -34,18 +35,9 @@ public object Sqlite : DbType("sqlite") {
 
     override fun createConnection(dbConfig: DbConnectionConfig): Connection =
         if (dbConfig.readOnly) {
-            try {
-                // Use SQLiteConfig to set read-only mode before a connection establishment
-                val configClass = Class.forName("org.sqlite.SQLiteConfig")
-                val config = configClass.getDeclaredConstructor().newInstance()
-                val setReadOnlyMethod = configClass.getMethod("setReadOnly", Boolean::class.javaPrimitiveType)
-                setReadOnlyMethod.invoke(config, true)
-                val createConnectionMethod = configClass.getMethod("createConnection", String::class.java)
-                createConnectionMethod.invoke(config, dbConfig.url) as Connection
-            } catch (e: Exception) {
-                // Fallback to regular connection if SQLiteConfig is not available
-                DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
-            }
+            val config = SQLiteConfig()
+            config.setReadOnly(true)
+            config.createConnection(dbConfig.url)
         } else {
             DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
         }

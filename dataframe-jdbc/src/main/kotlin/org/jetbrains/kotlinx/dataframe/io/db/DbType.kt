@@ -81,7 +81,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
     /**
      * Creates a database connection using the provided configuration.
-     * This method is only called when working with DbConnectionConfig (internally managed connections).
+     * This method is only called when working with [DbConnectionConfig] (internally managed connections).
      *
      * Some databases (like [Sqlite]) require read-only mode to be set during connection creation
      * rather than after the connection is established.

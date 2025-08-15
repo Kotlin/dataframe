@@ -17,6 +17,7 @@ repositories {
 dependencies {
     api(projects.core)
     compileOnly(libs.duckdb.jdbc)
+    compileOnly(libs.sqlite)
     implementation(libs.kotlinLogging)
     testImplementation(libs.mariadb)
     testImplementation(libs.sqlite)

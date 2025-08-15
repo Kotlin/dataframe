@@ -35,6 +35,7 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.ByteBuffer
+import java.nio.file.Files
 import java.sql.Blob
 import java.sql.DriverManager
 import java.sql.Timestamp
@@ -42,6 +43,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.util.UUID
+import kotlin.io.path.createTempDirectory
 
 private const val URL = "jdbc:duckdb:"
 
@@ -634,7 +636,7 @@ class DuckDbTest {
     @Test
     fun `change read mode with persistent database`() {
         // Test read-only mode with a temporary file
-        val tempDir = kotlin.io.path.createTempDirectory("duckdb-test-")
+        val tempDir = createTempDirectory("duckdb-test-")
         val dbPath = tempDir.resolve("test.duckdb")
         try {
             // First, create the database with actual data using plain JDBC to allow DDL/DML
@@ -650,8 +652,8 @@ class DuckDbTest {
             val df = config.readDataFrame("SELECT col1, col2, col3 FROM test_data")
             df.values().toList() shouldBe listOf(1, 2, 3)
         } finally {
-            java.nio.file.Files.deleteIfExists(dbPath)
-            java.nio.file.Files.deleteIfExists(tempDir)
+            Files.deleteIfExists(dbPath)
+            Files.deleteIfExists(tempDir)
         }
     }
 }
