@@ -30,7 +30,7 @@ class DataFrameJdbcSymbolProcessorTest {
             import org.jetbrains.kotlinx.dataframe.* 
             """.trimIndent()
 
-        const val GENERATED_FILE = "HelloJdbc${'$'}Extensions.kt"
+        const val GENERATED_FILE = $$"HelloJdbc$Extensions.kt"
 
         @JvmStatic
         @BeforeClass

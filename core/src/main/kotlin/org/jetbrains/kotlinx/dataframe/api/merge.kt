@@ -117,7 +117,7 @@ public fun <T, C, R> MergeWithTransform<T, C, R>.into(path: ColumnPath): DataFra
         res = res
             .removeImpl(allowMissingColumns = true) { path }
             .df
-            .move(mergePath).into { path }
+            .move { mergePath }.into { path }
     }
     return res
 }

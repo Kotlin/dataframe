@@ -348,7 +348,7 @@ internal object Parsers : GlobalParserOptions {
     private val readJsonStrAnyFrame: ((text: String) -> AnyFrame)? by lazy {
         try {
             val klass = Class.forName("org.jetbrains.kotlinx.dataframe.io.JsonKt")
-            val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
+            val typeClashTactic = Class.forName($$"org.jetbrains.kotlinx.dataframe.io.JSON$TypeClashTactic")
             val readJsonStr = klass.getMethod(
                 "readJsonStr",
                 // this =

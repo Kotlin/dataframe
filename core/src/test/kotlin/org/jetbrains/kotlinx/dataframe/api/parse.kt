@@ -255,8 +255,8 @@ class ParseTests {
         testSuccess(90_500.milliseconds, "PT1M30.500S")
 
         // with sign
-        testSuccess(-1.days + 15.minutes, "-PT23H45M", "PT-23H-45M", "+PT-24H+15M")
-        testSuccess(-1.days - 15.minutes, "-PT24H15M", "PT-24H-15M", "-PT25H-45M")
+        testSuccess((-1).days + 15.minutes, "-PT23H45M", "PT-23H-45M", "+PT-24H+15M")
+        testSuccess((-1).days - 15.minutes, "-PT24H15M", "PT-24H-15M", "-PT25H-45M")
         testSuccess(Duration.ZERO, "PT0S", "P1DT-24H", "+PT-1H+60M", "-PT1M-60S")
 
         // infinite

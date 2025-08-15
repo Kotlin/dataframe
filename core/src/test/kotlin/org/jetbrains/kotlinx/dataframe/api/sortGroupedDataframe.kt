@@ -57,7 +57,7 @@ class SortGroupedDataframeTests {
         groupBy.keys[0].print()
 
         val df1 = groupBy.updateGroups {
-            val missingValues = State.values().asList().toDataFrame {
+            val missingValues = State.entries.toDataFrame {
                 "state" from { it }
             }
 
