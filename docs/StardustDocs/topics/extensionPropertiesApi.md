@@ -183,7 +183,7 @@ df.`size in inches`
 ```
 
 However, sometimes the original column name contains special symbols
-and can still be used as a property name in backticks.
+and can't be used as a property name in backticks.
 In such cases, special symbols in the auto-generated property name will be replaced.
 
 ```kotlin
