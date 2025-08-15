@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -16,9 +15,9 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
+import org.jetbrains.kotlinx.dataframe.impl.api.GroupByEntryImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
-import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -63,6 +62,39 @@ public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
  */
 public inline fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { take(it.index()) } ?: this
+
+// endregion
+
+// region GroupBy
+
+/**
+ * Returns an adjusted [GroupBy] containing first [n] entries.
+ *
+ * @throws IllegalArgumentException if [n] is negative.
+ */
+public fun <T, G> GroupBy<T, G>.takeEntries(n: Int): GroupBy<T, G> {
+    require(n >= 0) { "Requested rows count $n is less than zero." }
+    return toDataFrame().take(n).asGroupBy(groups.name()).cast()
+}
+
+/**
+ * Returns an adjusted [GroupBy] containing last [n] entries.
+ *
+ * @throws IllegalArgumentException if [n] is negative.
+ */
+public fun <T, G> GroupBy<T, G>.takeLastEntries(n: Int): GroupBy<T, G> {
+    require(n >= 0) { "Requested rows count $n is less than zero." }
+    return toDataFrame().takeLast(n).asGroupBy(groups.name()).cast()
+}
+
+/**
+ * Returns an adjusted [GroupBy] containing the first entries that satisfy the given [predicate].
+ */
+public inline fun <T, G> GroupBy<T, G>.takeEntriesWhile(predicate: GroupByEntryFilter<T, G>): GroupBy<T, G> =
+    toDataFrame().takeWhile {
+        val entry = GroupByEntryImpl(it, groups)
+        predicate(entry, entry)
+    }.asGroupBy(groups.name()).cast()
 
 // endregion
 

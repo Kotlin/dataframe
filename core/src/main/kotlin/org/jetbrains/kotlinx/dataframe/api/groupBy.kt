@@ -2,9 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.BuildConfig
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
@@ -127,6 +125,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
     @Deprecated("Replaced by filterEntries")
     public fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G>
 
+    public fun filterEntries(predicate: GroupByEntryFilter<T, G>): GroupBy<T, G>
+
     @Refine
     @Interpretable("GroupByToDataFrame")
     public fun toDataFrame(groupedColumnName: String? = null): DataFrame<T>
@@ -151,3 +151,25 @@ public class ReducedGroupBy<T, G>(
 @PublishedApi
 internal fun <T, G> GroupBy<T, G>.reduce(reducer: Selector<DataFrame<G>, DataRow<G>?>): ReducedGroupBy<T, G> =
     ReducedGroupBy(this, reducer)
+
+/**
+ * Returns the total number of rows of this [GroupBy]-[DataFrame].
+ *
+ * @return The number of rows in the [GroupBy]-[DataFrame].
+ */
+public fun GroupBy<*, *>.rowsCount(): Int = groups.size()
+
+/**
+ * Retrieves all keys+group [entries][GroupByEntry] inside this [GroupBy]-[DataFrame].
+ * @see entriesAsSequence
+ */
+public fun <T, G> GroupBy<T, G>.entries(): List<GroupByEntry<T, G>> = entriesAsSequence().toList()
+
+/**
+ * Retrieves all keys+group [entries][GroupByEntry] inside this [GroupBy]-[DataFrame] as a [Sequence].
+ * @see entries
+ */
+public fun <T, G> GroupBy<T, G>.entriesAsSequence(): Sequence<GroupByEntry<T, G>> =
+    keys.asSequence().map {
+        GroupByEntryImpl(it, groups)
+    }

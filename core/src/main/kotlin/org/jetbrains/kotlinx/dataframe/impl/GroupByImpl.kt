@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.GroupByEntryFilter
 import org.jetbrains.kotlinx.dataframe.api.GroupedRowFilter
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.getColumn
@@ -63,7 +62,15 @@ internal class GroupByImpl<T, G>(
             val row = GroupedDataRowImpl(df[it], groups)
             predicate(row, row)
         }
-        return df[indices].asGroupBy(groups.name()).cast()
+        return df[indices].asGroupBy { groups }
+    }
+
+    override fun filterEntries(predicate: GroupByEntryFilter<T, G>): GroupBy<T, G> {
+        val indices = (0 until df.nrow).filter {
+            val row = GroupByEntryImpl(df[it], groups)
+            predicate(row, row)
+        }
+        return df[indices].asGroupBy { groups }
     }
 
     override fun toDataFrame(groupedColumnName: String?): DataFrame<T> =

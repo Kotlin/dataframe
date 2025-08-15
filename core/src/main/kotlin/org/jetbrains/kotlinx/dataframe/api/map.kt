@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.api.GroupByEntryImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
@@ -141,6 +142,7 @@ public inline fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFr
 
 // region GroupBy
 
+@Deprecated("Replaced by mapEntries")
 public inline fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> =
     keys.rows().mapIndexedNotNull { index, row ->
         val group = groups[index]
@@ -148,10 +150,24 @@ public inline fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>,
         body(g, g)
     }
 
+@Deprecated("Replaced by mapEntriesToRows")
 public fun <T, G> GroupBy<T, G>.mapToRows(body: Selector<GroupWithKey<T, G>, DataRow<G>?>): DataFrame<G> =
     map(body).concat()
 
+@Deprecated("Replaced by mapEntriesToFrames")
 public fun <T, G> GroupBy<T, G>.mapToFrames(body: Selector<GroupWithKey<T, G>, DataFrame<G>>): FrameColumn<G> =
     DataColumn.createFrameColumn(groups.name, map(body))
+
+public inline fun <T, G, R> GroupBy<T, G>.mapEntries(body: GroupByEntrySelector<T, G, R>): List<R & Any> =
+    keys.rows().mapNotNull { row ->
+        val entry = GroupByEntryImpl(row, groups)
+        body(entry, entry)
+    }
+
+public fun <T, G> GroupBy<T, G>.mapEntriesToRows(body: GroupByEntrySelector<T, G, DataRow<G>?>): DataFrame<G> =
+    mapEntries(body).concat()
+
+public fun <T, G> GroupBy<T, G>.mapEntriesToFrames(body: GroupByEntrySelector<T, G, DataFrame<G>>): FrameColumn<G> =
+    DataColumn.createFrameColumn(groups.name, mapEntries(body))
 
 // endregion
