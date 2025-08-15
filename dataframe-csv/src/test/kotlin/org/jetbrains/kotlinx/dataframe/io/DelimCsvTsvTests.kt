@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.deephaven.csv.parsers.Parsers
@@ -6,7 +8,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
@@ -36,6 +37,8 @@ import java.util.Locale
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 //  can be enabled for showing logs for these tests
 private const val SHOW_LOGS = false

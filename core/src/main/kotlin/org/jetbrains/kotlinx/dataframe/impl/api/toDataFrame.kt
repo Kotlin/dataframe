@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
@@ -37,6 +39,7 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
+import kotlin.time.ExperimentalTime
 
 // non-standard value types (not supertypes, but exact types)
 private val valueTypes = setOf(
@@ -52,7 +55,7 @@ private val valueTypes = setOf(
     kotlin.time.Duration::class,
     kotlinx.datetime.LocalDate::class,
     kotlinx.datetime.LocalDateTime::class,
-    kotlinx.datetime.Instant::class,
+    kotlin.time.Instant::class,
     kotlinx.datetime.TimeZone::class,
     kotlinx.datetime.DateTimePeriod::class,
     kotlinx.datetime.DateTimeUnit::class,
