@@ -127,6 +127,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
     @Deprecated("Replaced by filterEntries")
     public fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G>
 
+    public fun filterEntries(predicate: GroupByEntryFilter<T, G>): GroupBy<T, G>
+
     @Refine
     @Interpretable("GroupByToDataFrame")
     public fun toDataFrame(groupedColumnName: String? = null): DataFrame<T>
@@ -151,3 +153,76 @@ public class ReducedGroupBy<T, G>(
 @PublishedApi
 internal fun <T, G> GroupBy<T, G>.reduce(reducer: Selector<DataFrame<G>, DataRow<G>?>): ReducedGroupBy<T, G> =
     ReducedGroupBy(this, reducer)
+
+/**
+ * Returns the total number of rows of this [GroupBy]-[DataFrame].
+ *
+ * @return The number of rows in the [GroupBy]-[DataFrame].
+ */
+public fun GroupBy<*, *>.rowsCount(): Int = groups.size()
+
+/**
+ * Retrieves all keys+group [entries][GroupByEntry] inside this [GroupBy]-[DataFrame].
+ * @see entriesAsSequence
+ * @see toGroupBy
+ */
+public fun <T, G> GroupBy<T, G>.entries(): List<GroupByEntry<T, G>> = entriesAsSequence().toList()
+
+/**
+ * Retrieves all keys+group [entries][GroupByEntry] inside this [GroupBy]-[DataFrame] as a [Sequence].
+ * @see entries
+ * @see toGroupBy
+ */
+public fun <T, G> GroupBy<T, G>.entriesAsSequence(): Sequence<GroupByEntry<T, G>> =
+    keys.asSequence().map {
+        GroupByEntryImpl(it, groups)
+    }
+
+/**
+ * Creates a [GroupBy] instance from this [Iterable] of [entries][GroupByEntry].
+ *
+ * @throws IllegalStateException When [this] is empty.
+ * @throws IllegalArgumentException (Only in debug mode) When the input contains mismatching rows.
+ *
+ * @see entriesAsSequence
+ */
+public fun <T, G> Iterable<GroupByEntry<T, G>>.toGroupBy(): GroupBy<T, G> = asSequence().toGroupBy()
+
+/**
+ * Creates a [GroupBy] instance from this [Sequence] of [entries][GroupByEntry].
+ *
+ * @throws IllegalStateException When [this] is empty.
+ * @throws IllegalArgumentException (Only in debug mode) When the input contains mismatching rows.
+ *
+ * @see entriesAsSequence
+ */
+@Suppress("KotlinConstantConditions", "UNCHECKED_CAST")
+public fun <T, G> Sequence<GroupByEntry<T, G>>.toGroupBy(): GroupBy<T, G> {
+    if (BuildConfig.DEBUG) {
+        this as Sequence<GroupByEntryImpl<T, G>>
+        zipWithNext { a, b ->
+            require(a.columnNames() == b.columnNames() && a.columnTypes() == b.columnTypes()) {
+                "Iterable<GroupByEntry<T, G>>.toGroupBy(): Detected different keys in GroupByEntry: ${a.columnNames() zip a.columnTypes()} and ${b.columnNames() zip b.columnTypes()}"
+            }
+            require(a.allGroups == b.allGroups) {
+                "Iterable<GroupByEntry<T, G>>.toGroupBy(): Detected different groups-column in GroupByEntry: ${a.allGroups} and ${b.allGroups}"
+            }
+        }
+    }
+
+    val firstRow = firstOrNull() ?: error("Cannot create GroupBy from empty input.")
+    val keyColumnsMap = firstRow.columnNames().associateWith { mutableListOf<Any?>() }
+
+    for (entry in this) {
+        for (keyName in keyColumnsMap.keys) {
+            keyColumnsMap[keyName]!! += entry[keyName]
+        }
+    }
+    val keyCols = keyColumnsMap.map { (keyName, values) ->
+        DataColumn.createByType(name = keyName, values = values, type = firstRow.df()[keyName].type())
+    }
+    val groupsCol = (firstRow as GroupByEntryImpl<T, G>).allGroups
+
+    return (keyCols + groupsCol).toDataFrame()
+        .asGroupBy { groupsCol } as GroupBy<T, G>
+}

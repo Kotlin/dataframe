@@ -66,6 +66,14 @@ internal class GroupByImpl<T, G>(
         return df[indices].asGroupBy(groups.name()).cast()
     }
 
+    override fun filterEntries(predicate: GroupByEntryFilter<T, G>): GroupBy<T, G> {
+        val indices = (0 until df.nrow).filter {
+            val row = GroupByEntryImpl(df[it], groups)
+            predicate(row, row)
+        }
+        return df[indices].asGroupBy(groups.name()).cast()
+    }
+
     override fun toDataFrame(groupedColumnName: String?): DataFrame<T> =
         if (groupedColumnName == null || groupedColumnName == groups.name()) {
             df
