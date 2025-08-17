@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -60,6 +61,44 @@ public inline fun <T, R> DataColumn<T>.mapIndexed(
     type: KType,
     infer: Infer = Infer.Nulls,
     transform: (Int, T) -> R,
+): DataColumn<R> {
+    val values = Array<Any?>(size()) { transform(it, get(it)) }.asList()
+    return DataColumn.createByType(name(), values, type, infer).cast()
+}
+
+// endregion
+
+// region ColumnGroup
+
+public inline fun <T, reified R> ColumnGroup<T>.map(
+    infer: Infer = Infer.Nulls,
+    transform: (DataRow<T>) -> R,
+): DataColumn<R> {
+    val newValues = Array(size()) { transform(get(it)) }.asList()
+    return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
+}
+
+public inline fun <T, R> ColumnGroup<T>.map(
+    type: KType,
+    infer: Infer = Infer.Nulls,
+    transform: (DataRow<T>) -> R,
+): DataColumn<R> {
+    val values = Array<Any?>(size()) { transform(get(it)) }.asList()
+    return DataColumn.createByType(name(), values, type, infer).cast()
+}
+
+public inline fun <T, reified R> ColumnGroup<T>.mapIndexed(
+    infer: Infer = Infer.Nulls,
+    transform: (Int, DataRow<T>) -> R,
+): DataColumn<R> {
+    val newValues = Array(size()) { transform(it, get(it)) }.asList()
+    return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
+}
+
+public inline fun <T, R> ColumnGroup<T>.mapIndexed(
+    type: KType,
+    infer: Infer = Infer.Nulls,
+    transform: (Int, DataRow<T>) -> R,
 ): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(it, get(it)) }.asList()
     return DataColumn.createByType(name(), values, type, infer).cast()
