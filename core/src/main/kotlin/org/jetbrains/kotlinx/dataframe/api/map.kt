@@ -70,7 +70,10 @@ public inline fun <T, R> DataColumn<T>.mapIndexed(
 
 // region ColumnGroup
 
-public inline fun <T, reified R> ColumnGroup<T>.map(infer: Infer = Infer.Nulls, transform: (DataRow<T>) -> R): DataColumn<R> {
+public inline fun <T, reified R> ColumnGroup<T>.map(
+    infer: Infer = Infer.Nulls,
+    transform: (DataRow<T>) -> R,
+): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
 }
