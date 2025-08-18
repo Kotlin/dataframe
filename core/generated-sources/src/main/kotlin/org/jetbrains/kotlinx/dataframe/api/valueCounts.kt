@@ -72,7 +72,7 @@ public fun <T> DataFrame<T>.valueCounts(
         .asColumnGroup(rows)
         .asDataColumn()
         .valueCounts(sort, ascending, dropNA, countName)
-        .ungroup(rows)
+        .ungroup { rows }
         .cast()
 }
 
