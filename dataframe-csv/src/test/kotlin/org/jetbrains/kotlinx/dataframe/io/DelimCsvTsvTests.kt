@@ -6,7 +6,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
@@ -36,6 +35,8 @@ import java.util.Locale
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 //  can be enabled for showing logs for these tests
 private const val SHOW_LOGS = false
@@ -771,8 +772,8 @@ class DelimCsvTsvTests {
         // use DFs parsers by default for datetime-like columns
         val df1 = DataFrame.readCsvStr(csvContent)
         df1["with_timezone_offset"].let {
-            it.type() shouldBe typeOf<Instant>()
-            it[0] shouldBe Instant.parse("2024-12-12T13:00:00+01:00")
+            it.type() shouldBe typeOf<DeprecatedInstant>()
+            it[0] shouldBe DeprecatedInstant.parse("2024-12-12T13:00:00+01:00")
         }
         df1["without_timezone_offset"].let {
             it.type() shouldBe typeOf<LocalDateTime>()
@@ -794,6 +795,27 @@ class DelimCsvTsvTests {
             it.type() shouldBe typeOf<LocalDateTime>()
             it[0] shouldBe LocalDateTime.parse("2024-12-12T13:00:00")
         }
+    }
+
+    @Test
+    fun `test parsing kotlin-time-Instant`() {
+        @Language("csv")
+        val csvContent =
+            """
+            with_timezone_offset,without_timezone_offset
+            2024-12-12T13:00:00+01:00,2024-12-12T13:00:00
+            """.trimIndent()
+
+        DataFrame.parser.parseExperimentalInstant = true
+
+        // use DFs parsers by default for datetime-like columns
+        val df1 = DataFrame.readCsvStr(csvContent)
+        df1["with_timezone_offset"].let {
+            it.type() shouldBe typeOf<StdlibInstant>()
+            it[0] shouldBe StdlibInstant.parse("2024-12-12T13:00:00+01:00")
+        }
+
+        DataFrame.parser.resetToDefault()
     }
 
     @Test
