@@ -30,6 +30,13 @@ dependencies {
     implementation(libs.log4j.api)
 }
 
+// for Java 17+, and Arrow/Parquet support
+application {
+    applicationDefaultJvmArgs = listOf(
+        "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+    )
+}
+
 kotlin {
     jvmToolchain(11)
     compilerOptions {
@@ -42,6 +49,12 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(11))
     }
+}
+
+tasks.withType<JavaExec> {
+    jvmArgs(
+        "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+    )
 }
 
 tasks.withType<JavaCompile> {

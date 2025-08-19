@@ -5,13 +5,16 @@ import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.col
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.head
 import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.readParquet
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.stream.Collectors
 import kotlin.jvm.java
 
 /**
@@ -19,10 +22,6 @@ import kotlin.jvm.java
  * Also trains a simple Spark ML regression model and exports a summary as Parquet, then reads it back with Kotlin DataFrame.
  */
 fun main() {
-    // Configure Hadoop environment for cross-platform compatibility
-    setupHadoopEnvironment()
-
-
     // 1) Start local Spark
     val spark = SparkSession.builder()
         .appName("spark-parquet-dataframe")
@@ -30,16 +29,19 @@ fun main() {
         .config("spark.sql.warehouse.dir", Files.createTempDirectory("spark-warehouse").toString())
         // Completely bypass native Hadoop libraries and winutils
         .config("spark.hadoop.fs.defaultFS", "file:///")
-        // Use RawLocalFileSystem to avoid winutils-dependent permission calls on Windows
-        .config("spark.hadoop.fs.file.impl", "org.apache.hadoop.fs.RawLocalFileSystem")
         .config("spark.hadoop.fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs")
         .config("spark.hadoop.fs.file.impl.disable.cache", "true")
-        .config("spark.sql.execution.arrow.pyspark.enabled", "false")
         // Disable Hadoop native library requirements and native warnings
         .config("spark.hadoop.hadoop.native.lib", "false")
         .config("spark.hadoop.io.native.lib.available", "false")
-        // Set file permissions mode to bypass winutils permission setting
-        .config("spark.hadoop.fs.permissions.umask-mode", "000")
+        .config(
+            "spark.driver.extraJavaOptions",
+            "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+        )
+        .config(
+            "spark.executor.extraJavaOptions",
+            "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+        )
         .getOrCreate()
 
     // Make Spark a bit quieter
@@ -65,18 +67,20 @@ fun main() {
     println("Saved Spark Parquet to: $parquetPath")
 
     // 3) Read this Parquet with Kotlin DataFrame (Arrow backend)
-    val kdf = DataFrame.readParquet(Paths.get(parquetPath))
+    // Pass actual part-*.parquet files instead of the directory
+    val parquetFiles = listParquetFilesIfAny(parquetDir)
+    val kdf = DataFrame.readParquet(*parquetFiles)
 
     // 4) Print out head() for this Kotlin DataFrame
     println("Kotlin DataFrame (head):")
     kdf.head().print()
 
     // 5) Train a regression model with Spark MLlib
-    // Use numeric features only, drop the categorical 'oceanProximity'
-    val labelCol = "medianHouseValue"
+    // Use numeric features only, drop the categorical 'ocean_proximity'
+    val labelCol = "median_house_value"
     val candidateFeatureCols = listOf(
-        "longitude", "latitude", "housingMedianAge", "totalRooms", "totalBedrooms",
-        "population", "households", "medianIncome"
+        "longitude", "latitude", "housing_median_age", "total_rooms", "total_bedrooms",
+        "population", "households", "median_income"
     )
 
     val colsArray = (candidateFeatureCols + labelCol).map { col(it) }.toTypedArray()
@@ -87,28 +91,29 @@ fun main() {
         .setInputCols(candidateFeatureCols.toTypedArray())
         .setOutputCol("features")
 
-    val assembled = assembler.transform(sdfNumeric)
-        .withColumnRenamed(labelCol, "label")
+    // Build Pipeline (VectorAssembler -> LinearRegression) and train/test split WITHOUT prebuilt 'features'
+    val lr = LinearRegression()
+        .setFeaturesCol("features")
+        .setLabelCol(labelCol)
+        .setMaxIter(50)
 
-    val splits = assembled.randomSplit(doubleArrayOf(0.8, 0.2), 42)
+    val fullPipeline = org.apache.spark.ml.Pipeline().setStages(arrayOf(assembler, lr))
+
+    val splits = sdfNumeric.randomSplit(doubleArrayOf(0.8, 0.2), 42)
     val train = splits[0]
     val test = splits[1]
 
-    val lr = LinearRegression()
-        .setFeaturesCol("features")
-        .setLabelCol("label")
-        .setMaxIter(50)
+    val fullPipelineModel = fullPipeline.fit(train)
+    val lrModel = fullPipelineModel.stages()[1] as org.apache.spark.ml.regression.LinearRegressionModel
 
-    val model = lr.fit(train)
-
-    val summary = model.summary()
+    val summary = lrModel.summary()
     println("Training RMSE: ${summary.rootMeanSquaredError()}")
     println("Training r2: ${summary.r2()}")
 
     // 6) Export model information to Parquet (coefficients per feature + intercept row)
-    val coeffs = model.coefficients().toArray()
+    val coeffs = lrModel.coefficients().toArray()
     val rows = candidateFeatureCols.mapIndexed { idx, name -> org.apache.spark.sql.RowFactory.create(name, coeffs[idx]) } +
-        listOf(org.apache.spark.sql.RowFactory.create("intercept", model.intercept()))
+        listOf(org.apache.spark.sql.RowFactory.create("intercept", lrModel.intercept()))
 
     val schema = org.apache.spark.sql.types.StructType(
         arrayOf(
@@ -118,129 +123,120 @@ fun main() {
     )
 
     val modelDf = spark.createDataFrame(rows, schema)
-    val modelParquetDir = parquetDir.resolve("model").toString()
-    modelDf.write().mode("overwrite").parquet(modelParquetDir)
+    val modelParquetDir = parquetDir.resolve("model")
+    modelDf.write().mode("overwrite").parquet(modelParquetDir.toString())
     println("Saved model summary Parquet to: $modelParquetDir")
 
     // 7) Read this model Parquet with Kotlin DataFrame and print
-    val modelKdf = DataFrame.readParquet(Paths.get(modelParquetDir))
+    val modelParquetFiles = listParquetFilesIfAny(modelParquetDir)
+    val modelKdf = DataFrame.readParquet(*modelParquetFiles)
+
     println("Model summary Kotlin DataFrame (head):")
     modelKdf.head().print()
 
+    // 8) Save the entire PipelineModel using the standard Spark ML mechanism
+    //    The model is already fitted above; just save it.
+    val pipelinePath = parquetDir.resolve("pipeline_model_spark").toString()
+    fullPipelineModel.write().overwrite().save(pipelinePath)
+    println("Step 8: Saved PipelineModel to: $pipelinePath")
+
+    // 9) Inspect pipeline internals using Kotlin DataFrame from concrete paths (no directory walking)
+    // IMPORTANT (why this is not the most convenient way for export/import):
+    // - The ML writer saves a directory with mixed JSON (metadata) and Parquet (model data).
+    // - Internal folder names for stages include indexes and algorithm/uids (e.g., "0_VectorAssembler_xxx", "1_LinearRegressionModel_xxx"),
+    //   which are not guaranteed to be stable across Spark versions.
+    // - Reading internals are suitable only for inspection/exploration. For reuse, prefer PipelineModel.load();
+    //   for portable/tabular exchange, write an explicit summary DataFrame.
+    //
+    // Concrete layout this demo relies on:
+    //   $pipelinePath/metadata/
+    //   $pipelinePath/stages/0_*/metadata/, $pipelinePath/stages/0_*/data/
+    //   $pipelinePath/stages/1_*/metadata/, $pipelinePath/stages/1_*/data/
+
+    val pipelineRoot = Paths.get(pipelinePath)
+    val stagesDir = pipelineRoot.resolve("stages")
+    val stage0Dir = findStageDir(stagesDir, "0_")
+    val stage1Dir = findStageDir(stagesDir, "1_")
+
+    // 9.1) Root metadata (JSON) -> read each file one-by-one
+    val rootMetaDir = pipelineRoot.resolve("metadata")
+    val rootMetaFiles = listTextOrJsonFiles(rootMetaDir)
+    for (file in rootMetaFiles) {
+        val df = DataFrame.readJson(file.toFile())
+        println("Step 9: Pipeline root metadata JSON (${file.fileName}) head:")
+        df.head().print()
+    }
+
+// 9.2) Stage 0 (VectorAssembler) metadata/data
+    val stage0MetaDir = stage0Dir.resolve("metadata")
+    for (file in listTextOrJsonFiles(stage0MetaDir)) {
+        val df = DataFrame.readJson(file.toFile())
+        println("Step 9: Stage 0 metadata (${file.fileName}) head:")
+        df.head().print()
+    }
+    val stage0DataDir = stage0Dir.resolve("data")
+    val stage0ParquetFiles = listParquetFilesIfAny(stage0DataDir)
+    if (stage0ParquetFiles.isNotEmpty()) {
+        val stage0Kdf = DataFrame.readParquet(*stage0ParquetFiles)
+        println("Step 9: Stage 0 data (Parquet) head:")
+        stage0Kdf.head().print()
+    } else {
+        println("Step 9: Stage 0 data directory is missing or has no .parquet files, skipping.")
+    }
+
+    // 9.3) Stage 1 (LinearRegressionModel) metadata/data
+    val stage1MetaDir = stage1Dir.resolve("metadata")
+    for (file in listTextOrJsonFiles(stage1MetaDir)) {
+        val df = DataFrame.readJson(file.toFile())
+        println("Step 9: Stage 1 metadata (${file.fileName}) head:")
+        df.head().print()
+    }
+    val stage1DataDir = stage1Dir.resolve("data")
+    val stage1ParquetFiles = listParquetFilesIfAny(stage1DataDir)
+    if (stage1ParquetFiles.isNotEmpty()) {
+        val stage1Kdf = DataFrame.readParquet(*stage1ParquetFiles)
+        println("Step 9: Stage 1 data (Parquet) head:")
+        stage1Kdf.head().print()
+    } else {
+        println("Step 9: Stage 1 data directory is missing or has no .parquet files, skipping.")
+    }
+
     spark.stop()
+
+
 }
 
 /**
- * Configures Hadoop environment for cross-platform compatibility without requiring winutils.exe.
- * We force Hadoop to operate purely on the local filesystem and disable native libs.
+ * Returns .parquet files if the directory exists and contains any; otherwise returns an empty array.
+ * Safe to use for Spark ML stage "data" subfolders that may be absent.
  */
-private fun setupHadoopEnvironment() {
-    try {
-        // Use a temporary dir as a dummy HADOOP_HOME to satisfy code paths that read it
-        val hadoopDir = Files.createTempDirectory("hadoop_home").toFile()
-        hadoopDir.deleteOnExit()
+private fun listParquetFilesIfAny(dir: Path): Array<Path> {
+    if (!Files.exists(dir) || !Files.isDirectory(dir)) return emptyArray()
+    val files: List<Path> = Files.list(dir).use { stream ->
+        stream
+            .filter { Files.isRegularFile(it) && it.fileName.toString().endsWith(".parquet", ignoreCase = true) }
+            .collect(Collectors.toList())
+    }
+    return files.toTypedArray()
+}
 
-        // Create bin directory
-        val binDir = File(hadoopDir, "bin")
-        binDir.mkdirs()
-
-        val hadoopHome = hadoopDir.absolutePath
-        System.setProperty("hadoop.home.dir", hadoopHome)
-        System.setProperty("HADOOP_HOME", hadoopHome)
-
-        // Windows-specific: Create a working winutils.exe stub to satisfy permission commands
-        if (System.getProperty("os.name").lowercase().contains("windows")) {
-            val winutilsFile = File(binDir, "winutils.exe")
-            createWindowsWinutilsStub(winutilsFile)
-            println("Created Windows winutils stub at: ${winutilsFile.absolutePath}")
-        }
-
-        // Cross-platform settings to avoid native requirements and permission checks
-        System.setProperty("hadoop.native.lib", "false")
-        System.setProperty("java.library.path", "")
-        System.setProperty("hadoop.security.authentication", "simple")
-        System.setProperty("hadoop.security.authorization", "false")
-        System.setProperty("hadoop.fs.permissions.umask-mode", "000")
-
-        println("Hadoop environment configured (winutils-free): $hadoopHome")
-    } catch (e: Exception) {
-        println("Warning: Could not setup Hadoop environment: ${e.message}")
-        val tempDir = System.getProperty("java.io.tmpdir")
-        System.setProperty("hadoop.home.dir", tempDir)
-        System.setProperty("HADOOP_HOME", tempDir)
-        System.setProperty("hadoop.native.lib", "false")
+/**
+ * Finds a stage directory inside 'stagesDir' by prefix (e.g., "0_", "1_").
+ * No extra checks: assumes such a directory exists.
+ */
+private fun findStageDir(stagesDir: Path, prefix: String): Path {
+    return Files.list(stagesDir).use { s ->
+        s.filter { Files.isDirectory(it) && it.fileName.toString().startsWith(prefix) }
+            .findFirst().get()
     }
 }
 
-
-
-
-
-
-
-/**
- * Creates a minimal Windows executable that exits successfully.
- * This prevents the "not a valid Win32 application" error when Hadoop tries to invoke winutils.
- */
-private fun createWindowsWinutilsStub(winutilsFile: File) {
-    // Strategy:
-    // 1) Try to compile a tiny valid Windows console .exe via PowerShell Add-Type that just exits(0).
-    //    This avoids PE-format pitfalls and works on most modern Windows setups with PowerShell available.
-    // 2) Verify by attempting to run the generated exe once. If start fails (e.g., error=216), fall back.
-    // 3) Fallback: create an empty file (kept for compatibility with previous logic) and warn the user.
-    //    With our Hadoop/Spark configs, this may still work in some environments, but it’s not guaranteed.
-    try {
-        val ps = System.getenv("WINDIR") != null // naive check for Windows environment
-        if (ps) {
-            val code = "using System; public static class WinUtilsStub { public static void Main(string[] args) { Environment.Exit(0); } }"
-            // We escape quotes carefully for PowerShell -Command
-            val cmd = arrayOf(
-                "powershell",
-                "-NoProfile",
-                "-ExecutionPolicy",
-                "Bypass",
-                "-Command",
-                "Add-Type -TypeDefinition \"$code\" -OutputAssembly \"${winutilsFile.absolutePath}\" -OutputType ConsoleApplication"
-            )
-            try {
-                winutilsFile.parentFile?.mkdirs()
-                val proc = ProcessBuilder(*cmd)
-                    .redirectErrorStream(true)
-                    .start()
-                val out = proc.inputStream.bufferedReader().readText()
-                val exit = proc.waitFor()
-                if (exit == 0 && winutilsFile.exists()) {
-                    // quick self-check: try launching it once with no args
-                    try {
-                        val test = ProcessBuilder(winutilsFile.absolutePath)
-                            .redirectErrorStream(true)
-                            .start()
-                        test.waitFor()
-                        println("Created Windows winutils stub via PowerShell at: ${winutilsFile.absolutePath}")
-                        return
-                    } catch (pe: Exception) {
-                        println("Warning: Launching generated winutils failed (${pe.message}); will use fallback stub.")
-                    }
-                } else {
-                    println("Warning: PowerShell compilation of winutils.exe failed with exit $exit. Output: $out")
-                }
-            } catch (pe: Exception) {
-                println("PowerShell-based winutils build not available: ${pe.message}")
-            }
-        }
-        // Fallback: maintain previous minimal placeholder (non-functional), at least to satisfy existence checks.
-        if (!winutilsFile.exists()) {
-            winutilsFile.parentFile?.mkdirs()
-            winutilsFile.createNewFile()
-        }
-        winutilsFile.setExecutable(true)
-        println("Created placeholder winutils at: ${winutilsFile.absolutePath} (may not be runnable)")
-    } catch (e: Exception) {
-        println("Could not create winutils stub, using fallback: ${e.message}")
-        if (!winutilsFile.exists()) {
-            winutilsFile.parentFile?.mkdirs()
-            winutilsFile.createNewFile()
-        }
-        winutilsFile.setExecutable(true)
+private fun listTextOrJsonFiles(dir: Path): List<Path> {
+    return Files.list(dir).use { s ->
+        s.filter {
+            Files.isRegularFile(it) &&
+                (it.fileName.toString().endsWith(".json", ignoreCase = true) ||
+                    it.fileName.toString().endsWith(".txt", ignoreCase = true))
+        }.collect(Collectors.toList())
     }
 }
