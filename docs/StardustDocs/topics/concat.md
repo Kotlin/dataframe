@@ -4,6 +4,8 @@
 
 Returns a [`DataFrame`](DataFrame.md) with the union of rows from several given [`DataFrame`](DataFrame.md) objects.
 
+**Related operations**: [](multipleDataFrames.md)
+
 `concat` is available for:
 
 [`DataFrame`](DataFrame.md):
@@ -69,7 +71,7 @@ listOf(a, b).concat()
 df.groupBy { name }.concat()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html" width="100%"/>
 <!---END-->
 
 [`FrameColumn`](DataColumn.md#framecolumn):

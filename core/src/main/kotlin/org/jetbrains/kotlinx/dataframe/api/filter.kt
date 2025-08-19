@@ -14,16 +14,27 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
 import org.jetbrains.kotlinx.dataframe.indices
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.FILTER_BY
+import org.jetbrains.kotlinx.dataframe.util.FILTER_BY_REPLACE
 import kotlin.reflect.KProperty
 
 // region DataColumn
 
+/**
+ * Returns a new [DataColumn] containing only the elements that match the given [predicate].
+ *
+ * @param predicate the condition used to filter the elements in the DataColumn.
+ * @return a new DataColumn containing elements that satisfy the predicate.
+ */
 public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
     indices
         .filter { predicate(get(it)) }
@@ -33,26 +44,52 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
 
 // region DataFrame
 
+/**
+ * Filters the rows of this [DataFrame] based on the provided [RowFilter].
+ * Returns a new [DataFrame] containing only the rows that satisfy the given [predicate].
+ *
+ * {@include [RowFilterDescription]}
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * For more information, see: {@include [DocumentationUrls.Filter]}
+ *
+ * See also:
+ *  - [drop][DataFrame.drop], which drops rows based on values within the row.
+ *  - [distinct][DataFrame.distinct], which filters out rows with duplicated values.
+ *
+ * ### Example
+ * ```kotlin
+ * // Select rows where the value in the "age" column is greater than 18
+ * // and the "name/firstName" column starts with 'A'
+ * df.filter { age > 18 && name.firstName.startsWith("A") }
+ * ```
+ *
+ * @param predicate A lambda that takes a row (twice for compatibility) and returns `true`
+ * if the row should be included in the result.
+ * @return A new [DataFrame] containing only the rows that satisfy the predicate.
+ */
 public inline fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
     indices().filter {
         val row = get(it)
         predicate(row, row)
     }.let { get(it) }
 
+@Deprecated(message = FILTER_BY, replaceWith = ReplaceWith(FILTER_BY_REPLACE), level = DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFrame<T> =
     getRows(getColumn(column).toList().getTrueIndices())
 
+@Suppress("DEPRECATION_ERROR")
+@Deprecated(message = FILTER_BY, replaceWith = ReplaceWith(FILTER_BY_REPLACE), level = DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.filterBy(column: String): DataFrame<T> = filterBy { column.toColumnOf() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Suppress("DEPRECATION_ERROR")
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.filterBy(column: ColumnReference<Boolean>): DataFrame<T> = filterBy { column }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Suppress("DEPRECATION_ERROR")
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.filterBy(column: KProperty<Boolean>): DataFrame<T> = filterBy { column.toColumnAccessor() }
 
@@ -120,8 +157,8 @@ public interface FilterColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): TransformableColumnSet<C> =
-        colsInternal(predicate as ColumnFilter<*>) as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): ColumnSet<C> =
+        colsInternal(predicate as ColumnFilter<*>).cast()
 }
 
 // endregion

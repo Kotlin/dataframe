@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -117,7 +118,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
+    ): ColumnSet<*> =
         columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
             filter = filter,
@@ -133,7 +134,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
+    ): ColumnSet<*> =
         asSingleColumn().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
             filter = filter,
@@ -149,7 +150,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
+    ): ColumnSet<*> =
         this.ensureIsColumnGroup().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
             filter = filter,
@@ -165,7 +166,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
      * @include [CommonColsOfKindDocs]
@@ -173,15 +174,13 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOfKind][KProperty.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun KProperty<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
      * @include [CommonColsOfKindDocs]
@@ -193,7 +192,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     // endregion
 }

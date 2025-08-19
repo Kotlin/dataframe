@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.api.extractJoinColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 @Refine
@@ -112,23 +113,17 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
     public infix fun String.match(other: String): ColumnMatch<Any?> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> KProperty<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> ColumnReference<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(this, other.toColumnAccessor())
 
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> KProperty<C>.match(other: ColumnReference<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other)
@@ -173,12 +168,12 @@ public fun <C> ColumnMatch(left: ColumnReference<C>, right: ColumnReference<C>):
 public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnsResolver<*>
 
 public enum class JoinType {
-    Left, // all data from left data frame, nulls for mismatches in right data frame
-    Right, // all data from right data frame, nulls for mismatches in left data frame
-    Inner, // only matched data from right and left data frame
-    Filter, // only matched data from left data frame
-    Full, // all data from left and from right data frame, nulls for any mismatches
-    Exclude, // mismatched rows from left data frame
+    Left, // all data from left dataframe, nulls for mismatches in right dataframe
+    Right, // all data from right dataframe, nulls for mismatches in left dataframe
+    Inner, // only matched data from right and left dataframe
+    Filter, // only matched data from left dataframe
+    Full, // all data from left and from right dataframe, nulls for any mismatches
+    Exclude, // mismatched rows from left dataframe
 }
 
 internal val JoinType.addNewColumns: Boolean

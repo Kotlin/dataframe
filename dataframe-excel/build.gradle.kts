@@ -2,7 +2,7 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
         alias(binary.compatibility.validator)
     }
@@ -37,7 +37,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeExcel"
         artifactId = project.name
-        description = "Excel support for Kotlin Dataframe"
+        description = "Excel support for Kotlin DataFrame"
         packageName = artifactId
     }
 }

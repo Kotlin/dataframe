@@ -1,3 +1,21 @@
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.exclude
+import org.gradle.kotlin.dsl.implementation
+import org.gradle.kotlin.dsl.invoke
+import org.gradle.kotlin.dsl.java
+import org.gradle.kotlin.dsl.korro
+import org.gradle.kotlin.dsl.kotlin
+import org.gradle.kotlin.dsl.libs
+import org.gradle.kotlin.dsl.main
+import org.gradle.kotlin.dsl.projects
+import org.gradle.kotlin.dsl.repositories
+import org.gradle.kotlin.dsl.runKtlintCheckOverMainSourceSet
+import org.gradle.kotlin.dsl.runKtlintCheckOverTestSourceSet
+import org.gradle.kotlin.dsl.runKtlintFormatOverMainSourceSet
+import org.gradle.kotlin.dsl.runKtlintFormatOverTestSourceSet
+import org.gradle.kotlin.dsl.sourceSets
+import org.gradle.kotlin.dsl.test
+import org.gradle.kotlin.dsl.testImplementation
 
 plugins {
     java
@@ -5,7 +23,7 @@ plugins {
         alias(kotlin.jvm)
         alias(korro)
         alias(ktlint)
-        alias(kover)
+//        alias(kover)
 
         alias(dataframe)
         // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
@@ -24,6 +42,14 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
+    testImplementation(libs.kandy) {
+        // TODO remove when kandy uses version of DF with `FormatDsl`
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
+    testImplementation(libs.kandy.samples.utils) {
+        // TODO remove when kandy uses version of DF with `FormatDsl`
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
@@ -40,13 +66,21 @@ kotlin.sourceSets {
 
 korro {
     docs = fileTree(rootProject.rootDir) {
+        // todo topics/*.md as a part of #898
+        include("docs/StardustDocs/topics/DataSchema-Data-Classes-Generation.md")
         include("docs/StardustDocs/topics/read.md")
         include("docs/StardustDocs/topics/write.md")
+        include("docs/StardustDocs/topics/rename.md")
+        include("docs/StardustDocs/topics/format.md")
+        include("docs/StardustDocs/topics/guides/*.md")
+        include("docs/StardustDocs/topics/dataSources/sql/*.md")
     }
 
     samples = fileTree(project.projectDir) {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
     }
 
     groupSamples {

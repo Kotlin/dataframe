@@ -5,11 +5,14 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.CellAttributes
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
-import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
+import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
+import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
@@ -23,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
+import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -77,7 +81,14 @@ internal val formatter = DataFrameFormatter(
 internal fun getResources(vararg resource: String) = resource.joinToString(separator = "\n") { getResourceText(it) }
 
 internal fun getResourceText(resource: String, vararg replacement: Pair<String, Any>): String {
-    val res = DataFrame::class.java.getResourceAsStream(resource) ?: error("Resource '$resource' not found")
+    /**
+     * The choice of loader is crucial here: it should always be a class loaded by the same class loader as the resource we load.
+     * I.e. [DataFrame] isn't a good fit because it might be loaded by Kotlin IDEA plugin (because Kotlin plugin
+     * loads DataFrame compiler plugin), and plugin's classloader knows nothing about the resources.
+     */
+    val loader = HtmlContent::class.java
+    val res = loader.getResourceAsStream(resource)
+        ?: error("Resource '$resource' not found. Load was attempted by $loader, loaded by ${loader.classLoader}")
     var template = InputStreamReader(res).readText()
     replacement.forEach {
         template = template.replace(it.first, it.second.toString())
@@ -153,7 +164,11 @@ internal fun AnyFrame.toHtmlData(
     val scripts = mutableListOf<String>()
     val queue = LinkedList<RenderingQueueItem>()
 
-    fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int?, configuration: DisplayConfiguration): ColumnDataForJs {
+    fun AnyFrame.columnToJs(
+        col: ColumnWithPath<*>,
+        rowsLimit: Int?,
+        configuration: DisplayConfiguration,
+    ): ColumnDataForJs {
         val values = if (rowsLimit != null) rows().take(rowsLimit) else rows()
         val scale = if (col.isNumber()) col.asNumbers().scale() else 1
         val format = if (scale > 0) {
@@ -162,31 +177,67 @@ internal fun AnyFrame.toHtmlData(
             RendererDecimalFormat.of("%e")
         }
         val renderConfig = configuration.copy(decimalFormat = format)
-        val contents = values.map {
-            val value = it[col]
-            val content = value.toDataFrameLikeOrNull()
-            if (content != null) {
-                val df = content.df()
+        val contents = values.map { row ->
+            val value = col[row]
+            val dfLikeContent = value.toDataFrameLikeOrNull()
+            if (dfLikeContent != null) {
+                val df = dfLikeContent.df()
                 if (df.isEmpty()) {
                     HtmlContent("", null)
                 } else {
                     val id = nextTableId()
-                    queue.add(RenderingQueueItem(df, id, content.configuration(defaultConfiguration)))
+                    queue += RenderingQueueItem(df, id, dfLikeContent.configuration(defaultConfiguration))
                     DataFrameReference(id, df.size)
                 }
             } else {
-                val html =
-                    formatter.format(downsizeBufferedImageIfNeeded(value, renderConfig), cellRenderer, renderConfig)
-                val style = renderConfig.cellFormatter
-                    ?.invoke(FormattingDSL, it, col)
+                val html = formatter.format(
+                    value = downsizeBufferedImageIfNeeded(value, renderConfig),
+                    renderer = cellRenderer,
+                    configuration = renderConfig,
+                )
+
+                val formatter = renderConfig.cellFormatter
+                    ?: return@map HtmlContent(html, null)
+
+                // ask formatter for all attributes defined for this cell or any of its parents (outer column groups)
+                val parentCols = col.path.indices
+                    .map { i -> col.path.take(i + 1) }
+                    .dropLast(1)
+                    .map { ColumnWithPath(this@toHtmlData[it], it) }
+                val parentAttributes = parentCols
+                    .map { formatter(FormattingDsl, row, it) }
+                    .reduceOrNull(CellAttributes?::and)
+
+                val cellAttributes = formatter(FormattingDsl, row, col)
+
+                val style = (parentAttributes and cellAttributes)
                     ?.attributes()
                     ?.ifEmpty { null }
-                    ?.joinToString(";") { "${it.first}:${it.second}" }
+                    ?.flatMap {
+                        if (it.first == "color") {
+                            // override all --text-color* variables that
+                            // are used to color text of .numbers, .null, etc., inside DataFrame
+                            listOf(
+                                it,
+                                "--text-color" to "${it.second} !important",
+                                "--text-color-dark" to "${it.second} !important",
+                                "--text-color-pale" to "${it.second} !important",
+                                "--text-color-medium" to "${it.second} !important",
+                            )
+                        } else {
+                            listOf(it)
+                        }
+                    }
+                    ?.toMap() // removing duplicate keys, allowing only the final one to be applied
+                    ?.entries
+                    ?.joinToString(";") { "${it.key}:${it.value}" }
                 HtmlContent(html, style)
             }
         }
         val nested = if (col is ColumnGroup<*>) {
-            col.columns().map { col.columnToJs(it, rowsLimit, configuration) }
+            col.columns().map {
+                col.columnToJs(it.addParentPath(col.path), rowsLimit, configuration)
+            }
         } else {
             emptyList()
         }
@@ -199,11 +250,13 @@ internal fun AnyFrame.toHtmlData(
     }
 
     val rootId = nextTableId()
-    queue.add(RenderingQueueItem(this, rootId, defaultConfiguration))
+    queue += RenderingQueueItem(this, rootId, defaultConfiguration)
     while (!queue.isEmpty()) {
         val (nextDf, nextId, configuration) = queue.pop()
         val rowsLimit = if (nextId == rootId) configuration.rowsLimit else configuration.nestedRowsLimit
-        val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it, rowsLimit, configuration) }
+        val preparedColumns = nextDf.columns().map {
+            nextDf.columnToJs(it.addPath(), rowsLimit, configuration)
+        }
         val js = tableJs(preparedColumns, nextId, rootId, nextDf.nrow)
         scripts.add(js)
     }
@@ -283,7 +336,7 @@ public fun AnyFrame.toStaticHtml(
     val id = "static_df_${nextTableId()}"
 
     // Retrieve all columns, including nested ones
-    val flattenedCols = getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }
+    val flattenedCols = getColumnsWithPaths { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 
     // Get a grid of columns for the header, as well as the side borders for each cell
     val colGrid = getColumnsHeaderGrid()
@@ -526,7 +579,7 @@ public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
-) = toHtml(configuration, cellRenderer, getFooter)
+): DataFrameHtmlData = toHtml(configuration, cellRenderer, getFooter)
 
 @Deprecated(TO_STANDALONE_HTML, ReplaceWith(TO_STANDALONE_HTML_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.toStandaloneHTML(
@@ -536,13 +589,30 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
 ): DataFrameHtmlData = toStandaloneHtml(configuration, cellRenderer, getFooter)
 
 /**
+ * Returns a [DataFrameHtmlData] with CSS- and script definitions for DataFrame.
+ *
+ * To change the formatting of certain cells or columns in the dataframe,
+ * use [DataFrame.format].
+ *
+ * Use [toHtml] if you don't need the [DataFrameHtmlData] to include CSS- and script definitions.
+ *
+ * The [DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
+ * If you save it as a file and find it in the project tree,
+ * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure)
+ * feature of IntelliJ IDEA will automatically reload the file content when it's updated.
+ *
  * By default, cell content is formatted as text
  * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
  *
- * The [DataFrameHtmlData] be saved as an *.html file and displayed in the browser.
- * If you save it as a file and find it in the project tree,
- * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA will automatically reload the file content when it's updated
- * @return DataFrameHtmlData with table script and css definitions
+ * __NOTE:__ In Kotlin Notebook, output [DataFrame] directly, or use [toHtml],
+ * as that environment already has CSS- and script definitions for DataFrame.
+ * Using [toStandaloneHtml] might produce unexpected results.
+ *
+ * @param [configuration] The [DisplayConfiguration] to use. Default: [DisplayConfiguration.DEFAULT].
+ * @param [cellRenderer] Mostly for internal usage, use [DefaultCellRenderer] if unsure.
+ * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
+ *   Default: `"DataFrame [rows x cols]"`
+ * @see toHtml
  */
 public fun <T> DataFrame<T>.toStandaloneHtml(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
@@ -551,9 +621,23 @@ public fun <T> DataFrame<T>.toStandaloneHtml(
 ): DataFrameHtmlData = toHtml(configuration, cellRenderer, getFooter).withTableDefinitions()
 
 /**
+ * Returns a [DataFrameHtmlData] without additional definitions.
+ * Can be rendered in Jupyter kernel (Kotlin Notebook) environments or other environments that already have
+ * CSS- and script definitions for DataFrame.
+ *
+ * To change the formatting of certain cells or columns in the dataframe,
+ * use [DataFrame.format].
+ *
+ * Use [toStandaloneHtml] if you need the [DataFrameHtmlData] to include CSS- and script definitions.
+ *
  * By default, cell content is formatted as text
  * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
- * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
+ *
+ * @param [configuration] The [DisplayConfiguration] to use. Default: [DisplayConfiguration.DEFAULT].
+ * @param [cellRenderer] Mostly for internal usage, use [DefaultCellRenderer] if unsure.
+ * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
+ *   Default: `"DataFrame [rows x cols]"`
+ * @see toStandaloneHtml
  */
 public fun <T> DataFrame<T>.toHtml(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
@@ -590,8 +674,10 @@ public fun <T> DataFrame<T>.toHtml(
 }
 
 /**
- * Container for HTML page data in the form of a String
- * Can be used to compose rendered dataframe tables with additional HTML elements
+ * Container for HTML data, often containing a dataframe table.
+ *
+ * It can be used to compose rendered dataframe tables with additional HTML elements,
+ * or to simply print the HTML or write it to file.
  */
 public class DataFrameHtmlData(
     @Language("css") public val style: String = "",
@@ -728,6 +814,9 @@ public class DataFrameHtmlData(
 }
 
 /**
+ * A collection of settings for rendering dataframes as HTML tables or native
+ * Kotlin Notebook table output.
+ *
  * @param rowsLimit null to disable rows limit
  * @param cellContentLimit -1 to disable content trimming
  * @param enableFallbackStaticTables true to add additional pure HTML table that will be visible only if JS  is disabled;

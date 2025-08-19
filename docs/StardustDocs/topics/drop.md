@@ -1,8 +1,10 @@
-[//]: # (title: drop)
+[//]: # (title: drop / dropNulls / dropNaNs / dropNA)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
 Removes all rows that satisfy [row condition](DataRow.md#row-conditions)
+
+**Related operations**: [](filterRows.md)
 
 <!---FUN dropWhere-->
 <tabs>
@@ -20,12 +22,14 @@ df.drop { it["weight"] == null || it["city"] == null }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhere.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhere.html" width="100%"/>
 <!---END-->
 
 ## dropNulls
 
-Remove rows with `null` values
+Remove rows with `null` values. This is a DataFrame equivalent of `filterNotNull`.
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN dropNulls-->
 
@@ -37,12 +41,14 @@ df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'we
 df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNulls.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNulls.html" width="100%"/>
 <!---END-->
 
 ## dropNaNs
 
 Remove rows with [`NaN` values](nanAndNa.md#nan) (`Double.NaN` or `Float.NaN`).
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN dropNaNs-->
 
@@ -54,12 +60,14 @@ df.dropNaNs { age and weight } // remove rows where either 'age' or 'weight' is 
 df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'age' and 'weight' are NaN
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNaNs.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNaNs.html" width="100%"/>
 <!---END-->
 
 ## dropNA
 
 Remove rows with [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, or `Float.NaN`).
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN dropNA-->
 
@@ -71,5 +79,5 @@ df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is nu
 df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or NaN
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNA.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNA.html" width="100%"/>
 <!---END-->

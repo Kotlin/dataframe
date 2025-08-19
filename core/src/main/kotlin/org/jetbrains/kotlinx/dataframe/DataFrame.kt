@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrameOf
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KType
 
 /**
@@ -67,6 +68,11 @@ public interface DataFrame<out T> :
 
     // region rows
 
+    /**
+     * Returns the total number of rows of this [DataFrame].
+     *
+     * @return The number of rows in the [DataFrame].
+     */
     public fun rowsCount(): Int
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
@@ -121,9 +127,7 @@ public interface DataFrame<out T> :
  */
 public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = this.get(columns)
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
     select { (listOf(first) + other).toColumnSet() }

@@ -5,6 +5,8 @@
 Creates [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/), [DataFrame](DataFrame.md) or [DataColumn](DataColumn.md) 
 with values computed from rows of original [DataFrame](DataFrame.md).
 
+**Related operations**: [](addRemove.md)
+
 **Map into `List`:**
 
 ```text
@@ -89,5 +91,5 @@ df.mapToFrame {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapMany.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapMany.html" width="100%"/>
 <!---END-->

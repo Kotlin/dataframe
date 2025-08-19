@@ -129,7 +129,7 @@ fun createAndPopulateTable(con: Connection) {
 
 **Define the Table Schema**
 
-Use the `@DataSchema` annotation to define a [**custom data schema**](schemasCustom.md) for the `orders` table.
+Use the `@DataSchema` annotation to define a [**custom data schema**](schemas.md) for the `orders` table.
 
 ```kotlin
 @DataSchema

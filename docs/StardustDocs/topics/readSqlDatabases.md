@@ -1,5 +1,19 @@
 [//]: # (title: Read from SQL databases)
 
+<web-summary>
+Read data and infer schemas from SQL databases directly into Kotlin DataFrame, 
+with support for PostgreSQL, MySQL, SQLite, and more.
+</web-summary>
+
+<card-summary>
+Set up SQL database access and read query results efficiently into DataFrame.
+</card-summary>
+
+<link-summary>
+Learn how to query, read, and inspect SQL database tables using Kotlin DataFrame
+with full schema inference and flexible JDBC setup.
+</link-summary>
+
 These functions allow you to interact with an SQL database using a Kotlin DataFrame library.
 
 There are two main blocks of available functionality:
@@ -30,22 +44,22 @@ Also, there are a few **extension functions** available on `Connection`,
 
 
 **NOTE:** This is an experimental module, and for now, 
-we only support four databases: MS SQL, MariaDB, MySQL, PostgreSQL, and SQLite. 
+we only support these databases: MS SQL, MariaDB, MySQL, PostgreSQL, SQLite, and DuckDB. 
 
 Moreover, since release 0.15 we support the possibility to register custom SQL database, read more in our [guide](readSqlFromCustomDatabase.md).
 
 Additionally, support for JSON and date-time types is limited. 
 Please take this into consideration when using these functions.
 
-## Getting started with reading from SQL database in Gradle Project
+## Getting started with reading from SQL database in a Gradle Project
 
-In the first, you need to add a dependency
+First, you need to add a dependency
 
 ```kotlin
 implementation("org.jetbrains.kotlinx:dataframe-jdbc:$dataframe_version")
 ```
 
-after that, you need to add a dependency for a JDBC driver for the used database, for example
+after that, you need to add the dependency for the database's JDBC driver, for example
 
 For **MariaDB**:
 
@@ -53,7 +67,7 @@ For **MariaDB**:
 implementation("org.mariadb.jdbc:mariadb-java-client:$version")
 ```
 
-Maven Central version could be found [here](https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client).
+The Maven Central version can be found [here](https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client).
 
 For **PostgreSQL**:
 
@@ -61,7 +75,7 @@ For **PostgreSQL**:
 implementation("org.postgresql:postgresql:$version")
 ```
 
-Maven Central version could be found [here](https://mvnrepository.com/artifact/org.postgresql/postgresql).
+The Maven Central version can be found [here](https://mvnrepository.com/artifact/org.postgresql/postgresql).
 
 For **MySQL**:
 
@@ -69,7 +83,7 @@ For **MySQL**:
 implementation("com.mysql:mysql-connector-j:$version")
 ```
 
-Maven Central version could be found [here](https://mvnrepository.com/artifact/com.mysql/mysql-connector-j).
+The Maven Central version can be found [here](https://mvnrepository.com/artifact/com.mysql/mysql-connector-j).
 
 For **SQLite**:
 
@@ -77,7 +91,7 @@ For **SQLite**:
 implementation("org.xerial:sqlite-jdbc:$version")
 ```
 
-Maven Central version could be found [here](https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc).
+The Maven Central version can be found [here](https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc).
 
 For **MS SQL**:
 
@@ -85,16 +99,24 @@ For **MS SQL**:
 implementation("com.microsoft.sqlserver:mssql-jdbc:$version")
 ```
 
-Maven Central version could be found [here](https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc).
+The Maven Central version can be found [here](https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc).
 
-In the second, be sure that you can establish a connection to the database.
+For **DuckDB**:
 
-For this, usually, you need to have three things: a URL to a database, a username, and a password.
+```kotlin
+implementation("org.duckdb:duckdb_jdbc:$version")
+```
 
-Call one of the following functions to collect data from a database and transform it to the dataframe.
+The Maven Central version can be found [here](https://mvnrepository.com/artifact/org.duckdb/duckdb_jdbc).
 
-For example, if you have a local PostgreSQL database named as `testDatabase` with table `Customer`,
-you could read first 100 rows and print the data just copying the code below:
+Next, be sure that you can establish a connection to the database.
+
+For this, usually, you need to have three things: a URL to the database, a username, and a password.
+
+Call one of the following functions to collect data from the database and transform it to a dataframe.
+
+For example, if you have a local PostgreSQL database named `testDatabase` with a table `Customer`,
+you can read the first 100 rows and print the data by just copying the code below:
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
@@ -113,7 +135,7 @@ val df = DataFrame.readSqlTable(dbConfig, tableName, 100)
 df.print()
 ```
 
-Find a full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/).
+You can find a full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/).
 
 ## Getting Started with Notebooks
 
@@ -303,7 +325,7 @@ Note that reading from the `ResultSet` could potentially change its state.
 
 The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.), 
 supported by a library. 
-Currently, the following classes are available: `H2, MsSql, MariaDb, MySql, PostgreSql, Sqlite`.
+Currently, the following classes are available: `H2, MsSql, MariaDb, MySql, PostgreSql, Sqlite, DuckDb`.
 
 Also, users have an ability to pass objects, describing their custom databases, more information in [guide](readSqlFromCustomDatabase.md).
 
@@ -511,7 +533,7 @@ This function reads the schema from a `ResultSet` object provided by the user.
 
 The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.),
 supported by a library.
-Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite`.
+Currently, the following classes are available: `H2, MsSql, MariaDb, MySql, PostgreSql, Sqlite, DuckDB`.
 
 Also, users have an ability to pass objects, describing their custom databases, more information in [guide](readSqlFromCustomDatabase.md).
 

@@ -56,6 +56,8 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
@@ -140,6 +142,8 @@ internal object Parsers : GlobalParserOptions {
     override val skipTypes: Set<KType>
         get() = skipTypesSet
 
+    override var parseExperimentalUuid: Boolean = false
+
     override fun addDateTimePattern(pattern: String) {
         formatters.add(DateTimeFormatter.ofPattern(pattern))
     }
@@ -178,6 +182,7 @@ internal object Parsers : GlobalParserOptions {
             .let { formatters.add(it) }
 
         useFastDoubleParser = true
+        parseExperimentalUuid = false
         _locale = null
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }
@@ -343,7 +348,7 @@ internal object Parsers : GlobalParserOptions {
     private val readJsonStrAnyFrame: ((text: String) -> AnyFrame)? by lazy {
         try {
             val klass = Class.forName("org.jetbrains.kotlinx.dataframe.io.JsonKt")
-            val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
+            val typeClashTactic = Class.forName($$"org.jetbrains.kotlinx.dataframe.io.JSON$TypeClashTactic")
             val readJsonStr = klass.getMethod(
                 "readJsonStr",
                 // this =
@@ -426,6 +431,9 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
+    private val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+
+    @OptIn(ExperimentalUuidApi::class)
     internal val parsersOrder = listOf(
         // Int
         stringParser<Int> { it.toIntOrNull() },
@@ -491,6 +499,26 @@ internal object Parsers : GlobalParserOptions {
         posixParserToDoubleWithOptions,
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
+        // Uuid
+        stringParserWithOptions<Uuid> { options ->
+            val parser = { str: String ->
+                val parseExperimentalUuid = options?.parseExperimentalUuid ?: this.parseExperimentalUuid
+                when {
+                    !parseExperimentalUuid -> null
+
+                    uuidRegex.matches(str) -> {
+                        try {
+                            Uuid.parse(str)
+                        } catch (_: IllegalArgumentException) {
+                            null
+                        }
+                    }
+
+                    else -> null
+                }
+            }
+            parser
+        },
         // BigInteger
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
         // BigDecimal
@@ -681,7 +709,7 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
             col.isFrameColumn() -> {
                 col.map {
                     it.parseImpl(options) {
-                        colsAtAnyDepth { !it.isColumnGroup() }
+                        colsAtAnyDepth().filter { !it.isColumnGroup() }
                     }
                 }
             }

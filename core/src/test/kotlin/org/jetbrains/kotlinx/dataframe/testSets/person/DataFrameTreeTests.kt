@@ -187,7 +187,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `selects`() {
-        df2.select { nameAndCity.cols() } shouldBe typed2.nameAndCity.select { all() }
+        df2.select { nameAndCity.allCols() } shouldBe typed2.nameAndCity.select { all() }
         df2.select { nameAndCity.cols { !it.hasNulls() } } shouldBe typed2.select { nameAndCity.name }
         df2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
         df2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
@@ -195,9 +195,9 @@ class DataFrameTreeTests : BaseTest() {
         df2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
         df2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.allCols() }
         df2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
-        df2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
+        df2.select { nameAndCity.allCols().drop(1) } shouldBe typed2.nameAndCity.select { city }
 
-        typed2.select { nameAndCity.cols() } shouldBe typed2.nameAndCity.select { all() }
+        typed2.select { nameAndCity.allCols() } shouldBe typed2.nameAndCity.select { all() }
         typed2.select { nameAndCity.cols { !it.hasNulls() } } shouldBe typed2.select { nameAndCity.name }
         typed2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
         typed2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
@@ -206,7 +206,7 @@ class DataFrameTreeTests : BaseTest() {
             typed2.select { nameAndCity.city and nameAndCity.name }
         typed2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.allCols() }
         typed2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
-        typed2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
+        typed2.select { nameAndCity.allCols().drop(1) } shouldBe typed2.nameAndCity.select { city }
 
         df2.select { col(1) } shouldBe typed2.select { age }
         df2.select { nameInGroup } shouldBe typed2.nameAndCity.select { name }
@@ -288,7 +288,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `select atAnyDepth`() {
-        val cols = typed2.select { colsAtAnyDepth { it.hasNulls } }
+        val cols = typed2.select { colsAtAnyDepth().filter { it.hasNulls } }
         cols shouldBe typed2.select { nameAndCity.city and weight }
     }
 
@@ -535,14 +535,16 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun parentColumnTest() {
-        val res = typed2.move { colsAtAnyDepth { it.depth > 0 } }.toTop { it.parentName + "-" + it.name }
+        val res = typed2.move { colsAtAnyDepth().filter { it.depth > 0 } }.toTop { it.parentName + "-" + it.name }
         res.columnsCount() shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
 
     @Test
     fun `group cols`() {
-        val joined = typed2.move { colsAtAnyDepth { !it.isColumnGroup() } }.into { pathOf(it.path.joinToString(".")) }
+        val joined = typed2.move {
+            colsAtAnyDepth().filter { !it.isColumnGroup() }
+        }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
         val expected = typed2.rename { nameAndCity.allCols() }.into { it.path.joinToString(".") }
         grouped shouldBe expected
@@ -717,7 +719,7 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `create data frame from map column`() {
+    fun `create dataframe from map column`() {
         val df = dataFrameOf(typed.name, typed2.nameAndCity)
         df.rowsCount() shouldBe typed.rowsCount()
     }

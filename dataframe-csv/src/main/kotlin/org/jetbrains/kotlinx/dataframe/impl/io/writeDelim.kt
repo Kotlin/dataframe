@@ -6,10 +6,10 @@ import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.documentation.CommonWriteDelimDocs
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_FORMAT
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.CSV_DELIMITER
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.WRITER_WRITE
+import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonWriteDelimDocs
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_FORMAT
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CSV_DELIMITER
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.WRITER_WRITE
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 import org.jetbrains.kotlinx.dataframe.io.toJson

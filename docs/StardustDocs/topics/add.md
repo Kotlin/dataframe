@@ -2,11 +2,13 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns [`DataFrame`](DataFrame.md) which contains all columns from original [`DataFrame`](DataFrame.md) followed by newly added columns. 
+Returns [`DataFrame`](DataFrame.md) which contains all columns from the original [`DataFrame`](DataFrame.md) followed by newly added columns. 
 Original [`DataFrame`](DataFrame.md) is not modified.
 
 `add` appends columns to the end of the dataframe by default.
 If you want to add a single column to a specific position in the dataframe, use [insert](insert.md).
+
+**Related operations**: [](addRemove.md)
 
 ## Create a new column and add it to [`DataFrame`](DataFrame.md)
 
@@ -32,7 +34,7 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.add.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.add.html" width="100%"/>
 <!---END-->
 
 See [row expressions](DataRow.md#row-expressions)
@@ -49,7 +51,7 @@ df.add("fibonacci") {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addRecurrent.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addRecurrent.html" width="100%"/>
 <!---END-->
 
 ## Create and add several columns to [`DataFrame`](DataFrame.md)
@@ -101,7 +103,7 @@ df.add {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addMany.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addMany.html" width="100%"/>
 <!---END-->
 
 ### Create columns using intermediate result
@@ -161,7 +163,7 @@ df.add(score)
 df + score
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addExisting.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addExisting.html" width="100%"/>
 <!---END-->
 
 ## Add all columns from another [`DataFrame`](DataFrame.md)
@@ -172,7 +174,7 @@ df + score
 df.add(df1, df2)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html" width="100%"/>
 <!---END-->
 
 ## addId

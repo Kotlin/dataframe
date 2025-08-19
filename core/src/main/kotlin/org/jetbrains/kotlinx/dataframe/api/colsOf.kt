@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -153,9 +154,7 @@ public interface ColsOfColumnsSelectionDsl {
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
         columnGroup(this).colsOf(type, filter)
@@ -184,7 +183,7 @@ public interface ColsOfColumnsSelectionDsl {
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): TransformableColumnSet<C> =
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<C> =
     colsOfInternal(type, filter)
 
 /**
@@ -198,9 +197,8 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
 @Interpretable("ColsOf1")
-public inline fun <reified C> ColumnSet<*>.colsOf(
-    noinline filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = colsOf(typeOf<C>(), filter)
+public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: ColumnFilter<C> = { true }): ColumnSet<C> =
+    colsOf(typeOf<C>(), filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -210,10 +208,8 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> ColumnsSelectionDsl<*>.colsOf(
-    type: KType,
-    filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = asSingleColumn().colsOf(type, filter)
+public fun <C> ColumnsSelectionDsl<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<C> =
+    asSingleColumn().colsOf(type, filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -226,7 +222,7 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
 @Interpretable("ColsOf0")
 public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
     noinline filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = asSingleColumn().colsOf(typeOf<C>(), filter)
+): ColumnSet<C> = asSingleColumn().colsOf(typeOf<C>(), filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -238,10 +234,8 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> SingleColumn<DataRow<*>>.colsOf(
-    type: KType,
-    filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = ensureIsColumnGroup().colsOfInternal(type, filter)
+public fun <C> SingleColumn<DataRow<*>>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<C> =
+    ensureIsColumnGroup().colsOfInternal(type, filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -256,7 +250,7 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
 @Interpretable("ColsOf2")
 public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
     noinline filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = colsOf(typeOf<C>(), filter)
+): ColumnSet<C> = colsOf(typeOf<C>(), filter)
 
 /**
  * If this [ColumnsResolver] is a [SingleColumn], it

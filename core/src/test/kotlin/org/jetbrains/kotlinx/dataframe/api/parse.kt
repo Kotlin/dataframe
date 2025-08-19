@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -28,6 +29,8 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 
@@ -252,8 +255,8 @@ class ParseTests {
         testSuccess(90_500.milliseconds, "PT1M30.500S")
 
         // with sign
-        testSuccess(-1.days + 15.minutes, "-PT23H45M", "PT-23H-45M", "+PT-24H+15M")
-        testSuccess(-1.days - 15.minutes, "-PT24H15M", "PT-24H-15M", "-PT25H-45M")
+        testSuccess((-1).days + 15.minutes, "-PT23H45M", "PT-23H-45M", "+PT-24H+15M")
+        testSuccess((-1).days - 15.minutes, "-PT24H15M", "PT-24H-15M", "-PT25H-45M")
         testSuccess(Duration.ZERO, "PT0S", "P1DT-24H", "+PT-1H+60M", "-PT1M-60S")
 
         // infinite
@@ -479,6 +482,55 @@ class ParseTests {
         }
 
         df.parse()
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    @Test
+    fun `parse valid Uuid`() {
+        val validUUID = "550e8400-e29b-41d4-a716-446655440000"
+        val column by columnOf(validUUID)
+        val parsed = column.parse(ParserOptions(parseExperimentalUuid = true))
+
+        parsed.type() shouldBe typeOf<Uuid>()
+        (parsed[0] as Uuid).toString() shouldBe validUUID // Change UUID to Uuid
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    @Test
+    fun `parse valid Uuid with GlobalParserOptions`() {
+        val validUUID = "550e8400-e29b-41d4-a716-446655440000"
+        val column by columnOf(validUUID)
+        DataFrame.parser.parseExperimentalUuid = true
+        val parsed = column.parse()
+        DataFrame.parser.resetToDefault()
+
+        parsed.type() shouldBe typeOf<Uuid>()
+        (parsed[0] as Uuid).toString() shouldBe validUUID // Change UUID to Uuid
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    @Test
+    fun `parse invalid Uuid`() {
+        val invalidUUID = "this is not a UUID"
+        val column = columnOf(invalidUUID)
+        // tryParse as string is not formatted.
+        val parsed = column.tryParse(
+            ParserOptions(parseExperimentalUuid = true),
+        )
+
+        parsed.type() shouldNotBe typeOf<Uuid>()
+        parsed.type() shouldBe typeOf<String>()
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    @Test
+    fun `do not parse Uuid by default`() {
+        val validUUID = "550e8400-e29b-41d4-a716-446655440000"
+        val column = columnOf(validUUID)
+        val parsed = column.tryParse() // tryParse as string is not formatted.
+
+        parsed.type() shouldNotBe typeOf<Uuid>()
+        parsed.type() shouldBe typeOf<String>()
     }
 
     /**

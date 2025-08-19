@@ -51,18 +51,20 @@ df.pivot { city }.groupBy { name.lastName }.median()
 
 See [statistics](summaryStatistics.md#groupby-statistics) for details on complex data aggregations.
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 ### Type Conversion
 
 The following automatic type conversions are performed for the `median` operation.
 (Note that `null` only appears in the return type when using `-orNull` overloads).
 
-| Conversion                     | Result for Empty Input |
-|--------------------------------|------------------------|
-| T -> T where T : Comparable<T> | null                   |
-| Int -> Double                  | null                   |
-| Byte -> Double                 | null                   |
-| Short -> Double                | null                   |
-| Long -> Double                 | null                   |
-| Double -> Double               | null                   |
-| Float -> Double                | null                   |
-| Nothing -> Nothing             | null                   |
+| Conversion                       | Result for Empty Input |
+|----------------------------------|------------------------|
+| T -> T where T : Comparable\<T\> | null                   |
+| Int -> Double                    | null                   |
+| Byte -> Double                   | null                   |
+| Short -> Double                  | null                   |
+| Long -> Double                   | null                   |
+| Double -> Double                 | null                   |
+| Float -> Double                  | null                   |
+| Nothing -> Nothing               | null                   |

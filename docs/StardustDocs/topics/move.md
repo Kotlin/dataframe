@@ -11,9 +11,11 @@ move { columns }
 pathSelector: DataFrame.(DataColumn) -> ColumnPath
 ```
 
-See [Column Selectors](ColumnSelectors.md)
+**Related operations**: [](moveRename.md)
 
-Can be used to change columns hierarchy by providing `ColumnPath` for every moved column
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
+Can be used to change column hierarchy by providing `ColumnPath` for every moved column.
 
 <!---FUN move-->
 
@@ -39,14 +41,14 @@ dataFrameOf("a|b|c", "a|d|e")(0, 0)
 
 // name.firstName -> firstName
 // name.lastName -> lastName
-df.move { name.cols() }.toTop()
+df.move { name.allCols() }.toTop()
 
 // a.b.e -> be
 // c.d.e -> de
 df.move { colsAtAnyDepth().nameContains("e") }.toTop { it.parentName + it.name() }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.move.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.move.html" width="100%"/>
 <!---END-->
 
 Special cases of `move`:

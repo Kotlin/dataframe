@@ -102,7 +102,7 @@ fun setStyles(sheet: Sheet) {
 // Create a workbook (or use existing)
 val wb = WorkbookFactory.create(true)
 
-// Create different sheets from different data frames in the workbook
+// Create different sheets from different dataframes in the workbook
 val allPersonsSheet = df.writeExcel(wb, sheetName = "allPersons")
 val happyPersonsSheet =
     df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")
@@ -144,9 +144,10 @@ Add dependency:
 implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
 ```
 
-<warning>
-Make sure to follow [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide when using Java 9+
-</warning>
+> Make sure to follow an
+> [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) 
+> guide when using Java 9+
+> {style = "warning"}
 
 [`DataFrame`](DataFrame.md) supports writing [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
 and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)

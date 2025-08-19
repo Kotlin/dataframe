@@ -2,7 +2,7 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
         alias(binary.compatibility.validator)
     }
@@ -16,8 +16,10 @@ repositories {
 
 dependencies {
     api(projects.core)
-    implementation(libs.mariadb)
+    compileOnly(libs.duckdb.jdbc)
+    compileOnly(libs.sqlite)
     implementation(libs.kotlinLogging)
+    testImplementation(libs.mariadb)
     testImplementation(libs.sqlite)
     testImplementation(libs.postgresql)
     testImplementation(libs.mysql)
@@ -26,6 +28,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)
     testImplementation(libs.jts)
+    testImplementation(libs.duckdb.jdbc)
+    testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
@@ -35,7 +39,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeJDBC"
         artifactId = project.name
-        description = "JDBC support for Kotlin Dataframe"
+        description = "JDBC support for Kotlin DataFrame"
         packageName = artifactId
     }
 }

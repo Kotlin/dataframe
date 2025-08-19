@@ -78,69 +78,75 @@ class PostgresH2Test {
             connection = DriverManager.getConnection(URL)
 
             @Language("SQL")
-            val createTableStatement = """
+            val createTableStatement =
+                """
                 CREATE TABLE IF NOT EXISTS table1 (
-                id serial PRIMARY KEY,
-                bigintCol bigint not null,
-                smallintCol smallint not null,
-                bigserialCol bigserial not null,
-                booleanCol boolean not null,
-                byteaCol bytea not null,
-                characterCol character not null,
-                characterNCol character(10) not null,
-                charCol char not null,
-                dateCol date not null,
-                doubleCol double precision not null,
-                integerCol integer,
-                intArrayCol integer array,
-                doubleArrayCol double precision array,
-                dateArrayCol date array,
-                textArrayCol text array,
-                booleanArrayCol boolean array
-            )
-            """
+                    id serial PRIMARY KEY,
+                    bigintCol bigint not null,
+                    smallintCol smallint not null,
+                    bigserialCol bigserial not null,
+                    booleanCol boolean not null,
+                    byteaCol bytea not null,
+                    characterCol character not null,
+                    characterNCol character(10) not null,
+                    charCol char not null,
+                    dateCol date not null,
+                    doubleCol double precision not null,
+                    integerCol integer,
+                    intArrayCol integer array,
+                    doubleArrayCol double precision array,
+                    dateArrayCol date array,
+                    textArrayCol text array,
+                    booleanArrayCol boolean array
+                )
+                """.trimIndent()
+
             connection.createStatement().execute(createTableStatement.trimIndent())
 
             @Language("SQL")
-            val createTableQuery = """
+            val createTableQuery =
+                """
                 CREATE TABLE IF NOT EXISTS table2 (
-                id serial PRIMARY KEY,
-                moneyCol money not null,
-                numericCol numeric not null,
-                realCol real not null,
-                smallintCol smallint not null,
-                serialCol serial not null,
-                textCol text,
-                timeCol time not null,
-                timeWithZoneCol time with time zone not null,
-                timestampCol timestamp not null,
-                timestampWithZoneCol timestamp with time zone not null,
-                uuidCol uuid not null
-            )
-            """
+                    id serial PRIMARY KEY,
+                    moneyCol money not null,
+                    numericCol numeric not null,
+                    realCol real not null,
+                    smallintCol smallint not null,
+                    serialCol serial not null,
+                    textCol text,
+                    timeCol time not null,
+                    timeWithZoneCol time with time zone not null,
+                    timestampCol timestamp not null,
+                    timestampWithZoneCol timestamp with time zone not null,
+                    uuidCol uuid not null
+                )
+                """.trimIndent()
+
             connection.createStatement().execute(createTableQuery.trimIndent())
 
             @Language("SQL")
-            val insertData1 = """
-            INSERT INTO table1 (
-                bigintCol, smallintCol, bigserialCol,  booleanCol, 
-                byteaCol, characterCol, characterNCol, charCol, 
-                dateCol, doubleCol, 
-                integerCol, intArrayCol,
-                doubleArrayCol, dateArrayCol, textArrayCol, booleanArrayCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """
+            val insertData1 =
+                """
+                INSERT INTO table1 (
+                    bigintCol, smallintCol, bigserialCol,  booleanCol, 
+                    byteaCol, characterCol, characterNCol, charCol, 
+                    dateCol, doubleCol, 
+                    integerCol, intArrayCol,
+                    doubleArrayCol, dateArrayCol, textArrayCol, booleanArrayCol
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """.trimIndent()
 
             @Language("SQL")
-            val insertData2 = """
-            INSERT INTO table2 (
-                moneyCol, numericCol, 
-                realCol, smallintCol, 
-                serialCol, textCol, timeCol, 
-                timeWithZoneCol, timestampCol, timestampWithZoneCol, 
-                uuidCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """
+            val insertData2 =
+                """
+                INSERT INTO table2 (
+                    moneyCol, numericCol, 
+                    realCol, smallintCol, 
+                    serialCol, textCol, timeCol, 
+                    timeWithZoneCol, timestampCol, timestampWithZoneCol, 
+                    uuidCol
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """.trimIndent()
 
             val intArray = connection.createArrayOf("INTEGER", arrayOf(1, 2, 3))
             val doubleArray = connection.createArrayOf("DOUBLE", arrayOf(1.1, 2.2, 3.3))
@@ -326,5 +332,58 @@ class PostgresH2Test {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `readSqlQuery should execute a WITH clause and return results`() {
+        try {
+            // Step 1: Create a temporary table
+            @Language("SQL")
+            val createTableQuery =
+                """
+                CREATE TABLE employees (
+                    id INT PRIMARY KEY,
+                    name VARCHAR(100),
+                    salary DOUBLE
+                )
+                """.trimIndent()
+            connection.createStatement().execute(createTableQuery)
+
+            // Step 2: Insert data into the table
+            @Language("SQL")
+            val insertDataQuery =
+                """
+                INSERT INTO employees (id, name, salary) VALUES 
+                (1, 'Alice', 60000.0),
+                (2, 'Bob', 50000.0),
+                (3, 'Charlie', 70000.0)
+                """.trimIndent()
+
+            connection.createStatement().execute(insertDataQuery)
+
+            // Step 3: Execute the query with a WITH clause
+            @Language("SQL")
+            val queryWithClause =
+                """
+                WITH high_earners AS (
+                    SELECT name, salary 
+                    FROM employees 
+                    WHERE salary > 55000.0
+                )
+                SELECT * FROM high_earners
+                """.trimIndent()
+
+            val resultDataFrame = DataFrame.readSqlQuery(connection, queryWithClause)
+
+            // Step 4: Validate the results
+            resultDataFrame.rowsCount() shouldBe 2
+            resultDataFrame[0][0] shouldBe "Alice"
+            resultDataFrame[1][0] shouldBe "Charlie"
+        } finally {
+            // Step 5: Clean up the temporary table
+            @Language("SQL")
+            val dropTableQuery = "DROP TABLE IF EXISTS employees"
+            connection.createStatement().execute(dropTableQuery)
+        }
     }
 }

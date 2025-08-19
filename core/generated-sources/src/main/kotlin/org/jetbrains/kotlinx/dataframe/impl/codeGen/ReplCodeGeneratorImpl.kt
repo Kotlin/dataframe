@@ -5,14 +5,16 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithTypeCastGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
+import org.jetbrains.kotlinx.dataframe.codeGen.TypeCastGenerator
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -43,9 +45,9 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             else -> null
         }
 
-    override fun process(row: AnyRow, property: KProperty<*>?): CodeWithConverter = process(row.df(), property)
+    override fun process(row: AnyRow, property: KProperty<*>?): CodeWithTypeCastGenerator = process(row.df(), property)
 
-    override fun process(df: AnyFrame, property: KProperty<*>?): CodeWithConverter {
+    override fun process(df: AnyFrame, property: KProperty<*>?): CodeWithTypeCastGenerator {
         var targetSchema = df.schema()
 
         if (property != null) {
@@ -57,15 +59,15 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                 ?.takeIf { it.findAnnotation<DataSchema>() != null }
                 ?.let { registeredMarkers[it] ?: MarkersExtractor.get(it) }
             if (currentMarker != null) {
-                // we need to make sure that the property's marker type is open in order to let derived data frames be assignable to it
+                // we need to make sure that the property's marker type is open in order to let derived dataframes be assignable to it
                 if (currentMarker.isOpen) {
                     val columnSchema = currentMarker.schema
-                    // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
+                    // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual dataframe type
                     if (wasProcessedBefore || columnSchema == targetSchema) {
-                        // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
+                        // property scheme is valid for current dataframe, but we should also check that all compatible open markers are implemented by it
                         val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
-                            return CodeWithConverter.EMPTY
+                            return CodeWithTypeCastGenerator.EMPTY
                         }
                         // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
                         targetSchema = columnSchema
@@ -77,7 +79,28 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = true)
     }
 
-    fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithConverter {
+    override fun process(groupBy: GroupBy<*, *>): CodeWithTypeCastGenerator {
+        val key = generate(
+            schema = groupBy.keys.schema(),
+            name = markerInterfacePrefix + "Keys",
+            isOpen = false,
+        )
+        val group = generate(
+            schema = groupBy.groups.schema.value,
+            name = markerInterfacePrefix + "Groups",
+            isOpen = false,
+        )
+
+        val keyTypeName = (key.typeCastGenerator as TypeCastGenerator.DataFrameApi).types.single()
+        val groupTypeName = (group.typeCastGenerator as TypeCastGenerator.DataFrameApi).types.single()
+
+        return CodeWithTypeCastGenerator(
+            declarations = key.declarations + "\n" + group.declarations,
+            typeCastGenerator = TypeCastGenerator.DataFrameApi(keyTypeName, groupTypeName),
+        )
+    }
+
+    fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithTypeCastGenerator {
         val result = generator.generate(
             schema = schema,
             name = name,

@@ -26,7 +26,7 @@ class DataFrameSymbolProcessorTest {
             import org.jetbrains.kotlinx.dataframe.* 
             """.trimIndent()
 
-        const val GENERATED_FILE = "Hello${'$'}Extensions.kt"
+        const val GENERATED_FILE = $$"Hello$Extensions.kt"
     }
 
     @Before
@@ -1187,11 +1187,11 @@ class DataFrameSymbolProcessorTest {
                 it.forAtLeastOne { it shouldContain "Pet" }
                 it.forAtLeastOne { it shouldContain "Error" }
             }
-            result.inspectLines("org.example.Petstore.Pet\$Extensions.kt") {
+            result.inspectLines($$"org.example.Petstore.Pet$Extensions.kt") {
                 it.forAtLeastOne { it shouldContain "tag" }
                 it.forAtLeastOne { it shouldContain "id" }
             }
-            result.inspectLines("org.example.Petstore.Error\$Extensions.kt") {
+            result.inspectLines($$"org.example.Petstore.Error$Extensions.kt") {
                 it.forAtLeastOne { it shouldContain "message" }
                 it.forAtLeastOne { it shouldContain "code" }
             }
@@ -1218,11 +1218,6 @@ class DataFrameSymbolProcessorTest {
 
                             fun resolved() {
                                 JetBrains
-                                JetBrains1
-                                JetBrains2
-                                JetBrains3
-                                JetBrains4
-                                JetBrains5
                             }
                             """.trimIndent(),
                         ),
@@ -1268,11 +1263,11 @@ class DataFrameSymbolProcessorTest {
             )
             println(result.kspGeneratedFiles)
             result.inspectLines("MetricsNoKeyValue.Generated.kt") {
-//            (('1'..'5') + "").forEach { nr ->
-//                it.forAtLeastOne {
-//                    it shouldContain "JetBrains$nr"
-//                }
-//            }
+                (('1'..'3') + "").forEach { nr ->
+                    it.forAtLeastOne {
+                        it shouldContain "MetricsNoKeyValue$nr"
+                    }
+                }
             }
         }
 
@@ -1312,11 +1307,11 @@ class DataFrameSymbolProcessorTest {
                 it.forAtLeastOne { it shouldContain "readJson" }
                 it.forAtLeastOne { it shouldContain "readJsonStr" }
             }
-            result.inspectLines("org.example.Petstore.Pet\$Extensions.kt") {
+            result.inspectLines($$"org.example.Petstore.Pet$Extensions.kt") {
                 it.forAtLeastOne { it shouldContain "tag" }
                 it.forAtLeastOne { it shouldContain "id" }
             }
-            result.inspectLines("org.example.Petstore.Error\$Extensions.kt") {
+            result.inspectLines($$"org.example.Petstore.Error$Extensions.kt") {
                 it.forAtLeastOne { it shouldContain "message" }
                 it.forAtLeastOne { it shouldContain "code" }
             }

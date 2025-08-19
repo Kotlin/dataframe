@@ -1,4 +1,20 @@
 [//]: # (title: Read)
+
+<web-summary>
+Learn how to load structured data into Kotlin DataFrame 
+from CSV, JSON, Excel, SQL databases, and more.
+</web-summary>
+
+<card-summary>
+Read your data from various file formats into DataFrame.
+</card-summary>
+
+<link-summary>
+Explore how to read data into Kotlin DataFrame from files, URLs, 
+with format auto-detection and parsing options.
+</link-summary>
+
+
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Read-->
 
 The Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, and Apache Arrow input formats.
@@ -589,7 +605,7 @@ val df = DataFrame.readArrowFeather(file)
 
 [`DataFrame`](DataFrame.md) supports reading [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
 and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
-from raw Channel (ReadableByteChannel for streaming and SeekableByteChannel for random access), ArrowReader, InputStream, File or ByteArray.
+from raw Channel (ReadableByteChannel for streaming and SeekableByteChannel for random access), ArrowReader, InputStream, File, or ByteArray.
 
 > If you use Java 9+, follow the [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide.
 >

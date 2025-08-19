@@ -4,7 +4,6 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
-        alias(jupyter.api)
         alias(ktlint)
         alias(dataframe)
         alias(ksp)
@@ -14,7 +13,7 @@ plugins {
 group = "org.jetbrains.kotlinx"
 
 repositories {
-    // geo repository should come before Maven Central
+    // osgeo repository should come before Maven Central
     maven("https://repo.osgeo.org/repository/release")
     mavenCentral()
     mavenLocal()
@@ -26,19 +25,22 @@ fun ExternalModuleDependency.excludeJaiCore() = exclude("javax.media", "jai_core
 
 dependencies {
     api(projects.core)
-    implementation(projects.dataframeJupyter)
 
+    // Geotools
     implementation(libs.geotools.main) { excludeJaiCore() }
     implementation(libs.geotools.shapefile) { excludeJaiCore() }
     implementation(libs.geotools.geojson) { excludeJaiCore() }
     implementation(libs.geotools.referencing) { excludeJaiCore() }
     implementation(libs.geotools.epsg.hsql) { excludeJaiCore() }
 
+    // JAI
     implementation(libs.jai.core)
 
+    // JTS
     implementation(libs.jts.core)
     implementation(libs.jts.io.common)
 
+    // Ktor
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
@@ -54,14 +56,10 @@ tasks.withType<KotlinCompile>().configureEach {
 kotlinPublications {
     publication {
         publicationName = "dataframeGeo"
-        artifactId = "dataframe-geo"
+        artifactId = project.name
         description = "GeoDataFrame API"
         packageName = artifactId
     }
-}
-
-tasks.processJupyterApiResources {
-    libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.IntegrationGeo")
 }
 
 tasks.test {

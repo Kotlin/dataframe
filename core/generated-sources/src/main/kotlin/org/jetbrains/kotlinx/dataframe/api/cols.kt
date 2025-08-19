@@ -16,6 +16,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_COLS
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_COLS_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COLS_TO_ALL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /**
@@ -42,11 +47,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  | `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -418,8 +423,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.all]
      * @see [ColumnsSelectionDsl.filter] */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C> = { true }): TransformableColumnSet<C> =
-        colsInternal(predicate as ColumnFilter<*>) as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C>): ColumnSet<C> =
+        colsInternal(predicate as ColumnFilter<*>).cast()
+
+    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_REPLACE), DeprecationLevel.ERROR)
+    public fun <C> ColumnSet<C>.cols(): ColumnSet<C> = cols { true }
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -468,8 +476,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.all]
      * @see [ColumnsSelectionDsl.filter] */
-    public operator fun <C> ColumnSet<C>.get(predicate: ColumnFilter<C> = { true }): TransformableColumnSet<C> =
-        cols(predicate)
+    public operator fun <C> ColumnSet<C>.get(predicate: ColumnFilter<C> = { true }): ColumnSet<C> = cols(predicate)
 
     /**
      * ## Cols
@@ -571,8 +578,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.all] */
-    public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.asSingleColumn().colsInternal(predicate)
+
+    @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_REPLACE), DeprecationLevel.ERROR)
+    public fun ColumnsSelectionDsl<*>.cols(): ColumnSet<*> = cols { true }
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -622,7 +632,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.all] */
-    public operator fun ColumnsSelectionDsl<*>.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public operator fun ColumnsSelectionDsl<*>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         cols(predicate)
 
     /**
@@ -723,8 +733,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
-    public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal(predicate)
+
+    @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun SingleColumn<DataRow<*>>.cols(): ColumnSet<*> = cols { true }
 
     /**
      * ## Cols
@@ -775,9 +788,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols]
      */
-    public operator fun SingleColumn<DataRow<*>>.get(
-        predicate: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = cols(predicate)
+    public operator fun SingleColumn<DataRow<*>>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+        cols(predicate)
 
     /**
      * ## Cols
@@ -870,8 +882,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      */
-    public fun String.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).cols(predicate)
+    public fun String.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
+
+    @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun String.cols(): ColumnSet<*> = cols { true }
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -917,7 +931,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      */
-    public operator fun String.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> = cols(predicate)
+    public operator fun String.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
 
     /**
      * ## Cols
@@ -1011,11 +1025,9 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
+    public fun KProperty<*>.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).cols(predicate)
 
     /** ## Cols
@@ -1062,12 +1074,9 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun KProperty<*>.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        cols(predicate)
+    public operator fun KProperty<*>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
 
     /**
      * ## Cols
@@ -1156,8 +1165,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      */
-    public fun ColumnPath.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).cols(predicate)
+    public fun ColumnPath.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
+
+    @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
+    public fun ColumnPath.cols(): ColumnSet<*> = cols { true }
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1201,8 +1212,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      */
-    public operator fun ColumnPath.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        cols(predicate)
+    public operator fun ColumnPath.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
 
     // endregion
 

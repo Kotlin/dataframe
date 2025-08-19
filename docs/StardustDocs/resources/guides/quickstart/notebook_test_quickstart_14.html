@@ -1,0 +1,513 @@
+<html>
+<head>
+<style type="text/css">
+:root {
+    --background: #fff;
+    --background-odd: #f5f5f5;
+    --background-hover: #d9edfd;
+    --header-text-color: #474747;
+    --text-color: #848484;
+    --text-color-dark: #000;
+    --text-color-medium: #737373;
+    --text-color-pale: #b3b3b3;
+    --inner-border-color: #aaa;
+    --bold-border-color: #000;
+    --link-color: #296eaa;
+    --link-color-pale: #296eaa;
+    --link-hover: #1a466c;
+}
+
+:root[theme="dark"], :root [data-jp-theme-light="false"], .dataframe_dark{
+    --background: #303030;
+    --background-odd: #3c3c3c;
+    --background-hover: #464646;
+    --header-text-color: #dddddd;
+    --text-color: #b3b3b3;
+    --text-color-dark: #dddddd;
+    --text-color-medium: #b2b2b2;
+    --text-color-pale: #737373;
+    --inner-border-color: #707070;
+    --bold-border-color: #777777;
+    --link-color: #008dc0;
+    --link-color-pale: #97e1fb;
+    --link-hover: #00688e;
+}
+
+p.dataframe_description {
+    color: var(--text-color-dark);
+}
+
+table.dataframe {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    background-color: var(--background);
+    color: var(--text-color-dark);
+    border: none;
+    border-collapse: collapse;
+}
+
+table.dataframe th, td {
+    padding: 6px;
+    border: 1px solid transparent;
+    text-align: left;
+}
+
+table.dataframe th {
+    background-color: var(--background);
+    color: var(--header-text-color);
+}
+
+table.dataframe td {
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+table.dataframe th.bottomBorder {
+    border-bottom-color: var(--bold-border-color);
+}
+
+table.dataframe tbody > tr:nth-child(odd) {
+    background: var(--background-odd);
+}
+
+table.dataframe tbody > tr:nth-child(even) {
+    background: var(--background);
+}
+
+table.dataframe tbody > tr:hover {
+    background: var(--background-hover);
+}
+
+table.dataframe a {
+    cursor: pointer;
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+table.dataframe tr:hover > td a {
+    color: var(--link-color-pale);
+}
+
+table.dataframe a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+table.dataframe img {
+    max-width: fit-content;
+}
+
+table.dataframe th.complex {
+    background-color: var(--background);
+    border: 1px solid var(--background);
+}
+
+table.dataframe .leftBorder {
+    border-left-color: var(--inner-border-color);
+}
+
+table.dataframe .rightBorder {
+    border-right-color: var(--inner-border-color);
+}
+
+table.dataframe .rightAlign {
+    text-align: right;
+}
+
+table.dataframe .expanderSvg {
+    width: 8px;
+    height: 8px;
+    margin-right: 3px;
+}
+
+table.dataframe .expander {
+    display: flex;
+    align-items: center;
+}
+
+/* formatting */
+
+table.dataframe .null {
+    color: var(--text-color-pale);
+}
+
+table.dataframe .structural {
+    color: var(--text-color-medium);
+    font-weight: bold;
+}
+
+table.dataframe .dataFrameCaption {
+    font-weight: bold;
+}
+
+table.dataframe .numbers {
+    color: var(--text-color-dark);
+}
+
+table.dataframe td:hover .formatted .structural, .null {
+    color: var(--text-color-dark);
+}
+
+table.dataframe tr:hover .formatted .structural, .null {
+    color: var(--text-color-dark);
+}
+
+
+body {
+    font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
+}       
+
+:root {
+    color: #19191C;
+    background-color: #fff;
+}
+
+:root[theme="dark"] {
+    background-color: #19191C;
+    color: #FFFFFFCC
+}
+
+details details {
+    margin-left: 20px; 
+}
+
+summary {
+    padding: 6px;
+}
+</style>
+</head>
+<body>
+<table class="dataframe" id="df_838860818"></table>
+
+<p class="dataframe_description"></p>
+</body>
+<script>
+(function () {
+    window.DataFrame = window.DataFrame || new (function () {
+        this.addTable = function (df) {
+            let cols = df.cols;
+            for (let i = 0; i < cols.length; i++) {
+                for (let c of cols[i].children) {
+                    cols[c].parent = i;
+                }
+            }
+            df.nrow = 0
+            for (let i = 0; i < df.cols.length; i++) {
+                if (df.cols[i].values.length > df.nrow) df.nrow = df.cols[i].values.length
+            }
+            if (df.id === df.rootId) {
+                df.expandedFrames = new Set()
+                df.childFrames = {}
+                const table = this.getTableElement(df.id)
+                table.df = df
+                for (let i = 0; i < df.cols.length; i++) {
+                    let col = df.cols[i]
+                    if (col.parent === undefined && col.children.length > 0) col.expanded = true
+                }
+            } else {
+                const rootDf = this.getTableData(df.rootId)
+                rootDf.childFrames[df.id] = df
+            }
+        }
+
+        this.computeRenderData = function (df) {
+            let result = []
+            let pos = 0
+            for (let col = 0; col < df.cols.length; col++) {
+                if (df.cols[col].parent === undefined)
+                    pos += this.computeRenderDataRec(df.cols, col, pos, 0, result, false, false)
+            }
+            for (let i = 0; i < result.length; i++) {
+                let row = result[i]
+                for (let j = 0; j < row.length; j++) {
+                    let cell = row[j]
+                    if (j === 0)
+                        cell.leftBd = false
+                    if (j < row.length - 1) {
+                        let nextData = row[j + 1]
+                        if (nextData.leftBd) cell.rightBd = true
+                        else if (cell.rightBd) nextData.leftBd = true
+                    } else cell.rightBd = false
+                }
+            }
+            return result
+        }
+
+        this.computeRenderDataRec = function (cols, colId, pos, depth, result, leftBorder, rightBorder) {
+            if (result.length === depth) {
+                const array = [];
+                if (pos > 0) {
+                    let j = 0
+                    for (let i = 0; j < pos; i++) {
+                        let c = result[depth - 1][i]
+                        j += c.span
+                        let copy = Object.assign({empty: true}, c)
+                        array.push(copy)
+                    }
+                }
+                result.push(array)
+            }
+            const col = cols[colId];
+            let size = 0;
+            if (col.expanded) {
+                let childPos = pos
+                for (let i = 0; i < col.children.length; i++) {
+                    let child = col.children[i]
+                    let childLeft = i === 0 && (col.children.length > 1 || leftBorder)
+                    let childRight = i === col.children.length - 1 && (col.children.length > 1 || rightBorder)
+                    let childSize = this.computeRenderDataRec(cols, child, childPos, depth + 1, result, childLeft, childRight)
+                    childPos += childSize
+                    size += childSize
+                }
+            } else {
+                for (let i = depth + 1; i < result.length; i++)
+                    result[i].push({id: colId, span: 1, leftBd: leftBorder, rightBd: rightBorder, empty: true})
+                size = 1
+            }
+            let left = leftBorder
+            let right = rightBorder
+            if (size > 1) {
+                left = true
+                right = true
+            }
+            result[depth].push({id: colId, span: size, leftBd: left, rightBd: right})
+            return size
+        }
+
+        this.getTableElement = function (id) {
+            return document.getElementById("df_" + id)
+        }
+
+        this.getTableData = function (id) {
+            return this.getTableElement(id).df
+        }
+
+        this.createExpander = function (isExpanded) {
+            const svgNs = "http://www.w3.org/2000/svg"
+            let svg = document.createElementNS(svgNs, "svg")
+            svg.classList.add("expanderSvg")
+            let path = document.createElementNS(svgNs, "path")
+            if (isExpanded) {
+                svg.setAttribute("viewBox", "0 -2 8 8")
+                path.setAttribute("d", "M1 0 l-1 1 4 4 4 -4 -1 -1 -3 3Z")
+            } else {
+                svg.setAttribute("viewBox", "-2 0 8 8")
+                path.setAttribute("d", "M1 0 l-1 1 3 3 -3 3 1 1 4 -4Z")
+            }
+            path.setAttribute("fill", "currentColor")
+            svg.appendChild(path)
+            return svg
+        }
+
+        this.renderTable = function (id) {
+
+            let table = this.getTableElement(id)
+
+            if (table === null) return
+
+            table.innerHTML = ""
+
+            let df = table.df
+            let rootDf = df.rootId === df.id ? df : this.getTableData(df.rootId)
+
+            // header
+            let header = document.createElement("thead")
+            table.appendChild(header)
+
+            let renderData = this.computeRenderData(df)
+            for (let j = 0; j < renderData.length; j++) {
+                let rowData = renderData[j]
+                let tr = document.createElement("tr");
+                let isLastRow = j === renderData.length - 1
+                header.appendChild(tr);
+                for (let i = 0; i < rowData.length; i++) {
+                    let cell = rowData[i]
+                    let th = document.createElement("th");
+                    th.setAttribute("colspan", cell.span)
+                    let colId = cell.id
+                    let col = df.cols[colId];
+                    if (!cell.empty) {
+                        if (col.children.length === 0) {
+                            th.innerHTML = col.name
+                        } else {
+                            let link = document.createElement("a")
+                            link.className = "expander"
+                            let that = this
+                            link.onclick = function () {
+                                col.expanded = !col.expanded
+                                that.renderTable(id)
+                            }
+                            link.appendChild(this.createExpander(col.expanded))
+                            link.innerHTML += col.name
+                            th.appendChild(link)
+                        }
+                    }
+                    let classes = (cell.leftBd ? " leftBorder" : "") + (cell.rightBd ? " rightBorder" : "")
+                    if (col.rightAlign)
+                        classes += " rightAlign"
+                    if (isLastRow)
+                        classes += " bottomBorder"
+                    if (classes.length > 0)
+                        th.setAttribute("class", classes)
+                    tr.appendChild(th)
+                }
+            }
+
+            // body
+            let body = document.createElement("tbody")
+            table.appendChild(body)
+
+            let columns = renderData.pop()
+            for (let row = 0; row < df.nrow; row++) {
+                let tr = document.createElement("tr");
+                body.appendChild(tr)
+                for (let i = 0; i < columns.length; i++) {
+                    let cell = columns[i]
+                    let td = document.createElement("td");
+                    let colId = cell.id
+                    let col = df.cols[colId]
+                    let classes = (cell.leftBd ? " leftBorder" : "") + (cell.rightBd ? " rightBorder" : "")
+                    if (col.rightAlign)
+                        classes += " rightAlign"
+                    if (classes.length > 0)
+                        td.setAttribute("class", classes)
+                    tr.appendChild(td)
+                    let value = col.values[row]
+                    if (value.frameId !== undefined) {
+                        let frameId = value.frameId
+                        let expanded = rootDf.expandedFrames.has(frameId)
+                        let link = document.createElement("a")
+                        link.className = "expander"
+                        let that = this
+                        link.onclick = function () {
+                            if (rootDf.expandedFrames.has(frameId))
+                                rootDf.expandedFrames.delete(frameId)
+                            else rootDf.expandedFrames.add(frameId)
+                            that.renderTable(id)
+                        }
+                        link.appendChild(this.createExpander(expanded))
+                        link.innerHTML += value.value
+                        if (expanded) {
+                            td.appendChild(link)
+                            td.appendChild(document.createElement("p"))
+                            const childTable = document.createElement("table")
+                            childTable.className = "dataframe"
+                            childTable.id = "df_" + frameId
+                            let childDf = rootDf.childFrames[frameId]
+                            childTable.df = childDf
+                            td.appendChild(childTable)
+                            this.renderTable(frameId)
+                            if (childDf.nrow !== childDf.totalRows) {
+                                const footer = document.createElement("p")
+                                footer.innerText = `... showing only top ${childDf.nrow} of ${childDf.totalRows} rows`
+                                td.appendChild(footer)
+                            }
+                        } else {
+                            td.appendChild(link)
+                        }
+                    } else if (value.style !== undefined) {
+                        td.innerHTML = value.value
+                        td.setAttribute("style", value.style)
+                    } else td.innerHTML = value
+                    this.nodeScriptReplace(td)
+                }
+            }
+        }
+
+        this.nodeScriptReplace = function (node) {
+            if (this.nodeScriptIs(node) === true) {
+                node.parentNode.replaceChild(this.nodeScriptClone(node), node);
+            } else {
+                let i = -1, children = node.childNodes;
+                while (++i < children.length) {
+                    this.nodeScriptReplace(children[i]);
+                }
+            }
+
+            return node;
+        }
+
+        this.nodeScriptClone = function (node) {
+            let script = document.createElement("script");
+            script.text = node.innerHTML;
+
+            let i = -1, attrs = node.attributes, attr;
+            while (++i < attrs.length) {
+                script.setAttribute((attr = attrs[i]).name, attr.value);
+            }
+            return script;
+        }
+
+        this.nodeScriptIs = function (node) {
+            return node.tagName === 'SCRIPT';
+        }
+    })()
+
+    window.call_DataFrame = function (f) {
+        return f();
+    };
+
+    let funQueue = window["kotlinQueues"] && window["kotlinQueues"]["DataFrame"];
+    if (funQueue) {
+        funQueue.forEach(function (f) {
+            f();
+        });
+        funQueue = [];
+    }
+})()
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["kotlin","intellij-community","kotlin-native","compose-jb","ideavim","JetBrainsMono","Exposed","ring-ui","kotlinconf-app","create-react-kotlin-app"] }, 
+{ name: "<span title=\"starsCount: Int\">starsCount</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">39402</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">12926</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">7101</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">6805</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">6120</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">6059</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">5688</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2836</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2628</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2424</span></span>"] }, 
+{ name: "<span title=\"topics: List<String>\">topics</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"compiler\ngradle-plugin\nintellij-plugin\nkotlin\nkotlin-library\nmaven-plugin\nprogramming-language\"><span class=\"structural\">[</span>compiler<span class=\"structural\">, </span>gradle-plugin<span class=\"structural\">, </span>intel<span class=\"structural\">...</span><span class=\"structural\">, </span><span class=\"structural\">...</span><span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"code-editor\nide\nintellij\nintellij-community\nintellij-platform\"><span class=\"structural\">[</span>code-editor<span class=\"structural\">, </span>ide<span class=\"structural\">, </span>intellij<span class=\"structural\">, </span>i<span class=\"structural\">...</span><span class=\"structural\">, </span>i<span class=\"structural\">...</span><span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"c\ncompiler\nkotlin\nllvm\nobjective-c\"><span class=\"structural\">[</span>c<span class=\"structural\">, </span>compiler<span class=\"structural\">, </span>kotlin<span class=\"structural\">, </span>llvm<span class=\"structural\">, </span>objective-c<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"android\nawt\ncompose\ndeclarative-ui\ndesktop\ngui\njavascript\nkotlin\nmultiplatform\nreactive\nswing\nui\"><span class=\"structural\">[</span>android<span class=\"structural\">, </span>awt<span class=\"structural\">, </span>compose<span class=\"structural\">, </span>declara<span class=\"structural\">...</span><span class=\"structural\">, </span><span class=\"structural\">...</span><span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"ideavim\nintellij\nintellij-platform\njb-official\nkotlin\nvim\nvim-emulator\"><span class=\"structural\">[</span>ideavim<span class=\"structural\">, </span>intellij<span class=\"structural\">, </span>intellij-pl<span class=\"structural\">...</span><span class=\"structural\">, </span><span class=\"structural\">...</span><span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"coding-font\nfont\nligatures\nmonospaced-font\nprogramming-font\nprogramming-ligatures\"><span class=\"structural\">[</span>coding-font<span class=\"structural\">, </span>font<span class=\"structural\">, </span>ligatures<span class=\"structural\">, </span><span class=\"structural\">...</span><span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"dao\nkotlin\norm\nsql\"><span class=\"structural\">[</span>dao<span class=\"structural\">, </span>kotlin<span class=\"structural\">, </span>orm<span class=\"structural\">, </span>sql<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"components\njetbrains-ui\nreact\"><span class=\"structural\">[</span>components<span class=\"structural\">, </span>jetbrains-ui<span class=\"structural\">, </span>react<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"\"><span class=\"structural\">[</span><span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"create-react-app\njetbrains-ui\nkotlin\nreact\nwebpack\"><span class=\"structural\">[</span>create-react-app<span class=\"structural\">, </span>jetbrains-ui<span class=\"structural\">, </span><span class=\"structural\">...</span><span class=\"structural\">]</span></span>"] }, 
+{ name: "<span title=\"isIntellij: Boolean\">isIntellij</span>", children: [], rightAlign: false, values: ["false","true","false","false","true","false","false","false","false","false"] }, 
+], id: 838860818, rootId: 838860818, totalRows: 10 } ) });
+/*-->*/
+
+call_DataFrame(function() { DataFrame.renderTable(838860818) });
+
+function sendHeight() {
+    const table = document.querySelector('table.dataframe');
+    if (!table) return;
+
+    let height = 0;
+    
+    const thead = table.querySelector('thead');
+    if (thead) height += thead.offsetHeight;
+    
+    const rows = table.querySelectorAll(':scope > tbody > tr');
+    rows.forEach(row => {
+        height += row.offsetHeight;
+    });
+    
+    height += getVerticalMargins(table) + 10;
+
+    window.parent.postMessage({ type: 'iframeHeight', height: Math.ceil(height) }, '*');
+}
+
+function getVerticalMargins(element) {
+    const style = getComputedStyle(element);
+    return parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+}
+
+function repeatHeightCalculation(maxRetries = 10, interval = 100) {
+    let retries = 0;
+    const intervalId = setInterval(() => {
+        sendHeight();
+        retries++;
+        if (retries >= maxRetries) clearInterval(intervalId);
+    }, interval);
+}
+
+window.addEventListener('load', repeatHeightCalculation);
+
+const observer = new MutationObserver(() => repeatHeightCalculation(5, 50));
+observer.observe(document.querySelector('.dataframe'), {
+    childList: true,
+    subtree: true,
+    characterData: true,
+});
+
+
+</script>
+</html>

@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with rows that satisfy [row condition](DataRow.md#row-conditions)
 
+**Related operations**: [](filterRows.md)
+
 <!---FUN filter-->
 <tabs>
 <tab title="Properties">
@@ -20,28 +22,5 @@ df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.filter.html"/>
-<!---END-->
-
-## filterBy
-
-Returns [`DataFrame`](DataFrame.md) with rows that have value `true` in given column of type `Boolean`.
-
-<!---FUN filterBy-->
-<tabs>
-<tab title="Properties">
-
-```kotlin
-df.filterBy { isHappy }
-```
-
-</tab>
-<tab title="Strings">
-
-```kotlin
-df.filterBy("isHappy")
-```
-
-</tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.filterBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.filter.html" width="100%"/>
 <!---END-->

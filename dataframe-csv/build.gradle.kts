@@ -6,7 +6,7 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
         alias(kodex)
         alias(binary.compatibility.validator)
@@ -91,7 +91,7 @@ val processKDocsMain by creatingRunKodexTask(processKDocsMainSources) {
     outputReadOnly = false
 
     exportAsHtml {
-        dir = file("../docs/StardustDocs/snippets/kdocs")
+        dir = file("../docs/StardustDocs/resources/snippets/kdocs")
     }
     finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
 }
@@ -106,8 +106,8 @@ tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
 // If `changeJarTask` is run, modify all Jar tasks such that before running the Kotlin sources are set to
 // the target of `processKdocMain`, and they are returned to normal afterward.
 // This is usually only done when publishing
-val changeJarTask by tasks.creating {
-    outputs.upToDateWhen { false }
+val changeJarTask by tasks.registering {
+    outputs.upToDateWhen { project.hasProperty("skipKodex") }
     doFirst {
         tasks.withType<Jar> {
             doFirst {
@@ -136,7 +136,7 @@ tasks.withType<Jar> {
 
 // modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
 tasks.configureEach {
-    if (name.startsWith("publish")) {
+    if (!project.hasProperty("skipKodex") && name.startsWith("publish")) {
         dependsOn(processKDocsMain, changeJarTask)
     }
 }
@@ -152,7 +152,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeCsv"
         artifactId = project.name
-        description = "CSV support for Kotlin Dataframe"
+        description = "CSV support for Kotlin DataFrame"
         packageName = artifactId
     }
 }

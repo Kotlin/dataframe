@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -40,7 +39,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -177,7 +176,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols]
      */
     @Interpretable("ColGroups0")
-    public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+    public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
         columnGroupsInternal(filter)
 
     /**
@@ -213,9 +212,8 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols]
      */
     @Interpretable("ColGroups1")
-    public fun ColumnsSelectionDsl<*>.colGroups(
-        filter: Predicate<ColumnGroup<*>> = { true },
-    ): TransformableColumnSet<AnyRow> = asSingleColumn().columnGroupsInternal(filter)
+    public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+        asSingleColumn().columnGroupsInternal(filter)
 
     /**
      * ## Column Groups
@@ -250,9 +248,8 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols]
      */
     @Interpretable("ColGroups2")
-    public fun SingleColumn<DataRow<*>>.colGroups(
-        filter: Predicate<ColumnGroup<*>> = { true },
-    ): TransformableColumnSet<AnyRow> = this.ensureIsColumnGroup().columnGroupsInternal(filter)
+    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+        this.ensureIsColumnGroup().columnGroupsInternal(filter)
 
     /**
      * ## Column Groups
@@ -286,7 +283,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
-    public fun String.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+    public fun String.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
         columnGroup(this).colGroups(filter)
 
     /**
@@ -321,7 +318,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
-    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
         columnGroup(this).colGroups(filter)
 
     /**
@@ -354,19 +351,19 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
-    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
+    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
         columnGroup(this).colGroups(filter)
 }
 
 /**
- * Returns a TransformableColumnSet containing the column groups that satisfy the given filter.
+ * Returns a ColumnSet containing the column groups that satisfy the given filter.
  *
  * @param filter The filter function to apply on each column group. Must accept a ColumnGroup object and return a Boolean.
- * @return A [TransformableColumnSet] containing the column groups that satisfy the filter.
+ * @return A [ColumnSet] containing the column groups that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
 internal inline fun ColumnsResolver<*>.columnGroupsInternal(
     crossinline filter: (ColumnGroup<*>) -> Boolean,
-): TransformableColumnSet<AnyRow> = colsInternal { it.isColumnGroup() && filter(it) } as TransformableColumnSet<AnyRow>
+): ColumnSet<AnyRow> = colsInternal { it.isColumnGroup() && filter(it) }.cast()
 
 // endregion

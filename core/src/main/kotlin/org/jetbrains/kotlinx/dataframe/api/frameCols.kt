@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -111,9 +112,8 @@ public interface FrameColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("FrameCols0")
-    public fun ColumnSet<*>.frameCols(
-        filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = frameColumnsInternal(filter)
+    public fun ColumnSet<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
+        frameColumnsInternal(filter)
 
     /**
      * @include [CommonFrameColsDocs]
@@ -126,7 +126,7 @@ public interface FrameColsColumnsSelectionDsl {
     @Interpretable("FrameCols1")
     public fun ColumnsSelectionDsl<*>.frameCols(
         filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = asSingleColumn().frameColumnsInternal(filter)
+    ): ColumnSet<DataFrame<*>> = asSingleColumn().frameColumnsInternal(filter)
 
     /**
      * @include [CommonFrameColsDocs]
@@ -139,7 +139,7 @@ public interface FrameColsColumnsSelectionDsl {
     @Interpretable("FrameCols2")
     public fun SingleColumn<DataRow<*>>.frameCols(
         filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = this.ensureIsColumnGroup().frameColumnsInternal(filter)
+    ): ColumnSet<DataFrame<*>> = this.ensureIsColumnGroup().frameColumnsInternal(filter)
 
     /**
      * @include [CommonFrameColsDocs]
@@ -149,7 +149,7 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]`() }`
      */
-    public fun String.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
+    public fun String.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)
 
     /**
@@ -162,13 +162,10 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[frameCols][KProperty.frameCols]`() }`
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.frameCols(
-        filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
+    public fun KProperty<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
+        columnGroup(this).frameCols(filter)
 
     /**
      * @include [CommonFrameColsDocs]
@@ -176,9 +173,8 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`() }`
      */
-    public fun ColumnPath.frameCols(
-        filter: Predicate<FrameColumn<*>> = { true },
-    ): TransformableColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
+    public fun ColumnPath.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
+        columnGroup(this).frameCols(filter)
 }
 
 /**

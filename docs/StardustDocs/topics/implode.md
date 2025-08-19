@@ -8,6 +8,8 @@ Returns [`DataFrame`](DataFrame.md) where values in given columns are merged int
 implode(dropNA = false) [ { columns } ]
 ```
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 **Parameters:**
 * `dropNA` — if `true`, removes `NA` values from merged lists.
 
@@ -25,5 +27,5 @@ Imploded [`ColumnGroup`](DataColumn.md#columngroup) will convert into [`FrameCol
 df.implode { name and age and weight and isHappy }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.implode.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.implode.html" width="100%"/>
 <!---END-->

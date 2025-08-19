@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_RIGHT
@@ -237,16 +238,12 @@ public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<
  */
 public fun <T> DataFrame<T>.move(vararg columns: String): MoveClause<T, Any?> = move { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.move(vararg columns: ColumnReference<C>): MoveClause<T, C> =
     move { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.move(vararg columns: KProperty<C>): MoveClause<T, C> = move { columns.toColumnSet() }
 
@@ -409,16 +406,12 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: String): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColumnReference): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KProperty<*>): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
@@ -588,9 +581,7 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = 
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: AnyColumnReference): DataFrame<T> =
     moveToStart { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.moveToStart(vararg columns: AnyColumnReference): DataFrame<T> =
     moveToStart { columns.toColumnSet() }
@@ -600,9 +591,7 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: AnyColumnReference): Dat
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: KProperty<*>): DataFrame<T> =
     moveToStart { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.moveToStart(vararg columns: KProperty<*>): DataFrame<T> =
     moveToStart { columns.toColumnSet() }
@@ -772,9 +761,7 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = mo
 public fun <T> DataFrame<T>.moveToRight(vararg columns: AnyColumnReference): DataFrame<T> =
     moveToEnd { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: AnyColumnReference): DataFrame<T> =
     moveToEnd { columns.toColumnSet() }
@@ -784,9 +771,7 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: AnyColumnReference): DataF
 public fun <T> DataFrame<T>.moveToRight(vararg columns: KProperty<*>): DataFrame<T> =
     moveToEnd { columns.toColumnSet() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T> = moveToEnd { columns.toColumnSet() }
 
@@ -801,7 +786,9 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
 /**
  * Moves columns, previously selected with [move] into a new position specified by a
  * given column path within the [DataFrame].
- * If there are non-existent column groups on this path, they will be created.
+ *
+ * If the specified path is partially or fully missing — that is, if any segment of the path
+ * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -858,7 +845,9 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  * Moves columns, previously selected with [move] into a new position specified by a
  * given column path within the [DataFrame].
  * Provides selected column indices.
- * If there are non-existent column groups on this path, they will be created.
+ *
+ * If the specified path is partially or fully missing — that is, if any segment of the path
+ * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -932,9 +921,7 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
 @Interpretable("MoveUnder0")
 public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = pathOf(column).let { path -> under { path } }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> =
     column.path().let { path -> under { path } }
@@ -943,7 +930,9 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
  * Moves columns, previously selected with [move] under a new or
  * an existing column group specified by a
  * column path within the [DataFrame].
- * If there are non-existent column groups on this path, they will be created.
+ *
+ * If the specified path is partially or fully missing — that is, if any segment of the path
+ * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -1113,15 +1102,11 @@ public fun <T, C> MoveClause<T, C>.after(column: ColumnSelector<T, *>): DataFram
  */
 public fun <T, C> MoveClause<T, C>.after(column: String): DataFrame<T> = after { column.toColumnAccessor() }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> MoveClause<T, C>.after(column: AnyColumnReference): DataFrame<T> = after { column }
 
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = after { column.toColumnAccessor() }
 

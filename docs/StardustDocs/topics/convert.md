@@ -13,7 +13,10 @@ colExpression = DataFrame.(DataColumn) -> DataColumn
 frameExpression: DataFrame.(DataFrame) -> DataFrame
 ```
 
-See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
+**Related operations**: [](updateConvert.md)
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation and
+[row expressions](DataRow.md#row-expressions) for how to provide new values.
 
 <!---FUN convert-->
 
@@ -22,7 +25,7 @@ df.convert { age }.with { it.toDouble() }
 df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convert.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.convert.html" width="100%"/>
 <!---END-->
 
 ColumnGroup can be converted using DataFrame API, for example:
@@ -33,7 +36,7 @@ ColumnGroup can be converted using DataFrame API, for example:
 df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertAsFrame.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertAsFrame.html" width="100%"/>
 <!---END-->
 
 Similar to `replace with` operation, 
@@ -49,7 +52,7 @@ df.convert { name }.asColumn { col ->
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertAsColumn.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertAsColumn.html" width="100%"/>
 <!---END-->
 
 
@@ -78,7 +81,7 @@ df.convert { name.firstName and name.lastName }.asColumn { it.length() }
 df.convert { weight }.toFloat()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertTo.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertTo.html" width="100%"/>
 <!---END-->
 
 Automatic conversion from `String` to [enum classes](https://kotlinlang.org/docs/enum-classes.html#enum-classes.md)
@@ -95,7 +98,7 @@ dataFrameOf("direction")("NORTH", "WEST")
     .convert("direction").to<Direction>()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToEnum.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToEnum.html" width="100%"/>
 <!---END-->
 
 And finally, [Value classes](https://kotlinlang.org/docs/inline-classes.html) can be used with `convert` too.
@@ -113,5 +116,5 @@ dataFrameOf("value")("1", "2") // note that values are strings; conversion is do
     .convert("value").to<IntClass>()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToValueClass.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToValueClass.html" width="100%"/>
 <!---END-->

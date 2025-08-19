@@ -8,6 +8,10 @@ Splits list-like values in given columns and spreads them vertically. Values in 
 explode(dropEmpty = true) [ { columns } ]
 ```
 
+**Reverse operation:** [`implode`](implode.md)
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 **Parameters:**
 * `dropEmpty` — if `true`, removes rows with empty lists or [`DataFrame`](DataFrame.md) objects. Otherwise, they will be exploded into `null`.
 
@@ -15,8 +19,6 @@ explode(dropEmpty = true) [ { columns } ]
 * [`DataFrame`](DataFrame.md)
 * [`FrameColumn`](DataColumn.md#framecolumn)
 * `DataColumn<Collection>`
-
-**Reverse operation:** [`implode`](implode.md)
 
 Exploded columns will change their types:
 * `List<T>` to `T`

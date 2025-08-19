@@ -2,7 +2,7 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
         alias(binary.compatibility.validator)
     }
@@ -20,6 +20,7 @@ dependencies {
     implementation(libs.arrow.vector)
     implementation(libs.arrow.format)
     implementation(libs.arrow.memory)
+    implementation(libs.arrow.dataset)
     implementation(libs.commonsCompress)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.datetimeJvm)
@@ -36,7 +37,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeArrow"
         artifactId = project.name
-        description = "Apache Arrow support for Kotlin Dataframe"
+        description = "Apache Arrow support for Kotlin DataFrame"
         packageName = artifactId
     }
 }

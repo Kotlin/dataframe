@@ -248,7 +248,7 @@ internal fun Sequence<Number?>.convertToUnifiedNumberType(
 
 /** @include [Iterable.convertToUnifiedNumberType] */
 @Suppress("UNCHECKED_CAST")
-@JvmName("convert=SequenceToUnifiedNumberType")
+@JvmName("convertSequenceToUnifiedNumberType")
 internal fun Sequence<Number>.convertToUnifiedNumberType(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
     commonNumberType: KType? = null,

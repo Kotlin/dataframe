@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.exceptions
 
 public class DuplicateColumnNamesException(public val allColumnNames: List<String>) :
     IllegalArgumentException(),
-    DataFrameException {
+    DataFrameError {
 
     public val duplicatedNames: List<String> = allColumnNames
         .groupBy { it }

@@ -1,9 +1,11 @@
 plugins {
     `kotlin-dsl`
-    `java-gradle-plugin`
     `maven-publish`
-    alias(libs.plugins.plugin.publish)
-    alias(libs.plugins.ktlint)
+    with(libs.plugins) {
+        alias(buildconfig)
+        alias(plugin.publish)
+        alias(ktlint)
+    }
 }
 
 repositories {
@@ -14,26 +16,34 @@ repositories {
 
 group = "org.jetbrains.kotlinx.dataframe"
 
+buildscript {
+    dependencies {
+        classpath(embeddedKotlin("gradle-plugin"))
+    }
+}
+
 dependencies {
     api(libs.kotlin.reflect)
     implementation(projects.dataframe)
     // experimental
     implementation(projects.dataframeOpenapiGenerator)
 
+    compileOnly(embeddedKotlin("gradle-plugin"))
     implementation(libs.kotlin.gradle.plugin.api)
-    implementation(libs.kotlin.gradle.plugin)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
     implementation(libs.ksp.gradle)
     implementation(libs.ksp.api)
 
-    testImplementation(libs.junit)
+    testImplementation(gradleTestKit())
+    testImplementation(embeddedKotlin("test"))
+    testImplementation(embeddedKotlin("test-junit"))
     testImplementation(libs.kotestAssertions)
     testImplementation(libs.android.gradle.api)
     testImplementation(libs.android.gradle)
+    testImplementation(embeddedKotlin("gradle-plugin"))
     testImplementation(libs.ktor.server.netty)
     testImplementation(libs.h2db)
-    testImplementation(gradleApi())
 }
 
 tasks.withType<ProcessResources> {
@@ -70,14 +80,14 @@ gradlePlugin {
         create("schemaGeneratorPlugin") {
             id = "org.jetbrains.kotlinx.dataframe"
             implementationClass = "org.jetbrains.dataframe.gradle.ConvenienceSchemaGeneratorPlugin"
-            displayName = "Kotlin Dataframe gradle plugin"
+            displayName = "Kotlin DataFrame gradle plugin"
             description = "Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
         }
         create("deprecatedSchemaGeneratorPlugin") {
             id = "org.jetbrains.kotlin.plugin.dataframe"
             implementationClass = "org.jetbrains.dataframe.gradle.DeprecatingSchemaGeneratorPlugin"
-            displayName = "Kotlin Dataframe gradle plugin"
+            displayName = "Kotlin DataFrame gradle plugin"
             description =
                 "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
@@ -100,7 +110,11 @@ val integrationTestConfiguration by configurations.creating {
     extendsFrom(configurations.testImplementation.get())
 }
 
-val integrationTestTask = task<Test>("integrationTest") {
+tasks.pluginUnderTestMetadata {
+    pluginClasspath.from(integrationTestConfiguration)
+}
+
+val integrationTestTask = tasks.register<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
@@ -126,3 +140,14 @@ val integrationTestTask = task<Test>("integrationTest") {
 }
 
 tasks.check { dependsOn(integrationTestTask) }
+
+// fixing linter + buildConfig
+kotlin.sourceSets.create("buildConfigSources") {
+    kotlin.srcDir("build/generated/sources/buildConfig/main")
+}
+tasks.generateBuildConfig {
+    finalizedBy("runKtlintFormatOverBuildConfigSourcesSourceSet")
+}
+tasks.named("runKtlintCheckOverBuildConfigSourcesSourceSet") {
+    dependsOn(tasks.generateBuildConfig, "runKtlintFormatOverBuildConfigSourcesSourceSet")
+}

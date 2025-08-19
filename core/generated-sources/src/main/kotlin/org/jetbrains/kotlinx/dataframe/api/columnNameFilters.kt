@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -36,7 +36,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -164,10 +164,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("NameContains0")
-    public fun <C> ColumnSet<C>.nameContains(
-        text: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<C> = colsInternal { it.name.contains(text, ignoreCase) } as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.nameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<C> =
+        colsInternal { it.name.contains(text, ignoreCase) }.cast()
 
     /**
      * ## (Cols) Name Contains
@@ -203,10 +201,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      */
     @Interpretable("NameContains1")
-    public fun ColumnsSelectionDsl<*>.nameContains(
-        text: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = asSingleColumn().colsNameContains(text, ignoreCase)
+    public fun ColumnsSelectionDsl<*>.nameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        asSingleColumn().colsNameContains(text, ignoreCase)
 
     /**
      * ## (Cols) Name Contains
@@ -245,7 +241,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.colsNameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().colsInternal { it.name.contains(text, ignoreCase) }
+    ): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal { it.name.contains(text, ignoreCase) }
 
     /**
      * ## (Cols) Name Contains
@@ -280,7 +276,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    public fun String.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): TransformableColumnSet<*> =
+    public fun String.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
@@ -316,14 +312,10 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.colsNameContains(
-        text: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = columnGroup(this).colsNameContains(text, ignoreCase)
+    public fun KProperty<*>.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
      * ## (Cols) Name Contains
@@ -358,10 +350,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    public fun ColumnPath.colsNameContains(
-        text: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = columnGroup(this).colsNameContains(text, ignoreCase)
+    public fun ColumnPath.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
      * ## (Cols) Name Contains
@@ -434,8 +424,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> =
-        colsInternal { it.name.contains(regex) } as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.nameContains(regex: Regex): ColumnSet<C> =
+        colsInternal { it.name.contains(regex) }.cast()
 
     /**
      * ## (Cols) Name Contains
@@ -470,7 +460,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    public fun ColumnsSelectionDsl<*>.nameContains(regex: Regex): TransformableColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.nameContains(regex: Regex): ColumnSet<*> =
         asSingleColumn().colsNameContains(regex)
 
     /**
@@ -506,7 +496,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    public fun SingleColumn<DataRow<*>>.colsNameContains(regex: Regex): TransformableColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.colsNameContains(regex: Regex): ColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal { it.name.contains(regex) }
 
     /**
@@ -542,8 +532,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    public fun String.colsNameContains(regex: Regex): TransformableColumnSet<*> =
-        columnGroup(this).colsNameContains(regex)
+    public fun String.colsNameContains(regex: Regex): ColumnSet<*> = columnGroup(this).colsNameContains(regex)
 
     /**
      * ## (Cols) Name Contains
@@ -578,12 +567,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.colsNameContains(regex: Regex): TransformableColumnSet<*> =
-        columnGroup(this).colsNameContains(regex)
+    public fun KProperty<*>.colsNameContains(regex: Regex): ColumnSet<*> = columnGroup(this).colsNameContains(regex)
 
     /**
      * ## (Cols) Name Contains
@@ -618,8 +604,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    public fun ColumnPath.colsNameContains(regex: Regex): TransformableColumnSet<*> =
-        columnGroup(this).colsNameContains(regex)
+    public fun ColumnPath.colsNameContains(regex: Regex): ColumnSet<*> = columnGroup(this).colsNameContains(regex)
 
     // endregion
 
@@ -660,10 +645,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("NameStartsWith0")
-    public fun <C> ColumnSet<C>.nameStartsWith(
-        prefix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<C> = colsInternal { it.name.startsWith(prefix, ignoreCase) } as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.nameStartsWith(prefix: CharSequence, ignoreCase: Boolean = false): ColumnSet<C> =
+        colsInternal { it.name.startsWith(prefix, ignoreCase) }.cast()
 
     /**
      * ## (Cols) Name Starts With
@@ -699,10 +682,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameContains]
      */
     @Interpretable("NameStartsWith1")
-    public fun ColumnsSelectionDsl<*>.nameStartsWith(
-        prefix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = asSingleColumn().colsNameStartsWith(prefix, ignoreCase)
+    public fun ColumnsSelectionDsl<*>.nameStartsWith(prefix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        asSingleColumn().colsNameStartsWith(prefix, ignoreCase)
 
     /**
      * ## (Cols) Name Starts With
@@ -741,7 +722,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.colsNameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().colsInternal { it.name.startsWith(prefix, ignoreCase) }
+    ): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal { it.name.startsWith(prefix, ignoreCase) }
 
     /**
      * ## (Cols) Name Starts With
@@ -776,10 +757,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameEndsWith]
      * @see [nameContains]
      */
-    public fun String.colsNameStartsWith(
-        prefix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
+    public fun String.colsNameStartsWith(prefix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
     /**
      * ## (Cols) Name Starts With
@@ -814,14 +793,10 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameEndsWith]
      * @see [nameContains]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.colsNameStartsWith(
-        prefix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
+    public fun KProperty<*>.colsNameStartsWith(prefix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
     /**
      * ## (Cols) Name Starts With
@@ -856,10 +831,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameEndsWith]
      * @see [nameContains]
      */
-    public fun ColumnPath.colsNameStartsWith(
-        prefix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
+    public fun ColumnPath.colsNameStartsWith(prefix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
     // endregion
 
@@ -900,10 +873,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("NameEndsWith0")
-    public fun <C> ColumnSet<C>.nameEndsWith(
-        suffix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<C> = colsInternal { it.name.endsWith(suffix, ignoreCase) } as TransformableColumnSet<C>
+    public fun <C> ColumnSet<C>.nameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<C> =
+        colsInternal { it.name.endsWith(suffix, ignoreCase) }.cast()
 
     /**
      * ## (Cols) Name Ends With
@@ -939,10 +910,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameContains]
      */
     @Interpretable("NameEndsWith1")
-    public fun ColumnsSelectionDsl<*>.nameEndsWith(
-        suffix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = asSingleColumn().colsNameEndsWith(suffix, ignoreCase)
+    public fun ColumnsSelectionDsl<*>.nameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        asSingleColumn().colsNameEndsWith(suffix, ignoreCase)
 
     /**
      * ## (Cols) Name Ends With
@@ -981,7 +950,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.colsNameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix, ignoreCase) }
+    ): ColumnSet<*> = this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix, ignoreCase) }
 
     /**
      * ## (Cols) Name Ends With
@@ -1016,7 +985,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      * @see [nameContains]
      */
-    public fun String.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): TransformableColumnSet<*> =
+    public fun String.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     /**
@@ -1052,14 +1021,10 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      * @see [nameContains]
      */
-    @Deprecated(
-        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-    )
+    @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.colsNameEndsWith(
-        suffix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
+    public fun KProperty<*>.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     /**
      * ## (Cols) Name Ends With
@@ -1094,10 +1059,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      * @see [nameContains]
      */
-    public fun ColumnPath.colsNameEndsWith(
-        suffix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
+    public fun ColumnPath.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
+        columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     // endregion
 }

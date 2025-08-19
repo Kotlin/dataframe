@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.describeImpl
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 // region DataSchema
@@ -109,7 +110,7 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
  */
 public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
     describe {
-        colsAtAnyDepth { !it.isColumnGroup() }
+        colsAtAnyDepth().filter { !it.isColumnGroup() }
     }
 
 /**
@@ -286,9 +287,7 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
  * @param [columns] The [Column Accessors][ColumnReference] that specifies which
  * columns of this [DataFrame] should be described.
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReference<C>): DataFrame<ColumnDescription> =
     describe { columns.toColumnSet() }
@@ -342,9 +341,7 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
  * @param [columns] The [KProperties][KProperty] that specifies which
  * columns of this [DataFrame] should be described.
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: KProperty<C>): DataFrame<ColumnDescription> =
     describe { columns.toColumnSet() }

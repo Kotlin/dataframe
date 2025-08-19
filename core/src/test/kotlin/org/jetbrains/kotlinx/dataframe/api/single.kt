@@ -19,10 +19,10 @@ class SingleTests : ColumnsSelectionDslTests() {
             df.select { Person::age.singleCol() }
         }
         shouldThrow<NoSuchElementException> {
-            df.select { single { false } }
+            df.select { all().filter { false }.single() }
         }
         shouldThrow<IllegalArgumentException> {
-            df.select { single { true } }
+            df.select { single() }
         }
 
         val singleDf = df.select { take(1) }
@@ -32,12 +32,12 @@ class SingleTests : ColumnsSelectionDslTests() {
             singleDf.select { name },
             singleDf.select { single() },
             singleDf.select { all().single() },
-            df.select { single { it.name().startsWith("n") } },
+            df.select { all().filter { it.name().startsWith("n") }.single() },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name.firstName },
-            df.select { name.colsOf<String>().single { col -> col.any { it == "Alice" } } },
+            df.select { name.colsOf<String>().filter { col -> col.any { it == "Alice" } }.single() },
             df.select { name.singleCol { col -> col.any { it == "Alice" } } },
             df.select { "name".singleCol { col -> col.any { it == "Alice" } } },
             df.select { Person::name.singleCol { col -> col.any { it == "Alice" } } },

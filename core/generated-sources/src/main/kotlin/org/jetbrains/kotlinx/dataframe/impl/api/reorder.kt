@@ -71,7 +71,7 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
             df = if (parentPath.isEmpty()) {
                 newGroup.cast()
             } else {
-                df.replace(parentPath).with { newGroup.asColumnGroup(it.name()) }
+                df.replace { parentPath }.with { newGroup.asColumnGroup(it.name()) }
             }
         }
     return df

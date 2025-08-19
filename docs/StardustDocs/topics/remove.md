@@ -8,7 +8,9 @@ Returns [`DataFrame`](DataFrame.md) without selected columns.
 remove { columns }
 ```
 
-See [Column Selectors](ColumnSelectors.md)
+Related operations: [](addRemove.md)
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN remove-->
 <tabs>
@@ -26,5 +28,5 @@ df.remove("name", "weight")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html" width="100%"/>
 <!---END-->

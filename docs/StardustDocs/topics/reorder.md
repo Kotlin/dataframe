@@ -12,6 +12,10 @@ reorder { columns }
 columnExpression: DataColumn.(DataColumn) -> Value
 ```
 
+**Related operations**: [](moveRename.md)
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN reorder-->
 <tabs>
 <tab title="Properties">
@@ -29,7 +33,7 @@ df.reorder { age..isHappy }.byName()
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorder.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorder.html" width="100%"/>
 <!---END-->
 
 When a subset of columns is selected they will be reordered among their original positions. Positions of other columns will not change. 
@@ -56,7 +60,7 @@ When exactly one [`ColumnGroup`](DataColumn.md#columngroup) is selected, reorder
 df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html" width="100%"/>
 <!---END-->
 
 ## reorderColumnsBy

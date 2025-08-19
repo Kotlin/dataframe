@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Splits the rows of [`DataFrame`](DataFrame.md) and groups them horizontally into new columns based on values from one or several columns of original [`DataFrame`](DataFrame.md).
+Splits the rows of a [`DataFrame`](DataFrame.md) and groups them horizontally into new columns based on values from one or several columns of the original [`DataFrame`](DataFrame.md).
 
 ```text
 pivot (inward = true) { pivotColumns }
@@ -16,8 +16,10 @@ reducer = .minBy { column } | .maxBy { column } | .first [ { rowCondition } ] | 
 aggregator = .count() | .matches() | .frames() | .with { rowExpression } | .values { valueColumns } | .aggregate { aggregations } | .<stat> [ { columns } ]
 ```
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 **Parameters:**
-* `inward` — if `true` generated columns will be nested inside original column, otherwise they will be top-level
+* `inward` — if `true` generated columns are nested inside the original column, otherwise they will be top-level
 * `pivotColumns` — columns with values for horizontal data grouping and generation of new columns
 * `indexColumns` — columns with values for vertical data grouping
 * `defaultValue` — value to fill mismatched pivot-index column pairs
@@ -39,10 +41,10 @@ df.pivot("city")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot.html" width="100%"/>
 <!---END-->
 
-To pivot several columns at once you can combine them using `and` or `then` infix function:
+To pivot several columns at once, you can combine them using `and` or `then` infix function:
 * `and` will pivot columns independently
 * `then` will create column hierarchy from combinations of values from pivoted columns
 
@@ -64,12 +66,13 @@ df.pivot { "city" then "name"["firstName"] }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html" width="100%"/>
 <!---END-->
 
 ## pivot + groupBy
 
-To create matrix table that is expanded both horizontally and vertically, apply [`groupBy`](groupBy.md) transformation passing the columns for vertical grouping. 
+To create a matrix table that is expanded both horizontally and vertically,
+apply [`groupBy`](groupBy.md) transformation passing the columns for vertical grouping. 
 Reversed order of `pivot` and [`groupBy`](groupBy.md) will produce the same result.
 
 <!---FUN pivotGroupBy-->
@@ -92,7 +95,7 @@ df.groupBy("name").pivot("city")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupBy.html" width="100%"/>
 <!---END-->
 
 To group by all columns except pivoted use `groupByOther`:
@@ -103,7 +106,7 @@ To group by all columns except pivoted use `groupByOther`:
 df.pivot { city }.groupByOther()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupByOther.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupByOther.html" width="100%"/>
 <!---END-->
 
 ## Aggregation
@@ -126,7 +129,7 @@ df.pivot("city").aggregate { minBy("age")["name"] }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate.html" width="100%"/>
 <!---END-->
 
 <!---FUN pivotAggregate1-->
@@ -153,7 +156,7 @@ df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate1.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate1.html" width="100%"/>
 <!---END-->
 
 Shortcuts for common aggregation functions are also available:
@@ -176,7 +179,7 @@ df.groupBy("name").pivot("city").median("age")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCommonAggregations.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCommonAggregations.html" width="100%"/>
 <!---END-->
 
 By default, when aggregation function produces several values for single data group, 
@@ -233,7 +236,7 @@ df.pivot("city").groupBy("name").default(0).min()
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault.html" width="100%"/>
 <!---END-->
 
 <!---FUN pivotDefault1-->
@@ -258,13 +261,13 @@ df.pivot("city").groupBy("name").aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault1.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault1.html" width="100%"/>
 <!---END-->
 
 ### Pivot inside aggregate
 
 pivot transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`groupBy`](groupBy.md). 
-This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggregations:
+This allows combining column pivoting with other [`groupBy`](groupBy.md) aggregations:
 
 <!---FUN pivotInAggregate-->
 <tabs>
@@ -294,7 +297,7 @@ df.groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotInAggregate.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotInAggregate.html" width="100%"/>
 <!---END-->
 
 ### pivotCounts
@@ -318,7 +321,7 @@ df.groupBy { name }.aggregate {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCounts.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCounts.html" width="100%"/>
 <!---END-->
 
 ### pivotMatches
@@ -341,5 +344,5 @@ df.groupBy { name }.aggregate {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotMatches.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotMatches.html" width="100%"/>
 <!---END-->

@@ -52,7 +52,7 @@ private val unifiedNumberTypeGraphs = mutableMapOf<UnifiedNumberTypeOptions, Dir
  *    UByte     Byte
  *        \     /
  *        \    /
- *       Nothing?
+ *       Nothing
  * ```
  *
  * For any two numbers, we can find the nearest common ancestor in this graph
@@ -127,7 +127,7 @@ internal fun getUnifiedNumberTypeGraph(
  *    UByte     Byte
  *        \     /
  *        \    /
- *       Nothing?
+ *       Nothing
  * ```
  *
  * For any two numbers, we can find the nearest common ancestor in this graph
@@ -339,7 +339,7 @@ internal fun Sequence<Number?>.convertToUnifiedNumberType(
  * @throws IllegalStateException if an element cannot be converted to the common number type.
  * @see UnifyingNumbers */
 @Suppress("UNCHECKED_CAST")
-@JvmName("convert=SequenceToUnifiedNumberType")
+@JvmName("convertSequenceToUnifiedNumberType")
 internal fun Sequence<Number>.convertToUnifiedNumberType(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
     commonNumberType: KType? = null,

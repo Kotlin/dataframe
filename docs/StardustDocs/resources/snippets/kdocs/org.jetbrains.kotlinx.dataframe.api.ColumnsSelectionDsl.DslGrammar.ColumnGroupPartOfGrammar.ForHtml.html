@@ -1,0 +1,89 @@
+<html>
+<head>
+<style type="text/css">
+:root {
+    --background: #fff;
+    --background-odd: #f5f5f5;
+    --background-hover: #d9edfd;
+    --header-text-color: #474747;
+    --text-color: #848484;
+    --text-color-dark: #000;
+    --text-color-medium: #737373;
+    --text-color-pale: #b3b3b3;
+    --inner-border-color: #aaa;
+    --bold-border-color: #000;
+    --link-color: #296eaa;
+    --link-color-pale: #296eaa;
+    --link-hover: #1a466c;
+}
+:root[theme="dark"], :root [data-jp-theme-light="false"] {
+    --background: #303030;
+    --background-odd: #3c3c3c;
+    --background-hover: #464646;
+    --header-text-color: #dddddd;
+    --text-color: #b3b3b3;
+    --text-color-dark: #dddddd;
+    --text-color-medium: #b2b2b2;
+    --text-color-pale: #737373;
+    --inner-border-color: #707070;
+    --bold-border-color: #777777;
+    --link-color: #008dc0;
+    --link-color-pale: #97e1fb;
+    --link-hover: #00688e;
+}
+body {
+    font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
+}
+:root {
+    color: #19191C;
+    background-color: #fff;
+}
+:root[theme="dark"] {
+    background-color: #19191C;
+    color: #FFFFFFCC
+}
+</style>
+<script>
+    function calculateBodyHeight() {
+        const body = document.body;
+        const html = document.documentElement;
+        return Math.max(
+            body.scrollHeight,
+            body.offsetHeight,
+            html.scrollHeight,
+            html.offsetHeight,
+            html.clientHeight
+        );
+    }
+    
+    function sendHeight() {
+        const height = calculateBodyHeight();
+        window.parent.postMessage({ type: 'iframeHeight', height }, '*');
+    }
+    
+    function repeatHeightCalculation(maxRetries = 10, interval = 100) {
+        let retries = 0;
+        const intervalId = setInterval(() => {
+            sendHeight();
+            retries++;
+            if (retries >= maxRetries) clearInterval(intervalId);
+        }, interval);
+    }
+    
+    window.addEventListener('load', () => {
+        repeatHeightCalculation();
+        const observer = new MutationObserver(() => {
+            setTimeout(sendHeight, 50);
+        });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+    });
+    
+    window.addEventListener('resize', sendHeight);
+</script>
+</head>
+<body><p><code><code>columnGroup</code></code></p><p>    <code>| </code><code><strong><code>[</code></strong></code><code><code>column</code></code><strong><code>,</code></strong><code> ..</code><code><strong><code>]</code></strong></code></p><p>    <code>| </code><code><strong><code>[</code></strong></code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code><strong><code>]</code></strong></code></p><p>    <code>| </code><code><strong><code>{</code></strong></code><code> </code><code><code>colsSelector</code></code><code> </code><code><strong><code>}</code></strong></code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>allCols</code></strong></code><strong><code>()</code></strong></p><p>    <code>| </code><strong><code>.allCols</code></strong><code>(</code><code><strong><code>Before</code></strong></code><code>|</code><code><strong><code>After</code></strong></code><code>|</code><code><strong><code>From</code></strong></code><code>|</code><code><strong><code>UpTo</code></strong></code><code>) ( </code><strong><code>(</code></strong><code><code>column</code></code><strong><code>)</code></strong><code> | </code><strong><code>{ </code></strong><code><code>colSelector</code></code><strong><code> }</code></strong><code> )</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>allColsExcept</code></strong></code><strong><code> { </code></strong><code><code>colsSelector</code></code><strong><code> } </code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>allColsExcept</code></strong></code><strong><code>(</code></strong><code><code>columnNoAccessor</code></code><strong><code>,</code></strong><code> ..</code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>and</code></strong></code><strong><code> (</code></strong><code>|</code><strong><code>{ </code></strong><code><code>columnOrSet</code></code><strong><code> }</code></strong><code>|</code><strong><code>)</code></strong></p><p>    <code>| (</code><strong><code>.</code></strong><code><strong><code>col</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>valueCol</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>frameCol</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>colGroup</code></strong></code><code>)[</code><strong><code>&lt;</code></strong><code><code>T</code></code><strong><code>&gt;</code></strong><code>]</code><strong><code>(</code></strong><code><code>column</code></code><code> | </code><code><code>index</code></code><strong><code>)</code></strong></p><p>    <code>| (</code><strong><code>.</code></strong><code><strong><code>cols</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>valueCols</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>frameCols</code></strong></code><code>| </code><strong><code>.</code></strong><code><strong><code>colGroups</code></strong></code><code>) [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>cols</code></strong></code><code>[</code><strong><code>&lt;</code></strong><code><code>T</code></code><strong><code>&gt;</code></strong><code>]</code><strong><code>(</code></strong><code><code>column</code></code><strong><code>,</code></strong><code>.. |</code><code><code>index</code></code><strong><code>,</code></strong><code>.. |</code><code><code>indexRange</code></code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>colsAtAnyDepth</code></strong></code><code>()</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>colsInGroups</code></strong></code><code>()</code></p><p>    <code>| </code><strong><code>.colsName</code></strong><code>(</code><code><strong><code>Starts</code></strong></code><code>|</code><code><strong><code>Ends</code></strong></code><code>)</code><strong><code>With</code></strong><strong><code>(</code></strong><code><code>text</code></code><code>[</code><strong><code>, </code></strong><code><code>ignoreCase</code></code><code>]</code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>colsNameContains</code></strong></code><strong><code>(</code></strong><code><code>text</code></code><code>[</code><strong><code>, </code></strong><code><code>ignoreCase</code></code><code>] | </code><code><code>regex</code></code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>colsOfKind</code></strong></code><strong><code>(</code></strong><code><code>kind</code></code><strong><code>,</code></strong><code> ..</code><strong><code>)</code></strong><code> [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>colsWithoutNulls</code></strong></code><strong><code>()</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>drop</code></strong></code><code>(</code><code><strong><code>Last</code></strong></code><code>)</code><code><strong><code>Cols</code></strong></code><strong><code>(</code></strong><code><code>number</code></code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>drop</code></strong></code><code>(</code><code><strong><code>Last</code></strong></code><code>)</code><code><strong><code>ColsWhile</code></strong></code><strong><code> { </code></strong><code><code>condition</code></code><strong><code> }</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>except</code></strong></code><strong><code> { </code></strong><code><code>colsSelector</code></code><strong><code> } </code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>except</code></strong></code><strong><code>(</code></strong><code><code>columnNoAccessor</code></code><strong><code>,</code></strong><code> ..</code><strong><code>)</code></strong></p><p>    <code>| (</code><strong><code>.</code></strong><code><strong><code>firstCol</code></strong></code><code>|</code><strong><code>.</code></strong><code><strong><code>lastCol</code></strong></code><code>) [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>singleCol</code></strong></code><code>()</code></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>select</code></strong></code><strong><code> { </code></strong><code><code>colsSelector</code></code><strong><code> }</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>take</code></strong></code><code>(</code><code><strong><code>Last</code></strong></code><code>)</code><code><strong><code>Cols</code></strong></code><strong><code>(</code></strong><code><code>number</code></code><strong><code>)</code></strong></p><p>    <code>| </code><strong><code>.</code></strong><code><strong><code>take</code></strong></code><code>(</code><code><strong><code>Last</code></strong></code><code>)</code><code><strong><code>ColsWhile</code></strong></code><strong><code> { </code></strong><code><code>condition</code></code><strong><code> }</code></strong></p><p>    </p><p><code><code>singleColumn</code></code></p><p>    <strong><code>.</code></strong><code><strong><code>colsOf</code></strong></code><strong><code>&lt;</code></strong><code><code>T</code></code><strong><code>&gt;</code></strong><code> [ </code><strong><code>(</code></strong><code><code>kType</code></code><strong><code>)</code></strong><code> ] [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p><p>    </p><p><code><code>columnGroupReference</code></code></p><p>    <strong><code>.</code></strong><code><strong><code>colsOf</code></strong></code><strong><code>&lt;</code></strong><code><code>T</code></code><strong><code>&gt;(</code></strong><code><code>kType</code></code><strong><code>)</code></strong><code> [ </code><strong><code>{ </code></strong><code><code>condition</code></code><strong><code> }</code></strong><code> ]</code></p></body>
+<html/>

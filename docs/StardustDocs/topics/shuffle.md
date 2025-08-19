@@ -4,11 +4,13 @@
 
 Returns [`DataFrame`](DataFrame.md) with randomly reordered rows.
 
+**Related operations**: [](reorderRows.md)
+
 <!---FUN shuffle-->
 
 ```kotlin
 df.shuffle()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.shuffle.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.shuffle.html" width="100%"/>
 <!---END-->

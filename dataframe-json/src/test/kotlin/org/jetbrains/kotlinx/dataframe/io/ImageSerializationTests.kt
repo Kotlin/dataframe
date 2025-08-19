@@ -60,7 +60,7 @@ class ImageSerializationTests {
         images: List<BufferedImage>,
         encodingOptions: Base64ImageEncodingOptions?,
     ): JsonObject {
-        val df = dataFrameOf(listOf("imgs"), images)
+        val df = dataFrameOf("imgs" to images)
         val jsonStr = df.toJsonWithMetadata(
             20,
             nestedRowLimit = 20,

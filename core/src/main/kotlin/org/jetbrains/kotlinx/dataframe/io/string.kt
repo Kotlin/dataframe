@@ -32,7 +32,7 @@ internal fun AnyFrame.renderToString(
 
     // title
     if (title) {
-        sb.appendLine("Data Frame [${size()}]")
+        sb.appendLine("DataFrame [${size()}]")
         sb.appendLine()
     }
 

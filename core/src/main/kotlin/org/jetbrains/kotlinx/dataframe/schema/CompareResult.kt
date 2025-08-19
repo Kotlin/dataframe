@@ -28,3 +28,5 @@ public enum class CompareResult {
             }
     }
 }
+
+public operator fun CompareResult.plus(other: CompareResult): CompareResult = this.combine(other)

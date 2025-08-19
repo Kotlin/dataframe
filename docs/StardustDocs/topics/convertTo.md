@@ -7,6 +7,8 @@
 convertTo<Schema>(excessiveColumns = ExcessiveColumns.Keep)
 ```
 
+**Related operations**: [](adjustSchema.md)
+
 Customization DSL:
 * `convert`—how specific column types should be converted
 * `parser`—how to parse strings into custom types

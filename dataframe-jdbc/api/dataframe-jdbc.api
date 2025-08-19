@@ -1,13 +1,15 @@
 public final class org/jetbrains/kotlinx/dataframe/io/DbConnectionConfig {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;
+	public final fun component4 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getPassword ()Ljava/lang/String;
+	public final fun getReadOnly ()Z
 	public final fun getUrl ()Ljava/lang/String;
 	public final fun getUser ()Ljava/lang/String;
 	public fun hashCode ()I
@@ -118,11 +120,23 @@ public abstract class org/jetbrains/kotlinx/dataframe/io/db/DbType {
 	public abstract fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
 	public abstract fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
 	public abstract fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun createConnection (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;)Ljava/sql/Connection;
 	public final fun getDbTypeInJdbcUrl ()Ljava/lang/String;
 	public abstract fun getDriverClassName ()Ljava/lang/String;
+	public fun getTableTypes ()Ljava/util/List;
 	public abstract fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
 	public fun sqlQueryLimit (Ljava/lang/String;I)Ljava/lang/String;
 	public static synthetic fun sqlQueryLimit$default (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/DuckDb : org/jetbrains/kotlinx/dataframe/io/db/DbType {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/db/DuckDb;
+	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
+	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
+	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun createConnection (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;)Ljava/sql/Connection;
+	public fun getDriverClassName ()Ljava/lang/String;
+	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
 }
 
 public class org/jetbrains/kotlinx/dataframe/io/db/H2 : org/jetbrains/kotlinx/dataframe/io/db/DbType {
@@ -188,6 +202,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/db/Sqlite : org/jetbrains/
 	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;
 	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
 	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun createConnection (Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;)Ljava/sql/Connection;
 	public fun getDriverClassName ()Ljava/lang/String;
 	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/TableMetadata;)Z
 }

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -30,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /**
@@ -75,6 +78,9 @@ public class Update<T, C>(
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`at`**][Update.at]**`(`**[`rowIndices`][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
+     *
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`notNull`**][Update.notNull]**`()`**` ]`
      *
      * {@include [Indent]}
      * __`.`__[**`with`**][Update.with]**`  {  `**[`rowExpression`][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
@@ -178,9 +184,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * @include [UpdateWithNote]
  * @include [Update.KPropertiesParam]
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumnSet() }
 
@@ -190,9 +194,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * @include [UpdateWithNote]
  * @include [Update.ColumnAccessorsParam]
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
     update { columns.toColumnSet() }
@@ -206,6 +208,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
  *
  * @param [predicate] The [row value filter][RowValueFilter] to select the rows to update.
  */
+@Interpretable("UpdateWhere")
 public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T, C> =
     Update(df = df, filter = filter and predicate, columns = columns)
 
@@ -236,6 +239,7 @@ private interface CommonUpdateAtFunctionDoc {
  *
  * @param [rowIndices] {@include [CommonUpdateAtFunctionDoc.RowIndicesParam]}
  */
+@Interpretable("UpdateAt")
 public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = where { index in rowIndices }
 
 /**
@@ -245,6 +249,7 @@ public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = w
  *
  * @param [rowIndices] {@include [CommonUpdateAtFunctionDoc.RowIndicesParam]}
  */
+@Interpretable("UpdateAt")
 public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(rowIndices.toSet())
 
 /**
@@ -254,6 +259,7 @@ public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(row
  *
  * @param [rowRange] {@include [CommonUpdateAtFunctionDoc.RowIndicesParam]}
  */
+@Interpretable("UpdateAt")
 public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { index in rowRange }
 
 /** ## Per Row Col
@@ -265,6 +271,8 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  *  - {@include [SeeAlsoUpdatePerCol]}
  * @param [expression] The {@include [ExpressionsGivenRowAndColumn.RowColumnExpressionLink]} to provide a new value for every selected cell giving its row and column.
  */
+@Refine
+@Interpretable("UpdatePerRowCol")
 public inline fun <T, C> Update<T, C>.perRowCol(crossinline expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
@@ -354,6 +362,8 @@ private interface CommonUpdatePerColMapDoc
  * @param [values] The [Map]<[String], Value> to provide a new value for every selected cell.
  *   For each selected column, there must be a value in the map with the same name.
  */
+@Refine
+@Interpretable("UpdatePerColMap")
 public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
     updateWithValuePerColumnImpl {
         values[it.name()] ?: throw IllegalArgumentException("Update value for column ${it.name()} is not defined")
@@ -371,6 +381,8 @@ public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
  *
  * @param [values] The [DataRow] to provide a new value for every selected cell.
  */
+@Refine
+@Interpretable("UpdatePerColRow")
 public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
 
 /**
@@ -380,6 +392,8 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
  *
  * @param [valueSelector] The {@include [ExpressionsGivenColumn.ColumnExpressionLink]} to provide a new value for every selected cell giving its column.
  */
+@Refine
+@Interpretable("UpdatePerCol")
 public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
 
@@ -394,7 +408,22 @@ internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>)
     return { thisExp(this, it) && other(this, it) }
 }
 
-/** @include [Update.notNull] */
+/**
+ * ## Not Null
+ * Filters the update-selection to only include cells where the value is not null.
+ *
+ * This is shorthand for `.`[where][Update.where]` { it != null }`.
+ *
+ * For example:
+ *
+ * `df.`[update][update]` { `[colsOf][colsOf]`<`[Int][Int]`?>() }.`[notNull][notNull]`().`[perRowCol][Update.perRowCol]` { row, col ->`
+ *
+ * {@include [Indent]}`row\[col\] / col.`[mean][DataColumn.mean]`(skipNA = true)`
+ *
+ * `}`
+ */
+@Suppress("UNCHECKED_CAST")
+@Interpretable("UpdateNotNullDefault")
 public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } as Update<T, C>
 
 /**
@@ -418,6 +447,8 @@ public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } a
  * {@comment No brackets around `expression` because this doc is copied to [Update.notNull]}
  * @param expression Optional {@include [ExpressionsGivenRow.RowExpressionLink]} to update the rows with.
  */
+@Refine
+@Interpretable("UpdateNotNull")
 public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): DataFrame<T> =
     notNull().with(expression)
 
@@ -433,9 +464,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * @include [Update.ColumnAccessorsParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
@@ -455,9 +484,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [Update.KPropertiesParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
-@Deprecated(
-    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
-)
+@Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
@@ -506,6 +533,8 @@ private interface CommonSpecificWithDoc {
  * {@set [CommonSpecificWithDoc.FIRST] `null`}
  * {@set [CommonSpecificWithDoc.SECOND] [withNull][withNull]`()}
  */
+@Refine
+@Interpretable("UpdateWithNull")
 public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
 
 /**
@@ -514,4 +543,6 @@ public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
  * {@set [CommonSpecificWithDoc.FIRST] `0`}
  * {@set [CommonSpecificWithDoc.SECOND] [withZero][withZero]`()}
  */
+@Refine
+@Interpretable("UpdateWithZero")
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }

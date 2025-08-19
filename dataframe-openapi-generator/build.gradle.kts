@@ -5,7 +5,7 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
         alias(binary.compatibility.validator)
     }
@@ -18,7 +18,7 @@ val jupyterApiTCRepo: String by project
 repositories {
     mavenLocal()
     mavenCentral()
-    maven(jupyterApiTCRepo)
+    if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
 }
 
 dependencies {
@@ -46,7 +46,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeOpenApi"
         artifactId = project.name
-        description = "OpenAPI code generation support for Kotlin Dataframe"
+        description = "OpenAPI code generation support for Kotlin DataFrame"
         packageName = artifactId
     }
 }

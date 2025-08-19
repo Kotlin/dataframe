@@ -8,6 +8,10 @@ By default, columns are sorted in ascending order with `null` values going first
 * `.desc` — changes column sort order from ascending to descending
 * `.nullsLast` — forces `null` values to be placed at the end of the order
 
+**Related operations**: [](reorderRows.md)
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 <!---FUN sortBy-->
 <tabs>
 <tab title="Properties">
@@ -28,12 +32,14 @@ df.sortBy { "weight".nullsLast() }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html" width="100%"/>
 <!---END-->
 
 ## sortByDesc
 
 Returns [`DataFrame`](DataFrame.md) sorted by one or several columns in descending order.
+
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN sortByDesc-->
 <tabs>
@@ -51,7 +57,7 @@ df.sortByDesc("age", "weight")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortByDesc.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortByDesc.html" width="100%"/>
 <!---END-->
 
 ## sortWith
@@ -70,5 +76,5 @@ df.sortWith { row1, row2 ->
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortWith.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortWith.html" width="100%"/>
 <!---END-->

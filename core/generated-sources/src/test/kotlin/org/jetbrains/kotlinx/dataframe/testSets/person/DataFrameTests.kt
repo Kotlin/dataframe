@@ -552,7 +552,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `drop nulls 1`() {
-        fun AnyFrame.check() = rows().forEach { get("weight") shouldNotBe null }
+        fun AnyFrame.check() = rows().forEach { it["weight"] shouldNotBe null }
 
         typed.dropNulls(typed.weight).check()
         typed.dropNulls { weight }.check()
@@ -932,7 +932,7 @@ class DataFrameTests : BaseTest() {
         df["e"].kind() shouldBe ColumnKind.Group
         df.getColumnGroup("d").columnNames() shouldBe listOf("f")
         df.getColumnGroup("e").getColumnGroup("g").columnNames() shouldBe listOf("h")
-        val cols = df.getColumns { colsAtAnyDepth { !it.isColumnGroup() } }
+        val cols = df.getColumns { colsAtAnyDepth().filter { !it.isColumnGroup() } }
         cols.size shouldBe 5
         cols.forEach {
             it.toList() shouldBe expected
@@ -1977,7 +1977,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `render nested data frames to string`() {
+    fun `render nested dataframes to string`() {
         val rendered = typed
             .drop(1)
             .groupBy { name }
@@ -2182,6 +2182,14 @@ class DataFrameTests : BaseTest() {
     fun `split inplace`() {
         val split = typed.split { name }.by { it.toCharArray().asIterable() }.inplace()
         split["name"] shouldBe typed.name.map { it.toCharArray().toList() }
+    }
+
+    @Test
+    fun `split iterable inplace`() {
+        val df = dataFrameOf("a" to listOf(listOf(1), null)).split { "a"<List<Int>?>() }.inplace()
+
+        df["a"].type() shouldBe typeOf<List<Int>>()
+        df["a"].values() shouldBe listOf(listOf(1), emptyList())
     }
 
     @Test

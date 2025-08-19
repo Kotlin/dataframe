@@ -22,13 +22,9 @@ internal fun MutableMap<ColumnPath, Int>.putColumnsOrder(schema: DataFrameSchema
         val columnPath = path + name
         this[columnPath] = i
         when (column) {
-            is ColumnSchema.Frame -> {
-                putColumnsOrder(column.schema, columnPath)
-            }
-
-            is ColumnSchema.Group -> {
-                putColumnsOrder(column.schema, columnPath)
-            }
+            is ColumnSchema.Frame -> putColumnsOrder(column.schema, columnPath)
+            is ColumnSchema.Group -> putColumnsOrder(column.schema, columnPath)
+            is ColumnSchema.Value -> Unit
         }
     }
 }

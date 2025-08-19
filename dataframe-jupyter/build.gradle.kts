@@ -4,7 +4,7 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
-        alias(kover)
+//        alias(kover)
         alias(ktlint)
         alias(jupyter.api)
         alias(binary.compatibility.validator)
@@ -20,8 +20,13 @@ repositories {
 dependencies {
     api(projects.dataframe)
 
+    // logger, need it for apache poi
+    implementation(libs.log4j.core)
+    implementation(libs.log4j.api)
+
     testImplementation(libs.junit)
     testImplementation(libs.serialization.json)
+
     // experimental
     testImplementation(projects.dataframeOpenapiGenerator)
     testImplementation(projects.dataframeOpenapi)

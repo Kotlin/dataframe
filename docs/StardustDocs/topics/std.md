@@ -55,6 +55,8 @@ df.pivot { city }.groupBy { name.lastName }.std()
 
 See [statistics](summaryStatistics.md#groupby-statistics) for details on complex data aggregations.
 
+See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
+
 ### Type Conversion
 
 The following automatic type conversions are performed for the `mean` operation:

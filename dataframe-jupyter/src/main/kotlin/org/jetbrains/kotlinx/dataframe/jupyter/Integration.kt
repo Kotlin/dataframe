@@ -30,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
@@ -69,8 +68,8 @@ internal class Integration(private val notebook: Notebook, private val options: 
     // TODO temporary settings while these experimental modules are being developed
 
     private val enableExperimentalCsv = options["enableExperimentalCsv"]
-    private val enableExperimentalGeo = options["enableExperimentalGeo"]
     private val enableExperimentalOpenApi = options["enableExperimentalOpenApi"]
+    private val enableExperimentalGeo = options["enableExperimentalGeo"]
 
     private fun KotlinKernelHost.updateImportDataSchemaVariable(
         importDataSchema: ImportDataSchema,
@@ -108,7 +107,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
         codeGen: ReplCodeGenerator,
     ): VariableName? =
         execute(
-            codeWithConverter = codeGen.process(df, property),
+            codeWithTypeCastGenerator = codeGen.process(df, property),
             property = property,
             type = DataFrame::class.createStarProjectedType(false),
         )
@@ -119,7 +118,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
         codeGen: ReplCodeGenerator,
     ): VariableName? =
         execute(
-            codeWithConverter = codeGen.process(row, property),
+            codeWithTypeCastGenerator = codeGen.process(row, property),
             property = property,
             type = DataRow::class.createStarProjectedType(false),
         )
@@ -130,7 +129,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
         codeGen: ReplCodeGenerator,
     ): VariableName? =
         execute(
-            codeWithConverter = codeGen.process(col.asDataFrame(), property),
+            codeWithTypeCastGenerator = codeGen.process(col.asDataFrame(), property),
             property = property,
             type = ColumnGroup::class.createStarProjectedType(false),
         )
@@ -141,11 +140,12 @@ internal class Integration(private val notebook: Notebook, private val options: 
         codeGen: ReplCodeGenerator,
     ): VariableName? =
         if (col.isColumnGroup()) {
-            val codeWithConverter = codeGen.process(col.asDataFrame(), property).let { c ->
-                CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
+            val codeWithDfCaster = codeGen.process(col.asDataFrame(), property)
+            val codeWithColumnGroupCaster = codeWithDfCaster.copy {
+                codeWithDfCaster.typeCastGenerator("$it.asColumnGroup()")
             }
             execute(
-                codeWithConverter = codeWithConverter,
+                codeWithTypeCastGenerator = codeWithColumnGroupCaster,
                 property = property,
                 type = DataColumn::class.createStarProjectedType(false),
             )
@@ -153,15 +153,24 @@ internal class Integration(private val notebook: Notebook, private val options: 
             null
         }
 
+    private fun KotlinKernelHost.updateGroupByVariable(
+        instance: GroupBy<*, *>,
+        property: KProperty<*>,
+        codeGen: ReplCodeGenerator,
+    ): VariableName? =
+        execute(
+            codeWithTypeCastGenerator = codeGen.process(instance),
+            property = property,
+            type = GroupBy::class.createStarProjectedType(false),
+        )
+
     override fun Builder.onLoaded() {
         if (version != null) {
             if (enableExperimentalCsv?.toBoolean() == true) {
                 println("CSV module is already enabled by default now.")
             }
             if (enableExperimentalGeo?.toBoolean() == true) {
-                println("Enabling experimental Geo module: dataframe-geo")
-                repositories("https://repo.osgeo.org/repository/release")
-                dependencies("org.jetbrains.kotlinx:dataframe-geo:$version")
+                println("dataframe-geo module was extracted into separate descriptor: %use dataframe-geo")
             }
             if (enableExperimentalOpenApi?.toBoolean() == true) {
                 println("Enabling experimental OpenAPI 3.0.0 module: dataframe-openapi")
@@ -282,13 +291,16 @@ internal class Integration(private val notebook: Notebook, private val options: 
         import("org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader")
 
         addTypeConverter(object : FieldHandler {
+
             override val execution = FieldHandlerFactory.createUpdateExecution<Any> { instance, property ->
+                // TODO check property type first, then instance, Issue #1245
                 when (instance) {
                     is AnyCol -> updateAnyColVariable(instance, property, codeGen)
                     is ColumnGroup<*> -> updateColumnGroupVariable(instance, property, codeGen)
                     is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
                     is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
                     is ImportDataSchema -> updateImportDataSchemaVariable(instance, property)
+                    is GroupBy<*, *> -> updateGroupByVariable(instance, property, codeGen)
                     else -> error("${instance::class} should not be handled by Dataframe field handler")
                 }
             }
@@ -298,7 +310,8 @@ internal class Integration(private val notebook: Notebook, private val options: 
                     value is ColumnGroup<*> ||
                     value is AnyRow ||
                     value is AnyFrame ||
-                    value is ImportDataSchema
+                    value is ImportDataSchema ||
+                    value is GroupBy<*, *>
         })
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {

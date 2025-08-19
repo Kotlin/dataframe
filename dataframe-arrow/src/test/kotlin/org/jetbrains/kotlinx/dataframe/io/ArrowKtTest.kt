@@ -52,6 +52,7 @@ import java.net.URL
 import java.nio.channels.Channels
 import java.sql.DriverManager
 import java.util.Locale
+import kotlin.io.path.toPath
 import kotlin.reflect.typeOf
 
 internal class ArrowKtTest {
@@ -652,5 +653,80 @@ internal class ArrowKtTest {
             Assert.assertTrue(dbArrowReader.javaClass.name.equals("org.apache.arrow.c.ArrowArrayStreamReader"))
             DataFrame.readArrow(dbArrowReader) shouldBe expected
         }
+    }
+
+    @Test
+    fun testReadParquetPath() {
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
+        val dataFrame = DataFrame.readParquet(resourcePath)
+
+        dataFrame.rowsCount() shouldBe 300
+        assertEstimations(
+            exampleFrame = dataFrame,
+            expectedNullable = false,
+            hasNulls = false,
+            fromParquet = true,
+        )
+    }
+
+    @Test
+    fun testReadParquetFile() {
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
+        val dataFrame = DataFrame.readParquet(resourcePath.toFile())
+
+        dataFrame.rowsCount() shouldBe 300
+        assertEstimations(
+            exampleFrame = dataFrame,
+            expectedNullable = false,
+            hasNulls = false,
+            fromParquet = true,
+        )
+    }
+
+    @Test
+    fun testReadParquetStringPath() {
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
+        val dataFrame = DataFrame.readParquet("$resourcePath")
+
+        dataFrame.rowsCount() shouldBe 300
+        assertEstimations(
+            exampleFrame = dataFrame,
+            expectedNullable = false,
+            hasNulls = false,
+            fromParquet = true,
+        )
+    }
+
+    @Test
+    fun testReadParquetUrl() {
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+        val fileUrl = resourcePath.toUri().toURL()
+
+        val dataFrame = DataFrame.readParquet(fileUrl)
+
+        dataFrame.rowsCount() shouldBe 300
+        assertEstimations(
+            exampleFrame = dataFrame,
+            expectedNullable = false,
+            hasNulls = false,
+            fromParquet = true,
+        )
+    }
+
+    @Test
+    fun testReadMultipleParquetFiles() {
+        val resourceUrl = testResource("test.arrow.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
+        val dataFrame = DataFrame.readParquet(resourcePath, resourcePath, resourcePath)
+
+        dataFrame.rowsCount() shouldBe 900
     }
 }
