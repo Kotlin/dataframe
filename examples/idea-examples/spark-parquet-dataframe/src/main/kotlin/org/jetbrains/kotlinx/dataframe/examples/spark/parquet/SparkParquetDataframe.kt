@@ -7,7 +7,6 @@ import org.apache.spark.sql.functions.col
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.head
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -16,12 +15,10 @@ import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.readParquet
 import org.jetbrains.kotlinx.kandy.dsl.plot
-import org.jetbrains.kotlinx.kandy.letsplot.layers.line
 import org.jetbrains.kotlinx.kandy.letsplot.layers.points
 import org.jetbrains.kotlinx.kandy.letsplot.layers.abLine
 import org.jetbrains.kotlinx.kandy.letsplot.export.save
 import org.jetbrains.kotlinx.kandy.util.color.Color
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -58,7 +55,7 @@ fun main() {
     // Make Spark a bit quieter
     spark.sparkContext().setLogLevel("WARN")
 
-    // 1) Read housing.csv (from repo path) with Spark
+    // 1) Read housing.csv (from a repo path) with Spark
     val csvResource = object {}::class.java.getResource("/housing.csv")
         ?: throw IllegalStateException("housing.csv not found in classpath resources")
     val csvPath = Paths.get(csvResource.toURI()).toAbsolutePath().toString()

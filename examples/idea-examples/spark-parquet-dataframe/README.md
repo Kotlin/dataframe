@@ -60,7 +60,7 @@ Below is a faithful, step-by-step walkthrough matching the code in `SparkParquet
      - 10.4 Create a Kandy plot (points + abLine) and save it to `linear_model_plot.jpg`.
    - The plot is saved as `linear_model_plot.jpg` (an example image is committed at `lets-plot-images/linear_model_plot.jpg`).
 
-![Linear model plot](../../../lets-plot-images/linear_model_plot.jpg)
+![Linear model plot](src/main/resources/linear_model_plot.jpg)
 
 ## Why two ways to serialize the model?
 
@@ -80,16 +80,16 @@ The linear model has multiple coefficients (one per feature). A 2D chart can onl
 
 ## About the dataset (`housing.csv`)
 
-1. longitude: How far west a house is; higher values are farther west
-2. latitude: How far north a house is; higher values are farther north
-3. housingMedianAge: Median age of a house within a block; lower means newer
-4. totalRooms: Total number of rooms within a block
-5. totalBedrooms: Total number of bedrooms within a block
-6. population: Total number of people residing within a block
-7. households: Total number of households within a block
-8. medianIncome: Median household income (in tens of thousands of USD)
-9. medianHouseValue: Median house value (in USD)
-10. oceanProximity: Location of the house with respect to the ocean/sea
+1. __longitude:__ How far west a house is; higher values are farther west
+2. __latitude:__ How far north a house is; higher values are farther north
+3. __housingMedianAge:__ Median age of a house within a block; lower means newer
+4. __totalRooms:__ Total number of rooms within a block
+5. __totalBedrooms:__ Total number of bedrooms within a block
+6. __population:__ Total number of people residing within a block
+7. __households:__ Total number of households within a block
+8. __medianIncome:__ Median household income (in tens of thousands of USD)
+9. __medianHouseValue:__ Median house value (in USD)
+10. __oceanProximity:__ Location of the house with respect to the ocean/sea
 
 The CSV file is located at `examples/housing.csv` in the repository root.
 
@@ -108,3 +108,68 @@ On Windows, Spark may require Hadoop native helpers. If you see errors like "win
 
 This ensures Spark can operate correctly with Hadoop on Windows.
 </details>
+
+
+## SparkSession configuration to bypass Hadoop/winutils and enable Arrow
+
+Use the following SparkSession builder if you want to completely avoid native Hadoop libraries (including winutils on Windows) and enable Arrow-related add-opens:
+
+```kotlin
+val spark = SparkSession.builder()
+    .appName("spark-parquet-dataframe")
+    .master("local[*]")
+    .config("spark.sql.warehouse.dir", Files.createTempDirectory("spark-warehouse").toString())
+    // Completely bypass native Hadoop libraries and winutils
+    .config("spark.hadoop.fs.defaultFS", "file:///")
+    .config("spark.hadoop.fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs")
+    .config("spark.hadoop.fs.file.impl.disable.cache", "true")
+    // Disable Hadoop native library requirements and native warnings
+    .config("spark.hadoop.hadoop.native.lib", "false")
+    .config("spark.hadoop.io.native.lib.available", "false")
+    .config(
+        "spark.driver.extraJavaOptions",
+        "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+    )
+    .config(
+        "spark.executor.extraJavaOptions",
+        "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+    )
+    .getOrCreate()
+```
+
+Notes:
+- This configuration uses the pure-Java local filesystem (file://) and disables Hadoop native library checks, making winutils unnecessary.
+- If you rely on HDFS or native Hadoop tooling, omit these overrides and configure Hadoop as usual.
+
+## What each Spark config does (and why it matters on JDK 21 and the Java module system)
+- `spark.sql.warehouse.dir=Files.createTempDirectory("spark-warehouse").toString()`
+  - Points Spark SQL’s warehouse to an ephemeral, writable temp directory.
+  - Avoids permission issues and clutter in the project directory, especially on Windows.
+- `spark.hadoop.fs.defaultFS = file:///`
+  - Forces Hadoop to use the local filesystem instead of HDFS.
+  - Bypasses native Hadoop bits and makes winutils unnecessary on Windows for this example.
+- `spark.hadoop.fs.AbstractFileSystem.file.impl = org.apache.hadoop.fs.local.LocalFs`
+  - Ensures the AbstractFileSystem implementation resolves to the pure-Java LocalFs.
+- `spark.hadoop.fs.file.impl.disable.cache = true`
+  - Disables FS implementation caching so the LocalFs overrides are applied immediately within the current JVM.
+- `spark.hadoop.hadoop.native.lib = false` and `spark.hadoop.io.native.lib.available = false`
+  - Tell Hadoop not to load native libraries and suppress related warnings.
+  - Prevents errors stemming from missing native binaries (e.g., winutils) when you only need local file IO.
+- `spark.driver.extraJavaOptions` and `spark.executor.extraJavaOptions` with:
+  `--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED`
+  - Why needed: Starting with the Java Platform Module System (JDK 9+) and especially under JDK 17/21 (JEP 403 strong encapsulation), reflective access into JDK internals is restricted. Apache Arrow (used by the vectorized Parquet reader in Kotlin DataFrame) may need reflective access within java.nio for memory management and buffer internals. Without opening the package, you can get errors like:
+    - `java.lang.reflect.InaccessibleObjectException: module java.base does not open java.nio to org.apache.arrow.memory.core`
+    - ...does not open `java.nio` to unnamed module @xxxx
+  - What it does: Opens the `java.nio` package in module `java.base` at runtime to both the named module org.apache.arrow.memory.core (when Arrow is on the module path) and to ALL-UNNAMED (when Arrow is on the classpath). This enables Arrow’s memory code to work on modern JDKs.
+  - Driver vs executor: In `local[*]` both apply to the same process, but keeping both symmetric makes this snippet cluster-ready (executors are separate JVMs).
+  - When you might not need it: On JDK 8 (no module system) or if your stack does not use Arrow’s vectorized path. On JDK 17/21+, keep it if you see `InaccessibleObjectException` referencing `java.nio`.
+  - Other packages: Some environments/libraries (e.g., Netty) may require additional opens such as `--add-opens=java.base/sun.nio.ch=ALL-UNNAMED`. Only add the opens that your error messages explicitly mention.
+  - Security note: add-opens affects only the current JVM process at runtime; it doesn’t change compile-time checks or system-wide settings.
+
+## Troubleshooting on JDK 17+
+- Symptom: `InaccessibleObjectException` mentioning java.nio or “illegal reflective access” warnings.
+  - Fix: Ensure both spark.driver.extraJavaOptions and `spark.executor.extraJavaOptions` include the exact `--add-opens` string shown above.
+- Symptom: Works in IDE, fails with spark-submit.
+  - Fix: Pass the options with `--conf spark.driver.extraJavaOptions=...` and `--conf spark.executor.extraJavaOptions=...` (or via SPARK_SUBMIT_OPTS), not only in IDE settings.
+- Symptom: On Windows, “winutils.exe not found”.
+  - Fix: Either use this configuration block (bypassing native Hadoop) or install winutils as described in the Windows note above.
