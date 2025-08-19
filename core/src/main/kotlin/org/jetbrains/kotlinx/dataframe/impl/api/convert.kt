@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
-import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -29,12 +28,10 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
-import org.jetbrains.kotlinx.dataframe.exceptions.ColumnTypeMismatchesColumnValuesException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
@@ -64,22 +61,6 @@ import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
 import kotlin.toBigDecimal as toBigDecimalKotlin
 import kotlin.toBigInteger as toBigIntegerKotlin
-
-@PublishedApi
-internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
-    type: KType,
-    infer: Infer,
-    rowConverter: RowValueExpression<T, C, R>,
-): DataFrame<T> =
-    asColumn { col ->
-        try {
-            df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) }
-        } catch (e: ClassCastException) {
-            throw ColumnTypeMismatchesColumnValuesException(col, e)
-        } catch (e: NullPointerException) {
-            throw ColumnTypeMismatchesColumnValuesException(col, e)
-        }
-    }
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
