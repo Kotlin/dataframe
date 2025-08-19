@@ -27,7 +27,8 @@ public fun <T> DataFrame<T>.print(
     alignLeft: Boolean = false,
     columnTypes: Boolean = false,
     title: Boolean = false,
-): Unit = println(renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title))
+    rowIndex: Boolean = true,
+): Unit = println(renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex))
 
 // endregion
 
