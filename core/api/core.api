@@ -5822,6 +5822,9 @@ public final class org/jetbrains/kotlinx/dataframe/impl/api/ConstructorsKt {
 
 public final class org/jetbrains/kotlinx/dataframe/impl/api/ConvertKt {
 	public static final fun convertRowColumnImpl (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/api/ConvertRowCellImplKt {
 	public static final fun withRowCellImpl (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
