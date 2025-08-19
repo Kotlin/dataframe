@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import java.math.BigDecimal
 
-fun AnyFrame.renderToString(
+public fun AnyFrame.renderToString(
     rowsLimit: Int = 20,
     valueLimit: Int = 40,
     borders: Boolean = false,
