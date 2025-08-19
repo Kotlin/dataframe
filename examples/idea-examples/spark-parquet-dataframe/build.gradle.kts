@@ -25,6 +25,12 @@ dependencies {
     implementation("org.apache.spark:spark-sql_2.13:4.0.0")
     implementation("org.apache.spark:spark-mllib_2.13:4.0.0")
 
+    // Kandy (Lets-Plot backend) for plotting
+    implementation(libs.kandy) {
+        // Avoid pulling transitive kotlinx-dataframe from Kandy — we use the monorepo modules
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
+
     // Logging to keep Spark quiet
     implementation(libs.log4j.core)
     implementation(libs.log4j.api)

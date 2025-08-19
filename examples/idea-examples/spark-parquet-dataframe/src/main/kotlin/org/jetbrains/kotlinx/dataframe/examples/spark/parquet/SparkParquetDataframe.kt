@@ -6,10 +6,21 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.col
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.head
 import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.dropNA
+import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.readParquet
+import org.jetbrains.kotlinx.kandy.dsl.plot
+import org.jetbrains.kotlinx.kandy.letsplot.layers.line
+import org.jetbrains.kotlinx.kandy.letsplot.layers.points
+import org.jetbrains.kotlinx.kandy.letsplot.layers.abLine
+import org.jetbrains.kotlinx.kandy.letsplot.export.save
+import org.jetbrains.kotlinx.kandy.util.color.Color
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -95,7 +106,9 @@ fun main() {
     val lr = LinearRegression()
         .setFeaturesCol("features")
         .setLabelCol(labelCol)
-        .setMaxIter(50)
+        .setFitIntercept(false)
+        .setElasticNetParam(0.5)
+        .setMaxIter(10)
 
     val fullPipeline = org.apache.spark.ml.Pipeline().setStages(arrayOf(assembler, lr))
 
@@ -158,6 +171,10 @@ fun main() {
     val stage0Dir = findStageDir(stagesDir, "0_")
     val stage1Dir = findStageDir(stagesDir, "1_")
 
+    // Accumulate Kotlin DataFrames found in step 9 so we can optionally join only existing ones in step 10
+    val metaKdfs = mutableListOf<DataFrame<*>>()
+    val stageDataKdfs = mutableListOf<DataFrame<*>>()
+
     // 9.1) Root metadata (JSON) -> read each file one-by-one
     val rootMetaDir = pipelineRoot.resolve("metadata")
     val rootMetaFiles = listTextOrJsonFiles(rootMetaDir)
@@ -165,14 +182,16 @@ fun main() {
         val df = DataFrame.readJson(file.toFile())
         println("Step 9: Pipeline root metadata JSON (${file.fileName}) head:")
         df.head().print()
+        metaKdfs += df
     }
 
-// 9.2) Stage 0 (VectorAssembler) metadata/data
+    // 9.2) Stage 0 (VectorAssembler) metadata/data
     val stage0MetaDir = stage0Dir.resolve("metadata")
     for (file in listTextOrJsonFiles(stage0MetaDir)) {
         val df = DataFrame.readJson(file.toFile())
         println("Step 9: Stage 0 metadata (${file.fileName}) head:")
         df.head().print()
+        metaKdfs += df
     }
     val stage0DataDir = stage0Dir.resolve("data")
     val stage0ParquetFiles = listParquetFilesIfAny(stage0DataDir)
@@ -180,6 +199,7 @@ fun main() {
         val stage0Kdf = DataFrame.readParquet(*stage0ParquetFiles)
         println("Step 9: Stage 0 data (Parquet) head:")
         stage0Kdf.head().print()
+        stageDataKdfs += stage0Kdf
     } else {
         println("Step 9: Stage 0 data directory is missing or has no .parquet files, skipping.")
     }
@@ -190,6 +210,7 @@ fun main() {
         val df = DataFrame.readJson(file.toFile())
         println("Step 9: Stage 1 metadata (${file.fileName}) head:")
         df.head().print()
+        metaKdfs += df
     }
     val stage1DataDir = stage1Dir.resolve("data")
     val stage1ParquetFiles = listParquetFilesIfAny(stage1DataDir)
@@ -197,12 +218,71 @@ fun main() {
         val stage1Kdf = DataFrame.readParquet(*stage1ParquetFiles)
         println("Step 9: Stage 1 data (Parquet) head:")
         stage1Kdf.head().print()
+        stageDataKdfs += stage1Kdf
     } else {
         println("Step 9: Stage 1 data directory is missing or has no .parquet files, skipping.")
     }
 
-    spark.stop()
+    // 10) Join only existing Kotlin DataFrames and build a plot from the linear model
+    // 10.1) Unified metadata from any JSON files we successfully parsed above
+    val unifiedMeta = if (metaKdfs.isNotEmpty()) metaKdfs.concat() else null
+    if (unifiedMeta != null) {
+        println("Step 10: Unified metadata head:")
+        unifiedMeta.head().print()
+    } else {
+        println("Step 10: No metadata DataFrames were found to unify.")
+    }
 
+    // 10.2) Unified model data: in this demo we already have a single modelKdf (coefficients + intercept)
+    val unifiedModelDf = modelKdf
+    println("Step 10: Unified model data (coefficients) head:")
+    unifiedModelDf.head().print()
+
+    // 10.3) Build a linear plot: dataset points and model line y = a*x + b for the chosen feature
+    // Choose feature 'median_income' vs. label 'median_house_value'
+    val pointsDf = kdf.dropNA("median_income", "median_house_value")
+
+    // Extract slope (coefficient for 'median_income') and intercept from modelKdf
+    val terms = unifiedModelDf.getColumn("term").cast<String>().toList()
+    val coefs = unifiedModelDf.getColumn("coefficient").cast<Double>().toList()
+    val slopeIdx = terms.indexOf("median_income")
+    val interceptIdx = terms.indexOf("intercept")
+    val slopeValue = if (slopeIdx >= 0) coefs[slopeIdx] else 0.0
+    val interceptValue = if (interceptIdx >= 0) coefs[interceptIdx] else 0.0
+
+    println("slope: $slopeValue intercept: $interceptValue")
+
+    // Prepare DF for plotting: add constant columns for abLine mapping
+    val dfForPlot = pointsDf
+        .add("slope_const") { slopeValue }
+        .add("intercept_const") { interceptValue }
+
+    // 10.4) Create Kandy plot using abLine (slope/intercept) and export to a .jpg file
+    val plot = dfForPlot.plot {
+        points {
+            x("median_income")
+            y("median_house_value")
+            // Visual hint: small circles
+            color = Color.LIGHT_BLUE
+            size = 2.0
+        }
+        abLine {
+            // Use linear model parameters: y = slope * x + intercept
+            slope.constant(slopeValue)
+            intercept.constant(interceptValue)
+            color = Color.RED
+            width = 2.0
+        }
+    }
+
+    val targetDir = Paths.get("").normalize()
+    Files.createDirectories(targetDir)
+    val plotPath = targetDir.resolve("linear_model_plot.jpg").toString()
+
+    plot.save(plotPath)
+    println("Step 10: Saved plot to: $plotPath")
+
+    spark.stop()
 
 }
 
