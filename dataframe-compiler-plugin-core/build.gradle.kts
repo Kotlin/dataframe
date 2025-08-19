@@ -31,6 +31,10 @@ dependencies {
         exclude(group = "ch.randelshofer", module = "fastdoubleparser")
         exclude(group = "io.github.oshai", module = "kotlin-logging-jvm")
     }
+
+    // we assume Kotlin plugin has reflect dependency - we're not bringing our own version
+    testImplementation(kotlin("reflect"))
+    testImplementation(kotlin("test"))
 }
 
 tasks.withType<ShadowJar> {
