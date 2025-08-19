@@ -399,7 +399,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 StdlibInstant::class -> convert<Int> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<Int> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
 
                 JavaLocalDateTime::class -> convert<Int> {
@@ -440,7 +440,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 StdlibInstant::class -> convert<Byte> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<Byte> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
 
                 JavaLocalDateTime::class -> convert<Byte> {
@@ -481,7 +481,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 StdlibInstant::class -> convert<Short> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<Short> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
 
                 JavaLocalDateTime::class -> convert<Short> {
@@ -534,7 +534,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 StdlibInstant::class -> convert<Long> { StdlibInstant.fromEpochMilliseconds(it) }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<Long> { DeprecatedInstant.fromEpochMilliseconds(it) }
 
                 JavaLocalDateTime::class -> convert<Long> {
@@ -569,13 +569,13 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 JavaLocalTime::class -> convert<StdlibInstant> { it.toLocalTime(defaultTimeZone).toJavaLocalTime() }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<StdlibInstant> { it.toDeprecatedInstant() }
 
                 else -> null
             }
 
-            // #1350
+            // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
             DeprecatedInstant::class -> when (toClass) {
                 Long::class -> convert<DeprecatedInstant> { it.toStdlibInstant().toEpochMilliseconds() }
 
@@ -631,7 +631,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                     it.toKotlinInstant().toLocalTime(defaultTimeZone).toJavaLocalTime()
                 }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<JavaInstant> {
                     it.toKotlinInstant().toDeprecatedInstant()
                 }
@@ -682,7 +682,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 StdlibInstant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone) }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<LocalDateTime> {
                     it.toInstant(defaultTimeZone).toDeprecatedInstant()
                 }
@@ -711,7 +711,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                     it.toKotlinLocalDateTime().toInstant(defaultTimeZone)
                 }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<JavaLocalDateTime> {
                     it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toDeprecatedInstant()
                 }
@@ -736,7 +736,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 StdlibInstant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone) }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<LocalDate> {
                     it.atStartOfDayIn(defaultTimeZone).toDeprecatedInstant()
                 }
@@ -761,7 +761,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                     it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone)
                 }
 
-                // #1350
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
                 DeprecatedInstant::class -> convert<JavaLocalDate> {
                     it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toDeprecatedInstant()
                 }
