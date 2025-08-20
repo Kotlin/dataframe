@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.impl.api.GroupByEntryImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.index
@@ -67,6 +68,42 @@ public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> =
  */
 public inline fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: this
+
+// endregion
+
+// region GroupBy
+
+public inline fun <T, G> GroupBy<T, G>.dropEntries(crossinline predicate: GroupByEntryFilter<T, G>): GroupBy<T, G> =
+    filterEntries { !predicate(it, it) }
+
+/**
+ * Returns an adjusted [GroupBy] containing all entries except the first [n] entries.
+ *
+ * @throws IllegalArgumentException if [n] is negative.
+ */
+public fun <T, G> GroupBy<T, G>.dropEntries(n: Int): GroupBy<T, G> {
+    require(n >= 0) { "Requested rows count $n is less than zero." }
+    return toDataFrame().drop(n).asGroupBy(groups.name()).cast()
+}
+
+/**
+ * Returns an adjusted [GroupBy] containing all entries except the last [n] entries.
+ *
+ * @throws IllegalArgumentException if [n] is negative.
+ */
+public fun <T, G> GroupBy<T, G>.dropLastEntries(n: Int): GroupBy<T, G> {
+    require(n >= 0) { "Requested rows count $n is less than zero." }
+    return toDataFrame().drop(n).asGroupBy(groups.name()).cast()
+}
+
+/**
+ * Returns an adjusted [GroupBy] containing all entries except the first entries that satisfy the given [predicate].
+ */
+public inline fun <T, G> GroupBy<T, G>.dropEntriesWhile(predicate: GroupByEntryFilter<T, G>): GroupBy<T, G> =
+    toDataFrame().dropWhile {
+        val entry = GroupByEntryImpl(it, groups)
+        predicate(entry, entry)
+    }.asGroupBy(groups.name()).cast()
 
 // endregion
 
