@@ -20,7 +20,10 @@ public inline fun <T> DataFrame<T>.forEach(action: RowExpression<T, Unit>): Unit
 
 // region GroupBy
 
-@Deprecated("Replaced with forEachEntry")
+@Deprecated(
+    "Replaced with forEachEntry",
+    ReplaceWith("forEachEntry { val key = it\nval group = it.group()\nbody(key, group) }"),
+)
 public inline fun <T, G> GroupBy<T, G>.forEach(body: (GroupBy.Entry<T, G>) -> Unit): Unit =
     keys.forEach { key ->
         val group = groups[key.index()]

@@ -142,7 +142,10 @@ public inline fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFr
 
 // region GroupBy
 
-@Deprecated("Replaced by mapEntries")
+@Deprecated(
+    "Replaced by mapEntries",
+    ReplaceWith("mapEntries { val key = it\nval group = it.group()\nbody(key, group) }"),
+)
 public inline fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> =
     keys.rows().mapIndexedNotNull { index, row ->
         val group = groups[index]
@@ -150,11 +153,17 @@ public inline fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>,
         body(g, g)
     }
 
-@Deprecated("Replaced by mapEntriesToRows")
+@Deprecated(
+    "Replaced by mapEntriesToRows",
+    ReplaceWith("mapEntriesToRows { val key = it\nval group = it.group()\nbody(key, group) }"),
+)
 public fun <T, G> GroupBy<T, G>.mapToRows(body: Selector<GroupWithKey<T, G>, DataRow<G>?>): DataFrame<G> =
     map(body).concat()
 
-@Deprecated("Replaced by mapEntriesToFrames")
+@Deprecated(
+    "Replaced by mapEntriesToFrames",
+    ReplaceWith("mapEntriesToFrames { val key = it\nval group = it.group()\nbody(key, group) }"),
+)
 public fun <T, G> GroupBy<T, G>.mapToFrames(body: Selector<GroupWithKey<T, G>, DataFrame<G>>): FrameColumn<G> =
     DataColumn.createFrameColumn(groups.name, map(body))
 
@@ -164,10 +173,11 @@ public inline fun <T, G, R> GroupBy<T, G>.mapEntries(body: GroupByEntrySelector<
         body(entry, entry)
     }
 
-public fun <T, G> GroupBy<T, G>.mapEntriesToRows(body: GroupByEntrySelector<T, G, DataRow<G>?>): DataFrame<G> =
+public fun <T, G, R : Any> GroupBy<T, G>.mapEntriesToRows(body: GroupByEntrySelector<T, G, DataRow<R>?>): DataFrame<R> =
     mapEntries(body).concat()
 
-public fun <T, G> GroupBy<T, G>.mapEntriesToFrames(body: GroupByEntrySelector<T, G, DataFrame<G>>): FrameColumn<G> =
-    DataColumn.createFrameColumn(groups.name, mapEntries(body))
+public fun <T, G, R : Any> GroupBy<T, G>.mapEntriesToFrames(
+    body: GroupByEntrySelector<T, G, DataFrame<R>>,
+): FrameColumn<R> = DataColumn.createFrameColumn(groups.name, mapEntries(body))
 
 // endregion

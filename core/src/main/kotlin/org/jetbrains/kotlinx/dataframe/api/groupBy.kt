@@ -122,7 +122,7 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
     public fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupBy<T, R>
 
-    @Deprecated("Replaced by filterEntries")
+    @Deprecated("Replaced by filterEntries", ReplaceWith("filterEntries(predicate)"))
     public fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G>
 
     public fun filterEntries(predicate: GroupByEntryFilter<T, G>): GroupBy<T, G>

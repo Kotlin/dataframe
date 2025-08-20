@@ -47,9 +47,9 @@ internal class GroupByImpl<T, G>(
     override val keys by lazy { df.remove { groups } }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
+    override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupBy<T, R> =
         df.convert { groups }.with { transform(it, it) }
-            .asGroupBy(groups.name()) as GroupBy<T, R>
+            .asGroupBy { frameCol<R>(groups.name()) }
 
     override fun toString() = df.toString()
 
@@ -62,7 +62,7 @@ internal class GroupByImpl<T, G>(
             val row = GroupedDataRowImpl(df[it], groups)
             predicate(row, row)
         }
-        return df[indices].asGroupBy { groups }
+        return df[indices].asGroupBy { frameCol<G>(groups.name()) }
     }
 
     override fun filterEntries(predicate: GroupByEntryFilter<T, G>): GroupBy<T, G> {
@@ -70,7 +70,7 @@ internal class GroupByImpl<T, G>(
             val row = GroupByEntryImpl(df[it], groups)
             predicate(row, row)
         }
-        return df[indices].asGroupBy { groups }
+        return df[indices].asGroupBy { frameCol<G>(groups.name()) }
     }
 
     override fun toDataFrame(groupedColumnName: String?): DataFrame<T> =
