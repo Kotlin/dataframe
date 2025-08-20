@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.toIterable
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET
 import kotlin.reflect.KProperty
 
 /**
@@ -29,7 +30,7 @@ public interface DataRow<out T> {
 
     public operator fun <R> get(expression: RowExpression<T, R>): R = expression(this, this)
 
-    @Deprecated(DEPRECATED_ACCESS_API)
+    @Deprecated(DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET)
     @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<R>): R
 
