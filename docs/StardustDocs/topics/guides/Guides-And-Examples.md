@@ -24,6 +24,8 @@ Explore our structured, in-depth guides to steadily improve your Kotlin DataFram
 
 <img src="quickstart_preview.png" border-effect="rounded" width="705"/>
 
+* [](Guide-for-backend-SQL-developers.md) — migration guide for backend developers with SQL/ORM experience moving to Kotlin DataFrame
+
 * [](extensionPropertiesApi.md) — learn about extension properties for [`DataFrame`](DataFrame.md) 
 and make working with your data both convenient and type-safe.
 
@@ -60,6 +62,7 @@ and make working with your data both convenient and type-safe.
     * [Apache Spark Interop (With Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/kotlinSpark)
     * [Multik Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/multik)
     * [JetBrains Exposed Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/exposed)
+    * [Hibernate ORM](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/hibernate)
 * [OpenAPI Guide](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb)
   — learn how to parse and explore [OpenAPI](https://swagger.io) JSON structures using Kotlin DataFrame,
   enabling structured access and intuitive analysis of complex API schemas (*experimental*, supports OpenAPI 3.0.0).
