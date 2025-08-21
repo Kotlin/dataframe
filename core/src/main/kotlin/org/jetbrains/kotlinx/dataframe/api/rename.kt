@@ -294,7 +294,10 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  *
  * ### Examples
  * ```kotlin
+ * // Renames "arrival_date" and "passport-ID" columns to "camelCase"
  * df.rename("arrival_date", "passport-ID").toCamelCase()
+ * // Renames all numeric columns to "camelCase"
+ * df.rename { colsOf<Number>() }.toCamelCase()
  * ```
  *
  * #### Renaming Examples
