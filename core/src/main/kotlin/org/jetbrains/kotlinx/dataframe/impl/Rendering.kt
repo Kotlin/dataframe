@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -13,8 +15,6 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import java.net.URL
-import java.time.LocalDateTime
-import java.time.LocalTime
 import kotlin.reflect.KType
 import kotlin.reflect.KVariance
 import kotlin.reflect.full.isSubtypeOf
@@ -72,10 +72,13 @@ internal fun renderType(type: KType?): String {
                     fullName.removePrefix("java.net.")
 
                 type.classifier in listOf(LocalDateTime::class, LocalTime::class) ->
-                    fullName.removePrefix("java.time.")
+                    fullName.removePrefix("kotlinx.datetime.")
 
                 fullName.startsWith("kotlin.collections.") ->
                     fullName.removePrefix("kotlin.collections.")
+
+                fullName.startsWith("kotlin.time.") ->
+                    fullName.removePrefix("kotlin.time.")
 
                 fullName.startsWith("kotlin.") ->
                     fullName.removePrefix("kotlin.")

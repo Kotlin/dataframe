@@ -189,6 +189,13 @@ allprojects {
             options.release.set(8)
         }
     }
+    tasks.withType<KotlinCompile> {
+        compilerOptions {
+            // enables support for kotlin.time.Instant as kotlinx.datetime.Instant was deprecated; Issue #1350
+            // Can be removed once kotlin.time.Instant is marked "stable".
+            optIn.add("kotlin.time.ExperimentalTime")
+        }
+    }
 
     // Attempts to configure ktlint for each sub-project that uses the plugin
     afterEvaluate {
