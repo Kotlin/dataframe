@@ -6,6 +6,7 @@ import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import io.kotest.matchers.string.shouldStartWith
 import io.kotest.matchers.types.instanceOf
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.json.Json
@@ -20,6 +21,7 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.colsOf
@@ -27,12 +29,15 @@ import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toMap
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -40,15 +45,19 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.io.SERIALIZATION_VERSION
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.IS_FORMATTED
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KIND
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPE
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
+import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.convertToDataFrame
 import java.net.URL
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -1040,6 +1049,35 @@ class JsonTests {
         val metadata = json[METADATA]!!.jsonObject
         metadata[NROW]!!.jsonPrimitive.int shouldBe 1
         metadata[NCOL]!!.jsonPrimitive.int shouldBe 4
+        metadata[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe false
+        val columns = metadata[COLUMNS]!!.jsonArray.map { it.jsonPrimitive.content }
+        columns shouldBe listOf("id", "node_id", "name", "full_name")
+
+        val decodedData = json[KOTLIN_DATAFRAME]!!.jsonArray
+        val decodedDf = DataFrame.readJsonStr(decodedData.toString())
+        decodedDf shouldBe df
+    }
+
+    @Suppress("USELESS_IS_CHECK")
+    @Test
+    fun `json with metadata flat formatted table`() {
+        @Language("json")
+        val data =
+            """
+            [{"id":3602279,"node_id":"MDEwOlJlcG9zaXRvcnkzNjAyMjc5","name":"kotlin-web-demo","full_name":"JetBrains/kotlin-web-demo"}]
+            """.trimIndent()
+        // simulating the functions used to define whether the dataframe is formatted
+        val formattedDf = DataFrame.readJsonStr(data).format().with { background(blue) }
+        val df = convertToDataFrame(formattedDf)
+        val jsonStr = df.toJsonWithMetadata(df.rowsCount(), isFormatted = formattedDf is FormattedFrame<*>).trimIndent()
+        val json = parseJsonStr(jsonStr)
+
+        json[VERSION]!!.jsonPrimitive.content shouldBe SERIALIZATION_VERSION
+
+        val metadata = json[METADATA]!!.jsonObject
+        metadata[NROW]!!.jsonPrimitive.int shouldBe 1
+        metadata[NCOL]!!.jsonPrimitive.int shouldBe 4
+        metadata[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe true
         val columns = metadata[COLUMNS]!!.jsonArray.map { it.jsonPrimitive.content }
         columns shouldBe listOf("id", "node_id", "name", "full_name")
 
@@ -1079,6 +1117,8 @@ class JsonTests {
         val df = DataFrame.readJson(testJson("repositories"))
         val jsonStr = df.toJsonWithMetadata(df.rowsCount()).trimIndent()
         val json = parseJsonStr(jsonStr)
+        json[METADATA]!!.jsonObject[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe false
+
         val row = json[KOTLIN_DATAFRAME]!!.jsonArray[0].jsonObject
 
         val contributors = row["contributors"]!!.jsonObject
@@ -1101,6 +1141,8 @@ class JsonTests {
         val nestedFrameRowLimit = 20
         val jsonStr = df.toJsonWithMetadata(df.rowsCount(), nestedFrameRowLimit).trimIndent()
         val json = parseJsonStr(jsonStr)
+        json[METADATA]!!.jsonObject[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe false
+
         val row = json[KOTLIN_DATAFRAME]!!.jsonArray[0].jsonObject
 
         val contributors = row["contributors"]!!.jsonObject
@@ -1112,6 +1154,33 @@ class JsonTests {
 
         val decodedData = contributors[DATA]!!.jsonArray
         decodedData.size shouldBe nestedFrameRowLimit
+    }
+
+    @Test
+    fun `json with metadata containing formatted nested frames`() {
+        val df = DataFrame.readJson(testJson("repositories"))
+            .convert { frameCols() }.with { it.format().with { background(blue) } }
+
+        // simulating the functions used to define whether the dataframe is formatted
+        val hasFormattedColumns = df.getColumns { colsAtAnyDepth().colsOf<FormattedFrame<*>?>() }.isNotEmpty()
+        val jsonStr = df.toJsonWithMetadata(df.rowsCount(), isFormatted = hasFormattedColumns).trimIndent()
+
+        val json = parseJsonStr(jsonStr)
+        val metadata = json[METADATA]!!.jsonObject
+        metadata[IS_FORMATTED]!!.jsonPrimitive.boolean shouldBe true
+        metadata[NCOL]!!.jsonPrimitive.int shouldBe 1
+        metadata[NROW]!!.jsonPrimitive.int shouldBe 1
+        metadata[COLUMNS]!!.jsonArray.single().jsonPrimitive.content shouldBe "contributors"
+        metadata[TYPES]!!.jsonArray.single().jsonObject.let {
+            it[KIND]!!.jsonPrimitive.content shouldBe "ValueColumn"
+            it[TYPE]!!.jsonPrimitive.content shouldStartWith FormattedFrame::class.qualifiedName!!
+        }
+
+        val row = json[KOTLIN_DATAFRAME]!!.jsonArray[0].jsonObject
+
+        // is read as value column
+        val contributors = row["contributors"]!!.jsonPrimitive.content
+        contributors shouldStartWith FormattedFrame::class.qualifiedName!!
     }
 
     @Test
