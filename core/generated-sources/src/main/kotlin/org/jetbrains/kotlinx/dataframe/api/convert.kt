@@ -5,6 +5,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.toStdlibInstant
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -1282,6 +1283,24 @@ public fun DataColumn<String?>.convertToStdlibInstant(): DataColumn<StdlibInstan
     map { it?.let { StdlibInstant.parse(it) } }
 
 /**
+ * Converts values in this [kotlinx.datetime.Instant] column to [kotlin.time.Instant].
+ *
+ * @return A new [DataColumn] with the [kotlin.time.Instant] values.
+ */
+@JvmName("convertToStdlibInstantFromDeprecatedInstant")
+public fun DataColumn<DeprecatedInstant>.convertToStdlibInstant(): DataColumn<StdlibInstant> =
+    map { it.toStdlibInstant() }
+
+/**
+ * Converts values in this [kotlinx.datetime.Instant] column to [kotlin.time.Instant]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [kotlin.time.Instant] nullable values.
+ */
+@JvmName("convertToStdlibInstantFromDeprecatedInstantNullable")
+public fun DataColumn<DeprecatedInstant?>.convertToStdlibInstant(): DataColumn<StdlibInstant?> =
+    map { it?.toStdlibInstant() }
+
+/**
  * __Deprecated__:
  *
  * [kotlinx.datetime.Instant] is deprecated in favor of [kotlin.time.Instant].
@@ -1319,7 +1338,7 @@ public fun <T> Convert<T, String>.toInstant(): DataFrame<T> = asColumn { it.conv
  *
  * ### Examples:
  * ```kotlin
- * df.convert { timestamp }.toInstant()
+ * df.convert { timestamp }.toDeprecatedInstant()
  * ```
  *
  * Migrate to [kotlin.time.Instant] and use [convertToStdlibInstant] at your own pace.
@@ -1345,7 +1364,7 @@ public fun <T> Convert<T, String?>.toDeprecatedInstant(): DataFrame<T> = asColum
  *
  * ### Examples:
  * ```kotlin
- * df.convert { timestamp }.toInstant()
+ * df.convert { timestamp }.toDeprecatedInstant()
  * ```
  *
  * Migrate to [kotlin.time.Instant] and use [convertToStdlibInstant] at your own pace.
@@ -1364,7 +1383,7 @@ public fun <T> Convert<T, String?>.toDeprecatedInstant(): DataFrame<T> = asColum
 public fun <T> Convert<T, String>.toDeprecatedInstant(): DataFrame<T> = asColumn { it.convertToDeprecatedInstant() }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [StdlibInstant],
+ * Converts values in the [String] columns previously selected with [convert] to [kotlin.time.Instant],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1372,12 +1391,12 @@ public fun <T> Convert<T, String>.toDeprecatedInstant(): DataFrame<T> = asColumn
  *
  * ### Examples:
  * ```kotlin
- * df.convert { timestamp }.toInstant()
+ * df.convert { timestamp }.toStdlibInstant()
  * ```
  *
  * This function will be renamed to `.toInstant()` in 1.1.
  *
- * @return A new [DataFrame] with the values converted to [StdlibInstant].
+ * @return A new [DataFrame] with the values converted to [kotlin.time.Instant].
  */
 @JvmName("toStdlibInstantFromStringNullable")
 @Refine
@@ -1386,19 +1405,19 @@ public fun <T> Convert<T, String>.toDeprecatedInstant(): DataFrame<T> = asColumn
 public fun <T> Convert<T, String?>.toStdlibInstant(): DataFrame<T> = asColumn { it.convertToStdlibInstant() }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [StdlibInstant],
+ * Converts values in the [String] columns previously selected with [convert] to [kotlin.time.Instant],
  * preserving their original names and positions within the [DataFrame].
  *
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
  * ### Examples:
  * ```kotlin
- * df.convert { timestamp }.toInstant()
+ * df.convert { timestamp }.toStdlibInstant()
  * ```
  *
  * This function will be renamed to `.toInstant()` in 1.1.
  *
- * @return A new [DataFrame] with the values converted to [StdlibInstant].
+ * @return A new [DataFrame] with the values converted to [kotlin.time.Instant].
  */
 @JvmName("toStdlibInstantFromString")
 @Refine
@@ -1406,6 +1425,44 @@ public fun <T> Convert<T, String?>.toStdlibInstant(): DataFrame<T> = asColumn { 
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, String>.toStdlibInstant(): DataFrame<T> = asColumn { it.convertToStdlibInstant() }
 
+/**
+ * Converts values in the [kotlinx.datetime.Instant] columns previously selected with [convert] to [kotlin.time.Instant],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toStdlibInstant()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [kotlin.time.Instant].
+ */
+@JvmName("toStdlibInstantFromDeprecatedInstantNullable")
+@Refine
+@Converter(StdlibInstant::class, nullable = true)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, DeprecatedInstant?>.toStdlibInstant(): DataFrame<T> = asColumn { it.convertToStdlibInstant() }
+
+/**
+ * Converts values in the [kotlinx.datetime.Instant] columns previously selected with [convert] to the [kotlin.time.Instant],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toStdlibInstant()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [kotlin.time.Instant].
+ */
+@JvmName("toStdlibInstantFromDeprecatedInstant")
+@Refine
+@Converter(StdlibInstant::class, nullable = false)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, DeprecatedInstant>.toStdlibInstant(): DataFrame<T> = asColumn { it.convertToStdlibInstant() }
 // endregion
 
 // region toLocalDate
