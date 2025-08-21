@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isList
 import org.jetbrains.kotlinx.dataframe.api.rows
@@ -29,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.IS_FORMATTED
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KIND
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
@@ -52,7 +54,7 @@ import java.io.IOException
 
 // See docs/serialization_format.md for a description of
 // serialization versions and format.
-internal const val SERIALIZATION_VERSION = "2.1.1"
+internal const val SERIALIZATION_VERSION = "2.2.0"
 
 internal object SerializationKeys {
     const val DATA = "data"
@@ -65,6 +67,7 @@ internal object SerializationKeys {
     const val KOTLIN_DATAFRAME = "kotlin_dataframe"
     const val TYPE = "type"
     const val TYPES = "types"
+    const val IS_FORMATTED = "is_formatted"
 }
 
 private val valueTypes =
@@ -196,10 +199,12 @@ internal class DataframeConvertableEncoder(
                 rowLimit,
                 encoders,
             )
+            val isFormatted = input is FormattedFrame<*>
             buildJsonObject {
                 put(DATA, data)
                 putJsonObject(METADATA) {
                     put(KIND, JsonPrimitive(CellKind.DataFrameConvertable.toString()))
+                    put(IS_FORMATTED, JsonPrimitive(isFormatted))
                 }
             }
         } ?: JsonPrimitive(null)
@@ -377,6 +382,7 @@ internal fun encodeDataFrameWithMetadata(
     rowLimit: Int,
     nestedRowLimit: Int? = null,
     customEncoders: List<CustomEncoder> = emptyList(),
+    isFormatted: Boolean = false,
 ): JsonObject =
     buildJsonObject {
         put(VERSION, JsonPrimitive(SERIALIZATION_VERSION))
@@ -391,6 +397,7 @@ internal fun encodeDataFrameWithMetadata(
             }
             put(NROW, JsonPrimitive(frame.rowsCount()))
             put(NCOL, JsonPrimitive(frame.columnsCount()))
+            put(IS_FORMATTED, JsonPrimitive(isFormatted))
         }
         put(
             KOTLIN_DATAFRAME,
@@ -403,11 +410,12 @@ internal fun encodeDataFrameWithMetadata(
     }
 
 @OptIn(ExperimentalSerializationApi::class)
-internal fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int): JsonObject =
+internal fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int, isFormatted: Boolean): JsonObject =
     buildJsonObject {
         put(NROW, df.rowsCount())
         put(NCOL, df.columnsCount())
         putJsonArray(COLUMNS) { addAll(df.columnNames()) }
+        put(IS_FORMATTED, JsonPrimitive(isFormatted))
         put(
             KOTLIN_DATAFRAME,
             encodeFrame(df.take(limit)),
