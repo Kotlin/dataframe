@@ -21,7 +21,7 @@ public fun <T> DataRow<T>.print(): Unit = println(this)
 
 // region DataFrame
 
-@Deprecated(message=PRINT, level=DeprecationLevel.HIDDEN)
+@Deprecated(message = PRINT, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.print(
     rowsLimit: Int = 20,
     valueLimit: Int = 40,
