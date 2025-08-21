@@ -84,14 +84,6 @@ gradlePlugin {
             description = "Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
         }
-        create("deprecatedSchemaGeneratorPlugin") {
-            id = "org.jetbrains.kotlin.plugin.dataframe"
-            implementationClass = "org.jetbrains.dataframe.gradle.DeprecatingSchemaGeneratorPlugin"
-            displayName = "Kotlin DataFrame gradle plugin"
-            description =
-                "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
-            tags = listOf("dataframe", "kotlin")
-        }
     }
 }
 
