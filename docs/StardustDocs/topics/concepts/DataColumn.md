@@ -27,7 +27,9 @@ Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.
 
 #### ColumnGroup
 
-Container for nested columns. Is used to create column hierarchy. 
+Container for nested columns. Used to create column hierarchy.
+
+You can create column groups using the group operation or by splitting inward — see [group](group.md) and [split](split.md) for details.
 
 #### FrameColumn
 
