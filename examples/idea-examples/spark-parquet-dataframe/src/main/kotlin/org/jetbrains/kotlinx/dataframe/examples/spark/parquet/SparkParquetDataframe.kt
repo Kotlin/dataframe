@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.examples.spark.parquet
 
+import org.apache.spark.ml.PipelineStage
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.regression.LinearRegression
+import org.apache.spark.ml.regression.LinearRegressionModel
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.col
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -28,6 +30,8 @@ import kotlin.jvm.java
 /**
  * Demonstrates reading CSV with Apache Spark, writing Parquet, and reading Parquet with Kotlin DataFrame via Arrow.
  * Also trains a simple Spark ML regression model and exports a summary as Parquet, then reads it back with Kotlin DataFrame.
+ *
+ * NOTE: This example doesn't use Kotlin Apache Spark API, as it relies on the Java Spark API directly.
  */
 fun main() {
     // 1) Start local Spark
@@ -40,8 +44,8 @@ fun main() {
         .config("spark.hadoop.fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs")
         .config("spark.hadoop.fs.file.impl.disable.cache", "true")
         // Disable Hadoop native library requirements and native warnings
-        .config("spark.hadoop.hadoop.native.lib", "false")
-        .config("spark.hadoop.io.native.lib.available", "false")
+        .config("spark.hadoop.hadoop.native.lib", false)
+        .config("spark.hadoop.io.native.lib.available", false)
         .config(
             "spark.driver.extraJavaOptions",
             "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
@@ -55,7 +59,7 @@ fun main() {
     // Make Spark a bit quieter
     spark.sparkContext().setLogLevel("WARN")
 
-    // 1) Read housing.csv (from a repo path) with Spark
+    // 2) Read housing.csv (from a repo path) with Spark
     val csvResource = object {}::class.java.getResource("/housing.csv")
         ?: throw IllegalStateException("housing.csv not found in classpath resources")
     val csvPath = Paths.get(csvResource.toURI()).toAbsolutePath().toString()
@@ -65,7 +69,7 @@ fun main() {
         .option("inferSchema", "true")
         .csv(csvPath)
 
-    // 2) Print the Spark DataFrame and export to Parquet in a temp directory
+    // 3) Print the Spark DataFrame and export to Parquet in a temp directory
     println("Spark DataFrame (head):")
     sdf.show(10, false)
 
@@ -74,16 +78,16 @@ fun main() {
     sdf.write().mode("overwrite").parquet(parquetPath)
     println("Saved Spark Parquet to: $parquetPath")
 
-    // 3) Read this Parquet with Kotlin DataFrame (Arrow backend)
-    // Pass actual part-*.parquet files instead of the directory
+    // 4) Read this Parquet with Kotlin DataFrame (Arrow backend)
+    // Pass the actual part-*.parquet files instead of the directory
     val parquetFiles = listParquetFilesIfAny(parquetDir)
     val kdf = DataFrame.readParquet(*parquetFiles)
 
-    // 4) Print out head() for this Kotlin DataFrame
+    // 5) Print out head() for this Kotlin DataFrame
     println("Kotlin DataFrame (head):")
     kdf.head().print()
 
-    // 5) Train a regression model with Spark MLlib
+    // 6) Train a regression model with Spark MLlib
     // Use numeric features only, drop the categorical 'ocean_proximity'
     val labelCol = "median_house_value"
     val candidateFeatureCols = listOf(
@@ -107,28 +111,35 @@ fun main() {
         .setElasticNetParam(0.5)
         .setMaxIter(10)
 
-    val fullPipeline = org.apache.spark.ml.Pipeline().setStages(arrayOf(assembler, lr))
+    val fullPipeline = org.apache.spark.ml.Pipeline().setStages(arrayOf<PipelineStage>(assembler, lr))
 
-    val splits = sdfNumeric.randomSplit(doubleArrayOf(0.8, 0.2), 42)
-    val train = splits[0]
-    val test = splits[1]
-
-    val fullPipelineModel = fullPipeline.fit(train)
-    val lrModel = fullPipelineModel.stages()[1] as org.apache.spark.ml.regression.LinearRegressionModel
+    val fullPipelineModel = fullPipeline.fit(sdfNumeric)
+    val lrModel = fullPipelineModel.stages()[1] as LinearRegressionModel
 
     val summary = lrModel.summary()
     println("Training RMSE: ${summary.rootMeanSquaredError()}")
     println("Training r2: ${summary.r2()}")
 
-    // 6) Export model information to Parquet (coefficients per feature + intercept row)
+    // 7) Export model information to Parquet (coefficients per feature + intercept row)
     val coeffs = lrModel.coefficients().toArray()
-    val rows = candidateFeatureCols.mapIndexed { idx, name -> org.apache.spark.sql.RowFactory.create(name, coeffs[idx]) } +
-        listOf(org.apache.spark.sql.RowFactory.create("intercept", lrModel.intercept()))
+    val rows =
+        candidateFeatureCols.mapIndexed { idx, name -> org.apache.spark.sql.RowFactory.create(name, coeffs[idx]) } +
+            listOf(org.apache.spark.sql.RowFactory.create("intercept", lrModel.intercept()))
 
     val schema = org.apache.spark.sql.types.StructType(
         arrayOf(
-            org.apache.spark.sql.types.StructField("term", org.apache.spark.sql.types.DataTypes.StringType, false, org.apache.spark.sql.types.Metadata.empty()),
-            org.apache.spark.sql.types.StructField("coefficient", org.apache.spark.sql.types.DataTypes.DoubleType, false, org.apache.spark.sql.types.Metadata.empty())
+            org.apache.spark.sql.types.StructField(
+                "term",
+                org.apache.spark.sql.types.DataTypes.StringType,
+                false,
+                org.apache.spark.sql.types.Metadata.empty()
+            ),
+            org.apache.spark.sql.types.StructField(
+                "coefficient",
+                org.apache.spark.sql.types.DataTypes.DoubleType,
+                false,
+                org.apache.spark.sql.types.Metadata.empty()
+            )
         )
     )
 
@@ -137,21 +148,21 @@ fun main() {
     modelDf.write().mode("overwrite").parquet(modelParquetDir.toString())
     println("Saved model summary Parquet to: $modelParquetDir")
 
-    // 7) Read this model Parquet with Kotlin DataFrame and print
+    // 8) Read this model Parquet with Kotlin DataFrame and print
     val modelParquetFiles = listParquetFilesIfAny(modelParquetDir)
     val modelKdf = DataFrame.readParquet(*modelParquetFiles)
 
     println("Model summary Kotlin DataFrame (head):")
     modelKdf.head().print()
 
-    // 8) Save the entire PipelineModel using the standard Spark ML mechanism
+    // 9) Save the entire PipelineModel using the standard Spark ML mechanism
     //    The model is already fitted above; just save it.
     val pipelinePath = parquetDir.resolve("pipeline_model_spark").toString()
     fullPipelineModel.write().overwrite().save(pipelinePath)
     println("Step 8: Saved PipelineModel to: $pipelinePath")
 
-    // 9) Inspect pipeline internals using Kotlin DataFrame from concrete paths (no directory walking)
-    // IMPORTANT (why this is not the most convenient way for export/import):
+    // 10) Inspect pipeline internals using Kotlin DataFrame from concrete paths (no directory walking)
+    // IMPORTANT (why this is not the most convenient way to export/import):
     // - The ML writer saves a directory with mixed JSON (metadata) and Parquet (model data).
     // - Internal folder names for stages include indexes and algorithm/uids (e.g., "0_VectorAssembler_xxx", "1_LinearRegressionModel_xxx"),
     //   which are not guaranteed to be stable across Spark versions.
@@ -172,7 +183,7 @@ fun main() {
     val metaKdfs = mutableListOf<DataFrame<*>>()
     val stageDataKdfs = mutableListOf<DataFrame<*>>()
 
-    // 9.1) Root metadata (JSON) -> read each file one-by-one
+    // 10.1) Root metadata (JSON) -> read each file one-by-one
     val rootMetaDir = pipelineRoot.resolve("metadata")
     val rootMetaFiles = listTextOrJsonFiles(rootMetaDir)
     for (file in rootMetaFiles) {
@@ -182,7 +193,7 @@ fun main() {
         metaKdfs += df
     }
 
-    // 9.2) Stage 0 (VectorAssembler) metadata/data
+    // 10.2) Stage 0 (VectorAssembler) metadata/data
     val stage0MetaDir = stage0Dir.resolve("metadata")
     for (file in listTextOrJsonFiles(stage0MetaDir)) {
         val df = DataFrame.readJson(file.toFile())
@@ -201,7 +212,7 @@ fun main() {
         println("Step 9: Stage 0 data directory is missing or has no .parquet files, skipping.")
     }
 
-    // 9.3) Stage 1 (LinearRegressionModel) metadata/data
+    // 10.3) Stage 1 (LinearRegressionModel) metadata/data
     val stage1MetaDir = stage1Dir.resolve("metadata")
     for (file in listTextOrJsonFiles(stage1MetaDir)) {
         val df = DataFrame.readJson(file.toFile())
@@ -220,8 +231,8 @@ fun main() {
         println("Step 9: Stage 1 data directory is missing or has no .parquet files, skipping.")
     }
 
-    // 10) Join only existing Kotlin DataFrames and build a plot from the linear model
-    // 10.1) Unified metadata from any JSON files we successfully parsed above
+    // 11) Join only existing Kotlin DataFrames and build a plot from the linear model
+    // 11.1) Unified metadata from any JSON files we successfully parsed above
     val unifiedMeta = if (metaKdfs.isNotEmpty()) metaKdfs.concat() else null
     if (unifiedMeta != null) {
         println("Step 10: Unified metadata head:")
@@ -230,12 +241,12 @@ fun main() {
         println("Step 10: No metadata DataFrames were found to unify.")
     }
 
-    // 10.2) Unified model data: in this demo we already have a single modelKdf (coefficients + intercept)
+    // 11.2) Unified model data: in this demo we already have a single modelKdf (coefficients + intercept)
     val unifiedModelDf = modelKdf
     println("Step 10: Unified model data (coefficients) head:")
     unifiedModelDf.head().print()
 
-    // 10.3) Build a linear plot: dataset points and model line y = a*x + b for the chosen feature
+    // 11.3) Build a linear plot: dataset points and model line y = a*x + b for the chosen feature
     // Choose feature 'median_income' vs. label 'median_house_value'
     val pointsDf = kdf.dropNA("median_income", "median_house_value")
 
@@ -254,7 +265,7 @@ fun main() {
         .add("slope_const") { slopeValue }
         .add("intercept_const") { interceptValue }
 
-    // 10.4) Create Kandy plot using abLine (slope/intercept) and export to a .jpg file
+    // 11.4) Create Kandy plot using abLine (slope/intercept) and export to a .jpg file
     val plot = dfForPlot.plot {
         points {
             x("median_income")
@@ -274,7 +285,7 @@ fun main() {
 
     val targetDir = Paths.get("").normalize()
     Files.createDirectories(targetDir)
-    val plotPath = targetDir.resolve("linear_model_plot.jpg").toString()
+    val plotPath = targetDir.resolve("linear_model_plot.jpg").toAbsolutePath().toString()
 
     plot.save(plotPath)
     println("Step 10: Saved plot to: $plotPath")
