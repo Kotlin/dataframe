@@ -137,6 +137,10 @@ internal const val COL_TYPE_INSTANT =
     "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Either migrate to kotlin.time.Instant and use ColType.StdlibInstant or use ColType.DeprecatedInstant. $MESSAGE_1_0 and migrated to kotlin.time.Instant in 1.1."
 internal const val COL_TYPE_INSTANT_REPLACE = "ColType.DeprecatedInstant"
 
+internal const val INSERT_AFTER_COL_PATH = "This `after()` overload will be removed in favor of `after { }` with Column Selection" +
+    "DSL. $MESSAGE_1_0"
+internal const val INSERT_AFTER_COL_PATH_REPLACE = "this.after { colPath }"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
