@@ -26,7 +26,8 @@ class FunctionsStdTest : TestBase() {
         val ages = listOf(15, 45, 20, 40, 30, 20, 30)
         val ageCol = df["age"] as DataColumn<Int>
         ageCol.between(20, 40).toList() shouldBe listOf(false, false, true, true, true, true, true)
-        ageCol.between(20, 40, includeBoundaries = false).toList() shouldBe listOf(false, false, false, false, true, false, true)
+        ageCol.between(20, 40, includeBoundaries = false).toList() shouldBe
+            listOf(false, false, false, false, true, false, true)
         ageCol.toList() shouldBe ages
     }
 
