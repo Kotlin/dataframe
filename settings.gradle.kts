@@ -31,7 +31,7 @@ include("examples:idea-examples:movies")
 include("examples:idea-examples:youtube")
 include("examples:idea-examples:json")
 include("examples:idea-examples:unsupported-data-sources")
-// includeBuild("examples/kotlin-dataframe-plugin-example")
+includeBuild("examples/kotlin-dataframe-plugin-example")
 
 val jupyterApiTCRepo: String by settings
 

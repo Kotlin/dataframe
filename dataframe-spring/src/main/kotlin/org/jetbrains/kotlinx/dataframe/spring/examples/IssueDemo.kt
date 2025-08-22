@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.spring.examples
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.spring.DataFramePostProcessor
-import org.jetbrains.kotlinx.dataframe.spring.annotations.DataSource
+import org.jetbrains.kotlinx.dataframe.spring.annotations.CsvDataSource
 import org.springframework.stereotype.Component
 import java.io.File
 
@@ -25,7 +25,7 @@ interface MyRowType {
  */
 @Component
 class MyDataService {
-    @DataSource(csvFile = "data.csv")
+    @CsvDataSource(file = "data.csv")
     lateinit var df: DataFrame<MyRowType>
 
     fun process() {

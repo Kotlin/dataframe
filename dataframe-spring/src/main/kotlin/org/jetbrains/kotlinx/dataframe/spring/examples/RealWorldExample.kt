@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.spring.examples
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.spring.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

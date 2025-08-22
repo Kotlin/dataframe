@@ -2,7 +2,8 @@ package org.jetbrains.kotlinx.dataframe.spring.processors
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.io.readJdbc
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.spring.annotations.JdbcDataSource
 import org.springframework.context.ApplicationContext
 import java.sql.Connection
@@ -25,11 +26,11 @@ class JdbcDataSourceProcessor : DataSourceProcessor {
             return when {
                 annotation.query.isNotEmpty() -> {
                     // Execute custom query
-                    DataFrame.readJdbc(connection, annotation.query, limit = if (annotation.limit > 0) annotation.limit else null)
+                    DataFrame.readSqlQuery(connection, annotation.query, limit = annotation.limit)
                 }
                 annotation.tableName.isNotEmpty() -> {
                     // Query table
-                    DataFrame.readJdbc(connection, annotation.tableName, limit = if (annotation.limit > 0) annotation.limit else null)
+                    DataFrame.readSqlQuery(connection, annotation.query)
                 }
                 else -> {
                     throw IllegalArgumentException("Either 'tableName' or 'query' must be specified")

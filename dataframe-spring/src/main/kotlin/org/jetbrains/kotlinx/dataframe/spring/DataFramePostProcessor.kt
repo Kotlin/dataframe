@@ -84,8 +84,8 @@ class DataFramePostProcessor : BeanPostProcessor, ApplicationContextAware {
 
         // Try each supported annotation type
         for ((annotationType, processor) in processors) {
-            val annotation = prop.findAnnotation(annotationType) ?: continue
-            
+            val annotation = field.getAnnotation(annotationType) ?: continue
+
             try {
                 val dataFrame = processor.process(annotation, applicationContext)
                 field.isAccessible = true
