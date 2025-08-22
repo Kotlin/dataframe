@@ -161,6 +161,7 @@ kotlin-compiler = { group = "org.jetbrains.kotlin", name = "kotlin-compiler", ve
 kotlin-compiler-embeddable = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin" }
 kotlin-compiler-internal-test-framework = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-internal-test-framework", version.ref = "kotlin" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
 kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annotations-jvm", version.ref = "kotlin" }
 kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlinJupyter" }
