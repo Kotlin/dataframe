@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.spring
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.spring.annotations.DataSource
+import org.jetbrains.kotlinx.dataframe.spring.annotations.CsvDataSource
 import org.junit.jupiter.api.Test
 import java.io.File
 import kotlin.test.assertEquals
@@ -15,7 +15,7 @@ interface TestRow {
 }
 
 class TestDataService {
-    @DataSource(csvFile = "test-data.csv")
+    @CsvDataSource(file = "test-data.csv")
     lateinit var df: DataFrame<TestRow>
 
     fun getRowCount(): Int = df.rowsCount()
@@ -64,7 +64,7 @@ class DataFramePostProcessorTest {
         
         try {
             class TestServiceWithPipe {
-                @DataSource(csvFile = "test-data-pipe.csv", delimiter = '|')
+                @CsvDataSource(file = "test-data-pipe.csv", delimiter = '|')
                 lateinit var df: DataFrame<TestRow>
             }
             

@@ -1,34 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.spring.examples
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.spring.DataFramePostProcessor
-import org.jetbrains.kotlinx.dataframe.spring.annotations.DataSource
-import org.springframework.beans.factory.config.BeanDefinition
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
+import org.jetbrains.kotlinx.dataframe.spring.annotations.CsvDataSource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 import java.io.File
 
-// Define the data schema
-@DataSchema
-interface CustomerRow {
-    val id: Int
-    val name: String
-    val email: String
-    val age: Int
-}
-
-@DataSchema
-interface SalesRow {
-    val saleId: Int
-    val customerId: Int
-    val amount: Double
-    val date: String
-}
 
 /**
  * Example Spring service that uses @DataSource annotation
@@ -37,10 +16,10 @@ interface SalesRow {
 @Component
 class DataAnalysisService {
     
-    @DataSource(csvFile = "customers.csv")
+    @CsvDataSource(file = "customers.csv")
     lateinit var customers: DataFrame<CustomerRow>
     
-    @DataSource(csvFile = "sales.csv", delimiter = ';')
+    @CsvDataSource(file = "sales.csv", delimiter = ';')
     lateinit var sales: DataFrame<SalesRow>
     
     fun analyzeCustomerData() {
@@ -87,8 +66,20 @@ open class DataFrameConfiguration {
     }
 }
 
+
 /**
- * Example demonstrating the complete Spring integration
+ * Entry point for the DataFrame Spring Integration Example application.
+ *
+ * This method demonstrates a mock integration of Kotlin DataFrames with a
+ * Spring-like lifecycle. It performs the following tasks:
+ *
+ * 1. Creates sample data files (e.g., CSV files) to simulate data sources.
+ * 2. Initializes a DataFramePostProcessor to mimic Spring's BeanPostProcessor functionality.
+ * 3. Simulates the creation and initialization of a Spring bean (DataAnalysisService).
+ * 4. Processes mock `@DataSource` annotations to load data into DataFrame properties.
+ * 5. Executes a sample data analysis and generates a combined report.
+ * 6. Highlights key features of declarative data integration using annotations.
+ * 7. Cleans up the sample data files after execution.
  */
 fun main() {
     println("DataFrame Spring Integration Example")
@@ -113,7 +104,7 @@ fun main() {
         
         println("\n✓ Spring-style DataFrame integration completed successfully!")
         println("\nThis demonstrates:")
-        println("- @DataSource annotation for declarative CSV loading")
+        println("- @CsvDataSource annotation for declarative CSV loading")
         println("- Automatic DataFrame population during bean initialization")
         println("- Support for custom delimiters")
         println("- Integration with Spring's dependency injection lifecycle")

@@ -46,7 +46,7 @@ class DataSourceProcessorTest {
             override val file: String = "${tempDir}/test.csv"
             override val delimiter: Char = ','
             override val header: Boolean = true
-            override fun annotationClass() = CsvDataSource::class
+            fun annotationClass() = CsvDataSource::class
         }
         
         val dataFrame = processor.process(annotation, applicationContext)
@@ -63,7 +63,7 @@ class DataSourceProcessorTest {
             override val keyValuePaths: Array<String> = emptyArray()
             override val typeClashTactic = org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
             override val unifyNumbers: Boolean = true
-            override fun annotationClass() = JsonDataSource::class
+            fun annotationClass() = JsonDataSource::class
         }
         
         val dataFrame = processor.process(annotation, applicationContext)
@@ -79,7 +79,7 @@ class DataSourceProcessorTest {
             override val keyValuePaths: Array<String> = emptyArray()
             override val typeClashTactic = org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
             override val unifyNumbers: Boolean = true
-            override fun annotationClass() = JsonDataSource::class
+            fun annotationClass() = JsonDataSource::class
         }
         
         assertFailsWith<IllegalArgumentException> {
@@ -94,7 +94,7 @@ class DataSourceProcessorTest {
             override val file: String = "${tempDir}/missing.csv"
             override val delimiter: Char = ','
             override val header: Boolean = true
-            override fun annotationClass() = CsvDataSource::class
+            fun annotationClass() = CsvDataSource::class
         }
         
         assertFailsWith<IllegalArgumentException> {

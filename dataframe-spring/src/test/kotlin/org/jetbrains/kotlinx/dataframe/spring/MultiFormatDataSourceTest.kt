@@ -130,10 +130,9 @@ class MultiFormatDataSourceTest {
     }
 
     @Test
-    fun testLegacyDataSourceAnnotation() {
+    fun testCsvDataSourceAnnotation_legacyReplacement() {
         class TestBean {
-            @Suppress("DEPRECATION")
-            @DataSource(csvFile = "${tempDir}/test.csv")
+            @CsvDataSource(file = "${tempDir}/test.csv")
             lateinit var data: DataFrame<*>
         }
         

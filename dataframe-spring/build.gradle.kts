@@ -30,12 +30,12 @@ dependencies {
     api(projects.dataframeJdbc)
 
     // Spring dependencies
-    implementation("org.springframework:spring-context:6.0.0")
-    implementation("org.springframework:spring-beans:6.0.0")
+    implementation("org.springframework:spring-context:6.2.7")
+    implementation("org.springframework:spring-beans:6.2.7")
     implementation(libs.kotlin.reflect)
     
     // Test dependencies
-    testImplementation("org.springframework:spring-test:6.0.0")
+    testImplementation("org.springframework:spring-test:6.2.7")
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotestAssertions)

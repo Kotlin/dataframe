@@ -26,7 +26,6 @@ import org.springframework.context.support.StaticApplicationContext
  * - @JsonDataSource - for JSON files  
  * - @ArrowDataSource - for Arrow/Parquet/Feather files
  * - @JdbcDataSource - for database tables/queries
- * - @DataSource - legacy CSV annotation (deprecated)
  * 
  * Usage:
  * ```kotlin
@@ -56,8 +55,7 @@ class DataFramePostProcessor : BeanPostProcessor, ApplicationContextAware {
         CsvDataSource::class.java to CsvDataSourceProcessor(),
         JsonDataSource::class.java to JsonDataSourceProcessor(),
         ArrowDataSource::class.java to ArrowDataSourceProcessor(),
-        JdbcDataSource::class.java to JdbcDataSourceProcessor(),
-        DataSource::class.java to LegacyCsvDataSourceProcessor() // For backward compatibility
+        JdbcDataSource::class.java to JdbcDataSourceProcessor()
     )
 
     override fun setApplicationContext(applicationContext: ApplicationContext) {

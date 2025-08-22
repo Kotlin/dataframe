@@ -20,9 +20,9 @@ import org.jetbrains.kotlinx.dataframe.io.JSON
 @Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-annotation class JsonDataSource(
-    val file: String,
-    val keyValuePaths: Array<String> = [],
-    val typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
-    val unifyNumbers: Boolean = true
+open annotation class JsonDataSource(
+    open val file: String,
+    open val keyValuePaths: Array<String> = [],
+    open val typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
+    open val unifyNumbers: Boolean = true
 )
