@@ -3785,11 +3785,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/PivotKt {
 
 public final class org/jetbrains/kotlinx/dataframe/api/PrintKt {
 	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)V
-	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZ)V
+	public static final synthetic fun print (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZ)V
+	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZZ)V
 	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/DataRow;)V
 	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)V
 	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;)V
 	public static synthetic fun print$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZILjava/lang/Object;)V
+	public static synthetic fun print$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZZILjava/lang/Object;)V
 	public static final fun print-XIlnkTk (Ljava/lang/String;)V
 }
 
@@ -6301,6 +6303,11 @@ public final class org/jetbrains/kotlinx/dataframe/io/RendererDecimalFormat {
 public final class org/jetbrains/kotlinx/dataframe/io/RendererDecimalFormat$Companion {
 	public final fun fromPrecision-VVLz-gw (I)Ljava/lang/String;
 	public final fun of-VVLz-gw (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/StringKt {
+	public static final fun renderToString (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZZ)Ljava/lang/String;
+	public static synthetic fun renderToString$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZZILjava/lang/Object;)Ljava/lang/String;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedCodeGenerationFormat : org/jetbrains/kotlinx/dataframe/io/SupportedFormat {
