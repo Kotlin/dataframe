@@ -12,6 +12,7 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.javaGetter
 import org.springframework.context.support.StaticApplicationContext
+import org.springframework.context.LifecycleProcessor
 
 /**
  * Spring BeanPostProcessor that automatically populates DataFrame fields
@@ -63,6 +64,8 @@ class DataFramePostProcessor : BeanPostProcessor, ApplicationContextAware {
     }
 
     override fun postProcessBeforeInitialization(bean: Any, beanName: String): Any? {
+        // Skip Spring lifecycle infrastructure beans to avoid triggering optional CRaC class loading via reflection
+        if (bean is LifecycleProcessor) return bean
         try {
             bean::class.memberProperties.forEach { prop ->
                 processProperty(bean, prop, beanName)

@@ -166,6 +166,7 @@ val modulesUsingJava11 = with(projects) {
 val modulesUsingJava17 = with(projects) {
     setOf(
         dataframeSpring,
+        examples.ideaExamples.springbootDataframeWeb,
     )
 }.map { it.path }
 
