@@ -104,7 +104,7 @@ private interface SetInsertOperationArg
  * df.insert(count).after { url }
  * ```
  *
- * @param column A single [DataColumn] to insert into the [DataFrame].
+ * @param [column] A single [DataColumn] to insert into the [DataFrame].
  * @return An [InsertClause] for specifying the placement of the new column.
  */
 public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = InsertClause(this, column)
@@ -132,9 +132,9 @@ public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = 
  * }.under("math")
  * ```
  *
- * @param name The name of the new column to be created and inserted.
- * @param infer Controls how values are inferred when building the new column. Defaults to [Infer.Nulls].
- * @param expression An [AddExpression] that computes the value for each row of the new column.
+ * @param [name] The name of the new column to be created and inserted.
+ * @param [infer] Controls how values are inferred when building the new column. Defaults to [Infer.Nulls].
+ * @param [expression] An [AddExpression] that computes the value for each row of the new column.
  * @return An [InsertClause] for specifying the placement of the newly created column.
  */
 @Interpretable("Insert1")
@@ -230,7 +230,7 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
  * df.insert(age).under(pathOf("info", "personal"))
  * ```
  *
- * @param columnPath The [ColumnPath] specifying the path to a column group in this [DataFrame]
+ * @param [columnPath] The [ColumnPath] specifying the path to a column group in this [DataFrame]
  * under which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed under the specified column group.
  */
@@ -263,7 +263,7 @@ public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under
  * df.insert(age).under("info")
  * ```
  *
- * @param column The [name][String] of the column group in this [DataFrame].
+ * @param [column] The [name][String] of the column group in this [DataFrame].
  * If the group does not exist, it will be created.
  * @return A new [DataFrame] with the inserted column placed under the specified column group.
  */
@@ -294,7 +294,7 @@ public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathO
  * val dfWithSum = df.insert("sum") { a + b }.after { stats.min }
  * ```
  *
- * @param column The [ColumnSelector] used to choose an existing column in this [DataFrame],
+ * @param [column] The [ColumnSelector] used to choose an existing column in this [DataFrame],
  * after which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed after the selected column.
  */
@@ -318,7 +318,7 @@ public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T>
  * df.insert(age).after("name")
  * ```
  *
- * @param column The [String] name of the column in this [DataFrame]
+ * @param [column] The [String] name of the column in this [DataFrame]
  * after which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed after the specified column.
  */
@@ -363,7 +363,7 @@ internal fun <T> InsertClause<T>.afterImpl(columnPath: ColumnPath): DataFrame<T>
  * df.insert(age).at(3)
  * ```
  *
- * @param position The [Int] index where the new column should be inserted.
+ * @param [position] The [Int] index where the new column should be inserted.
  *                 Columns currently at this index and after will be shifted right.
  * @return A new [DataFrame] with the inserted column placed at the specified position.
  */
