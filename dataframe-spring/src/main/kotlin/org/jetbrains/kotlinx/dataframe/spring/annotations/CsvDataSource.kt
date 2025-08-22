@@ -1,26 +1,23 @@
 package org.jetbrains.kotlinx.dataframe.spring.annotations
 
 /**
- * Legacy annotation to mark DataFrame fields/properties for CSV data loading.
+ * Annotation to mark DataFrame fields/properties that should be automatically
+ * populated with data from a CSV file using Spring's dependency injection.
  * 
- * @deprecated Use @CsvDataSource instead for CSV files
+ * This annotation is processed by [DataFramePostProcessor] during Spring
+ * bean initialization.
  * 
- * @param csvFile The path to the CSV file to read from
+ * @param file The path to the CSV file to read from
  * @param delimiter The delimiter character to use for CSV parsing (default: ',')
  * @param header Whether the first row contains column headers (default: true)
  * 
- * @see CsvDataSource
  * @see DataFramePostProcessor
  */
 @Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-@Deprecated(
-    "Use @CsvDataSource instead",
-    ReplaceWith("CsvDataSource(file = csvFile, delimiter = delimiter, header = header)")
-)
-annotation class DataSource(
-    val csvFile: String,
+annotation class CsvDataSource(
+    val file: String,
     val delimiter: Char = ',',
     val header: Boolean = true
 )

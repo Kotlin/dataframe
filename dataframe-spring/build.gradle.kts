@@ -17,6 +17,9 @@ kotlin {
 dependencies {
     api(projects.core)
     api(projects.dataframeCsv)
+    api(projects.dataframeJson)
+    api(projects.dataframeArrow)
+    api(projects.dataframeJdbc)
     
     // Spring dependencies
     implementation("org.springframework:spring-context:6.0.0")
