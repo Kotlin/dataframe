@@ -79,10 +79,10 @@ class DataAnalysisService {
  * Spring configuration that enables the DataFramePostProcessor
  */
 @Configuration
-class DataFrameConfiguration {
+open class DataFrameConfiguration {
     
     @Bean
-    fun dataFramePostProcessor(): DataFramePostProcessor {
+    open fun dataFramePostProcessor(): DataFramePostProcessor {
         return DataFramePostProcessor()
     }
 }

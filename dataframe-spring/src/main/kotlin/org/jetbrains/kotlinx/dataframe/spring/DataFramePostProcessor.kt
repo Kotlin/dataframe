@@ -8,9 +8,10 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
 import kotlin.reflect.KProperty1
-import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
+import kotlin.reflect.jvm.javaGetter
+import org.springframework.context.support.StaticApplicationContext
 
 /**
  * Spring BeanPostProcessor that automatically populates DataFrame fields
@@ -48,7 +49,8 @@ import kotlin.reflect.jvm.javaField
 @Component
 class DataFramePostProcessor : BeanPostProcessor, ApplicationContextAware {
     
-    private lateinit var applicationContext: ApplicationContext
+    // Make context optional to support both Spring-managed and manual usage
+    private var applicationContext: ApplicationContext? = null
     
     private val processors = mapOf<Class<out Annotation>, DataSourceProcessor>(
         CsvDataSource::class.java to CsvDataSourceProcessor(),
@@ -74,23 +76,36 @@ class DataFramePostProcessor : BeanPostProcessor, ApplicationContextAware {
     }
 
     private fun processProperty(bean: Any, prop: KProperty1<out Any, *>, beanName: String) {
-        // Check if the property is a DataFrame type
+        // Skip non-DataFrame properties
         if (!isDataFrameProperty(prop)) {
             return
         }
 
-        // Get the Java field for reflection access
-        val field = prop.javaField ?: return
+        // Obtain reflection handles
+        val field = prop.javaField
+        val getter = prop.javaGetter
 
-        // Try each supported annotation type
+        // Try each supported annotation and search on property/getter/field
         for ((annotationType, processor) in processors) {
-            val annotation = field.getAnnotation(annotationType) ?: continue
+            val fromProperty = prop.annotations.firstOrNull { annotationType.isInstance(it) }
+            val fromGetter = getter?.getAnnotation(annotationType)
+            val fromField = field?.getAnnotation(annotationType)
+
+            val annotation = (fromProperty ?: fromGetter ?: fromField) ?: continue
 
             try {
-                val dataFrame = processor.process(annotation, applicationContext)
-                field.isAccessible = true
-                field.set(bean, dataFrame)
-                return // Successfully processed, don't try other annotations
+                // Use provided ApplicationContext if available; otherwise fallback to a lightweight static context
+                val ctx = applicationContext ?: StaticApplicationContext()
+                val dataFrame = processor.process(annotation, ctx)
+
+                // Inject into backing field
+                val targetField = field ?: prop.javaField
+                    ?: throw IllegalStateException(
+                        "No backing field found for property '${prop.name}' in bean '$beanName' to inject DataFrame"
+                    )
+                targetField.isAccessible = true
+                targetField.set(bean, dataFrame)
+                return // Successfully processed, stop trying other annotations
             } catch (e: Exception) {
                 throw RuntimeException(
                     "Failed to process ${annotationType.simpleName} annotation for property '${prop.name}' in bean '$beanName'", 
@@ -101,8 +116,8 @@ class DataFramePostProcessor : BeanPostProcessor, ApplicationContextAware {
     }
 
     private fun isDataFrameProperty(prop: KProperty1<out Any, *>): Boolean {
-        val returnType = prop.returnType
-        val classifier = returnType.classifier
-        return classifier == DataFrame::class
+        // Robust check that works for parameterized DataFrame<T>
+        val classifier = prop.returnType.classifier as? kotlin.reflect.KClass<*> ?: return false
+        return DataFrame::class.java.isAssignableFrom(classifier.java)
     }
 }
