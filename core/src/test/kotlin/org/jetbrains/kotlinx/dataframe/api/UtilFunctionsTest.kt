@@ -9,7 +9,7 @@ import kotlin.collections.map
 import kotlin.random.Random
 
 @Suppress("UNCHECKED_CAST")
-class UtilFunctionsTest: TestBase() {
+class UtilFunctionsTest : TestBase() {
 
     @Test
     fun `DataColumn any`() {
