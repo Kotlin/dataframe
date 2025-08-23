@@ -88,7 +88,6 @@ import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapToFrame
 import org.jetbrains.kotlinx.dataframe.api.match
@@ -1124,7 +1123,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot matches with conversion`() {
         val filtered = typed.dropNulls { city }
-        val res = filtered.pivot(inward = false) { city.lowercase() }.groupBy { name and age }.matches()
+        val res = filtered.pivot(inward = false) { city.map { it?.lowercase() } }.groupBy { name and age }.matches()
         val cities = filtered.city.toList().map { it!!.lowercase() }
         val gathered =
             res.gather { colsOf<Boolean> { cities.contains(it.name()) } }.where { it }.keysInto("city")
@@ -2061,7 +2060,9 @@ class DataFrameTests : BaseTest() {
         typed
             .groupBy { name.map { it.lowercase() } }.toDataFrame()
             .name.values() shouldBe
-            typed.name.distinct().lowercase().values()
+            run {
+                typed.name.distinct().map { it.lowercase() }.values()
+            }
     }
 
     @Test

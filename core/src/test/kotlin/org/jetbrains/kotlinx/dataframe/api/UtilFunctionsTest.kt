@@ -3,10 +3,13 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
+import org.jetbrains.kotlinx.dataframe.size
 import org.junit.Test
+import kotlin.collections.map
+import kotlin.random.Random
 
 @Suppress("UNCHECKED_CAST")
-class FunctionsStdTest : TestBase() {
+class UtilFunctionsTest: TestBase() {
 
     @Test
     fun `DataColumn any`() {
@@ -68,5 +71,46 @@ class FunctionsStdTest : TestBase() {
     fun `DataFrame asSequence`() {
         val happyCount = df.asSequence().count { it["isHappy"] as Boolean }
         happyCount shouldBe 5
+    }
+
+    @Test
+    fun `DataFrame chunked`() {
+        val groups = df.chunked(3)
+        groups.size shouldBe 3
+        groups.name() shouldBe "groups"
+        groups[0].rowsCount() shouldBe 3
+        groups[1].rowsCount() shouldBe 3
+        groups[2].rowsCount() shouldBe 1
+    }
+
+    @Test
+    fun `DataColumn chunked`() {
+        val ageCol = df["age"] as DataColumn<Int>
+        val chunked = ageCol.chunked(4)
+        chunked.size shouldBe 2
+        chunked.name() shouldBe "age"
+        // Check chunk contents
+        chunked[0] shouldBe listOf(15, 45, 20, 40)
+        chunked[1] shouldBe listOf(30, 20, 30)
+    }
+
+    @Test
+    fun `DataFrame shuffle`() {
+        val rnd = Random(123)
+        val shuffledDf = df.shuffle(rnd)
+        // Compute expected order via indices.shuffled with same seed
+        val ages = (df["age"] as DataColumn<Int>).toList()
+        val expectedAges = ages.indices.shuffled(Random(123)).map { ages[it] }
+        shuffledDf.rows().map { it["age"] as Int } shouldBe expectedAges
+    }
+
+    @Test
+    fun `DataColumn shuffle`() {
+        val rnd = Random(123)
+        val ageCol = df["age"] as DataColumn<Int>
+        val shuffled = ageCol.shuffle(rnd)
+        val values = ageCol.toList()
+        val expected = values.indices.shuffled(Random(123)).map { values[it] }
+        shuffled.toList() shouldBe expected
     }
 }
