@@ -2,6 +2,26 @@ package org.jetbrains.kotlinx.dataframe.annotations
 
 import kotlin.reflect.KClass
 
+/**
+ * Matches the type parameter of the annotated class to DataRow/DataFrame type parameter T.
+ *
+ * Annotate public API classes that implement DataRow/DataFrame interface to enable "extract schema/create column from values" operation:
+ * ```kotlin
+ * df.add {
+ *   "col" from { it }
+ * }
+ * ```
+ * Result before:
+ * `col: DataColumn<AddDataRow<MySchema>>`
+ *
+ * Result after:
+ *
+ * ```
+ * col:
+ *   col1: Int
+ *   col2: String
+ * ```
+ */
 @Target(AnnotationTarget.CLASS)
 public annotation class HasSchema(val schemaArg: Int)
 
