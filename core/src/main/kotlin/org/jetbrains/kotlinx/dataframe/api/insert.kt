@@ -66,22 +66,21 @@ internal interface InsertDocs {
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * **[`insert`][insert]**`(column: `[`DataColumn`][DataColumn]`)`
+     * [**`insert`**][insert]**`(`**`column: `[`DataColumn`][DataColumn]**`)`**` /`
+     *
+     * [**`insert`**][insert]**`(`**`name: `[`String`][String]**`, `**`infer: `[`Infer`][Infer]**`) { `**`rowExpression: `[`RowExpression`][RowExpression]**`  }`**
      *
      * {@include [Indent]}
-     * `| `[`insert`][insert]`(name: `[`String`][String]`, infer: `[`Infer`][Infer]`, rowExpression: `[`RowExpression`][RowExpression]`  }`
+     * __`.`__[**`under`**][InsertClause.under]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
      * {@include [Indent]}
-     * __`.`__[**`under`**][InsertClause.under]`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`
+     * `| `__`.`__[**`under`**][InsertClause.under]**`(`**` columnPath: `[`ColumnPath`][ColumnPath]**`)`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`under`**][InsertClause.under]`(columnPath: `[`ColumnPath`][ColumnPath]`)`
+     * `| `__`.`__[**`after`**][InsertClause.after]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`after`**][InsertClause.after]`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`at`**][InsertClause.at]`(position: `[`Int`][Int]`)`
+     * `| `__`.`__[**`at`**][InsertClause.at]**`(`**`position: `[`Int`][Int]**`)`**
      */
     interface Grammar
 }
@@ -190,6 +189,7 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  * Works only with existing column groups.
  * To insert into a new column group, use the overloads:
  * `under(path: ColumnPath)` or `under(column: String)`.
+ * [Should be fixed](https://github.com/Kotlin/dataframe/issues/1411).
  *
  * For more information: {@include [DocumentationUrls.Insert]}
  *

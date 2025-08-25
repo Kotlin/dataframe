@@ -138,8 +138,7 @@ internal const val COL_TYPE_INSTANT =
 internal const val COL_TYPE_INSTANT_REPLACE = "ColType.DeprecatedInstant"
 
 internal const val INSERT_AFTER_COL_PATH =
-    "This `after()` overload will be removed in favor of `after { }` with Column Selection" +
-        "DSL. $MESSAGE_1_0"
+    "This `after()` overload will be removed in favor of `after { }` with Column Selection DSL. $MESSAGE_1_0"
 internal const val INSERT_AFTER_COL_PATH_REPLACE = "this.after { columnPath }"
 
 // endregion
