@@ -139,6 +139,9 @@ internal const val COL_TYPE_INSTANT =
     "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Either migrate to kotlin.time.Instant and use ColType.StdlibInstant or use ColType.DeprecatedInstant. $MESSAGE_1_0 and migrated to kotlin.time.Instant in 1.1."
 internal const val COL_TYPE_INSTANT_REPLACE = "ColType.DeprecatedInstant"
 
+internal const val TAIL = "This function will be removed in favor of `takeLast()`. $MESSAGE_1_0"
+internal const val TAIL_REPLACE = "this.takeLast(numRows)"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -228,6 +231,12 @@ internal const val TO_DEPRECATED_INSTANT_REPLACE = "this.toStdlibInstant()"
 internal const val COL_TYPE_DEPRECATED_INSTANT =
     "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Migrate to kotlin.time.Instant and use Coltype.StdlibInstant at your own pace. $MESSAGE_1_1"
 internal const val COL_TYPE_DEPRECATED_INSTANT_REPLACE = "ColType.StdlibInstant"
+
+internal const val MESSAGE_SHORTCUT = "This shortcut is deprecated. $MESSAGE_1_1"
+
+internal const val LENGTH_REPLACE = "this.map { it?.length ?: 0 }"
+internal const val LOWERCASE_REPLACE = "this.map { it?.lowercase() }"
+internal const val UPPERCASE_REPLACE = "this.map { it?.uppercase() }"
 
 // endregion
 
