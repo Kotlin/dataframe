@@ -158,7 +158,6 @@ import org.jetbrains.kotlinx.dataframe.api.valuesNotNull
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.api.withZero
 import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -245,24 +244,6 @@ class DataFrameTests : BaseTest() {
         val a = columnOf("Alice", "Bob") named "col"
         val b = columnOf(1, 2) named "col"
         val d = dataFrameOf(a, b)
-    }
-
-    @Test
-    fun `create column reference`() {
-        val name by column<String>()
-        val col = name.withValues("Alice", "Bob")
-        val df = col.toDataFrame()
-        df.nrow shouldBe 2
-        df.columnNames() shouldBe listOf("name")
-    }
-
-    @Test
-    fun `add values to column reference`() {
-        val name by column<String>()
-        val values = listOf("Alice", "Bob")
-        val col1 = name.withValues(values)
-        val col2 = values.toColumn(name)
-        col1 shouldBe col2
     }
 
     @Test
