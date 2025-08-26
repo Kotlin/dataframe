@@ -50,6 +50,8 @@ import kotlin.reflect.KProperty
  * See [Selecting Columns][RenameSelectingOptions].
  *
  * For more information: {@include [DocumentationUrls.Rename]}
+ *
+ * See also [renameToCamelCase] which renames all columns to "camelCase" format.
  */
 internal interface RenameDocs {
 
@@ -65,16 +67,16 @@ internal interface RenameDocs {
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * **[`rename`][rename]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
+     * [**`rename`**][rename]**`  { `**`columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  `**`}`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`into`**][RenameClause.into]`(name: `[`String`][String]`)`
+     * `| `__`.`__[**`into`**][RenameClause.into]**`(`**`name: `[`String`][String]**`)`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`into`**][RenameClause.into]`  { nameExpression: (`[`ColumnWithPath`][ColumnWithPath]`<C>) -> `[String]`  }`
+     * `| `__`.`__[**`into`**][RenameClause.into]**`  { `**`nameExpression: (`[`ColumnWithPath`][ColumnWithPath]`) -> `[String]` `**`}`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`toCamelCase`**][RenameClause.toCamelCase]`()`
+     * `| `__`.`__[**`toCamelCase`**][RenameClause.toCamelCase]**`()`**
      */
     interface Grammar
 }
@@ -95,6 +97,8 @@ private interface CommonRenameDocs
  *
  * This function allows renaming multiple columns in a single call by supplying a list of name pairs.
  * Each pair consists of the current column name and the desired new name.
+ *
+ * See also [renameToCamelCase] which renames all columns to "camelCase" format.
  *
  * Example:
  * ```
@@ -200,6 +204,7 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
  * "UPPER_CASE_NAME -> upperCaseName"
  * ```
  *
+ * @see [rename]
  * @return a [DataFrame] with column names converted to "camelCase" format.
  */
 @Refine
