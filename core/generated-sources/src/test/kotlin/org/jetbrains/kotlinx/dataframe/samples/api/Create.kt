@@ -25,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.value
-import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.kind
@@ -79,7 +78,8 @@ class Create : TestBase() {
         // SampleEnd
     }
 
-    @Test
+    // Not used anymore
+    /*@Test
     @TransformDataFrameExpressions
     fun columnAccessorToColumn() {
         // SampleStart
@@ -89,7 +89,7 @@ class Create : TestBase() {
         // SampleEnd
 
         ageCol2.size() shouldBe 10
-    }
+    }*/
 
     @Test
     @TransformDataFrameExpressions

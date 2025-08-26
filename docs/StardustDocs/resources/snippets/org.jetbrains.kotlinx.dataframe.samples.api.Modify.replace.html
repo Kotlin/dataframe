@@ -194,7 +194,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.with { it.lowercase() }</summary>
+                                <summary>df.with { col -&gt; col.map { it?.lowercase() } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_2"></table>
