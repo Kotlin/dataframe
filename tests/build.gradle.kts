@@ -23,6 +23,7 @@ plugins {
         alias(kotlin.jvm)
         alias(korro)
         alias(ktlint)
+        alias(dataframePlugin)
 //        alias(kover)
 
         alias(dataframe)
