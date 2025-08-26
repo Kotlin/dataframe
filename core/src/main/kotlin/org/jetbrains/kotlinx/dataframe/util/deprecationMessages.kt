@@ -229,6 +229,12 @@ internal const val COL_TYPE_DEPRECATED_INSTANT =
     "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Migrate to kotlin.time.Instant and use Coltype.StdlibInstant at your own pace. $MESSAGE_1_1"
 internal const val COL_TYPE_DEPRECATED_INSTANT_REPLACE = "ColType.StdlibInstant"
 
+internal const val MESSAGE_SHORTCUT = "This shortcut is deprecated. $MESSAGE_1_1"
+
+internal const val LENGTH_REPLACE = "this.map { it?.length ?: 0 }"
+internal const val LOWERCASE_REPLACE = "this.map { it?.lowercase() }"
+internal const val UPPERCASE_REPLACE = "this.map { it?.uppercase() }"
+
 // endregion
 
 // region keep across releases
