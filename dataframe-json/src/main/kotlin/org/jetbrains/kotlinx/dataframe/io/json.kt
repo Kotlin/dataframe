@@ -7,8 +7,10 @@ import kotlinx.serialization.json.decodeFromStream
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.single
@@ -320,6 +322,10 @@ public fun AnyFrame.toJson(prettyPrint: Boolean = false): String {
  * @param prettyPrint Specifies whether the output JSON should be formatted with indentation and line breaks.
  * @param customEncoders The options for encoding things like images.
  *   The default is empty list, which indicates that the image is not encoded as Base64.
+ * @param isFormatted Specifies whether the DataFrame should be formatted,
+ *   a.k.a. it comes from [FormattedFrame.df] or it contains a
+ *   [DataColumn][DataColumn]`<`[FormattedFrame][FormattedFrame]`<*>>` at any depth.
+ *   This is just a marker; formatting is applied by the renderer. Defaults to `false`.
  *
  * @return The DataFrame converted to a JSON string with metadata.
  */
@@ -328,6 +334,7 @@ public fun AnyFrame.toJsonWithMetadata(
     nestedRowLimit: Int? = null,
     prettyPrint: Boolean = false,
     customEncoders: List<CustomEncoder> = emptyList(),
+    isFormatted: Boolean = false,
 ): String {
     val json = Json {
         this.prettyPrint = prettyPrint
@@ -336,7 +343,13 @@ public fun AnyFrame.toJsonWithMetadata(
     }
     return json.encodeToString(
         JsonElement.serializer(),
-        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, customEncoders),
+        encodeDataFrameWithMetadata(
+            frame = this@toJsonWithMetadata,
+            rowLimit = rowLimit,
+            nestedRowLimit = nestedRowLimit,
+            customEncoders = customEncoders,
+            isFormatted = isFormatted,
+        ),
     )
 }
 

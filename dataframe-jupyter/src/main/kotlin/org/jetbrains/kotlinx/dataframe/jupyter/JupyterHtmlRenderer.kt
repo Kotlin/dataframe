@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
+import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.CustomEncoder
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
@@ -40,6 +43,9 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
 
     val df = convertToDataFrame(value)
 
+    val isFormatted = reifiedDisplayConfiguration.cellFormatter != null ||
+        df.hasFormattedColumns()
+
     val limit = if (applyRowsLimit) {
         reifiedDisplayConfiguration.rowsLimit ?: df.rowsCount()
     } else {
@@ -67,10 +73,10 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         // TODO Do we need to handle the improved meta data here as well?
         val jsonEncodedDf = when {
             !ideBuildNumber.supportsDynamicNestedTables() ->
-                encodeFrameNoDynamicNestedTables(df, limit).toString()
+                encodeFrameNoDynamicNestedTables(df = df, limit = limit, isFormatted = isFormatted).toString()
 
             else -> {
-                val encoders = buildList<CustomEncoder> {
+                val encoders = buildList {
                     if (ideBuildNumber.supportsDataFrameConvertableValues()) {
                         add(DataframeConvertableEncoder(this))
                     }
@@ -83,15 +89,19 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
                     rowLimit = limit,
                     nestedRowLimit = reifiedDisplayConfiguration.rowsLimit,
                     customEncoders = encoders,
+                    isFormatted = isFormatted,
                 )
             }
         }
 
-        notebook.renderAsIFrameAsNeeded(html, staticHtml, jsonEncodedDf)
+        notebook.renderAsIFrameAsNeeded(data = html, staticData = staticHtml, jsonEncodedDf = jsonEncodedDf)
     } else {
-        notebook.renderHtmlAsIFrameIfNeeded(html)
+        notebook.renderHtmlAsIFrameIfNeeded(data = html)
     }
 }
+
+internal fun AnyFrame.hasFormattedColumns() =
+    this.getColumns { colsAtAnyDepth().colsOf<FormattedFrame<*>?>() }.isNotEmpty()
 
 private fun KotlinNotebookPluginUtils.IdeBuildNumber?.supportsDynamicNestedTables() =
     this != null && majorVersion >= MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA
@@ -125,8 +135,8 @@ internal fun DataFrameHtmlData.toJupyterHtmlData() = HtmlData(style, body, scrip
 // region friend module error suppression
 
 @Suppress("INVISIBLE_REFERENCE")
-private fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int) =
-    org.jetbrains.kotlinx.dataframe.impl.io.encodeFrameNoDynamicNestedTables(df, limit)
+private fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int, isFormatted: Boolean) =
+    org.jetbrains.kotlinx.dataframe.impl.io.encodeFrameNoDynamicNestedTables(df, limit, isFormatted)
 
 @Suppress("INVISIBLE_REFERENCE", "ktlint:standard:function-naming")
 private fun DataframeConvertableEncoder(encoders: List<CustomEncoder>, rowLimit: Int? = null) =
