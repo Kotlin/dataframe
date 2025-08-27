@@ -1,4 +1,5 @@
 <resource src=".DS_Store"></resource>
+<resource src="example.csv"></resource>
 <resource src="movies.csv"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAsDataRowOrFrame.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeDefault.html"></resource>
@@ -24,6 +25,7 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNaNs.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeSameWith.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html"></resource>
+<resource src=".DS_Store"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getSeveralRowsByRanges.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html"></resource>
@@ -82,14 +84,12 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.joinWith.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsUsages.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByCondition.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromIterable.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinWithMatch.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describeColumns.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupBySingle.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.takeLast.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.filterBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateWith.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addRecurrent.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByWithoutAggregation.html"></resource>
@@ -144,15 +144,15 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getSeveralRowsByIndices.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNA.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.ForHtml.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers.Graph.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.ForHtml.html"></resource>
 <resource src="extensionPropertiesApi1.html"></resource>
-<resource src="formatExampleNumbers.html"></resource>
-<resource src="formatExample_properties.html"></resource>
 <resource src="formatExample_strings.html"></resource>
+<resource src="formatExample_properties.html"></resource>
+<resource src="formatExampleNumbers.html"></resource>
 <resource src="quickstart.ipynb"></resource>
 <resource src="notebook_test_quickstart_6.html"></resource>
 <resource src="notebook_test_quickstart_11.html"></resource>
@@ -166,6 +166,7 @@
 <resource src="notebook_test_quickstart_3.html"></resource>
 <resource src="notebook_test_quickstart_14.html"></resource>
 <resource src="notebook_test_generate_docs_1.html"></resource>
+<resource src="notebook_test_any_3.html"></resource>
 <resource src="notebook_test_rename_3.html"></resource>
 <resource src="notebook_test_rename_4.html"></resource>
 <resource src="notebook_test_rename_5.html"></resource>
