@@ -101,7 +101,7 @@ private interface CommonRenameDocs
  * See also [renameToCamelCase] which renames all columns to "camelCase" format.
  *
  * Example:
- * ```
+ * ```kotlin
  * df.rename("oldName1" to "newName1", "oldName2" to "newName2")
  * ```
  *
