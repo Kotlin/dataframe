@@ -26,41 +26,48 @@ import org.jetbrains.kotlinx.dataframe.dataTypes.*
 import org.junit.Test
 
 class Notebook_test_anyTests : SampleHelper("any") {
+
+    @DataSchema
+    interface SimplePerson {
+        val name: String
+        val age: Int
+    }
+
     private val df = dataFrameOf(
-    "name" to listOf("Alice", "Bob"),
-    "age" to listOf(15, 20)
-)
-    
+        "name" to listOf("Alice", "Bob"),
+        "age" to listOf(15, 20)
+    ).cast<SimplePerson>()
+
     @Test
     fun notebook_test_any_3() {
         // SampleStart
         df
-        // SampleEnd
-        .saveDfHtmlSample()
+            // SampleEnd
+            .saveDfHtmlSample()
     }
-    
+
     @Test
     fun notebook_test_any_4() {
         // SampleStart
         df.any { age > 21 }
         // SampleEnd
     }
-    
+
     @Test
     fun notebook_test_any_5() {
         // SampleStart
         df.any { age == 15 && name == "Alice" }
         // SampleEnd
     }
-    
+
     @Test
     fun notebook_test_any_6() {
         // SampleStart
-        df.name
-        // SampleEnd
-        .saveDfHtmlSample()
+        df.name.toDataFrame()
+            // SampleEnd
+            .saveDfHtmlSample()
     }
-    
+
     @Test
     fun notebook_test_any_7() {
         // SampleStart
