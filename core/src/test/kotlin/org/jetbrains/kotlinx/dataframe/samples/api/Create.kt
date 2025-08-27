@@ -78,19 +78,6 @@ class Create : TestBase() {
         // SampleEnd
     }
 
-    // Not used anymore
-    /*@Test
-    @TransformDataFrameExpressions
-    fun columnAccessorToColumn() {
-        // SampleStart
-        val age by column<Int>()
-        val ageCol1 = age.withValues(15, 20)
-        val ageCol2 = age.withValues(1..10)
-        // SampleEnd
-
-        ageCol2.size() shouldBe 10
-    }*/
-
     @Test
     @TransformDataFrameExpressions
     fun columnAccessorMap() {

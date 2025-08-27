@@ -41,6 +41,7 @@ public fun <T> DataColumn<T>.any(predicate: Predicate<T>): Boolean = values.any(
  * @param predicate A [RowFilter] lambda that takes a [DataRow] (as both `this` and `it`)
  * and returns `true` if the row should be considered a match.
  * @return `true` if at least one row satisfies the [predicate], `false` otherwise.
+ * @see [DataFrame.all]
  */
 public inline fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
 
