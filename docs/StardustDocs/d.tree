@@ -180,6 +180,9 @@
             <toc-element topic="columnStatistics.md" toc-title="Statistics"/>
         </toc-element>
         <toc-element topic="ColumnSelectors.md"/>
+        <toc-element topic="Utils.md">
+            <toc-element topic="any.md"/>
+        </toc-element>
         <toc-element topic="collectionsInterop.md">
             <toc-element topic="toList.md"/>
             <toc-element topic="toMap.md"/>
