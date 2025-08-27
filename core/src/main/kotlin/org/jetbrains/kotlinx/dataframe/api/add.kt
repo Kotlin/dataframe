@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -99,6 +100,7 @@ public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T>
  * Receiver that is used by the [AddExpression] (for instance in the [add] and [update] operations)
  * to access new (added or updated) column value in preceding row.
  */
+@HasSchema(schemaArg = 0)
 public interface AddDataRow<out T> : DataRow<T> {
 
     /**

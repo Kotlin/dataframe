@@ -134,4 +134,7 @@ internal interface DocumentationUrls {
 
     /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
     interface Format
+
+    /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
+    interface Rename
 }
