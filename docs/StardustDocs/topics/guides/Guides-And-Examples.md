@@ -105,6 +105,10 @@ Explore our extensive collection of practical examples and real-world analytics 
   — analyze IMDb data stored in MariaDB using Kotlin DataFrame
   and visualize with [Kandy](https://kotlin.github.io/kandy/).
 
+* [Reading Parquet files from Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/spark-parquet-dataframe)
+  — this project showcases how to export data and ML models from Apache Spark via reading from Parquet files. 
+Also, [Kandy](https://kotlin.github.io/kandy/) used to visualize the exported data and Linear Regression model.
+
 See also [Kandy User Guides](https://kotlin.github.io/kandy/user-guide.html)
 and [Examples Gallery](https://kotlin.github.io/kandy/examples.html)
 for the best data visualizations using Kotlin DataFrame and Kandy together!

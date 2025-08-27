@@ -44,6 +44,8 @@ internal const val PARSER_OPTIONS = "This constructor is only here for binary co
 
 internal const val PARSER_OPTIONS_COPY = "This function is only here for binary compatibility. $MESSAGE_1_0"
 
+internal const val PRINT = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
 internal const val IS_COMPARABLE =
     "This function is replaced by `valuesAreComparable()` to better reflect its purpose. $MESSAGE_1_0"
 internal const val IS_COMPARABLE_REPLACE = "valuesAreComparable()"

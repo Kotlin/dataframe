@@ -11,11 +11,14 @@ Also includes [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/datafr
 * [json](idea-examples/json) Using OpenAPI support in DataFrame's Gradle and KSP plugins to access data from [API guru](https://apis.guru/) in a type-safe manner
 * [imdb sql database](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples) This project prominently showcases how to convert data from an SQL table to a Kotlin DataFrame 
 and how to transform the result of an SQL query into a DataFrame.
+* [spark-parquet-dataframe](idea-examples/spark-parquet-dataframe) This project showcases how to export data and ML models from Apache Spark via reading from Parquet files.
 * [unsupported-data-sources](idea-examples/unsupported-data-sources) Showcases of how to use DataFrame with
   (momentarily) unsupported data libraries such as [Spark](https://spark.apache.org/) and [Exposed](https://github.com/JetBrains/Exposed).
 They show how to convert to and from Kotlin DataFrame and their respective tables.
   * **JetBrains Exposed**: See the [exposed folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/exposed)
     for an example of using Kotlin DataFrame with [Exposed](https://github.com/JetBrains/Exposed).
+  * **Hibernate**: See the [hibernate folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/hibernate)
+    for an example of using Kotlin DataFrame with [Hibernate](https://hibernate.org/orm/).
   * **Apache Spark**: See the [spark folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/spark)
     for an example of using Kotlin DataFrame with [Spark](https://spark.apache.org/).
   * **Spark (with Kotlin Spark API)**: See the [kotlinSpark folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/kotlinSpark)
