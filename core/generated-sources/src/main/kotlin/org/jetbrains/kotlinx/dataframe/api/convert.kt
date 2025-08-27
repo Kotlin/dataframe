@@ -203,7 +203,7 @@ internal interface ConvertDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * **[`convert`][convert]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
+     * **[`convert`][DataFrame.convert]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[**`with`**][Convert.with]`(infer: `[`Infer`][Infer]`, rowExpression: `[`RowValueExpression`][RowValueExpression]`)`
