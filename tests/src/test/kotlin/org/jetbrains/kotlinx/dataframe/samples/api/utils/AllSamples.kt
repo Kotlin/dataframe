@@ -10,7 +10,7 @@ class AllSamples : DataFrameSampleHelper("all", "api") {
 
     private val df = dataFrameOf(
         "name" to listOf("Alice", "Bob"),
-        "age" to listOf(15, 20)
+        "age" to listOf(15, 20),
     ).cast<AnySamples.SimplePerson>()
 
     @Test

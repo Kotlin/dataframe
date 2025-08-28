@@ -25,9 +25,6 @@ plugins {
         alias(ktlint)
         alias(dataframePlugin)
 //        alias(kover)
-
-        alias(dataframe)
-        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
         alias(ksp)
     }
 }

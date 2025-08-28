@@ -17,7 +17,7 @@ class AnySamples : DataFrameSampleHelper("any", "api") {
 
     private val df = dataFrameOf(
         "name" to listOf("Alice", "Bob"),
-        "age" to listOf(15, 20)
+        "age" to listOf(15, 20),
     ).cast<SimplePerson>()
 
     @Test
@@ -41,5 +41,4 @@ class AnySamples : DataFrameSampleHelper("any", "api") {
         df.any { age == 15 && name == "Alice" }
         // SampleEnd
     }
-
 }
