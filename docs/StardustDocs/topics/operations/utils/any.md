@@ -20,7 +20,9 @@ Checks if there is at least one row in the [](DataFrame.md) that satisfies the p
 Returns `Boolean` — `true` if there is at least one row that satisfies the predicate, `false` otherwise.
 
 ```kotlin
-any { rowCondition }
+df.any { rowCondition }
+
+rowCondition := (DataRow) -> Boolean
 ```
 
 **Related operations**: [](all.md)

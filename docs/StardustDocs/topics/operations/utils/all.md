@@ -21,6 +21,8 @@ Returns `Boolean` — `true` if every row satisfies the predicate, `false` other
 
 ```kotlin
 all { rowCondition }
+
+rowCondition := (DataRow) -> Boolean
 ```
 
 **Related operations**: [](any.md)
