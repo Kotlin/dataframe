@@ -37,9 +37,9 @@ df
 
 <inline-frame src="./resources/notebook_test_all_3.html" width="100%" height="500px"></inline-frame>
 
-<!---FUN notebook_test_all_4-->
-
 Check if all persons' `age` is greater than 21:
+
+<!---FUN notebook_test_all_4-->
 
 ```kotlin
 df.all { age > 21 }
@@ -57,7 +57,7 @@ Check if all persons have `age` greater or equal to 15:
 <!---FUN notebook_test_all_5-->
 
 ```kotlin
-df.all { age >= 15 }
+df.all { name.first().isUpperCase() && age >= 15 }
 ```
 
 <!---END-->

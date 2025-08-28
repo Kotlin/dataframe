@@ -37,9 +37,9 @@ df
 
 <inline-frame src="./resources/notebook_test_any_3.html" width="100%" height="500px"></inline-frame>
 
-<!---FUN notebook_test_any_4-->
-
 Check if any person `age` is greater than 21:
+
+<!---FUN notebook_test_any_4-->
 
 ```kotlin
 df.any { age > 21 }
