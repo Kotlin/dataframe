@@ -182,6 +182,7 @@
         <toc-element topic="ColumnSelectors.md"/>
         <toc-element topic="Utils.md">
             <toc-element topic="any.md"/>
+            <toc-element topic="all.md"/>
         </toc-element>
         <toc-element topic="collectionsInterop.md">
             <toc-element topic="toList.md"/>

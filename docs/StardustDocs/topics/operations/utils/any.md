@@ -25,7 +25,7 @@ df.any { rowCondition }
 rowCondition := (DataRow) -> Boolean
 ```
 
-**Related operations**: [](all.md)
+**Related operations**: [](all.md), [](filter.md), [](single.md), [](count.md).
 
 ### Examples
 

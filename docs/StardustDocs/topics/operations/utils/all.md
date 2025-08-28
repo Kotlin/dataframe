@@ -25,7 +25,7 @@ all { rowCondition }
 rowCondition := (DataRow) -> Boolean
 ```
 
-**Related operations**: [](any.md)
+**Related operations**: [](any.md), [](filter.md), [](single.md), [](count.md).
 
 ### Examples
 
