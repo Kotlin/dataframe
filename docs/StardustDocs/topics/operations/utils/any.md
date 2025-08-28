@@ -23,6 +23,8 @@ Returns `Boolean` — `true` if there is at least one row that satisfies the pre
 any { rowCondition }
 ```
 
+**Related operations**: [](all.md)
+
 ### Examples
 
 <!---FUN notebook_test_any_3-->
