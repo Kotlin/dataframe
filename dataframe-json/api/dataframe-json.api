@@ -64,8 +64,8 @@ public final class org/jetbrains/kotlinx/dataframe/io/JsonKt {
 	public static final fun toJson (Lorg/jetbrains/kotlinx/dataframe/DataRow;Z)Ljava/lang/String;
 	public static synthetic fun toJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILjava/lang/Object;)Ljava/lang/String;
 	public static synthetic fun toJson$default (Lorg/jetbrains/kotlinx/dataframe/DataRow;ZILjava/lang/Object;)Ljava/lang/String;
-	public static final fun toJsonWithMetadata (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ILjava/lang/Integer;ZLjava/util/List;)Ljava/lang/String;
-	public static synthetic fun toJsonWithMetadata$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ILjava/lang/Integer;ZLjava/util/List;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun toJsonWithMetadata (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ILjava/lang/Integer;ZLjava/util/List;Z)Ljava/lang/String;
+	public static synthetic fun toJsonWithMetadata$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ILjava/lang/Integer;ZLjava/util/List;ZILjava/lang/Object;)Ljava/lang/String;
 	public static final fun writeJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;Z)V
 	public static final fun writeJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Appendable;Z)V
 	public static final fun writeJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Z)V

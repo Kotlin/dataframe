@@ -235,7 +235,7 @@ class RenderingTests : JupyterReplTestCase() {
         val expectedOutput =
             """
             {
-              "${'$'}version": "2.1.1",
+              "${'$'}version": "2.2.0",
               "metadata": {
                 "columns": ["group", "col3", "col4"],
                 "types": [{
@@ -247,7 +247,8 @@ class RenderingTests : JupyterReplTestCase() {
                   "kind": "FrameColumn"
                 }],
                 "nrow": 3,
-                "ncol": 3
+                "ncol": 3,
+                "is_formatted": false
               },
               "kotlin_dataframe": [{
                 "group": {
