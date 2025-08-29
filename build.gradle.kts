@@ -185,7 +185,7 @@ allprojects {
             options.release.set(11)
         }
     }
-    if (path in modulesUsingJava17) {
+    else if (path in modulesUsingJava17) {
         tasks.withType<KotlinCompile> {
             compilerOptions {
                 jvmTarget = JvmTarget.JVM_17
