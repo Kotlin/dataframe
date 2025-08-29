@@ -11,7 +11,6 @@ Inspired by Spring Data's approach to data source management, this integration s
 - **@JsonDataSource** - JSON files with type clash handling and key-value processing
 - **@ArrowDataSource** - Arrow/Parquet/Feather files with format auto-detection
 - **@JdbcDataSource** - Database tables and custom queries with connection pooling
-- **@DataSource** - Legacy CSV support (deprecated, use @CsvDataSource)
 
 ### Spring Data Inspiration
 - **Declarative Configuration**: Data sources specified through annotations
@@ -79,6 +78,8 @@ class DataFrameConfiguration {
         }
     }
 }
+```
+
 ## 📖 Data Source Types
 
 ### CSV Data Sources
@@ -316,20 +317,6 @@ class DataService {
         // Data automatically loaded and ready to use
     }
 }
-```
-
-### From Legacy @DataSource
-
-**Before:**
-```kotlin
-@DataSource(csvFile = "data.csv", delimiter = ',')
-lateinit var data: DataFrame<*>
-```
-
-**After:**
-```kotlin
-@CsvDataSource(file = "data.csv", delimiter = ',')
-lateinit var data: DataFrame<*>
 ```
 
 ## 🐛 Troubleshooting

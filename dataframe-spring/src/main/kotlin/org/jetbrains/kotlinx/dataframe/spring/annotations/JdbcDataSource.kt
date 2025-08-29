@@ -4,7 +4,7 @@ package org.jetbrains.kotlinx.dataframe.spring.annotations
  * Annotation to mark DataFrame fields/properties that should be automatically
  * populated with data from a JDBC database using Spring's dependency injection.
  * 
- * This annotation is processed by [DataFramePostProcessor] during Spring
+ * This annotation is processed by [org.jetbrains.kotlinx.dataframe.spring.DataFramePostProcessor] during Spring
  * bean initialization.
  * 
  * @param url The JDBC URL to connect to (if not using existing connection)
@@ -15,7 +15,7 @@ package org.jetbrains.kotlinx.dataframe.spring.annotations
  * @param username Database username (if not using connectionBean)
  * @param password Database password (if not using connectionBean)
  * 
- * @see DataFramePostProcessor
+ * @see org.jetbrains.kotlinx.dataframe.spring.DataFramePostProcessor
  */
 @Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)

@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
  * @param format The file format to use (AUTO, IPC, FEATHER)
  * @param nullability How to handle nullable types (default: Infer)
  * 
- * @see DataFramePostProcessor
+ * @see org.jetbrains.kotlinx.dataframe.spring.DataFramePostProcessor
  */
 @Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
