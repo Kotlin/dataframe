@@ -127,6 +127,13 @@ public class JSON(
     }
 }
 
+public class JsonSchemaReader : SchemaReader {
+    override fun accepts(path: String, qualifier: String): Boolean =
+        qualifier == SchemaReader.DEFAULT_QUALIFIER && path.endsWith(".json")
+
+    override fun read(path: String): DataFrame<*> = DataFrame.readJson(path)
+}
+
 internal const val ARRAY_COLUMN_NAME: String = "array"
 internal const val VALUE_COLUMN_NAME: String = "value"
 

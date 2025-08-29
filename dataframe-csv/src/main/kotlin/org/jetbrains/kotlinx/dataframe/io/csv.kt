@@ -29,6 +29,20 @@ public class CsvDeephaven(private val delimiter: Char = DelimParams.CSV_DELIMITE
     }
 }
 
+public class CsvSchemaReader : SchemaReader {
+    override fun accepts(path: String, qualifier: String): Boolean =
+        super.accepts(path, qualifier) && path.endsWith(".csv")
+
+    override fun read(path: String): DataFrame<*> = DataFrame.readCsv(path)
+}
+
+public class TsvSchemaReader : SchemaReader {
+    override fun accepts(path: String, qualifier: String): Boolean =
+        super.accepts(path, qualifier) && path.endsWith(".tsv")
+
+    override fun read(path: String): DataFrame<*> = DataFrame.readTsv(path)
+}
+
 private const val READ_CSV = "readCsv"
 
 internal class DefaultReadCsvMethod(path: String?, arguments: MethodArguments) :
