@@ -21,15 +21,15 @@ dependencies {
 class AppConfiguration
 ```
 
-### 3. Use @DataSource Annotation
+### 3. Use @CsvDataSource Annotation
 
 ```kotlin
 @Component
 class CustomerService {
-    @DataSource(csvFile = "customers.csv")
+    @CsvDataSource(file = "customers.csv")
     lateinit var customers: DataFrame<CustomerRow>
     
-    @DataSource(csvFile = "orders.csv", delimiter = ';')
+    @CsvDataSource(file = "orders.csv", delimiter = ';')
     lateinit var orders: DataFrame<OrderRow>
     
     fun analyzeCustomers() {
@@ -70,7 +70,7 @@ class DataFrameConfig {
 Use Spring's property placeholders:
 
 ```kotlin
-@DataSource(csvFile = "\${app.data.customers.file}")
+@CsvDataSource(file = "${app.data.customers.file}")
 lateinit var customers: DataFrame<CustomerRow>
 ```
 
@@ -78,13 +78,13 @@ lateinit var customers: DataFrame<CustomerRow>
 
 The post-processor provides detailed error messages:
 
-```kotlin
+```
 // File not found
-RuntimeException: Failed to process @DataSource annotations for bean 'customerService'
+RuntimeException: Failed to process @CsvDataSource annotations for bean 'customerService'
 Caused by: IllegalArgumentException: CSV file not found: /path/to/customers.csv
 
 // Wrong property type
-IllegalArgumentException: Property 'data' is annotated with @DataSource but is not a DataFrame type
+IllegalArgumentException: Property 'data' is annotated with @CsvDataSource but is not a DataFrame type
 
 // CSV parsing error
 RuntimeException: Failed to read CSV file 'customers.csv' for property 'customers'
