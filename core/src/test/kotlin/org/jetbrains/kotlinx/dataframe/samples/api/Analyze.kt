@@ -411,7 +411,7 @@ class Analyze : TestBase() {
         df.max { name.firstName and name.lastName }
         df.sum { age and weight }
         df.mean { cols(1, 3).asNumbers() }
-        df.median<_, String> { name.cols().cast() }
+        df.median<_, String> { name.allCols().cast() }
         // SampleEnd
     }
 
@@ -429,7 +429,7 @@ class Analyze : TestBase() {
         df.sum { "age"<Int>() and "weight"<Int?>() }
 
         df.mean { cols(1, 3).asNumbers() }
-        df.median<_, String> { name.cols().cast() }
+        df.median<_, String> { name.allCols().cast() }
         // SampleEnd
     }
 
@@ -441,13 +441,13 @@ class Analyze : TestBase() {
         df.maxFor { name.firstName and name.lastName }
         df.sumFor { age and weight }
         df.meanFor { cols(1, 3).asNumbers() }
-        df.medianFor { name.cols().asComparable() }
+        df.medianFor { name.allCols().asComparable() }
         // SampleEnd
     }
 
     @Test
     @TransformDataFrameExpressions
-    fun columnsFor_aсcessors() {
+    fun columnsFor_accessors() {
         // SampleStart
         val name by columnGroup()
         val firstName by name.column<String>()
@@ -466,7 +466,7 @@ class Analyze : TestBase() {
         df.sum(age, weight)
 
         df.mean { cols(1, 3).asNumbers() }
-        df.median<_, String> { name.cols().cast() }
+        df.median<_, String> { name.allCols().cast() }
         // SampleEnd
     }
 
@@ -482,7 +482,7 @@ class Analyze : TestBase() {
         df.sumFor { "age"<Int>() and "weight"<Int?>() }
 
         df.meanFor { cols(1, 3).asNumbers() }
-        df.medianFor { name.cols().asComparable() }
+        df.medianFor { name.allCols().asComparable() }
         // SampleEnd
     }
 

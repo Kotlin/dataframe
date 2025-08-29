@@ -44,6 +44,8 @@ internal const val PARSER_OPTIONS = "This constructor is only here for binary co
 
 internal const val PARSER_OPTIONS_COPY = "This function is only here for binary compatibility. $MESSAGE_1_0"
 
+internal const val PRINT = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
 internal const val IS_COMPARABLE =
     "This function is replaced by `valuesAreComparable()` to better reflect its purpose. $MESSAGE_1_0"
 internal const val IS_COMPARABLE_REPLACE = "valuesAreComparable()"
@@ -113,6 +115,34 @@ internal const val TO_URL_REPLACE = "toUrl()"
 internal const val FILTER_BY = "This function is deprecated in favor of `filter { }`. $MESSAGE_1_0"
 internal const val FILTER_BY_REPLACE = "filter { column }"
 
+internal const val FORMATTING_DSL = "Replaced by `FormattingDsl`. $MESSAGE_1_0"
+internal const val FORMATTING_DSL_REPLACE = "FormattingDsl"
+
+internal const val RGB_COLOR = "Replaced by `RgbColor`. $MESSAGE_1_0"
+internal const val RGB_COLOR_REPLACE = "RgbColor"
+
+internal const val COLS_TO_ALL = "This `cols()` overload will be removed in favor of `all()`. $MESSAGE_1_0"
+internal const val COLS_TO_ALL_REPLACE = "this.all()"
+
+internal const val COLS_TO_ALL_COLS = "This `cols()` overload will be removed in favor of `allCols()`. $MESSAGE_1_0"
+internal const val COLS_TO_ALL_COLS_REPLACE = "this.allCols()"
+
+internal const val CONVERT_TO_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Either migrate to kotlin.time.Instant and use convertToStdlibInstant() or use convertToDeprecatedInstant(). $MESSAGE_1_0 and migrated to kotlin.time.Instant in 1.1."
+internal const val CONVERT_TO_INSTANT_REPLACE = "this.convertToDeprecatedInstant()"
+
+internal const val TO_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Either migrate to kotlin.time.Instant and use toStdlibInstant() or use toDeprecatedInstant(). $MESSAGE_1_0 and migrated to kotlin.time.Instant in 1.1."
+internal const val TO_INSTANT_REPLACE = "this.toDeprecatedInstant()"
+
+internal const val COL_TYPE_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Either migrate to kotlin.time.Instant and use ColType.StdlibInstant or use ColType.DeprecatedInstant. $MESSAGE_1_0 and migrated to kotlin.time.Instant in 1.1."
+internal const val COL_TYPE_INSTANT_REPLACE = "ColType.DeprecatedInstant"
+
+internal const val INSERT_AFTER_COL_PATH =
+    "This `after()` overload will be removed in favor of `after { }` with Column Selection DSL. $MESSAGE_1_0"
+internal const val INSERT_AFTER_COL_PATH_REPLACE = "this.after { columnPath }"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -180,12 +210,38 @@ internal const val SINGLE_COL_REPLACE = "this.allCols().filter(condition).single
 internal const val SINGLE_PLAIN_REPLACE = "this.cols().filter(condition).single()"
 internal const val SINGLE_SET_REPLACE = "this.filter(condition).single()"
 
+internal const val GENERATE_CODE =
+    "This function has been deprecated in favor of the more explicit `generateInterfaces()`. The `fields` parameter has also been removed. Use `CodeGenerator` explicitly, if you need it. $MESSAGE_1_1"
+
+internal const val GENERATE_CODE_REPLACE1 = "this.generateInterfaces(extensionProperties = extensionProperties)"
+internal const val GENERATE_CODE_REPLACE2 =
+    "this.generateInterfaces(markerName = markerName, extensionProperties = extensionProperties, visibility = visibility)"
+
+internal const val GENERATE_INTERFACES = "This function is just here for binary compatibility. $MESSAGE_1_1"
+
+internal const val UNIFIED_SIMILAR_CS_API = "Deprecated duplicated functionality. $MESSAGE_1_1"
+
+internal const val CONVERT_TO_DEPRECATED_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Migrate to kotlin.time.Instant and use convertToStdlibInstant() at your own pace. $MESSAGE_1_1"
+internal const val CONVERT_TO_DEPRECATED_INSTANT_REPLACE = "this.convertToStdlibInstant()"
+
+internal const val TO_DEPRECATED_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Migrate to kotlin.time.Instant and use toStdlibInstant() at your own pace. $MESSAGE_1_1"
+internal const val TO_DEPRECATED_INSTANT_REPLACE = "this.toStdlibInstant()"
+
+internal const val COL_TYPE_DEPRECATED_INSTANT =
+    "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Migrate to kotlin.time.Instant and use Coltype.StdlibInstant at your own pace. $MESSAGE_1_1"
+internal const val COL_TYPE_DEPRECATED_INSTANT_REPLACE = "ColType.StdlibInstant"
+
 // endregion
 
 // region keep across releases
 
 internal const val DEPRECATED_ACCESS_API =
     "It's recommended to migrate to the String or Extension Properties Access API https://kotlin.github.io/dataframe/apilevels.html"
+
+internal const val DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET =
+    "Accessing a DataRow by ColumnReference (row[col]) is deprecated. Prefer String or extension property access (e.g., row[\"name\"] or row.name). The reverse indexing col[row] remains supported."
 
 internal const val IDENTITY_FUNCTION = "This overload is an identity function and can be omitted."
 

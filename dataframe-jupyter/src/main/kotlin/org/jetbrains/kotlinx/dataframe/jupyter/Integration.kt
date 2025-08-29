@@ -68,8 +68,8 @@ internal class Integration(private val notebook: Notebook, private val options: 
     // TODO temporary settings while these experimental modules are being developed
 
     private val enableExperimentalCsv = options["enableExperimentalCsv"]
-    private val enableExperimentalGeo = options["enableExperimentalGeo"]
     private val enableExperimentalOpenApi = options["enableExperimentalOpenApi"]
+    private val enableExperimentalGeo = options["enableExperimentalGeo"]
 
     private fun KotlinKernelHost.updateImportDataSchemaVariable(
         importDataSchema: ImportDataSchema,
@@ -170,9 +170,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
                 println("CSV module is already enabled by default now.")
             }
             if (enableExperimentalGeo?.toBoolean() == true) {
-                println("Enabling experimental Geo module: dataframe-geo")
-                repositories("https://repo.osgeo.org/repository/release")
-                dependencies("org.jetbrains.kotlinx:dataframe-geo:$version")
+                println("dataframe-geo module was extracted into separate descriptor: %use dataframe-geo")
             }
             if (enableExperimentalOpenApi?.toBoolean() == true) {
                 println("Enabling experimental OpenAPI 3.0.0 module: dataframe-openapi")

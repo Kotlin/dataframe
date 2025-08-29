@@ -102,7 +102,7 @@ class AtAnyDepth : TestBase() {
 
     @Test
     fun `cols atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { colsAtAnyDepth().cols() }.sortedBy { it.name } shouldBe atAnyDepthGoal
+        dfGroup.getColumnsWithPaths { colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
     }
 
     @Test
@@ -121,9 +121,9 @@ class AtAnyDepth : TestBase() {
 
     @Test
     fun `cols allAtAnyDepth`() {
-        dfGroup.getColumnsWithPaths { cols().colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
+        dfGroup.getColumnsWithPaths { all().colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
         dfGroup
-            .getColumnsWithPaths { cols().colsAtAnyDepth().filter { !it.isColumnGroup() } }
+            .getColumnsWithPaths { all().colsAtAnyDepth().filter { !it.isColumnGroup() } }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 

@@ -20,6 +20,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * ### Global Parser Options
@@ -73,6 +75,26 @@ public interface GlobalParserOptions {
     public val nulls: Set<String>
 
     public val skipTypes: Set<KType>
+
+    /**
+     * Whether to allow parsing UUIDs to the experimental [kotlin.uuid.Uuid] type.
+     * By default, this is false and UUIDs are not recognized.
+     *
+     * NOTE: Interacting with a [Uuid][Uuid] in your code might require
+     * `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
+     * In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
+     */
+    public var parseExperimentalUuid: Boolean
+
+    /**
+     * Whether to allow parsing to the experimental [kotlin.time.Instant] type.
+     * By default, this is false and instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
+     *
+     * NOTE: Interacting with an [Instant][kotlin.time.Instant] in your code might require
+     * `@`[OptIn][OptIn]`(`[ExperimentalTime][kotlin.time.ExperimentalTime]`::class)`.
+     * In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
+     */
+    public var parseExperimentalInstant: Boolean
 }
 
 /**
@@ -101,6 +123,16 @@ public interface GlobalParserOptions {
  * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
  *   By default, it's an empty set. To skip all types except a specified one, use [convertTo] instead.
  * @param useFastDoubleParser whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter.
+ * @param parseExperimentalUuid whether to allow parsing UUIDs to the experimental [kotlin.uuid.Uuid] type.
+ *   By default, this is false and UUIDs are not recognized.
+ *   NOTE: Interacting with a [Uuid][Uuid] in your code might require
+ *   `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
+ *   In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
+ * @param parseExperimentalInstant whether to allow parsing to the experimental [kotlin.time.Instant] type.
+ *   By default, this is false and instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
+ *   NOTE: Interacting with an [Instant][kotlin.time.Instant] in your code might require
+ *   `@`[OptIn][OptIn]`(`[ExperimentalTime][kotlin.time.ExperimentalTime]`::class)`.
+ *   In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
  */
 public class ParserOptions(
     public val locale: Locale? = null,
@@ -110,7 +142,32 @@ public class ParserOptions(
     public val nullStrings: Set<String>? = null,
     public val skipTypes: Set<KType>? = null,
     public val useFastDoubleParser: Boolean? = null,
+    public val parseExperimentalUuid: Boolean? = null,
+    public val parseExperimentalInstant: Boolean? = null,
 ) {
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = PARSER_OPTIONS,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public constructor(
+        locale: Locale? = null,
+        dateTimeFormatter: DateTimeFormatter? = null,
+        dateTimePattern: String? = null,
+        nullStrings: Set<String>? = null,
+        skipTypes: Set<KType>? = null,
+        useFastDoubleParser: Boolean? = null,
+    ) : this(
+        locale = locale,
+        dateTimeFormatter = dateTimeFormatter,
+        dateTimePattern = dateTimePattern,
+        nullStrings = nullStrings,
+        skipTypes = skipTypes,
+        useFastDoubleParser = useFastDoubleParser,
+        parseExperimentalUuid = null,
+        parseExperimentalInstant = null,
+    )
 
     /** For binary compatibility. */
     @Deprecated(
@@ -129,7 +186,33 @@ public class ParserOptions(
         nullStrings = nullStrings,
         skipTypes = null,
         useFastDoubleParser = null,
+        parseExperimentalUuid = null,
+        parseExperimentalInstant = null,
     )
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = PARSER_OPTIONS_COPY,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public fun copy(
+        locale: Locale? = this.locale,
+        dateTimeFormatter: DateTimeFormatter? = this.dateTimeFormatter,
+        dateTimePattern: String? = this.dateTimePattern,
+        nullStrings: Set<String>? = this.nullStrings,
+        skipTypes: Set<KType>? = this.skipTypes,
+        useFastDoubleParser: Boolean? = this.useFastDoubleParser,
+    ): ParserOptions =
+        ParserOptions(
+            locale = locale,
+            dateTimeFormatter = dateTimeFormatter,
+            dateTimePattern = dateTimePattern,
+            nullStrings = nullStrings,
+            skipTypes = skipTypes,
+            useFastDoubleParser = useFastDoubleParser,
+            parseExperimentalUuid = null,
+            parseExperimentalInstant = null,
+        )
 
     /** For binary compatibility. */
     @Deprecated(
@@ -149,6 +232,8 @@ public class ParserOptions(
             nullStrings = nullStrings,
             skipTypes = skipTypes,
             useFastDoubleParser = useFastDoubleParser,
+            parseExperimentalUuid = null,
+            parseExperimentalInstant = null,
         )
 
     internal fun getDateTimeFormatter(): DateTimeFormatter? =
@@ -166,6 +251,8 @@ public class ParserOptions(
         nullStrings: Set<String>? = this.nullStrings,
         skipTypes: Set<KType>? = this.skipTypes,
         useFastDoubleParser: Boolean? = this.useFastDoubleParser,
+        parseExperimentalUuid: Boolean? = this.parseExperimentalUuid,
+        parseExperimentalInstant: Boolean? = this.parseExperimentalInstant,
     ): ParserOptions =
         ParserOptions(
             locale = locale,
@@ -174,6 +261,8 @@ public class ParserOptions(
             nullStrings = nullStrings,
             skipTypes = skipTypes,
             useFastDoubleParser = useFastDoubleParser,
+            parseExperimentalUuid = parseExperimentalUuid,
+            parseExperimentalInstant = parseExperimentalInstant,
         )
 
     override fun equals(other: Any?): Boolean {
@@ -188,6 +277,8 @@ public class ParserOptions(
         if (dateTimePattern != other.dateTimePattern) return false
         if (nullStrings != other.nullStrings) return false
         if (skipTypes != other.skipTypes) return false
+        if (parseExperimentalUuid != other.parseExperimentalUuid) return false
+        if (parseExperimentalInstant != other.parseExperimentalInstant) return false
 
         return true
     }
@@ -199,11 +290,13 @@ public class ParserOptions(
         result = 31 * result + (dateTimePattern?.hashCode() ?: 0)
         result = 31 * result + (nullStrings?.hashCode() ?: 0)
         result = 31 * result + (skipTypes?.hashCode() ?: 0)
+        result = 31 * result + (parseExperimentalUuid?.hashCode() ?: 0)
+        result = 31 * result + (parseExperimentalInstant?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String =
-        "ParserOptions(locale=$locale, dateTimeFormatter=$dateTimeFormatter, dateTimePattern=$dateTimePattern, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser)"
+        "ParserOptions(locale=$locale, dateTimeFormatter=$dateTimeFormatter, dateTimePattern=$dateTimePattern, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser, parseExperimentalUuid=$parseExperimentalUuid, parseExperimentalInstant=$parseExperimentalInstant)"
 }
 
 /** Tries to parse a column of strings into a column of a different type.

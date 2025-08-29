@@ -8,7 +8,7 @@ with the name and type of properties inferred from the name and type of the corr
 It also works for all types of hierarchical dataframes.
 
 > The behavior of data schema generation differs between the 
-> [Compiler Plugin](Compiler-Plugin.md) and [Kotlin Notebook](gettingStartedKotlinNotebook.md).
+> [Compiler Plugin](Compiler-Plugin.md) and [Kotlin Notebook](SetupKotlinNotebook.md).
 >
 > * In **Kotlin Notebook**, a schema is generated **only after cell execution** for 
 > `DataFrame` variables defined within that cell.
@@ -29,7 +29,7 @@ which is a [**column group**](DataColumn.md#columngroup) containing two nested
 [value columns](DataColumn.md#valuecolumn) — 
 `age` of type `Int`, and `height` of type `Double`.
 
-<table>
+<table width="705">
   <thead>
     <tr>
       <th>name</th>
@@ -163,3 +163,52 @@ See [Compiler Plugin Example](https://github.com/Kotlin/dataframe/tree/plugin_ex
 IDEA project with basic Extension Properties API examples.
 </tab>
 </tabs>
+
+## Properties name generation
+
+By default, each extension property is generated with a name equal to the original column name.
+
+```kotlin
+val df = dataFrameOf("size_in_inches" to listOf(..))
+df.size_in_inches
+```
+
+If the original column name cannot be used as a property name (for example, if it contains spaces 
+or has a name equal to a keyword in Kotlin), 
+it will be enclosed in backticks.
+
+```kotlin
+val df = dataFrameOf("size in inches" to listOf(..))
+df.`size in inches`
+```
+
+However, sometimes the original column name contains special symbols
+and can't be used as a property name in backticks.
+In such cases, special symbols in the auto-generated property name will be replaced.
+
+```kotlin
+val df = dataFrameOf("size\nin:inches" to listOf(..))
+df.`size in - inches`
+```
+
+> In such cases, use [**`rename`**](rename.md) to update column names, 
+> or [**`renameToCamelCase`**](rename.md#renametocamelcase) to convert all column names 
+> in a `DataFrame` to `camelCase`, which is the idiomatic and widely preferred naming style in Kotlin.
+
+If you don't want to change the actual column name, but you need a convenient accessor for this column,
+you can use the `@ColumnName` annotation in a manually declared [data schema](schemas.md). 
+It allows you to use a property name different
+from the original column name without changing the column's actual name:
+
+```kotlin
+@DataSchema
+interface Info {
+    @ColumnName("size\nin:inches")
+    val sizeInInches: Double
+}
+```
+
+```kotlin
+val df = dataFrameOf("size\nin:inches" to listOf(..)).cast<Info>()
+df.sizeInInches
+```

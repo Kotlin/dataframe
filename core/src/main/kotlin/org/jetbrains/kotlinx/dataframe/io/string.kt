@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import java.math.BigDecimal
 
-internal fun AnyFrame.renderToString(
+public fun AnyFrame.renderToString(
     rowsLimit: Int = 20,
     valueLimit: Int = 40,
     borders: Boolean = false,
@@ -32,7 +32,7 @@ internal fun AnyFrame.renderToString(
 
     // title
     if (title) {
-        sb.appendLine("Data Frame [${size()}]")
+        sb.appendLine("DataFrame [${size()}]")
         sb.appendLine()
     }
 

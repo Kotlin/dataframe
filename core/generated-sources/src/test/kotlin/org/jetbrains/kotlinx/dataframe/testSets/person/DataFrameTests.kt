@@ -552,7 +552,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `drop nulls 1`() {
-        fun AnyFrame.check() = rows().forEach { get("weight") shouldNotBe null }
+        fun AnyFrame.check() = rows().forEach { it["weight"] shouldNotBe null }
 
         typed.dropNulls(typed.weight).check()
         typed.dropNulls { weight }.check()
@@ -1977,7 +1977,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `render nested data frames to string`() {
+    fun `render nested dataframes to string`() {
         val rendered = typed
             .drop(1)
             .groupBy { name }

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -67,6 +69,9 @@ public class Update<T, C>(
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `[ `__`.`__[**`at`**][Update.at]**`(`**[`rowIndices`][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`notNull`**][Update.notNull]**`()`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[**`with`**][Update.with]**`  {  `**[`rowExpression`][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
@@ -444,6 +449,7 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  *  - [Update per col][org.jetbrains.kotlinx.dataframe.api.Update.perCol] to provide a new value for every selected cell giving its column.
  * @param [expression] The [Row Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression] to provide a new value for every selected cell giving its row and column.
  */
+@Refine
 @Interpretable("UpdatePerRowCol")
 public inline fun <T, C> Update<T, C>.perRowCol(crossinline expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
@@ -490,13 +496,13 @@ public inline fun <T, C, R : C?> Update<T, C>.with(crossinline expression: Updat
  *
  * Updates selected [column group][ColumnGroup] as a [DataFrame] with the given [expression].
  *
- * Provide a new value for every selected data frame using a [dataframe expression][org.jetbrains.kotlinx.dataframe.DataFrameExpression].
+ * Provide a new value for every selected dataframe using a [dataframe expression][org.jetbrains.kotlinx.dataframe.DataFrameExpression].
  *
  * For example:
  *
  * `df.`[update][update]` { name }.`[asFrame][asFrame]` { `[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { lastName } }`
  *
- * @param [expression] The [Data Frame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
+ * @param [expression] The [DataFrame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
  */
 public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     asFrameImpl(expression)
@@ -529,6 +535,7 @@ public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpressi
  * @param [values] The [Map]<[String], Value> to provide a new value for every selected cell.
  *   For each selected column, there must be a value in the map with the same name.
  */
+@Refine
 @Interpretable("UpdatePerColMap")
 public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
     updateWithValuePerColumnImpl {
@@ -568,6 +575,7 @@ public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
  *
  * @param [values] The [DataRow] to provide a new value for every selected cell.
  */
+@Refine
 @Interpretable("UpdatePerColRow")
 public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
 
@@ -596,6 +604,7 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
  *
  * @param [valueSelector] The [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression] to provide a new value for every selected cell giving its column.
  */
+@Refine
 @Interpretable("UpdatePerCol")
 public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
@@ -607,25 +616,21 @@ internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>)
     return { thisExp(this, it) && other(this, it) }
 }
 
-/** ## Not Null
+/**
+ * ## Not Null
+ * Filters the update-selection to only include cells where the value is not null.
  *
- * Selects only the rows where the values in the selected columns are not null.
- *
- * Shorthand for: [update][org.jetbrains.kotlinx.dataframe.api.update]` { ... }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { it != null }`
- *
- * For example:
- *
- * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Number][Number]`?>() }.`[notNull][org.jetbrains.kotlinx.dataframe.api.notNull]`().`[perCol][org.jetbrains.kotlinx.dataframe.api.Update.perCol]`  {  `[mean][org.jetbrains.kotlinx.dataframe.api.mean]`() }`
- *
- * ### Optional
- * Provide an [expression] to update the rows with.
- * This combines [with][org.jetbrains.kotlinx.dataframe.api.Update.with] with [notNull][org.jetbrains.kotlinx.dataframe.api.notNull].
+ * This is shorthand for `.`[where][Update.where]` { it != null }`.
  *
  * For example:
  *
- * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { city }.`[notNull][org.jetbrains.kotlinx.dataframe.api.Update.notNull]` { it.`[toUpperCase][String.toUpperCase]`() }`
+ * `df.`[update][update]` { `[colsOf][colsOf]`<`[Int][Int]`?>() }.`[notNull][notNull]`().`[perRowCol][Update.perRowCol]` { row, col ->`
  *
- * @param expression Optional [Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample] to update the rows with. */
+ * &nbsp;&nbsp;&nbsp;&nbsp;`row[col] / col.`[mean][DataColumn.mean]`(skipNA = true)`
+ *
+ * `}`
+ */
+@Suppress("UNCHECKED_CAST")
 @Interpretable("UpdateNotNullDefault")
 public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } as Update<T, C>
 
@@ -650,6 +655,7 @@ public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } a
  *
  * @param expression Optional [Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample] to update the rows with.
  */
+@Refine
 @Interpretable("UpdateNotNull")
 public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): DataFrame<T> =
     notNull().with(expression)
@@ -787,6 +793,8 @@ public fun <T> DataFrame<T>.update(
  *
  *
  */
+@Refine
+@Interpretable("UpdateWithNull")
 public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
 
 /**
@@ -799,4 +807,6 @@ public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
  *
  *
  */
+@Refine
+@Interpretable("UpdateWithZero")
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }

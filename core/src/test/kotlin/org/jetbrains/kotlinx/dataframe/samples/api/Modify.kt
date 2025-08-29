@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.asFrame
@@ -372,7 +373,7 @@ class Modify : TestBase() {
 
         // name.firstName -> firstName
         // name.lastName -> lastName
-        df.move { name.cols() }.toTop()
+        df.move { name.allCols() }.toTop()
 
         // a.b.e -> be
         // c.d.e -> de

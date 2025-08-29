@@ -10,12 +10,14 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.UNIFIED_SIMILAR_CS_API
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -24,7 +26,7 @@ import kotlin.reflect.typeOf
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <C, reified R> ColumnReference<C>.map(
+internal inline fun <C, reified R> ColumnReference<C>.map(
     infer: Infer = Infer.Nulls,
     noinline transform: (C) -> R,
 ): ColumnReference<R> = createComputedColumnReference(name(), typeOf<R>(), infer) { transform(this@map()) }
@@ -68,8 +70,25 @@ public inline fun <T, R> DataColumn<T>.mapIndexed(
 
 // region DataFrame
 
+/**
+ * Note: When this method is applied to a **[ColumnGroup]**,
+ * its behavior differs from [DataColumn.map].
+ * To apply `map` as if on a regular [DataColumn] (i.e., a column of [DataRow]s
+ * whose values correspond to values in columns of the group),
+ * call [ColumnGroup.asDataColumn] first.
+ */
 public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = rows().map { transform(it, it) }
 
+public inline fun <T, reified R> DataFrame<T>.mapToColumn(
+    name: String,
+    infer: Infer = Infer.Nulls,
+    noinline body: AddExpression<T, R>,
+): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, body)
+
+@Deprecated(
+    UNIFIED_SIMILAR_CS_API,
+    replaceWith = ReplaceWith("expr(name, infer, body)", "org.jetbrains.kotlinx.dataframe.api.Infer"),
+)
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     name: String,
     infer: Infer = Infer.Nulls,
@@ -92,7 +111,8 @@ public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
 
-public fun <T, R> ColumnsContainer<T>.mapToColumn(
+@PublishedApi
+internal fun <T, R> ColumnsContainer<T>.mapToColumn(
     name: String,
     type: KType,
     infer: Infer = Infer.Nulls,

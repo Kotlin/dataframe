@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.util.PRINT
 
 // region DataColumn
 
@@ -20,6 +21,7 @@ public fun <T> DataRow<T>.print(): Unit = println(this)
 
 // region DataFrame
 
+@Deprecated(message = PRINT, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.print(
     rowsLimit: Int = 20,
     valueLimit: Int = 40,
@@ -27,7 +29,17 @@ public fun <T> DataFrame<T>.print(
     alignLeft: Boolean = false,
     columnTypes: Boolean = false,
     title: Boolean = false,
-): Unit = println(renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title))
+): Unit = print(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, true)
+
+public fun <T> DataFrame<T>.print(
+    rowsLimit: Int = 20,
+    valueLimit: Int = 40,
+    borders: Boolean = false,
+    alignLeft: Boolean = false,
+    columnTypes: Boolean = false,
+    title: Boolean = false,
+    rowIndex: Boolean = true,
+): Unit = println(renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex))
 
 // endregion
 

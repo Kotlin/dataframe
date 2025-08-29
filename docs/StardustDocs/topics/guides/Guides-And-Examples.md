@@ -24,6 +24,8 @@ Explore our structured, in-depth guides to steadily improve your Kotlin DataFram
 
 <img src="quickstart_preview.png" border-effect="rounded" width="705"/>
 
+* [](Guide-for-backend-SQL-developers.md) — migration guide for backend developers with SQL/ORM experience moving to Kotlin DataFrame
+
 * [](extensionPropertiesApi.md) — learn about extension properties for [`DataFrame`](DataFrame.md) 
 and make working with your data both convenient and type-safe.
 
@@ -60,6 +62,7 @@ and make working with your data both convenient and type-safe.
     * [Apache Spark Interop (With Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/kotlinSpark)
     * [Multik Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/multik)
     * [JetBrains Exposed Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/exposed)
+    * [Hibernate ORM](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/hibernate)
 * [OpenAPI Guide](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb)
   — learn how to parse and explore [OpenAPI](https://swagger.io) JSON structures using Kotlin DataFrame,
   enabling structured access and intuitive analysis of complex API schemas (*experimental*, supports OpenAPI 3.0.0).
@@ -86,7 +89,7 @@ Explore our extensive collection of practical examples and real-world analytics 
   — a practical example of working with deeply nested, hierarchical DataFrames using GitHub data.
 
 * [Netflix Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/netflix/netflix.ipynb)
-  — explore TV shows and movies from Netflix with the powerful Kotlin Dataframe API and beautiful
+  — explore TV shows and movies from Netflix with the powerful Kotlin DataFrame API and beautiful
   [Kandy](https://kotlin.github.io/kandy/) visualizations.
 
 * [Top-12 German Companies Financial Analyze](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/top_12_german_companies)
@@ -96,11 +99,15 @@ Explore our extensive collection of practical examples and real-world analytics 
   — basic Kotlin DataFrame operations on data from [movielens](https://movielens.org/).
 
 * [YouTube Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/youtube/Youtube.ipynb)
-  — explore YouTube videos with YouTube REST API and Kotlin Dataframe.
+  — explore YouTube videos with YouTube REST API and Kotlin DataFrame.
 
 * [IMDb SQL Database Example](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb)
   — analyze IMDb data stored in MariaDB using Kotlin DataFrame
   and visualize with [Kandy](https://kotlin.github.io/kandy/).
+
+* [Reading Parquet files from Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/spark-parquet-dataframe)
+  — this project showcases how to export data and ML models from Apache Spark via reading from Parquet files. 
+Also, [Kandy](https://kotlin.github.io/kandy/) used to visualize the exported data and Linear Regression model.
 
 See also [Kandy User Guides](https://kotlin.github.io/kandy/user-guide.html)
 and [Examples Gallery](https://kotlin.github.io/kandy/examples.html)

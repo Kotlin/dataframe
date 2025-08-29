@@ -1,12 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.format.DateTimeComponents
-import kotlinx.datetime.toKotlinInstant
+import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
@@ -56,6 +54,7 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.time.toKotlinInstant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
@@ -63,6 +62,8 @@ import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 private val logger = KotlinLogging.logger { }
 
@@ -142,6 +143,10 @@ internal object Parsers : GlobalParserOptions {
     override val skipTypes: Set<KType>
         get() = skipTypesSet
 
+    override var parseExperimentalUuid by Delegates.notNull<Boolean>()
+
+    override var parseExperimentalInstant by Delegates.notNull<Boolean>()
+
     override fun addDateTimePattern(pattern: String) {
         formatters.add(DateTimeFormatter.ofPattern(pattern))
     }
@@ -180,6 +185,8 @@ internal object Parsers : GlobalParserOptions {
             .let { formatters.add(it) }
 
         useFastDoubleParser = true
+        parseExperimentalUuid = false
+        parseExperimentalInstant = false
         _locale = null
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }
@@ -208,14 +215,8 @@ internal object Parsers : GlobalParserOptions {
             }
         }
 
-    private fun String.toInstantOrNull(): Instant? =
-        // low chance throwing exception, thanks to using parseOrNull instead of parse
-        catchSilent {
-            // Default format used by Instant.parse
-            DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET
-                .parseOrNull(this)
-                ?.toInstantUsingOffset()
-        }
+    private fun String.toInstantOrNull(): StdlibInstant? =
+        StdlibInstant.parseOrNull(this)
             // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
             ?: toJavaInstantOrNull()?.toKotlinInstant()
 
@@ -302,7 +303,7 @@ internal object Parsers : GlobalParserOptions {
         }
 
     private fun String.toDurationOrNull(): Duration? =
-        if (Duration.canParse(this)) {
+        if (Duration.canParse(this)) { // TODO, migrate to `Duration.parseOrNull()` in Kotlin 2.3.0+
             catchSilent { Duration.parse(this) } // will likely succeed
         } else {
             null
@@ -345,7 +346,7 @@ internal object Parsers : GlobalParserOptions {
     private val readJsonStrAnyFrame: ((text: String) -> AnyFrame)? by lazy {
         try {
             val klass = Class.forName("org.jetbrains.kotlinx.dataframe.io.JsonKt")
-            val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
+            val typeClashTactic = Class.forName($$"org.jetbrains.kotlinx.dataframe.io.JSON$TypeClashTactic")
             val readJsonStr = klass.getMethod(
                 "readJsonStr",
                 // this =
@@ -428,18 +429,32 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
+    private val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+
     @OptIn(ExperimentalUuidApi::class)
     internal val parsersOrder = listOf(
         // Int
         stringParser<Int> { it.toIntOrNull() },
         // Long
         stringParser<Long> { it.toLongOrNull() },
+        // kotlin.time.Instant
+        stringParserWithOptions<StdlibInstant> {
+            val parseExperimentalInstant = it?.parseExperimentalInstant ?: this.parseExperimentalInstant
+            val parser = { it: String ->
+                if (parseExperimentalInstant) {
+                    it.toInstantOrNull()
+                } else {
+                    null
+                }
+            }
+            parser
+        },
         // kotlinx.datetime.Instant
-        stringParser<Instant> {
-            it.toInstantOrNull()
+        stringParser<DeprecatedInstant> {
+            it.toInstantOrNull()?.toDeprecatedInstant()
         },
         // java.time.Instant, will be skipped if kotlinx.datetime.Instant is already checked
-        stringParser<JavaInstant>(coveredBy = setOf(typeOf<Instant>())) {
+        stringParser<JavaInstant>(coveredBy = setOf(typeOf<DeprecatedInstant>())) {
             it.toJavaInstantOrNull()
         },
         // kotlinx.datetime.LocalDateTime
@@ -494,20 +509,25 @@ internal object Parsers : GlobalParserOptions {
         posixParserToDoubleWithOptions,
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
-        // UUID
-        stringParser<Uuid> { str ->
+        // Uuid
+        stringParserWithOptions<Uuid> { options ->
+            val parser = { str: String ->
+                val parseExperimentalUuid = options?.parseExperimentalUuid ?: this.parseExperimentalUuid
+                when {
+                    !parseExperimentalUuid -> null
 
-            val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+                    uuidRegex.matches(str) -> {
+                        try {
+                            Uuid.parse(str)
+                        } catch (_: IllegalArgumentException) {
+                            null
+                        }
+                    }
 
-            if (uuidRegex.matches(str)) {
-                try {
-                    Uuid.parse(str)
-                } catch (e: IllegalArgumentException) {
-                    null
+                    else -> null
                 }
-            } else {
-                null
             }
+            parser
         },
         // BigInteger
         stringParser<BigInteger> { it.toBigIntegerOrNull() },

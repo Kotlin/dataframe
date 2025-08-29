@@ -30,7 +30,12 @@ dependencies {
         exclude(group = "com.squareup", module = "kotlinpoet-jvm")
         exclude(group = "ch.randelshofer", module = "fastdoubleparser")
         exclude(group = "io.github.oshai", module = "kotlin-logging-jvm")
+        exclude(group = "org.jetbrains", module = "annotations")
     }
+
+    // we assume Kotlin plugin has reflect dependency - we're not bringing our own version
+    testImplementation(kotlin("reflect"))
+    testImplementation(kotlin("test"))
 }
 
 tasks.withType<ShadowJar> {
@@ -49,6 +54,7 @@ tasks.withType<ShadowJar> {
         exclude(dependency("com.squareup:kotlinpoet-jvm:.*"))
         exclude(dependency("ch.randelshofer:fastdoubleparser:.*"))
         exclude(dependency("io.github.oshai:kotlinlogging:.*"))
+        exclude(dependency("org.jetbrains:annotations:.*"))
     }
     exclude("org/jetbrains/kotlinx/dataframe/jupyter/**")
     exclude("org/jetbrains/kotlinx/dataframe/io/**")

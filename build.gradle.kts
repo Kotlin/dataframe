@@ -156,8 +156,9 @@ kotlin {
 val modulesUsingJava11 = with(projects) {
     setOf(
         dataframeJupyter,
-        dataframeGeo,
+        dataframeGeoJupyter,
         examples.ideaExamples.titanic,
+        examples.ideaExamples.unsupportedDataSources,
         tests,
         plugins.dataframeGradlePlugin,
     )
@@ -207,6 +208,13 @@ allprojects {
             sourceCompatibility = JavaVersion.VERSION_1_8.toString()
             targetCompatibility = JavaVersion.VERSION_1_8.toString()
             options.release.set(8)
+        }
+    }
+    tasks.withType<KotlinCompile> {
+        compilerOptions {
+            // enables support for kotlin.time.Instant as kotlinx.datetime.Instant was deprecated; Issue #1350
+            // Can be removed once kotlin.time.Instant is marked "stable".
+            optIn.add("kotlin.time.ExperimentalTime")
         }
     }
 
@@ -274,8 +282,8 @@ kotlinPublications {
     fairDokkaJars = false
 
     sonatypeSettings(
-        project.findProperty("kds.sonatype.user") as String?,
-        project.findProperty("kds.sonatype.password") as String?,
+        project.findProperty("kds.sonatype.central.username") as String?,
+        project.findProperty("kds.sonatype.central.password") as String?,
         "dataframe project, v. ${project.version}",
     )
 

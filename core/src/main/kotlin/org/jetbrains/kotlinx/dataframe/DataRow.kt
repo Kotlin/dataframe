@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.api.next
 import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -10,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.toIterable
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET
 import kotlin.reflect.KProperty
 
 /**
@@ -17,6 +19,7 @@ import kotlin.reflect.KProperty
  *
  * @param T Schema marker. See [DataFrame] for details
  */
+@HasSchema(schemaArg = 0)
 public interface DataRow<out T> {
 
     public fun index(): Int
@@ -29,7 +32,7 @@ public interface DataRow<out T> {
 
     public operator fun <R> get(expression: RowExpression<T, R>): R = expression(this, this)
 
-    @Deprecated(DEPRECATED_ACCESS_API)
+    @Deprecated(DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET)
     @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<R>): R
 

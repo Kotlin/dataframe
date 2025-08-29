@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 5.3//EN"
+        "http://hibernate.org/dtd/hibernate-configuration-5.3.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- H2 in-memory -->
+        <property name="hibernate.connection.driver_class">org.h2.Driver</property>
+        <property name="hibernate.connection.url">jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1</property>
+        <property name="hibernate.connection.username">sa</property>
+        <property name="hibernate.connection.password"></property>
+
+        <!-- Connection pool: HikariCP via Hibernate integration -->
+        <property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>
+        <property name="hibernate.hikari.maximumPoolSize">5</property>
+
+        <!-- Hibernate Dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
+
+        <!-- Automatic schema generation -->
+        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+
+        <!-- Logging -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Mappings -->
+        <mapping class="org.jetbrains.kotlinx.dataframe.examples.hibernate.CustomersEntity"/>
+        <mapping class="org.jetbrains.kotlinx.dataframe.examples.hibernate.ArtistsEntity"/>
+        <mapping class="org.jetbrains.kotlinx.dataframe.examples.hibernate.AlbumsEntity"/>
+    </session-factory>
+</hibernate-configuration>

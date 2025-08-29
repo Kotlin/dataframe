@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.io.readDataFrame
 import org.jetbrains.kotlinx.dataframe.io.readResultSet
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+import org.jetbrains.kotlinx.dataframe.io.withReadOnlyConnection
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -793,6 +794,27 @@ class JdbcTest {
     }
 
     @Test
+    fun `read from table with column name containing the reserved SQL keywords`() {
+        @Language("SQL")
+        val createAlterTableQuery = """
+            CREATE TABLE HELLO_ALTER (
+            id INT PRIMARY KEY,
+            last_update TEXT
+            )
+            """
+
+        @Language("SQL")
+        val selectFromWeirdTableSQL = """SELECT last_update from HELLO_ALTER"""
+
+        try {
+            connection.createStatement().execute(createAlterTableQuery)
+            DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL).rowsCount() shouldBe 0
+        } finally {
+            connection.createStatement().execute("DROP TABLE IF EXISTS HELLO_ALTER")
+        }
+    }
+
+    @Test
     fun `read from non-existing jdbc url`() {
         shouldThrow<SQLException> {
             DataFrame.readSqlTable(DriverManager.getConnection("ddd"), "WrongTableName")
@@ -1147,5 +1169,20 @@ class JdbcTest {
         val saleDataSchema1 = dataSchemas1[1]
         saleDataSchema1.columns.size shouldBe 3
         saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
+    }
+
+    @Test
+    fun `withReadOnlyConnection sets readOnly and rolls back after execution`() {
+        val config = DbConnectionConfig("jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1", readOnly = true)
+
+        var wasExecuted = false
+        val result = withReadOnlyConnection(config) { conn ->
+            wasExecuted = true
+            conn.autoCommit shouldBe false
+            42
+        }
+
+        wasExecuted shouldBe true
+        result shouldBe 42
     }
 }

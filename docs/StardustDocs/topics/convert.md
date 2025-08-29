@@ -13,6 +13,8 @@ colExpression = DataFrame.(DataColumn) -> DataColumn
 frameExpression: DataFrame.(DataFrame) -> DataFrame
 ```
 
+**Related operations**: [](updateConvert.md)
+
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation and
 [row expressions](DataRow.md#row-expressions) for how to provide new values.
 
@@ -68,7 +70,7 @@ df.convert { name }.asColumn { col ->
 * `LocalDateTime` (kotlinx.datetime and java.time)
 * `LocalDate` (kotlinx.datetime and java.time)
 * `LocalTime` (kotlinx.datetime and java.time)
-* `Instant` (kotlinx.datetime and java.time)
+* `Instant` (kotlinx.datetime, kotlin.time, and java.time)
 
 <!---FUN convertTo-->
 

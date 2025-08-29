@@ -26,7 +26,8 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.sl4j)
 
-    testImplementation(libs.kotlin.test)
+    // Use Kotlin test integration for JUnit 5 to satisfy variant 'kotlin-test-framework-junit5'
+    testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.junit.jupiter.params)

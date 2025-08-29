@@ -9,6 +9,8 @@ This parsing operation is sometimes executed implicitly, for example, when [read
 [type converting from `String` columns](convert.md).
 You can recognize this by the `locale` or `parserOptions` arguments in these functions.
 
+Related operations: [](updateConvert.md)
+
 <!---FUN parseAll-->
 
 ```kotlin
@@ -34,6 +36,7 @@ df.parse { age and weight }
 `parse` tries to parse every `String` column into one of supported types in the following order:
 * `Int`
 * `Long`
+* `Instant` (`kotlin.time`) (requires `parseExperimentalInstant = true`, available from Kotlin 2.1+.)
 * `Instant` (`kotlinx.datetime` and `java.time`)
 * `LocalDateTime` (`kotlinx.datetime` and `java.time`)
 * `LocalDate` (`kotlinx.datetime` and `java.time`)
@@ -42,6 +45,7 @@ df.parse { age and weight }
 * `URL` (`java.net`)
 * [`Double` (with optional locale settings)](#parsing-doubles)
 * `Boolean`
+* `Uuid` ([`kotlin.uuid.Uuid`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/)) (requires `parseExperimentalUuid = true`) 
 * `BigDecimal`
 * `JSON` (arrays and objects) (requires the `org.jetbrains.kotlinx:dataframe-json` dependency)
 
@@ -69,6 +73,11 @@ Available parser options:
   * Empty set by global default; parsing can result in any supported type
 * `useFastDoubleParser: Boolean` is used to enable or disable the [new fast double parser](#parsing-doubles)
   * Enabled by global default
+* `parseExperimentalUuid: Boolean` is used to enable or disable parsing to the experimental [`kotlin.uuid.Uuid` class](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/).
+  * Disabled by global default
+* `parseExperimentalInstant: Boolean` is used to enable or disable parsing to the experimental 
+  [`kotlin.time.Instant` class](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.time/-instant/), available from Kotlin 2.1+. Will parse to `kotlinx.datetime.Instant` if `false`.
+  * Disabled by global default 
 
 <!---FUN parseWithOptions-->
 

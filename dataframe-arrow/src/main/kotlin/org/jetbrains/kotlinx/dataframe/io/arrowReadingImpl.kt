@@ -6,6 +6,11 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
+import org.apache.arrow.dataset.file.FileFormat
+import org.apache.arrow.dataset.file.FileSystemDatasetFactory
+import org.apache.arrow.dataset.jni.DirectReservationListener
+import org.apache.arrow.dataset.jni.NativeMemoryPool
+import org.apache.arrow.dataset.scanner.ScanOptions
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BigIntVector
 import org.apache.arrow.vector.BitVector
@@ -59,10 +64,13 @@ import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import java.io.File
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.net.URI
 import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
+import java.nio.file.Files
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -412,5 +420,54 @@ internal fun DataFrame.Companion.readArrowImpl(
             }
         }
         return flattened.concatKeepingSchema()
+    }
+}
+
+private fun resolveArrowDatasetUris(fileUris: Array<String>): Array<String> =
+    fileUris.map {
+        when {
+            it.startsWith("http:", true) -> {
+                val url = URI.create(it).toURL()
+                val tempFile = File.createTempFile("kdf", ".parquet")
+                tempFile.deleteOnExit()
+                url.openStream().use { input ->
+                    Files.copy(input, tempFile.toPath())
+                    tempFile.toURI().toString()
+                }
+            }
+
+            !it.startsWith("file:", true) && File(it).exists() -> {
+                File(it).toURI().toString()
+            }
+
+            else -> it
+        }
+    }.toTypedArray()
+
+/**
+ * Read [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html) from [fileUris]
+ */
+internal fun DataFrame.Companion.readArrowDatasetImpl(
+    fileUris: Array<String>,
+    fileFormat: FileFormat,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+    batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
+): AnyFrame {
+    val scanOptions = ScanOptions(batchSize)
+    RootAllocator().use { allocator ->
+        FileSystemDatasetFactory(
+            allocator,
+            NativeMemoryPool.createListenable(DirectReservationListener.instance()),
+            fileFormat,
+            resolveArrowDatasetUris(fileUris),
+        ).use { datasetFactory ->
+            datasetFactory.finish().use { dataset ->
+                dataset.newScan(scanOptions).use { scanner ->
+                    scanner.scanBatches().use { reader ->
+                        return readArrowImpl(reader, nullability)
+                    }
+                }
+            }
+        }
     }
 }

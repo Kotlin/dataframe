@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.Check
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -84,8 +85,10 @@ public fun <T> ColumnGroup<*>.cast(): ColumnGroup<T> = this as ColumnGroup<T>
 
 public fun <T> ColumnWithPath<*>.cast(): ColumnWithPath<T> = this as ColumnWithPath<T>
 
+@Interpretable("ColumnAccessorCast")
 public fun <T> ColumnAccessor<*>.cast(): ColumnAccessor<T> = this as ColumnAccessor<T>
 
+@Interpretable("ColumnSetCast")
 public fun <C> ColumnSet<*>.cast(): ColumnSet<C> = this as ColumnSet<C>
 
 public fun <C> ColumnsResolver<*>.cast(): ColumnsResolver<C> = this as ColumnsResolver<C>
