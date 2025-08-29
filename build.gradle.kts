@@ -63,6 +63,7 @@ dependencies {
 
     // experimental, so not included by default:
     // api(projects.dataframeOpenapi)
+    // api(projects.dataframeSpring)
 
 //    kover(projects.core)
 //    kover(projects.dataframeArrow)
@@ -163,6 +164,13 @@ val modulesUsingJava11 = with(projects) {
     )
 }.map { it.path }
 
+val modulesUsingJava17 = with(projects) {
+    setOf(
+        dataframeSpring,
+        examples.ideaExamples.springbootDataframeWeb,
+    )
+}.map { it.path }
+
 allprojects {
     if (path in modulesUsingJava11) {
         tasks.withType<KotlinCompile> {
@@ -175,6 +183,19 @@ allprojects {
             sourceCompatibility = JavaVersion.VERSION_11.toString()
             targetCompatibility = JavaVersion.VERSION_11.toString()
             options.release.set(11)
+        }
+    }
+    else if (path in modulesUsingJava17) {
+        tasks.withType<KotlinCompile> {
+            compilerOptions {
+                jvmTarget = JvmTarget.JVM_17
+                freeCompilerArgs.add("-Xjdk-release=17")
+            }
+        }
+        tasks.withType<JavaCompile> {
+            sourceCompatibility = JavaVersion.VERSION_17.toString()
+            targetCompatibility = JavaVersion.VERSION_17.toString()
+            options.release.set(17)
         }
     } else {
         tasks.withType<KotlinCompile> {
