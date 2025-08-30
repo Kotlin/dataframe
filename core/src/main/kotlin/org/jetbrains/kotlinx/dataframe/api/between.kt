@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.impl.between
 
 /**
  * Returns a [DataColumn] of [Boolean] values indicating whether each element
- * lies between [left] and [right].
+ * in this column lies between [left] and [right].
  *
  * If [includeBoundaries] is `true` (default), values equal to [left] or [right] are also considered in range.
  *
