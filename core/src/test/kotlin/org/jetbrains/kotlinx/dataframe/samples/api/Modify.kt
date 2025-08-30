@@ -10,9 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
-import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.asColumn
-import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
@@ -51,8 +49,6 @@ import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.keysInto
-import org.jetbrains.kotlinx.dataframe.api.length
-import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
@@ -88,11 +84,12 @@ import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
-import org.jetbrains.kotlinx.dataframe.api.toStart
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toPath
+import org.jetbrains.kotlinx.dataframe.api.toStart
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.unfold
@@ -115,7 +112,8 @@ import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
+import java.util.Random
 import java.util.stream.Collectors
 
 @Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:argument-list-wrapping")
@@ -197,7 +195,7 @@ class Modify : TestBase() {
         // SampleStart
         df.convert { age }.to<Double>()
         df.convert { colsOf<Number>() }.to<String>()
-        df.convert { name.firstName and name.lastName }.asColumn { it.length() }
+        df.convert { name.firstName and name.lastName }.asColumn { col -> col.map { it.length } }
         df.convert { weight }.toFloat()
         // SampleEnd
     }
@@ -287,7 +285,7 @@ class Modify : TestBase() {
     fun replace() {
         // SampleStart
         df.replace { name }.with { name.firstName }
-        df.replace { colsOf<String?>() }.with { it.lowercase() }
+        df.replace { colsOf<String?>() }.with { col -> col.map { it?.lowercase() } }
         df.replace { age }.with { 2021 - age named "year" }
         // SampleEnd
     }
@@ -923,7 +921,7 @@ class Modify : TestBase() {
             "year of birth" from 2021 - age
             age gt 18 into "is adult"
             "details" {
-                name.lastName.length() into "last name length"
+                name.lastName.map { it.length } into "last name length"
                 "full name" from { name.firstName + " " + name.lastName }
             }
         }
@@ -938,7 +936,7 @@ class Modify : TestBase() {
             "year of birth" from 2021 - "age"<Int>()
             "age"<Int>() gt 18 into "is adult"
             "details" {
-                "name"["lastName"]<String>().length() into "last name length"
+                "name"["lastName"]<String>().map { it.length } into "last name length"
                 "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
             }
         }
@@ -992,7 +990,7 @@ class Modify : TestBase() {
         df.mapToFrame {
             "year of birth" from 2021 - age
             age gt 18 into "is adult"
-            name.lastName.length() into "last name length"
+            name.lastName.map { it.length } into "last name length"
             "full name" from { name.firstName + " " + name.lastName }
             +city
         }
@@ -1006,7 +1004,7 @@ class Modify : TestBase() {
         df.mapToFrame {
             "year of birth" from 2021 - "age"<Int>()
             "age"<Int>() gt 18 into "is adult"
-            "name"["lastName"]<String>().length() into "last name length"
+            "name"["lastName"]<String>().map { it.length } into "last name length"
             "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
             +"city"
         }

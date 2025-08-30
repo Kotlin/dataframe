@@ -88,7 +88,6 @@ import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapToFrame
 import org.jetbrains.kotlinx.dataframe.api.match
@@ -159,7 +158,6 @@ import org.jetbrains.kotlinx.dataframe.api.valuesNotNull
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.api.withZero
 import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -246,24 +244,6 @@ class DataFrameTests : BaseTest() {
         val a = columnOf("Alice", "Bob") named "col"
         val b = columnOf(1, 2) named "col"
         val d = dataFrameOf(a, b)
-    }
-
-    @Test
-    fun `create column reference`() {
-        val name by column<String>()
-        val col = name.withValues("Alice", "Bob")
-        val df = col.toDataFrame()
-        df.nrow shouldBe 2
-        df.columnNames() shouldBe listOf("name")
-    }
-
-    @Test
-    fun `add values to column reference`() {
-        val name by column<String>()
-        val values = listOf("Alice", "Bob")
-        val col1 = name.withValues(values)
-        val col2 = values.toColumn(name)
-        col1 shouldBe col2
     }
 
     @Test
@@ -1124,7 +1104,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot matches with conversion`() {
         val filtered = typed.dropNulls { city }
-        val res = filtered.pivot(inward = false) { city.lowercase() }.groupBy { name and age }.matches()
+        val res = filtered.pivot(inward = false) { city.map { it?.lowercase() } }.groupBy { name and age }.matches()
         val cities = filtered.city.toList().map { it!!.lowercase() }
         val gathered =
             res.gather { colsOf<Boolean> { cities.contains(it.name()) } }.where { it }.keysInto("city")
@@ -2061,7 +2041,9 @@ class DataFrameTests : BaseTest() {
         typed
             .groupBy { name.map { it.lowercase() } }.toDataFrame()
             .name.values() shouldBe
-            typed.name.distinct().lowercase().values()
+            run {
+                typed.name.distinct().map { it.lowercase() }.values()
+            }
     }
 
     @Test
