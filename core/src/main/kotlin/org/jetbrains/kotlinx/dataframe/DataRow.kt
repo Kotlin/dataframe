@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.api.next
 import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -18,6 +19,7 @@ import kotlin.reflect.KProperty
  *
  * @param T Schema marker. See [DataFrame] for details
  */
+@HasSchema(schemaArg = 0)
 public interface DataRow<out T> {
 
     public fun index(): Int
