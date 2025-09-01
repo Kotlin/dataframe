@@ -27,9 +27,11 @@ Related: [](associateBy.md), [](toMap.md)
 ### Examples
 
 <!---FUN notebook_test_associate_1-->
+
 ```kotlin
 df
 ```
+
 <!---END-->
 
 <inline-frame src="./resources/notebook_test_associate_1.html" width="100%" height="500px"></inline-frame>
@@ -37,9 +39,11 @@ df
 Create a map from name to age using pair selector:
 
 <!---FUN notebook_test_associate_2-->
+
 ```kotlin
 df.associate { "${name.firstName} ${name.lastName}" to age }
 ```
+
 <!---END-->
 
 Output:

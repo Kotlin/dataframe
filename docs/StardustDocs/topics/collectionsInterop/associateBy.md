@@ -29,9 +29,11 @@ Related: [](associate.md), [](toMap.md)
 ### Examples
 
 <!---FUN notebook_test_associateBy_1-->
+
 ```kotlin
 df
 ```
+
 <!---END-->
 
 <inline-frame src="./resources/notebook_test_associateBy_1.html" width="100%" height="500px"></inline-frame>
@@ -39,9 +41,11 @@ df
 Create a map with names as keys:
 
 <!---FUN notebook_test_associateBy_2-->
+
 ```kotlin
 df.associateBy { "${name.firstName} ${name.lastName}" }
 ```
+
 <!---END-->
 
 Output:
