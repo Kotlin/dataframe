@@ -84,6 +84,7 @@
                 <toc-element topic="last.md"/>
                 <toc-element topic="minBy.md"/>
                 <toc-element topic="maxBy.md"/>
+                <toc-element topic="asSequence.md"/>
             </toc-element>
             <toc-element topic="getColumns.md">
                 <toc-element topic="columns.md"/>
@@ -178,6 +179,8 @@
         <toc-element topic="columnOperations.md">
             <toc-element topic="columnArithmetics.md" toc-title="Arithmetics"/>
             <toc-element topic="columnStatistics.md" toc-title="Statistics"/>
+            <toc-element topic="asIterable.md"/>
+            <toc-element topic="asSequenceColumn.md" toc-title="asSequence"/>
         </toc-element>
         <toc-element topic="ColumnSelectors.md"/>
         <toc-element topic="Utils.md">
