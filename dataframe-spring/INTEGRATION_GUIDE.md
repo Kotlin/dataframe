@@ -21,7 +21,9 @@ dependencies {
 class AppConfiguration
 ```
 
-### 3. Use @CsvDataSource Annotation
+Let's consider the following example: reading from a CSV file.
+
+### 3. Use @CsvDataSource Annotation 
 
 ```kotlin
 @Component
@@ -103,7 +105,7 @@ RuntimeException: Failed to read CSV file 'customers.csv' for property 'customer
 ### Common Issues
 
 1. **ClassNotFoundException**: Ensure Spring dependencies are available
-2. **FileNotFoundException**: Check CSV file paths are correct
+2. **FileNotFoundException**: Check file paths are correct
 3. **PropertyAccessException**: Ensure DataFrame properties are `lateinit var`
 4. **NoSuchBeanDefinitionException**: Enable component scanning or register manually
 
