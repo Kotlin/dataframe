@@ -14,19 +14,26 @@ Discover `associateBy` interop for Kotlin DataFrame.
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.collectionsInterop.AssociateBySamples-->
 
-Build a Map from a DataFrame by selecting a key for each row.
+The `associateBy` function builds a `Map` from a [`DataFrame`](DataFrame.md) 
+by selecting a key for each row using a [row expression](DataRow.md#row-expressions).  
+The rows themselves (or values derived from them) become the map values.
 
-Returns Map<K, Row/Value> depending on variant used.
+If multiple rows produce the same key, only the last row (or value) for that key is kept. 
+This matches the behavior of Kotlin’s standard 
+[`kotlin.collections.associateBy`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/associate-by.html) 
+function.
 
 ```kotlin
 df.associateBy { keySelector }
 
-keySelector := (DataRow) -> Boolean 
+keySelector := (DataRow) -> Key
 ```
 
-Related: [](associate.md), [](toMap.md)
+### Related functions
+- [`toMap`](toMap.md) — converts a [`DataFrame`](DataFrame.md) into a `Map` by using column names as keys and their values as map values.
+- [`associate`](associate.md) — builds a map from key–value pairs produced by transforming each row.
 
-### Examples
+### Example
 
 <!---FUN notebook_test_associateBy_1-->
 
@@ -50,7 +57,7 @@ df.associateBy { "${name.firstName} ${name.lastName}" }
 
 Output:
 
-```
+```text
 {
   Alice Cooper: { name:{ firstName:Alice, lastName:Cooper }, age:15, city:London, weight:54, isHappy:true },
   Bob Dylan: { name:{ firstName:Bob, lastName:Dylan }, age:45, city:Dubai, weight:87, isHappy:true },
