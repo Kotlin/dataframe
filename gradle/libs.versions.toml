@@ -62,7 +62,7 @@ geotools = "32.1"
 jai-core = "1.1.3"
 jts = "1.20.0"
 
-kandy = "0.8.1-dev-78"
+kandy = "0.8.1-dev-79"
 exposed = "1.0.0-beta-2"
 hibernate = "6.5.2.Final"
 hikari = "5.1.0"
