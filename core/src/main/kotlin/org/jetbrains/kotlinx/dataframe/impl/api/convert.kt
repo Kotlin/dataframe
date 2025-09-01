@@ -229,6 +229,7 @@ internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null
     convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
 
 internal typealias TypeConverter = (Any) -> Any?
+private val TypeConverterIdentity: TypeConverter = { it }
 
 internal fun Any.convertTo(type: KType): Any? {
     val clazz = javaClass.kotlin
@@ -242,6 +243,7 @@ internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConvert
 
 private enum class DummyEnum
 
+@Suppress("UNCHECKED_CAST")
 internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
     if (from.arguments.isNotEmpty() || to.arguments.isNotEmpty()) return null
     if (from.isMarkedNullable) {
@@ -250,25 +252,24 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
     }
     val fromClass = from.jvmErasure
     val toClass = to.jvmErasure
-
-    if (fromClass == toClass) return { it }
-
-    if (toClass.isValue) {
-        val constructor =
-            toClass.primaryConstructor ?: error("Value type $toClass doesn't have primary constructor")
-        val underlyingType = constructor.parameters.single().type
-        val converter = getConverter(from, underlyingType)
-            ?: throw TypeConverterNotFoundException(from, underlyingType, null)
-        return convert<Any> {
-            val converted = converter(it)
-            if (converted == null && !underlyingType.isMarkedNullable) {
-                throw TypeConversionException(it, from, underlyingType, null)
-            }
-            constructor.call(converted)
-        }
-    }
-
     return when {
+        fromClass == toClass -> TypeConverterIdentity
+
+        toClass.isValue -> {
+            val constructor =
+                toClass.primaryConstructor ?: error("Value type $toClass doesn't have primary constructor")
+            val underlyingType = constructor.parameters.single().type
+            val converter = getConverter(from, underlyingType)
+                ?: throw TypeConverterNotFoundException(from, underlyingType, null)
+            return convert<Any> {
+                val converted = converter(it)
+                if (converted == null && !underlyingType.isMarkedNullable) {
+                    throw TypeConversionException(it, from, underlyingType, null)
+                }
+                constructor.call(converted)
+            }
+        }
+
         fromClass == String::class -> {
             val parser = Parsers[to.withNullability(false)]
             when {
@@ -369,7 +370,13 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
             Char::class -> when (toClass) {
                 Int::class -> convert<Char> { it.code }
-                else -> null
+
+                else -> // convert char to string and then to target type
+                    getConverter(typeOf<String>(), to, options)?.let { stringConverter ->
+                        convert<Char> {
+                            stringConverter(it.toString())
+                        }
+                    }
             }
 
             Int::class -> when (toClass) {
