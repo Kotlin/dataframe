@@ -45,6 +45,10 @@ tasks.withType<KotlinCompile> {
     friendPaths.from(project(projects.core.path).projectDir)
 }
 
+tasks.withType<Javadoc> {
+    enabled = false
+}
+
 tasks.test {
     useJUnitPlatform()
 }
