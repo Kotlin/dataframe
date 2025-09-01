@@ -190,6 +190,8 @@
         <toc-element topic="collectionsInterop.md">
             <toc-element topic="toList.md"/>
             <toc-element topic="toMap.md"/>
+            <toc-element topic="associate.md"/>
+            <toc-element topic="associateBy.md"/>
         </toc-element>
         <toc-element topic="rendering.md">
             <toc-element topic="toHTML.md"/>
