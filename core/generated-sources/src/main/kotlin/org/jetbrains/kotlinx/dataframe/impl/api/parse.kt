@@ -730,6 +730,10 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
                     .asColumnGroup(col.name())
                     .asDataColumn()
 
+            // Base case, parse the column if it's a `Char?` column
+            col.isSubtypeOf<Char?>() ->
+                col.map { it?.toString() }.tryParseImpl(options)
+
             // Base case, parse the column if it's a `String?` column
             col.isSubtypeOf<String?>() ->
                 col.cast<String?>().tryParseImpl(options)
