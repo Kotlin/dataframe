@@ -40,14 +40,8 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
-    testImplementation(libs.kandy) {
-        // TODO remove when kandy uses version of DF with `FormatDsl`
-        exclude("org.jetbrains.kotlinx", "dataframe")
-    }
-    testImplementation(libs.kandy.samples.utils) {
-        // TODO remove when kandy uses version of DF with `FormatDsl`
-        exclude("org.jetbrains.kotlinx", "dataframe")
-    }
+    testImplementation(libs.kandy)
+    testImplementation(libs.kandy.samples.utils)
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
