@@ -17,7 +17,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnsSelectorByIndices.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinSpecial.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.duplicatedColumns.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhere.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.select.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToValueClass.html"></resource>
@@ -168,6 +167,8 @@
 <resource src="notebook_test_generate_docs_1.html"></resource>
 <resource src="notebook_test_all_3.html"></resource>
 <resource src="notebook_test_any_3.html"></resource>
+<resource src="notebook_test_associate_1.html"></resource>
+<resource src="notebook_test_associateBy_1.html"></resource>
 <resource src="notebook_test_rename_3.html"></resource>
 <resource src="notebook_test_rename_4.html"></resource>
 <resource src="notebook_test_rename_5.html"></resource>
