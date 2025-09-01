@@ -3,6 +3,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
@@ -1100,11 +1101,17 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun customConverters() {
         // SampleStart
-        val df = dataFrameOf("a", "b")(1, "2")
+        val df: AnyFrame = dataFrameOf(
+            "a" to columnOf(1, 2, 3),
+            "b" to columnOf("1", "2", "3"),
+        )
         df.convertTo<MySchema> {
-            convert<Int>().with { MyType(it) } // converts `a` from Int to MyType
-            parser { MyType(it.toInt()) } // converts `b` from String to MyType
-            fill { c }.with { a.value + b.value } // computes missing column `c`
+            // providing the converter: Int -> MyType, so column `a` can be converted
+            convert<Int>().with { MyType(it) }
+            // providing the parser: String -> MyType, so column `b` can be converted
+            parser { MyType(it.toInt()) }
+            // providing the filler for `c`, as it's missing in `df`
+            fill { c }.with { a.value + b.value }
         }
         // SampleEnd
     }
