@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -42,9 +43,10 @@ class ParseTests {
     @Test
     fun `parse to chars`() {
         val char = columnOf('a', 'b', 'c')
-        char.parse() shouldBe char
+        shouldThrow<IllegalStateException> { char.parse() }
         char.tryParse() shouldBe char
         char.convertToString().parse() shouldBe char
+        char.convertToString().tryParse() shouldBe char
     }
 
     @Test
