@@ -71,7 +71,7 @@ columnMapping = column into columnName | columnName from column | columnName fro
 df.mapToFrame {
     "year of birth" from 2021 - age
     age gt 18 into "is adult"
-    name.lastName.length() into "last name length"
+    name.lastName.map { it.length } into "last name length"
     "full name" from { name.firstName + " " + name.lastName }
     +city
 }
@@ -84,7 +84,7 @@ df.mapToFrame {
 df.mapToFrame {
     "year of birth" from 2021 - "age"<Int>()
     "age"<Int>() gt 18 into "is adult"
-    "name"["lastName"]<String>().length() into "last name length"
+    "name"["lastName"]<String>().map { it.length } into "last name length"
     "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
     +"city"
 }

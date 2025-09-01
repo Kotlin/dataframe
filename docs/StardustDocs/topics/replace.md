@@ -18,7 +18,7 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 
 ```kotlin
 df.replace { name }.with { name.firstName }
-df.replace { colsOf<String?>() }.with { it.lowercase() }
+df.replace { colsOf<String?>() }.with { col -> col.map { it?.lowercase() } }
 df.replace { age }.with { 2021 - age named "year" }
 ```
 
