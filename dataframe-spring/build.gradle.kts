@@ -41,6 +41,37 @@ dependencies {
     testImplementation(libs.kotestAssertions)
 }
 
+// Define examples source set
+val examples by sourceSets.creating {
+    kotlin.srcDir("examples/src")
+    resources.srcDir("examples/resources")
+}
+
+// Configure examples classpath
+configurations {
+    named("examplesImplementation") {
+        extendsFrom(configurations.implementation.get())
+    }
+    named("examplesRuntimeOnly") {
+        extendsFrom(configurations.runtimeOnly.get())
+    }
+}
+
+// Add dependencies for examples
+dependencies {
+    "examplesImplementation"(project(":dataframe-spring"))
+    "examplesImplementation"("org.springframework:spring-context:6.2.7")
+    "examplesImplementation"("org.springframework:spring-beans:6.2.7")
+}
+
+// Task for running examples
+tasks.register<JavaExec>("runExamples") {
+    group = "Examples"
+    description = "Runs the DataFrame Spring examples"
+    classpath = examples.runtimeClasspath
+    mainClass.set("org.jetbrains.kotlinx.dataframe.spring.examples.ExampleRunnerKt")
+}
+
 tasks.test {
     useJUnitPlatform()
 }

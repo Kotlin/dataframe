@@ -172,42 +172,47 @@ val modulesUsingJava17 = with(projects) {
 }.map { it.path }
 
 allprojects {
-    if (path in modulesUsingJava11) {
-        tasks.withType<KotlinCompile> {
-            compilerOptions {
-                jvmTarget = JvmTarget.JVM_11
-                freeCompilerArgs.add("-Xjdk-release=11")
+    when (path) {
+        in modulesUsingJava11 -> {
+            tasks.withType<KotlinCompile> {
+                compilerOptions {
+                    jvmTarget = JvmTarget.JVM_11
+                    freeCompilerArgs.add("-Xjdk-release=11")
+                }
+            }
+            tasks.withType<JavaCompile> {
+                sourceCompatibility = JavaVersion.VERSION_11.toString()
+                targetCompatibility = JavaVersion.VERSION_11.toString()
+                options.release.set(11)
             }
         }
-        tasks.withType<JavaCompile> {
-            sourceCompatibility = JavaVersion.VERSION_11.toString()
-            targetCompatibility = JavaVersion.VERSION_11.toString()
-            options.release.set(11)
-        }
-    }
-    else if (path in modulesUsingJava17) {
-        tasks.withType<KotlinCompile> {
-            compilerOptions {
-                jvmTarget = JvmTarget.JVM_17
-                freeCompilerArgs.add("-Xjdk-release=17")
+
+        in modulesUsingJava17 -> {
+            tasks.withType<KotlinCompile> {
+                compilerOptions {
+                    jvmTarget = JvmTarget.JVM_17
+                    freeCompilerArgs.add("-Xjdk-release=17")
+                }
+            }
+            tasks.withType<JavaCompile> {
+                sourceCompatibility = JavaVersion.VERSION_17.toString()
+                targetCompatibility = JavaVersion.VERSION_17.toString()
+                options.release.set(17)
             }
         }
-        tasks.withType<JavaCompile> {
-            sourceCompatibility = JavaVersion.VERSION_17.toString()
-            targetCompatibility = JavaVersion.VERSION_17.toString()
-            options.release.set(17)
-        }
-    } else {
-        tasks.withType<KotlinCompile> {
-            compilerOptions {
-                jvmTarget = JvmTarget.JVM_1_8
-                freeCompilerArgs.add("-Xjdk-release=8")
+
+        else -> {
+            tasks.withType<KotlinCompile> {
+                compilerOptions {
+                    jvmTarget = JvmTarget.JVM_1_8
+                    freeCompilerArgs.add("-Xjdk-release=8")
+                }
             }
-        }
-        tasks.withType<JavaCompile> {
-            sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-            targetCompatibility = JavaVersion.VERSION_1_8.toString()
-            options.release.set(8)
+            tasks.withType<JavaCompile> {
+                sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+                targetCompatibility = JavaVersion.VERSION_1_8.toString()
+                options.release.set(8)
+            }
         }
     }
     tasks.withType<KotlinCompile> {
