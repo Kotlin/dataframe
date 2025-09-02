@@ -40,8 +40,12 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
-    testImplementation(libs.kandy)
-    testImplementation(libs.kandy.samples.utils)
+    testImplementation(libs.kandy) {
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
+    testImplementation(libs.kandy.samples.utils) {
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
