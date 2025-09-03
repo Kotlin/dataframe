@@ -39,7 +39,6 @@ Check ages are between 18 and 25 inclusive:
 <!---FUN notebook_test_between_2-->
 
 ```kotlin
-// Create a Boolean column indicating whether ages are between 18 and 25 (inclusive)
 df.age.between(left = 18, right = 25)
 ```
 
@@ -50,7 +49,6 @@ Strictly between 18 and 25 (exclude boundaries):
 <!---FUN notebook_test_between_3-->
 
 ```kotlin
-// Exclude boundaries: strictly between 18 and 25 (i.e., 19..24)
 df.age.between(left = 18, right = 25, includeBoundaries = false)
 ```
 

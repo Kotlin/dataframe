@@ -45,7 +45,6 @@ Fixed size chunks:
 <!---FUN notebook_test_chunked_2-->
 
 ```kotlin
-// Split DataFrame into chunks of size 2
 df.chunked(size = 2)
 ```
 
@@ -57,7 +56,6 @@ Custom start indices:
 <!---FUN notebook_test_chunked_3-->
 
 ```kotlin
-// Split DataFrame using custom start indices
 df.chunked(startIndices = listOf(0, 2, 4), name = "segments")
 ```
 
