@@ -27,27 +27,33 @@ col.between(left, right, includeBoundaries)
 ### Examples
 
 <!---FUN notebook_test_between_1-->
+
 ```kotlin
 df
 ```
+
 <!---END-->
 <inline-frame src="./resources/notebook_test_between_1.html" width="100%" height="500px"></inline-frame>
 
 Check ages are between 18 and 25 inclusive:
 <!---FUN notebook_test_between_2-->
+
 ```kotlin
 // Create a Boolean column indicating whether ages are between 18 and 25 (inclusive)
-val inRange = df["age"].cast<Int>().between(left = 18, right = 25)
+df.age.between(left = 18, right = 25)
 ```
+
 <!---END-->
 <inline-frame src="./resources/notebook_test_between_2.html" width="100%" height="500px"></inline-frame>
 
 Strictly between 18 and 25 (exclude boundaries):
 <!---FUN notebook_test_between_3-->
+
 ```kotlin
 // Exclude boundaries: strictly between 18 and 25 (i.e., 19..24)
-val strictly = df["age"].cast<Int>().between(left = 18, right = 25, includeBoundaries = false)
+df.age.between(left = 18, right = 25, includeBoundaries = false)
 ```
+
 <!---END-->
 <inline-frame src="./resources/notebook_test_between_3.html" width="100%" height="500px"></inline-frame>
 

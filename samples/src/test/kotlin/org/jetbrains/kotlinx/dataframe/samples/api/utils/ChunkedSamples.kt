@@ -1,9 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.samples.api.utils
 
-import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
@@ -32,7 +31,7 @@ class ChunkedSamples : DataFrameSampleHelper("chunked", "api") {
         // SampleStart
         // Split DataFrame into chunks of size 2
         df.chunked(size = 2)
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 
@@ -41,7 +40,7 @@ class ChunkedSamples : DataFrameSampleHelper("chunked", "api") {
         // SampleStart
         // Split DataFrame using custom start indices
         df.chunked(startIndices = listOf(0, 2, 4), name = "segments")
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 }

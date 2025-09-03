@@ -70,6 +70,7 @@ korro {
         include("docs/StardustDocs/topics/format.md")
         include("docs/StardustDocs/topics/guides/*.md")
         include("docs/StardustDocs/topics/operations/utils/*.md")
+        include("docs/StardustDocs/topics/operations/column/*.md")
         include("docs/StardustDocs/topics/collectionsInterop/*.md")
         include("docs/StardustDocs/topics/dataSources/sql/*.md")
     }
@@ -79,6 +80,7 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
     }

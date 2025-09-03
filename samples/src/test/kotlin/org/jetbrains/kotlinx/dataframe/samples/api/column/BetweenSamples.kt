@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.between
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
@@ -34,7 +33,7 @@ class BetweenSamples : DataFrameSampleHelper("between", "api") {
         // SampleStart
         // Create a Boolean column indicating whether ages are between 18 and 25 (inclusive)
         df.age.between(left = 18, right = 25)
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 
@@ -43,7 +42,7 @@ class BetweenSamples : DataFrameSampleHelper("between", "api") {
         // SampleStart
         // Exclude boundaries: strictly between 18 and 25 (i.e., 19..24)
         df.age.between(left = 18, right = 25, includeBoundaries = false)
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 }

@@ -37,29 +37,34 @@ val frames2 = df.chunked(startIndices = starts, name = "segments")
 ### Examples
 
 <!---FUN notebook_test_chunked_1-->
+
 ```kotlin
 df
 ```
+
 <!---END-->
 <inline-frame src="./resources/notebook_test_chunked_1.html" width="100%" height="500px"></inline-frame>
 
 Fixed size chunks:
 <!---FUN notebook_test_chunked_2-->
+
 ```kotlin
 // Split DataFrame into chunks of size 2
-val frames: FrameColumn<SimplePerson> = df.chunked(size = 2)
+df.chunked(size = 2)
 ```
+
 <!---END-->
 
 <inline-frame src="./resources/notebook_test_chunked_2.html" width="100%" height="500px"></inline-frame>
 
 Custom start indices:
 <!---FUN notebook_test_chunked_3-->
+
 ```kotlin
 // Split DataFrame using custom start indices
-val starts = listOf(0, 2, 4)
-val frames2: FrameColumn<SimplePerson> = df.chunked(startIndices = starts, name = "segments")
+df.chunked(startIndices = listOf(0, 2, 4), name = "segments")
 ```
+
 <!---END-->
 
 <inline-frame src="./resources/notebook_test_chunked_3.html" width="100%" height="500px"></inline-frame>
