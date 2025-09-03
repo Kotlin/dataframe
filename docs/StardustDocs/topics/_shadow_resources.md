@@ -165,7 +165,13 @@
 <resource src="notebook_test_quickstart_3.html"></resource>
 <resource src="notebook_test_quickstart_14.html"></resource>
 <resource src="notebook_test_generate_docs_1.html"></resource>
+<resource src="notebook_test_chunked_1.html"></resource>
+<resource src="notebook_test_chunked_3.html"></resource>
+<resource src="notebook_test_chunked_2.html"></resource>
 <resource src="notebook_test_all_3.html"></resource>
+<resource src="notebook_test_between_3.html"></resource>
+<resource src="notebook_test_between_2.html"></resource>
+<resource src="notebook_test_between_1.html"></resource>
 <resource src="notebook_test_any_3.html"></resource>
 <resource src="notebook_test_associate_1.html"></resource>
 <resource src="notebook_test_associateBy_1.html"></resource>
