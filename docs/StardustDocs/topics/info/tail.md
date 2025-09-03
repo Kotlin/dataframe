@@ -20,8 +20,7 @@ Returns a [`DataFrame`](DataFrame.md) with the last `numRows` rows.
 This is equivalent to calling [`takeLast`](sliceRows.md#takelast) with the same argument. By default, `numRows = 5`.
 
 ```kotlin
-// Returns last [numRows] rows (default 5)
-df.tail(numRows)
+df.tail(numRows: Int)
 ```
 
 ### Examples

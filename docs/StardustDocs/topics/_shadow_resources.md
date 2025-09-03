@@ -165,10 +165,15 @@
 <resource src="notebook_test_quickstart_3.html"></resource>
 <resource src="notebook_test_quickstart_14.html"></resource>
 <resource src="notebook_test_generate_docs_1.html"></resource>
+<resource src="notebook_test_shuffle_2.html"></resource>
+<resource src="notebook_test_shuffle_1.html"></resource>
 <resource src="notebook_test_chunked_1.html"></resource>
 <resource src="notebook_test_chunked_3.html"></resource>
 <resource src="notebook_test_chunked_2.html"></resource>
 <resource src="notebook_test_all_3.html"></resource>
+<resource src="notebook_test_tail_1.html"></resource>
+<resource src="notebook_test_tail_2.html"></resource>
+<resource src="notebook_test_tail_3.html"></resource>
 <resource src="notebook_test_between_3.html"></resource>
 <resource src="notebook_test_between_2.html"></resource>
 <resource src="notebook_test_between_1.html"></resource>

@@ -129,7 +129,6 @@
             <toc-element topic="replace.md"/>
             <toc-element topic="reverse.md"/>
             <toc-element topic="select.md"/>
-            <toc-element topic="shuffle.md"/>
             <toc-element topic="sliceRows.md"/>
             <toc-element topic="sortBy.md"/>
             <toc-element topic="split.md"/>
@@ -189,6 +188,7 @@
             <toc-element topic="any.md"/>
             <toc-element topic="all.md"/>
             <toc-element topic="chunked.md"/>
+            <toc-element topic="shuffle.md"/>
         </toc-element>
         <toc-element topic="collectionsInterop.md">
             <toc-element topic="toList.md"/>
