@@ -23,7 +23,7 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.groupByOther
 import org.jetbrains.kotlinx.dataframe.api.head
 import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.length
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
@@ -644,7 +644,7 @@ class Analyze : TestBase() {
         df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
         df.groupBy { city }.count() // number of rows into column "count"
         df.groupBy { city }
-            .max { name.firstName.length() and name.lastName.length() } // maximum length of firstName or lastName into column "max"
+            .max { name.firstName.map { it.length } and name.lastName.map { it.length } } // maximum length of firstName or lastName into column "max"
         df.groupBy { city }
             .medianFor { age and weight } // median age into column "age", median weight into column "weight"
         df.groupBy { city }
@@ -663,7 +663,7 @@ class Analyze : TestBase() {
         df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"
         df.groupBy("city").count() // number of rows into column "count"
         df.groupBy("city").max {
-            "name"["firstName"]<String>().length() and "name"["lastName"]<String>().length()
+            "name"["firstName"]<String>().map { it.length } and "name"["lastName"]<String>().map { it.length }
         } // maximum length of firstName or lastName into column "max"
         df.groupBy("city")
             .medianFor("age", "weight") // median age into column "age", median weight into column "weight"

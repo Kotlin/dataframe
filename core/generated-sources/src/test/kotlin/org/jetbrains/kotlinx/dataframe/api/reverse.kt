@@ -14,7 +14,7 @@ class ReverseTests {
     @Test
     fun column() {
         val col by columnOf(1, 2, 3)
-        col.reverse() shouldBe col.withValues(listOf(3, 2, 1))
+        col.reverse() shouldBe listOf(3, 2, 1).toColumn("col")
     }
 
     @Test
