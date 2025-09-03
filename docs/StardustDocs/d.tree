@@ -137,7 +137,6 @@
             <toc-element topic="ungroup.md"/>
             <toc-element topic="update.md"/>
             <toc-element topic="xs.md"/>
-            <toc-element topic="chunked.md" toc-title="chunked"/>
             <toc-element topic="addRemove.md" hidden="true"/>
             <toc-element topic="sliceRows.md" hidden="true"/>
             <toc-element topic="filterRows.md" hidden="true"/>
@@ -188,6 +187,7 @@
         <toc-element topic="Utils.md">
             <toc-element topic="any.md"/>
             <toc-element topic="all.md"/>
+            <toc-element topic="chunked.md"/>
         </toc-element>
         <toc-element topic="collectionsInterop.md">
             <toc-element topic="toList.md"/>
