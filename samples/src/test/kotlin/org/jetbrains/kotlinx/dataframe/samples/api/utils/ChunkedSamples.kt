@@ -29,7 +29,6 @@ class ChunkedSamples : DataFrameSampleHelper("chunked", "api") {
     @Test
     fun notebook_test_chunked_2() {
         // SampleStart
-        // Split DataFrame into chunks of size 2
         df.chunked(size = 2)
             // SampleEnd
             .saveDfHtmlSample()
@@ -38,7 +37,6 @@ class ChunkedSamples : DataFrameSampleHelper("chunked", "api") {
     @Test
     fun notebook_test_chunked_3() {
         // SampleStart
-        // Split DataFrame using custom start indices
         df.chunked(startIndices = listOf(0, 2, 4), name = "segments")
             // SampleEnd
             .saveDfHtmlSample()

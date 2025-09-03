@@ -26,12 +26,8 @@ The resulting FrameColumn’s name can be customized; by default, it is "groups.
 - By start indices: split using custom zero-based start indices for each chunk; each chunk ends right before the next start index or the end of the DataFrame.
 
 ```kotlin
-// fixed size
-val frames = df.chunked(size = 2)
-
-// custom start indices
-val starts = listOf(0, 2, 4)
-val frames2 = df.chunked(startIndices = starts, name = "segments")
+df.chunked(size: Int, name: String)
+df.chunked(startIndices: List<Int>, name: String)
 ```
 
 ### Examples

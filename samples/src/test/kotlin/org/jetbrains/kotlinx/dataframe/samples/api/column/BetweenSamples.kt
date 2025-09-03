@@ -31,7 +31,6 @@ class BetweenSamples : DataFrameSampleHelper("between", "api") {
     @Test
     fun notebook_test_between_2() {
         // SampleStart
-        // Create a Boolean column indicating whether ages are between 18 and 25 (inclusive)
         df.age.between(left = 18, right = 25)
             // SampleEnd
             .saveDfHtmlSample()
@@ -40,7 +39,6 @@ class BetweenSamples : DataFrameSampleHelper("between", "api") {
     @Test
     fun notebook_test_between_3() {
         // SampleStart
-        // Exclude boundaries: strictly between 18 and 25 (i.e., 19..24)
         df.age.between(left = 18, right = 25, includeBoundaries = false)
             // SampleEnd
             .saveDfHtmlSample()
