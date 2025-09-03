@@ -71,6 +71,7 @@
             <toc-element topic="columnNames.md"/>
             <toc-element topic="columnTypes.md"/>
             <toc-element topic="head.md"/>
+            <toc-element topic="tail.md"/>
             <toc-element topic="schema.md"/>
             <toc-element topic="describe.md"/>
         </toc-element>

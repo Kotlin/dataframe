@@ -62,7 +62,6 @@ kotlin.sourceSets {
 
 korro {
     docs = fileTree(rootProject.rootDir) {
-        // todo topics/*.md as a part of #898
         include("docs/StardustDocs/topics/DataSchema-Data-Classes-Generation.md")
         include("docs/StardustDocs/topics/read.md")
         include("docs/StardustDocs/topics/write.md")
@@ -73,6 +72,7 @@ korro {
         include("docs/StardustDocs/topics/operations/column/*.md")
         include("docs/StardustDocs/topics/collectionsInterop/*.md")
         include("docs/StardustDocs/topics/dataSources/sql/*.md")
+        include("docs/StardustDocs/topics/info/*.md")
     }
 
     samples = fileTree(project.projectDir) {
@@ -81,6 +81,7 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
     }
