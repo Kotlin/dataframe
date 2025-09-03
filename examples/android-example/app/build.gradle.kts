@@ -21,7 +21,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -37,25 +37,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-    packaging {
-        resources {
-            pickFirsts += listOf(
-                "META-INF/AL2.0",
-                "META-INF/LGPL2.1",
-                "META-INF/ASL-2.0.txt",
-                "META-INF/LICENSE.md",
-                "META-INF/NOTICE.md",
-                "META-INF/LGPL-3.0.txt",
-                "META-INF/thirdparty-LICENSE",
-            )
-            excludes += listOf(
-                "META-INF/kotlin-jupyter-libraries/libraries.json",
-                "META-INF/{INDEX.LIST,DEPENDENCIES}",
-                "{draftv3,draftv4}/schema",
-                "arrow-git.properties",
-            )
-        }
     }
 }
 
@@ -78,9 +59,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // TODO update version
-    // Core Kotlin DataFrame API & JSON IO.
+    // Core Kotlin DataFrame API, JSON and CSV IO.
     // See custom Gradle setup:
     // https://kotlin.github.io/dataframe/setupcustomgradle.html
     implementation("org.jetbrains.kotlinx:dataframe-core:1.0.0-dev-7831")
     implementation("org.jetbrains.kotlinx:dataframe-json:1.0.0-dev-7831")
+    implementation("org.jetbrains.kotlinx:dataframe-csv:1.0.0-dev-7831")
+    // You can add any additional IO modules you like, except for 'dataframe-arrow'.
+    // Apache Arrow is not supported well on Android.
 }
