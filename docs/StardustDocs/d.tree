@@ -137,6 +137,7 @@
             <toc-element topic="ungroup.md"/>
             <toc-element topic="update.md"/>
             <toc-element topic="xs.md"/>
+            <toc-element topic="chunked.md" toc-title="chunked"/>
             <toc-element topic="addRemove.md" hidden="true"/>
             <toc-element topic="sliceRows.md" hidden="true"/>
             <toc-element topic="filterRows.md" hidden="true"/>
@@ -181,6 +182,7 @@
             <toc-element topic="columnStatistics.md" toc-title="Statistics"/>
             <toc-element topic="asIterable.md"/>
             <toc-element topic="asSequenceColumn.md" toc-title="asSequence"/>
+            <toc-element topic="between.md"/>
         </toc-element>
         <toc-element topic="ColumnSelectors.md"/>
         <toc-element topic="Utils.md">
