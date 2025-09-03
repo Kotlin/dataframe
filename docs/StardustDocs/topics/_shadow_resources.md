@@ -24,7 +24,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNaNs.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeSameWith.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html"></resource>
-<resource src=".DS_Store"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getSeveralRowsByRanges.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html"></resource>
