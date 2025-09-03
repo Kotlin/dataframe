@@ -9,16 +9,14 @@ import org.junit.Test
 
 class TailSamples : DataFrameSampleHelper("tail", "api") {
 
-    @DataSchema
-    interface SimplePerson {
-        val name: String
-        val age: Int
-    }
-
     private val df = dataFrameOf(
-        "name" to listOf("Alice", "Bob", "Charlie", "Diana", "Eve"),
-        "age" to listOf(15, 20, 25, 30, 35),
-    ).cast<SimplePerson>()
+        "firstName" to listOf("Alice", "Bob", "Charlie", "Charlie", "Bob", "Alice", "Charlie"),
+        "lastName" to listOf("Cooper", "Dylan", "Daniels", "Chaplin", "Marley", "Wolf", "Byrd"),
+        "age" to listOf(15, 45, 20, 40, 30, 20, 30),
+        "city" to listOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
+        "weight" to listOf(54, 87, null, null, 68, 55, 90),
+        "isHappy" to listOf(true, true, false, true, true, false, true)
+    )
 
     @Test
     fun notebook_test_tail_1() {

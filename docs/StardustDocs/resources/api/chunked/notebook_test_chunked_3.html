@@ -457,26 +457,26 @@ summary {
 })()
 
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"segments: DataFrame<*>\">segments</span>", children: [], rightAlign: false, values: [{ frameId: 1, value: "<b>DataFrame 2 x 2</b>" },{ frameId: 2, value: "<b>DataFrame 2 x 2</b>" },{ frameId: 3, value: "<b>DataFrame 1 x 2</b>" }] }, 
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"segments: DataFrame<*>\">segments</span>", children: [], rightAlign: false, values: [{ frameId: 1, value: "<b>DataFrame 1 x 2</b>" },{ frameId: 2, value: "<b>DataFrame 2 x 2</b>" },{ frameId: 3, value: "<b>DataFrame 2 x 2</b>" }] }, 
 ], id: 0, rootId: 0, totalRows: 3 } ) });
 /*-->*/
 
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["Alice","Bob"] }, 
-{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>"] }, 
-], id: 1, rootId: 0, totalRows: 2 } ) });
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["Alice"] }, 
+{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>"] }, 
+], id: 1, rootId: 0, totalRows: 1 } ) });
 /*-->*/
 
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["Charlie","Diana"] }, 
-{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">25</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>"] }, 
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["Bob","Charlie"] }, 
+{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">25</span></span>"] }, 
 ], id: 2, rootId: 0, totalRows: 2 } ) });
 /*-->*/
 
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["Eve"] }, 
-{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">35</span></span>"] }, 
-], id: 3, rootId: 0, totalRows: 1 } ) });
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["Diana","Eve"] }, 
+{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">35</span></span>"] }, 
+], id: 3, rootId: 0, totalRows: 2 } ) });
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(0) });

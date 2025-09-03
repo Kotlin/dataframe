@@ -37,7 +37,7 @@ class ChunkedSamples : DataFrameSampleHelper("chunked", "api") {
     @Test
     fun notebook_test_chunked_3() {
         // SampleStart
-        df.chunked(startIndices = listOf(0, 2, 4), name = "segments")
+        df.chunked(startIndices = listOf(0, 1, 3), name = "segments")
             // SampleEnd
             .saveDfHtmlSample()
     }
