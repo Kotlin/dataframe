@@ -56,7 +56,7 @@ Custom start indices:
 <!---FUN notebook_test_chunked_3-->
 
 ```kotlin
-df.chunked(startIndices = listOf(0, 2, 4), name = "segments")
+df.chunked(startIndices = listOf(0, 1, 3), name = "segments")
 ```
 
 <!---END-->
