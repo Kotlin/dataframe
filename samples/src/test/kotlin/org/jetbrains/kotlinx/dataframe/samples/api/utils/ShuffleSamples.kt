@@ -25,7 +25,7 @@ class ShuffleSamples : DataFrameSampleHelper("shuffle", "api") {
     fun notebook_test_shuffle_1() {
         // SampleStart
         df
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 
@@ -33,8 +33,7 @@ class ShuffleSamples : DataFrameSampleHelper("shuffle", "api") {
     fun notebook_test_shuffle_2() {
         // SampleStart
         df.shuffle(Random(42))
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
-
 }

@@ -33,7 +33,7 @@ class AssociateBySamples : DataFrameSampleHelper("associateBy", "api/collections
         "age" to listOf(15, 45, 20, 40, 30, 20, 30),
         "city" to listOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
         "weight" to listOf(54, 87, null, null, 68, 55, 90),
-        "isHappy" to listOf(true, true, false, true, true, false, true)
+        "isHappy" to listOf(true, true, false, true, true, false, true),
     ).group("firstName", "lastName").into("name").cast<Person>()
 
     @Test

@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.samples.api.info
 
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.tail
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
@@ -15,14 +13,14 @@ class TailSamples : DataFrameSampleHelper("tail", "api") {
         "age" to listOf(15, 45, 20, 40, 30, 20, 30),
         "city" to listOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
         "weight" to listOf(54, 87, null, null, 68, 55, 90),
-        "isHappy" to listOf(true, true, false, true, true, false, true)
+        "isHappy" to listOf(true, true, false, true, true, false, true),
     )
 
     @Test
     fun notebook_test_tail_1() {
         // SampleStart
         df
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 
@@ -30,7 +28,7 @@ class TailSamples : DataFrameSampleHelper("tail", "api") {
     fun notebook_test_tail_2() {
         // SampleStart
         df.tail()
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 
@@ -38,7 +36,7 @@ class TailSamples : DataFrameSampleHelper("tail", "api") {
     fun notebook_test_tail_3() {
         // SampleStart
         df.tail(numRows = 2)
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 }
