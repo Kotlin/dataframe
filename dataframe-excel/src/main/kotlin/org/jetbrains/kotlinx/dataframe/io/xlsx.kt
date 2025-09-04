@@ -59,6 +59,13 @@ public class Excel : SupportedDataFrameFormat {
         DefaultReadExcelMethod(pathRepresentation)
 }
 
+public class ExcelSchemaReader : SchemaReader {
+    override fun accepts(path: String, qualifier: String): Boolean =
+        super.accepts(path, qualifier) && path.endsWith(".xlsx") || path.endsWith(".xls")
+
+    override fun read(path: String): DataFrame<*> = DataFrame.readExcel(path)
+}
+
 private const val MESSAGE_REMOVE_1_1 = "Will be removed in 1.1."
 internal const val READ_EXCEL_OLD = "This function is only here for binary compatibility. $MESSAGE_REMOVE_1_1"
 
