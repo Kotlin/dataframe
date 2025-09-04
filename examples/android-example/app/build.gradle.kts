@@ -1,8 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.dataframe") version "2.2.20-Beta1"
+    kotlin("plugin.dataframe") version "2.2.20-Beta2"
 }
 
 android {
@@ -24,7 +26,7 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -32,8 +34,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_1_8
+        }
     }
     buildFeatures {
         compose = true
@@ -62,9 +66,9 @@ dependencies {
     // Core Kotlin DataFrame API, JSON and CSV IO.
     // See custom Gradle setup:
     // https://kotlin.github.io/dataframe/setupcustomgradle.html
-    implementation("org.jetbrains.kotlinx:dataframe-core:1.0.0-dev-7831")
-    implementation("org.jetbrains.kotlinx:dataframe-json:1.0.0-dev-7831")
-    implementation("org.jetbrains.kotlinx:dataframe-csv:1.0.0-dev-7831")
+    implementation("org.jetbrains.kotlinx:dataframe-core:1.0.0-dev-8314")
+    implementation("org.jetbrains.kotlinx:dataframe-json:1.0.0-dev-8314")
+    implementation("org.jetbrains.kotlinx:dataframe-csv:1.0.0-dev-8314")
     // You can add any additional IO modules you like, except for 'dataframe-arrow'.
     // Apache Arrow is not supported well on Android.
 }
