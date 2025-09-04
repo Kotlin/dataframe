@@ -2,8 +2,8 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
-    kotlin("jvm") version "2.2.20-dev-3524"
-    kotlin("plugin.dataframe") version "2.2.20-dev-3524"
+    kotlin("jvm") version "2.2.20-Beta1"
+    kotlin("plugin.dataframe") version "2.2.20-Beta1"
 }
 
 group = "org.example"
