@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
+import org.jetbrains.kotlinx.dataframe.api.GroupByEntry
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
@@ -13,12 +14,23 @@ import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
+import org.jetbrains.kotlinx.dataframe.io.renderToString
 
+@Deprecated("Replaced by GroupByEntryImpl")
 internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val frameCol: FrameColumn<G>) :
     GroupedDataRow<T, G>,
     DataRow<T> by row {
 
     override fun group() = frameCol[row.index()]
+}
+
+@PublishedApi
+internal class GroupByEntryImpl<T, G>(private val keysRow: DataRow<T>, internal val allGroups: FrameColumn<G>) :
+    GroupByEntry<T, G>,
+    DataRow<T> by keysRow {
+    override fun group() = allGroups[keysRow.index()]
+
+    override fun toString(): String = "GroupByEntry(keysRow=${renderToString()}, group()=${group()})"
 }
 
 @PublishedApi
