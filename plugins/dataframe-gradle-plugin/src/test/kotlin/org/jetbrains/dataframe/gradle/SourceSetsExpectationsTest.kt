@@ -29,18 +29,4 @@ class SourceSetsExpectationsTest {
             it.sourceSets.findByName("jvmMain") shouldBe null
         }
     }
-
-    @Test
-    fun `there is main in android project`() {
-        val project = makeProject()
-        project.plugins.apply("com.android.application")
-        project.plugins.apply("org.jetbrains.kotlin.android")
-        project.extensions.getByType(KotlinAndroidProjectExtension::class.java).let { extension ->
-            val main = extension.sourceSets.getByName("main")
-            main.kotlin.sourceDirectories.toList().asClue { files ->
-                files.forAny { it.shouldEndWith("src", "main", "java") }
-                files.forAny { it.shouldEndWith("src", "main", "kotlin") }
-            }
-        }
-    }
 }

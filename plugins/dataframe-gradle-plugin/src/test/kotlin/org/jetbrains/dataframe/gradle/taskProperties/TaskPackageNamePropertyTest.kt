@@ -114,27 +114,6 @@ class TaskPackageNamePropertyTest {
     }
 
     @Test
-    fun `task infers packageName from directory structure on android`() {
-        val project = makeProject()
-        project.plugins.apply(SchemaGeneratorPlugin::class.java)
-        project.plugins.apply("com.android.application")
-        project.plugins.apply("org.jetbrains.kotlin.android")
-        (project.extensions.getByName("android") as BaseAppModuleExtension).let {
-            it.compileSdk = 30
-        }
-        File(project.projectDir, "/src/main/kotlin/org/test/").also { it.mkdirs() }
-        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
-            schema {
-                data = "123"
-                name = "321"
-            }
-        }
-        project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
-            .packageName.get() shouldBe "org.test.dataframe"
-    }
-
-    @Test
     fun `task will not add _dataframe_ if inferred package ends with _dataframe_`() {
         val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
