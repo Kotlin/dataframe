@@ -33,9 +33,8 @@ dependencies {
 }
 
 android {
-    // Requires Android 0+, i.e. SDK version 26 or higher.
     defaultConfig {
-        minSdk = 26 
+        minSdk = 21
     }
     // Requires Java 8 or higher
     compileOptions {
@@ -68,9 +67,8 @@ dependencies {
 }
 
 android {
-    // Requires Android 0+, i.e. SDK version 26 or higher.
     defaultConfig {
-        minSdk 26
+        minSdk 21
     }
     // Requires Java 8 or higher
     compileOptions {
