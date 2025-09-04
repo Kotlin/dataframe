@@ -56,8 +56,8 @@ df.convert { name }.asColumn { col ->
 <!---END-->
 
 
-`convert` supports automatic type conversions between the following types:
-* `String` (uses [`parse`](parse.md) to convert from `String` to other types)
+`convert {}.to<>()` supports automatic type conversions between the following types:
+* `String`, `Char` (uses [`parse`](parse.md) to convert from `String` to other types)
 * `Boolean`
 * `Byte`
 * `Short`
@@ -71,6 +71,13 @@ df.convert { name }.asColumn { col ->
 * `LocalDate` (kotlinx.datetime and java.time)
 * `LocalTime` (kotlinx.datetime and java.time)
 * `Instant` (kotlinx.datetime, kotlin.time, and java.time)
+* `enum` classes (by name)
+
+Note that converting between `Char` and `Int` is done by ASCII character code.
+This means the `Char` `'1'` becomes the `Int` `49`.
+
+If you want to convert `Char` `'1'` to the `Int` `1`, use [parse()](parse.md) instead, or use `String`
+as intermediate type.
 
 <!---FUN convertTo-->
 

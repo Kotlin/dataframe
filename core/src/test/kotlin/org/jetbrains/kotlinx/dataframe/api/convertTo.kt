@@ -51,6 +51,38 @@ class ConvertToTests {
         df.convertTo<Schema> { parser { A(it.toInt()) } }
             .single()
             .a.value shouldBe 1
+
+        // shortcut for:
+        df.convertTo<Schema> { convert<String>().with { A(it.toInt()) } }
+            .single()
+            .a.value shouldBe 1
+    }
+
+    @Test
+    fun `convert from char with parser`() {
+        val df = dataFrameOf("a")('1')
+
+        shouldThrow<TypeConverterNotFoundException> {
+            df.convertTo<Schema>()
+        }
+
+        // Char -> String -> Target
+        df.convertTo<Schema> { parser { A(it.toInt()) } }
+            .single()
+            .a.value shouldBe 1
+
+        // shortcut for:
+        df.convertTo<Schema> { convert<String>().with { A(it.toInt()) } }
+            .single()
+            .a.value shouldBe 1
+
+        // Char -> Target
+        df.convertTo<Schema> {
+            parser<A> { error("should not be triggered if convert<Char>() is present") }
+            convert<String>().with<_, A> { error("should not be triggered if convert<Char>() is present") }
+
+            convert<Char>().with { A(it.digitToInt()) }
+        }.single().a.value shouldBe 1
     }
 
     @Test
@@ -334,5 +366,32 @@ class ConvertToTests {
             dataFrameOf("v")(3, 4),
             DataFrame.emptyOf<Entry>(),
         )
+    }
+
+    enum class SimpleEnum { A, B }
+
+    @DataSchema
+    interface SchemaWithNullableEnum {
+        val a: SimpleEnum?
+    }
+
+    @Test
+    fun `convert Char to Enum`() {
+        val df = dataFrameOf("a")('A', 'B', null)
+
+        val converted = df.convertTo<SchemaWithNullableEnum>()
+        converted["a"].type() shouldBe typeOf<SimpleEnum?>()
+        converted shouldBe dataFrameOf("a")(SimpleEnum.A, SimpleEnum.B, null)
+    }
+
+    @Test
+    fun `convert Char to Enum custom charParser`() {
+        val df = dataFrameOf("a")('a', 'b', null)
+
+        val converted = df.convertTo<SchemaWithNullableEnum> {
+            parser { SimpleEnum.valueOf(it.uppercase()) }
+        }
+        converted["a"].type() shouldBe typeOf<SimpleEnum?>()
+        converted shouldBe dataFrameOf("a")(SimpleEnum.A, SimpleEnum.B, null)
     }
 }
