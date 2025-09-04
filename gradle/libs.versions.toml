@@ -1,11 +1,11 @@
 [versions]
-ksp = "2.2.0-2.0.2"
+ksp = "2.2.20-Beta2-2.0.2"
 kotlinJupyter = "0.15.0-587"
 
 ktlint = "12.3.0"
 
-# make sure to sync both manually with :generator module
-kotlin = "2.2.0" # needs jupyter compatibility with Kotlin 2.1 to update
+kotlin = "2.2.20-Beta2"
+# make sure to sync manually with :generator module
 kotlinpoet = "2.2.0"
 
 dokka = "2.0.0"
@@ -13,7 +13,7 @@ libsPublisher = "2.2.0-dev-61"
 
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
-dataframe = "1.0.0-dev-6538"
+dataframe = "1.0.0-dev-8314"
 korro = "0.1.6"
 
 binaryCompatibilityValidator = "0.17.0"
