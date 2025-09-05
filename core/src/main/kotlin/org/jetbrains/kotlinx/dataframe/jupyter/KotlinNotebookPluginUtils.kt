@@ -30,6 +30,8 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.isList
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
@@ -111,8 +113,15 @@ public object KotlinNotebookPluginUtils {
     private fun createComparator(sortKeys: List<ColumnPath>, isDesc: List<Boolean>): Comparator<DataRow<*>> {
         return Comparator { row1, row2 ->
             for ((key, desc) in sortKeys.zip(isDesc)) {
-                val comparisonResult = if (row1.df().getColumn(key).valuesAreComparable()) {
+                val column = row1.df().getColumn(key)
+                val comparisonResult = if (column.valuesAreComparable()) {
                     compareComparableValues(row1, row2, key, desc)
+                } else if (column.isFrameColumn()) {
+                    val firstValue = column[row1].rowsCount()
+                    val secondValue = column[row2].rowsCount()
+                    firstValue.compare(secondValue, desc)
+                } else if (column.isList()) {
+                    compareListSizes(row1, row2, key, desc)
                 } else {
                     compareStringValues(row1, row2, key, desc)
                 }
@@ -121,6 +130,21 @@ public object KotlinNotebookPluginUtils {
             }
             // All comparisons are equal
             0
+        }
+    }
+
+    private fun compareListSizes(
+        row1: DataRow<*>,
+        row2: DataRow<*>,
+        key: ColumnPath,
+        desc: Boolean,
+    ): Int {
+        val firstValue = (row1.getValueOrNull(key) as? List<*>)?.size ?: 0
+        val secondValue = (row2.getValueOrNull(key) as? List<*>)?.size ?: 0
+        return if (desc) {
+            secondValue.compareTo(firstValue)
+        } else {
+            firstValue.compareTo(secondValue)
         }
     }
 
@@ -158,6 +182,8 @@ public object KotlinNotebookPluginUtils {
             firstValue.compareTo(secondValue)
         }
     }
+
+    private fun <T : Comparable<T>> T.compare(other: T, desc: Boolean) = if (desc) other.compareTo(this) else this.compareTo(other)
 
     internal fun isDataframeConvertable(dataframeLike: Any?): Boolean =
         when (dataframeLike) {
