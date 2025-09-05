@@ -1,15 +1,15 @@
 # associate
 
 <web-summary>
-Discover `associate` interop for Kotlin DataFrame.
+Discover `associate` operation for Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `associate` interop for Kotlin DataFrame.
+Discover `associate` operation for Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `associate` interop for Kotlin DataFrame.
+Discover `associate` operation for Kotlin DataFrame.
 </link-summary>
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.collectionsInterop.AssociateSamples-->
@@ -23,7 +23,7 @@ If multiple rows produce the same key, only the last value for that key is kept.
 ```kotlin
 df.associate { pairSelector }
 
-pairSelector := (DataRow) -> Pair
+pairSelector: (DataRow) -> Pair
 ```
 
 ### Related functions

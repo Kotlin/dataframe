@@ -45,7 +45,7 @@ df.age.between(left = 18, right = 25)
 <!---END-->
 <inline-frame src="./resources/notebook_test_between_2.html" width="100%" height="500px"></inline-frame>
 
-Strictly between 18 and 25 (exclude boundaries):
+Strictly between 18 and 25 (excluding boundaries):
 <!---FUN notebook_test_between_3-->
 
 ```kotlin

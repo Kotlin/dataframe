@@ -18,7 +18,7 @@ Discover `shuffle` operation in Kotlin Dataframe.
 Returns a new [`DataFrame`](DataFrame.md) with rows in random order.
 
 You can supply a [kotlin.random.Random](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/)
-instance for reproducible results.
+instance with a fixed seed for reproducible results.
 
 ```Kotlin
 df.shuffle()

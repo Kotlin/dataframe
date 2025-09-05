@@ -1,15 +1,15 @@
 # associateBy
 
 <web-summary>
-Discover `associateBy` interop for Kotlin DataFrame.
+Discover `associateBy` operation for Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `associateBy` interop for Kotlin DataFrame.
+Discover `associateBy` operation for Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `associateBy` interop for Kotlin DataFrame.
+Discover `associateBy` operation for Kotlin DataFrame.
 </link-summary>
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.collectionsInterop.AssociateBySamples-->
@@ -26,7 +26,7 @@ function.
 ```kotlin
 df.associateBy { keySelector }
 
-keySelector := (DataRow) -> Key
+keySelector: (DataRow) -> Key
 ```
 
 ### Related functions

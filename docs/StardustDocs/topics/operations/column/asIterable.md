@@ -20,3 +20,5 @@ Returns values of this [`DataColumn`](DataColumn.md) as
 ```kotlin
 col.asIterable()
 ```
+
+**Related operation**: [](asSequenceColumn.md).

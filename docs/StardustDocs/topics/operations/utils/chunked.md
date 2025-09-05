@@ -19,7 +19,7 @@ Splits a [`DataFrame`](DataFrame.md) into consecutive sub-dataframes (chunks) an
 [`FrameColumn`](DataColumn.md#framecolumn). Chunks are formed in order and do not overlap.
 
 Each chunk contains at most the specified number of rows.
-The resulting FrameColumn’s name can be customized; by default, it is "groups."
+The resulting `FrameColumn`’s name can be customized; by default, it is "groups."
 
 `DataFrame` can be split into chunks in two ways:
 - By fixed size: split into chunks of up to the given size.

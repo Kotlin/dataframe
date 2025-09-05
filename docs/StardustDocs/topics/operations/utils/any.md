@@ -22,7 +22,7 @@ Returns `Boolean` — `true` if there is at least one row that satisfies the pre
 ```kotlin
 df.any { rowCondition }
 
-rowCondition := (DataRow) -> Boolean
+rowCondition: (DataRow) -> Boolean
 ```
 
 **Related operations**: [](all.md), [](filter.md), [](single.md), [](count.md).
