@@ -1,39 +1,39 @@
 ## :samples
 
-Code samples as well as DataFrame iframes and Kandy plot images for the 
+Code samples, as well as DataFrame iframes and Kandy plot images, for the 
 [documentation website](https://github.com/Kotlin/dataframe).
 
 ### Korro
 
 Saves code samples using [Korro](https://github.com/devcrocod/korro).
 
-To save / update samples:
-* Run `korroClean` and `korro` gradle tasks.
+To save or update samples:
+* Run the `korroClean` and `korro` Gradle tasks.
 
-**Important**: may work incorrectly until 
-[migration from `:core` is not finished](https://github.com/Kotlin/dataframe/issues/898).
-Run Korro tasks **for the whole project**.
+**Important**: May not work correctly until the 
+[migration from `:core` is finished](https://github.com/Kotlin/dataframe/issues/898).
+Run Korro tasks for the whole project.
 
 ### SampleHelper
 
 [`SampleHelper`](https://github.com/Kotlin/kandy/blob/samples_util/util/kandy-samples-utils/README.md)
-allows to save resulting Kandy plots as SVG images and `DataFrame`s as iframes.
+allows you to save the resulting Kandy plots as SVG images and DataFrames as iframes.
 
 Running tests in this module will save or update these samples.
 
-**Important**: 
+**Important**:
 
-1) if the sample is changed, check if it is (так и надо было или нет короче переформулируй).
-You can track it with the help of the git file changes tracker in IDEA.
-2) All iframes should be added as resources in [this file](../docs/StardustDocs/topics/_shadow_resources.md). 
+1) If a sample has changed, verify that the change is intentional and correct.
+You can track it with the Git file changes tracker in IDEA.
+2) Add all iframes as resources in [this file](../docs/StardustDocs/topics/_shadow_resources.md).
 Run [this script](https://github.com/Kotlin/kandy/blob/samples_util/util/kandy-samples-utils/README.md#how-to-use)
 to update them.
 
 ### Notebook-To-Doc
 
-Kotlin notebook can be easily converted to a documentation using 
+A Kotlin notebook can be easily converted to documentation using 
 [this script](https://github.com/Kotlin/kandy/blob/samples_util/util/kandy-samples-utils/README.md#how-to-use).
-It produces two files: `.kt` and `.md`. 
-* Place `.kt` file in the tests in this module, and run it.
-* Place `.md` file in the [docs topics directory](../docs/StardustDocs/topics).
-* Run Korro tasks.
+It produces two files: `.kt` and `.md`.
+* Place the `.kt` file in the tests of this module and run it.
+* Place the `.md` file in the [docs topics directory](../docs/StardustDocs/topics).
+* Run the Korro tasks.
