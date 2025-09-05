@@ -10,28 +10,6 @@ At the moment, these integrations are still part of the `:core` module:
 - (deprecated) csv/tsv
 - html
 
-### Korro code samples
-
-Code samples for the documentation website reside
-in [core/.../test/.../samples/api](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api) (for samples that depend solely on `dataframe-core`),
-and [tests/.../samples/api](../tests/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api) (for samples can depend on other I/O modules)
-and they are copied over to Markdown files in [docs/StardustDocs/topics](../docs/StardustDocs/topics)
-by [Korro](https://github.com/devcrocod/korro).
-
-### ~~Explainer dataframes~~ NOTE: This is being moved to [tests](../tests)
-
-Aside from code samples, `@TransformDataFrameExpressions` annotated test functions also generate sample
-dataframe HTML files that can be used as iFrames on the documentation website.
-They are tested, generated, and copied over to [docs/StardustDocs/resources/snippets](../docs/StardustDocs/resources/snippets) by
-our "explainer" [plugin callback proxy](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/explainer),
-which hooks into [the TestBase class](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/TestBase.kt) and
-retrieves the intermediate DataFrame expressions thanks to our "explainer" compiler plugin
-[:plugins:expressions-converter](../plugins/expressions-converter).
-
-We can also generate "normal" DataFrame samples for the website. This can be done using the
-[OtherSamples class](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/OtherSamples.kt). Generated
-HTML files will be stored in [docs/StardustDocs/resources/snippets/manual](../docs/StardustDocs/resources/snippets/manual).
-
 ### KoDEx
 
 The code you're working on needs to be edited in [src](src), but the KDocs are processed by
