@@ -138,10 +138,10 @@ public fun <T> DataFrame<T>.median(skipNaN: Boolean = skipNaNDefault): DataRow<T
 
 @Refine
 @Interpretable("Median1")
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> = Aggregators.medianCommon<C>(skipNaN).aggregateFor(this, columns)
+): DataRow<T> = Aggregators.median.invoke(skipNaN).aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.medianFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(skipNaN) { columns.toComparableColumns() }
@@ -329,10 +329,10 @@ public fun <T> Grouped<T>.median(skipNaN: Boolean = skipNaNDefault): DataFrame<T
 
 @Refine
 @Interpretable("GroupByMedian0")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.medianCommon<C>(skipNaN).aggregateFor(this, columns)
+): DataFrame<T> = Aggregators.median.invoke(skipNaN).aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
 
@@ -418,7 +418,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianB
 public fun <T> Pivot<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
+public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -501,11 +501,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
 public fun <T> PivotGroupBy<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     medianFor(separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.medianCommon<C>(skipNaN).aggregateFor(this, separate, columns)
+): DataFrame<T> = Aggregators.median.invoke(skipNaN).aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.medianFor(
     vararg columns: String,
