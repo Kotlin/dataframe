@@ -5,7 +5,6 @@ import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 plugins {
     with(libs.plugins) {
@@ -16,7 +15,6 @@ plugins {
 //        alias(kover)
         alias(ktlint)
         alias(kodex)
-        alias(simpleGit)
         alias(buildconfig)
         alias(binary.compatibility.validator)
 
@@ -152,12 +150,6 @@ val clearSamplesOutputs by tasks.registering {
     }
 }
 
-val addSamplesToGit by tasks.registering(GitTask::class, fun GitTask.() {
-    directory = file(".")
-    command = "add"
-    args = listOf("-A", "../docs/StardustDocs/resources/snippets")
-})
-
 val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     group = "documentation"
     mainClass = "org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt"
@@ -165,10 +157,6 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     dependsOn(clearSamplesOutputs)
     dependsOn(samplesTest)
     classpath = sourceSets.test.get().runtimeClasspath
-
-    doLast {
-        addSamplesToGit.get().executeCommand()
-    }
 }
 
 tasks.withType<KorroTask> {
