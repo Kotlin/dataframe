@@ -84,11 +84,7 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
 public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> {
-    @Suppress("UNCHECKED_CAST")
-    return Aggregators.min<Comparable<Any>?>(skipNaN)
-        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
-}
+): DataRow<T> = Aggregators.min.invoke(skipNaN).aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
@@ -219,11 +215,7 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
 public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> {
-    @Suppress("UNCHECKED_CAST")
-    return Aggregators.min<Comparable<Any>?>(skipNaN)
-        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
-}
+): DataFrame<T> = Aggregators.min.invoke(skipNaN).aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
