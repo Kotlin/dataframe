@@ -71,6 +71,7 @@
             <toc-element topic="columnNames.md"/>
             <toc-element topic="columnTypes.md"/>
             <toc-element topic="head.md"/>
+            <toc-element topic="tail.md"/>
             <toc-element topic="schema.md"/>
             <toc-element topic="describe.md"/>
         </toc-element>
@@ -84,6 +85,7 @@
                 <toc-element topic="last.md"/>
                 <toc-element topic="minBy.md"/>
                 <toc-element topic="maxBy.md"/>
+                <toc-element topic="asSequence.md"/>
             </toc-element>
             <toc-element topic="getColumns.md">
                 <toc-element topic="columns.md"/>
@@ -127,7 +129,6 @@
             <toc-element topic="replace.md"/>
             <toc-element topic="reverse.md"/>
             <toc-element topic="select.md"/>
-            <toc-element topic="shuffle.md"/>
             <toc-element topic="sliceRows.md"/>
             <toc-element topic="sortBy.md"/>
             <toc-element topic="split.md"/>
@@ -178,11 +179,22 @@
         <toc-element topic="columnOperations.md">
             <toc-element topic="columnArithmetics.md" toc-title="Arithmetics"/>
             <toc-element topic="columnStatistics.md" toc-title="Statistics"/>
+            <toc-element topic="asIterable.md"/>
+            <toc-element topic="asSequenceColumn.md" toc-title="asSequence"/>
+            <toc-element topic="between.md"/>
         </toc-element>
         <toc-element topic="ColumnSelectors.md"/>
+        <toc-element topic="Utils.md">
+            <toc-element topic="any.md"/>
+            <toc-element topic="all.md"/>
+            <toc-element topic="chunked.md"/>
+            <toc-element topic="shuffle.md"/>
+        </toc-element>
         <toc-element topic="collectionsInterop.md">
             <toc-element topic="toList.md"/>
             <toc-element topic="toMap.md"/>
+            <toc-element topic="associate.md"/>
+            <toc-element topic="associateBy.md"/>
         </toc-element>
         <toc-element topic="rendering.md">
             <toc-element topic="toHTML.md"/>

@@ -33,10 +33,10 @@ import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.symbols.impl.IrSimpleFunctionSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
 import org.jetbrains.kotlin.ir.types.classFqName
-import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SetDeclarationsParentVisitor
+import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
 import org.jetbrains.kotlin.ir.util.isLocal
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
@@ -285,8 +285,8 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
                         ).apply {
                             val clazz = ClassId(explainerPackage, Name.identifier("PluginCallbackProxy"))
                             val plugin = pluginContext.referenceClass(clazz)!!
-                            dispatchReceiver = IrGetObjectValueImpl(-1, -1, plugin.defaultType, plugin)
-
+                            val pluginType = plugin.owner.defaultType
+                            dispatchReceiver = IrGetObjectValueImpl(-1, -1, pluginType, plugin)
                             val firstValueArgumentIndex = 1 // skipping dispatch receiver
                             valueArguments.forEachIndexed { i, argument ->
                                 this.arguments[firstValueArgumentIndex + i] = argument

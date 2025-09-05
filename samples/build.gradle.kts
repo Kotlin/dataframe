@@ -23,10 +23,9 @@ plugins {
         alias(kotlin.jvm)
         alias(korro)
         alias(ktlint)
+        // Doesn't work properly for now: https://github.com/Kotlin/dataframe/issues/1432
+        alias(dataframePlugin)
 //        alias(kover)
-
-        alias(dataframe)
-        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
         alias(ksp)
     }
 }
@@ -43,11 +42,9 @@ dependencies {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
     testImplementation(libs.kandy) {
-        // TODO remove when kandy uses version of DF with `FormatDsl`
         exclude("org.jetbrains.kotlinx", "dataframe")
     }
     testImplementation(libs.kandy.samples.utils) {
-        // TODO remove when kandy uses version of DF with `FormatDsl`
         exclude("org.jetbrains.kotlinx", "dataframe")
     }
     testImplementation(libs.kotlin.datetimeJvm)
@@ -66,19 +63,26 @@ kotlin.sourceSets {
 
 korro {
     docs = fileTree(rootProject.rootDir) {
-        // todo topics/*.md as a part of #898
         include("docs/StardustDocs/topics/DataSchema-Data-Classes-Generation.md")
         include("docs/StardustDocs/topics/read.md")
         include("docs/StardustDocs/topics/write.md")
         include("docs/StardustDocs/topics/rename.md")
         include("docs/StardustDocs/topics/format.md")
         include("docs/StardustDocs/topics/guides/*.md")
+        include("docs/StardustDocs/topics/operations/utils/*.md")
+        include("docs/StardustDocs/topics/operations/column/*.md")
+        include("docs/StardustDocs/topics/collectionsInterop/*.md")
         include("docs/StardustDocs/topics/dataSources/sql/*.md")
+        include("docs/StardustDocs/topics/info/*.md")
     }
 
     samples = fileTree(project.projectDir) {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
     }

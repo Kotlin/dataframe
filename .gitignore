@@ -9,3 +9,6 @@
 build
 .ipynb_checkpoints
 local.properties
+
+# macOS
+.DS_Store
