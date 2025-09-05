@@ -74,7 +74,7 @@ spark = "3.3.2"
 multik = "0.2.3"
 
 # todo remove and use kotlin version instead
-dataframePlugin = "2.2.20-Beta1"
+dataframePlugin = "2.2.20-Beta2"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
