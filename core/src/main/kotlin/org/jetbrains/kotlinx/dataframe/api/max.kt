@@ -84,7 +84,11 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
 public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> = Aggregators.max<C>(skipNaN).aggregateFor(this, columns)
+): DataRow<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.max<Comparable<Any>?>(skipNaN)
+        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> DataFrame<T>.maxFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     maxFor(skipNaN) { columns.toComparableColumns() }
@@ -215,7 +219,11 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
 public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.max<C>(skipNaN).aggregateFor(this, columns)
+): DataFrame<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.max<Comparable<Any>?>(skipNaN)
+        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> Grouped<T>.maxFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     maxFor(skipNaN) { columns.toComparableColumns() }
@@ -392,7 +400,11 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, R>,
-): DataFrame<T> = Aggregators.max<R>(skipNaN).aggregateFor(this, separate, columns)
+): DataFrame<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.max<Comparable<Any>?>(skipNaN)
+        .aggregateFor(this, separate, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> PivotGroupBy<T>.maxFor(
     vararg columns: String,

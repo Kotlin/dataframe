@@ -124,7 +124,7 @@ public object Aggregators {
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    public fun <T : Comparable<*>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
+    public fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
 
     public val max: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
         by withOneOption { skipNaN: Boolean ->
@@ -159,14 +159,14 @@ public object Aggregators {
         percentile: Double,
         skipNaN: Boolean,
     ): Aggregator<T & Any, T?>
-        where T : Comparable<*>? =
+        where T : Comparable<T & Any>? =
         this.percentile.invoke(percentile, skipNaN).cast2()
 
     // T: Comparable<T & Any>? -> T?
     public fun <T> percentileComparables(
         percentile: Double,
     ): Aggregator<T & Any, T?>
-        where T : Comparable<*>? =
+        where T : Comparable<T & Any>? =
         percentileCommon<T>(percentile, skipNaNDefault).cast2()
 
     // T: primitive Number? -> Double?
@@ -174,7 +174,7 @@ public object Aggregators {
         percentile: Double,
         skipNaN: Boolean,
     ): Aggregator<T & Any, Double?>
-        where T : Comparable<*>?, T : Number? =
+        where T : Comparable<T & Any>?, T : Number? =
         percentileCommon<T>(percentile, skipNaN).cast2()
 
     @Suppress("UNCHECKED_CAST")
@@ -193,19 +193,19 @@ public object Aggregators {
     // T: primitive Number? -> Double?
     // T: Comparable<T & Any>? -> T?
     public fun <T> medianCommon(skipNaN: Boolean): Aggregator<T & Any, T?>
-        where T : Comparable<*>? =
+        where T : Comparable<T & Any>? =
         median.invoke(skipNaN).cast2()
 
     // T: Comparable<T & Any>? -> T?
     public fun <T> medianComparables(): Aggregator<T & Any, T?>
-        where T : Comparable<*>? =
+        where T : Comparable<T & Any>? =
         medianCommon<T>(skipNaNDefault).cast2()
 
     // T: primitive Number? -> Double?
     public fun <T> medianNumbers(
         skipNaN: Boolean,
     ): Aggregator<T & Any, Double?>
-        where T : Comparable<*>?, T : Number? =
+        where T : Comparable<T & Any>?, T : Number? =
         medianCommon<T>(skipNaN).cast2()
 
     @Suppress("UNCHECKED_CAST")

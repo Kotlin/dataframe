@@ -81,10 +81,14 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
 
 @Refine
 @Interpretable("Min1")
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> = Aggregators.min<C>(skipNaN).aggregateFor(this, columns)
+): DataRow<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.min<Comparable<Any>?>(skipNaN)
+        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> DataFrame<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
@@ -212,10 +216,14 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
 
 @Refine
 @Interpretable("GroupByMin0")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.minFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.min<C>(skipNaN).aggregateFor(this, columns)
+): DataFrame<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.min<Comparable<Any>?>(skipNaN)
+        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> Grouped<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
@@ -302,7 +310,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
 public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     delegate { min(separate, skipNaN) }
 
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.minFor(
+public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, R>,
