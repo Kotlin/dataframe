@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
+import org.jetbrains.kotlinx.dataframe.annotations.IntellijPluginApi
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
@@ -73,6 +74,7 @@ public interface DataFrame<out T> :
      *
      * @return The number of rows in the [DataFrame].
      */
+    @IntellijPluginApi
     public fun rowsCount(): Int
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
@@ -97,6 +99,7 @@ public interface DataFrame<out T> :
 
     // region get rows
 
+    @IntellijPluginApi
     public operator fun get(index: Int): DataRow<T>
 
     public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
