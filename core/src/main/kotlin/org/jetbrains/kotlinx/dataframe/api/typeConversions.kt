@@ -406,7 +406,7 @@ public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
 public fun AnyRow.toMap(): Map<String, Any?> = df().columns().associate { it.name() to it[index] }
 
-public fun Map<String, Any?>.toDataRow() : DataRow<*> {
+public fun Map<String, Any?>.toDataRow(): DataRow<*> {
     val df = mapValues { listOf(it.value) }.toDataFrame()
     return DataRowImpl(0, df)
 }
