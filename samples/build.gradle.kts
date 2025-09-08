@@ -63,13 +63,14 @@ kotlin.sourceSets {
 
 korro {
     docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/DataSchema-Data-Classes-Generation.md")
+        include("docs/StardustDocs/topics/schemas/*.md")
         include("docs/StardustDocs/topics/read.md")
         include("docs/StardustDocs/topics/write.md")
         include("docs/StardustDocs/topics/rename.md")
         include("docs/StardustDocs/topics/format.md")
         include("docs/StardustDocs/topics/guides/*.md")
         include("docs/StardustDocs/topics/operations/utils/*.md")
+        include("docs/StardustDocs/topics/operations/multiple/*.md")
         include("docs/StardustDocs/topics/operations/column/*.md")
         include("docs/StardustDocs/topics/collectionsInterop/*.md")
         include("docs/StardustDocs/topics/dataSources/sql/*.md")
@@ -80,6 +81,7 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/multiple/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
