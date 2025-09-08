@@ -141,11 +141,7 @@ public fun <T> DataFrame<T>.median(skipNaN: Boolean = skipNaNDefault): DataRow<T
 public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> {
-    @Suppress("UNCHECKED_CAST")
-    return Aggregators.medianCommon<Comparable<Any>?>(skipNaN)
-        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
-}
+): DataRow<T> = Aggregators.median.invoke(skipNaN).aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.medianFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(skipNaN) { columns.toComparableColumns() }
@@ -336,11 +332,7 @@ public fun <T> Grouped<T>.median(skipNaN: Boolean = skipNaNDefault): DataFrame<T
 public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> {
-    @Suppress("UNCHECKED_CAST")
-    return Aggregators.medianCommon<Comparable<Any>?>(skipNaN)
-        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
-}
+): DataFrame<T> = Aggregators.median.invoke(skipNaN).aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
 
@@ -513,11 +505,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> {
-    @Suppress("UNCHECKED_CAST")
-    return Aggregators.medianCommon<Comparable<Any>?>(skipNaN)
-        .aggregateFor(this, separate, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
-}
+): DataFrame<T> = Aggregators.median.invoke(skipNaN).aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.medianFor(
     vararg columns: String,
