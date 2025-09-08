@@ -30,7 +30,7 @@ When it's set to `true`, `NaN` values are ignored.
 ```kotlin
 df.median() // median of values per every comparable column
 df.median { age and weight } // median of all values in `age` and `weight`
-df.medianFor(skipNaN = true) { age and weight } // median of values per `age` and `weight` separately
+df.medianFor(skipNaN = true) { age and name.firstName } // median of values per `age` and `firstName` separately
 df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
 df.medianBy { age } // DataRow where the median age lies (lower-median for an even number of values)
 ```
