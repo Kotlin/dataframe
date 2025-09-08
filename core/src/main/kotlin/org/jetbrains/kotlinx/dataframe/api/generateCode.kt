@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
@@ -268,6 +269,7 @@ public val NameNormalizer.Companion.default: NameNormalizer get() = NameNormaliz
  * @see CodeString.print
  */
 @JvmInline
+@RequiredByIntellijPlugin
 public value class CodeString(public val value: String) {
     override fun toString(): String = value
 }
@@ -327,6 +329,7 @@ public inline fun <reified T> DataFrame<T>.generateCode(
     replaceWith = ReplaceWith(GENERATE_CODE_REPLACE2),
     level = DeprecationLevel.WARNING,
 )
+@RequiredByIntellijPlugin
 public fun <T> DataFrame<T>.generateCode(
     markerName: String,
     fields: Boolean = true,
