@@ -169,6 +169,10 @@ public interface TraversePropertiesDsl {
     public fun preserve(vararg properties: KCallable<*>)
 }
 
+/**
+ * Store values of given type [T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+ */
+@Interpretable("PreserveT")
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
 
 public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
@@ -177,8 +181,10 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     public abstract fun add(column: AnyBaseCol, path: ColumnPath? = null)
 
+    @Interpretable("ToDataFrameDslIntoString")
     public infix fun AnyBaseCol.into(name: String): Unit = add(this, pathOf(name))
 
+    @Interpretable("ToDataFrameDslIntoPath")
     public infix fun AnyBaseCol.into(path: ColumnPath): Unit = add(this, path)
 
     @Interpretable("Properties0")
@@ -191,6 +197,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn(infer = infer)
 
+    @Interpretable("ToDataFrameDslAdd")
     public inline fun <reified R> add(name: String, noinline expression: (T) -> R): Unit =
         add(source.map { expression(it) }.toColumn(name, Infer.Nulls))
 
@@ -202,6 +209,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
 
+    @Interpretable("ToDataFrameDslFromInferType")
     public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(this, source.map { inferType.expression(it) }))
 
