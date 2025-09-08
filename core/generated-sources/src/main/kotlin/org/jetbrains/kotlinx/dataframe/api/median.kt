@@ -138,24 +138,28 @@ public fun <T> DataFrame<T>.median(skipNaN: Boolean = skipNaNDefault): DataRow<T
 
 @Refine
 @Interpretable("Median1")
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> = Aggregators.medianCommon<C>(skipNaN).aggregateFor(this, columns)
+): DataRow<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.medianCommon<Comparable<Any>?>(skipNaN)
+        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> DataFrame<T>.medianFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(skipNaN) { columns.toColumnSet() }
@@ -329,23 +333,27 @@ public fun <T> Grouped<T>.median(skipNaN: Boolean = skipNaNDefault): DataFrame<T
 
 @Refine
 @Interpretable("GroupByMedian0")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.medianCommon<C>(skipNaN).aggregateFor(this, columns)
+): DataFrame<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.medianCommon<Comparable<Any>?>(skipNaN)
+        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(skipNaN) { columns.toColumnSet() }
@@ -418,7 +426,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianB
 public fun <T> Pivot<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
+public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -432,7 +440,7 @@ public fun <T> Pivot<T>.medianFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
+public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -440,7 +448,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
+public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -501,11 +509,15 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
 public fun <T> PivotGroupBy<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     medianFor(separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.medianCommon<C>(skipNaN).aggregateFor(this, separate, columns)
+): DataFrame<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.medianCommon<Comparable<Any>?>(skipNaN)
+        .aggregateFor(this, separate, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> PivotGroupBy<T>.medianFor(
     vararg columns: String,
@@ -515,7 +527,7 @@ public fun <T> PivotGroupBy<T>.medianFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -523,7 +535,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
