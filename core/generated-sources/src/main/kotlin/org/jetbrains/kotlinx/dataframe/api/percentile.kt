@@ -152,11 +152,15 @@ public fun <T> DataFrame<T>.percentile(percentile: Double, skipNaN: Boolean = sk
 
 @Refine
 @Interpretable("Percentile1")
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.percentileFor(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateFor(this, columns)
+): DataRow<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.percentileCommon<Comparable<Any>?>(percentile, skipNaN)
+        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> DataFrame<T>.percentileFor(
     percentile: Double,
@@ -166,7 +170,7 @@ public fun <T> DataFrame<T>.percentileFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.percentileFor(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -174,7 +178,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.percentileFor(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -393,18 +397,22 @@ public fun <T> Grouped<T>.percentile(percentile: Double, skipNaN: Boolean = skip
 
 @Refine
 @Interpretable("GroupByPercentile0")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateFor(this, columns)
+): DataFrame<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.percentileCommon<Comparable<Any>?>(percentile, skipNaN)
+        .aggregateFor(this, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> Grouped<T>.percentileFor(percentile: Double, vararg columns: String): DataFrame<T> =
     percentileFor(percentile) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -412,7 +420,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -500,7 +508,7 @@ public fun <T> Pivot<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileFor(percentile, separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
+public fun <T, C : Comparable<*>?> Pivot<T>.percentileFor(
     percentile: Double,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -516,7 +524,7 @@ public fun <T> Pivot<T>.percentileFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
+public fun <T, C : Comparable<*>?> Pivot<T>.percentileFor(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
@@ -525,7 +533,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
+public fun <T, C : Comparable<*>?> Pivot<T>.percentileFor(
     percentile: Double,
     vararg columns: KProperty<C>,
     separate: Boolean = false,
@@ -603,12 +611,16 @@ public fun <T> PivotGroupBy<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentileFor(percentile, separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
     percentile: Double,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateFor(this, separate, columns)
+): DataFrame<T> {
+    @Suppress("UNCHECKED_CAST")
+    return Aggregators.percentileCommon<Comparable<Any>?>(percentile, skipNaN)
+        .aggregateFor(this, separate, columns as ColumnsForAggregateSelector<T, Comparable<Any>?>)
+}
 
 public fun <T> PivotGroupBy<T>.percentileFor(
     percentile: Double,
@@ -619,7 +631,7 @@ public fun <T> PivotGroupBy<T>.percentileFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
@@ -628,7 +640,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
     percentile: Double,
     vararg columns: KProperty<C>,
     separate: Boolean = false,
