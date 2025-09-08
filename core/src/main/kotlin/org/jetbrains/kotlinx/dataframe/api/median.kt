@@ -152,14 +152,14 @@ public fun <T> DataFrame<T>.medianFor(vararg columns: String, skipNaN: Boolean =
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
+public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(skipNaN) { columns.toColumnSet() }
@@ -346,14 +346,14 @@ public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medi
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
+public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(skipNaN) { columns.toColumnSet() }
@@ -440,7 +440,7 @@ public fun <T> Pivot<T>.medianFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
+public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -448,7 +448,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
+public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -527,7 +527,7 @@ public fun <T> PivotGroupBy<T>.medianFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -535,7 +535,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
+public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
