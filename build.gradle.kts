@@ -34,6 +34,8 @@ plugins {
         // dependence on our own plugin
         alias(dataframe) apply false
         alias(ksp) apply false
+
+        alias(dataframePlugin) apply false
     }
 }
 
@@ -158,7 +160,7 @@ val modulesUsingJava11 = with(projects) {
         dataframeGeoJupyter,
         examples.ideaExamples.titanic,
         examples.ideaExamples.unsupportedDataSources,
-        tests,
+        samples,
         plugins.dataframeGradlePlugin,
     )
 }.map { it.path }
