@@ -23,8 +23,10 @@ plugins {
         alias(kotlin.jvm)
         alias(korro)
         alias(ktlint)
-        // Doesn't work properly for now: https://github.com/Kotlin/dataframe/issues/1432
-        alias(dataframePlugin)
+        // Compiler plugin doesn't work properly for now: https://github.com/Kotlin/dataframe/issues/1432
+//        alias(dataframePlugin)
+        // using deprecated gradle plugin instead
+        alias(dataframe)
 //        alias(kover)
         alias(ksp)
     }
