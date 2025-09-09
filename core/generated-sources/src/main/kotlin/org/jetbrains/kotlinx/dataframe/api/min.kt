@@ -335,10 +335,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
     columns: ColumnsSelector<T, R>,
 ): DataRow<T> = delegate { min(skipNaN, columns) }
 
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
-    vararg columns: String,
-    skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = min(skipNaN) { columns.toComparableColumns() }
+public fun <T> Pivot<T>.min(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
+    min(skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

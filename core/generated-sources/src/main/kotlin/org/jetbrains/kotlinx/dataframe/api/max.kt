@@ -335,10 +335,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
     columns: ColumnsSelector<T, R>,
 ): DataRow<T> = delegate { max(skipNaN, columns) }
 
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
-    vararg columns: String,
-    skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = max(skipNaN) { columns.toComparableColumns() }
+public fun <T> Pivot<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
+    max(skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
