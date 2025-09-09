@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.jupyter.repl.result.EvalResultEx
 import org.junit.Assume
 import org.junit.AssumptionViolatedException
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.util.Locale
@@ -62,6 +63,9 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
             ),
         )
 
+    // TODO Ignoring only for 1.0.0-Beta3n: Test fails because it requires %use kandy-geo
+    //   to point to dataframe-geo-jupyter, but this has no stable release yet.
+    @Ignore
     @Test
     fun netflix() {
         val currentLocale = Locale.getDefault()
