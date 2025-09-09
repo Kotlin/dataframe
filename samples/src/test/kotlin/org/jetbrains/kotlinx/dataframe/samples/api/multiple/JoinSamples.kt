@@ -82,7 +82,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_6() {
         // SampleStart
-        // Join rows of both dataframes where `firstName` value in `dfAges` matches `name` values in `dfCities`
+        // INNER JOIN on differently named keys:
+        // Merge a row when dfAges.firstName == dfCities.name.
+        // With the given data all 3 names match → all rows merge.
         dfAges.join(dfCities) { firstName match right.name }
             // SampleEnd
             .saveDfHtmlSample()
@@ -107,7 +109,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_11() {
         // SampleStart
-        // Join rows of both dataframes where `name` values match.
+        // INNER JOIN on "name" only:
+        // Merge when left.name == right.name.
+        // Duplicate keys produce multiple merged rows (one per pairing).
         dfLeft.join(dfRight) { name }
             // SampleEnd
             .saveDfHtmlSample()
@@ -116,8 +120,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_12() {
         // SampleStart
-        // Join rows of both dataframes where values
-        // in columns with the same name (i.e., "name" and "city") match.
+        // INNER JOIN on all same-named columns ("name" and "city"):
+        // Merge when BOTH name AND city are equal; otherwise the row is dropped.
         dfLeft.join(dfRight)
             // SampleEnd
             .saveDfHtmlSample()
@@ -142,6 +146,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_15() {
         // SampleStart
+        // INNER JOIN:
+        // Keep only rows where (name, city) match on both sides.
+        // In this dataset both Charlies match twice (Moscow, Milan) → 2 merged rows.
         dfLeft.innerJoin(dfRight) { name and city }
             // SampleEnd
             .saveDfHtmlSample()
@@ -150,6 +157,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_16() {
         // SampleStart
+        // FILTER JOIN:
+        // Keep ONLY left rows that have ANY match on (name, city).
+        // No right-side columns are added.
         dfLeft.filterJoin(dfRight) { name and city }
             // SampleEnd
             .saveDfHtmlSample()
@@ -158,6 +168,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_17() {
         // SampleStart
+        // LEFT JOIN:
+        // Keep ALL left rows. If (name, city) matches, attach right columns;
+        // if not, right columns are null (e.g., Alice–London has no right match).
         dfLeft.leftJoin(dfRight) { name and city }
             // SampleEnd
             .saveDfHtmlSample()
@@ -166,6 +179,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_18() {
         // SampleStart
+        // RIGHT JOIN:
+        // Keep ALL right rows. If no left match, left columns become null
+        // (e.g., Alice with city=null exists only on the right).
         dfLeft.rightJoin(dfRight) { name and city }
             // SampleEnd
             .saveDfHtmlSample()
@@ -174,6 +190,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_19() {
         // SampleStart
+        // FULL JOIN:
+        // Keep ALL rows from both sides. Where there's no match on (name, city),
+        // the other side is filled with nulls.
         dfLeft.fullJoin(dfRight) { name and city }
             // SampleEnd
             .saveDfHtmlSample()
@@ -182,6 +201,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_20() {
         // SampleStart
+        // EXCLUDE JOIN:
+        // Keep ONLY left rows that have NO match on (name, city).
+        // Useful to find "unpaired" left rows.
         dfLeft.excludeJoin(dfRight) { name and city }
             // SampleEnd
             .saveDfHtmlSample()
