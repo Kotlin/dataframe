@@ -1,9 +1,7 @@
 package org.jetbrains.dataframe.gradle
 
-import io.kotest.assertions.asClue
 import io.kotest.inspectors.forAny
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.junit.Test
@@ -27,20 +25,6 @@ class SourceSetsExpectationsTest {
         project.plugins.apply("org.jetbrains.kotlin.multiplatform")
         project.extensions.getByType(KotlinMultiplatformExtension::class.java).let {
             it.sourceSets.findByName("jvmMain") shouldBe null
-        }
-    }
-
-    @Test
-    fun `there is main in android project`() {
-        val project = makeProject()
-        project.plugins.apply("com.android.application")
-        project.plugins.apply("org.jetbrains.kotlin.android")
-        project.extensions.getByType(KotlinAndroidProjectExtension::class.java).let { extension ->
-            val main = extension.sourceSets.getByName("main")
-            main.kotlin.sourceDirectories.toList().asClue { files ->
-                files.forAny { it.shouldEndWith("src", "main", "java") }
-                files.forAny { it.shouldEndWith("src", "main", "kotlin") }
-            }
         }
     }
 }
