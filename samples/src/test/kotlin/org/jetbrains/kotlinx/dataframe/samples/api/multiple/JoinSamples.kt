@@ -23,7 +23,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
 
     private val dfAges = dataFrameOf(
         "firstName" to listOf("Alice", "Bob", "Charlie"),
-        "age" to listOf(14, 45, 20)
+        "age" to listOf(14, 45, 20),
     ).cast<DfAges>()
 
     @DataSchema
@@ -34,7 +34,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
 
     private val dfCities = dataFrameOf(
         "name" to listOf("Bob", "Alice", "Charlie"),
-        "city" to listOf("London", "Dubai", "Moscow")
+        "city" to listOf("London", "Dubai", "Moscow"),
     ).cast<DfCities>()
 
     @DataSchema
@@ -47,7 +47,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     private val dfLeft = dataFrameOf(
         "name" to listOf("Alice", "Bob", "Charlie", "Charlie"),
         "age" to listOf(15, 45, 20, 40),
-        "city" to listOf("London", "Dubai", "Moscow", "Milan")
+        "city" to listOf("London", "Dubai", "Moscow", "Milan"),
     ).cast<DfLeft>()
 
     @DataSchema
@@ -60,7 +60,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     private val dfRight = dataFrameOf(
         "name" to listOf("Charlie", "Bob", "Alice", "Charlie"),
         "isBusy" to listOf(true, false, true, true),
-        "city" to listOf("Milan", "Tokyo", null, "Moscow")
+        "city" to listOf("Milan", "Tokyo", null, "Moscow"),
     ).cast<DfRight>()
 
     @Test
