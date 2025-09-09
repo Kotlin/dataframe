@@ -21,7 +21,7 @@ interface JoinDsl: LeftDataFrame {
 
 Related operations: [](multipleDataFrames.md)
 
-### Examples
+## Examples
 
 <!---FUN notebook_test_join_3-->
 
@@ -120,6 +120,9 @@ df.rightJoin(otherDf) [ { joinColumns } ]
 df.fullJoin(otherDf) [ { joinColumns } ]
 df.excludeJoin(otherDf) [ { joinColumns } ]
 ```
+
+
+### Examples {id="examples_1"}
 
 <!---FUN notebook_test_join_13-->
 

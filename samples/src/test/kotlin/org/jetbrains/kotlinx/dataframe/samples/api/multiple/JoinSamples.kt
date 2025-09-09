@@ -82,6 +82,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_6() {
         // SampleStart
+        // Join rows of both dataframes where `firstName` value in `dfAges` matches `name` values in `dfCities`
         dfAges.join(dfCities) { firstName match right.name }
             // SampleEnd
             .saveDfHtmlSample()
@@ -106,6 +107,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_11() {
         // SampleStart
+        // Join rows of both dataframes where `name` values match.
         dfLeft.join(dfRight) { name }
             // SampleEnd
             .saveDfHtmlSample()
@@ -114,6 +116,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     @Test
     fun notebook_test_join_12() {
         // SampleStart
+        // Join rows of both dataframes where values
+        // in columns with the same name (i.e., "name" and "city") match.
         dfLeft.join(dfRight)
             // SampleEnd
             .saveDfHtmlSample()
