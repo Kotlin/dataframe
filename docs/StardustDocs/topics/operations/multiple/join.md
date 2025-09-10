@@ -2,7 +2,13 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.multiple.JoinSamples-->
 
-Joins two [`DataFrame`](DataFrame.md) object by join columns.
+Joins two [`DataFrame`](DataFrame.md) objects by join columns.
+
+A *join* creates a new dataframe by combining rows from two input dataframes according to one or more key columns.  
+Rows are merged when the values in the join columns match.  
+If there is no match, whether the row is included and how missing values are filled depends on the type of join (e.g., inner, left, right, full).
+
+Returns a new [`DataFrame`](DataFrame.md) that contains the merged rows and columns from both inputs.
 
 ```kotlin
 join(otherDf, type = JoinType.Inner) [ { joinColumns } ]
