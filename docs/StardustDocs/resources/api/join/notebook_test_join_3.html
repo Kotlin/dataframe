@@ -457,8 +457,8 @@ summary {
 })()
 
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie"] }, 
-{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">14</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>"] }, 
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: [{ style: "background-color:#4caf50", value: "Alice"},{ style: "background-color:#2196f3", value: "Bob"},{ style: "background-color:#f44336", value: "Charlie"}] }, 
+{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: [{ style: "background-color:#4caf50", value: "<span class=\"formatted\" title=\"\"><span class=\"numbers\">14</span></span>"},{ style: "background-color:#2196f3", value: "<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>"},{ style: "background-color:#f44336", value: "<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>"}] }, 
 ], id: 0, rootId: 0, totalRows: 3 } ) });
 /*-->*/
 

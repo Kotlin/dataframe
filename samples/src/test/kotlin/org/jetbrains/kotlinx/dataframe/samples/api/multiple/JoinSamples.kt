@@ -1,16 +1,21 @@
 package org.jetbrains.kotlinx.dataframe.samples.api.multiple
 
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.excludeJoin
 import org.jetbrains.kotlinx.dataframe.api.filterJoin
+import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.innerJoin
 import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
+import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
+import org.jetbrains.kotlinx.kandy.letsplot.style.LayoutParameters.Companion.background
 import org.junit.Test
 
 class JoinSamples : DataFrameSampleHelper("join", "api") {
@@ -63,11 +68,22 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         "city" to listOf("Milan", "Tokyo", null, "Moscow"),
     ).cast<DfRight>()
 
+    private fun nameToColor(name: String): RgbColor = when(name) {
+        "Alice" -> RgbColor(76, 175, 80)
+        "Bob" -> RgbColor(33, 150, 243)
+        "Charlie" -> RgbColor(244, 67, 54)
+        else -> RgbColor(255, 255, 255)
+    }
+
     @Test
     fun notebook_test_join_3() {
         // SampleStart
         dfAges
             // SampleEnd
+            .format().perRowCol { row, _ ->
+                val color = nameToColor(row.firstName)
+                background(color)
+            }
             .saveDfHtmlSample()
     }
 
@@ -76,6 +92,10 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         dfCities
             // SampleEnd
+            .format().perRowCol { row, _ ->
+                val color = nameToColor(row.name)
+                background(color)
+            }
             .saveDfHtmlSample()
     }
 
@@ -87,6 +107,10 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // With the given data all 3 names match → all rows merge.
         dfAges.join(dfCities) { firstName match right.name }
             // SampleEnd
+            .format().perRowCol { row, _ ->
+                val color = nameToColor(row.firstName)
+                background(color)
+            }
             .saveDfHtmlSample()
     }
 
