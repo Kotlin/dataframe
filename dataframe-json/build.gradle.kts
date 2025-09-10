@@ -53,6 +53,12 @@ tasks.test {
     useJUnitPlatform()
 }
 
+sourceSets {
+    main {
+        java.srcDirs("src/main/kotlin")
+    }
+}
+
 val instrumentedJars: Configuration by configurations.creating {
     isCanBeConsumed = true
     isCanBeResolved = false
