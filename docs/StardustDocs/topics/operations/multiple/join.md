@@ -98,7 +98,7 @@ dfLeft.join(dfRight) { name }
 
 <inline-frame src="./resources/notebook_test_join_11.html" width="100%" height="500px"></inline-frame>
 
-> In this example, the "city" columns from the left and right dataframes do not match to each other.  
+> In this example, the "city" columns from the left and right dataframes do not match to each other.
 > After joining, the "city" column from the right dataframe is included into result dataframe
 > with the name **"city1"** to avoid a name conflict.  
 > { style = "note" }

@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api.multiple
 
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.RgbColor
+import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.excludeJoin
@@ -69,9 +70,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     ).cast<DfRight>()
 
     private fun nameToColor(name: String): RgbColor = when(name) {
-        "Alice" -> RgbColor(76, 175, 80)
-        "Bob" -> RgbColor(33, 150, 243)
-        "Charlie" -> RgbColor(244, 67, 54)
+        "Alice"   -> RgbColor(189, 206, 233)  // светлый голубовато-серый
+        "Bob"     -> RgbColor(198, 224, 198)  // мягкий зелёный
+        "Charlie" -> RgbColor(219, 198, 230)  // нежный сиреневый
         else -> RgbColor(255, 255, 255)
     }
 
@@ -82,7 +83,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
             // SampleEnd
             .format().perRowCol { row, _ ->
                 val color = nameToColor(row.firstName)
-                background(color)
+                background(color) and textColor(black)
             }
             .saveDfHtmlSample()
     }
@@ -94,7 +95,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
             // SampleEnd
             .format().perRowCol { row, _ ->
                 val color = nameToColor(row.name)
-                background(color)
+                background(color) and textColor(black)
             }
             .saveDfHtmlSample()
     }
@@ -109,7 +110,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
             // SampleEnd
             .format().perRowCol { row, _ ->
                 val color = nameToColor(row.firstName)
-                background(color)
+                background(color) and textColor(black)
             }
             .saveDfHtmlSample()
     }
