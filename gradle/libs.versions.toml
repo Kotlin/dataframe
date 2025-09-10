@@ -73,9 +73,6 @@ spark = "3.3.2"
 
 multik = "0.2.3"
 
-# todo remove and use kotlin version instead
-dataframePlugin = "2.2.20-Beta2"
-
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
@@ -212,5 +209,4 @@ plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publi
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark" }
-# todo use kotlin version instead
-dataframePlugin = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "dataframePlugin" }
+dataframe-compiler-plugin = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
