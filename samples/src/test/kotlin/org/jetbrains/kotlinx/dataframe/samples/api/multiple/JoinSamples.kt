@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api.multiple
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.and
@@ -44,10 +45,16 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     ).cast<DfCities>()
 
     @DataSchema
-    interface DfLeft {
-        val age: kotlin.Int
-        val city: kotlin.String
-        val name: kotlin.String
+    interface DfWithNameAndCity {
+        val name: String
+        val city: String?
+    }
+
+    @DataSchema
+    interface DfLeft: DfWithNameAndCity {
+        val age: Int
+        override val city: String
+        override val name: String
     }
 
     private val dfLeft = dataFrameOf(
@@ -57,10 +64,10 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     ).cast<DfLeft>()
 
     @DataSchema
-    interface DfRight {
-        val city: kotlin.String?
-        val isBusy: kotlin.Boolean
-        val name: kotlin.String
+    interface DfRight: DfWithNameAndCity {
+        override val city: String?
+        val isBusy: Boolean
+        override val name: String
     }
 
     private val dfRight = dataFrameOf(
@@ -70,11 +77,27 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     ).cast<DfRight>()
 
     private fun nameToColor(name: String): RgbColor = when(name) {
-        "Alice"   -> RgbColor(189, 206, 233)  // светлый голубовато-серый
-        "Bob"     -> RgbColor(198, 224, 198)  // мягкий зелёный
-        "Charlie" -> RgbColor(219, 198, 230)  // нежный сиреневый
+        "Alice"   -> RgbColor(189, 206, 233)
+        "Bob"     -> RgbColor(198, 224, 198)
+        "Charlie" -> RgbColor(219, 198, 230)
         else -> RgbColor(255, 255, 255)
     }
+
+    private fun nameAndCityToColor(name: String, city: String?): RgbColor = when(name to city) {
+        "Alice" to "London"  ->RgbColor(242, 210, 189)
+        "Bob" to "Dubai"    ->RgbColor(245, 226, 191)
+        "Charlie" to "Moscow" -> RgbColor(210, 229, 199)
+        "Charlie" to "Tokyo" ->RgbColor(191, 223, 232)
+        "Bob" to "Tokyo" -> RgbColor(200, 200, 232)
+        "Alice" to null -> RgbColor(233, 199, 220)
+        else -> RgbColor(255, 255, 255)
+    }
+
+    fun<T: DfWithNameAndCity> DataFrame<T>.colorized() =
+        format().perRowCol { row, _ ->
+            val color = nameAndCityToColor(row.name, row.city)
+            background(color) and textColor(black)
+        }
 
     @Test
     fun notebook_test_join_3() {
@@ -120,6 +143,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         dfLeft
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -128,6 +152,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         dfRight
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -139,6 +164,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // Duplicate keys produce multiple merged rows (one per pairing).
         dfLeft.join(dfRight) { name }
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -149,6 +175,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // Merge when BOTH name AND city are equal; otherwise the row is dropped.
         dfLeft.join(dfRight)
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -157,6 +184,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         dfLeft
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -165,6 +193,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         dfRight
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -176,6 +205,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // In this dataset both Charlies match twice (Moscow, Milan) → 2 merged rows.
         dfLeft.innerJoin(dfRight) { name and city }
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -187,6 +217,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // No right-side columns are added.
         dfLeft.filterJoin(dfRight) { name and city }
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -198,6 +229,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // if not, right columns are null (e.g., Alice–London has no right match).
         dfLeft.leftJoin(dfRight) { name and city }
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -209,6 +241,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // (e.g., Alice with city=null exists only on the right).
         dfLeft.rightJoin(dfRight) { name and city }
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -220,6 +253,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // the other side is filled with nulls.
         dfLeft.fullJoin(dfRight) { name and city }
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 
@@ -231,6 +265,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // Useful to find "unpaired" left rows.
         dfLeft.excludeJoin(dfRight) { name and city }
             // SampleEnd
+            .colorized()
             .saveDfHtmlSample()
     }
 }

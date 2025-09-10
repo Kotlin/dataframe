@@ -145,6 +145,8 @@ df.excludeJoin(otherDf) [ { joinColumns } ]
 
 ### Examples {id="examples_1"}
 
+#### Inner {collapsible="true"}
+
 <!---FUN notebook_test_join_13-->
 
 ```kotlin
@@ -178,6 +180,29 @@ dfLeft.innerJoin(dfRight) { name and city }
 
 <inline-frame src="./resources/notebook_test_join_15.html" width="100%" height="500px"></inline-frame>
 
+#### Filter {collapsible="true"}
+
+<!---FUN notebook_test_join_13-->
+
+```kotlin
+dfLeft
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN notebook_test_join_14-->
+
+```kotlin
+dfRight
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
+
 <!---FUN notebook_test_join_16-->
 
 ```kotlin
@@ -190,6 +215,29 @@ dfLeft.filterJoin(dfRight) { name and city }
 <!---END-->
 
 <inline-frame src="./resources/notebook_test_join_16.html" width="100%" height="500px"></inline-frame>
+
+#### Left {collapsible="true"}
+
+<!---FUN notebook_test_join_13-->
+
+```kotlin
+dfLeft
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN notebook_test_join_14-->
+
+```kotlin
+dfRight
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
 
 <!---FUN notebook_test_join_17-->
 
@@ -204,6 +252,29 @@ dfLeft.leftJoin(dfRight) { name and city }
 
 <inline-frame src="./resources/notebook_test_join_17.html" width="100%" height="500px"></inline-frame>
 
+#### Right {collapsible="true"}
+
+<!---FUN notebook_test_join_13-->
+
+```kotlin
+dfLeft
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN notebook_test_join_14-->
+
+```kotlin
+dfRight
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
+
 <!---FUN notebook_test_join_18-->
 
 ```kotlin
@@ -217,6 +288,29 @@ dfLeft.rightJoin(dfRight) { name and city }
 
 <inline-frame src="./resources/notebook_test_join_18.html" width="100%" height="500px"></inline-frame>
 
+#### Full {collapsible="true"}
+
+<!---FUN notebook_test_join_13-->
+
+```kotlin
+dfLeft
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN notebook_test_join_14-->
+
+```kotlin
+dfRight
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
+
 <!---FUN notebook_test_join_19-->
 
 ```kotlin
@@ -229,6 +323,29 @@ dfLeft.fullJoin(dfRight) { name and city }
 <!---END-->
 
 <inline-frame src="./resources/notebook_test_join_19.html" width="100%" height="500px"></inline-frame>
+
+#### Exclude {collapsible="true"}
+
+<!---FUN notebook_test_join_13-->
+
+```kotlin
+dfLeft
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN notebook_test_join_14-->
+
+```kotlin
+dfRight
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
 
 <!---FUN notebook_test_join_20-->
 
