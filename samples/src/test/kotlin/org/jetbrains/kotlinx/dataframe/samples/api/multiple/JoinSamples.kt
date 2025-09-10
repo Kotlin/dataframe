@@ -52,7 +52,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     private val dfLeft = dataFrameOf(
         "name" to listOf("Alice", "Bob", "Charlie", "Charlie"),
         "age" to listOf(15, 45, 20, 40),
-        "city" to listOf("London", "Dubai", "Moscow", "Milan"),
+        "city" to listOf("London", "Dubai", "Moscow", "Tokyo"),
     ).cast<DfLeft>()
 
     @DataSchema
@@ -63,9 +63,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     }
 
     private val dfRight = dataFrameOf(
-        "name" to listOf("Charlie", "Bob", "Alice", "Charlie"),
+        "name" to listOf("Alice", "Bob", "Alice", "Charlie"),
         "isBusy" to listOf(true, false, true, true),
-        "city" to listOf("Milan", "Tokyo", null, "Moscow"),
+        "city" to listOf("London", "Tokyo", null, "Moscow"),
     ).cast<DfRight>()
 
     private fun nameToColor(name: String): RgbColor = when(name) {

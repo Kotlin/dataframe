@@ -457,12 +457,12 @@ summary {
 })()
 
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Charlie","Charlie"] }, 
-{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">40</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">40</span></span>"] }, 
-{ name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Moscow","Milan","Milan"] }, 
-{ name: "<span title=\"isBusy: Boolean\">isBusy</span>", children: [], rightAlign: false, values: ["true","false","true","true","true","true"] }, 
-{ name: "<span title=\"city1: String?\">city1</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","Tokyo","Milan","Moscow","Milan","Moscow"] }, 
-], id: 0, rootId: 0, totalRows: 6 } ) });
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["Alice","Alice","Bob","Charlie","Charlie"] }, 
+{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">40</span></span>"] }, 
+{ name: "<span title=\"city: String\">city</span>", children: [], rightAlign: false, values: ["London","London","Dubai","Moscow","Tokyo"] }, 
+{ name: "<span title=\"isBusy: Boolean\">isBusy</span>", children: [], rightAlign: false, values: ["true","true","false","true","true"] }, 
+{ name: "<span title=\"city1: String?\">city1</span>", children: [], rightAlign: false, values: ["London","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","Tokyo","Moscow","Moscow"] }, 
+], id: 0, rootId: 0, totalRows: 5 } ) });
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(0) });
