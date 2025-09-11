@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.IntellijPluginApi
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -167,6 +168,7 @@ public operator fun ColumnsContainer<*>.contains(column: KProperty<*>): Boolean 
 
 // region rows
 
+@IntellijPluginApi
 public fun <T> DataFrame<T>.rows(): Iterable<DataRow<T>> =
     object : Iterable<DataRow<T>> {
         override fun iterator() =
