@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.api.relative
 import org.jetbrains.kotlinx.dataframe.api.rowMean
 import org.jetbrains.kotlinx.dataframe.api.rowStd
 import org.jetbrains.kotlinx.dataframe.api.rowSum
+import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.toDouble
 import org.jetbrains.kotlinx.dataframe.api.transposeTo
 import org.jetbrains.kotlinx.dataframe.api.update
@@ -117,5 +118,13 @@ class DataRowTests : BaseTest() {
         typed[1].relative(0..0) shouldBe typed[1..1]
         typed[1].relative(-2..2) shouldBe typed[0..3]
         typed[1].relative(listOf(2, -1, -3, 0)) shouldBe typed[3, 0, 1]
+    }
+
+    @Test
+    fun toDataRow() {
+        val map = mapOf<String, Any?>("a" to 1, "b" to true)
+        val row = map.toDataRow()
+        row["a"] shouldBe 1
+        row["b"] shouldBe true
     }
 }
