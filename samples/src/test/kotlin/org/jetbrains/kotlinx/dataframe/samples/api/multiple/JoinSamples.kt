@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
-import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.kandy.letsplot.style.LayoutParameters.Companion.background
 import org.junit.Test
@@ -51,7 +50,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     }
 
     @DataSchema
-    interface DfLeft: DfWithNameAndCity {
+    interface DfLeft : DfWithNameAndCity {
         val age: Int
         override val city: String
         override val name: String
@@ -64,7 +63,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     ).cast<DfLeft>()
 
     @DataSchema
-    interface DfRight: DfWithNameAndCity {
+    interface DfRight : DfWithNameAndCity {
         override val city: String?
         val isBusy: Boolean
         override val name: String
@@ -76,24 +75,26 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         "city" to listOf("London", "Tokyo", null, "Moscow"),
     ).cast<DfRight>()
 
-    private fun nameToColor(name: String): RgbColor = when(name) {
-        "Alice"   -> RgbColor(189, 206, 233)
-        "Bob"     -> RgbColor(198, 224, 198)
-        "Charlie" -> RgbColor(219, 198, 230)
-        else -> RgbColor(255, 255, 255)
-    }
+    private fun nameToColor(name: String): RgbColor =
+        when (name) {
+            "Alice" -> RgbColor(189, 206, 233)
+            "Bob" -> RgbColor(198, 224, 198)
+            "Charlie" -> RgbColor(219, 198, 230)
+            else -> RgbColor(255, 255, 255)
+        }
 
-    private fun nameAndCityToColor(name: String, city: String?): RgbColor = when(name to city) {
-        "Alice" to "London"  ->RgbColor(242, 210, 189)
-        "Bob" to "Dubai"    ->RgbColor(245, 226, 191)
-        "Charlie" to "Moscow" -> RgbColor(210, 229, 199)
-        "Charlie" to "Tokyo" ->RgbColor(191, 223, 232)
-        "Bob" to "Tokyo" -> RgbColor(200, 200, 232)
-        "Alice" to null -> RgbColor(233, 199, 220)
-        else -> RgbColor(255, 255, 255)
-    }
+    private fun nameAndCityToColor(name: String, city: String?): RgbColor =
+        when (name to city) {
+            "Alice" to "London" -> RgbColor(242, 210, 189)
+            "Bob" to "Dubai" -> RgbColor(245, 226, 191)
+            "Charlie" to "Moscow" -> RgbColor(210, 229, 199)
+            "Charlie" to "Tokyo" -> RgbColor(191, 223, 232)
+            "Bob" to "Tokyo" -> RgbColor(200, 200, 232)
+            "Alice" to null -> RgbColor(233, 199, 220)
+            else -> RgbColor(255, 255, 255)
+        }
 
-    fun<T: DfWithNameAndCity> DataFrame<T>.colorized() =
+    fun <T : DfWithNameAndCity> DataFrame<T>.colorized() =
         format().perRowCol { row, _ ->
             val color = nameAndCityToColor(row.name, row.city)
             background(color) and textColor(black)
