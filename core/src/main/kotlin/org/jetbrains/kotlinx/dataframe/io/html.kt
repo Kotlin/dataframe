@@ -179,17 +179,17 @@ internal fun AnyFrame.toHtmlData(
         val renderConfig = configuration.copy(decimalFormat = format)
         val contents = values.map { row ->
             val value = col[row]
-            val dfLikeContent = value.toDataFrameLikeOrNull()
-            if (dfLikeContent != null) {
-                val df = dfLikeContent.df()
-                if (df.isEmpty()) {
-                    HtmlContent("", null)
-                } else {
-                    val id = nextTableId()
-                    queue += RenderingQueueItem(df, id, dfLikeContent.configuration(defaultConfiguration))
-                    DataFrameReference(id, df.size)
-                }
-            } else {
+//            val dfLikeContent = value.toDataFrameLikeOrNull()
+//            if (dfLikeContent != null) {
+//                val df = dfLikeContent.df()
+//                if (df.isEmpty()) {
+//                    HtmlContent("", null)
+//                } else {
+//                    val id = nextTableId()
+//                    queue += RenderingQueueItem(df, id, dfLikeContent.configuration(defaultConfiguration))
+//                    DataFrameReference(id, df.size)
+//                }
+//            } else {
                 val html = formatter.format(
                     value = downsizeBufferedImageIfNeeded(value, renderConfig),
                     renderer = cellRenderer,
@@ -232,7 +232,7 @@ internal fun AnyFrame.toHtmlData(
                     ?.entries
                     ?.joinToString(";") { "${it.key}:${it.value}" }
                 HtmlContent(html, style)
-            }
+//            }
         }
         val nested = if (col is ColumnGroup<*>) {
             col.columns().map {

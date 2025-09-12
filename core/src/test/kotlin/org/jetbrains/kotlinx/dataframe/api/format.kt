@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.red
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb
@@ -311,5 +312,30 @@ class FormatTests : TestBase() {
         // Should handle null values gracefully
         html.split("background-color:#00ff00").size - 1 shouldBe 5 // Only non-null weight values get formatted
         formatted::class.simpleName shouldBe "FormattedFrame"
+    }
+
+    @Suppress("ktlint:standard:argument-list-wrapping")
+    @Test
+    fun `formatting a column shouldn't affect nested columns with the same name`() {
+        val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+            "Alice", "Cooper", 15, "London", 54, true,
+            "Bob", "Dylan", 45, "Dubai", 87, true,
+            "Charlie", "Daniels", 20, "Moscow", null, false,
+            "Charlie", "Chaplin", 40, "Milan", null, true,
+            "Bob", "Marley", 30, "Tokyo", 68, true,
+            "Alice", "Wolf", 20, null, 55, false,
+            "Charlie", "Byrd", 30, "Moscow", 90, true,
+        ).group("firstName", "lastName").into("name")
+            .groupBy("city").toDataFrame()
+            .add("cityCopy") { "city"<String>() }
+            .group("city").into("cityGroup")
+            .rename("cityCopy").into("city")
+
+        df.alsoDebug()
+
+        df.format().with { background(black) }.toStandaloneHtml().openInBrowser()
+
+        // affects city, cityGroup.city, and group[*].city
+        df.format("city").with { bold and italic and textColor(green) }.toStandaloneHtml().openInBrowser()
     }
 }
