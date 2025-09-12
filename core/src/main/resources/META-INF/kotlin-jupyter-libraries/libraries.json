@@ -1,0 +1,9 @@
+{
+  "descriptors": [
+    {
+      "init": [
+        "@Suppress(\"INVISIBLE_MEMBER\", \"INVISIBLE_REFERENCE\") USE { dependencies(\"org.jetbrains.kotlinx:dataframe-jupyter:${org.jetbrains.kotlinx.dataframe.BuildConfig.VERSION}\") }"
+      ]
+    }
+  ]
+}
