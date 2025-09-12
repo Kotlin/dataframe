@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.red
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
@@ -311,5 +312,32 @@ class FormatTests : TestBase() {
         // Should handle null values gracefully
         html.split("background-color:#00ff00").size - 1 shouldBe 5 // Only non-null weight values get formatted
         formatted::class.simpleName shouldBe "FormattedFrame"
+    }
+
+    // Issue #982
+    @Suppress("ktlint:standard:argument-list-wrapping")
+    @Test
+    fun `formatting a column shouldn't affect nested columns with the same name`() {
+        val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+            "Alice", "Cooper", 15, "London", 54, true,
+            "Bob", "Dylan", 45, "Dubai", 87, true,
+            "Charlie", "Daniels", 20, "Moscow", null, false,
+            "Charlie", "Chaplin", 40, "Milan", null, true,
+            "Bob", "Marley", 30, "Tokyo", 68, true,
+            "Alice", "Wolf", 20, null, 55, false,
+            "Charlie", "Byrd", 30, "Moscow", 90, true,
+        ).group("firstName", "lastName").into("name")
+            .groupBy("city").toDataFrame()
+            .add("cityCopy") { "city"<String>() }
+            .group("city").into("cityGroup")
+            .rename("cityCopy").into("city")
+
+        val formatted = df.format("city").with { bold and italic and textColor(green) }
+        val html =
+            formatted.toStandaloneHtml() + // expand the nested dataframes so we can see the difference
+                DataFrameHtmlData(script = "document.querySelectorAll('a.expander').forEach(a => a.click());")
+
+        html.toString().split("color:#00ff00").size - 1 shouldBe 12
+        html.toString().split("font-style:italic").size - 1 shouldBe 6
     }
 }
