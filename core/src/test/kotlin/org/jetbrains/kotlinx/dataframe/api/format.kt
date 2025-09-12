@@ -2,10 +2,10 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.red
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
@@ -314,6 +314,7 @@ class FormatTests : TestBase() {
         formatted::class.simpleName shouldBe "FormattedFrame"
     }
 
+    // Issue #982
     @Suppress("ktlint:standard:argument-list-wrapping")
     @Test
     fun `formatting a column shouldn't affect nested columns with the same name`() {
@@ -331,11 +332,12 @@ class FormatTests : TestBase() {
             .group("city").into("cityGroup")
             .rename("cityCopy").into("city")
 
-        df.alsoDebug()
+        val formatted = df.format("city").with { bold and italic and textColor(green) }
+        val html =
+            formatted.toStandaloneHtml() + // expand the nested dataframes so we can see the difference
+                DataFrameHtmlData(script = "document.querySelectorAll('a.expander').forEach(a => a.click());")
 
-        df.format().with { background(black) }.toStandaloneHtml().openInBrowser()
-
-        // affects city, cityGroup.city, and group[*].city
-        df.format("city").with { bold and italic and textColor(green) }.toStandaloneHtml().openInBrowser()
+        html.toString().split("color:#00ff00").size - 1 shouldBe 12
+        html.toString().split("font-style:italic").size - 1 shouldBe 6
     }
 }
