@@ -2,8 +2,10 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
-    kotlin("jvm") version "2.2.20-Beta2"
-    kotlin("plugin.dataframe") version "2.2.20-Beta2"
+
+    val kotlinVersion = "2.2.20"
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.dataframe") version kotlinVersion
 }
 
 group = "org.example"
@@ -15,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta2")
+    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta3")
     testImplementation(kotlin("test"))
 }
 

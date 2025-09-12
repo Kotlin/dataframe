@@ -103,7 +103,7 @@ To enable the plugin in your Gradle project, add it to the `plugins` section:
 
 ```kotlin
 plugins {
-    kotlin("plugin.dataframe") version "2.2.20-Beta1"
+    kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
 }
 ```
 
@@ -113,7 +113,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'org.jetbrains.kotlin.plugin.dataframe' version '2.2.20-Beta1'
+    id 'org.jetbrains.kotlin.plugin.dataframe' version '%compilerPluginKotlinVersion%'
 }
 ```
 

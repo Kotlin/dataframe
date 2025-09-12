@@ -54,7 +54,7 @@ You could find the following articles there:
 
 ### What's new
 
-1.0.0-Beta2: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-Beta2)
+1.0.0-Beta3: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-Beta3)
 
 Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
@@ -100,7 +100,7 @@ Add dependencies in the build.gradle.kts script:
 
 ```kotlin
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta2")
+    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta3")
 }
 ```
 
@@ -124,7 +124,7 @@ for Groovy, and for configurations specific to Android projects.
 This example of Kotlin DataFrame code with
 the [Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) enabled.
 See [the full project](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-example).
-See also 
+See also
 [this example in Kotlin Notebook](https://github.com/Kotlin/dataframe/tree/master/examples/notebooks/readme_example.ipynb).
 
 ```kotlin
@@ -175,18 +175,19 @@ for your dataframes.
 
 This table shows the mapping between main library component versions and minimum supported Java versions.
 
-| Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | Apache Arrow version |
-|--------------------------|----------------------|----------------|------------------------|----------------------|
-| 0.10.0                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |
-| 0.10.1                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |
-| 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |
-| 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |
-| 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 11.0.0               |
-| 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 11.0.0               |
-| 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 15.0.0               |
-| 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 17.0.0               |
-| 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 18.1.0               |
-| 1.0.0-Beta2              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               |
+| Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | Apache Arrow Version | Compiler Plugin Version | Compatible Kandy version |
+|--------------------------|----------------------|----------------|------------------------|----------------------|-------------------------|--------------------------|
+| 0.10.0                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |                         |                          |
+| 0.10.1                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |                         |                          |
+| 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |                         |                          |
+| 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |                         |                          |
+| 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 11.0.0               |                         |                          |
+| 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 11.0.0               |                         |                          |
+| 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 15.0.0               |                         |                          |
+| 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 17.0.0               |                         |                          |
+| 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 18.1.0               |                         | 0.8.0                    |
+| 1.0.0-Beta2              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               | 2.2.20-dev-3524         | 0.8.1-dev                |
+| 1.0.0-Beta3              | 8 / 11               | 2.2.20         | 0.15.0-587             | 18.3.0               | 2.2.20                  | TODO                     |
 
 ## Code of Conduct
 

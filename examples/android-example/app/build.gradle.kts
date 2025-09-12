@@ -4,7 +4,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.dataframe") version "2.2.20-Beta2"
+
+    // DataFrame Compiler plugin, matching the Kotlin version
+    alias(libs.plugins.dataframe)
 }
 
 android {
@@ -66,9 +68,9 @@ dependencies {
     // Core Kotlin DataFrame API, JSON and CSV IO.
     // See custom Gradle setup:
     // https://kotlin.github.io/dataframe/setupcustomgradle.html
-    implementation("org.jetbrains.kotlinx:dataframe-core:1.0.0-dev-8314")
-    implementation("org.jetbrains.kotlinx:dataframe-json:1.0.0-dev-8314")
-    implementation("org.jetbrains.kotlinx:dataframe-csv:1.0.0-dev-8314")
+    implementation("org.jetbrains.kotlinx:dataframe-core:1.0.0-Beta3")
+    implementation("org.jetbrains.kotlinx:dataframe-json:1.0.0-Beta3")
+    implementation("org.jetbrains.kotlinx:dataframe-csv:1.0.0-Beta3")
     // You can add any additional IO modules you like, except for 'dataframe-arrow'.
     // Apache Arrow is not supported well on Android.
 }
