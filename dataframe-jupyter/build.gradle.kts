@@ -16,6 +16,7 @@ group = "org.jetbrains.kotlinx"
 repositories {
     // geo repository should come before Maven Central
     maven("https://repo.osgeo.org/repository/release")
+    maven("https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
     mavenCentral()
 }
 
@@ -35,6 +36,8 @@ dependencies {
 
     testImplementation(projects.dataframeJupyter)
     testImplementation(projects.dataframeGeoJupyter)
+    testImplementation(libs.kandy.notebook)
+    testImplementation(libs.kandy.stats)
 
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
