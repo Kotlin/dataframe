@@ -1,4 +1,5 @@
 # Kotlin DataFrame: typesafe in-memory structured data processing for JVM
+
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin component beta stability](https://img.shields.io/badge/project-beta-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
 [![Kotlin](https://img.shields.io/badge/kotlin-2.0.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
@@ -8,29 +9,37 @@
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Kotlin/dataframe/HEAD)
 
-Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
+Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full
+power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and
+REPL.
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
 * **Functional** — the data processing pipeline is organized in a chain of `DataFrame` transformation operations.
-* **Immutable** — every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's possible.
+* **Immutable** — every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's
+  possible.
 * **Readable** — data transformation operations are defined in DSL close to natural language.
 * **Practical** — provides simple solutions for common problems and the ability to perform complex tasks.
 * **Minimalistic** — simple, yet powerful data model of three column kinds.
-* **Interoperable** — convertable with Kotlin data classes and collections. This also means conversion to/from other libraries' data structures is usually quite straightforward!
+* **Interoperable** — convertable with Kotlin data classes and collections. This also means conversion to/from other
+  libraries' data structures is usually quite straightforward!
 * **Generic** — can store objects of any type, not only numbers or strings.
-* **Typesafe** — on-the-fly [generation of extension properties](https://kotlin.github.io/dataframe/extensionpropertiesapi.html) for type safe data access with Kotlin-style care for null safety.
-* **Polymorphic** — type compatibility derives from column schema compatibility. You can define a function that requires a special subset of columns in a dataframe but doesn't care about other columns.
+* **Typesafe** —
+  on-the-fly [generation of extension properties](https://kotlin.github.io/dataframe/extensionpropertiesapi.html) for
+  type safe data access with Kotlin-style care for null safety.
+* **Polymorphic** — type compatibility derives from column schema compatibility. You can define a function that requires
+  a special subset of columns in a dataframe but doesn't care about other columns.
   In notebooks this works out-of-the-box. In ordinary projects this requires casting (for now).
 
-Integrates with [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html). 
-Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
+Integrates with [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
+Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections
+and [pandas](https://pandas.pydata.org/)
 
 ## 🚀 Quickstart
 
 Looking for a fast and simple way to learn the basics?  
 Get started in minutes with our [Quickstart Guide](https://kotlin.github.io/dataframe/quickstart.html).
 
-It walks you through the core features of Kotlin DataFrame with minimal setup and clear examples 
+It walks you through the core features of Kotlin DataFrame with minimal setup and clear examples
 — perfect for getting up to speed in just a few minutes.
 
 [![quickstart_preview](docs/StardustDocs/images/guides/quickstart_preview.png)](https://kotlin.github.io/dataframe/quickstart.html)
@@ -66,7 +75,7 @@ Check out this [notebook with new features](examples/notebooks/feature_overviews
 ### Kotlin Notebook
 
 You can use Kotlin DataFrame in [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html),
-or other interactive environment with [Kotlin Jupyter Kernel](https://github.com/Kotlin/kotlin-jupyter) support, 
+or other interactive environment with [Kotlin Jupyter Kernel](https://github.com/Kotlin/kotlin-jupyter) support,
 such as [Datalore](https://datalore.jetbrains.com/),
 and [Jupyter Notebook](https://jupyter.org/).
 
@@ -90,7 +99,7 @@ Or manually specify the version:
 %use dataframe($dataframe_version)
 ```
 
-Refer to the 
+Refer to the
 [Get started with Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/gettingstartedkotlinnotebook.html)
 for details.
 
@@ -115,7 +124,7 @@ repositories {
 Refer to the
 [Get started with Kotlin DataFrame on Gradle](https://kotlin.github.io/dataframe/gettingstartedgradle.html)
 for details.
-Also, check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) 
+Also, check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html)
 if you don't need some formats as dependencies,
 for Groovy, and for configurations specific to Android projects.
 
@@ -129,27 +138,27 @@ See also
 
 ```kotlin
 val df = DataFrame
-   // Read DataFrame from the CSV file.
-   .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
-   // And convert it to match the `Repositories` schema.
-   .convertTo<Repositories>()
+    // Read DataFrame from the CSV file.
+    .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+    // And convert it to match the `Repositories` schema.
+    .convertTo<Repositories>()
 
 // Update the DataFrame.
 val reposUpdated = repos
-   // Rename columns to CamelCase.
-   .renameToCamelCase()
-   // Rename "stargazersCount" column to "stars".
-   .rename { stargazersCount }.into("stars")
-   // Filter by the number of stars:
-   .filter { stars > 50 }
-   // Convert values in the "topic" column (which were `String` initially)
-   // to the list of topics.
-   .convert { topics }.with { 
-       val inner = it.removeSurrounding("[", "]")
+    // Rename columns to CamelCase.
+    .renameToCamelCase()
+    // Rename "stargazersCount" column to "stars".
+    .rename { stargazersCount }.into("stars")
+    // Filter by the number of stars:
+    .filter { stars > 50 }
+    // Convert values in the "topic" column (which were `String` initially)
+    // to the list of topics.
+    .convert { topics }.with {
+        val inner = it.removeSurrounding("[", "]")
         if (inner.isEmpty()) emptyList() else inner.split(',').map(String::trim)
-   }
-   // Add a new column with the number of topics.
-   .add("topicCount") { topics.size }
+    }
+    // Add a new column with the number of topics.
+    .add("topicCount") { topics.size }
 
 // Write the updated DataFrame to a CSV file.
 reposUpdated.writeCsv("jetbrains_repositories_new.csv")
@@ -158,22 +167,24 @@ reposUpdated.writeCsv("jetbrains_repositories_new.csv")
 Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-examples.html).
 
 ## Data model
+
 * `DataFrame` is a list of columns with equal sizes and distinct names.
 * `DataColumn` is a named list of values. Can be one of three kinds:
-  * `ValueColumn` — contains data
-  * `ColumnGroup` — contains columns
-  * `FrameColumn` — contains dataframes
+    * `ValueColumn` — contains data
+    * `ColumnGroup` — contains columns
+    * `FrameColumn` — contains dataframes
 
 ## Visualizations
 
-[Kandy](https://kotlin.github.io/kandy/welcome.html) plotting library provides seamless visualizations 
+[Kandy](https://kotlin.github.io/kandy/welcome.html) plotting library provides seamless visualizations
 for your dataframes.
 
 ![kandy_preview](docs/StardustDocs/images/guides/kandy_gallery_preview.png)
 
 ## Kotlin, Kotlin Jupyter, Arrow, and JDK versions
 
-This table shows the mapping between main library component versions and minimum supported Java versions.
+This table shows the mapping between main library component versions and minimum supported Java versions, along with
+other recommended versions.
 
 | Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | Apache Arrow Version | Compiler Plugin Version | Compatible Kandy version |
 |--------------------------|----------------------|----------------|------------------------|----------------------|-------------------------|--------------------------|
@@ -186,12 +197,15 @@ This table shows the mapping between main library component versions and minimum
 | 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 15.0.0               |                         |                          |
 | 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 17.0.0               |                         |                          |
 | 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 18.1.0               |                         | 0.8.0                    |
-| 1.0.0-Beta2              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               | 2.2.20-dev-3524         | 0.8.1-dev                |
-| 1.0.0-Beta3              | 8 / 11               | 2.2.20         | 0.15.0-587             | 18.3.0               | 2.2.20                  | TODO                     |
+| 1.0.0-Beta2              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               | 2.2.20-dev-3524         | 0.8.1-dev-66             |
+| 1.0.0-Beta3n (notebooks) | 8 / 11               | 2.2.20         | 0.15.0-587 (K1 only)   | 18.3.0               | -                       | 0.8.1n                   |
+| 1.0.0-Beta3              | 8 / 11               | 2.2.20         | 0.15.0-587             | 18.3.0               | 2.2.20 / IDEA 2025.2+   | 0.8.1                    |
 
 ## Code of Conduct
 
-This project and the corresponding community are governed by the [JetBrains Open Source and Community Code of Conduct](https://confluence.jetbrains.com/display/ALL/JetBrains+Open+Source+and+Community+Code+of+Conduct). Please make sure you read it.
+This project and the corresponding community are governed by
+the [JetBrains Open Source and Community Code of Conduct](https://confluence.jetbrains.com/display/ALL/JetBrains+Open+Source+and+Community+Code+of+Conduct).
+Please make sure you read it.
 
 ## License
 
