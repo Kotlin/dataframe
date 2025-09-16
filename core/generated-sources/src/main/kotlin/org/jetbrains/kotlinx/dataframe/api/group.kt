@@ -291,9 +291,11 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  * where that column should be grouped.
  * All selected columns will be moved under the groups defined by this expression.
  */
+@Refine
 @JvmName("intoString")
 @OverloadResolutionByLambdaReturnType
 @OptIn(ExperimentalTypeInference::class)
+@Interpretable("IntoStringLambda")
 public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String): DataFrame<T> =
     df.move(columns).under { column(it).toColumnAccessor() }
 
