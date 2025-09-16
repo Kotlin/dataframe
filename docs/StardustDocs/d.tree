@@ -209,6 +209,7 @@
         <toc-element topic="CSV-TSV.md"/>
         <toc-element topic="Excel.md"/>
         <toc-element topic="ApacheArrow.md"/>
+        <toc-element topic="Parquet.md"/>
         <toc-element topic="SQL.md">
             <toc-element topic="PostgreSQL.md"/>
             <toc-element topic="MySQL.md"/>

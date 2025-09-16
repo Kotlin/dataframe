@@ -21,6 +21,7 @@ Below you'll find a list of supported sources along with instructions on how to 
 - [CSV / TSV](CSV-TSV.md)
 - [Excel](Excel.md)
 - [Apache Arrow](ApacheArrow.md)
+- [Parquet](Parquet.md)
 - [SQL](SQL.md):
     - [PostgreSQL](PostgreSQL.md)
     - [MySQL](MySQL.md)
