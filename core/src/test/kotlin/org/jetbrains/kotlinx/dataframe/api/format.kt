@@ -5,7 +5,6 @@ import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.red
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb
-import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
