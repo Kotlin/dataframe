@@ -56,7 +56,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 
 /** Users will get an error if their Kotlin Jupyter kernel is older than this version. */
-private const val MIN_KERNEL_VERSION = "0.11.0.198"
+private const val MIN_KERNEL_VERSION = "0.15.0.606"
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
