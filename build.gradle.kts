@@ -158,7 +158,7 @@ val modulesUsingJava11 = with(projects) {
         dataframeGeoJupyter,
         examples.ideaExamples.titanic,
         examples.ideaExamples.unsupportedDataSources,
-        tests,
+        samples,
         plugins.dataframeGradlePlugin,
     )
 }.map { it.path }

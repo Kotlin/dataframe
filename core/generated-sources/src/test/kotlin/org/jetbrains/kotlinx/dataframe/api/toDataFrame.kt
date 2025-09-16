@@ -167,6 +167,25 @@ class CreateDataFrameTests {
         df2.a.kind() shouldBe ColumnKind.Group
     }
 
+    class ExcludeTestData(val s: String, val data: NestedData)
+
+    class NestedData(val i: Int, val nestedStr: String)
+
+    @Test
+    fun `preserve T test`() {
+        val data = listOf(
+            ExcludeTestData("test", NestedData(42, "nested")),
+            ExcludeTestData("test2", NestedData(43, "nested2")),
+        )
+
+        val res = data.toDataFrame {
+            preserve<NestedData>()
+            properties(maxDepth = 2)
+        }
+
+        res.schema() shouldBe data.toDataFrame(maxDepth = 0).schema()
+    }
+
     enum class DummyEnum { A }
 
     @Test

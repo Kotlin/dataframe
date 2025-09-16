@@ -275,7 +275,7 @@ private fun Any?.toDataFrameLikeOrNull(): DataFrameLike? =
     when (this) {
         is AnyFrame -> {
             object : DataFrameLike {
-                override fun configuration(default: DisplayConfiguration) = default
+                override fun configuration(default: DisplayConfiguration) = default.copy(cellFormatter = null)
 
                 override fun df(): AnyFrame = this@toDataFrameLikeOrNull
             }
@@ -318,6 +318,11 @@ private fun downsizeBufferedImageIfNeeded(value: Any?, renderConfig: DisplayConf
 /**
  * Renders [this] [DataFrame] as static HTML (meaning no JS is used).
  * CSS rendering is enabled by default but can be turned off using [includeCss]
+ *
+ * __IMPORTANT:__ If JavaScript is enabled, the table inside the returned [DataFrameHtmlData] will be HIDDEN when rendered.
+ * This is done so this function can be used as a fallback mechanism for [AnyFrame.toHtmlData], which
+ * requires JavaScript to be displayed.
+ * Call `.copy(script = "")` on the returned [DataFrameHtmlData] to remove this hiding/fallback mechanism.
  *
  * @param configuration optional configuration for rendering
  * @param cellRenderer optional cell renderer for rendering

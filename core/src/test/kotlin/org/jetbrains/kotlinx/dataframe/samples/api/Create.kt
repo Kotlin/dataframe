@@ -25,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.value
-import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.kind
@@ -77,18 +76,6 @@ class Create : TestBase() {
         // Returns new dataframe containing only rows with age > 30
         df.filter { age > 30 }
         // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnAccessorToColumn() {
-        // SampleStart
-        val age by column<Int>()
-        val ageCol1 = age.withValues(15, 20)
-        val ageCol2 = age.withValues(1..10)
-        // SampleEnd
-
-        ageCol2.size() shouldBe 10
     }
 
     @Test

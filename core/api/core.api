@@ -4502,6 +4502,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/TypeConversionsKt {
 	public static final fun toColumnOf (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;
 	public static final fun toDataFrame (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toDataFrame (Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toDataRow (Ljava/util/Map;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun toDoubleArray (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)[D
 	public static final fun toFloatArray (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)[F
 	public static final fun toFrameColumn (Ljava/lang/Iterable;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
@@ -6581,8 +6582,6 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords : j
 	public static final field EXTERNAL Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field FINAL Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field FUN Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
-	public static final field HEADER Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
-	public static final field IMPL Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field IN Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field INFIX Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field INLINE Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
@@ -6636,8 +6635,6 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords : java/
 	public static final field FINAL Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
 	public static final field FINALLY Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
 	public static final field GET Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
-	public static final field HEADER Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
-	public static final field IMPL Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
 	public static final field IMPORT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
 	public static final field INFIX Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
 	public static final field INIT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;

@@ -22,13 +22,19 @@ but you can add the Kotlin DataFrame JVM dependency to your Android project with
 
 ```kotlin
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
+    // Core Kotlin DataFrame API, CSV and JSON IO.
+    // See custom Gradle setup:
+    // https://kotlin.github.io/dataframe/setupcustomgradle.html
+    implementation("org.jetbrains.kotlinx:dataframe-core:%dataFrameVersion%")
+    implementation("org.jetbrains.kotlinx:dataframe-json:%dataFrameVersion%")
+    implementation("org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%")
+    // You can add any additional IO modules you like, except for 'dataframe-arrow'.
+    // Apache Arrow is not supported well on Android.
 }
 
 android {
-    // Requires Android 0+, i.e. SDK version 26 or higher.
     defaultConfig {
-        minSdk = 26 
+        minSdk = 21
     }
     // Requires Java 8 or higher
     compileOptions {
@@ -37,25 +43,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-    packaging {
-        resources {
-            pickFirsts += listOf(
-                "META-INF/AL2.0",
-                "META-INF/LGPL2.1",
-                "META-INF/ASL-2.0.txt",
-                "META-INF/LICENSE.md",
-                "META-INF/NOTICE.md",
-                "META-INF/LGPL-3.0.txt",
-                "META-INF/thirdparty-LICENSE",
-            )
-            excludes += listOf(
-                "META-INF/kotlin-jupyter-libraries/libraries.json",
-                "META-INF/{INDEX.LIST,DEPENDENCIES}",
-                "{draftv3,draftv4}/schema",
-                "arrow-git.properties",
-            )
-        }
     }
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> { 
@@ -69,13 +56,19 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 ```groovy
 dependencies {
-    implementation 'org.jetbrains.kotlinx:dataframe:%dataFrameVersion%'
+    // Core Kotlin DataFrame API, CSV and JSON IO.
+    // See custom Gradle setup:
+    // https://kotlin.github.io/dataframe/setupcustomgradle.html
+    implementation 'org.jetbrains.kotlinx:dataframe-core:%dataFrameVersion%'
+    implementation 'org.jetbrains.kotlinx:dataframe-json:%dataFrameVersion%'
+    implementation 'org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%'
+    // You can add any additional IO modules you like, except for 'dataframe-arrow'.
+    // Apache Arrow is not supported well on Android.
 }
 
 android {
-    // Requires Android 0+, i.e. SDK version 26 or higher.
     defaultConfig {
-        minSdk 26
+        minSdk 21
     }
     // Requires Java 8 or higher
     compileOptions {
@@ -84,25 +77,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-    packaging {
-        resources {
-            pickFirsts += [
-                "META-INF/AL2.0",
-                "META-INF/LGPL2.1",
-                "META-INF/ASL-2.0.txt",
-                "META-INF/LICENSE.md",
-                "META-INF/NOTICE.md",
-                "META-INF/LGPL-3.0.txt",
-                "META-INF/thirdparty-LICENSE",
-            ]
-            excludes += [
-                "META-INF/kotlin-jupyter-libraries/libraries.json",
-                "META-INF/{INDEX.LIST,DEPENDENCIES}",
-                "{draftv3,draftv4}/schema",
-                "arrow-git.properties",
-            ]
-        }
     }
 }
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach { 
@@ -113,9 +87,8 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 </tab>
 </tabs>
 
-This setup adds the [general Kotlin DataFrame dependency](Modules.md#dataframe-general), 
-which includes the [core API and implementation](Modules.md#dataframe-core) 
-as well as all [IO modules](Modules.md#io-modules) 
+This setup adds the [Kotlin DataFrame core](Modules.md#dataframe-core) 
+as well as a subset of the [IO modules](Modules.md#io-modules) 
 (excluding [experimental ones](Modules.md#experimental-modules)).
 For flexible configuration, see [Custom configuration](SetupCustomGradle.md).
 
