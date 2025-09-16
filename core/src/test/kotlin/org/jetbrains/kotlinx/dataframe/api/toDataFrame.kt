@@ -213,8 +213,7 @@ class CreateDataFrameTests {
         df.rowsCount() shouldBe 1
 
         val childCol = df[Entry::child]
-        childCol.kind() shouldBe ColumnKind.Group
-        childCol.asColumnGroup().columnsCount() shouldBe 0
+        childCol.kind() shouldBe ColumnKind.Value
     }
 
     @Test
@@ -631,5 +630,44 @@ class CreateDataFrameTests {
         val files = listOf(File("data.csv"))
         val df = files.toDataFrame(columnName = "files")
         df["files"][0] shouldBe File("data.csv")
+    }
+
+    class MyEmptyDeclaration
+
+    class TestItem(val name: String, val containingDeclaration: MyEmptyDeclaration, val test: Int)
+
+    @Test
+    fun `preserve empty interface consistency`() {
+        val df = listOf(MyEmptyDeclaration(), MyEmptyDeclaration()).toDataFrame()
+        df["value"].type() shouldBe typeOf<MyEmptyDeclaration>()
+    }
+
+    @Test
+    fun `preserve nested empty interface consistency`() {
+        val df = List(10) {
+            TestItem(
+                "Test1",
+                MyEmptyDeclaration(),
+                123,
+            )
+        }.toDataFrame(maxDepth = 2)
+
+        df["containingDeclaration"].type() shouldBe typeOf<MyEmptyDeclaration>()
+    }
+
+    @Test
+    fun `preserve value type consistency`() {
+        val list = listOf(mapOf("a" to 1))
+        val df = list.toDataFrame(maxDepth = 1)
+        df["value"].type() shouldBe typeOf<Map<String, Int>>()
+    }
+
+    class MapContainer(val map: Map<String, Int>)
+
+    @Test
+    fun `preserve nested value type consistency`() {
+        val list = listOf(MapContainer(mapOf("a" to 1)))
+        val df = list.toDataFrame(maxDepth = 2)
+        df["map"].type() shouldBe typeOf<Map<String, Int>>()
     }
 }
