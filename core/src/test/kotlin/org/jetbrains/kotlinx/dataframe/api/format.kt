@@ -333,11 +333,9 @@ class FormatTests : TestBase() {
             .rename("cityCopy").into("city")
 
         val formatted = df.format("city").with { bold and italic and textColor(green) }
-        val html =
-            formatted.toStandaloneHtml() + // expand the nested dataframes so we can see the difference
-                DataFrameHtmlData(script = "document.querySelectorAll('a.expander').forEach(a => a.click());")
+        val html = formatted.toHtml().toString()
 
-        html.toString().split("color:#00ff00").size - 1 shouldBe 12
-        html.toString().split("font-style:italic").size - 1 shouldBe 6
+        html.split("color:#00ff00").size - 1 shouldBe 12
+        html.split("font-style:italic").size - 1 shouldBe 6
     }
 }
