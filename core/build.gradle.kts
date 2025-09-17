@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
 
+    testImplementation(projects.dataframeJson)
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
