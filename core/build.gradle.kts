@@ -3,7 +3,7 @@ import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
 import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.gradle.jvm.tasks.Jar
-import org.gradle.kotlin.dsl.withType
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -251,15 +251,71 @@ val changeJarTask by tasks.registering {
     }
 }
 
+// generateLibrariesJson makes sure a META-INF/kotlin-jupyter-libraries/libraries.json file is generated
+// This file allows loading dataframe-jupyter when dataframe-core is present on its own in a Kotlin Notebook.
+val generatedJupyterResourcesDir = layout.buildDirectory.dir("generated/jupyter")
+val generateLibrariesJson by tasks.registering {
+    val outDir = generatedJupyterResourcesDir.get().asFile.resolve("META-INF/kotlin-jupyter-libraries")
+    val outFile = outDir.resolve("libraries.json")
+    outputs.file(outFile)
+
+    doLast {
+        outDir.mkdirs()
+        @Language("json")
+        val content =
+            """
+            {
+              "descriptors": [
+                {
+                  "init": [
+                    "USE { dependencies(\"org.jetbrains.kotlinx:dataframe-jupyter:${project.version}\") }"
+                  ]
+                }
+              ]
+            }
+            """.trimIndent()
+
+        outFile.delete()
+        outFile.writeText(content)
+        logger.lifecycle("generated META-INF/kotlin-jupyter-libraries/libraries.json for :core")
+    }
+}
+
+// If `changeProcessResourcesTask` is run, modify the processResources task such that before running,
+// a META-INF libraries.json file is added to the resources.
+// This file allows loading dataframe-jupyter when dataframe-core is present on its own in a Kotlin Notebook.
+// This is usually only done when publishing.
+val changeProcessResourcesTask by tasks.registering {
+    doFirst {
+        tasks.processResources {
+            from(generatedJupyterResourcesDir) {
+                into("") // keep META-INF/... structure as generated
+            }
+            doLast {
+                logger.lifecycle("$this includes generated META-INF/kotlin-jupyter-libraries/libraries.json")
+            }
+        }
+    }
+}
+tasks.processResources {
+    mustRunAfter(changeProcessResourcesTask)
+    dependsOn(generateLibrariesJson)
+}
+
 // if `processKDocsMain` runs, the Jar tasks must run after it so the generated-sources are there
 tasks.withType<Jar> {
     mustRunAfter(changeJarTask, tasks.generateKeywordsSrc, processKDocsMain)
 }
 
 // modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
+// also `changeProcessResourcesTask`, so libraries.json is included in the resources
 tasks.configureEach {
-    if (!project.hasProperty("skipKodex") && name.startsWith("publish")) {
-        dependsOn(processKDocsMain, changeJarTask)
+    if (name.startsWith("publish")) {
+        dependsOn(changeProcessResourcesTask)
+
+        if (!project.hasProperty("skipKodex")) {
+            dependsOn(processKDocsMain, changeJarTask)
+        }
     }
 }
 
