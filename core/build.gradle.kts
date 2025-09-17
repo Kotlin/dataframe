@@ -285,7 +285,6 @@ tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
 korro {
     docs = fileTree(rootProject.rootDir) {
         include("docs/StardustDocs/topics/*.md")
-        include("docs/StardustDocs/topics/schemas/*.md")
     }
 
     samples = fileTree(project.projectDir) {
