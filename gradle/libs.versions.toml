@@ -1,5 +1,5 @@
 [versions]
-ksp = "2.2.20-RC2-2.0.2"
+ksp = "2.2.20-2.0.2"
 kotlinJupyter = "0.15.0-587"
 
 ktlint = "12.3.0"
@@ -62,7 +62,13 @@ geotools = "32.1"
 jai-core = "1.1.3"
 jts = "1.20.0"
 
-kandy = "0.8.1-dev-82"
+# Normal examples Kandy versions
+kandy = "0.8.2-dev-87"
+
+# Example notebooks Kandy versions
+kandy-notebook = "0.8.1n"
+kandy-stats-notebook = "0.5.0n"
+
 exposed = "1.0.0-beta-2"
 hibernate = "6.5.2.Final"
 hikari = "5.1.0"
@@ -102,6 +108,12 @@ postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "pos
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
 jts = { group = "org.locationtech.jts", name = "jts-core", version.ref = "jtsCore" }
 
+# Example notebooks Kandy versions
+kandy-notebook = { group = "org.jetbrains.kotlinx", name = "kandy-lets-plot", version.ref = "kandy-notebook" }
+# -- Requires repo: https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven
+kandy-stats = { group = "org.jetbrains.kotlinx", name = "kotlin-statistics-jvm", version.ref = "kandy-stats-notebook" }
+
+# Normal examples Kandy versions
 kandy = { group = "org.jetbrains.kotlinx", name = "kandy-lets-plot", version.ref = "kandy" }
 kandy-samples-utils = { group = "org.jetbrains.kotlinx", name = "kandy-samples-utils", version.ref = "kandy" }
 

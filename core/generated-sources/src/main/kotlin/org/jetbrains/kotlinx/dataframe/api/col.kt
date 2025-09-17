@@ -780,6 +780,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
+    @Interpretable("SingleColumnNestedColUntyped")
     public fun SingleColumn<DataRow<*>>.col(name: String): SingleColumn<*> = col<Any?>(name)
 
     /**
@@ -832,6 +833,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
+    @Interpretable("SingleColumnNestedCol")
     public fun <C> SingleColumn<DataRow<*>>.col(name: String): SingleColumn<C> =
         this.ensureIsColumnGroup().transformSingle {
             val child = it.getCol(name)?.cast<C>()
