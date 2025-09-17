@@ -281,25 +281,20 @@ val generateLibrariesJson by tasks.registering {
     }
 }
 
-// If `changeProcessResourcesTask` is run, modify the processResources task such that before running,
-// a META-INF libraries.json file is added to the resources.
+// If `includeCoreLibrariesJson` is set, modify the processResources task such that it includes
+// a META-INF libraries.json file.
 // This file allows loading dataframe-jupyter when dataframe-core is present on its own in a Kotlin Notebook.
 // This is usually only done when publishing.
-val changeProcessResourcesTask by tasks.registering {
-    doFirst {
-        tasks.processResources {
-            from(generatedJupyterResourcesDir) {
-                into("") // keep META-INF/... structure as generated
-            }
-            doLast {
-                logger.lifecycle("$this includes generated META-INF/kotlin-jupyter-libraries/libraries.json")
-            }
+tasks.processResources {
+    if (project.hasProperty("includeCoreLibrariesJson")) {
+        dependsOn(generateLibrariesJson)
+        from(generatedJupyterResourcesDir) {
+            into("") // keep META-INF/... structure as generated
+        }
+        doLast {
+            logger.lifecycle("$this includes generated META-INF/kotlin-jupyter-libraries/libraries.json")
         }
     }
-}
-tasks.processResources {
-    mustRunAfter(changeProcessResourcesTask)
-    dependsOn(generateLibrariesJson)
 }
 
 // if `processKDocsMain` runs, the Jar tasks must run after it so the generated-sources are there
@@ -308,14 +303,9 @@ tasks.withType<Jar> {
 }
 
 // modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
-// also `changeProcessResourcesTask`, so libraries.json is included in the resources
 tasks.configureEach {
-    if (name.startsWith("publish")) {
-        dependsOn(changeProcessResourcesTask)
-
-        if (!project.hasProperty("skipKodex")) {
-            dependsOn(processKDocsMain, changeJarTask)
-        }
+    if (!project.hasProperty("skipKodex") && name.startsWith("publish")) {
+        dependsOn(processKDocsMain, changeJarTask)
     }
 }
 
