@@ -1,6 +1,5 @@
 import com.google.devtools.ksp.gradle.KspTask
 import com.google.devtools.ksp.gradle.KspTaskJvm
-import io.github.devcrocod.korro.KorroTask
 import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.withType
@@ -159,8 +158,10 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     classpath = sourceSets.test.get().runtimeClasspath
 }
 
-tasks.withType<KorroTask> {
-    dependsOn(copySamplesOutputs)
+tasks.configureEach {
+    if (name == "korro") {
+        dependsOn(copySamplesOutputs)
+    }
 }
 
 // region docPreprocessor
