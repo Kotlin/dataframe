@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
+import org.jetbrains.kotlinx.dataframe.api.GroupByEntryFilter
 import org.jetbrains.kotlinx.dataframe.api.GroupedRowFilter
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -18,11 +19,13 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
+import org.jetbrains.kotlinx.dataframe.impl.api.GroupByEntryImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.GroupedDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
@@ -41,29 +44,40 @@ internal class GroupByImpl<T, G>(
 ) : GroupBy<T, G>,
     AggregatableInternal<G> {
 
-    override val keys by lazy { df.remove(groups) }
+    override val keys by lazy { df.remove { groups } }
 
-    override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
-        df.convert(groups) { transform(it, it) }.asGroupBy(groups.name()) as GroupBy<T, R>
+    @Suppress("UNCHECKED_CAST")
+    override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupBy<T, R> =
+        df.convert { groups }.with { transform(it, it) }
+            .asGroupBy { frameCol<R>(groups.name()) }
 
     override fun toString() = df.toString()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> =
         keyColumnsInGroups.toColumnSet().let { groupCols -> { all().except(groupCols) } }
 
+    @Deprecated("Replaced by filterEntries")
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G> {
         val indices = (0 until df.nrow).filter {
-            val row = GroupedDataRowImpl(df.get(it), groups)
+            val row = GroupedDataRowImpl(df[it], groups)
             predicate(row, row)
         }
-        return df[indices].asGroupBy(groups)
+        return df[indices].asGroupBy { frameCol<G>(groups.name()) }
+    }
+
+    override fun filterEntries(predicate: GroupByEntryFilter<T, G>): GroupBy<T, G> {
+        val indices = (0 until df.nrow).filter {
+            val row = GroupByEntryImpl(df[it], groups)
+            predicate(row, row)
+        }
+        return df[indices].asGroupBy { frameCol<G>(groups.name()) }
     }
 
     override fun toDataFrame(groupedColumnName: String?): DataFrame<T> =
         if (groupedColumnName == null || groupedColumnName == groups.name()) {
             df
         } else {
-            df.rename(groups).into(groupedColumnName)
+            df.rename { groups }.into(groupedColumnName)
         }
 }
 
