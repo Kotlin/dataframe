@@ -24,9 +24,9 @@ plugins {
         alias(korro)
         alias(ktlint)
         // Compiler plugin doesn't work properly for now: https://github.com/Kotlin/dataframe/issues/1432
-//        alias(dataframePlugin)
+        alias(dataframe.compiler.plugin)
         // using deprecated gradle plugin instead
-        alias(dataframe)
+//        alias(dataframe)
 //        alias(kover)
         alias(ksp)
     }
@@ -37,8 +37,22 @@ repositories {
     mavenLocal() // for local development
 }
 
+tasks.compileKotlin {
+    dependsOn(projects.core.path + ":jar")
+}
+
+val coreJar = project(projects.core.path).configurations
+    .getByName("instrumentedJars")
+    .artifacts.single()
+    .file.absolutePath
+    .replace(File.separatorChar, '/')
+
 dependencies {
-    implementation(projects.dataframe)
+    implementation(projects.dataframe) {
+       // exclude(group, "dataframe-core")
+    }
+    implementation(files(coreJar))
+
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
