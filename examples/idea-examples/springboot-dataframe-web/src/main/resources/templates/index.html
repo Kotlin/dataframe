@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>DataFrame Spring Boot Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        .btn { display: inline-block; margin: .25rem; padding: .5rem 1rem; background: #1e88e5; color: #fff; text-decoration: none; border-radius: 4px; }
+        .btn.secondary { background: #43a047; }
+        .btn.warn { background: #fb8c00; }
+    </style>
+</head>
+<body>
+<h1>Reports</h1>
+<p>Choose one of the reports below:</p>
+<div>
+    <a class="btn" href="/customers">Customers (sort by name)</a>
+    <a class="btn" href="/sales">Sales (sort by value desc)</a>
+</div>
+<hr/>
+<h2>Filter Customers by Country</h2>
+<form action="/customers/filter" method="get">
+    <label>Country: <input type="text" name="country" placeholder="USA" required/></label>
+    <button class="btn secondary" type="submit">Filter</button>
+</form>
+</body>
+</html>
