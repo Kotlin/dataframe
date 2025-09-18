@@ -66,37 +66,56 @@ Dataset API to scan the data and materialize it as a Kotlin `DataFrame`.
 
 ### Examples
 
+```kotlin
+// Read from file paths (as strings)
+val df1 = DataFrame.readParquet("data/sales.parquet")
+```
+
 <!---FUN readParquetFilePath-->
 
 ```kotlin
-val df1 = DataFrame.readParquet("sales.parquet")
+// Read from Path objects
+val path = Paths.get("data/sales.parquet")
+val df = DataFrame.readParquet(path)
 ```
 
 <!---END-->
 
-```kotlin
-// Read from file paths (as strings)
-val df1 = DataFrame.readParquet("data/sales.parquet")
+<!---FUN readParquetURL-->
 
+```kotlin
+// Read from URLs
+val df = DataFrame.readParquet(url)
+```
+
+<!---END-->
+
+<!---FUN readParquetFile-->
+
+```kotlin
 // Read from File objects
 val file = File("data/sales.parquet")
-val df2 = DataFrame.readParquet(file)
+val df = DataFrame.readParquet(file)
+```
 
-// Read from Path objects
-val path = Paths.get("data/sales.parquet")
-val df3 = DataFrame.readParquet(path)
+<!---END-->
 
-// Read from URLs
-val url = URL("https://example.com/data/sales.parquet")
-val df4 = DataFrame.readParquet(url)
 
-// Customize nullability inference and batch size
-val df5 = DataFrame.readParquet(
-    File("data/sales.parquet"),
+<!---FUN readParquetFileWithParameters-->
+
+```kotlin
+// Read from File objects
+val file = File("data/sales.parquet")
+
+val df = DataFrame.readParquet(
+    file,
     nullability = NullabilityOptions.Infer,
-    batchSize = 64L * 1024 // tune Arrow scan batch size if needed
+    batchSize = 64L * 1024
 )
 ```
+
+<!---END-->
+
 
 If you want to see a complete, realistic data‑engineering example using Spark and Parquet with Kotlin DataFrame,
 check out the [example project](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/spark-parquet-dataframe).
@@ -105,9 +124,18 @@ check out the [example project](https://github.com/Kotlin/dataframe/tree/master/
 
 It's possible to read multiple Parquet files:
 
+<!---FUN readMultipleParquetFiles-->
+
 ```kotlin
-val df = DataFrame.readParquet("file1.parquet", "file2.parquet", "file3.parquet")
+val file = File("data/sales.parquet")
+val file1 = File("data/sales1.parquet")
+val file2 = File("data/sales2.parquet")
+
+val df = DataFrame.readParquet(file, file1, file2)
 ```
+
+<!---END-->
+
 **Requirements:**
 
 - All files must have compatible schemas
