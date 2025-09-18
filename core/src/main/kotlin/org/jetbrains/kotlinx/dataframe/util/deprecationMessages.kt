@@ -143,12 +143,6 @@ internal const val INSERT_AFTER_COL_PATH =
     "This `after()` overload will be removed in favor of `after { }` with Column Selection DSL. $MESSAGE_1_0"
 internal const val INSERT_AFTER_COL_PATH_REPLACE = "this.after { columnPath }"
 
-internal const val ADD_VARARG_COLUMNS = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_0"
-internal const val ADD_VARARG_COLUMNS_REPLACE = "this.addAll(*columns)"
-
-internal const val ADD_VARARG_FRAMES = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_0"
-internal const val ADD_VARARG_FRAMES_REPLACE = "this.addAll(*dataFrames)"
-
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -238,6 +232,12 @@ internal const val TO_DEPRECATED_INSTANT_REPLACE = "this.toStdlibInstant()"
 internal const val COL_TYPE_DEPRECATED_INSTANT =
     "kotlinx.datetime.Instant is deprecated in favor of kotlin.time.Instant. Migrate to kotlin.time.Instant and use Coltype.StdlibInstant at your own pace. $MESSAGE_1_1"
 internal const val COL_TYPE_DEPRECATED_INSTANT_REPLACE = "ColType.StdlibInstant"
+
+internal const val ADD_VARARG_COLUMNS = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_1"
+internal const val ADD_VARARG_COLUMNS_REPLACE = "this.addAll(*columns)"
+
+internal const val ADD_VARARG_FRAMES = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_1"
+internal const val ADD_VARARG_FRAMES_REPLACE = "this.addAll(*dataFrames)"
 
 // endregion
 
