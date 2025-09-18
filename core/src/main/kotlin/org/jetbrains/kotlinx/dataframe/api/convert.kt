@@ -295,6 +295,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  * @return A new [DataFrame] with the converted values.
  */
+@Refine
 @Interpretable("Convert6")
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
@@ -303,6 +304,8 @@ public inline fun <T, reified R> DataFrame<T>.convert(
     noinline expression: RowValueExpression<T, Any?, R>,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
+@Refine
+@Interpretable("ConvertNotNull")
 public inline fun <T, C, reified R> Convert<T, C?>.notNull(
     crossinline expression: RowValueExpression<T, C, R>,
 ): DataFrame<T> =

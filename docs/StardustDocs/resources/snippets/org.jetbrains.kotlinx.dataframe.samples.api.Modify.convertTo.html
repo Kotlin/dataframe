@@ -218,7 +218,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.convert { name.firstName and name.lastName }.asColumn { it.length() }</summary>
+                                <summary>df.convert { name.firstName and name.lastName }.asColumn { col -&gt; col.map { it.length } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_4"></table>

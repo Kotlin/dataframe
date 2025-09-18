@@ -82,7 +82,7 @@ df.add {
     "year of birth" from 2021 - age
     age gt 18 into "is adult"
     "details" {
-        name.lastName.length() into "last name length"
+        name.lastName.map { it.length } into "last name length"
         "full name" from { name.firstName + " " + name.lastName }
     }
 }
@@ -96,7 +96,7 @@ df.add {
     "year of birth" from 2021 - "age"<Int>()
     "age"<Int>() gt 18 into "is adult"
     "details" {
-        "name"["lastName"]<String>().length() into "last name length"
+        "name"["lastName"]<String>().map { it.length } into "last name length"
         "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
     }
 }

@@ -275,7 +275,7 @@ private fun Any?.toDataFrameLikeOrNull(): DataFrameLike? =
     when (this) {
         is AnyFrame -> {
             object : DataFrameLike {
-                override fun configuration(default: DisplayConfiguration) = default
+                override fun configuration(default: DisplayConfiguration) = default.copy(cellFormatter = null)
 
                 override fun df(): AnyFrame = this@toDataFrameLikeOrNull
             }

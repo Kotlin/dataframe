@@ -312,4 +312,29 @@ class FormatTests : TestBase() {
         html.split("background-color:#00ff00").size - 1 shouldBe 5 // Only non-null weight values get formatted
         formatted::class.simpleName shouldBe "FormattedFrame"
     }
+
+    // Issue #982
+    @Suppress("ktlint:standard:argument-list-wrapping")
+    @Test
+    fun `formatting a column shouldn't affect nested columns with the same name`() {
+        val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+            "Alice", "Cooper", 15, "London", 54, true,
+            "Bob", "Dylan", 45, "Dubai", 87, true,
+            "Charlie", "Daniels", 20, "Moscow", null, false,
+            "Charlie", "Chaplin", 40, "Milan", null, true,
+            "Bob", "Marley", 30, "Tokyo", 68, true,
+            "Alice", "Wolf", 20, null, 55, false,
+            "Charlie", "Byrd", 30, "Moscow", 90, true,
+        ).group("firstName", "lastName").into("name")
+            .groupBy("city").toDataFrame()
+            .add("cityCopy") { "city"<String>() }
+            .group("city").into("cityGroup")
+            .rename("cityCopy").into("city")
+
+        val formatted = df.format("city").with { bold and italic and textColor(green) }
+        val html = formatted.toHtml().toString()
+
+        html.split("color:#00ff00").size - 1 shouldBe 12
+        html.split("font-style:italic").size - 1 shouldBe 6
+    }
 }

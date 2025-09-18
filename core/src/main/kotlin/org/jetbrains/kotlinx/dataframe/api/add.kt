@@ -365,8 +365,10 @@ public class AddDsl<T>(
         add(dsl.columns.toColumnGroup(name))
     }
 
+    @Interpretable("AddDslAddGroup")
     public fun group(body: AddDsl<T>.() -> Unit): AddGroup<T> = AddGroup(body)
 
+    @Interpretable("AddDslAddGroupInto")
     public infix fun AddGroup<T>.into(groupName: String): Unit = group(groupName, body)
 
     @Deprecated(DEPRECATED_ACCESS_API)
