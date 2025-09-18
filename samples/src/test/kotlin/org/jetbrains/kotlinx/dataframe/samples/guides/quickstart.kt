@@ -33,188 +33,216 @@ import org.junit.Test
 class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @DataSchema
-    interface Repositories {
-        val full_name: String
+    interface Repositories : SelectedRepositories {
         val html_url: java.net.URL
+        val watchers: Int
+    }
+
+    @DataSchema
+    interface SelectedRepositories {
+        val full_name: String
         val stargazers_count: Int
         val topics: String
-        val watchers: Int
+    }
+
+    @DataSchema
+    interface RenamedSelectedRepositories {
+        val name: String
+        val starsCount: Int
+        val topics: String
+    }
+
+    @DataSchema
+    interface UpdatedRepositories {
+        val name: String
+        val starsCount: Int
+        val topics: List<String>
+    }
+
+    @DataSchema
+    interface IsIntellijRepositories {
+        val name: String
+        val starsCount: Int
+        val topics: List<String>
+        val isIntellij: Boolean
     }
 
     private val df = DataFrame.readCsv(
         "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
     ).cast<Repositories>()
 
-    interface DFUpdatedSchema
+    private val dfSelected = df.select { full_name and stargazers_count and topics }.cast<SelectedRepositories>()
+    private val dfFiltered = dfSelected.filter { stargazers_count >= 1000 }
+    private val dfRenamed = dfFiltered.rename { full_name }.into("name")
+        // And "stargazers_count" into "starsCount"
+        .rename { stargazers_count }.into("starsCount")
+        .cast<RenamedSelectedRepositories>()
+    private val dfUpdated = dfRenamed
+        // Update "name" values with only its second part (after '/')
+        .update { name }.with { it.split("/")[1] }
+        // Convert "topics" `String` values into `List<String>` by splitting:
+        .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
+        .cast<UpdatedRepositories>()
 
-//    private val dfSelected = df.select { full_name and stargazers_count and topics }
-//    private val dfFiltered = dfSelected.filter { stargazers_count >= 1000 }
-//    private val dfRenamed = dfFiltered.rename { full_name }.into("name")
-//        // And "stargazers_count" into "starsCount"
-//        .rename { stargazers_count }.into("starsCount")
-//    private val dfUpdated = dfRenamed
-//        // Update "name" values with only its second part (after '/')
-//        .update { name }.with { it.split("/")[1] }
-//        // Convert "topics" `String` values into `List<String>` by splitting:
-//        .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") } as DataFrame<DFUpdatedSchema>
-//    private val dfWithIsIntellij = dfUpdated.add("isIntellij") {
-//        name.contains("intellij") || "intellij" in topics
-//    }
-//    private val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
-//    private val dfTop10 = dfWithIsIntellij
-//        // Sort by "starsCount" value descending
-//        .sortByDesc { starsCount }.take(10)
+    private val dfWithIsIntellij = dfUpdated.add("isIntellij") {
+        name.contains("intellij") || "intellij" in topics
+    }.cast<IsIntellijRepositories>()
+    private val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
+    private val dfTop10 = dfWithIsIntellij
+        // Sort by "starsCount" value descending
+        .sortByDesc { starsCount }.take(10)
 
-//    @Test
-//    fun notebook_test_quickstart_2() {
-//        // SampleStart
-//        val df = DataFrame.readCsv(
-//            "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
-//        )
-//        // SampleEnd
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_3() {
-//        // SampleStart
-//        df
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_4() {
-//        // SampleStart
-//        df.describe()
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_5() {
-//        // SampleStart
-//        // Select "full_name", "stargazers_count" and "topics" columns
-//        val dfSelected = df.select { full_name and stargazers_count and topics }
-//        dfSelected
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_6() {
-//        // SampleStart
-//        // Keep only rows where "stargazers_count" value is more than 1000
-//        val dfFiltered = dfSelected.filter { stargazers_count >= 1000 }
-//        dfFiltered
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_7() {
-//        // SampleStart
-//        // Rename "full_name" column into "name"
-//        val dfRenamed = dfFiltered.rename { full_name }.into("name")
-//            // And "stargazers_count" into "starsCount"
-//            .rename { stargazers_count }.into("starsCount")
-//        dfRenamed
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_8() {
-//        // SampleStart
-//        val dfUpdated = dfRenamed
-//            // Update "name" values with only its second part (after '/')
-//            .update { name }.with { it.split("/")[1] }
-//            // Convert "topics" `String` values into `List<String>` by splitting:
-//            .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
-//        dfUpdated
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_9() {
-//        // SampleStart
-//        dfUpdated.topics.type()
-//        // SampleEnd
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_10() {
-//        // SampleStart
-//        // Add a `Boolean` column indicating whether the `name` contains the "intellij" substring
-//        // or the topics include "intellij".
-//        val dfWithIsIntellij = dfUpdated.add("isIntellij") {
-//            name.contains("intellij") || "intellij" in topics
-//        }
-//        dfWithIsIntellij
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_11() {
-//        // SampleStart
-//        val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
-//        groupedByIsIntellij
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_12() {
-//        // SampleStart
-//        groupedByIsIntellij.count()
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_13() {
-//        // SampleStart
-//        groupedByIsIntellij.aggregate {
-//            // Compute sum and max of "starsCount" within each group into "sumStars" and "maxStars" columns
-//            sumOf { starsCount } into "sumStars"
-//            maxOf { starsCount } into "maxStars"
-//        }
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_14() {
-//        // SampleStart
-//        val dfTop10 = dfWithIsIntellij
-//            // Sort by "starsCount" value descending
-//            .sortByDesc { starsCount }.take(10)
-//        dfTop10
-//            // SampleEnd
-//            .saveDfHtmlSample()
-//    }
-//
-//    @Test
-//    fun notebook_test_quickstart_16() {
-//        // SampleStart
-//        dfTop10.plot {
-//            bars {
-//                x(name)
-//                y(starsCount)
-//            }
-//
-//            layout.title = "Top 10 JetBrains repositories by stars count"
-//        }
-//            // SampleEnd
-//            .savePlotSVGSample()
-//    }
-//
-//    @Ignore
-//    @Test
-//    fun notebook_test_quickstart_17() {
-//        // SampleStart
-//        dfWithIsIntellij.writeExcel("jb_repos.xlsx")
-//        // SampleEnd
-//    }
+    @Test
+    fun notebook_test_quickstart_2() {
+        // SampleStart
+        val df = DataFrame.readCsv(
+            "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+        )
+        // SampleEnd
+    }
+
+    @Test
+    fun notebook_test_quickstart_3() {
+        // SampleStart
+        df
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_4() {
+        // SampleStart
+        df.describe()
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_5() {
+        // SampleStart
+        // Select "full_name", "stargazers_count" and "topics" columns
+        val dfSelected = df.select { full_name and stargazers_count and topics }
+        dfSelected
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_6() {
+        // SampleStart
+        // Keep only rows where "stargazers_count" value is more than 1000
+        val dfFiltered = dfSelected.filter { stargazers_count >= 1000 }
+        dfFiltered
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_7() {
+        // SampleStart
+        // Rename "full_name" column into "name"
+        val dfRenamed = dfFiltered.rename { full_name }.into("name")
+            // And "stargazers_count" into "starsCount"
+            .rename { stargazers_count }.into("starsCount")
+        dfRenamed
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_8() {
+        // SampleStart
+        val dfUpdated = dfRenamed
+            // Update "name" values with only its second part (after '/')
+            .update { name }.with { it.split("/")[1] }
+            // Convert "topics" `String` values into `List<String>` by splitting:
+            .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
+        dfUpdated
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_9() {
+        // SampleStart
+        dfUpdated.topics.type()
+        // SampleEnd
+    }
+
+    @Test
+    fun notebook_test_quickstart_10() {
+        // SampleStart
+        // Add a `Boolean` column indicating whether the `name` contains the "intellij" substring
+        // or the topics include "intellij".
+        val dfWithIsIntellij = dfUpdated.add("isIntellij") {
+            name.contains("intellij") || "intellij" in topics
+        }
+        dfWithIsIntellij
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_11() {
+        // SampleStart
+        groupedByIsIntellij
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_12() {
+        // SampleStart
+        groupedByIsIntellij.count()
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_13() {
+        // issue #1454
+        val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
+        // SampleStart
+        groupedByIsIntellij.aggregate {
+            // Compute sum and max of "starsCount" within each group into "sumStars" and "maxStars" columns
+            sumOf { starsCount } into "sumStars"
+            maxOf { starsCount } into "maxStars"
+        }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_14() {
+        // SampleStart
+        val dfTop10 = dfWithIsIntellij
+            // Sort by "starsCount" value descending
+            .sortByDesc { starsCount }.take(10)
+        dfTop10
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun notebook_test_quickstart_16() {
+        // SampleStart
+        dfTop10.plot {
+            bars {
+                x(name)
+                y(starsCount)
+            }
+
+            layout.title = "Top 10 JetBrains repositories by stars count"
+        }
+            // SampleEnd
+            .savePlotSVGSample()
+    }
+
+    @Ignore
+    @Test
+    fun notebook_test_quickstart_17() {
+        // SampleStart
+        dfWithIsIntellij.writeExcel("jb_repos.xlsx")
+        // SampleEnd
+    }
 }

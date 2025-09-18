@@ -23,10 +23,7 @@ plugins {
         alias(kotlin.jvm)
         alias(korro)
         alias(ktlint)
-        // Compiler plugin doesn't work properly for now: https://github.com/Kotlin/dataframe/issues/1432
         alias(dataframe.compiler.plugin)
-        // using deprecated gradle plugin instead
-//        alias(dataframe)
 //        alias(kover)
         alias(ksp)
     }
@@ -37,7 +34,7 @@ repositories {
     mavenLocal() // for local development
 }
 
-val dependentProjectPaths = with(projects) {
+val dependentProjects = with(projects) {
     listOf(
         core,
         dataframeArrow,
@@ -46,16 +43,16 @@ val dependentProjectPaths = with(projects) {
         dataframeCsv,
         dataframeJson,
     )
-}.map { it.path }
+}.map { project(it.path) }
 
 tasks.compileKotlin {
-    dependentProjectPaths.forEach {
-        dependsOn("$it:jar")
+    dependentProjects.forEach {
+        dependsOn("${it.path}:jar")
     }
 }
 
-val jarPaths = dependentProjectPaths.map {
-    project(it).configurations
+val dependentProjectJarPaths = dependentProjects.map {
+    it.configurations
         .getByName("instrumentedJars")
         .artifacts.single()
         .file.absolutePath
@@ -63,8 +60,17 @@ val jarPaths = dependentProjectPaths.map {
 }
 
 dependencies {
-//    implementation(projects.dataframe) Must depend on jars for the compiler plugin to work!
-    implementation(files(jarPaths))
+    // implementation(projects.dataframe) // Must depend on jars for the compiler plugin to work!
+    implementation(files(dependentProjectJarPaths))
+
+    // include api() dependencies from dependent projects, as they are not included in the jars
+    dependentProjects.forEach {
+        it.configurations.getByName("api").dependencies.forEach { dep ->
+            if (dep is ExternalModuleDependency) {
+                implementation("${dep.group}:${dep.name}:${dep.version ?: "+"}")
+            }
+        }
+    }
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {

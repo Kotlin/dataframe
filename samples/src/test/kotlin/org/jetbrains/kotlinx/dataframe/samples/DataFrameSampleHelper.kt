@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.kandy.letsplot.samples.SampleHelper
 
 abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "samples") :
@@ -10,7 +11,7 @@ abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "sa
         subFolder,
         "../docs/StardustDocs/images",
         "../docs/StardustDocs/resources",
-    ) {
+    ), TestBase {
 
     fun DataColumn<*>.saveDfHtmlSample() {
         toDataFrame().saveDfHtmlSample()

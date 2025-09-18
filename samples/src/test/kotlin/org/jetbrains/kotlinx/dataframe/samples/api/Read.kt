@@ -150,6 +150,7 @@ class Read {
                 },
             )
             // SampleEnd
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
     }
 }
