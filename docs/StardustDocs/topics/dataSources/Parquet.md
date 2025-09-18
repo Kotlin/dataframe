@@ -23,7 +23,7 @@ Requires the [`dataframe-arrow` module](Modules.md#dataframe-arrow), which is in
 > {style="warning"}
 
 > Structured (nested) Arrow types such as Struct are not supported yet in Kotlin DataFrame.
-> See an issue: [Add inner / Struct type support in Arrow](https://github.com/Kotlin/dataframe/issues/536)
+> See the issue: [Add inner / Struct type support in Arrow](https://github.com/Kotlin/dataframe/issues/536)
 > {style="warning"}
 
 ## Reading Parquet Files
@@ -68,7 +68,7 @@ Dataset API to scan the data and materialize it as a Kotlin `DataFrame`.
 
 ```kotlin
 // Read from file paths (as strings)
-val df1 = DataFrame.readParquet("data/sales.parquet")
+val df = DataFrame.readParquet("data/sales.parquet")
 ```
 
 <!---FUN readParquetFilePath-->

@@ -25,7 +25,7 @@ and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for
 > {style="warning"}
 
 > Structured (nested) Arrow types such as Struct are not supported yet in Kotlin DataFrame.
-> See an issue: [Add inner / Struct type support in Arrow](https://github.com/Kotlin/dataframe/issues/536)
+> See the issue: [Add inner / Struct type support in Arrow](https://github.com/Kotlin/dataframe/issues/536)
 > {style="warning"}
 
 ## Read
