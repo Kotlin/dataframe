@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.into
 @Suppress("ktlint:standard:argument-list-wrapping")
 public open class TestBase {
 
-    val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+    private val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
         "Alice", "Cooper", 15, "London", 54, true,
         "Bob", "Dylan", 45, "Dubai", 87, true,
         "Charlie", "Daniels", 20, "Moscow", null, false,
@@ -21,19 +21,19 @@ public open class TestBase {
         "Bob", "Marley", 30, "Tokyo", 68, true,
         "Alice", "Wolf", 20, null, 55, false,
         "Charlie", "Byrd", 30, "Moscow", 90, true,
-    ).group("firstName", "lastName").into("name").cast<Person>()
+    ).group { firstName and lastName }.into("name")//.cast<Person>()
 
     @DataSchema
     interface Name {
-        val firstName: String
-        val lastName: String
+        val firstNameA: String
+        val lastNameA: String
     }
 
     @DataSchema
     interface Person {
         val age: Int
         val city: String?
-        val name: DataRow<Name>
+        val name: Name
         val weight: Int?
         val isHappy: Boolean
     }

@@ -36,7 +36,7 @@ class AssociateSamples : DataFrameSampleHelper("associate", "api/collectionsInte
         "city" to listOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
         "weight" to listOf(54, 87, null, null, 68, 55, 90),
         "isHappy" to listOf(true, true, false, true, true, false, true),
-    ).group("firstName", "lastName").into("name").cast<Person>()
+    ).group { firstName and lastName }.into("name").cast<Person>()
 
     @Test
     fun notebook_test_associate_1() {
