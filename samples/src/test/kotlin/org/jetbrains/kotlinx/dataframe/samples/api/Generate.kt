@@ -20,10 +20,10 @@ import org.junit.Test
 class Generate : DataFrameSampleHelper("generate_docs", "api") {
 
     @DataSchema
-    interface Orders {
-        val orderId: Int
-        val amount: Double
-    }
+    data class Orders(
+        val orderId: Int,
+        val amount: Double,
+    )
 
     private val ordersAlice = dataFrameOf(
         "orderId" to listOf(101, 102),
@@ -36,10 +36,10 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
     ).cast<Orders>()
 
     @DataSchema
-    interface Customer {
-        val user: String
-        val orders: List<Orders>
-    }
+    data class Customer(
+        val user: String,
+        val orders: List<Orders>,
+    )
 
     private val df = dataFrameOf(
         "user" to listOf("Alice", "Bob"),
@@ -79,7 +79,7 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
     @Test
     fun notebook_test_generate_docs_5() {
         // SampleStart
-        val customers: List<Customer> = df.toList()
+        val customers: List<Customer> = df.cast<Customer>().toList()
         // SampleEnd
     }
 
@@ -93,7 +93,7 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
     @Test
     fun notebook_test_generate_docs_7() {
         // SampleStart
-        df
+        df.cast<Customer>()
             .add("ordersTotal") { orders.sumOf { it.amount } }
             .filter { user.startsWith("A") }
             .rename { user }.into("customer")

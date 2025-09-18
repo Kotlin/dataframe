@@ -29,68 +29,56 @@ import org.jetbrains.kotlinx.kandy.letsplot.feature.layout
 import org.jetbrains.kotlinx.kandy.letsplot.layers.bars
 import org.junit.Ignore
 import org.junit.Test
+import java.net.URL
 
 class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @DataSchema
-    interface Repositories : SelectedRepositories {
-        val html_url: java.net.URL
+    interface Repositories {
+        val html_url: URL
         val watchers: Int
-    }
-
-    @DataSchema
-    interface SelectedRepositories {
         val full_name: String
         val stargazers_count: Int
         val topics: String
-    }
-
-    @DataSchema
-    interface RenamedSelectedRepositories {
-        val name: String
-        val starsCount: Int
-        val topics: String
-    }
-
-    @DataSchema
-    interface UpdatedRepositories {
-        val name: String
-        val starsCount: Int
-        val topics: List<String>
-    }
-
-    @DataSchema
-    interface IsIntellijRepositories {
-        val name: String
-        val starsCount: Int
-        val topics: List<String>
-        val isIntellij: Boolean
     }
 
     private val df = DataFrame.readCsv(
         "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
     ).cast<Repositories>()
 
-    private val dfSelected = df.select { full_name and stargazers_count and topics }.cast<SelectedRepositories>()
-    private val dfFiltered = dfSelected.filter { stargazers_count >= 1000 }
-    private val dfRenamed = dfFiltered.rename { full_name }.into("name")
-        // And "stargazers_count" into "starsCount"
-        .rename { stargazers_count }.into("starsCount")
-        .cast<RenamedSelectedRepositories>()
-    private val dfUpdated = dfRenamed
-        // Update "name" values with only its second part (after '/')
-        .update { name }.with { it.split("/")[1] }
-        // Convert "topics" `String` values into `List<String>` by splitting:
-        .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
-        .cast<UpdatedRepositories>()
+    private fun getDfSelected() = df.select { full_name and stargazers_count and topics }
 
-    private val dfWithIsIntellij = dfUpdated.add("isIntellij") {
-        name.contains("intellij") || "intellij" in topics
-    }.cast<IsIntellijRepositories>()
-    private val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
-    private val dfTop10 = dfWithIsIntellij
-        // Sort by "starsCount" value descending
-        .sortByDesc { starsCount }.take(10)
+    private fun getDfFiltered() =
+        getDfSelected()
+            .filter { stargazers_count >= 1000 }
+
+    private fun getDfRenamed() =
+        getDfFiltered()
+            .rename { full_name }.into("name")
+            // And "stargazers_count" into "starsCount"
+            .rename { stargazers_count }.into("starsCount")
+
+    private fun getDfUpdated() =
+        getDfRenamed()
+            // Update "name" values with only its second part (after '/')
+            .update { name }.with { it.split("/")[1] }
+            // Convert "topics" `String` values into `List<String>` by splitting:
+            .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
+
+    private fun getDfWithIsIntellij() =
+        getDfUpdated()
+            .add("isIntellij") {
+                name.contains("intellij") || "intellij" in topics
+            }
+
+    private fun getGroupedByIsIntellij() =
+        getDfWithIsIntellij()
+            .groupBy { isIntellij }
+
+    private fun getDfTop10() =
+        getDfWithIsIntellij()
+            // Sort by "starsCount" value descending
+            .sortByDesc { starsCount }.take(10)
 
     @Test
     fun notebook_test_quickstart_2() {
@@ -129,6 +117,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_6() {
+        val dfSelected = getDfSelected()
         // SampleStart
         // Keep only rows where "stargazers_count" value is more than 1000
         val dfFiltered = dfSelected.filter { stargazers_count >= 1000 }
@@ -139,6 +128,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_7() {
+        val dfFiltered = getDfFiltered()
         // SampleStart
         // Rename "full_name" column into "name"
         val dfRenamed = dfFiltered.rename { full_name }.into("name")
@@ -151,6 +141,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_8() {
+        val dfRenamed = getDfRenamed()
         // SampleStart
         val dfUpdated = dfRenamed
             // Update "name" values with only its second part (after '/')
@@ -164,6 +155,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_9() {
+        val dfUpdated = getDfUpdated()
         // SampleStart
         dfUpdated.topics.type()
         // SampleEnd
@@ -171,6 +163,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_10() {
+        val dfUpdated = getDfUpdated()
         // SampleStart
         // Add a `Boolean` column indicating whether the `name` contains the "intellij" substring
         // or the topics include "intellij".
@@ -184,7 +177,9 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_11() {
+        val dfWithIsIntellij = getDfWithIsIntellij()
         // SampleStart
+        val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
         groupedByIsIntellij
             // SampleEnd
             .saveDfHtmlSample()
@@ -192,6 +187,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_12() {
+        val groupedByIsIntellij = getGroupedByIsIntellij()
         // SampleStart
         groupedByIsIntellij.count()
             // SampleEnd
@@ -200,8 +196,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_13() {
-        // issue #1454
-        val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
+        val groupedByIsIntellij = getGroupedByIsIntellij()
         // SampleStart
         groupedByIsIntellij.aggregate {
             // Compute sum and max of "starsCount" within each group into "sumStars" and "maxStars" columns
@@ -214,6 +209,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_14() {
+        val dfWithIsIntellij = getDfWithIsIntellij()
         // SampleStart
         val dfTop10 = dfWithIsIntellij
             // Sort by "starsCount" value descending
@@ -225,6 +221,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @Test
     fun notebook_test_quickstart_16() {
+        val dfTop10 = getDfTop10()
         // SampleStart
         dfTop10.plot {
             bars {
@@ -241,6 +238,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     @Ignore
     @Test
     fun notebook_test_quickstart_17() {
+        val dfWithIsIntellij = getDfWithIsIntellij()
         // SampleStart
         dfWithIsIntellij.writeExcel("jb_repos.xlsx")
         // SampleEnd

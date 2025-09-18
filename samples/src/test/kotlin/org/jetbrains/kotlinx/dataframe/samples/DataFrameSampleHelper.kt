@@ -11,7 +11,8 @@ abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "sa
         subFolder,
         "../docs/StardustDocs/images",
         "../docs/StardustDocs/resources",
-    ), TestBase {
+    ),
+    TestBase {
 
     fun DataColumn<*>.saveDfHtmlSample() {
         toDataFrame().saveDfHtmlSample()

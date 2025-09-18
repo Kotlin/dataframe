@@ -3,7 +3,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.into
 @Suppress("ktlint:standard:argument-list-wrapping")
 interface TestBase {
 
-    val peopleDf
+    val peopleDf: DataFrame<Person>
         get() = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
             "Alice", "Cooper", 15, "London", 54, true,
             "Bob", "Dylan", 45, "Dubai", 87, true,
@@ -22,7 +22,8 @@ interface TestBase {
             "Bob", "Marley", 30, "Tokyo", 68, true,
             "Alice", "Wolf", 20, null, 55, false,
             "Charlie", "Byrd", 30, "Moscow", 90, true,
-        ).group { firstName and lastName }.into("name").cast<Person>()
+        ).group("firstName", "lastName").into("name")
+            .cast<Person>(verify = false)
 
     @DataSchema
     interface Name {

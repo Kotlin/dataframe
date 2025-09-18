@@ -1,42 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.samples.api.collectionsInterop
 
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.associate
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
-import org.jetbrains.kotlinx.dataframe.samples.api.utils.age
-import org.jetbrains.kotlinx.dataframe.samples.api.utils.name
+import org.jetbrains.kotlinx.dataframe.samples.api.age
+import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
 class AssociateSamples : DataFrameSampleHelper("associate", "api/collectionsInterop") {
 
-    @DataSchema
-    interface Name {
-        val firstName: String
-        val lastName: String
-    }
-
-    @DataSchema
-    interface Person {
-        val age: Int
-        val city: String?
-        val name: DataRow<Name>
-        val weight: Int?
-        val isHappy: Boolean
-    }
-
-    private val df = dataFrameOf(
-        "firstName" to listOf("Alice", "Bob", "Charlie", "Charlie", "Bob", "Alice", "Charlie"),
-        "lastName" to listOf("Cooper", "Dylan", "Daniels", "Chaplin", "Marley", "Wolf", "Byrd"),
-        "age" to listOf(15, 45, 20, 40, 30, 20, 30),
-        "city" to listOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
-        "weight" to listOf(54, 87, null, null, 68, 55, 90),
-        "isHappy" to listOf(true, true, false, true, true, false, true),
-    ).group { firstName and lastName }.into("name").cast<Person>()
+    private val df = peopleDf
 
     @Test
     fun notebook_test_associate_1() {

@@ -16,6 +16,7 @@ import org.gradle.kotlin.dsl.runKtlintFormatOverTestSourceSet
 import org.gradle.kotlin.dsl.sourceSets
 import org.gradle.kotlin.dsl.test
 import org.gradle.kotlin.dsl.testImplementation
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
@@ -45,7 +46,7 @@ val dependentProjects = with(projects) {
     )
 }.map { project(it.path) }
 
-tasks.compileKotlin {
+tasks.withType<KotlinCompile> {
     dependentProjects.forEach {
         dependsOn("${it.path}:jar")
     }
@@ -60,7 +61,7 @@ val dependentProjectJarPaths = dependentProjects.map {
 }
 
 dependencies {
-    // implementation(projects.dataframe) // Must depend on jars for the compiler plugin to work!
+    runtimeOnly(projects.dataframe) // Must depend on jars for the compiler plugin to work!
     implementation(files(dependentProjectJarPaths))
 
     // include api() dependencies from dependent projects, as they are not included in the jars
