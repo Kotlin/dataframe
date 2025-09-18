@@ -9,3 +9,5 @@ fun testCsv(csvName: String) = testResource("$csvName.csv")
 fun testJson(jsonName: String) = testResource("$jsonName.json")
 
 fun testArrowFeather(name: String) = testResource("$name.feather")
+
+fun testParquet(name: String) = testResource("$name.feather")
