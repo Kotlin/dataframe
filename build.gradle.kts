@@ -223,6 +223,20 @@ allprojects {
         } catch (_: UnknownDomainObjectException) {
             logger.warn("Could not set buildConfig on :${this.name}")
         }
+
+        try {
+            val instrumentedJars: Configuration by configurations.creating {
+                isCanBeConsumed = true
+                isCanBeResolved = false
+            }
+            artifacts {
+                add("instrumentedJars", tasks.jar.get().archiveFile) {
+                    builtBy(tasks.jar)
+                }
+            }
+        } catch (_: Exception) {
+            logger.warn("Could not set instrumentedJars on :${this.name}")
+        }
     }
 }
 

@@ -386,17 +386,6 @@ kotlinPublications {
     }
 }
 
-val instrumentedJars: Configuration by configurations.creating {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-}
-
-artifacts {
-    add("instrumentedJars", tasks.jar.get().archiveFile) {
-        builtBy(tasks.jar)
-    }
-}
-
 // Disable and enable if updating plugin breaks the build
 dataframes {
     schema {

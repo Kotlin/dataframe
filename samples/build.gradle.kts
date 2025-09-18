@@ -37,21 +37,34 @@ repositories {
     mavenLocal() // for local development
 }
 
+val dependentProjectPaths = with(projects) {
+    listOf(
+        core,
+        dataframeArrow,
+        dataframeExcel,
+        dataframeJdbc,
+        dataframeCsv,
+        dataframeJson,
+    )
+}.map { it.path }
+
 tasks.compileKotlin {
-    dependsOn(projects.core.path + ":jar")
+    dependentProjectPaths.forEach {
+        dependsOn("$it:jar")
+    }
 }
 
-val coreJar = project(projects.core.path).configurations
-    .getByName("instrumentedJars")
-    .artifacts.single()
-    .file.absolutePath
-    .replace(File.separatorChar, '/')
+val jarPaths = dependentProjectPaths.map {
+    project(it).configurations
+        .getByName("instrumentedJars")
+        .artifacts.single()
+        .file.absolutePath
+        .replace(File.separatorChar, '/')
+}
 
 dependencies {
-    implementation(projects.dataframe) {
-       // exclude(group, "dataframe-core")
-    }
-    implementation(files(coreJar))
+//    implementation(projects.dataframe) Must depend on jars for the compiler plugin to work!
+    implementation(files(jarPaths))
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
