@@ -1,14 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.samples.io
 
 import io.kotest.matchers.shouldBe
-import java.io.File
-import java.nio.file.Path
-import java.nio.file.Paths
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
-import org.junit.Test
 import org.jetbrains.kotlinx.dataframe.io.readParquet
 import org.jetbrains.kotlinx.dataframe.testParquet
+import org.junit.Test
+import java.io.File
+import java.nio.file.Paths
 
 class Parquet {
     @Test
@@ -56,7 +55,7 @@ class Parquet {
         val df = DataFrame.readParquet(
             file,
             nullability = NullabilityOptions.Infer,
-            batchSize = 64L * 1024
+            batchSize = 64L * 1024,
         )
         // SampleEnd
         df.rowsCount() shouldBe 300
