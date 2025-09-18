@@ -258,6 +258,7 @@ val generateLibrariesJson by tasks.registering {
     val outDir = generatedJupyterResourcesDir.get().asFile.resolve("META-INF/kotlin-jupyter-libraries")
     val outFile = outDir.resolve("libraries.json")
     outputs.file(outFile)
+    inputs.property("version", project.version)
 
     doLast {
         outDir.mkdirs()
