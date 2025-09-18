@@ -239,6 +239,12 @@ internal const val LENGTH_REPLACE = "this.map { it?.length ?: 0 }"
 internal const val LOWERCASE_REPLACE = "this.map { it?.lowercase() }"
 internal const val UPPERCASE_REPLACE = "this.map { it?.uppercase() }"
 
+internal const val ADD_VARARG_COLUMNS = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_1"
+internal const val ADD_VARARG_COLUMNS_REPLACE = "this.addAll(*columns)"
+
+internal const val ADD_VARARG_FRAMES = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_1"
+internal const val ADD_VARARG_FRAMES_REPLACE = "this.addAll(*dataFrames)"
+
 // endregion
 
 // region keep across releases
