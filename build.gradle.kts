@@ -223,6 +223,23 @@ allprojects {
         } catch (_: UnknownDomainObjectException) {
             logger.warn("Could not set buildConfig on :${this.name}")
         }
+
+        // Adds the instrumentedJars configuration/artifact to all sub-projects with a `jar` task
+        // This allows other modules to depend on the output of this task, aka the compiled jar of that module
+        // Used in :plugins:dataframe-gradle-plugin integration tests and in :samples for compiler plugin support
+        try {
+            val instrumentedJars: Configuration by configurations.creating {
+                isCanBeConsumed = true
+                isCanBeResolved = false
+            }
+            artifacts {
+                add("instrumentedJars", tasks.jar.get().archiveFile) {
+                    builtBy(tasks.jar)
+                }
+            }
+        } catch (_: Exception) {
+            logger.warn("Could not set instrumentedJars on :${this.name}")
+        }
     }
 }
 

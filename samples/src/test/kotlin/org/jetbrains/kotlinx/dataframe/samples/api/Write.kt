@@ -24,7 +24,9 @@ import org.junit.Test
 import java.io.File
 import kotlin.io.path.deleteExisting
 
-class Write : TestBase() {
+class Write : TestBase {
+
+    val df = peopleDf
 
     @Test
     fun writeCsv() {
