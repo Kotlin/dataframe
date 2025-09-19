@@ -56,15 +56,18 @@ internal inline fun <T, C> FormatClause<T, C>.formatImpl(
     val clause = this
     val columns = clause.df.getColumnPaths(UnresolvedColumnsPolicy.Skip, clause.columns).toSet()
 
-    return FormattedFrame(clause.df) { row, col ->
-        val oldAttributes = clause.oldFormatter?.invoke(FormattingDsl, row, col.cast())
-        if (col.path in columns) {
-            val value = col[row] as C
-            if (clause.filter(row, value)) {
-                return@FormattedFrame oldAttributes and formatter(FormattingDsl, row.cast(), col.cast())
+    return FormattedFrame(
+        df = clause.df,
+        formatter = { row, col ->
+            val oldAttributes = clause.oldFormatter?.invoke(FormattingDsl, row, col.cast())
+            if (col.path in columns) {
+                val value = col[row] as C
+                if (clause.filter(row, value)) {
+                    return@FormattedFrame oldAttributes and formatter(FormattingDsl, row.cast(), col.cast())
+                }
             }
-        }
-
-        oldAttributes
-    }
+            oldAttributes
+        },
+        headerFormatter = clause.oldHeaderFormatter
+    )
 }
