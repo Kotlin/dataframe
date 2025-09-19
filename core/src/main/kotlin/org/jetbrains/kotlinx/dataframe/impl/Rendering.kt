@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.annotations.IntellijPluginApi
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -54,6 +55,7 @@ internal fun renderType(column: ColumnSchema) =
         else -> throw NotImplementedError()
     }
 
+@IntellijPluginApi
 internal fun renderType(type: KType?): String {
     return when (type?.classifier) {
         null -> "*"

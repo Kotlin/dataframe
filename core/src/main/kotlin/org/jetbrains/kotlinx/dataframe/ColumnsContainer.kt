@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.IntellijPluginApi
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -26,8 +27,10 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     // region columns
 
+    @IntellijPluginApi
     public fun columns(): List<AnyCol>
 
+    @IntellijPluginApi
     public fun columnsCount(): Int
 
     public fun containsColumn(name: String): Boolean
