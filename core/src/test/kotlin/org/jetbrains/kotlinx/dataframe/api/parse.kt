@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -38,6 +39,23 @@ import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.Instant as DeprecatedInstant
 
 class ParseTests {
+
+    @Test
+    fun `parse to chars`() {
+        val char = columnOf('a', 'b', 'c')
+        shouldThrow<IllegalStateException> { char.parse() }
+        char.tryParse() shouldBe char
+        char.convertToString().parse() shouldBe char
+        char.convertToString().tryParse() shouldBe char
+    }
+
+    @Test
+    fun `parse chars to int`() {
+        val char = columnOf('1', '2', '3')
+        char.parse() shouldBe columnOf(1, 2, 3)
+        char.tryParse() shouldBe columnOf(1, 2, 3)
+    }
+
     @Test
     fun parseDate() {
         val currentLocale = Locale.getDefault()

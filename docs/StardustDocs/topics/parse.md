@@ -1,12 +1,12 @@
 [//]: # (title: parse)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns a [`DataFrame`](DataFrame.md) in which the given `String` columns are parsed into other types.
+Returns a [`DataFrame`](DataFrame.md) in which the given `String` and `Char` columns are parsed into other types.
 
-This is a special case of the [convert](convert.md) operation.
+This is a special case of the [](convert.md) operation.
 
 This parsing operation is sometimes executed implicitly, for example, when [reading from CSV](read.md) or
-[type converting from `String` columns](convert.md).
+[type converting from `String`/`Char` columns](convert.md).
 You can recognize this by the `locale` or `parserOptions` arguments in these functions.
 
 Related operations: [](updateConvert.md)
@@ -20,7 +20,10 @@ df.parse()
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseAll.html" width="100%"/>
 <!---END-->
 
-To parse only particular columns use a [column selector](ColumnSelectors.md):
+When no columns are specified, all `String` and `Char` columns are parsed,
+even those inside [column groups](DataColumn.md#columngroup) and inside [frame columns](DataColumn.md#framecolumn).
+
+To parse only particular columns, use a [column selector](ColumnSelectors.md):
 
 <!---FUN parseSome-->
 
@@ -33,7 +36,7 @@ df.parse { age and weight }
 
 ### Parsing Order
 
-`parse` tries to parse every `String` column into one of supported types in the following order:
+`parse` tries to parse every `String`/`Char` column into one of the supported types in the following order:
 * `Int`
 * `Long`
 * `Instant` (`kotlin.time`) (requires `parseExperimentalInstant = true`, available from Kotlin 2.1+.)
@@ -48,6 +51,12 @@ df.parse { age and weight }
 * `Uuid` ([`kotlin.uuid.Uuid`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/)) (requires `parseExperimentalUuid = true`) 
 * `BigDecimal`
 * `JSON` (arrays and objects) (requires the `org.jetbrains.kotlinx:dataframe-json` dependency)
+* `Char`
+* `String`
+
+When `.parse()` is called on a single column and the input (`String`/`Char`) type is the same as the output type,
+(a.k.a., it cannot be parsed further) an `IllegalStateException` is thrown.
+To avoid this, use `col.tryParse()` instead.
 
 ### Parser Options
 
