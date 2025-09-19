@@ -77,6 +77,7 @@ class DataFrameSymbolProcessor(
             }
             .partition { it.first.validate() }
 
+        val outputDirectory = File(configuration.importedSchemasOutput)
         validDeclarations
             .forEach { (classDeclaration, annotation) ->
                 val reader = providers.firstOrNull { it.accepts(annotation.source, annotation.qualifier) }
@@ -86,8 +87,11 @@ class DataFrameSymbolProcessor(
                         "data" to JsonPrimitive(annotation.source),
                     )
                     val df = reader.default(annotation.source)
+                    if (!outputDirectory.exists()) {
+                        outputDirectory.mkdirs()
+                    }
                     File(
-                        File(configuration.importedSchemasOutput),
+                        outputDirectory,
                         "${classDeclaration.simpleName.asString()}.json",
                     ).writeText(df.schema().toJsonString(metadata = metadata))
                 } else {
