@@ -4,6 +4,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -35,7 +36,7 @@ interface TestBase {
     interface Person {
         val age: Int
         val city: String?
-        val name: Name
+        val name: DataRow<Name> // TODO Requires https://code.jetbrains.team/p/kt/repositories/kotlin/reviews/23694 to be merged
         val weight: Int?
         val isHappy: Boolean
     }

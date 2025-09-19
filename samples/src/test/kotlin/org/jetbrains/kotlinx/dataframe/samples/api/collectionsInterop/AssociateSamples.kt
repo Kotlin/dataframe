@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.samples.api.collectionsInterop
 import org.jetbrains.kotlinx.dataframe.api.associate
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.dataframe.samples.api.age
+import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
