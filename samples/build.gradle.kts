@@ -52,6 +52,8 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+// get the output of the instrumentedJars configuration, aka the jar-files of the compiled modules
+// all modules with jar-task have this artifact in the DataFrame project
 val dependentProjectJarPaths = dependentProjects.map {
     it.configurations
         .getByName("instrumentedJars")
