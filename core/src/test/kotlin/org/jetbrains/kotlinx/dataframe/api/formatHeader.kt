@@ -3,11 +3,10 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue
-import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.green
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
-import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
 class FormatHeaderTests : TestBase() {
@@ -21,7 +20,6 @@ class FormatHeaderTests : TestBase() {
         // count exact style occurrences to avoid interference with CSS
         val occurrences = html.split("border:3px solid green").size - 1
         occurrences shouldBe 1
-
     }
 
     @Test

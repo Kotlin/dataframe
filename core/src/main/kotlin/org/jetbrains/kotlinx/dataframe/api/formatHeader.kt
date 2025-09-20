@@ -5,11 +5,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
-import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import kotlin.reflect.KProperty
 
 /**
  * Formats the headers (column names) of the selected columns similarly to how [format] formats cell values.
@@ -78,13 +78,22 @@ public fun <T, C> DataFrame<T>.formatHeader(vararg columns: KProperty<C>): Heade
 // region FormattedFrame.formatHeader
 
 public fun <T, C> FormattedFrame<T>.formatHeader(columns: ColumnsSelector<T, C>): HeaderFormatClause<T, C> =
-    HeaderFormatClause(df = df, columns = columns, oldHeaderFormatter = headerFormatter as HeaderColFormatter<C>?, oldCellFormatter = formatter)
+    HeaderFormatClause(
+        df = df,
+        columns = columns,
+        oldHeaderFormatter = headerFormatter as HeaderColFormatter<C>?,
+        oldCellFormatter = formatter,
+    )
 
 public fun <T> FormattedFrame<T>.formatHeader(vararg columns: String): HeaderFormatClause<T, Any?> =
     formatHeader { columns.toColumnSet() }
 
 public fun <T> FormattedFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> =
-    HeaderFormatClause(df = df, oldHeaderFormatter = headerFormatter as HeaderColFormatter<Any?>?, oldCellFormatter = formatter)
+    HeaderFormatClause(
+        df = df,
+        oldHeaderFormatter = headerFormatter as HeaderColFormatter<Any?>?,
+        oldCellFormatter = formatter,
+    )
 
 // endregion
 
@@ -102,7 +111,15 @@ public fun <T, C> HeaderFormatClause<T, C>.with(formatter: HeaderColFormatter<C>
         val parentAttributes = parentCols
             .dropLast(1)
             .map { path -> ColumnWithPath(df[path], path) }
-            .map { parentCol -> if (parentCol.path in paths) (oldHeader?.invoke(FormattingDsl, parentCol as ColumnWithPath<C>)) else null }
+            .map { parentCol ->
+                if (parentCol.path in
+                    paths
+                ) {
+                    (oldHeader?.invoke(FormattingDsl, parentCol as ColumnWithPath<C>))
+                } else {
+                    null
+                }
+            }
             .reduceOrNull(CellAttributes?::and)
         val selfAttr = if (col.path in paths) {
             val oldAttr = oldHeader?.invoke(FormattingDsl, col as ColumnWithPath<C>)

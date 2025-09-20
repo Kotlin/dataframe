@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.CellAttributes
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
-import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.HeaderColFormatter
+import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
@@ -239,7 +239,9 @@ internal fun AnyFrame.toHtmlData(
         }
         val headerStyle = run {
             val hf = configuration.headerFormatter
-            if (hf == null) null else {
+            if (hf == null) {
+                null
+            } else {
                 // collect attributes from parents
                 val parentCols = col.path.indices
                     .map { i -> col.path.take(i + 1) }

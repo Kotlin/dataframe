@@ -390,7 +390,13 @@ public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(
  * Check out the full [Grammar][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> =
-    FormatClause(filter = this.filter and filter, df = df, columns = columns, oldFormatter = oldFormatter, oldHeaderFormatter = oldHeaderFormatter)
+    FormatClause(
+        filter = this.filter and filter,
+        df = df,
+        columns = columns,
+        oldFormatter = oldFormatter,
+        oldHeaderFormatter = oldHeaderFormatter,
+    )
 
 /**
  * Only format the selected columns at given row indices.
@@ -830,7 +836,10 @@ public class FormattedFrame<T>(
     /** Applies this formatter to the given [configuration] and returns a new instance. */
     @Suppress("UNCHECKED_CAST")
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration =
-        configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?, headerFormatter = headerFormatter as HeaderColFormatter<*>?)
+        configuration.copy(
+            cellFormatter = formatter as RowColFormatter<*, *>?,
+            headerFormatter = headerFormatter as HeaderColFormatter<*>?,
+        )
 }
 
 /**

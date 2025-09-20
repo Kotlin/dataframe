@@ -68,6 +68,6 @@ internal inline fun <T, C> FormatClause<T, C>.formatImpl(
             }
             oldAttributes
         },
-        headerFormatter = clause.oldHeaderFormatter
+        headerFormatter = clause.oldHeaderFormatter,
     )
 }
