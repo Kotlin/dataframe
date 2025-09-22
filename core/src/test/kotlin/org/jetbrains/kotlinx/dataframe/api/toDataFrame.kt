@@ -425,6 +425,22 @@ class CreateDataFrameTests {
         df["value"].toList() shouldBe maps
     }
 
+    @Test
+    fun `should convert iterables of maps representing rows to DataFrame with value column`() {
+        val maps: Iterable<Map<String, *>> = listOf(mapOf("a" to 1, "b" to true), mapOf("c" to 2, "d" to false))
+        val df = maps.toDataFrame()
+        df["a"][0] shouldBe 1
+        df["b"][0] shouldBe true
+        df["a"][1] shouldBe null
+        df["b"][1] shouldBe null
+        df["c"][0] shouldBe null
+        df["d"][0] shouldBe null
+        df["c"][1] shouldBe 2
+        df["d"][1] shouldBe false
+        df.columnsCount() shouldBe 4
+        df.rowsCount() shouldBe 2
+    }
+
     class NoPublicPropsClass(private val a: Int, private val b: String)
 
     @Test

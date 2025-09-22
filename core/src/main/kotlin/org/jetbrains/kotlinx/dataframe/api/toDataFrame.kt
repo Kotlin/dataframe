@@ -72,7 +72,7 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     }
 }
 
-@JvmName("toDataFrameMapStringAny?")
+@JvmName("toDataFrameMapStringAnyNullable")
 public fun Iterable<Map<String, *>>.toDataFrame(): DataFrame<*> = map { it.toDataRow() }.toDataFrame()
 
 @JvmName("toDataFrameAnyColumn")
