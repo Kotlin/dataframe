@@ -25,6 +25,12 @@ class UtilFunctionsTest : TestBase() {
     }
 
     @Test
+    fun `DataFrame none`() {
+        df.none { "age"<Int>() > 40 && "isHappy"<Boolean>() } shouldBe false
+        df.none { "city"<String?>() == "Berlin" } shouldBe true
+    }
+
+    @Test
     fun `DataColumn between`() {
         val ages = listOf(15, 45, 20, 40, 30, 20, 30)
         val ageCol = df["age"] as DataColumn<Int>
