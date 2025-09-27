@@ -168,6 +168,6 @@ class MoveTests {
             .before { "a"["c"]["d"] }
         df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
-        //df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("b", "d")
+        df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("b", "d")
     }
 }
