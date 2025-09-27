@@ -69,7 +69,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         ColumnPosition(index, false, col)
     }
     //final step,
-    val parentPath = targetPath.dropLast(1)
+    val parentPath = effectivePath.dropLast(1)
     val toInsert = removeResult.removedColumns.map {
         val sourceCol = it.toColumnWithPath<C>()
         val sourcePath = sourceCol.path //path of each column to insert
