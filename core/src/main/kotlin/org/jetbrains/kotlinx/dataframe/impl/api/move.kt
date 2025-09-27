@@ -20,9 +20,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 
-// TODO: support 'before' mode
+ // TODO: support 'before' mode
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
-    val removeResult = df.removeImpl(columns = columns)
+    val removeResult = df.removeImpl(columns = columns) //what remains after the removal
 
     val targetPath = df.getColumnWithPath(column).path
     val sourcePaths = removeResult.removedColumns.map { it.toColumnWithPath<C>().path }
@@ -41,12 +41,12 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         }
     }
 
-    val removeRoot = removeResult.removedColumns.first().getRoot()
+    val removeRoot = removeResult.removedColumns.first().getRoot() //first column to insert, a TreeNode (string, depth(int)..)
+     //finding the first common node between target and inserting
+    val refNode = removeRoot.getOrPut(targetPath) {  //the TreeNode<ColumnPosition>, first node that target and inserting c. have in common,
+        val path = it.asList()                       //df if they both at top
 
-    val refNode = removeRoot.getOrPut(targetPath) {
-        val path = it.asList()
-
-        // Get parent of a target path
+        //Get parent of a target path
         val effectivePath = path.dropLast(1)
 
         // Get column name (last segment)
@@ -65,11 +65,11 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
 
         ColumnPosition(index, false, col)
     }
-
+    //final step,
     val parentPath = targetPath.dropLast(1)
     val toInsert = removeResult.removedColumns.map {
         val sourceCol = it.toColumnWithPath<C>()
-        val sourcePath = sourceCol.path
+        val sourcePath = sourceCol.path //path of each column to insert
         val path = if (sourcePath.size > 1) {
             // If source is nested, preserve its structure under the target parent
             parentPath + sourcePath.last()
@@ -78,7 +78,10 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         }
         ColumnToInsert(path, sourceCol.data, refNode)
     }
-    return removeResult.df.insertImpl(toInsert)
+    return removeResult.df.insertImpl(toInsert)//automatically insert after!
+     //idea: insertImpl(List<ColumnToInsert>) automatically insert after columns that share same path untill the common parent
+     //-> (idea1) rather than removing and than reinserting source columns, i remove and reinsert target!
+     //OR (idea2) i create a new version of insertImpl
 }
 
 internal fun <T, C> MoveClause<T, C>.moveImpl(

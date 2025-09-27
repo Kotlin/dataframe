@@ -621,6 +621,40 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 
 // endregion
 
+// region after
+
+/**
+ * Moves columns, previously selected with [move] to the position before the
+ * specified [column] within the [DataFrame].
+ *
+ * Returns a new [DataFrame] with updated columns.
+ *
+ * See [Selecting Columns][SelectingColumns].
+ *
+ * For more information: {@include [DocumentationUrls.Move]}
+ *
+ * ### This Before Overload
+ */
+@ExcludeFromSources
+internal interface MoveBefore
+
+/**
+ * {@include [MoveBefore]}
+ * @include [SelectingColumns.Dsl]
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.before { surname }
+ * df.move { cols(3..5) }.before { col(2) }
+ * ```
+ *
+ * @param [column] A [ColumnSelector] specifying the column
+ * before which the selected columns will be placed.
+ */
+@Refine
+@Interpretable("MoveBefore0")
+public fun <T, C> MoveClause<T, C>.before(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, false)
+
 /* TODO: implement 'before'
 fun <T, C> MoveColsClause<T, C>.before(columnPath: ColumnPath) = before { columnPath.toColumnDef() }
 fun <T, C> MoveColsClause<T, C>.before(column: Column) = before { column }
