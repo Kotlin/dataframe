@@ -621,7 +621,7 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 
 // endregion
 
-// region after
+// region before
 
 /**
  * Moves columns, previously selected with [move] to the position before the
@@ -655,12 +655,35 @@ internal interface MoveBefore
 @Interpretable("MoveBefore0")
 public fun <T, C> MoveClause<T, C>.before(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, false)
 
+/**
+ * {@include [MoveBefore]}
+ * @include [SelectingColumns.ColumnNames]
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move("age", "weight").after("surname")
+ * ```
+ * @param [column] The [Column Name][String] specifying the column
+ * after which the selected columns will be placed.
+ */
+public fun <T, C> MoveClause<T, C>.before(column: String): DataFrame<T> = before { column.toColumnAccessor() }
+
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+public fun <T, C> MoveClause<T, C>.before(column: AnyColumnReference): DataFrame<T> = before { column }
+
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+public fun <T, C> MoveClause<T, C>.before(column: KProperty<*>): DataFrame<T> = before { column.toColumnAccessor() }
+
+// endregion
+
 /* TODO: implement 'before'
 fun <T, C> MoveColsClause<T, C>.before(columnPath: ColumnPath) = before { columnPath.toColumnDef() }
 fun <T, C> MoveColsClause<T, C>.before(column: Column) = before { column }
 fun <T, C> MoveColsClause<T, C>.before(column: KProperty<*>) = before { column.toColumnDef() }
 fun <T, C> MoveColsClause<T, C>.before(column: String) = before { column.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBefore(column, false)
+fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBefore(column, false) DONE
 */
 
 @Deprecated(TO_LEFT, ReplaceWith(TO_LEFT_REPLACE), DeprecationLevel.ERROR)

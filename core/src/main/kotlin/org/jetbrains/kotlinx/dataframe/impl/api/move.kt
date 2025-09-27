@@ -26,27 +26,28 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
     val removeResult = if (isAfter) df.removeImpl(columns = columns) else df.removeImpl(columns = column)  //what remains after the removal
 
     val targetPath = if (isAfter) df.getColumnWithPath(column).path else df.getColumnsWithPaths(columns).map { it.path }
+    val effectiveTargetPath = if (isAfter) targetPath else targetPath.first()
+    effectiveTargetPath as ColumnPath
+
     val sourcePaths = removeResult.removedColumns.map { it.toColumnWithPath<C>().path }
 
     // Check if any source path is a prefix of the target path
     sourcePaths.forEach { sourcePath ->
         val sourceSegments = sourcePath.toList()
-        val targetSegments = targetPath.toList()
+        val targetSegments = effectiveTargetPath.toList()
 
         if (sourceSegments.size <= targetSegments.size &&
             sourceSegments.indices.all { targetSegments[it] == sourceSegments[it] }
         ) {
             throw IllegalArgumentException(
-                "Cannot move column '${sourcePath.joinToString()}' after its own child column '${targetPath.joinToString()}'",
+                "Cannot move column '${sourcePath.joinToString()}' after its own child column '${effectiveTargetPath.joinToString()}'",
             )
         }
     }
 
     val removeRoot = removeResult.removedColumns.first().getRoot() //first column to insert, a TreeNode (string, depth(int)..)
     //finding the first common node between target and inserting
-    val effectivePath = if (isAfter) targetPath else targetPath.first()
-    effectivePath as ColumnPath
-    val refNode = removeRoot.getOrPut(effectivePath) {  //the TreeNode<ColumnPosition>, first node that target and inserting c. have in common,
+    val refNode = removeRoot.getOrPut(effectiveTargetPath) {  //the TreeNode<ColumnPosition>, first node that target and inserting c. have in common,
         val path = it.asList()                       //df if they both at top
 
         //Get parent of a target path
@@ -69,7 +70,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         ColumnPosition(index, false, col)
     }
     //final step,
-    val parentPath = effectivePath.dropLast(1)
+    val parentPath = effectiveTargetPath.dropLast(1)
     val toInsert = removeResult.removedColumns.map {
         val sourceCol = it.toColumnWithPath<C>()
         val sourcePath = sourceCol.path //path of each column to insert

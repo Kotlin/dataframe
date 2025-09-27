@@ -152,4 +152,22 @@ class MoveTests {
             grouped.move { "a"["b"] }.after { "a"["b"] }
         }.message shouldBe "Cannot move column 'a/b' after its own child column 'a/b'"
     }
+
+    @Test
+    fun `move before first`() {
+        val df = dataFrameOf("1", "2")(1, 2)
+        shouldNotThrowAny {
+            df.move("2").before("1") shouldBe dataFrameOf("2", "1")(2, 1)
+        }
+    }
+
+    //val columnNames = listOf("q", "a.b", "b.c", "w", "a.c.d", "e.f", "b.d", "r")
+    @Test
+    fun `move before in nested structure`() {
+        val df = grouped.move { "a"["b"] }
+            .before { "a"["c"]["d"] }
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
+        //df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("b", "d")
+    }
 }
