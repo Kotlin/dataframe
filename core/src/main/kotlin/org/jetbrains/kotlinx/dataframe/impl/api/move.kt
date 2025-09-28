@@ -11,10 +11,12 @@ import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
@@ -23,34 +25,32 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 
 // TODO: support 'before' mode
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
-    val removeResult = if (isAfter) df.removeImpl(columns = columns) else df.removeImpl(columns = column)  //what remains after the removal
 
-    val targetPath = if (isAfter) df.getColumnWithPath(column).path else df.getColumnsWithPaths(columns).map { it.path }
-    val effectiveTargetPath = if (isAfter) targetPath else targetPath.first()
-    effectiveTargetPath as ColumnPath
+    val removeResult = df.removeImpl(columns = columns)
 
+    val targetPath = df.getColumnWithPath(column).path
     val sourcePaths = removeResult.removedColumns.map { it.toColumnWithPath<C>().path }
 
     // Check if any source path is a prefix of the target path
     sourcePaths.forEach { sourcePath ->
         val sourceSegments = sourcePath.toList()
-        val targetSegments = effectiveTargetPath.toList()
+        val targetSegments = targetPath.toList()
 
         if (sourceSegments.size <= targetSegments.size &&
             sourceSegments.indices.all { targetSegments[it] == sourceSegments[it] }
         ) {
             throw IllegalArgumentException(
-                "Cannot move column '${sourcePath.joinToString()}' after its own child column '${effectiveTargetPath.joinToString()}'",
+                "Cannot move column '${sourcePath.joinToString()}' after its own child column '${targetPath.joinToString()}'",
             )
         }
     }
 
-    val removeRoot = removeResult.removedColumns.first().getRoot() //first column to insert, a TreeNode (string, depth(int)..)
-    //finding the first common node between target and inserting
-    val refNode = removeRoot.getOrPut(effectiveTargetPath) {  //the TreeNode<ColumnPosition>, first node that target and inserting c. have in common,
-        val path = it.asList()                       //df if they both at top
+    val removeRoot = removeResult.removedColumns.first().getRoot()
 
-        //Get parent of a target path
+    val refNode = removeRoot.getOrPut(targetPath) {
+        val path = it.asList()
+
+        // Get parent of a target path
         val effectivePath = path.dropLast(1)
 
         // Get column name (last segment)
@@ -69,11 +69,11 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
 
         ColumnPosition(index, false, col)
     }
-    //final step,
-    val parentPath = effectiveTargetPath.dropLast(1)
+
+    val parentPath = targetPath.dropLast(1)
     val toInsert = removeResult.removedColumns.map {
         val sourceCol = it.toColumnWithPath<C>()
-        val sourcePath = sourceCol.path //path of each column to insert
+        val sourcePath = sourceCol.path
         val path = if (sourcePath.size > 1) {
             // If source is nested, preserve its structure under the target parent
             parentPath + sourcePath.last()
@@ -82,10 +82,19 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         }
         ColumnToInsert(path, sourceCol.data, refNode)
     }
-    return removeResult.df.insertImpl(toInsert)//automatically insert after!
-    //idea: insertImpl(List<ColumnToInsert>) automatically insert after columns that share same path untill the common parent
-    //-> (idea1) rather than removing and than reinserting source columns, i remove and reinsert target!
-    //OR (idea2) i create a new version of insertImpl
+
+    if (isAfter)
+        return removeResult.df.insertImpl(toInsert)
+
+    //remove target's parent sons from removeResult
+    val toRemove = refNode.children.map { it.name }
+    val withoutTargetSonsAndSourceColumns = removeResult.df.removeImpl { toRemove.toColumnSet() }
+
+    //add SourceColumns
+    val withoutTargetSons = withoutTargetSonsAndSourceColumns.df.insertImpl(toInsert)
+
+    //add target's parent sons
+
 }
 
 internal fun <T, C> MoveClause<T, C>.moveImpl(
