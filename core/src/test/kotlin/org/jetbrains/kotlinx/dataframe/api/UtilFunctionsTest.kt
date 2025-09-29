@@ -19,6 +19,13 @@ class UtilFunctionsTest : TestBase() {
     }
 
     @Test
+    fun `DataColumn none`() {
+        val ageCol = df["age"] as DataColumn<Int>
+        ageCol.none { it > 40 } shouldBe false
+        ageCol.none { it > 90 } shouldBe true
+    }
+
+    @Test
     fun `DataFrame any`() {
         df.any { "age"<Int>() > 40 && "isHappy"<Boolean>() } shouldBe true
         df.any { "city"<String?>() == "Berlin" } shouldBe false
