@@ -8,6 +8,28 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 
+// region DataFrame
+
+/**
+ * Returns `true` if none of the rows in this [DataFrame] satisfies the given [predicate].
+ *
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription]}
+ *
+ * ### Example
+ * ```kotlin
+ * // Check if there is not any row where "age" is greater than 18
+ * val hasNoAdults = df.none { age > 18 }
+ * ```
+ *
+ * @param predicate A [RowFilter] lambda that takes a [DataRow] (as both `this` and `it`)
+ * and returns `true` if none of the rows should be considered a match.
+ * @return `true` if none of the rows satisfies the [predicate], `false` otherwise.
+ * @see [DataFrame.any]
+ */
+public inline fun <T> DataFrame<T>.none(predicate: RowFilter<T>): Boolean = rows().none { predicate(it, it) }
+
+// endregion
+
 // region ColumnsSelectionDsl
 
 /**
@@ -52,27 +74,5 @@ public interface NoneColumnsSelectionDsl {
      */
     public fun none(): ColumnsResolver<*> = ColumnListImpl<Any?>(emptyList())
 }
-
-// endregion
-
-// region DataFrame
-
-/**
- * Returns `true` if none of the rows in this [DataFrame] satisfies the given [predicate].
- *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription]}
- *
- * ### Example
- * ```kotlin
- * // Check if there is not any row where "age" is greater than 18
- * val hasNoAdults = df.none { age > 18 }
- * ```
- *
- * @param predicate A [RowFilter] lambda that takes a [DataRow] (as both `this` and `it`)
- * and returns `true` if none of the rows should be considered a match.
- * @return `true` if none of the rows satisfies the [predicate], `false` otherwise.
- * @see [DataFrame.any]
- */
-public inline fun <T> DataFrame<T>.none(predicate: RowFilter<T>): Boolean = rows().none { predicate(it, it) }
 
 // endregion
