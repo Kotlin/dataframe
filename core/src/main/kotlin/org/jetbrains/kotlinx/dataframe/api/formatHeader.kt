@@ -11,30 +11,10 @@ import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
-/**
- * Formats the headers (column names) of the selected columns similarly to how [format] formats cell values.
- *
- * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause] which must be
- * finalized using [HeaderFormatClause.with].
- *
- * Header formatting is additive and supports nested column groups: styles specified for a parent [ColumnGroup]
- * are inherited by its child columns unless overridden for the child.
- *
- * Examples:
- * ```kt
- * // center a single column header
- * df.formatHeader { age }.with { attr("text-align", "center") }
- *
- * // style a whole group header and override one child
- * df.formatHeader { name }.with { bold }
- *   .formatHeader { name.firstName }.with { textColor(green) }
- *   .toStandaloneHtml()
- * ```
- */
 public typealias HeaderColFormatter<C> = FormattingDsl.(col: ColumnWithPath<C>) -> CellAttributes?
 
 /**
- * Intermediate clause for header formatting, analogous to [FormatClause] but without rows.
+ * Intermediate clause for header formatting.
  *
  * Use [with] to specify how to format the selected column headers, producing a [FormattedFrame].
  */
@@ -56,22 +36,31 @@ public class HeaderFormatClause<T, C>(
 public fun <T, C> DataFrame<T>.formatHeader(columns: ColumnsSelector<T, C>): HeaderFormatClause<T, C> =
     HeaderFormatClause(this, columns)
 
-/** Selects columns by [columns] names for header formatting. */
+/**
+ * Formats the headers (column names) of the selected columns similarly to how [format] formats cell values.
+ *
+ * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause] which must be
+ * finalized using [HeaderFormatClause.with].
+ *
+ * Header formatting is additive and supports nested column groups: styles specified for a parent [ColumnGroup]
+ * are inherited by its child columns unless overridden for the child.
+ *
+ * Examples:
+ * ```kt
+ * // center a single column header
+ * df.formatHeader { age }.with { attr("text-align", "center") }
+ *
+ * // style a whole group header and override one child
+ * df.formatHeader { name }.with { bold }
+ *   .formatHeader { name.firstName }.with { textColor(green) }
+ *   .toStandaloneHtml()
+ * ```
+ */
 public fun <T> DataFrame<T>.formatHeader(vararg columns: String): HeaderFormatClause<T, Any?> =
     formatHeader { columns.toColumnSet() }
 
 /** Selects all columns for header formatting. */
 public fun <T> DataFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> = HeaderFormatClause(this)
-
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
-public fun <T, C> DataFrame<T>.formatHeader(vararg columns: ColumnReference<C>): HeaderFormatClause<T, C> =
-    formatHeader { columns.toColumnSet() }
-
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
-public fun <T, C> DataFrame<T>.formatHeader(vararg columns: KProperty<C>): HeaderFormatClause<T, C> =
-    formatHeader { columns.toColumnSet() }
 
 // endregion
 
@@ -91,7 +80,7 @@ public fun <T> FormattedFrame<T>.formatHeader(vararg columns: String): HeaderFor
 public fun <T> FormattedFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> =
     HeaderFormatClause(
         df = df,
-        oldHeaderFormatter = headerFormatter as HeaderColFormatter<Any?>?,
+        oldHeaderFormatter = headerFormatter,
         oldCellFormatter = formatter,
     )
 
@@ -129,7 +118,6 @@ public fun <T, C> HeaderFormatClause<T, C>.with(formatter: HeaderColFormatter<C>
         }
         parentAttributes and selfAttr
     }
-    @Suppress("UNCHECKED_CAST")
     return FormattedFrame(df, oldCellFormatter, composedHeader)
 }
 
