@@ -50,6 +50,8 @@ public class HeaderFormatClause<T, C>(
 // region DataFrame.formatHeader
 
 /**
+ * **Experimental API. It may be changed in the future.**
+ *
  * Selects [columns] whose headers should be formatted.
  *
  * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
@@ -59,29 +61,37 @@ public fun <T, C> DataFrame<T>.formatHeader(columns: ColumnsSelector<T, C>): Hea
     HeaderFormatClause(this, columns)
 
 /**
- * Selects headers by [column names][String].
+ * **Experimental API. It may be changed in the future.**
  *
- * Equivalent to `formatHeader { columns.toColumnSet() }`.
+ * Selects [columns] whose headers should be formatted.
  *
- * Examples:
- * ```kt
- * // center a single column header
- * df.formatHeader("age").with { attr("text-align", "center") }
- * ```
+ * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
+ * which must be finalized using [HeaderFormatClause.with].
  */
 public fun <T> DataFrame<T>.formatHeader(vararg columns: String): HeaderFormatClause<T, Any?> =
     formatHeader { columns.toColumnSet() }
 
-/** Formats all column headers. */
+/**
+ * **Experimental API. It may be changed in the future.**
+ *
+ * Selects all columns for header formatting.
+ *
+ * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
+ * which must be finalized using [HeaderFormatClause.with].
+ */
 public fun <T> DataFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> = HeaderFormatClause(this)
-
 
 // endregion
 
 // region FormattedFrame.formatHeader
 
 /**
- * Continue header formatting on an already [FormattedFrame], preserving existing cell- and header formatting.
+ * **Experimental API. It may be changed in the future.**
+ *
+ * Selects [columns] whose headers should be formatted.
+ *
+ * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
+ * which must be finalized using [HeaderFormatClause.with].
  */
 public fun <T, C> FormattedFrame<T>.formatHeader(columns: ColumnsSelector<T, C>): HeaderFormatClause<T, C> =
     HeaderFormatClause(
@@ -91,11 +101,25 @@ public fun <T, C> FormattedFrame<T>.formatHeader(columns: ColumnsSelector<T, C>)
         oldCellFormatter = formatter,
     )
 
-/** Selects headers by [column names][String] on an existing [FormattedFrame]. */
+/**
+ * **Experimental API. It may be changed in the future.**
+ *
+ * Selects [columns] whose headers should be formatted.
+ *
+ * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
+ * which must be finalized using [HeaderFormatClause.with].
+ */
 public fun <T> FormattedFrame<T>.formatHeader(vararg columns: String): HeaderFormatClause<T, Any?> =
     formatHeader { columns.toColumnSet() }
 
-/** Selects all headers on an existing [FormattedFrame]. */
+/**
+ * **Experimental API. It may be changed in the future.**
+ *
+ * Selects all columns for header formatting.
+ *
+ * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
+ * which must be finalized using [HeaderFormatClause.with].
+ */
 public fun <T> FormattedFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> =
     HeaderFormatClause(
         df = df,
@@ -108,6 +132,8 @@ public fun <T> FormattedFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> =
 // region terminal operations
 
 /**
+ * **Experimental API. It may be changed in the future.**
+ *
  * Creates a new [FormattedFrame] that uses the specified [HeaderColFormatter] to format the selected headers.
  *
  * Header formatting is additive: attributes from already-applied header formatters are combined with the newly
@@ -128,14 +154,12 @@ public fun <T, C> HeaderFormatClause<T, C>.with(formatter: HeaderColFormatter<C>
                 .map { p -> ColumnWithPath(df[p], p) }
                 .map { parentCol ->
                     if (parentCol.path in selectedPaths) {
-                        @Suppress("UNCHECKED_CAST")
                         oldHeader?.invoke(FormattingDsl, parentCol as ColumnWithPath<C>)
                     } else null
                 }
                 .reduceOrNull(CellAttributes?::and)
         } else null
 
-        @Suppress("UNCHECKED_CAST")
         val typedCol = col as ColumnWithPath<C>
 
         val existingAttr = oldHeader?.invoke(FormattingDsl, typedCol)
