@@ -83,32 +83,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         ColumnToInsert(path, sourceCol.data, refNode)
     }
 
-    if (isAfter)
-        return removeResult.df.insertImpl(toInsert)
-
-    //remove ref Node's sons from removeResult
-    val toRemove = refNode.children.map { it.name }
-    val withoutRefNodeAndSourceColumns = removeResult.df.removeImpl { toRemove.toColumnSet() }
-
-    //add SourceColumns
-    val withoutRefNodeSons = withoutRefNodeAndSourceColumns.df.insertImpl(toInsert)
-
-    //add target's parent sons (refNode's sons)
-    val  refNodeSonsToInsert = withoutRefNodeAndSourceColumns.removedColumns.map{   // List<TreeNode<ColumnPosition>>.map..
-        val sourceCol = it.toColumnWithPath<C>()
-        val sourcePath = sourceCol.path
-        val path = if (sourcePath.size > 1) {
-            // If source is nested, preserve its structure under the target parent
-            parentPath + sourcePath.last()
-        } else {
-            parentPath + sourceCol.name()
-        }
-        ColumnToInsert(path, sourceCol.data, refNode)
-    }
-
-    //return
-    return withoutRefNodeSons.insertImpl(refNodeSonsToInsert)
-
+    return removeResult.df.insertImpl(toInsert)
 }
 
 internal fun <T, C> MoveClause<T, C>.moveImpl(
