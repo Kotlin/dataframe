@@ -162,6 +162,8 @@ public fun <T> DataFrame<T>.cumSum(
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  * {@set [CumSumDocs.CUMSUM_PARAM]}
  */
+@Refine
+@Interpretable("DataFrameCumSum0")
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) {
         colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
@@ -216,6 +218,8 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  * {@set [CumSumDocs.CUMSUM_PARAM]}
  */
+@Refine
+@Interpretable("GroupByCumSum0")
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) {
         colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
