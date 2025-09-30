@@ -2,14 +2,10 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
-import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region docs
 
@@ -155,10 +151,14 @@ public fun <T, C> HeaderFormatClause<T, C>.with(formatter: HeaderColFormatter<C>
                 .map { parentCol ->
                     if (parentCol.path in selectedPaths) {
                         oldHeader?.invoke(FormattingDsl, parentCol as ColumnWithPath<C>)
-                    } else null
+                    } else {
+                        null
+                    }
                 }
                 .reduceOrNull(CellAttributes?::and)
-        } else null
+        } else {
+            null
+        }
 
         val typedCol = col as ColumnWithPath<C>
 
