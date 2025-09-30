@@ -2241,8 +2241,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/FormatHeaderKt {
 	public static final fun formatHeader (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/api/HeaderFormatClause;
 	public static final fun formatHeader (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/HeaderFormatClause;
 	public static final fun formatHeader (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/HeaderFormatClause;
-	public static final fun formatHeader (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/HeaderFormatClause;
-	public static final fun formatHeader (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/HeaderFormatClause;
 	public static final fun formatHeader (Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;)Lorg/jetbrains/kotlinx/dataframe/api/HeaderFormatClause;
 	public static final fun formatHeader (Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/HeaderFormatClause;
 	public static final fun formatHeader (Lorg/jetbrains/kotlinx/dataframe/api/FormattedFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/HeaderFormatClause;
