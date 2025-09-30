@@ -24,15 +24,19 @@ import kotlin.reflect.KProperty
  * from the first cell to the last cell.
  *
  * __NOTE:__ If the column contains nullable values and [skipNA\] is set to `true`,
- * null and NaN values are skipped when computing the cumulative sum.
- * When false, all values after the first NA will be NaN (for Double and Float columns)
- * or null (for integer columns).
+ * `null` and `NaN` values are skipped when computing the cumulative sum.
+ * When `false`, all values after the first `NA` will be `NaN` (for [Double] and [Float] columns)
+ * or `null` (for other columns).
  *
- * {@get [CumSumDocs.CUMSUM_PARAM] @param [columns\]
- * The names of the columns to apply cumSum operation.}
+ * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * @param [skipNA\] Whether to skip null and NaN values (default: `true`).
+ * Similar to [sum][sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
  *
+ * {@get [CumSumDocs.CUMSUM_PARAM] @param [columns\] The selection of the columns to apply the `cumSum` operation to.
+ *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][ColumnsSelectionDsl.colsAtAnyDepth].
+ * }
+ *
+ * @param [skipNA\] Whether to skip `null` and `NaN` values (default: `true`).
  * @return A new {@get [CumSumDocs.DATA_TYPE]} of the same type with the cumulative sums.
  *
  * {@get [CumSumDocs.CUMSUM_PARAM] @see [Selecting Columns][SelectSelectingOptions].}
@@ -41,8 +45,11 @@ import kotlin.reflect.KProperty
 @ExcludeFromSources
 @Suppress("ClassName")
 private interface CumSumDocs {
+
+    // Can be emptied to disable information about selecting columns
     interface CUMSUM_PARAM
 
+    // Either [DataColumn] or [DataFrame]
     interface DATA_TYPE
 }
 
@@ -159,8 +166,7 @@ public fun <T> DataFrame<T>.cumSum(
  */
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) {
-        // TODO keep at any depth?
-        colsAtAnyDepth().filter { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
     }
 
 // endregion
@@ -214,8 +220,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  */
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) {
-        // TODO keep at any depth?
-        colsAtAnyDepth().filter { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
     }
 
 // endregion
