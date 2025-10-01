@@ -3471,6 +3471,11 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/NoneColumnsS
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/NoneColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
+public final class org/jetbrains/kotlinx/dataframe/api/NoneKt {
+	public static final fun none (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Z
+	public static final fun none (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Z
+}
+
 public final class org/jetbrains/kotlinx/dataframe/api/NullabilityException : java/lang/Exception {
 	public fun <init> ()V
 }
