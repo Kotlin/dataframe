@@ -19,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
@@ -736,7 +735,7 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
 
             // Base case, parse the column if it's a `String?` column
             col.isSubtypeOf<String?>() ->
-                col.cast<String?>().tryParseImpl(options)
+                col.tryParseImpl(options)
 
             else -> col
         }

@@ -7,8 +7,6 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnDescription
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.asComparable
-import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.isNumber
@@ -55,8 +53,8 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
                 ?.key
         }
         if (hasNumericCols) {
-            ColumnDescription::mean from { if (it.isNumber()) it.asNumbers().mean() else null }
-            ColumnDescription::std from { if (it.isNumber()) it.asNumbers().std() else null }
+            ColumnDescription::mean from { if (it.isNumber()) it.mean() else null }
+            ColumnDescription::std from { if (it.isNumber()) it.std() else null }
         }
         if (hasComparableCols || hasNumericCols) {
             ColumnDescription::min from inferType {
@@ -113,10 +111,10 @@ private fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> =
 @Suppress("UNCHECKED_CAST")
 private fun DataColumn<Any?>.convertToComparableOrNull(): DataColumn<Comparable<Any>?>? {
     return when {
-        valuesAreComparable() -> asComparable()
+        valuesAreComparable() -> this
 
         // Found incomparable number types, convert all to Double first
-        isNumber() -> cast<Number?>().map {
+        isNumber() -> map {
             if (it?.isPrimitiveNumber() == false) {
                 // Cannot calculate statistics of a non-primitive number type
                 return@convertToComparableOrNull null

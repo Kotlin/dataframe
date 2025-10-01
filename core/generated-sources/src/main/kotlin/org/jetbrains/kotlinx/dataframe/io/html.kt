@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -170,7 +169,7 @@ internal fun AnyFrame.toHtmlData(
         configuration: DisplayConfiguration,
     ): ColumnDataForJs {
         val values = if (rowsLimit != null) rows().take(rowsLimit) else rows()
-        val scale = if (col.isNumber()) col.asNumbers().scale() else 1
+        val scale = if (col.isNumber()) col.scale() else 1
         val format = if (scale > 0) {
             RendererDecimalFormat.fromPrecision(scale)
         } else {
