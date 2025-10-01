@@ -73,8 +73,11 @@ df.convert { name }.asColumn { col ->
 * `Instant` (kotlinx.datetime, kotlin.time, and java.time)
 * `enum` classes (by name)
 
-Note that converting between `Char` and `Int` is done by ASCII character code.
-This means the `Char` `'1'` becomes the `Int` `49`.
+> Note that converting between `Char` and `Int` is done by UTF-16 character code.
+> This means the `Char` `'1'` becomes the `Int` `49`. 
+> To convert `Char -> Int` the way it is written, use `parse()` instead, or, 
+> in either case, use `String` as intermediary type.
+> {style="warning"}
 
 If you want to convert `Char` `'1'` to the `Int` `1`, use [parse()](parse.md) instead, or use `String`
 as intermediate type.
