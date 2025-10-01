@@ -136,3 +136,30 @@ df2.format().perRowCol { row, col ->
 
 <!---END-->
 <inline-frame src="resources/formatExampleNumbers.html" width="100%"/>
+
+## formatHeader
+
+> This method is experimental and may be unstable.
+> 
+> {type="warning"}
+
+Formats the specified column headers.
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.render.FormatHeaderSamples-->
+
+<!---FUN formatHeader-->
+
+```kotlin
+df
+    // Format all column headers with bold
+    .formatHeader().with { bold }
+    // Format the "name" column (including nested) header with red text
+    .formatHeader { name }.with { textColor(red) }
+    // Override "name"/"lastName" column formating header with blue text
+    .formatHeader { name.lastName }.with { textColor(blue) }
+    // Format all numeric column headers with underlines
+    .formatHeader { colsOf<Number?>() }.with { underline }
+```
+
+<!---END-->
+<inline-frame src="resources/formatHeader.html" width="100%"/>
