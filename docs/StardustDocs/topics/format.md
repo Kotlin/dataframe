@@ -136,3 +136,18 @@ df2.format().perRowCol { row, col ->
 
 <!---END-->
 <inline-frame src="resources/formatExampleNumbers.html" width="100%"/>
+
+## formatHeader
+
+> This method is experimental and may be unstable.
+> 
+> {type="warning"}
+
+Formats the specified column headers.
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.render.FormatHeaderSamples-->
+
+<!---FUN formatHeader-->
+
+<!---END-->
+<inline-frame src="resources/formatHeader.html" width="100%"/>
