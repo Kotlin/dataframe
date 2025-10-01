@@ -112,6 +112,9 @@ This library is built with Gradle.
   making local publishing faster: `./gradlew publishToMavenLocal -PskipKodex`.
   This, however, publishes the library with "broken" KDocs, 
   so it's only meant for faster iterations during development.
+* The parameter `-PincludeCoreLibrariesJson` makes the build include the `libraries.json` file in the `:core` module.
+  This file allows loading dataframe-jupyter when dataframe-core is present on its own in a Kotlin Notebook.
+  Usually only done when publishing.
 
 You can import this project into IDEA, but you have to delegate the build actions
 to Gradle (in Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle -> Runner)

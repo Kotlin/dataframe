@@ -23,7 +23,7 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.groupByOther
 import org.jetbrains.kotlinx.dataframe.api.head
 import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.length
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
@@ -181,7 +181,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.min() // min of values per every comparable column
         df.min { age and weight } // min of all values in `age` and `weight`
-        df.minFor(skipNaN = true) { age and weight } // min of values per `age` and `weight` separately
+        df.minFor(skipNaN = true) { age and name.firstName } // min of values per `age` and `firstName` separately
         df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
         df.minBy { age } // DataRow with minimal `age`
         // SampleEnd
@@ -205,7 +205,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.median() // median of values per every comparable column
         df.median { age and weight } // median of all values in `age` and `weight`
-        df.medianFor(skipNaN = true) { age and weight } // median of values per `age` and `weight` separately
+        df.medianFor(skipNaN = true) { age and name.firstName } // median of values per `age` and `firstName` separately
         df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
         df.medianBy { age } // DataRow where the median age lies (lower-median for an even number of values)
         // SampleEnd
@@ -229,7 +229,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.percentile(25.0) // 25th percentile of values per every comparable column
         df.percentile(75.0) { age and weight } // 75th percentile of all values in `age` and `weight`
-        df.percentileFor(50.0, skipNaN = true) { age and weight } // 50th percentile of values per `age` and `weight` separately
+        df.percentileFor(50.0, skipNaN = true) { age and name.firstName } // 50th percentile of values per `age` and `firstName` separately
         df.percentileOf(75.0) { (weight ?: 0) / age } // 75th percentile of expression evaluated for every row
         df.percentileBy(25.0) { age } // DataRow where the 25th percentile of `age` lies (index rounded using R3)
         // SampleEnd
@@ -438,7 +438,7 @@ class Analyze : TestBase() {
     fun columnsFor_properties() {
         // SampleStart
         df.minFor { colsOf<Int>() }
-        df.maxFor { name.firstName and name.lastName }
+        df.maxFor { name.firstName and age }
         df.sumFor { age and weight }
         df.meanFor { cols(1, 3).asNumbers() }
         df.medianFor { name.allCols().asComparable() }
@@ -457,7 +457,7 @@ class Analyze : TestBase() {
 
         df.minFor { colsOf<Int>() }
 
-        df.maxFor { firstName and lastName }
+        df.maxFor { firstName and age }
         // or
         df.maxFor(firstName, lastName)
 
@@ -475,7 +475,7 @@ class Analyze : TestBase() {
     fun columnsFor_strings() {
         // SampleStart
         df.minFor { colsOf<Int>() }
-        df.maxFor { "name"["firstName"].asComparable() and "name"["lastName"].asComparable() }
+        df.maxFor { "name"["firstName"].asComparable() and "age"<Int>() }
 
         df.sumFor("age", "weight")
         // or
@@ -644,7 +644,7 @@ class Analyze : TestBase() {
         df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
         df.groupBy { city }.count() // number of rows into column "count"
         df.groupBy { city }
-            .max { name.firstName.length() and name.lastName.length() } // maximum length of firstName or lastName into column "max"
+            .max { name.firstName.map { it.length } and name.lastName.map { it.length } } // maximum length of firstName or lastName into column "max"
         df.groupBy { city }
             .medianFor { age and weight } // median age into column "age", median weight into column "weight"
         df.groupBy { city }
@@ -663,7 +663,7 @@ class Analyze : TestBase() {
         df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"
         df.groupBy("city").count() // number of rows into column "count"
         df.groupBy("city").max {
-            "name"["firstName"]<String>().length() and "name"["lastName"]<String>().length()
+            "name"["firstName"]<String>().map { it.length } and "name"["lastName"]<String>().map { it.length }
         } // maximum length of firstName or lastName into column "max"
         df.groupBy("city")
             .medianFor("age", "weight") // median age into column "age", median weight into column "weight"

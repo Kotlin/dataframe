@@ -160,14 +160,3 @@ kotlinPublications {
 kotlin {
     explicitApi()
 }
-
-val instrumentedJars: Configuration by configurations.creating {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-}
-
-artifacts {
-    add("instrumentedJars", tasks.jar.get().archiveFile) {
-        builtBy(tasks.jar)
-    }
-}

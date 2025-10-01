@@ -42,9 +42,11 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  * Filters the rows of this [DataFrame] based on the provided [RowFilter].
  * Returns a new [DataFrame] containing only the rows that satisfy the given [predicate].
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] both as `this` and `it`,
- * allowing you to define a [Boolean] condition using the row's values,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs] for convenient access.
+ * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [Boolean] value.
+ *
+ * It allows you to define conditions using the row's values directly,
+ * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs] for convenient and type-safe access.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *

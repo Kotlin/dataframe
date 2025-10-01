@@ -282,6 +282,8 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFr
  * and returns the new column name.
  * @return A new [DataFrame] with the columns renamed.
  */
+@Refine
+@Interpretable("RenameIntoLambda")
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> =
     renameImpl(transform)
 
