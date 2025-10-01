@@ -716,29 +716,24 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
         when {
             // when a frame column is requested to be parsed,
             // parse each value/frame column at any depth inside each DataFrame in the frame column
-            col.isFrameColumn() -> {
+            col.isFrameColumn() ->
                 col.map {
                     it.parseImpl(options) {
                         colsAtAnyDepth().filter { !it.isColumnGroup() }
                     }
                 }
-            }
 
             // when a column group is requested to be parsed,
             // parse each column in the group
-            col.isColumnGroup() -> {
+            col.isColumnGroup() ->
                 col.parseImpl(options) { all() }
                     .asColumnGroup(col.name())
                     .asDataColumn()
-            }
 
             // Base case, parse the column if it's a `String?` column
-            col.isSubtypeOf<String?>() -> {
+            col.isSubtypeOf<String?>() ->
                 col.cast<String?>().tryParseImpl(options)
-            }
 
-            else -> {
-                col
-            }
+            else -> col
         }
     }
