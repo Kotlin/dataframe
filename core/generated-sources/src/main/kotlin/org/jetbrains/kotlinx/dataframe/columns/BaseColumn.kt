@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -82,6 +83,7 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     public fun values(): Iterable<T>
 
+    @RequiredByIntellijPlugin
     public fun toList(): List<T> = values().asList()
 
     public fun toSet(): Set<T>

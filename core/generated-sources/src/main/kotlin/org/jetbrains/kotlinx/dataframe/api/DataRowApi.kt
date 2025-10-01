@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -32,6 +33,7 @@ public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInst
 
 // region DataSchema
 @DataSchema
+@RequiredByIntellijPlugin
 public data class NameValuePair<V>(val name: String, val value: V)
 
 // Without these overloads row.transpose().name or row.map { name } won't resolve
@@ -56,6 +58,7 @@ public val DataRow<NameValuePair<*>>.value: Any?
 public inline fun <reified R> AnyRow.namedValuesOf(): List<NameValuePair<R>> =
     values().zip(columnNames()).filter { it.first is R }.map { NameValuePair(it.second, it.first as R) }
 
+@RequiredByIntellijPlugin
 public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
     values().zip(columnNames()) { value, name -> NameValuePair(name, value) }
 
@@ -188,6 +191,7 @@ public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>):
 public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
+@RequiredByIntellijPlugin
 public fun AnyRow.columnsCount(): Int = df().ncol
 
 public fun AnyRow.columnNames(): List<String> = df().columnNames()
