@@ -40,15 +40,18 @@ internal fun <T> insertImpl(
 ): DataFrame<T> {
     if (columns.isEmpty()) return df ?: DataFrame.empty().cast()
 
+    //starts from 0
     val childDepth = depth + 1
 
+    // map : name of column path's piece at 'depth' -> List of columns with same piece at 'depth'
     val columnsMap = columns.groupBy { it.insertionPath[depth] }.toMutableMap() // map: columnName -> columnsToAdd
 
     val newColumns = mutableListOf<AnyBaseCol>()
 
     // insert new columns under existing
     df?.columns()?.forEach {
-        val subTree = columnsMap[it.name()]
+        val subTree = columnsMap[it.name()] //cols to insert that have in the path the name of the column -> !cols to insert under 'it'!
+        //sub tree == null -> nothing to insert under this column
         if (subTree != null) {
             // assert that new columns go directly under current column so they have longer paths
             val invalidPath = subTree.firstOrNull { it.insertionPath.size == childDepth }
@@ -56,7 +59,7 @@ internal fun <T> insertImpl(
                 val text = invalidPath!!.insertionPath.joinToString(".")
                 "Can not insert column `$text` because column with this path already exists in DataFrame"
             }
-            val group = it as? ColumnGroup<*>
+            val group = it as? ColumnGroup<*> //it as a ColumnGroup, a sub-type of DataFrame!
             check(group != null) {
                 "Can not insert columns under a column '${it.name()}', because it is not a column group"
             }
@@ -97,7 +100,7 @@ internal fun <T> insertImpl(
         } else {
             null
         }
-    }.sortedBy { it.first } // sort by insertion index
+    }.sortedByDescending { it.first } // sort by insertion index
 
     val removedSiblings = treeNode?.children
     var k = 0 // index in 'removedSiblings' list
