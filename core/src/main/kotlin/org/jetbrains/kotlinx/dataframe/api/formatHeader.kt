@@ -13,12 +13,12 @@ import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
  * A lambda used to format a column header (its displayed name) when rendering a dataframe to HTML.
  *
  * The lambda runs in the context of [FormattingDsl] and receives the [ColumnWithPath] of the header to format.
- * Return a [CellAttributes] (or `null`) describing CSS you want to apply to the header cell.
+ * Return a [CellAttributes] (or `null`) describing the CSS you want to apply to the header cell.
  *
  * Examples:
- * - Center a header: `attr("text-align", "center")`
+ * - Center the header: `attr("text-align", "center")`
  * - Make it bold: `bold`
- * - Set custom color: `textColor(rgb(10, 10, 10))`
+ * - Set a custom color: `textColor(rgb(10, 10, 10))`
  */
 public typealias HeaderColFormatter<C> = FormattingDsl.(col: ColumnWithPath<C>) -> CellAttributes?
 
@@ -133,7 +133,8 @@ public fun <T> FormattedFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> =
  * Creates a new [FormattedFrame] that uses the specified [HeaderColFormatter] to format the selected headers.
  *
  * Header formatting is additive: attributes from already-applied header formatters are combined with the newly
- * returned attributes using [CellAttributes.and]. If a parent column group is selected, its attributes are
+ *
+ *  returned attributes using [CellAttributes.and]. If a parent column group is selected, its attributes are
  * applied to its children unless explicitly overridden.
  */
 @Suppress("UNCHECKED_CAST")
