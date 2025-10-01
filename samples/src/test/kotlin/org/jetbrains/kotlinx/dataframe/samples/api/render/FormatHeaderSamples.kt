@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
-class FormatHeaderSamples: DataFrameSampleHelper("format", "api") {
+class FormatHeaderSamples : DataFrameSampleHelper("format", "api") {
     val df = peopleDf.cast<Person>()
 
     @DataSchema
@@ -22,14 +22,14 @@ class FormatHeaderSamples: DataFrameSampleHelper("format", "api") {
     interface Person {
         val age: Int
         val city: String?
-        val name: DataRow<Name> // TODO Requires https://code.jetbrains.team/p/kt/repositories/kotlin/reviews/23694 to be merged
+        val name: DataRow<Name>
         val weight: Int?
         val isHappy: Boolean
     }
 
     @Test
     fun formatHeader() {
-        //SampleStart
+        // SampleStart
         df
             // Format all column headers with bold
             .formatHeader().with { bold }
@@ -39,7 +39,7 @@ class FormatHeaderSamples: DataFrameSampleHelper("format", "api") {
             .formatHeader { name.lastName }.with { textColor(blue) }
             // Format all numeric column headers with underlines
             .formatHeader { colsOf<Number?>() }.with { underline }
-        //SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 }
