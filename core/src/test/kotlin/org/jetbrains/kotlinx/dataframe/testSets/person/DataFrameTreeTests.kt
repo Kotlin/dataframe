@@ -266,7 +266,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `move`() {
-        val actual = typed2.move { nameAndCity.name }.into("name")
+        val actual = typed2.move { nameAndCity.name }.into { pathOf("name") }
         actual.columnNames() shouldBe listOf("nameAndCity", "name", "age", "weight")
         actual.getColumnGroup("nameAndCity").columnNames() shouldBe listOf("city")
     }
@@ -368,6 +368,7 @@ class DataFrameTreeTests : BaseTest() {
         df2.pivot { it["nameAndCity"]["city"] }.groupBy { it["nameAndCity"]["name"] }.values("age").check()
     }
 
+    @Suppress("DEPRECATION_ERROR")
     @Test
     fun `pivot grouped column`() {
         val grouped = typed.group { age and weight }.into("info")

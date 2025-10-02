@@ -35,7 +35,6 @@ import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
-import org.jetbrains.kotlinx.dataframe.api.copy
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.pathOf
@@ -354,7 +353,7 @@ internal class ArrowKtTest {
 
     @Test
     fun testNarrowing() {
-        val frameWithoutRequiredField = citiesExampleFrame.copy().remove("settled")
+        val frameWithoutRequiredField = citiesExampleFrame.remove("settled")
 
         frameWithoutRequiredField.arrowWriter(
             targetSchema = Schema.fromJSON(citiesExampleSchema),
@@ -381,7 +380,7 @@ internal class ArrowKtTest {
 
     @Test
     fun testStrictType() {
-        val frameRenaming = citiesExampleFrame.copy().remove("settled")
+        val frameRenaming = citiesExampleFrame.remove("settled")
         val frameWithIncompatibleField =
             frameRenaming.add(
                 frameRenaming["is_capital"]
@@ -424,7 +423,7 @@ internal class ArrowKtTest {
 
     @Test
     fun testStrictNullable() {
-        val frameRenaming = citiesExampleFrame.copy().remove("settled")
+        val frameRenaming = citiesExampleFrame.remove("settled")
         val frameWithNulls = frameRenaming.add(
             DataColumn.createValueColumn(
                 "settled",
