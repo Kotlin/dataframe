@@ -27,6 +27,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.depth
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
+import org.jetbrains.kotlinx.dataframe.path
+import org.jetbrains.kotlinx.dataframe.values
 
 // TODO: support 'before' mode
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
@@ -92,9 +94,9 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
 
     //move (older) after (last of the newest)
     val verticalIsCorrect = removeResult.df.insertImpl(toInsert)
-    val lastOfNewest = toInsert.map { it.column }.last()
+    val lastOfNewest = toInsert.last().insertionPath
     //val older = refNode.children.map { it.name } //is empty
-    val older = removeResult.df[parentPath].asColumnGroup().columns()
+    val older = removeResult.df[parentPath].asColumnGroup().columns() //is path complete? NO
     return verticalIsCorrect.move{ older.toColumnSet() }.after(lastOfNewest)
 
 }
