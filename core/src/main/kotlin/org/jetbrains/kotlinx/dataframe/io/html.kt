@@ -881,17 +881,17 @@ public data class DisplayConfiguration(
         level = DeprecationLevel.HIDDEN,
     )
     public constructor(
-         rowsLimit: Int? = 20,
-         nestedRowsLimit: Int? = 5,
-         cellContentLimit: Int = 40,
-         cellFormatter: RowColFormatter<*, *>? = null,
-         decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
-         isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
-          localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
-         useDarkColorScheme: Boolean = false,
-         enableFallbackStaticTables: Boolean = true,
-         downsizeBufferedImage: Boolean = true,
-    ): this (
+        rowsLimit: Int? = 20,
+        nestedRowsLimit: Int? = 5,
+        cellContentLimit: Int = 40,
+        cellFormatter: RowColFormatter<*, *>? = null,
+        decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
+        isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
+        localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
+        useDarkColorScheme: Boolean = false,
+        enableFallbackStaticTables: Boolean = true,
+        downsizeBufferedImage: Boolean = true,
+    ) : this (
         rowsLimit,
         nestedRowsLimit,
         cellContentLimit,
@@ -902,7 +902,7 @@ public data class DisplayConfiguration(
         localTesting,
         useDarkColorScheme,
         enableFallbackStaticTables,
-        downsizeBufferedImage
+        downsizeBufferedImage,
     )
 
     /** For binary compatibility. */
@@ -933,7 +933,7 @@ public data class DisplayConfiguration(
             localTesting,
             useDarkColorScheme,
             enableFallbackStaticTables,
-            downsizeBufferedImage
+            downsizeBufferedImage,
         )
 
     /** DSL accessor. */

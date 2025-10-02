@@ -147,7 +147,6 @@ internal const val DISPLAY_CONFIGURATION = "This constructor is only here for bi
 
 internal const val DISPLAY_CONFIGURATION_COPY = "This function is only here for binary compatibility. $MESSAGE_1_0"
 
-
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
