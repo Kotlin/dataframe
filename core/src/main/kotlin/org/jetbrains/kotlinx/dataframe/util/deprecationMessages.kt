@@ -143,6 +143,10 @@ internal const val INSERT_AFTER_COL_PATH =
     "This `after()` overload will be removed in favor of `after { }` with Column Selection DSL. $MESSAGE_1_0"
 internal const val INSERT_AFTER_COL_PATH_REPLACE = "this.after { columnPath }"
 
+internal const val DISPLAY_CONFIGURATION = "This constructor is only here for binary compatibility. $MESSAGE_1_0"
+
+internal const val DISPLAY_CONFIGURATION_COPY = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1

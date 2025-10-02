@@ -36,8 +36,12 @@ dependencies {
 
     testImplementation(projects.dataframeJupyter)
     testImplementation(projects.dataframeGeoJupyter)
-    testImplementation(libs.kandy.notebook)
-    testImplementation(libs.kandy.stats)
+    testImplementation(libs.kandy.notebook) {
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
+    testImplementation(libs.kandy.stats) {
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
 
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
