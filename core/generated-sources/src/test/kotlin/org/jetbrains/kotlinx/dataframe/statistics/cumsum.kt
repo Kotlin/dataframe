@@ -104,6 +104,9 @@ class CumsumTests {
             "shorts" to columnOf(1.toShort(), 2.toShort(), null),
             "bigInts" to columnOf(1.toBigInteger(), 2.toBigInteger(), null),
             "mixed" to columnOf<Number?>(1.0, 2, null),
+            "group" to columnOf(
+                "ints" to columnOf(1, 2, 3),
+            ),
         )
 
         val res = df.cumSum()
@@ -116,6 +119,8 @@ class CumsumTests {
         res["bigInts"].values() shouldBe columnOf(1.toBigInteger(), 2.toBigInteger(), null).values()
         // works for mixed columns of primitives, number-unifies them; in this case to Doubles
         res["mixed"].values() shouldBe columnOf(1.0, 3.0, Double.NaN).values()
+        // runs at any depth
+        res["group"]["ints"].values() shouldBe columnOf(1, 3, 6).values()
     }
 
     @Test
