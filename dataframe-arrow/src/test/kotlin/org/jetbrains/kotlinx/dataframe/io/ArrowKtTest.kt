@@ -35,7 +35,6 @@ import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
-import org.jetbrains.kotlinx.dataframe.api.copy
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.pathOf
