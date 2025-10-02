@@ -2464,6 +2464,7 @@ class DataFrameTests : BaseTest() {
         df.comparableNothing.valuesAreComparable() shouldBe false
     }
 
+    @Suppress("DEPRECATION_ERROR")
     // https://github.com/Kotlin/dataframe/pull/1077#discussion_r1981352374
     @Test
     fun `values are comparable difficult`() {
