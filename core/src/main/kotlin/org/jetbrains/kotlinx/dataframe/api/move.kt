@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
-import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -24,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT_1_0
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_RIGHT
@@ -409,7 +409,7 @@ public fun <T, C> MoveClause<T, C>.into(
 /**
  * Move a single selected column to top level with a new name
  */
-@CandidateForRemoval
+@Deprecated(MESSAGE_SHORTCUT_1_0, ReplaceWith("into { pathOf(column) }"), DeprecationLevel.ERROR)
 @Refine
 @Interpretable("MoveInto0")
 public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
