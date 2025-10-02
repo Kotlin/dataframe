@@ -100,7 +100,7 @@ internal fun <T> insertImpl(
         } else {
             null
         }
-    }.sortedByDescending { it.first } // sort by insertion index
+    }.sortedBy { it.first } // sort by insertion index
 
     val removedSiblings = treeNode?.children
     var k = 0 // index in 'removedSiblings' list

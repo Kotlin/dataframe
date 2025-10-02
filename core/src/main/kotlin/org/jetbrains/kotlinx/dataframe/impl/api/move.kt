@@ -6,11 +6,13 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -19,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columns.depth
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
@@ -82,8 +85,14 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         }
         ColumnToInsert(path, sourceCol.data, refNode)
     }
+    if (isAfter)
+        return removeResult.df.insertImpl(toInsert)
 
-    return removeResult.df.insertImpl(toInsert)
+    //move (older) after (last of the newest)
+    val verticalIsCorrect = removeResult.df.insertImpl(toInsert)
+    val lastOfNewest = toInsert.map { it.column }.last()
+    val older = removeResult.df.get()
+
 }
 
 internal fun <T, C> MoveClause<T, C>.moveImpl(
