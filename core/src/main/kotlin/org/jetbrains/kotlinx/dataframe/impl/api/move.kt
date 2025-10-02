@@ -6,7 +6,9 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
+import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.before
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
@@ -91,7 +93,9 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
     //move (older) after (last of the newest)
     val verticalIsCorrect = removeResult.df.insertImpl(toInsert)
     val lastOfNewest = toInsert.map { it.column }.last()
-    val older = removeResult.df.get()
+    //val older = refNode.children.map { it.name } //is empty
+    val older = removeResult.df[parentPath].asColumnGroup().columns()
+    return verticalIsCorrect.move{ older.toColumnSet() }.after(lastOfNewest)
 
 }
 
