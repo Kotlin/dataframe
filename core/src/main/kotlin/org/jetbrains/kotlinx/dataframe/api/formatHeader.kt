@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.api.formatHeaderImpl
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 
 // region docs
@@ -48,7 +49,7 @@ public class HeaderFormatClause<T, C>(
 /**
  * **Experimental API. It may be changed in the future.**
  *
- * Selects [columns] whose headers should be formatted.
+ * Selects [columns] whose headers should be formatted. If unspecified, all columns will be formatted.
  *
  * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
  * which must be finalized using [HeaderFormatClause.with].
@@ -138,38 +139,7 @@ public fun <T> FormattedFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> =
  * applied to its children unless explicitly overridden.
  */
 @Suppress("UNCHECKED_CAST")
-public fun <T, C> HeaderFormatClause<T, C>.with(formatter: HeaderColFormatter<C>): FormattedFrame<T> {
-    val selectedPaths = df.getColumnPaths(UnresolvedColumnsPolicy.Skip, columns).toSet()
-    val oldHeader = oldHeaderFormatter
-
-    val composedHeader: HeaderColFormatter<Any?> = { col ->
-        val path = col.path
-        // Merge attributes from selected parents
-        val parentAttributes = if (path.size > 1) {
-            val parentPaths = (0 until path.size - 1).map { i -> path.take(i + 1) }
-            parentPaths
-                .map { p -> ColumnWithPath(df[p], p) }
-                .map { parentCol ->
-                    if (parentCol.path in selectedPaths) {
-                        oldHeader?.invoke(FormattingDsl, parentCol as ColumnWithPath<C>)
-                    } else {
-                        null
-                    }
-                }
-                .reduceOrNull(CellAttributes?::and)
-        } else {
-            null
-        }
-
-        val typedCol = col as ColumnWithPath<C>
-
-        val existingAttr = oldHeader?.invoke(FormattingDsl, typedCol)
-        val newAttr = if (path in selectedPaths) formatter(FormattingDsl, typedCol) else null
-
-        parentAttributes and (existingAttr and newAttr)
-    }
-
-    return FormattedFrame(df, oldCellFormatter, composedHeader)
-}
+public fun <T, C> HeaderFormatClause<T, C>.with(formatter: HeaderColFormatter<C>): FormattedFrame<T> =
+    formatHeaderImpl(formatter)
 
 // endregion

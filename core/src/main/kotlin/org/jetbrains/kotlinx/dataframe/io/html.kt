@@ -39,6 +39,8 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.util.DISPLAY_CONFIGURATION
+import org.jetbrains.kotlinx.dataframe.util.DISPLAY_CONFIGURATION_COPY
 import org.jetbrains.kotlinx.dataframe.util.TO_HTML
 import org.jetbrains.kotlinx.dataframe.util.TO_HTML_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.TO_STANDALONE_HTML
@@ -872,6 +874,67 @@ public data class DisplayConfiguration(
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
     }
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = DISPLAY_CONFIGURATION,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public constructor(
+         rowsLimit: Int? = 20,
+         nestedRowsLimit: Int? = 5,
+         cellContentLimit: Int = 40,
+         cellFormatter: RowColFormatter<*, *>? = null,
+         decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
+         isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
+          localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
+         useDarkColorScheme: Boolean = false,
+         enableFallbackStaticTables: Boolean = true,
+         downsizeBufferedImage: Boolean = true,
+    ): this (
+        rowsLimit,
+        nestedRowsLimit,
+        cellContentLimit,
+        cellFormatter,
+        null,
+        decimalFormat,
+        isolatedOutputs,
+        localTesting,
+        useDarkColorScheme,
+        enableFallbackStaticTables,
+        downsizeBufferedImage
+    )
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = DISPLAY_CONFIGURATION_COPY,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public fun copy(
+        rowsLimit: Int? = this.rowsLimit,
+        nestedRowsLimit: Int? = this.nestedRowsLimit,
+        cellContentLimit: Int = this.cellContentLimit,
+        cellFormatter: RowColFormatter<*, *>? = this.cellFormatter,
+        decimalFormat: RendererDecimalFormat = this.decimalFormat,
+        isolatedOutputs: Boolean = this.isolatedOutputs,
+        localTesting: Boolean = this.localTesting,
+        useDarkColorScheme: Boolean = this.useDarkColorScheme,
+        enableFallbackStaticTables: Boolean = this.enableFallbackStaticTables,
+        downsizeBufferedImage: Boolean = this.downsizeBufferedImage,
+    ): DisplayConfiguration =
+        DisplayConfiguration(
+            rowsLimit,
+            nestedRowsLimit,
+            cellContentLimit,
+            cellFormatter,
+            null,
+            decimalFormat,
+            isolatedOutputs,
+            localTesting,
+            useDarkColorScheme,
+            enableFallbackStaticTables,
+            downsizeBufferedImage
+        )
 
     /** DSL accessor. */
     public operator fun invoke(block: DisplayConfiguration.() -> Unit): DisplayConfiguration = apply(block)

@@ -838,7 +838,7 @@ public class FormattedFrame<T>(
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration =
         configuration.copy(
             cellFormatter = formatter as RowColFormatter<*, *>?,
-            headerFormatter = headerFormatter as HeaderColFormatter<*>?,
+            headerFormatter = headerFormatter,
         )
 }
 
