@@ -186,6 +186,7 @@ internal class CreateDataFrameDslImpl<T>(
             excludes = dsl.excludeProperties,
             preserveClasses = dsl.preserveClasses,
             preserveProperties = dsl.preserveProperties,
+            excludeClasses = dsl.excludeClasses,
             maxDepth = maxDepth,
         )
         df.columns().forEach {
@@ -212,6 +213,7 @@ internal fun convertToDataFrame(
     excludes: Set<KCallable<*>>,
     preserveClasses: Set<KClass<*>>,
     preserveProperties: Set<KCallable<*>>,
+    excludeClasses: Set<KClass<*>>,
     maxDepth: Int,
 ): AnyFrame {
     val clazz = type.classifierOrAny()
@@ -231,10 +233,12 @@ internal fun convertToDataFrame(
     val columns = properties.mapNotNull {
         val property = it
         if (excludes.contains(property)) return@mapNotNull null
+        val klass = it.returnType.classifier as? KClass<*>
+        if (excludeClasses.contains(klass)) return@mapNotNull null
 
         class ValueClassConverter(val unbox: Method, val box: Method)
 
-        val valueClassConverter = (it.returnType.classifier as? KClass<*>)?.let { kClass ->
+        val valueClassConverter = klass?.let { kClass ->
             if (!kClass.isValue) return@let null
 
             val constructor = requireNotNull(kClass.primaryConstructor) {
@@ -374,6 +378,7 @@ internal fun convertToDataFrame(
                                             excludes = excludes,
                                             preserveClasses = preserveClasses,
                                             preserveProperties = preserveProperties,
+                                            excludeClasses = excludeClasses,
                                             maxDepth = maxDepth - 1,
                                         )
                                     }
@@ -392,6 +397,7 @@ internal fun convertToDataFrame(
                     excludes = excludes,
                     preserveClasses = preserveClasses,
                     preserveProperties = preserveProperties,
+                    excludeClasses = excludeClasses,
                     maxDepth = maxDepth - 1,
                 )
                 DataColumn.createColumnGroup(name = it.columnName, df = df)
