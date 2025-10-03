@@ -52,6 +52,10 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+tasks.withType<KotlinCompile>().configureEach {
+    friendPaths.from(project(projects.core.path).projectDir)
+}
+
 // get the output of the instrumentedJars configuration, aka the jar-files of the compiled modules
 // all modules with jar-task have this artifact in the DataFrame project
 val dependentProjectJarPaths = dependentProjects.map {
@@ -108,6 +112,7 @@ korro {
         include("docs/StardustDocs/topics/format.md")
         include("docs/StardustDocs/topics/guides/*.md")
         include("docs/StardustDocs/topics/operations/utils/*.md")
+        include("docs/StardustDocs/topics/operations/multiple/*.md")
         include("docs/StardustDocs/topics/operations/column/*.md")
         include("docs/StardustDocs/topics/collectionsInterop/*.md")
         include("docs/StardustDocs/topics/dataSources/sql/*.md")
@@ -118,6 +123,7 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/multiple/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/render/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
