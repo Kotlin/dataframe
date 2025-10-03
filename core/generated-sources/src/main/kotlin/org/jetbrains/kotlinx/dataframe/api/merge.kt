@@ -90,6 +90,7 @@ public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
 public fun <T, C, R> MergeWithTransform<T, C, R>.intoList(): List<R> =
     df.select(selector).rows().map { transform(it, it.values() as List<C>) }
 
+@Suppress("DEPRECATION_ERROR")
 public fun <T, C, R> MergeWithTransform<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     // If target path exists, merge into temp path
     val mergePath = if (df.getColumnOrNull(path) != null) {
