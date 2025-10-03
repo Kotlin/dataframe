@@ -119,6 +119,9 @@ objects will be used as join columns:
 
 <!---FUN dfLeftImplicit-->
 
+```kotlin
+dfLeft
+```
 
 <!---END-->
 
@@ -127,7 +130,9 @@ objects will be used as join columns:
 
 <!---FUN dfRightImplicit-->
 
-
+```kotlin
+dfRight
+```
 
 <!---END-->
 
@@ -139,7 +144,7 @@ objects will be used as join columns:
 ```kotlin
 // INNER JOIN on all same-named columns ("name" and "city"):
 // Merge when BOTH name AND city are equal; otherwise the row is dropped.
-dfLeft.join(dfRight)
+dfLeft.join(dfRight) { name and city }
 ```
 
 <!---END-->
