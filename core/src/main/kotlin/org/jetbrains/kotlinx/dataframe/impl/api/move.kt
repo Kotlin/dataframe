@@ -92,12 +92,13 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
     if (isAfter)
         return removeResult.df.insertImpl(toInsert)
 
-    //move (older) after (last of the newest)
-    val verticalIsCorrect = removeResult.df.insertImpl(toInsert)
-    val lastOfNewest = toInsert.last().insertionPath
-    val older = removeResult.df[parentPath].asColumnGroup().columns()
-    val olderPaths = older.map { parentPath + it.path }.filter { it.last() == targetPath.last() }
-    return verticalIsCorrect.move{ olderPaths.toColumnSet() }.after(lastOfNewest)
+    //move target after last of toInsert
+    val logicOfAfter = removeResult.df.insertImpl(toInsert)
+    //val lastOfInsertedCols = toInsert.last().insertionPath
+    val lastOfInsertedCols = toInsert.last().insertionPath
+    val siblingsOfTargetAndTarget = removeResult.df[parentPath].asColumnGroup().columns().map { parentPath + it.path }
+    val target = siblingsOfTargetAndTarget.filter { it.last() == targetPath.last() }
+    return logicOfAfter.move{ target.toColumnSet() }.after{ lastOfInsertedCols }
 
 }
 
