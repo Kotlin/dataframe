@@ -157,7 +157,9 @@ class CreateDataFrameTests {
 
         val df2 = data.toDataFrame {
             preserve(B::row)
-            properties { preserve(DataFrame::class) }
+            properties {
+                preserve(DataFrame::class)
+            }
         }
         df2.frame.kind shouldBe ColumnKind.Value
         df2.frame.type shouldBe typeOf<DataFrame<A>>()
@@ -184,6 +186,24 @@ class CreateDataFrameTests {
         }
 
         res.schema() shouldBe data.toDataFrame(maxDepth = 0).schema()
+    }
+
+    class NestedExcludeClasses(val s: String, val list1: List<String>)
+
+    class ExcludeClasses(val i: Int, val list: List<Int>, val nested: NestedExcludeClasses)
+
+    @Test
+    fun `exclude classes`() {
+        val list = listOf(
+            ExcludeClasses(1, listOf(1, 2, 3), NestedExcludeClasses("str", listOf("foo", "bar"))),
+        )
+        val df = list.toDataFrame {
+            properties(maxDepth = 2) {
+                exclude(List::class)
+            }
+        }
+
+        df shouldBe list.toDataFrame(maxDepth = 2).remove { "list" and "nested"["list1"] }
     }
 
     enum class DummyEnum { A }
