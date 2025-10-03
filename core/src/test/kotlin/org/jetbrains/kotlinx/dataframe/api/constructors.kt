@@ -87,6 +87,7 @@ class ConstructorsTests {
         col.type() shouldBe typeOf<AnyRow>()
         col.kind() shouldBe ColumnKind.Group
         col[0] shouldBe row
+        @Suppress("DEPRECATION_ERROR")
         col[1].isEmpty() shouldBe true
     }
 
@@ -103,7 +104,9 @@ class ConstructorsTests {
         col.type() shouldBe typeOf<AnyRow>()
         col.kind() shouldBe ColumnKind.Group
         col[0] shouldBe row
+        @Suppress("DEPRECATION_ERROR")
         col[1]!!.isEmpty() shouldBe true
+        @Suppress("DEPRECATION_ERROR")
         col[2]!!.isEmpty() shouldBe true
     }
 

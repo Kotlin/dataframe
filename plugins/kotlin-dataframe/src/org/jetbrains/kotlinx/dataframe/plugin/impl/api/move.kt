@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveToStart
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toStart
 import org.jetbrains.kotlinx.dataframe.api.toEnd
@@ -62,7 +63,7 @@ class MoveInto0 : AbstractSchemaModificationInterpreter() {
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val columns = receiver.columns.resolve(receiver.df).map { it.path }
-        return receiver.df.asDataFrame().move { columns.toColumnSet() }.into(column).toPluginDataFrameSchema()
+        return receiver.df.asDataFrame().move { columns.toColumnSet() }.into{ pathOf(column) }.toPluginDataFrameSchema()
     }
 }
 
