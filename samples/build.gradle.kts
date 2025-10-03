@@ -118,6 +118,7 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/render/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
