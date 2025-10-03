@@ -160,7 +160,7 @@ class MoveTests {
             df.move("2").before("1") shouldBe dataFrameOf("2", "1")(2, 1)
         }
     }
-    
+
     @Test
     fun `move before in nested structure`() {
         val df = grouped.move { "a"["b"] }
@@ -201,23 +201,23 @@ class MoveTests {
         // Simple case: direct parent-child relationship
         shouldThrow<IllegalArgumentException> {
             grouped.move("a").before { "a"["b"] }
-        }.message shouldBe "Cannot move column 'a' after its own child column 'a/b'"
+        }.message shouldBe "Cannot move column 'a' before its own child column 'a/b'"
 
         // Nested case: deeper parent-child relationship
         shouldThrow<IllegalArgumentException> {
             grouped.move("a").before { "a"["c"]["d"] }
-        }.message shouldBe "Cannot move column 'a' after its own child column 'a/c/d'"
+        }.message shouldBe "Cannot move column 'a' before its own child column 'a/c/d'"
 
         // Group case: moving group after its nested column
         shouldThrow<IllegalArgumentException> {
             grouped.move { "a"["c"] }.before { "a"["c"]["d"] }
-        }.message shouldBe "Cannot move column 'a/c' after its own child column 'a/c/d'"
+        }.message shouldBe "Cannot move column 'a/c' before its own child column 'a/c/d'"
     }
 
     @Test
     fun `should throw when moving column before itself`() {
         shouldThrow<IllegalArgumentException> {
             grouped.move { "a"["b"] }.before { "a"["b"] }
-        }.message shouldBe "Cannot move column 'a/b' after its own child column 'a/b'"
+        }.message shouldBe "Cannot move column 'a/b' before its own child column 'a/b'"
     }
 }
