@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.BuildConfig
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
@@ -50,10 +51,13 @@ internal abstract class DataColumnImpl<T>(
 
     protected val distinct = distinct ?: lazy { values.toSet() }
 
+    @RequiredByIntellijPlugin
     override fun name() = name
 
+    @RequiredByIntellijPlugin
     override fun values() = values
 
+    @RequiredByIntellijPlugin
     override fun type() = type
 
     override fun toSet() = distinct.value
