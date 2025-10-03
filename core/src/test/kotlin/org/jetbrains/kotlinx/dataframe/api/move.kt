@@ -190,7 +190,7 @@ class MoveTests {
     }
 
     @Test
-    fun `move before between groups2`() {
+    fun `move before between groups`() {
         val df = grouped.move { "a"["b"] }.before { "b"["d"] }
         df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
