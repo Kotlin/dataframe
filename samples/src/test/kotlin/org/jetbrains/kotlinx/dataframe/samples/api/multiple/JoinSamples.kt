@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
-import org.jetbrains.kotlinx.kandy.letsplot.style.LayoutParameters.Companion.background
 import org.junit.Test
 
 class JoinSamples : DataFrameSampleHelper("join", "api") {
@@ -94,9 +93,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
             else -> RgbColor(255, 255, 255)
         }
 
-    fun <T : DfWithNameAndCity> DataFrame<T>.colorized() =
+    fun <T> DataFrame<T>.colorized() =
         format().perRowCol { row, _ ->
-            val color = nameAndCityToColor(row.name, row.city)
+            val color = nameAndCityToColor(row["name"] as String, row["city"] as String?)
             background(color) and textColor(black)
         }
 
