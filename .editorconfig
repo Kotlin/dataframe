@@ -33,6 +33,7 @@ ktlint_standard_chain-method-continuation = disabled
 ktlint_ignore_back_ticked_identifier = true
 ktlint_standard_multiline-expression-wrapping = disabled
 ktlint_standard_when-entry-bracing = disabled
+ktlint_standard_function-expression-body = disabled
 
 [{*/build/**/*,**/*keywords*/**,**/*.Generated.kt,**/*$Extensions.kt}]
 ktlint = disabled
