@@ -29,6 +29,13 @@ Related operations: [](multipleDataFrames.md)
 
 ## Examples
 
+### Join with explicit keys (with different names) {collapsible="true"}
+
+Use the Join DSL when the key column names differ:
+
+- access the right `DataFrame` via `right`;
+- define the join condition with **match()**.
+
 <!---FUN notebook_test_join_3-->
 
 ```kotlin
@@ -62,7 +69,9 @@ dfAges.join(dfCities) { firstName match right.name }
 
 <inline-frame src="./resources/notebook_test_join_6.html" width="100%" height="500px"></inline-frame>
 
-If mapped columns have the same name, just select join columns from the left [`DataFrame`](DataFrame.md):
+### Join with explicit keys (with the same names) {collapsible="true"}
+
+If mapped columns have the same name, just select join columns (one or several) from the left [`DataFrame`](DataFrame.md):
 
 <!---FUN notebook_test_join_8-->
 
@@ -99,13 +108,30 @@ dfLeft.join(dfRight) { name }
 <inline-frame src="./resources/notebook_test_join_11.html" width="100%" height="500px"></inline-frame>
 
 > In this example, the "city" columns from the left and right dataframes do not match to each other.
-> After joining, the "city" column from the right dataframe is included into result dataframe
+> After joining, the "city" column from the right dataframe is included in the result dataframe
 > with the name **"city1"** to avoid a name conflict.  
 > { style = "note" }
 
+### Join with implicit keys (all columns with the same name) {collapsible="true"}
 
 If `joinColumns` is not specified, columns with the same name from both [`DataFrame`](DataFrame.md)
 objects will be used as join columns:
+
+<!---FUN dfLeftImplicit-->
+
+
+<!---END-->
+
+<inline-frame src="./resources/dfLeftImplicit.html" width="100%" height="500px"></inline-frame>
+
+
+<!---FUN dfRightImplicit-->
+
+
+
+<!---END-->
+
+<inline-frame src="./resources/dfRightImplicit.html" width="100%" height="500px"></inline-frame>
 
 
 <!---FUN notebook_test_join_12-->

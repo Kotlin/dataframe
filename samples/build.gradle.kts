@@ -52,6 +52,10 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+tasks.withType<KotlinCompile>().configureEach {
+    friendPaths.from(project(projects.core.path).projectDir)
+}
+
 // get the output of the instrumentedJars configuration, aka the jar-files of the compiled modules
 // all modules with jar-task have this artifact in the DataFrame project
 val dependentProjectJarPaths = dependentProjects.map {

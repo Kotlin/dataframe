@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
+import org.jetbrains.kotlinx.dataframe.util.defaultHeaderFormatting
 import org.junit.Test
 
 class JoinSamples : DataFrameSampleHelper("join", "api") {
@@ -93,7 +94,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
             else -> RgbColor(255, 255, 255)
         }
 
-    fun <T> DataFrame<T>.colorized() =
+    private fun <T> DataFrame<T>.colorized() =
         format().perRowCol { row, _ ->
             val color = nameAndCityToColor(row["name"] as String, row["city"] as String?)
             background(color) and textColor(black)
@@ -108,6 +109,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
                 val color = nameToColor(row.firstName)
                 background(color) and textColor(black)
             }
+            .defaultHeaderFormatting { firstName }
             .saveDfHtmlSample()
     }
 
@@ -120,6 +122,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
                 val color = nameToColor(row.name)
                 background(color) and textColor(black)
             }
+            .defaultHeaderFormatting { name }
             .saveDfHtmlSample()
     }
 
@@ -135,6 +138,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
                 val color = nameToColor(row.firstName)
                 background(color) and textColor(black)
             }
+            .defaultHeaderFormatting { firstName }
             .saveDfHtmlSample()
     }
 
@@ -144,6 +148,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name }
             .saveDfHtmlSample()
     }
 
@@ -153,6 +158,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfRight
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name }
             .saveDfHtmlSample()
     }
 
@@ -165,6 +171,27 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.join(dfRight) { name }
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun dfLeftImplicit() {
+        // SampleStart
+        dfLeft
+            // SampleEnd
+            .colorized()
+            .defaultHeaderFormatting { name and city }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun dfRightImplicit() {
+        // SampleStart
+        dfRight
+            // SampleEnd
+            .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 
@@ -173,9 +200,10 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         // INNER JOIN on all same-named columns ("name" and "city"):
         // Merge when BOTH name AND city are equal; otherwise the row is dropped.
-        dfLeft.join(dfRight)
+        dfLeft.join(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 
@@ -185,6 +213,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 
@@ -194,6 +223,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfRight
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 
@@ -206,6 +236,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.innerJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 
@@ -218,6 +249,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.filterJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 
@@ -230,6 +262,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.leftJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 
@@ -242,6 +275,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.rightJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 
@@ -254,6 +288,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.fullJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 
@@ -266,6 +301,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.excludeJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
 }
