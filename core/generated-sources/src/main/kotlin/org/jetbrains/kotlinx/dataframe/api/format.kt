@@ -566,7 +566,7 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  *   If unspecified, all columns will be formatted.
  */
 public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> =
-    FormatClause(df, columns, formatter)
+    FormatClause(df, columns, formatter, oldHeaderFormatter = headerFormatter)
 
 /**
  * Formats the specified [columns] or cells within this dataframe such that
@@ -702,7 +702,13 @@ public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(
  * Check out the full [Grammar][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> =
-    FormatClause(filter = this.filter and filter, df = df, columns = columns, oldFormatter = oldFormatter)
+    FormatClause(
+        filter = this.filter and filter,
+        df = df,
+        columns = columns,
+        oldFormatter = oldFormatter,
+        oldHeaderFormatter = oldHeaderFormatter,
+    )
 
 /**
  * Only format the selected columns at given row indices.
@@ -1173,7 +1179,11 @@ public typealias CellFormatter<C> = FormattingDsl.(cell: C) -> CellAttributes?
  *
  * You can apply further formatting to this [FormattedFrame] by calling [format()][FormattedFrame.format] once again.
  */
-public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val formatter: RowColFormatter<T, *>? = null) {
+public class FormattedFrame<T>(
+    internal val df: DataFrame<T>,
+    internal val formatter: RowColFormatter<T, *>? = null,
+    internal val headerFormatter: HeaderColFormatter<*>? = null,
+) {
 
     /**
      * Returns a [DataFrameHtmlData] without additional definitions.
@@ -1219,7 +1229,10 @@ public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val forma
     /** Applies this formatter to the given [configuration] and returns a new instance. */
     @Suppress("UNCHECKED_CAST")
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration =
-        configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)
+        configuration.copy(
+            cellFormatter = formatter as RowColFormatter<*, *>?,
+            headerFormatter = headerFormatter,
+        )
 }
 
 /**
@@ -1251,6 +1264,7 @@ public class FormatClause<T, C>(
     internal val columns: ColumnsSelector<T, C> = { all().cast() },
     internal val oldFormatter: RowColFormatter<T, C>? = null,
     internal val filter: RowValueFilter<T, C> = { true },
+    internal val oldHeaderFormatter: HeaderColFormatter<*>? = null,
 ) {
     override fun toString(): String =
         "FormatClause(df=$df, columns=$columns, oldFormatter=$oldFormatter, filter=$filter)"
