@@ -8,14 +8,11 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.before
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
-import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -23,16 +20,12 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.asList
-import org.jetbrains.kotlinx.dataframe.impl.columns.depth
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 import org.jetbrains.kotlinx.dataframe.path
-import org.jetbrains.kotlinx.dataframe.values
 
-// TODO: support 'before' mode
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
-
     val removeResult = df.removeImpl(columns = columns)
 
     val targetPath = df.getColumnWithPath(column).path
@@ -89,17 +82,16 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         }
         ColumnToInsert(path, sourceCol.data, refNode)
     }
-    if (isAfter)
+    if (isAfter) {
         return removeResult.df.insertImpl(toInsert)
+    }
 
-    //move target after last of toInsert
+    // move target after last of toInsert
     val logicOfAfter = removeResult.df.insertImpl(toInsert)
-    //val lastOfInsertedCols = toInsert.last().insertionPath
     val lastOfInsertedCols = toInsert.last().insertionPath
     val siblingsOfTargetAndTarget = removeResult.df[parentPath].asColumnGroup().columns().map { parentPath + it.path }
     val target = siblingsOfTargetAndTarget.filter { it.last() == targetPath.last() }
-    return logicOfAfter.move{ target.toColumnSet() }.after{ lastOfInsertedCols }
-
+    return logicOfAfter.move { target.toColumnSet() }.after { lastOfInsertedCols }
 }
 
 internal fun <T, C> MoveClause<T, C>.moveImpl(

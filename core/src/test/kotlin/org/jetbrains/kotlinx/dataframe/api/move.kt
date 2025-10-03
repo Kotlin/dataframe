@@ -160,8 +160,7 @@ class MoveTests {
             df.move("2").before("1") shouldBe dataFrameOf("2", "1")(2, 1)
         }
     }
-
-    //val columnNames = listOf("q", "a.b", "b.c", "w", "a.c.d", "e.f", "b.d", "r")
+    
     @Test
     fun `move before in nested structure`() {
         val df = grouped.move { "a"["b"] }
