@@ -407,9 +407,20 @@ public fun <T, C> MoveClause<T, C>.into(
     )
 
 /**
- * Move a single selected column to top level with a new name
+ * Moves the selected column, previously specified with [move],
+ * to the top level of the [DataFrame] and assigns it a new name.
+ *
+ * For more information, see {@include [DocumentationUrls.Move]}.
+ *
+ * ### Example:
+ * ```kotlin
+ * // Move "info"."salary" column to the top level with a new name "income"
+ * df.move { info.salary }.into("income")
+ * ```
+ *
+ * @param column The new [String] name of the column after the move.
+ * @return A new [DataFrame] with the column moved and renamed.
  */
-@Deprecated(MESSAGE_SHORTCUT_1_0, ReplaceWith("into { pathOf(column) }"), DeprecationLevel.ERROR)
 @Refine
 @Interpretable("MoveInto0")
 public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
