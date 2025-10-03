@@ -1,10 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
+import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
+import org.jetbrains.kotlinx.dataframe.util.COPY_REPLACE
+
 // region DataFrame
 
-@CandidateForRemoval
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(COPY_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataFrame<T>.copy(): DataFrame<T> = columns().toDataFrame().cast()
 
 // endregion
