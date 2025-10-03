@@ -16,6 +16,7 @@ import org.gradle.kotlin.dsl.runKtlintFormatOverTestSourceSet
 import org.gradle.kotlin.dsl.sourceSets
 import org.gradle.kotlin.dsl.test
 import org.gradle.kotlin.dsl.testImplementation
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
@@ -23,10 +24,7 @@ plugins {
         alias(kotlin.jvm)
         alias(korro)
         alias(ktlint)
-        // Compiler plugin doesn't work properly for now: https://github.com/Kotlin/dataframe/issues/1432
-//        alias(dataframePlugin)
-        // using deprecated gradle plugin instead
-        alias(dataframe)
+        alias(dataframe.compiler.plugin)
 //        alias(kover)
         alias(ksp)
     }
@@ -37,8 +35,46 @@ repositories {
     mavenLocal() // for local development
 }
 
+val dependentProjects = with(projects) {
+    listOf(
+        core,
+        dataframeArrow,
+        dataframeExcel,
+        dataframeJdbc,
+        dataframeCsv,
+        dataframeJson,
+    )
+}.map { project(it.path) }
+
+tasks.withType<KotlinCompile> {
+    dependentProjects.forEach {
+        dependsOn("${it.path}:jar")
+    }
+}
+
+// get the output of the instrumentedJars configuration, aka the jar-files of the compiled modules
+// all modules with jar-task have this artifact in the DataFrame project
+val dependentProjectJarPaths = dependentProjects.map {
+    it.configurations
+        .getByName("instrumentedJars")
+        .artifacts.single()
+        .file.absolutePath
+        .replace(File.separatorChar, '/')
+}
+
 dependencies {
-    implementation(projects.dataframe)
+    runtimeOnly(projects.dataframe) // Must depend on jars for the compiler plugin to work!
+    implementation(files(dependentProjectJarPaths))
+
+    // include api() dependencies from dependent projects, as they are not included in the jars
+    dependentProjects.forEach {
+        it.configurations.getByName("api").dependencies.forEach { dep ->
+            if (dep is ExternalModuleDependency) {
+                implementation("${dep.group}:${dep.name}:${dep.version ?: "+"}")
+            }
+        }
+    }
+
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
@@ -82,6 +118,7 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/render/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")

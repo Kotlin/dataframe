@@ -44,7 +44,7 @@ USE {
 </tabs>
 
 The actual Maven Central driver version could be found
-[here](https://mvnrepository.com/artifact/com.mysql/mysql-connector-j).
+[here](https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc).
 
 ## Read
 

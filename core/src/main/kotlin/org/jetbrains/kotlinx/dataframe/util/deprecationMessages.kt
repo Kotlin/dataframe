@@ -143,6 +143,10 @@ internal const val INSERT_AFTER_COL_PATH =
     "This `after()` overload will be removed in favor of `after { }` with Column Selection DSL. $MESSAGE_1_0"
 internal const val INSERT_AFTER_COL_PATH_REPLACE = "this.after { columnPath }"
 
+internal const val DISPLAY_CONFIGURATION = "This constructor is only here for binary compatibility. $MESSAGE_1_0"
+
+internal const val DISPLAY_CONFIGURATION_COPY = "This function is only here for binary compatibility. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -238,6 +242,12 @@ internal const val MESSAGE_SHORTCUT = "This shortcut is deprecated. $MESSAGE_1_1
 internal const val LENGTH_REPLACE = "this.map { it?.length ?: 0 }"
 internal const val LOWERCASE_REPLACE = "this.map { it?.lowercase() }"
 internal const val UPPERCASE_REPLACE = "this.map { it?.uppercase() }"
+
+internal const val ADD_VARARG_COLUMNS = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_1"
+internal const val ADD_VARARG_COLUMNS_REPLACE = "this.addAll(*columns)"
+
+internal const val ADD_VARARG_FRAMES = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_1"
+internal const val ADD_VARARG_FRAMES_REPLACE = "this.addAll(*dataFrames)"
 
 // endregion
 

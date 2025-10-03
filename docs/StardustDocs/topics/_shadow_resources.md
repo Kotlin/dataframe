@@ -194,6 +194,7 @@
 <resource src="notebook_test_any_3.html"></resource>
 <resource src="notebook_test_associate_1.html"></resource>
 <resource src="notebook_test_associateBy_1.html"></resource>
+<resource src="formatHeader.html"></resource>
 <resource src="notebook_test_rename_3.html"></resource>
 <resource src="notebook_test_rename_4.html"></resource>
 <resource src="notebook_test_rename_5.html"></resource>

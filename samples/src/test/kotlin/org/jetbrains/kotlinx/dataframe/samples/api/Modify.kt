@@ -3,12 +3,9 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
 import org.jetbrains.kotlinx.dataframe.api.and
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnIndex
-import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.linearBg
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.min
@@ -21,17 +18,9 @@ import org.junit.Test
 @Suppress("ktlint:standard:argument-list-wrapping")
 class Modify : DataFrameSampleHelper("operations", "modify") {
 
-    val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
-        "Alice", "Cooper", 15, "London", 54, true,
-        "Bob", "Dylan", 45, "Dubai", 87, true,
-        "Charlie", "Daniels", 20, "Moscow", null, false,
-        "Charlie", "Chaplin", 40, "Milan", null, true,
-        "Bob", "Marley", 30, "Tokyo", 68, true,
-        "Alice", "Wolf", 20, null, 55, false,
-        "Charlie", "Byrd", 30, "Moscow", 90, true,
-    ).group("firstName", "lastName").into("name").cast<TestBase.Person>()
+    val df = peopleDf
 
-    val df2 = dataFrameOf(
+    private val df2 = dataFrameOf(
         "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9", "col10",
     )(
         45, 12, 78, 34, 90, 23, 67, 89, 56, 43,

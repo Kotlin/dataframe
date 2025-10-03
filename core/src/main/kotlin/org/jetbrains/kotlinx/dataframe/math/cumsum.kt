@@ -292,7 +292,7 @@ internal fun DataColumn<Long?>.cumSumImpl(skipNA: Boolean): DataColumn<Long?> {
  * T : Number(?) -> T(?)
  */
 public val cumSumTypeConversion: CalculateReturnType = { type, _ ->
-    when (val type = type.withNullability(false)) {
+    when (type.withNullability(false)) {
         // type changes to Int, carrying nullability
         typeOf<Short>(), typeOf<Byte>() -> typeOf<Int>().withNullability(type.isMarkedNullable)
 

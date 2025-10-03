@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api.utils
 
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -8,6 +9,7 @@ import org.junit.Test
 
 class ChunkedSamples : DataFrameSampleHelper("chunked", "api") {
 
+    @DataSchema
     interface SimplePerson {
         val name: String
         val age: Int

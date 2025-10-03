@@ -1,10 +1,44 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
+
+// region DataColumn
+
+/** Returns `true` if none of the [values] match the given [predicate] */
+public fun <T> DataColumn<T>.none(predicate: Predicate<T>): Boolean = values.none(predicate)
+
+// endregion
+
+// region DataFrame
+
+/**
+ * Returns `true` if none of the rows in this [DataFrame] satisfies the given [predicate].
+ *
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription]}
+ *
+ * ### Example
+ * ```kotlin
+ * // Check if there is not any row where "age" is greater than 18
+ * val hasNoAdults = df.none { age > 18 }
+ * ```
+ *
+ * @param predicate A [RowFilter] lambda that takes a [DataRow] (as both `this` and `it`)
+ * and returns `true` if none of the rows should be considered a match.
+ * @return `true` if none of the rows satisfies the [predicate], `false` otherwise.
+ * @see [DataFrame.any]
+ */
+public inline fun <T> DataFrame<T>.none(predicate: RowFilter<T>): Boolean = rows().none { predicate(it, it) }
+
+// endregion
 
 // region ColumnsSelectionDsl
 

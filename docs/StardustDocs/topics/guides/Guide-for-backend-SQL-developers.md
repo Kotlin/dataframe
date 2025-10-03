@@ -201,7 +201,7 @@ ORDER BY total DESC LIMIT 5;
 ```kotlin
 sales.filter { amount > 0 }
     .groupBy { region }
-    .aggregate { sum(amount).into("total") }
+    .aggregate { sum { amount } into "total" }
     .sortByDesc { total }
     .take(5)
 ```
