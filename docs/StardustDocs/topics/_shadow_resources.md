@@ -168,6 +168,7 @@
 <resource src="notebook_test_shuffle_1.html"></resource>
 <resource src="notebook_test_join_8.html"></resource>
 <resource src="notebook_test_join_10.html"></resource>
+<resource src="dfRightImplicit.html"></resource>
 <resource src="notebook_test_join_5.html"></resource>
 <resource src="notebook_test_join_11.html"></resource>
 <resource src="notebook_test_join_20.html"></resource>
@@ -177,6 +178,7 @@
 <resource src="notebook_test_join_18.html"></resource>
 <resource src="notebook_test_join_14.html"></resource>
 <resource src="notebook_test_join_15.html"></resource>
+<resource src="dfLeftImplicit.html"></resource>
 <resource src="notebook_test_join_19.html"></resource>
 <resource src="notebook_test_join_12.html"></resource>
 <resource src="notebook_test_join_6.html"></resource>
