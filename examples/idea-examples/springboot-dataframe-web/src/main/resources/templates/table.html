@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${title}">Table</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f5f5f5; text-align: left; }
+        .btn { display: inline-block; margin: .25rem; padding: .5rem 1rem; background: #1e88e5; color: #fff; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<a class="btn" href="/">Back</a>
+<h2 th:text="${title}">Table</h2>
+<table>
+    <thead>
+    <tr>
+        <th th:each="h : ${table.headers}" th:text="${h}">Header</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row : ${table.rows}">
+        <td th:each="cell : ${row}" th:text="${cell}">cell</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
