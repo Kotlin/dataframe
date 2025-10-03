@@ -143,8 +143,6 @@ internal const val INSERT_AFTER_COL_PATH =
     "This `after()` overload will be removed in favor of `after { }` with Column Selection DSL. $MESSAGE_1_0"
 internal const val INSERT_AFTER_COL_PATH_REPLACE = "this.after { columnPath }"
 
-internal const val MESSAGE_SHORTCUT_1_0 = "This shortcut is deprecated. $MESSAGE_1_0"
-
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -246,6 +244,14 @@ internal const val ADD_VARARG_COLUMNS_REPLACE = "this.addAll(*columns)"
 
 internal const val ADD_VARARG_FRAMES = "Deprecated in favor of `addAll(vararg)` to improve completion. $MESSAGE_1_1"
 internal const val ADD_VARARG_FRAMES_REPLACE = "this.addAll(*dataFrames)"
+
+internal const val IS_EMPTY_REPLACE = "values().all { it == null }"
+internal const val IS_NOT_EMPTY_REPLACE = "values().any { it != null }"
+internal const val GET_ROW_REPLACE = "df().getRow(index)"
+internal const val GET_ROWS_ITERABLE_REPLACE = "df().getRows(indices)"
+internal const val GET_ROWS_RANGE_REPLACE = "df().getRows(indices)"
+internal const val GET_ROW_OR_NULL_REPLACE = "df().getRowOrNull(index)"
+internal const val COPY_REPLACE = "columns().toDataFrame().cast()"
 
 // endregion
 

@@ -1,11 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT_1_0
+import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
+import org.jetbrains.kotlinx.dataframe.util.COPY_REPLACE
 
 // region DataFrame
 
-@Deprecated(MESSAGE_SHORTCUT_1_0, ReplaceWith("columns().toDataFrame().cast()"), DeprecationLevel.ERROR)
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(COPY_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataFrame<T>.copy(): DataFrame<T> = columns().toDataFrame().cast()
 
 // endregion

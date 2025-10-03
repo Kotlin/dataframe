@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT_1_0
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_RIGHT

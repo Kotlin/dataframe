@@ -17,16 +17,22 @@ import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT_1_0
+import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
+import org.jetbrains.kotlinx.dataframe.util.IS_EMPTY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.IS_NOT_EMPTY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROW_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROWS_ITERABLE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROWS_RANGE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROW_OR_NULL_REPLACE
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-@Deprecated(MESSAGE_SHORTCUT_1_0, ReplaceWith("values().all { it == null }"), DeprecationLevel.ERROR)
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(IS_EMPTY_REPLACE), DeprecationLevel.WARNING)
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 
 @Suppress("DEPRECATION_ERROR")
-@Deprecated(MESSAGE_SHORTCUT_1_0, ReplaceWith("values().any { it != null }"), DeprecationLevel.ERROR)
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(IS_NOT_EMPTY_REPLACE), DeprecationLevel.WARNING)
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
@@ -180,16 +186,16 @@ public fun AnyRow.columnNames(): List<String> = df().columnNames()
 public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
 
 @Suppress("DEPRECATION_ERROR")
-@Deprecated(MESSAGE_SHORTCUT_1_0, ReplaceWith("df().getRow(index)"), DeprecationLevel.ERROR)
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROW_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
-@Deprecated(MESSAGE_SHORTCUT_1_0, ReplaceWith("df().getRows(indices)"), DeprecationLevel.ERROR)
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROWS_ITERABLE_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRows(indices: Iterable<Int>): DataFrame<T> = df().getRows(indices)
 
-@Deprecated(MESSAGE_SHORTCUT_1_0, ReplaceWith("df().getRows(indices)"), DeprecationLevel.ERROR)
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROWS_RANGE_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRows(indices: IntRange): DataFrame<T> = df().getRows(indices)
 
-@Deprecated(MESSAGE_SHORTCUT_1_0, ReplaceWith("df().getRowOrNull(index)"), DeprecationLevel.ERROR)
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROW_OR_NULL_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {
     val df = df()
     return if (index >= 0 && index < df.nrow) df[index] else null
