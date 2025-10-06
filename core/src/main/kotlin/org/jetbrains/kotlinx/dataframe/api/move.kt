@@ -668,14 +668,6 @@ public fun <T, C> MoveClause<T, C>.before(column: ColumnSelector<T, *>): DataFra
  */
 public fun <T, C> MoveClause<T, C>.before(column: String): DataFrame<T> = before { column.toColumnAccessor() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
-public fun <T, C> MoveClause<T, C>.before(column: AnyColumnReference): DataFrame<T> = before { column }
-
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
-public fun <T, C> MoveClause<T, C>.before(column: KProperty<*>): DataFrame<T> = before { column.toColumnAccessor() }
-
 // endregion
 
 @Deprecated(TO_LEFT, ReplaceWith(TO_LEFT_REPLACE), DeprecationLevel.ERROR)

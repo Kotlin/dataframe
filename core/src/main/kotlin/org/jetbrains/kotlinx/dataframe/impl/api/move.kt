@@ -39,8 +39,9 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         if (sourceSegments.size <= targetSegments.size &&
             sourceSegments.indices.all { targetSegments[it] == sourceSegments[it] }
         ) {
+            val afterOrBefore = if (isAfter) "after" else "before"
             throw IllegalArgumentException(
-                "Cannot move column '${sourcePath.joinToString()}' after its own child column '${targetPath.joinToString()}'",
+                "Cannot move column '${sourcePath.joinToString()}' $afterOrBefore its own child column '${targetPath.joinToString()}'",
             )
         }
     }
@@ -86,7 +87,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         return removeResult.df.insertImpl(toInsert)
     }
 
-    // move target after last of toInsert
+    //  Move the target column after the removed/inserted columns
     val logicOfAfter = removeResult.df.insertImpl(toInsert)
     val lastOfInsertedCols = toInsert.last().insertionPath
     val siblingsOfTargetAndTarget = removeResult.df[parentPath].asColumnGroup().columns().map { parentPath + it.path }
