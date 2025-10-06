@@ -7,9 +7,10 @@ import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.typeClass
+import kotlin.reflect.KType
 
 @PublishedApi
-internal fun <T> DataColumn<T>.unfoldImpl(body: CreateDataFrameDsl<T>.() -> Unit): AnyCol =
+internal fun <T> DataColumn<T>.unfoldImpl(type: KType, body: CreateDataFrameDsl<T>.() -> Unit): AnyCol =
     when (kind()) {
         ColumnKind.Group, ColumnKind.Frame -> this
 
@@ -17,7 +18,7 @@ internal fun <T> DataColumn<T>.unfoldImpl(body: CreateDataFrameDsl<T>.() -> Unit
             !typeClass.canBeUnfolded -> this
 
             else -> values()
-                .createDataFrameImpl(typeClass) { (this as CreateDataFrameDsl<T>).body() }
+                .createDataFrameImpl(type) { (this as CreateDataFrameDsl<T>).body() }
                 .asColumnGroup(name())
                 .asDataColumn()
         }
