@@ -621,13 +621,54 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 
 // endregion
 
-/* TODO: implement 'before'
-fun <T, C> MoveColsClause<T, C>.before(columnPath: ColumnPath) = before { columnPath.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: Column) = before { column }
-fun <T, C> MoveColsClause<T, C>.before(column: KProperty<*>) = before { column.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: String) = before { column.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBefore(column, false)
-*/
+// region before
+
+/**
+ * Moves columns, previously selected with [move] to the position before the
+ * specified [column] within the [DataFrame].
+ *
+ * Returns a new [DataFrame] with updated columns.
+ *
+ * See [Selecting Columns][SelectingColumns].
+ *
+ * For more information: {@include [DocumentationUrls.Move]}
+ *
+ * ### This Before Overload
+ */
+@ExcludeFromSources
+internal interface MoveBefore
+
+/**
+ * {@include [MoveBefore]}
+ * @include [SelectingColumns.Dsl]
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.before { surname }
+ * df.move { cols(3..5) }.before { col(2) }
+ * ```
+ *
+ * @param [column] A [ColumnSelector] specifying the column
+ * before which the selected columns will be placed.
+ */
+@Refine
+@Interpretable("MoveBefore0")
+public fun <T, C> MoveClause<T, C>.before(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, false)
+
+/**
+ * {@include [MoveBefore]}
+ * @include [SelectingColumns.ColumnNames]
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move("age", "weight").before("surname")
+ * ```
+ * @param [column] The [Column Name][String] specifying the column
+ * before which the selected columns will be placed.
+ */
+public fun <T, C> MoveClause<T, C>.before(column: String): DataFrame<T> = before { column.toColumnAccessor() }
+
+// endregion
 
 @Deprecated(TO_LEFT, ReplaceWith(TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)

@@ -1112,13 +1112,77 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 
 // endregion
 
-/* TODO: implement 'before'
-fun <T, C> MoveColsClause<T, C>.before(columnPath: ColumnPath) = before { columnPath.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: Column) = before { column }
-fun <T, C> MoveColsClause<T, C>.before(column: KProperty<*>) = before { column.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: String) = before { column.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBefore(column, false)
-*/
+// region before
+
+/**
+ * Moves columns, previously selected with [move][org.jetbrains.kotlinx.dataframe.api.move] to the position before the
+ * specified [column][org.jetbrains.kotlinx.dataframe.api.column] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ *
+ * ### This Before Overload
+ * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+ *
+ * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * #### NOTE:
+ * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+ * in this DSL directly with any function, they are NOT valid return types for the
+ * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
+ * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+ *
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.before { surname }
+ * df.move { cols(3..5) }.before { col(2) }
+ * ```
+ *
+ * @param [column] A [ColumnSelector] specifying the column
+ * before which the selected columns will be placed.
+ */
+@Refine
+@Interpretable("MoveBefore0")
+public fun <T, C> MoveClause<T, C>.before(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, false)
+
+/**
+ * Moves columns, previously selected with [move][org.jetbrains.kotlinx.dataframe.api.move] to the position before the
+ * specified [column][org.jetbrains.kotlinx.dataframe.api.column] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ *
+ * ### This Before Overload
+ * Select columns using their [column names][String]
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move("age", "weight").before("surname")
+ * ```
+ * @param [column] The [Column Name][String] specifying the column
+ * before which the selected columns will be placed.
+ */
+public fun <T, C> MoveClause<T, C>.before(column: String): DataFrame<T> = before { column.toColumnAccessor() }
+
+// endregion
 
 @Deprecated(TO_LEFT, ReplaceWith(TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
