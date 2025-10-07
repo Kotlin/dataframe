@@ -426,7 +426,7 @@ class CreateDataFrameTests {
     }
 
     @Test
-    fun `should convert iterables of maps representing rows to DataFrame with value column`() {
+    fun `should convert iterables of maps representing rows to DataFrame with value columns`() {
         val maps: Iterable<Map<String, *>> = listOf(mapOf("a" to 1, "b" to true), mapOf("c" to 2, "d" to false),)
         val df = maps.toDataFrame()
         df["a"][0] shouldBe 1
