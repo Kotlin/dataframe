@@ -6,8 +6,6 @@ import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
@@ -51,11 +49,6 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
                 "Unable to compute the $name for ${
                     renderType(type)
                 }. Only primitive numbers or self-comparables are supported.",
-            )
-
-        type == typeOf<BigDecimal>() || type == typeOf<BigInteger>() ->
-            throw IllegalArgumentException(
-                "Cannot calculate the $name for big numbers in DataFrame. Only primitive numbers are supported.",
             )
     }
 
