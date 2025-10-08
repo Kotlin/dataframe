@@ -20,6 +20,8 @@ The operation is also available for self-comparable columns
 (so columns of type `T : Comparable<T>`, like `DateTime`, `String`, etc.)
 In this case, the return type remains `T?`.
 When the number of values is even, the median is the low of the two middle values.
+NOTE: This logic also applies to other self-comparable `Number` types, like `BigDecimal`.
+They will not be interpolated.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.

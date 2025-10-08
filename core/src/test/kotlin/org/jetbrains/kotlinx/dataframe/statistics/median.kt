@@ -251,23 +251,25 @@ class MedianTests {
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe median`() {
         val df = dataFrameOf(
-            "a", "b", "c",
+            "a", "b", "c", "d",
         )(
-            1, 2f, 3.0,
-            4, 5f, 6.0,
-            7, 8f, 9.0,
+            1, 2f, 3.0, 1.toBigInteger(),
+            4, 5f, 6.0, 2.toBigInteger(),
+            7, 8f, 9.0, 4.toBigInteger(),
         )
 
         // Get row with median values for each column
         val medians = df.median()
-        medians["a"] shouldBe 4
-        medians["b"] shouldBe 5f
+        medians["a"] shouldBe 4.0
+        medians["b"] shouldBe 5.0
         medians["c"] shouldBe 6.0
+        medians["d"] shouldBe 2.toBigInteger() // not interpolated!
 
         // Test median for specific columns
-        val medianFor = df.medianFor("a", "c")
-        medianFor["a"] shouldBe 4
+        val medianFor = df.medianFor("a", "c", "d")
+        medianFor["a"] shouldBe 4.0
         medianFor["c"] shouldBe 6.0
+        medianFor["d"] shouldBe 2.toBigInteger() // not interpolated!
     }
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
