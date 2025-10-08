@@ -235,7 +235,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
 ): DataFrame<T> = minFor(skipNaN) { columns.toColumnSet() }
 
 @Refine
-@Interpretable("GroupByMin0")
+@Interpretable("GroupByMin2")
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -598,13 +598,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull(column: KProperty<C>): DataRow<T>? =
     minByOrNull(column, skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMin1")
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> Grouped<T>.min(): DataFrame<T> = min(skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMin0")
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T, C : Comparable<*>?> Grouped<T>.minFor(columns: ColumnsForAggregateSelector<T, C>): DataFrame<T> =
     minFor(skipNaN = skipNaNDefault, columns = columns)
@@ -623,8 +619,6 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(vararg columns: ColumnRefer
 public fun <T, C : Comparable<*>?> Grouped<T>.minFor(vararg columns: KProperty<C>): DataFrame<T> =
     minFor(columns = columns, skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMin0")
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
     name: String? = null,
@@ -649,15 +643,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
     name: String? = null,
 ): DataFrame<T> = min(columns = columns, name = name, skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMinOf")
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
     name: String? = null,
     crossinline expression: RowExpression<T, C>,
 ): DataFrame<T> = minOf(name, skipNaN = skipNaNDefault, expression = expression)
 
-@Interpretable("GroupByReduceExpression")
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.minBy(
     crossinline rowExpression: RowExpression<G, R>,
