@@ -421,7 +421,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
 ): DataFrame<T> = percentileFor(percentile, skipNaN) { columns.toColumnSet() }
 
 @Refine
-@Interpretable("GroupByPercentile0")
+@Interpretable("GroupByPercentile2")
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
     percentile: Double,
     name: String? = null,
