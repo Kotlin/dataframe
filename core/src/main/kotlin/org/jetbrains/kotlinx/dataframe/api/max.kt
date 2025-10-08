@@ -235,7 +235,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
 ): DataFrame<T> = maxFor(skipNaN) { columns.toColumnSet() }
 
 @Refine
-@Interpretable("GroupByMax0")
+@Interpretable("GroupByMax2")
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -598,13 +598,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(column: KProperty<C>): DataRow<T>? =
     maxByOrNull(column, skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMax1")
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> Grouped<T>.max(): DataFrame<T> = max(skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMax0")
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(columns: ColumnsForAggregateSelector<T, C>): DataFrame<T> =
     maxFor(skipNaN = skipNaNDefault, columns = columns)
@@ -623,8 +619,6 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(vararg columns: ColumnRefer
 public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(vararg columns: KProperty<C>): DataFrame<T> =
     maxFor(columns = columns, skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMax0")
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
     name: String? = null,
@@ -649,15 +643,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
     name: String? = null,
 ): DataFrame<T> = max(columns = columns, name = name, skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMaxOf")
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
     name: String? = null,
     crossinline expression: RowExpression<T, C>,
 ): DataFrame<T> = maxOf(name, skipNaN = skipNaNDefault, expression = expression)
 
-@Interpretable("GroupByReduceExpression")
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.maxBy(
     crossinline rowExpression: RowExpression<G, R>,
