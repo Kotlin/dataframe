@@ -34,6 +34,7 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
@@ -201,6 +202,16 @@ internal fun <T> Iterable<T>.createDataFrameImpl(
     body: CreateDataFrameDslImpl<T>.() -> Unit,
 ): DataFrame<T> {
     val builder = CreateDataFrameDslImpl(this, type)
+    builder.body()
+    return builder.columns.toDataFrameFromPairs()
+}
+
+@Deprecated("backward compatibility for Kandy", level = DeprecationLevel.ERROR)
+internal fun <T> Iterable<T>.createDataFrameImpl(
+    clazz: KClass<*>,
+    body: CreateDataFrameDslImpl<T>.() -> Unit,
+): DataFrame<T> {
+    val builder = CreateDataFrameDslImpl(this, clazz.starProjectedType)
     builder.body()
     return builder.columns.toDataFrameFromPairs()
 }
