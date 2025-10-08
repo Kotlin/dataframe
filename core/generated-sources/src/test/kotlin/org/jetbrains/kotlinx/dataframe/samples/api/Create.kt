@@ -289,12 +289,11 @@ class Create : TestBase() {
     @TransformDataFrameExpressions
     fun createDataFrameFromColumns() {
         // SampleStart
-
-        val name by columnOf("Alice", "Bob", "Charlie")
-        val age by columnOf(15, 20, 22)
-
         // DataFrame with 2 columns
-        val df = dataFrameOf(name, age)
+        val df = dataFrameOf(
+            "name" to columnOf("Alice", "Bob", "Charlie"),
+            "age" to columnOf(15, 20, 22)
+        )
         // SampleEnd
     }
 
