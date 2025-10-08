@@ -72,6 +72,9 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     }
 }
 
+@JvmName("toDataFrameMapStringAnyNullable")
+public fun Iterable<Map<String, *>>.toDataFrame(): DataFrame<*> = map { it.toDataRow() }.toDataFrame()
+
 @JvmName("toDataFrameAnyColumn")
 public fun Iterable<AnyBaseCol>.toDataFrame(): AnyFrame = dataFrameOf(this)
 
