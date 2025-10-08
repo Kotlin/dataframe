@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.impl.api.canBeUnfolded
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -21,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 // region read DataFrame from objects
 
@@ -28,21 +28,13 @@ import kotlin.reflect.KProperty
 @Interpretable("toDataFrameDefault")
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
     toDataFrame {
-        // check if type is value: primitives, primitive arrays, datetime types etc.,
-        // or has no properties
-        if (!T::class.canBeUnfolded) {
-            // create a single `value` column
-            ValueProperty<T>::value.name from { it }
-        } else {
-            // otherwise creates columns based on properties
-            properties()
-        }
+        properties()
     }
 
 @Refine
 @Interpretable("toDataFrameDsl")
 public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
-    createDataFrameImpl(T::class, body)
+    createDataFrameImpl(typeOf<T>(), body)
 
 @Refine
 @Interpretable("toDataFrame")
@@ -71,6 +63,9 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
         map { it.toDataFrame() }.concat()
     }
 }
+
+@JvmName("toDataFrameMapStringAnyNullable")
+public fun Iterable<Map<String, *>>.toDataFrame(): DataFrame<*> = map { it.toDataRow() }.toDataFrame()
 
 @JvmName("toDataFrameAnyColumn")
 public fun Iterable<AnyBaseCol>.toDataFrame(): AnyFrame = dataFrameOf(this)
