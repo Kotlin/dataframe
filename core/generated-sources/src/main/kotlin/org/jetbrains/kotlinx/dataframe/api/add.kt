@@ -114,6 +114,8 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
+@Refine
+@Interpretable("DataFrameAddAll")
 public fun <T> DataFrame<T>.addAll(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
@@ -293,6 +295,7 @@ public class AddDsl<T>(
 
     public fun add(column: AnyColumnReference): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
+    @Interpretable("AddDslReferencePlus")
     public operator fun AnyColumnReference.unaryPlus(): Boolean = add(this)
 
     public operator fun String.unaryPlus(): Boolean = add(df[this])
