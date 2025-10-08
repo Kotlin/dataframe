@@ -10,6 +10,13 @@ public final class org/jetbrains/kotlinx/dataframe/io/CsvDeephaven : org/jetbrai
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/io/CsvSchemaReader : org/jetbrains/kotlinx/dataframe/io/SchemaReader {
+	public fun <init> ()V
+	public fun accepts (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun default (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun read (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/QuoteMode : java/lang/Enum {
 	public static final field ALL Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
 	public static final field ALL_NON_NULL Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
@@ -100,6 +107,13 @@ public final class org/jetbrains/kotlinx/dataframe/io/TsvDeephaven : org/jetbrai
 	public fun getTestOrder ()I
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/TsvSchemaReader : org/jetbrains/kotlinx/dataframe/io/SchemaReader {
+	public fun <init> ()V
+	public fun accepts (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun default (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun read (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/UtilKt {
