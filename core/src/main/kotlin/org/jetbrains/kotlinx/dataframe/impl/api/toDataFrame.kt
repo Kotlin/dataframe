@@ -30,6 +30,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KVisibility
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
@@ -201,6 +202,16 @@ internal fun <T> Iterable<T>.createDataFrameImpl(
     body: CreateDataFrameDslImpl<T>.() -> Unit,
 ): DataFrame<T> {
     val builder = CreateDataFrameDslImpl(this, type)
+    builder.body()
+    return builder.columns.toDataFrameFromPairs()
+}
+
+@Deprecated("backward compatibility for Kandy", level = DeprecationLevel.ERROR)
+internal fun <T> Iterable<T>.createDataFrameImpl(
+    clazz: KClass<*>,
+    body: CreateDataFrameDslImpl<T>.() -> Unit,
+): DataFrame<T> {
+    val builder = CreateDataFrameDslImpl(this, clazz.createType())
     builder.body()
     return builder.columns.toDataFrameFromPairs()
 }
