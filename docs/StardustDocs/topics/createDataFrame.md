@@ -142,9 +142,11 @@ df.add("length") { value.length }
 <!---END-->
 
 Creates a [`DataFrame`](DataFrame.md) from an [`Iterable<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) with one column:
-"columnName: `DataColumn<T>`".
+"columnName: `DataColumn<T>`":
+
 This is an easy way to create a [`DataFrame`](DataFrame.md) when you have a list of Files, URLs, or a structure
 you want to extract data from.
+
 In a notebook,
 it can be convenient to start from the column of these values to see the number of rows, their `toString` in a table
 and then iteratively add columns with the parts of the data you're interested in.
