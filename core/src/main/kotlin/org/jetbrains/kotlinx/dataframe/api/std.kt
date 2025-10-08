@@ -160,7 +160,7 @@ public fun <T, C : Number?> Grouped<T>.stdFor(
 ): DataFrame<T> = stdFor(skipNaN, ddof) { columns.toColumnSet() }
 
 @Refine
-@Interpretable("GroupByStd0")
+@Interpretable("GroupByStd2")
 public fun <T, C : Number?> Grouped<T>.std(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
