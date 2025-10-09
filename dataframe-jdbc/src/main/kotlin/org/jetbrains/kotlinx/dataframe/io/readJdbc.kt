@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
@@ -789,15 +790,17 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
 ): DataFrameSchema {
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    val sqlQuery = "SELECT * FROM $tableName"
-    val selectFirstRowQuery = determinedDbType.sqlQueryLimit(sqlQuery, limit = 1)
+    // Read just 1 row to get the schema
+    val singleRowDataFrame = readSqlTable(
+        connection = connection,
+        tableName = tableName,
+        limit = 1,
+        inferNullability = false, // Schema extraction doesn't need nullability inference
+        dbType = determinedDbType,
+        strictValidation = true
+    )
 
-    connection.prepareStatement(selectFirstRowQuery).use { st ->
-        st.executeQuery().use { rs ->
-            val tableColumns = getTableColumnsMetadata(rs)
-            return buildSchemaByTableColumns(tableColumns, determinedDbType)
-        }
-    }
+    return singleRowDataFrame.schema()
 }
 
 /**
@@ -888,12 +891,17 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(
 ): DataFrameSchema {
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    connection.prepareStatement(sqlQuery).use { st ->
-        st.executeQuery().use { rs ->
-            val tableColumns = getTableColumnsMetadata(rs)
-            return buildSchemaByTableColumns(tableColumns, determinedDbType)
-        }
-    }
+    // Read just 1 row to get the schema
+    val singleRowDataFrame = readSqlQuery(
+        connection = connection,
+        sqlQuery = sqlQuery,
+        limit = 1,
+        inferNullability = false, // Schema extraction doesn't need nullability inference
+        dbType = determinedDbType,
+        strictValidation = true
+    )
+
+    return singleRowDataFrame.schema()
 }
 
 /**
