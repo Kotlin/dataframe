@@ -6099,8 +6099,8 @@ public final class org/jetbrains/kotlinx/dataframe/io/CommonKt {
 	public static final fun isURL (Ljava/lang/String;)Z
 	public static final fun isUrl (Ljava/lang/String;)Z
 	public static final fun skippingBomCharacters (Ljava/io/InputStream;)Ljava/io/InputStream;
-	public static final fun toDataFrame (Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun toDataFrame$default (Ljava/util/List;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toDataFrame (Ljava/util/List;Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun toDataFrame$default (Ljava/util/List;Ljava/util/List;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun urlAsFile (Ljava/net/URL;)Ljava/io/File;
 }
 
