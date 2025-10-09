@@ -222,9 +222,33 @@ class MoveTests {
     }
 
     @Test
-    fun `experiment with move to`() {
+    fun `move a single nested column to the start remaining inside the group`() {
         val df = grouped.move { "b"["d"] }.to (0, true)
         df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         df["b"].asColumnGroup().columnNames() shouldBe listOf("d", "c")
     }
+
+    @Test
+    fun `move a single nested column to the end remaining inside the group`() {
+        val df = grouped.move { "b"["c"] }.to (2, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("d", "c")
+    }
+
+    //not working area
+    @Test
+    fun `move a single nested column to the end remaining inside the group 2`() {
+        val df = grouped.move { "b"["c"] }.to (1, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("d", "c")
+    }
+
+    @Test
+    fun `move a single nested column to the end while it is to the end yet and remaining inside the group`() {
+        val df = grouped.move { "b"["d"] }.to (1, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("c", "d")
+    }
+
 }
+
