@@ -2525,4 +2525,4 @@ public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolea
  *  @return A new [DataColumn] with the values converted to [DataFrame].
  */
 public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =
-    map { it.toDataFrame(containsColumns) }
+    map { it.toDataFrame(containsColumns = containsColumns) }

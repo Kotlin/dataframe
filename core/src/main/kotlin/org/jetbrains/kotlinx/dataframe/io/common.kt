@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.util.IS_URL
@@ -48,24 +50,28 @@ public fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFram
 /**
  * Converts a list of lists into a [DataFrame].
  *
- * By default, treats the first inner list as a header (column names), and the remaining lists as rows.
- * If [containsColumns] is `true`, interprets each inner list as a column,
- * where the first element is used as the column name, and the remaining elements as values.
+ * By default, treats lists as rows. If [header] is not provided, the first inner list becomes a header (column names), and the remaining lists are treated as data.
+ *
+ * With [containsColumns] = `true`, interprets each inner list as a column.
+ * If [header] is not provided, the first element will be used as the column name, and the remaining elements as values.
  *
  * @param T The type of elements contained in the nested lists.
- * @param containsColumns If `true`, treats each nested list as a column with its first element as the column name.
- *                        Otherwise, the first list is treated as the header.
+ * @param containsColumns If `true`, treats each nested list as a column.
+ *                        Otherwise, each nested list is a row.
  *                        Defaults to `false`.
+ * @param header overrides extraction of column names from lists - all values are treated as data instead.
  * @return A [DataFrame] containing the data from the nested list structure.
  *         Returns an empty [DataFrame] if the input is empty or invalid.
  */
-public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyFrame =
+@Refine
+@Interpretable("ValuesListsToDataFrame")
+public fun <T> List<List<T>>.toDataFrame(header: List<String>? = null, containsColumns: Boolean = false): AnyFrame =
     when {
         containsColumns -> {
-            mapNotNull {
-                if (it.isEmpty()) return@mapNotNull null
-                val name = it[0].toString()
-                val values = it.drop(1)
+            mapIndexedNotNull { index, list ->
+                if (list.isEmpty()) return@mapIndexedNotNull null
+                val name = header?.get(index) ?: list[0].toString()
+                val values = if (header == null) list.drop(1) else list
                 createColumnGuessingType(name, values)
             }.toDataFrame()
         }
@@ -73,9 +79,8 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
         isEmpty() -> DataFrame.Empty
 
         else -> {
-            val header = get(0).map { it.toString() }
-            val data = drop(1)
-            header.mapIndexed { colIndex, name ->
+            val data = if (header == null) drop(1) else this
+            (header ?: get(0).map { it.toString() }).mapIndexed { colIndex, name ->
                 val values = data.map { row ->
                     if (row.size <= colIndex) {
                         null
