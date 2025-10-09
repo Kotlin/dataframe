@@ -141,13 +141,13 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
         )
     }
 
-    //if parent has at least one son
+    //if parent has at least one son and columnIndex is different to the current index of the column
     val sons = df[parentOfFirst].asColumnGroup().columns()
     if (sons.isNotEmpty()) {
         val parentPath = df[parentOfFirst].path
         val sonsPaths = sons.map{parentPath + it.path}
-        val referenceSon = if (columnIndex >= sonsPaths.size) sonsPaths.last() else sonsPaths.get(columnIndex)
-        if (columnIndex >= sons.size)
+        val referenceSon = if (columnIndex >= sonsPaths.size - 1) sonsPaths.last() else sonsPaths.get(columnIndex)
+        if (columnIndex >= sons.size - 1)
             return df.move(columns).after{referenceSon}
         else
             return df.move(columns).before{referenceSon}
