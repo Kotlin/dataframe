@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -28,6 +29,7 @@ public interface ValueCount {
 
 internal val defaultCountColumnName: String = ValueCount::count.name
 
+@RequiredByIntellijPlugin
 public fun <T> DataColumn<T>.valueCounts(
     sort: Boolean = true,
     ascending: Boolean = false,

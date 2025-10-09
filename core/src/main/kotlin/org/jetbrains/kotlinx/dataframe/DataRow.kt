@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.next
 import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -53,6 +54,7 @@ public interface DataRow<out T> {
 
     public operator fun get(path: ColumnPath): Any? = owner.get(path)[index]
 
+    @RequiredByIntellijPlugin
     public operator fun get(name: String): Any?
 
     public fun getColumnGroup(columnName: String): AnyRow {
