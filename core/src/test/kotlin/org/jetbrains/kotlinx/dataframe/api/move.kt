@@ -242,7 +242,6 @@ class MoveTests {
         df["b"].asColumnGroup().columnNames() shouldBe listOf("d", "c")
     }
 
-    //not working area : when i want to move the col to the index where it is yet
     @Test
     fun `move a single nested column to the end while it is to the end yet and remaining inside the group`() {
         val df = grouped.move { "b"["d"] }.to (1, true)
@@ -252,8 +251,8 @@ class MoveTests {
 
     @Test
     fun `check move behavior`() {
-        val df = grouped.move ( "q" ).to (0)
-        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        val df = grouped.move ( "q", "b" ).to (0)
+        df.columnNames() shouldBe listOf("q", "b", "a", "w", "e", "r")
     }
 
 }

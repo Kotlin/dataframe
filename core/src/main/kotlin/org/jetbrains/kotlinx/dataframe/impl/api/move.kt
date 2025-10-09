@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
@@ -141,16 +142,19 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
         )
     }
 
-    //if parent has at least one son and columnIndex is different to the current index of the column
+    //if parent has at least one son
     val sons = df[parentOfFirst].asColumnGroup().columns()
     if (sons.isNotEmpty()) {
         val parentPath = df[parentOfFirst].path
         val sonsPaths = sons.map{parentPath + it.path}
         val referenceSon = if (columnIndex >= sonsPaths.size - 1) sonsPaths.last() else sonsPaths.get(columnIndex)
-        if (columnIndex >= sons.size - 1)
-            return df.move(columns).after{referenceSon}
-        else
-            return df.move(columns).before{referenceSon}
+
+        //if in 'columns' there are columns equal to reference, remove them
+        val effectiveColumns = columnsToMove.filter { it.path.last() != referenceSon.path.last() }
+        if (columnIndex >= sons.size - 1 && effectiveColumns.isNotEmpty())
+            return df.move{effectiveColumns.toColumnSet()}.after{referenceSon}
+        else if (effectiveColumns.isNotEmpty())
+            return df.move{effectiveColumns.toColumnSet()}.before{referenceSon}
     }
 
     return df
