@@ -8,10 +8,12 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.before
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -123,4 +125,29 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
                 emptyList()
             }
     return newColumnList.toDataFrame().cast()
+}
+
+internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boolean): DataFrame<T> {
+    if (!insideGroup)
+        return moveTo(columnIndex)
+
+    val columnsToMove = df.getColumns(columns)
+    //check if columns to move have the same parent
+    val columnsToMoveParents = columnsToMove.map { it.path.dropLast() }
+    val parentOfFirst = columnsToMoveParents.first()
+    if (columnsToMoveParents.any { it != parentOfFirst }) {
+        throw IllegalArgumentException(
+            "Cannot move columns with different parent to an index which is associated to one only column group",
+        )
+    }
+
+    //if parent has at least one son
+    val sons = df.getColumnGroup(parentOfFirst).columns()
+    //if (sons.isNotEmpty()) {
+        val referenceSon = if (columnIndex >= sons.size) sons.last() else sons.get(columnIndex)
+        if (columnIndex > sons.size)
+            return df.move(columns).after{referenceSon}
+        else
+            return df.move(columns).before{referenceSon}
+    //}
 }

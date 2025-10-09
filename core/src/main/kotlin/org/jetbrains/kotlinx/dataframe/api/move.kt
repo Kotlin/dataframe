@@ -537,6 +537,10 @@ public fun <T, C> MoveClause<T, C>.under(
 @Interpretable("MoveTo")
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(columnIndex)
 
+@Refine
+@Interpretable("MoveTo")
+public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): DataFrame<T> = moveTo(columnIndex, insideGroup)
+
 /**
  * Moves columns, previously selected with [move] to the top-level within the [DataFrame].
  * Moved columns name can be specified via special ColumnSelectionDsl.

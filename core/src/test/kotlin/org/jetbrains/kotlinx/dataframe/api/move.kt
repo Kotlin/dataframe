@@ -220,4 +220,11 @@ class MoveTests {
             grouped.move { "a"["b"] }.before { "a"["b"] }
         }.message shouldBe "Cannot move column 'a/b' before its own child column 'a/b'"
     }
+
+    @Test
+    fun `experiment with move to`() {
+        val df = grouped.move { "b"["d"] }.to (0, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("d", "c")
+    }
 }
