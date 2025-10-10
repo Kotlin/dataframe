@@ -233,13 +233,13 @@ public object KotlinNotebookPluginUtils {
 
             is FormattedFrame<*> -> dataframeLike.df
 
-            is AnyCol -> dataFrameOf(dataframeLike)
+            is AnyFrame -> dataframeLike
 
             is AnyRow -> dataframeLike.toDataFrame()
 
             is GroupBy<*, *> -> dataframeLike.toDataFrame()
 
-            is AnyFrame -> dataframeLike
+            is AnyCol -> dataFrameOf(dataframeLike)
 
             is DisableRowsLimitWrapper -> dataframeLike.value
 
