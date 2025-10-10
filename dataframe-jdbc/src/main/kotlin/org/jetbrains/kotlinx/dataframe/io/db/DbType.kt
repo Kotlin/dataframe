@@ -1,14 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import kotlin.reflect.KType
 
@@ -40,6 +39,10 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      */
     public open val tableTypes: List<String>? = listOf("TABLE", "BASE TABLE")
 
+
+    public open val defaultFetchSize: Int = 1000
+    public open val defaultQueryTimeout: Int? = null // null = no timeout
+
     /**
      * Returns a [ColumnSchema] produced from [tableColumnMetadata].
      */
@@ -70,6 +73,62 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      */
     public abstract fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType?
 
+
+    /**
+     * Builds a SELECT query for reading from a table.
+     *
+     * @param [tableName] the name of the table to query.
+     * @param [limit] the maximum number of rows to retrieve. If 0 or negative, no limit is applied.
+     * @return the SQL query string.
+     */
+    public open fun buildSelectTableQueryWithLimit(tableName: String, limit: Int): String {
+        val quotedTableName = quoteIdentifier(tableName)
+        return if (limit > 0) {
+            buildSqlQueryWithLimit("SELECT * FROM $quotedTableName", limit)
+        } else {
+            "SELECT * FROM $quotedTableName"
+        }
+    }
+
+    /**
+     * Configures a [PreparedStatement] for optimal read performance.
+     * This method is called automatically before statement execution.
+     *
+     * @param [statement] the prepared statement to configure.
+     */
+    public open fun configureReadStatement(
+        statement: PreparedStatement
+    ) {
+        // Set fetch size for better streaming performance
+        statement.fetchSize = defaultFetchSize
+
+
+        if (defaultQueryTimeout != null) {
+            statement.queryTimeout = defaultQueryTimeout!!
+        }
+
+
+        // Set the fetch direction (forward-only for read-only operations)
+        statement.fetchDirection = ResultSet.FETCH_FORWARD
+    }
+
+    /**
+     * Quotes an identifier (table or column name) according to database-specific rules.
+     *
+     * Examples:
+     * - PostgreSQL: "tableName" or "schema"."table"
+     * - MySQL: `tableName` or `schema`.`table`
+     * - MS SQL: [tableName] or [schema].[table]
+     * - SQLite/H2: no quotes for simple names
+     *
+     * @param [name] the identifier to quote (can contain dots for schema.table).
+     * @return the quoted identifier.
+     */
+    public open fun quoteIdentifier(name: String): String {
+        // Default: no quoting (works for SQLite, H2, simple names)
+        return name
+    }
+
     /**
      * Constructs a SQL query with a limit clause.
      *
@@ -77,7 +136,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param limit The maximum number of rows to retrieve from the query. Default is 1.
      * @return A new SQL query with the limit clause added.
      */
-    public open fun sqlQueryLimit(sqlQuery: String, limit: Int = 1): String = "$sqlQuery LIMIT $limit"
+    public open fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int = 1): String = "$sqlQuery LIMIT $limit"
 
     /**
      * Creates a database connection using the provided configuration.
