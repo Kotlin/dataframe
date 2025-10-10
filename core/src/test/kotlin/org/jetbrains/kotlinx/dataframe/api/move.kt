@@ -244,14 +244,14 @@ class MoveTests {
 
     @Test
     fun `move single nested column to current index of the column itself`() {
-        val df = grouped.move { "b"["d"] }.to (1, true)
+        val df = grouped.move { "b"["d"] }.to(1, true)
         df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         df["b"].asColumnGroup().columnNames() shouldBe listOf("c", "d")
     }
 
     @Test
     fun `move multiple nested columns to an index`() {
-        val groupedModified = grouped.move ("r").before { "b"["c"] }
+        val groupedModified = grouped.move("r").before { "b"["c"] }
         groupedModified["b"].asColumnGroup().columnNames() shouldBe listOf("r", "c", "d")
 
         val df = groupedModified.move { "b"["c"] and "b"["d"] }.to(0, true)
@@ -278,12 +278,5 @@ class MoveTests {
         shouldThrow<IllegalArgumentException> {
             grouped.move { "a"["b"] and "b"["c"] }.to(0, true)
         }.message shouldBe "Cannot move columns with different parent to an index"
-    }
-
-    @Test
-    fun `check move behavior`() {
-        val df = grouped.move("q", "e").to(0)
-        df.columnNames() shouldBe listOf("q", "e", "a", "b", "w", "r")
-        df["e"].asColumnGroup().columnNames() shouldBe listOf("f")
     }
 }

@@ -537,6 +537,23 @@ public fun <T, C> MoveClause<T, C>.under(
 @Interpretable("MoveTo")
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(columnIndex)
 
+/**
+ * Moves columns, previously selected with [move] to a new position specified
+ * by [columnIndex] within the columns group (remaining inside the group).
+ *
+ * Returns a new [DataFrame] with updated columns structure.
+ *
+ * For more information: {@include [DocumentationUrls.Move]}
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.to(0)
+ * df.move("age", "weight").to(2)
+ * ```
+ *
+ * @param [columnIndex] The index specifying the position in the [DataFrame] columns
+ *  * where the selected columns will be moved.
+ */
 @Refine
 @Interpretable("MoveTo")
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): DataFrame<T> = moveTo(columnIndex, insideGroup)
@@ -694,6 +711,24 @@ public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 @Refine
 @Interpretable("MoveToStart0")
 public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
+
+/**
+ * Moves columns, previously selected with [move] to the start of their group (remaining inside the group).
+ *
+ * Returns a new [DataFrame] with updated columns.
+ *
+ * For more information: {@include [DocumentationUrls.Move]}
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.toStart()
+ * df.move { colsOf<String>() }.toStart()
+ * df.move("age", "weight").toStart()
+ * ```
+ */
+@Refine
+@Interpretable("MoveToStart0")
+public fun <T, C> MoveClause<T, C>.toStart(insideGroup: Boolean): DataFrame<T> = to(0, insideGroup)
 
 @Deprecated(TO_RIGHT, ReplaceWith(TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
