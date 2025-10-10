@@ -1,9 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.schema
 
 public interface DataFrameSchema {
-    public companion object {
-
-    }
+    public companion object;
 
     public val columns: Map<String, ColumnSchema>
 

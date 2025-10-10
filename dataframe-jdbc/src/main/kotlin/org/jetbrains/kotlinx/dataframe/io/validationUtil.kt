@@ -167,7 +167,7 @@ internal fun isValidSqlQuery(sqlQuery: String): Boolean {
     val normalizedSqlQuery = sqlQuery.trim().uppercase()
 
     // Log the query being validated
-    logger.warn { "Validating SQL query: '$sqlQuery'" }
+    logger.debug { "Validating SQL query: '$sqlQuery'" }
 
     // Ensure the query starts from one of the allowed SQL operators
     if (ALLOWED_SQL_OPERATORS.none { normalizedSqlQuery.startsWith(it) }) {
@@ -200,7 +200,7 @@ internal fun isValidSqlQuery(sqlQuery: String): Boolean {
         return false
     }
 
-    logger.warn { "SQL query validation succeeded for query: '$sqlQuery'." }
+    logger.debug { "SQL query validation succeeded for query: '$sqlQuery'." }
     return true
 }
 
@@ -211,7 +211,7 @@ internal fun isValidTableName(tableName: String): Boolean {
     val normalizedTableName = tableName.trim().uppercase()
 
     // Log the table name being validated
-    logger.warn { "Validating SQL table name: '$tableName'" }
+    logger.debug { "Validating SQL table name: '$tableName'" }
 
     // Validate against forbidden patterns
     if (hasForbiddenPatterns(normalizedTableName)) {
@@ -228,6 +228,6 @@ internal fun isValidTableName(tableName: String): Boolean {
         return false
     }
 
-    logger.warn { "Table name validation passed for table: '$tableName'." }
+    logger.debug { "Table name validation passed for table: '$tableName'." }
     return true
 }
