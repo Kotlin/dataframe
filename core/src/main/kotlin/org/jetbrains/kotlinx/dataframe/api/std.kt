@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveOrMixedNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -127,7 +126,7 @@ public inline fun <T, reified R : Number?> DataFrame<T>.stdOf(
 @Refine
 @Interpretable("GroupByStd1")
 public fun <T> Grouped<T>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): DataFrame<T> =
-    stdFor(skipNaN, ddof, numberColumns())
+    stdFor(skipNaN, ddof, primitiveOrMixedNumberColumns())
 
 @Refine
 @Interpretable("GroupByStd0")
@@ -210,7 +209,7 @@ public fun <T> Pivot<T>.std(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataRow<T> = stdFor(separate, skipNaN, ddof, numberColumns())
+): DataRow<T> = stdFor(separate, skipNaN, ddof, primitiveOrMixedNumberColumns())
 
 public fun <T, R : Number?> Pivot<T>.stdFor(
     separate: Boolean = false,
@@ -282,7 +281,7 @@ public fun <T> PivotGroupBy<T>.std(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataFrame<T> = stdFor(separate, skipNaN, ddof, numberColumns())
+): DataFrame<T> = stdFor(separate, skipNaN, ddof, primitiveOrMixedNumberColumns())
 
 public fun <T, R : Number?> PivotGroupBy<T>.stdFor(
     separate: Boolean = false,
