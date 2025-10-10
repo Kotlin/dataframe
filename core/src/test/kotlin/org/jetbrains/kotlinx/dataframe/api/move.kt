@@ -243,16 +243,32 @@ class MoveTests {
     }
 
     @Test
-    fun `move a single nested column to the end while it is to the end yet and remaining inside the group`() {
+    fun `move a single nested column to current index of the column itself`() {
         val df = grouped.move { "b"["d"] }.to (1, true)
         df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         df["b"].asColumnGroup().columnNames() shouldBe listOf("c", "d")
     }
 
+    //this is not working
+    @Test
+    fun `move multiple columns to an index`() {
+        val df = grouped.move ("w", "e").to (0, true)
+        df.columnNames() shouldBe listOf("w", "e", "q", "a", "b", "r")
+        df["e"].asColumnGroup().columnNames() shouldBe listOf("f")
+    }
+
+    @Test
+    fun `should throw when moving columns of different groups`() {
+        shouldThrow<IllegalArgumentException> {
+            grouped.move { "a"["b"] and "b"["c"] }.to (0, true)
+        }.message shouldBe "Cannot move columns with different parent to an index"
+    }
+
     @Test
     fun `check move behavior`() {
-        val df = grouped.move ( "q", "b" ).to (0)
-        df.columnNames() shouldBe listOf("q", "b", "a", "w", "e", "r")
+        val df = grouped.move ( "q", "e" ).to (0)
+        df.columnNames() shouldBe listOf("q", "e", "a", "b", "w", "r")
+        df["e"].asColumnGroup().columnNames() shouldBe listOf("f")
     }
 
 }

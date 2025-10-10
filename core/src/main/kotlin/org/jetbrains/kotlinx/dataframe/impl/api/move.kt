@@ -138,7 +138,7 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
     val parentOfFirst = columnsToMoveParents.first()
     if (columnsToMoveParents.any { it != parentOfFirst }) {
         throw IllegalArgumentException(
-            "Cannot move columns with different parent to an index which is associated to one only column group",
+            "Cannot move columns with different parent to an index",
         )
     }
 
