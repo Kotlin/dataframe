@@ -55,4 +55,9 @@ public object MySql : DbType("mysql") {
         }
         return null
     }
+
+    override fun quoteIdentifier(name: String): String {
+        // schema.table -> `schema`.`table`
+        return name.split(".").joinToString(".") { "`$it`" }
+    }
 }

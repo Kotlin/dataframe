@@ -19,6 +19,7 @@ import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.NClob
+import java.sql.PreparedStatement
 import java.sql.Ref
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
@@ -63,6 +64,8 @@ private const val DEFAULT_LIMIT = Int.MIN_VALUE
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
  *                           Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
  *
  * ### Default Behavior:
@@ -81,9 +84,10 @@ public fun DataFrame.Companion.readSqlTable(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame =
     withReadOnlyConnection(dbConfig, dbType) { conn ->
-        readSqlTable(conn, tableName, limit, inferNullability, dbType, strictValidation)
+        readSqlTable(conn, tableName, limit, inferNullability, dbType, strictValidation, configureStatement)
     }
 
 /**
@@ -97,6 +101,8 @@ public fun DataFrame.Companion.readSqlTable(
  * in that case the [dbType] will be recognized from the [dataSource].
  * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
  *                           Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
  *
  * @see [DataSource.getConnection]
@@ -108,9 +114,10 @@ public fun DataFrame.Companion.readSqlTable(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     dataSource.connection.use { connection ->
-        return readSqlTable(connection, tableName, limit, inferNullability, dbType, strictValidation)
+        return readSqlTable(connection, tableName, limit, inferNullability, dbType, strictValidation, configureStatement)
     }
 }
 
@@ -125,6 +132,8 @@ public fun DataFrame.Companion.readSqlTable(
  * in that case the [dbType] will be recognized from the [connection].
  * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
  *                           Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
  *
  * @see DriverManager.getConnection
@@ -136,6 +145,7 @@ public fun DataFrame.Companion.readSqlTable(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     if (strictValidation) {
         require(isValidTableName(tableName)) {
@@ -148,16 +158,21 @@ public fun DataFrame.Companion.readSqlTable(
     val url = connection.metaData.url
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    val selectAllQuery = if (limit > 0) {
-        determinedDbType.sqlQueryLimit("SELECT * FROM $tableName", limit)
-    } else {
-        "SELECT * FROM $tableName"
-    }
+    // Build SQL query using DbType
+    val sqlQuery = determinedDbType.buildSelectTableQueryWithLimit(tableName, limit)
 
-    connection.prepareStatement(selectAllQuery).use { st ->
+    connection.prepareStatement(sqlQuery).use { statement ->
         logger.debug { "Connection with url:$url is established successfully." }
 
-        st.executeQuery().use { rs ->
+        // Configure statement with DbType defaults
+        determinedDbType.configureReadStatement(statement) // TODO: what's about limit
+
+        // Apply user's custom configuration
+        configureStatement(statement)
+
+        logger.debug { "Executing query: $sqlQuery on connection: ${connection.metaData.url}" }
+
+        statement.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
         }
@@ -178,6 +193,8 @@ public fun DataFrame.Companion.readSqlTable(
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
  *                           Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  *
  * ### Default Behavior:
@@ -197,9 +214,10 @@ public fun DataFrame.Companion.readSqlQuery(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame =
     withReadOnlyConnection(dbConfig, dbType) { conn ->
-        readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, strictValidation)
+        readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, strictValidation, configureStatement)
     }
 
 /**
@@ -216,6 +234,8 @@ public fun DataFrame.Companion.readSqlQuery(
  * in that case the [dbType] will be recognized from the [dataSource].
  * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
  *                           Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  *
  * @see [DataSource.getConnection]
@@ -227,9 +247,10 @@ public fun DataFrame.Companion.readSqlQuery(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     dataSource.connection.use { connection ->
-        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, strictValidation)
+        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, strictValidation, configureStatement)
     }
 }
 
@@ -247,6 +268,8 @@ public fun DataFrame.Companion.readSqlQuery(
  * in that case the [dbType] will be recognized from the [connection].
  * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
  *                           Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  *
  * @see DriverManager.getConnection
@@ -258,6 +281,7 @@ public fun DataFrame.Companion.readSqlQuery(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     if (strictValidation) {
         require(isValidSqlQuery(sqlQuery)) {
@@ -270,12 +294,18 @@ public fun DataFrame.Companion.readSqlQuery(
 
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    val internalSqlQuery = if (limit > 0) determinedDbType.sqlQueryLimit(sqlQuery, limit) else sqlQuery
+    val internalSqlQuery = if (limit > 0) determinedDbType.buildSqlQueryWithLimit(sqlQuery, limit) else sqlQuery
 
     logger.debug { "Executing SQL query: $internalSqlQuery" }
 
-    connection.prepareStatement(internalSqlQuery).use { st ->
-        st.executeQuery().use { rs ->
+    connection.prepareStatement(internalSqlQuery).use { statement ->
+        // Configure statement with DbType defaults
+        determinedDbType.configureReadStatement(statement)
+
+        // Apply user's custom configuration
+        configureStatement(statement)
+
+        statement.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
         }
@@ -295,6 +325,8 @@ public fun DataFrame.Companion.readSqlQuery(
  * in that case the [dbType] will be recognized from the [DbConnectionConfig].
  * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
  * Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  *
  * ### Default Behavior:
@@ -312,6 +344,7 @@ public fun DbConnectionConfig.readDataFrame(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
@@ -321,6 +354,7 @@ public fun DbConnectionConfig.readDataFrame(
             inferNullability,
             dbType,
             strictValidation,
+            configureStatement,
         )
 
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -330,6 +364,7 @@ public fun DbConnectionConfig.readDataFrame(
             inferNullability,
             dbType,
             strictValidation,
+            configureStatement,
         )
 
         else -> throw IllegalArgumentException(
@@ -352,6 +387,8 @@ public fun DbConnectionConfig.readDataFrame(
  * in that case the [dbType] will be recognized from the [Connection].
  * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
  * Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun Connection.readDataFrame(
@@ -360,6 +397,7 @@ public fun Connection.readDataFrame(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
@@ -369,6 +407,7 @@ public fun Connection.readDataFrame(
             inferNullability,
             dbType,
             strictValidation,
+            configureStatement,
         )
 
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -378,6 +417,7 @@ public fun Connection.readDataFrame(
             inferNullability,
             dbType,
             strictValidation,
+            configureStatement,
         )
 
         else -> throw IllegalArgumentException(
@@ -398,6 +438,8 @@ public fun Connection.readDataFrame(
  * in that case the [dbType] will be recognized from the [DataSource].
  * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
  * Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  *
  * ### Example with HikariCP:
@@ -427,6 +469,7 @@ public fun DataSource.readDataFrame(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     connection.use { conn ->
         return when {
@@ -437,6 +480,7 @@ public fun DataSource.readDataFrame(
                 inferNullability,
                 dbType,
                 strictValidation,
+                configureStatement,
             )
 
             isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -446,6 +490,7 @@ public fun DataSource.readDataFrame(
                 inferNullability,
                 dbType,
                 strictValidation,
+                configureStatement,
             )
 
             else -> throw IllegalArgumentException(
@@ -471,6 +516,8 @@ public fun DataSource.readDataFrame(
  * @param [dbType] the type of database that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
  * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
@@ -582,6 +629,8 @@ public fun ResultSet.readDataFrame(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  *
  * ### Default Behavior:
@@ -614,6 +663,8 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dataSource].
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  *
  * ### Example with HikariCP:
@@ -660,6 +711,8 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  *
  * @see DriverManager.getConnection

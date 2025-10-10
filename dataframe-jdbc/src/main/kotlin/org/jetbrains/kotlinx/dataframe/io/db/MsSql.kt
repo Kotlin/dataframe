@@ -49,6 +49,11 @@ public object MsSql : DbType("sqlserver") {
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 
-    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String =
+    public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
         sqlQuery.replace("SELECT", "SELECT TOP $limit", ignoreCase = true)
+
+    override fun quoteIdentifier(name: String): String {
+        // schema.table -> [schema].[table]
+        return name.split(".").joinToString(".") { "[$it]" }
+    }
 }
