@@ -41,8 +41,8 @@ import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.DuckDb.convertSqlTypeToKType
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables

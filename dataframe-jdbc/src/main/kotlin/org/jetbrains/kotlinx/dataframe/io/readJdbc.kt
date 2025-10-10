@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
-import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.math.BigDecimal
@@ -23,7 +23,6 @@ import java.sql.Ref
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
 import java.sql.RowId
-import java.sql.SQLException
 import java.sql.SQLXML
 import java.sql.Time
 import java.sql.Timestamp
@@ -33,6 +32,7 @@ import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.util.Date
 import java.util.UUID
+import javax.sql.DataSource
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -51,153 +51,6 @@ private val logger = KotlinLogging.logger {}
  * @see Int.MIN_VALUE
  */
 private const val DEFAULT_LIMIT = Int.MIN_VALUE
-
-/**
- * A regular expression defining the valid pattern for SQL table names.
- *
- * This pattern enforces that table names must:
- * - Contain only Unicode letters, Unicode digits, or underscores.
- * - Optionally be segmented by dots to indicate schema and table separation.
- *
- * It ensures compatibility with most SQL database naming conventions, thus minimizing risks of invalid names
- * or injection vulnerabilities.
- *
- * Example of valid table names:
- * - `my_table`
- * - `schema1.table2`
- *
- * Example of invalid table names:
- * - `my-table` (contains a dash)
- * - `table!name` (contains special characters)
- * - `.startWithDot` (cannot start with a dot)
- */
-private const val TABLE_NAME_VALID_PATTERN = "^[\\p{L}\\p{N}_]+(\\.[\\p{L}\\p{N}_]+)*$"
-
-/**
- * Represents a column in a database table to keep all required meta-information.
- *
- * @property [name] the name of the column.
- * @property [sqlTypeName] the SQL data type of the column.
- * @property [jdbcType] the JDBC data type of the column produced from [java.sql.Types].
- * @property [size] the size of the column.
- * @property [javaClassName] the class name in Java.
- * @property [isNullable] true if column could contain nulls.
- */
-public data class TableColumnMetadata(
-    val name: String,
-    val sqlTypeName: String,
-    val jdbcType: Int,
-    val size: Int,
-    val javaClassName: String,
-    val isNullable: Boolean = false,
-)
-
-/**
- * Represents a table metadata to store information about a database table,
- * including its name, schema name, and catalogue name.
- *
- * NOTE: we need to extract both, [schemaName] and [catalogue]
- * because the different databases have different implementations of metadata.
- *
- * @property [name] the name of the table.
- * @property [schemaName] the name of the schema the table belongs to (optional).
- * @property [catalogue] the name of the catalogue the table belongs to (optional).
- */
-public data class TableMetadata(val name: String, val schemaName: String?, val catalogue: String?)
-
-/**
- * Represents the configuration for an internally managed JDBC database connection.
- *
- * This class defines connection parameters used by the library to create a `Connection`
- * when the user does not provide one explicitly. It is designed for safe, read-only access by default.
- *
- * @property url The JDBC URL of the database, e.g., `"jdbc:postgresql://localhost:5432/mydb"`.
- *               Must follow the standard format: `jdbc:subprotocol:subname`.
- *
- * @property user The username used for authentication.
- *                Optional, default is an empty string.
- *
- * @property password The password used for authentication.
- *                    Optional, default is an empty string.
- *
- * @property readOnly If `true` (default), the library will create the connection in read-only mode.
- *                    This enables the following behavior:
- *                    - `Connection.setReadOnly(true)`
- *                    - `Connection.setAutoCommit(false)`
- *                    - automatic `rollback()` at the end of execution
- *
- *                    If `false`, the connection will be created with JDBC defaults (usually read-write),
- *                    but the library will still reject any queries that appear to modify data
- *                    (e.g. contain `INSERT`, `UPDATE`, `DELETE`, etc.).
- *
- * Note: Connections created using this configuration are managed entirely by the library.
- * Users do not have access to the underlying `Connection` instance and cannot commit or close it manually.
- *
- * ### Examples:
- *
- * ```kotlin
- * // Safe read-only connection (default)
- * val config = DbConnectionConfig("jdbc:sqlite::memory:")
- * val df = DataFrame.readSqlQuery(config, "SELECT * FROM books")
- *
- * // Use default JDBC connection settings (still protected against mutations)
- * val config = DbConnectionConfig(
- *     url = "jdbc:sqlite::memory:",
- *     readOnly = false
- * )
- * ```
- */
-public data class DbConnectionConfig(
-    val url: String,
-    val user: String = "",
-    val password: String = "",
-    val readOnly: Boolean = true,
-)
-
-/**
- * Executes the given block with a managed JDBC connection created from [DbConnectionConfig].
- *
- * If [DbConnectionConfig.readOnly] is `true` (default), the connection will be:
- * - explicitly marked as read-only
- * - used with auto-commit disabled
- * - rolled back after execution to prevent unintended modifications
- *
- * This utility guarantees proper closing of the connection and safe rollback in read-only mode.
- * It should be used when the user does not manually manage JDBC connections.
- *
- * @param [dbConfig] The configuration used to create the connection.
- * @param [dbType] Optional database type (not used here but can be passed through for logging or future extensions).
- * @param [block] A lambda with receiver that runs with an open and managed [Connection].
- * @return The result of the [block] execution.
- */
-internal inline fun <T> withReadOnlyConnection(
-    dbConfig: DbConnectionConfig,
-    dbType: DbType? = null,
-    block: (Connection) -> T,
-): T {
-    val actualDbType = dbType ?: extractDBTypeFromUrl(dbConfig.url)
-    val connection = actualDbType.createConnection(dbConfig)
-
-    return connection.use { conn ->
-        try {
-            if (dbConfig.readOnly) {
-                conn.autoCommit = false
-            }
-
-            block(conn)
-        } finally {
-            if (dbConfig.readOnly) {
-                try {
-                    conn.rollback()
-                } catch (e: SQLException) {
-                    logger.warn(e) {
-                        "Failed to rollback read-only transaction (url=${dbConfig.url})"
-                    }
-                }
-            }
-        }
-    }
-}
 
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
@@ -232,6 +85,34 @@ public fun DataFrame.Companion.readSqlTable(
     withReadOnlyConnection(dbConfig, dbType) { conn ->
         readSqlTable(conn, tableName, limit, inferNullability, dbType, strictValidation)
     }
+
+/**
+ * Reads data from an SQL table and converts it into a DataFrame.
+ *
+ * @param [dataSource] the [DataSource] to get a database connection from.
+ * @param [tableName] the name of the table to read data from.
+ * @param [limit] the maximum number of rows to retrieve from the table.
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [dataSource].
+ * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
+ *                           Default is `true` for strict validation.
+ * @return the DataFrame containing the data from the SQL table.
+ *
+ * @see [DataSource.getConnection]
+ */
+public fun DataFrame.Companion.readSqlTable(
+    dataSource: DataSource,
+    tableName: String,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+    dbType: DbType? = null,
+    strictValidation: Boolean = true,
+): AnyFrame {
+    dataSource.connection.use { connection ->
+        return readSqlTable(connection, tableName, limit, inferNullability, dbType, strictValidation)
+    }
+}
 
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
@@ -320,6 +201,37 @@ public fun DataFrame.Companion.readSqlQuery(
     withReadOnlyConnection(dbConfig, dbType) { conn ->
         readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, strictValidation)
     }
+
+/**
+ * Converts the result of an SQL query to the DataFrame.
+ *
+ * NOTE: SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain `;` symbol.
+ *
+ * @param [dataSource] the [DataSource] to obtain a database connection from.
+ * @param [sqlQuery] the SQL query to execute.
+ * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [dataSource].
+ * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
+ *                           Default is `true` for strict validation.
+ * @return the DataFrame containing the result of the SQL query.
+ *
+ * @see [DataSource.getConnection]
+ */
+public fun DataFrame.Companion.readSqlQuery(
+    dataSource: DataSource,
+    sqlQuery: String,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+    dbType: DbType? = null,
+    strictValidation: Boolean = true,
+): AnyFrame {
+    dataSource.connection.use { connection ->
+        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, strictValidation)
+    }
+}
 
 /**
  * Converts the result of an SQL query to the DataFrame.
@@ -425,16 +337,7 @@ public fun DbConnectionConfig.readDataFrame(
         )
     }
 
-private fun isSqlQuery(sqlQueryOrTableName: String): Boolean {
-    val queryPattern = Regex("(?i)\\b(SELECT)\\b")
-    return queryPattern.containsMatchIn(sqlQueryOrTableName.trim())
-}
 
-private fun isSqlTableName(sqlQueryOrTableName: String): Boolean {
-    // Match table names with optional schema and catalog (e.g., catalog.schema.table)
-    val tableNamePattern = Regex("^[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*){0,2}$")
-    return tableNamePattern.matches(sqlQueryOrTableName.trim())
-}
 
 /**
  * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
@@ -482,151 +385,74 @@ public fun Connection.readDataFrame(
         )
     }
 
-private val FORBIDDEN_PATTERNS_REGEX = listOf(
-    ";", // Separator for SQL statements
-    "--", // Single-line comments
-    "/\\*", // Start of multi-line comments
-    "\\*/", // End of multi-line comments
-    "\\bDROP\\b", // DROP as a full word
-    "\\bDELETE\\b", // DELETE as a full word
-    "\\bINSERT\\b", // INSERT as a full word
-    "\\bUPDATE\\b", // UPDATE as a full word
-    "\\bEXEC\\b", // EXEC as a full word
-    "\\bEXECUTE\\b", // EXECUTE as a full word
-    "\\bCREATE\\b", // CREATE as a full word
-    "\\bALTER\\b", // ALTER as a full word
-    "\\bGRANT\\b", // GRANT as a full word
-    "\\bREVOKE\\b", // REVOKE as a full word
-    "\\bMERGE\\b", // MERGE as a full word
-).map { Regex(it, RegexOption.IGNORE_CASE) }
-
 /**
- * Checks if a given string contains forbidden patterns or keywords.
- * Logs a clear and friendly message if any forbidden pattern is found.
+ * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
  *
- * ### Forbidden SQL Examples:
- * 1. **Single-line comment** (using `--`):
- *    - `SELECT * FROM Sale WHERE amount = 100.0 -- AND id = 5`
+ * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
+ * It should be a name of one of the existing SQL tables,
+ * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain `;` symbol.
+ * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [DataSource].
+ * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
+ * Default is `true` for strict validation.
+ * @return the DataFrame containing the result of the SQL query.
  *
- * 2. **Multi-line comment** (using `/* */`):
- *    - `SELECT * FROM Customer /* Possible malicious comment */ WHERE id = 1`
+ * ### Example with HikariCP:
+ * ```kotlin
+ * import com.zaxxer.hikari.HikariConfig
+ * import com.zaxxer.hikari.HikariDataSource
  *
- * 3. **Multiple statements separated by semicolon (`;`)**:
- *    - `SELECT * FROM Sale WHERE amount = 500.0; DROP TABLE Customer`
+ * val config = HikariConfig().apply {
+ *     jdbcUrl = "jdbc:postgresql://localhost:5432/mydb"
+ *     username = "user"
+ *     password = "password"
+ * }
+ * val dataSource = HikariDataSource(config)
  *
- * 4. **Potentially malicious SQL with single quotes for injection**:
- *    - `SELECT * FROM Sale WHERE id = 1 AND amount = 100.0 OR '1'='1`
+ * // Read from a table
+ * val customersDF = dataSource.readDataFrame("customers", limit = 100)
  *
- * 5. **Usage of dangerous commands like `DROP`, `DELETE`, `ALTER`, etc.**:
- *    - `DROP TABLE Customer; SELECT * FROM Sale`
+ * // Or execute a query
+ * val queryDF = dataSource.readDataFrame("SELECT * FROM orders WHERE amount > 100")
+ * ```
  *
- * ### Allowed SQL Examples:
- * 1. Query with names containing reserved words as parts of identifiers:
- *    - `SELECT last_update FROM HELLO_ALTER`
- *
- * 2. Query with fully valid syntax:
- *    - `SELECT id, name FROM Customers WHERE age > 25`
- *
- * 3. Query with identifiers resembling commands but not in forbidden contexts:
- *    - `SELECT id, amount FROM TRANSACTION_DROP`
- *
- * 4. Query with case-insensitive identifiers:
- *    - `select Id, Name from Hello_Table`
- *
- * ### Key Notes:
- * - Reserved keywords like `DROP`, `DELETE`, `ALTER`, etc., are forbidden **only when they appear as standalone commands**.
- * - Reserved words as parts of table or column names (e.g., `HELLO_ALTER`, `myDropTable`) **are allowed**.
- * - Inline or multi-line comments (`--` or `/* */`) are restricted to prevent potential SQL injection attacks.
- * - Multiple SQL statements separated by semicolons (`;`) are not allowed to prevent the execution of unintended commands.
+ * @see [DataSource.getConnection]
  */
-private fun hasForbiddenPatterns(input: String): Boolean {
-    for (regex in FORBIDDEN_PATTERNS_REGEX) {
-        if (regex.containsMatchIn(input)) {
-            logger.error {
-                "Validation failed: The input contains a forbidden element matching '${regex.pattern}'. Please review the input: '$input'."
-            }
-            return true
+public fun DataSource.readDataFrame(
+    sqlQueryOrTableName: String,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+    dbType: DbType? = null,
+    strictValidation: Boolean = true,
+): AnyFrame {
+    connection.use { conn ->
+        return when {
+            isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
+                conn,
+                sqlQueryOrTableName,
+                limit,
+                inferNullability,
+                dbType,
+                strictValidation,
+            )
+
+            isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
+                conn,
+                sqlQueryOrTableName,
+                limit,
+                inferNullability,
+                dbType,
+                strictValidation,
+            )
+
+            else -> throw IllegalArgumentException(
+                "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
+            )
         }
     }
-    return false
-}
-
-/**
- * Allowed list of SQL operators
- */
-private val ALLOWED_SQL_OPERATORS = listOf("SELECT", "WITH", "VALUES", "TABLE")
-
-/**
- * Validates if the SQL query is safe and starts with SELECT.
- * Ensures a proper syntax structure, checks for balanced quotes, and disallows dangerous commands or patterns.
- */
-private fun isValidSqlQuery(sqlQuery: String): Boolean {
-    val normalizedSqlQuery = sqlQuery.trim().uppercase()
-
-    // Log the query being validated
-    logger.warn { "Validating SQL query: '$sqlQuery'" }
-
-    // Ensure the query starts from one of the allowed SQL operators
-    if (ALLOWED_SQL_OPERATORS.none { normalizedSqlQuery.startsWith(it) }) {
-        logger.error {
-            "Validation failed: The SQL query must start with one of: $ALLOWED_SQL_OPERATORS. Given query: '$sqlQuery'."
-        }
-        return false
-    }
-
-    // Validate against forbidden patterns
-    if (hasForbiddenPatterns(normalizedSqlQuery)) {
-        return false
-    }
-
-    // Check if there are balanced quotes (single and double)
-    val singleQuotes = sqlQuery.count { it == '\'' }
-    val doubleQuotes = sqlQuery.count { it == '"' }
-    if (singleQuotes % 2 != 0) {
-        logger.error {
-            "Validation failed: Unbalanced single quotes in the SQL query. " +
-                "Please correct the query: '$sqlQuery'."
-        }
-        return false
-    }
-    if (doubleQuotes % 2 != 0) {
-        logger.error {
-            "Validation failed: Unbalanced double quotes in the SQL query. " +
-                "Please correct the query: '$sqlQuery'."
-        }
-        return false
-    }
-
-    logger.warn { "SQL query validation succeeded for query: '$sqlQuery'." }
-    return true
-}
-
-/**
- * Validates if the given SQL table name is safe and logs any validation violations.
- */
-private fun isValidTableName(tableName: String): Boolean {
-    val normalizedTableName = tableName.trim().uppercase()
-
-    // Log the table name being validated
-    logger.warn { "Validating SQL table name: '$tableName'" }
-
-    // Validate against forbidden patterns
-    if (hasForbiddenPatterns(normalizedTableName)) {
-        return false
-    }
-
-    // Validate the table name structure: letters, numbers, underscores, and dots are allowed
-    val tableNameRegex = Regex(TABLE_NAME_VALID_PATTERN)
-    if (!tableNameRegex.matches(normalizedTableName)) {
-        logger.error {
-            "Validation failed: The table name contains invalid characters. " +
-                "Only letters, numbers, underscores, and dots are allowed. Provided name: '$tableName'."
-        }
-        return false
-    }
-
-    logger.warn { "Table name validation passed for table: '$tableName'." }
-    return true
 }
 
 /**
@@ -681,7 +507,7 @@ public fun ResultSet.readDataFrame(
     dbType: DbType,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): AnyFrame = DataFrame.Companion.readResultSet(this, dbType, limit, inferNullability)
+): AnyFrame = DataFrame.readResultSet(this, dbType, limit, inferNullability)
 
 /**
  * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
@@ -744,7 +570,7 @@ public fun ResultSet.readDataFrame(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-): AnyFrame = DataFrame.Companion.readResultSet(this, connection, limit, inferNullability, dbType)
+): AnyFrame = DataFrame.readResultSet(this, connection, limit, inferNullability, dbType)
 
 /**
  * Reads all non-system tables from a database and returns them
@@ -777,6 +603,52 @@ public fun DataFrame.Companion.readAllSqlTables(
     withReadOnlyConnection(dbConfig, dbType) { connection ->
         readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
     }
+
+/**
+ * Reads all non-system tables from a database and returns them
+ * as a map of SQL tables and corresponding dataframes.
+ *
+ * @param [dataSource] the [DataSource] to get a database connection from.
+ * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
+ * @param [limit] the maximum number of rows to read from each table.
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [dataSource].
+ * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
+ *
+ * ### Example with HikariCP:
+ * ```kotlin
+ * import com.zaxxer.hikari.HikariConfig
+ * import com.zaxxer.hikari.HikariDataSource
+ *
+ * val config = HikariConfig().apply {
+ *     jdbcUrl = "jdbc:postgresql://localhost:5432/mydb"
+ *     username = "user"
+ *     password = "password"
+ * }
+ * val dataSource = HikariDataSource(config)
+ *
+ * // Read all tables from the database
+ * val allTables = DataFrame.readAllSqlTables(dataSource, limit = 100)
+ *
+ * // Access individual tables
+ * val customersDF = allTables["customers"]
+ * val ordersDF = allTables["orders"]
+ * ```
+ *
+ * @see [DataSource.getConnection]
+ */
+public fun DataFrame.Companion.readAllSqlTables(
+    dataSource: DataSource,
+    catalogue: String? = null,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+    dbType: DbType? = null,
+): Map<String, AnyFrame> {
+    dataSource.connection.use { connection ->
+        return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
+    }
+}
 
 /**
  * Reads all non-system tables from a database and returns them
@@ -833,248 +705,6 @@ public fun DataFrame.Companion.readAllSqlTables(
 }
 
 /**
- * Retrieves the schema for an SQL table using the provided database configuration.
- *
- * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @param [tableName] the name of the SQL table for which to retrieve the schema.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dbConfig].
- * @return the [DataFrameSchema] object representing the schema of the SQL table
- *
- * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
- * - explicitly set as read-only via `Connection.setReadOnly(true)`
- * - used with `autoCommit = false`
- * - automatically rolled back after reading, ensuring no changes to the database
- *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
- * and only permits safe `SELECT` operations internally.
- */
-public fun DataFrame.Companion.getSchemaForSqlTable(
-    dbConfig: DbConnectionConfig,
-    tableName: String,
-    dbType: DbType? = null,
-): DataFrameSchema =
-    withReadOnlyConnection(dbConfig, dbType) { connection ->
-        getSchemaForSqlTable(connection, tableName, dbType)
-    }
-
-/**
- * Retrieves the schema for an SQL table using the provided database connection.
- *
- * @param [connection] the database connection.
- * @param [tableName] the name of the SQL table for which to retrieve the schema.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [connection].
- * @return the schema of the SQL table as a [DataFrameSchema] object.
- *
- * @see DriverManager.getConnection
- */
-public fun DataFrame.Companion.getSchemaForSqlTable(
-    connection: Connection,
-    tableName: String,
-    dbType: DbType? = null,
-): DataFrameSchema {
-    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
-
-    val sqlQuery = "SELECT * FROM $tableName"
-    val selectFirstRowQuery = determinedDbType.sqlQueryLimit(sqlQuery, limit = 1)
-
-    connection.prepareStatement(selectFirstRowQuery).use { st ->
-        st.executeQuery().use { rs ->
-            val tableColumns = getTableColumnsMetadata(rs)
-            return buildSchemaByTableColumns(tableColumns, determinedDbType)
-        }
-    }
-}
-
-/**
- * Retrieves the schema of an SQL query result using the provided database configuration.
- *
- * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dbConfig].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
- *
- * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
- * - explicitly set as read-only via `Connection.setReadOnly(true)`
- * - used with `autoCommit = false`
- * - automatically rolled back after reading, ensuring no changes to the database
- *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
- * and only permits safe `SELECT` operations internally.
- */
-public fun DataFrame.Companion.getSchemaForSqlQuery(
-    dbConfig: DbConnectionConfig,
-    sqlQuery: String,
-    dbType: DbType? = null,
-): DataFrameSchema =
-    withReadOnlyConnection(dbConfig, dbType) { connection ->
-        getSchemaForSqlQuery(connection, sqlQuery, dbType)
-    }
-
-/**
- * Retrieves the schema of an SQL query result using the provided database connection.
- *
- * @param [connection] the database connection.
- * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [connection].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
- *
- * @see DriverManager.getConnection
- */
-public fun DataFrame.Companion.getSchemaForSqlQuery(
-    connection: Connection,
-    sqlQuery: String,
-    dbType: DbType? = null,
-): DataFrameSchema {
-    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
-
-    connection.prepareStatement(sqlQuery).use { st ->
-        st.executeQuery().use { rs ->
-            val tableColumns = getTableColumnsMetadata(rs)
-            return buildSchemaByTableColumns(tableColumns, determinedDbType)
-        }
-    }
-}
-
-/**
- * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
- *
- * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [DbConnectionConfig].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
- *
- * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
- * - explicitly set as read-only via `Connection.setReadOnly(true)`
- * - used with `autoCommit = false`
- * - automatically rolled back after reading, ensuring no changes to the database
- *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
- * and only permits safe `SELECT` operations internally.
- */
-public fun DbConnectionConfig.getDataFrameSchema(
-    sqlQueryOrTableName: String,
-    dbType: DbType? = null,
-): DataFrameSchema =
-    when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName, dbType)
-
-        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName, dbType)
-
-        else -> throw IllegalArgumentException(
-            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
-        )
-    }
-
-/**
- * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
- *
- * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [Connection].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
- */
-public fun Connection.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType? = null): DataFrameSchema =
-    when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName, dbType)
-
-        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName, dbType)
-
-        else -> throw IllegalArgumentException(
-            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
-        )
-    }
-
-/**
- * Retrieves the schema from [ResultSet].
- *
- * NOTE: This function will not close connection and result set and not retrieve data from the result set.
- *
- * @param [resultSet] the [ResultSet] obtained from executing a database query.
- * @param [dbType] the type of database that the [ResultSet] belongs to, could be a custom object, provided by user.
- * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
- */
-public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
-    val tableColumns = getTableColumnsMetadata(resultSet)
-    return buildSchemaByTableColumns(tableColumns, dbType)
-}
-
-/**
- * Retrieves the schema from [ResultSet].
- *
- * NOTE: This function will not close connection and result set and not retrieve data from the result set.
- *
- * @param [dbType] the type of database that the [ResultSet] belongs to, could be a custom object, provided by user.
- * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
- */
-public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataFrame.getSchemaForResultSet(this, dbType)
-
-/**
- * Retrieves the schemas of all non-system tables in the database using the provided database configuration.
- *
- * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dbConfig].
- * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
- *
- * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
- * - explicitly set as read-only via `Connection.setReadOnly(true)`
- * - used with `autoCommit = false`
- * - automatically rolled back after reading, ensuring no changes to the database
- *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
- * and only permits safe `SELECT` operations internally.
- */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(
-    dbConfig: DbConnectionConfig,
-    dbType: DbType? = null,
-): Map<String, DataFrameSchema> =
-    withReadOnlyConnection(dbConfig, dbType) { connection ->
-        getSchemaForAllSqlTables(connection, dbType)
-    }
-
-/**
- * Retrieves the schemas of all non-system tables in the database using the provided database connection.
- *
- * @param [connection] the database connection.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [connection].
- * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
- */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(
-    connection: Connection,
-    dbType: DbType? = null,
-): Map<String, DataFrameSchema> {
-    val metaData = connection.metaData
-    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
-
-    // exclude system- and other tables without data
-    val tableTypes = determinedDbType.tableTypes?.toTypedArray()
-    val tables = metaData.getTables(null, null, null, tableTypes)
-
-    val dataFrameSchemas = mutableMapOf<String, DataFrameSchema>()
-
-    while (tables.next()) {
-        val jdbcTable = determinedDbType.buildTableMetadata(tables)
-        if (!determinedDbType.isSystemTable(jdbcTable)) {
-            // we filter her a second time because of specific logic with SQLite and possible issues with future databases
-            val tableName = jdbcTable.name
-            val dataFrameSchema = getSchemaForSqlTable(connection, tableName, determinedDbType)
-            dataFrameSchemas += tableName to dataFrameSchema
-        }
-    }
-
-    return dataFrameSchemas
-}
-
-/**
  * Builds a DataFrame schema based on the given table columns.
  *
  * @param [tableColumns] a mutable map containing the table columns, where the key represents the column name
@@ -1082,7 +712,7 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(
  * @param [dbType] the type of database.
  * @return a [DataFrameSchema] object representing the schema built from the table columns.
  */
-private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetadata>, dbType: DbType): DataFrameSchema {
+internal fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetadata>, dbType: DbType): DataFrameSchema {
     val schemaColumns = tableColumns.associate {
         Pair(it.name, generateColumnSchemaValue(dbType, it))
     }
@@ -1092,7 +722,7 @@ private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetad
     )
 }
 
-private fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
+internal fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
     dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
         ?: ColumnSchema.Value(makeCommonSqlToKTypeMapping(tableColumnMetadata))
 
@@ -1104,7 +734,7 @@ private fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: Table
  *         where each TableColumnMetadata object contains information such as the column type,
  *         JDBC type, size, and name.
  */
-private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetadata> {
+internal fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetadata> {
     val metaData: ResultSetMetaData = rs.metaData
     val numberOfColumns: Int = metaData.columnCount
     val tableColumns = mutableListOf<TableColumnMetadata>()
@@ -1144,7 +774,7 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
  * @param originalName the original name of the column to be managed.
  * @return the modified column name that is free from duplication.
  */
-private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, Int>, originalName: String): String {
+internal fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, Int>, originalName: String): String {
     var name = originalName
     val count = columnNameCounter[originalName]
 
@@ -1163,7 +793,7 @@ private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, In
 }
 
 // Utility function to cast arrays based on the type of elements
-private fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> =
+internal fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> =
     array.mapNotNull { elementType.safeCast(it) }
 
 /**
@@ -1176,7 +806,7 @@ private fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @return A mutable map containing the fetched and converted data.
  */
-private fun fetchAndConvertDataFromResultSet(
+internal fun fetchAndConvertDataFromResultSet(
     tableColumns: MutableList<TableColumnMetadata>,
     rs: ResultSet,
     dbType: DbType,
@@ -1207,7 +837,7 @@ private fun fetchAndConvertDataFromResultSet(
     }
 
     val dataFrame = data.mapIndexed { index, values ->
-        // TODO: add override handlers from dbType to intercept the final parcing before column creation
+        // TODO: add override handlers from dbType to intercept the final parsing before column creation
         val correctedValues = if (kotlinTypesForSqlColumns[index]!!.classifier == Array::class) {
             handleArrayValues(values)
         } else {
@@ -1229,7 +859,7 @@ private fun fetchAndConvertDataFromResultSet(
     return dataFrame
 }
 
-private fun handleArrayValues(values: MutableList<Any?>): List<Any> {
+internal fun handleArrayValues(values: MutableList<Any?>): List<Any> {
     // Intermediate variable for the first mapping
     val sqlArrays = values.mapNotNull {
         (it as? java.sql.Array)?.array?.let { array -> array as? Array<*> }
@@ -1254,9 +884,9 @@ private fun handleArrayValues(values: MutableList<Any?>): List<Any> {
     }
 }
 
-private fun convertNullabilityInference(inferNullability: Boolean) = if (inferNullability) Infer.Nulls else Infer.None
+internal fun convertNullabilityInference(inferNullability: Boolean) = if (inferNullability) Infer.Nulls else Infer.None
 
-private fun extractNewRowFromResultSetAndAddToData(
+internal fun extractNewRowFromResultSetAndAddToData(
     tableColumns: MutableList<TableColumnMetadata>,
     data: List<MutableList<Any?>>,
     rs: ResultSet,
@@ -1284,7 +914,7 @@ private fun extractNewRowFromResultSetAndAddToData(
  *
  * @return The generated KType.
  */
-private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType =
+internal fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType =
     dbType.convertSqlTypeToKType(tableColumnMetadata)
         ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
 
@@ -1294,7 +924,7 @@ private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetada
  * @param tableColumnMetadata The metadata of the table column.
  * @return The KType associated with the SQL type or a default type if no mapping is found.
  */
-private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
+internal fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
     val jdbcTypeToKTypeMapping = mapOf(
         Types.BIT to Boolean::class,
         Types.TINYINT to Int::class,
