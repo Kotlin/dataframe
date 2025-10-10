@@ -308,7 +308,7 @@ class DuckDbTest {
             ).executeUpdate()
 
             df = DataFrame.readSqlTable(connection, "test_table")
-            schema = DataFrame.getSchemaForSqlTable(connection, "test_table")
+            schema = DataFrameSchema.getSchemaForSqlTable(connection, "test_table")
 
             subset = DataFrame.readSqlQuery(connection, """SELECT test_table.name, test_table.age FROM test_table""")
         }
@@ -393,7 +393,7 @@ class DuckDbTest {
             ).executeUpdate()
 
             dfs = DataFrame.readAllSqlTables(connection = connection)
-            schemas = DataFrame.getSchemaForAllSqlTables(connection = connection)
+            schemas = DataFrameSchema.getSchemaForAllSqlTables(connection = connection)
         }
 
         val df = dfs["test_table"]!!
@@ -544,7 +544,7 @@ class DuckDbTest {
                 """.trimIndent(),
             ).executeUpdate()
 
-            schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+            schema = DataFrameSchema.getSchemaForSqlTable(connection, "table1")
             df = DataFrame.readSqlTable(connection, "table1").reorderColumnsByName()
         }
 
@@ -599,7 +599,7 @@ class DuckDbTest {
                 """.trimIndent(),
             ).executeUpdate()
 
-            schema = DataFrame.getSchemaForSqlTable(connection, "table2")
+            schema = DataFrameSchema.getSchemaForSqlTable(connection, "table2")
             df = DataFrame.readSqlTable(connection, "table2")
         }
 

@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
@@ -508,7 +507,7 @@ public fun ResultSet.readDataFrame(
     dbType: DbType,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): AnyFrame = DataFrame.Companion.readResultSet(this, dbType, limit, inferNullability)
+): AnyFrame = DataFrame.readResultSet(this, dbType, limit, inferNullability)
 
 /**
  * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
@@ -571,7 +570,7 @@ public fun ResultSet.readDataFrame(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-): AnyFrame = DataFrame.Companion.readResultSet(this, connection, limit, inferNullability, dbType)
+): AnyFrame = DataFrame.readResultSet(this, connection, limit, inferNullability, dbType)
 
 /**
  * Reads all non-system tables from a database and returns them
@@ -704,8 +703,6 @@ public fun DataFrame.Companion.readAllSqlTables(
 
     return dataFrames
 }
-
-
 
 /**
  * Builds a DataFrame schema based on the given table columns.
@@ -840,7 +837,7 @@ internal fun fetchAndConvertDataFromResultSet(
     }
 
     val dataFrame = data.mapIndexed { index, values ->
-        // TODO: add override handlers from dbType to intercept the final parcing before column creation
+        // TODO: add override handlers from dbType to intercept the final parsing before column creation
         val correctedValues = if (kotlinTypesForSqlColumns[index]!!.classifier == Array::class) {
             handleArrayValues(values)
         } else {
