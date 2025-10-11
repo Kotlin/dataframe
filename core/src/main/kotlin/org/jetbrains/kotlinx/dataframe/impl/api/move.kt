@@ -8,10 +8,12 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.before
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -123,4 +125,42 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
                 emptyList()
             }
     return newColumnList.toDataFrame().cast()
+}
+
+internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boolean): DataFrame<T> {
+    val columnsToMove = df.getColumns(columns)
+
+    // check if columns to move have the same parent
+    val columnsToMoveParents = columnsToMove.map { it.path.dropLast() }
+    val parentOfFirst = columnsToMoveParents.first()
+    if (columnsToMoveParents.any { it != parentOfFirst }) {
+        throw IllegalArgumentException(
+            "Cannot move columns with different parent to an index",
+        )
+    }
+
+    // if columns will be moved to top level or columns to move are at top level
+    if (!insideGroup || parentOfFirst.isEmpty()) {
+        return moveTo(columnIndex)
+    }
+
+    // columns are nested and will be eventually moved inside their own group
+    val parentPath = df[parentOfFirst].path
+    val referenceAndSiblings = df[parentOfFirst].asColumnGroup().columns()
+    val referenceAndSiblingsPaths = referenceAndSiblings.map { parentPath + it.path }
+    val reference = if (columnIndex >= referenceAndSiblingsPaths.size - 1){
+        referenceAndSiblingsPaths.last()
+    } else {
+        referenceAndSiblingsPaths.get(columnIndex)
+    }
+    // if there is any column equal to reference, don't move it
+    val effectiveColumns = columnsToMove.filter { it.path.last() != reference.path.last() }
+    if (columnIndex >= referenceAndSiblings.size - 1 && effectiveColumns.isNotEmpty()) {
+        return df.move { effectiveColumns.toColumnSet() }.after { reference }
+    } else if (effectiveColumns.isNotEmpty()) {
+        return df.move { effectiveColumns.toColumnSet() }.before { reference }
+    }
+
+    // if it is not needed to move any of the nested columns
+    return df
 }

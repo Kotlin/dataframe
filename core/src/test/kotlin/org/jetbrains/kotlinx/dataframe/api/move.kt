@@ -220,4 +220,76 @@ class MoveTests {
             grouped.move { "a"["b"] }.before { "a"["b"] }
         }.message shouldBe "Cannot move column 'a/b' before its own child column 'a/b'"
     }
+
+    @Test
+    fun `move single nested column to the start remaining inside the group`() {
+        val df = grouped.move { "b"["d"] }.to(0, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("d", "c")
+    }
+
+    @Test
+    fun `move single nested column to the end remaining inside the group`() {
+        val df = grouped.move { "b"["c"] }.to(2, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("d", "c")
+    }
+
+    //not working
+    @Test
+    fun `move single nested column between columns`() {
+        // creating an appropriate df for the test
+        val groupedModified = grouped.move("r").before { "b"["c"] }
+        groupedModified["b"].asColumnGroup().columnNames() shouldBe listOf("r", "c", "d")
+        // test itself
+        val df = groupedModified.move { "b"["r"] }.to(1, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("c", "r", "d")
+    }
+
+    @Test
+    fun `move single nested column to the end remaining inside the group, need to switch group's columns`() {
+        val df = grouped.move { "b"["c"] }.to(1, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("d", "c")
+    }
+
+    @Test
+    fun `move single nested column to current index of the column itself`() {
+        val df = grouped.move { "b"["d"] }.to(1, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("c", "d")
+    }
+
+    @Test
+    fun `move multiple nested columns to the start`() {
+        // creating an appropriate df for the test
+        val groupedModified = grouped.move("r").before { "b"["c"] }
+        groupedModified["b"].asColumnGroup().columnNames() shouldBe listOf("r", "c", "d")
+        // test itself
+        val df = groupedModified.move { "b"["c"] and "b"["d"] }.to(0, true)
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("c", "d", "r")
+    }
+
+    @Test
+    fun `move single top level column to the start`() {
+        val df = grouped.move("e").to(0, true)
+        df.columnNames() shouldBe listOf("e", "q", "a", "b", "w", "r")
+        df["e"].asColumnGroup().columnNames() shouldBe listOf("f")
+    }
+
+    @Test
+    fun `move multiple top level columns between columns`() {
+        val df = grouped.move("w", "e").to(1, true)
+        df.columnNames() shouldBe listOf("q", "w", "e", "a", "b", "r")
+        df["e"].asColumnGroup().columnNames() shouldBe listOf("f")
+    }
+
+    @Test
+    fun `should throw when moving columns of different groups`() {
+        shouldThrow<IllegalArgumentException> {
+            grouped.move { "a"["b"] and "b"["c"] }.to(0, true)
+        }.message shouldBe "Cannot move columns with different parent to an index"
+    }
 }
