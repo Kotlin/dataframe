@@ -237,7 +237,7 @@ class MoveTests {
 
     //not working
     @Test
-    fun `move single nested column between columns`() {
+    fun `move single nested column between columns remaining inside the group`() {
         // creating an appropriate df for the test
         val groupedModified = grouped.move("r").before { "b"["c"] }
         groupedModified["b"].asColumnGroup().columnNames() shouldBe listOf("r", "c", "d")
