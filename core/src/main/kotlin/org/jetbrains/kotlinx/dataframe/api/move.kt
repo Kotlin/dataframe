@@ -539,7 +539,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
 
 /**
  * Moves columns, previously selected with [move] to a new position specified
- * by [columnIndex] within the columns group (remaining inside the group).
+ * by [columnIndex] within the column group (remaining inside the group).
  *
  * Returns a new [DataFrame] with updated columns structure.
  *
@@ -551,7 +551,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  * df.move("age", "weight").to(2)
  * ```
  *
- * @param [columnIndex] The index specifying the position in the [DataFrame] columns
+ * @param [columnIndex] The index specifying the position in the [ColumnGroup] columns
  *  * where the selected columns will be moved.
  */
 @Refine
@@ -713,7 +713,7 @@ public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
 
 /**
- * Moves columns, previously selected with [move] to the start of their group (remaining inside the group).
+ * Moves columns, previously selected with [move] to the start of their [ColumnGroup] (remaining inside the group).
  *
  * Returns a new [DataFrame] with updated columns.
  *

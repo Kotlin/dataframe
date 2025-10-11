@@ -144,13 +144,11 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
         return moveTo(columnIndex)
     }
 
-    // columns are nested and will be eventually moved inside group
+    // columns are nested and will be eventually moved inside their own group
     val parentPath = df[parentOfFirst].path
     val referenceAndSiblings = df[parentOfFirst].asColumnGroup().columns()
     val referenceAndSiblingsPaths = referenceAndSiblings.map { parentPath + it.path }
-    val reference = if (columnIndex >=
-        referenceAndSiblingsPaths.size - 1
-    ) {
+    val reference = if (columnIndex >= referenceAndSiblingsPaths.size - 1){
         referenceAndSiblingsPaths.last()
     } else {
         referenceAndSiblingsPaths.get(columnIndex)
