@@ -273,6 +273,17 @@ class MoveTests {
     }
 
     @Test
+    fun `move multiple non bordering nested columns`() {
+        // creating an appropriate df for the test
+        val groupedModified = grouped.move("r" , "q").before { "b"["c"] }
+        groupedModified["b"].asColumnGroup().columnNames() shouldBe listOf("r", "q", "c", "d")
+        // test itself
+        val df = groupedModified.move { "b"["r"] and "b"["d"] }.to(1, true)
+        df.columnNames() shouldBe listOf("a", "b", "w", "e")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("q", "r", "d", "c")
+    }
+
+    @Test
     fun `move single top level column to the start`() {
         val df = grouped.move("e").to(0, true)
         df.columnNames() shouldBe listOf("e", "q", "a", "b", "w", "r")

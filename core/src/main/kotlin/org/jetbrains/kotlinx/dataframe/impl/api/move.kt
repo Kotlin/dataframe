@@ -157,7 +157,7 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
         referenceAndSiblingsPaths.get(columnIndex)
     }
 
-    // two cases : columns are before, or after, the reference
+    // two cases : columns to move are before, or after, the reference
     val columnsBeforeReferenceToMove = mutableListOf<ColumnPath>()
     val columnsAfterReferenceToMove = mutableListOf<ColumnPath>()
     val columnsToMovePath = columnsToMove.map { it.path }
@@ -175,14 +175,11 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
         }
     }
 
-    //don't move reference
-    //val effectiveColsBeforeRef = columnsBeforeReference.filter { it.path.last() != reference.path.last() }
-    //val effectiveColsAfterRef = columnsAfterReference.filter { it.path.last() != reference.path.last() }
-
-    //move cols before reference after reference itself ; move cols after reference before reference itself
+    // move columns
     if (columnsBeforeReferenceToMove.isNotEmpty() && columnsAfterReferenceToMove.isNotEmpty()) {
         val intermediateDf = df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
-        val finalDf = intermediateDf.move { columnsAfterReferenceToMove.toColumnSet() }.before { reference }
+        val newReference = columnsBeforeReferenceToMove.last()
+        val finalDf = intermediateDf.move { columnsAfterReferenceToMove.toColumnSet() }.after { newReference }
         return finalDf
     }
     if (columnsBeforeReferenceToMove.isNotEmpty())
