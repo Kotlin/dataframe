@@ -158,27 +158,37 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
     }
 
     // two cases : columns are before, or after, the reference
-    val columnsBeforeReference = columnsToMove.subList(0, columnIndex)
-    if (columnIndex >= referenceAndSiblingsPaths.size){
-        val effectiveColsBeforeRef = columnsBeforeReference.filter { it.path.last() != reference.path.last() }
-        return df.move { effectiveColsBeforeRef.toColumnSet() }.after { reference }
+    val columnsBeforeReferenceToMove = mutableListOf<ColumnPath>()
+    val columnsAfterReferenceToMove = mutableListOf<ColumnPath>()
+    val columnsToMovePath = columnsToMove.map { it.path }
+    var referenceWasIterated = false
+    referenceAndSiblingsPaths.forEach {
+        if (it.path.last() == reference.path.last())
+            referenceWasIterated = true
+        else {
+            if (columnsToMovePath.contains(it)){
+                if (referenceWasIterated)
+                    columnsAfterReferenceToMove.add(it)
+                else
+                    columnsBeforeReferenceToMove.add(it)
+            }
+        }
     }
-    val columnsAfterReference = columnsToMove.subList(columnIndex +1, columnsToMove.size)
 
     //don't move reference
-    val effectiveColsBeforeRef = columnsBeforeReference.filter { it.path.last() != reference.path.last() }
-    val effectiveColsAfterRef = columnsAfterReference.filter { it.path.last() != reference.path.last() }
+    //val effectiveColsBeforeRef = columnsBeforeReference.filter { it.path.last() != reference.path.last() }
+    //val effectiveColsAfterRef = columnsAfterReference.filter { it.path.last() != reference.path.last() }
 
-    //move cols before reference after reference ; move cols after reference before reference
-    if (effectiveColsBeforeRef.isNotEmpty() && effectiveColsAfterRef.isNotEmpty()) {
-        val intermediateDf = df.move { effectiveColsBeforeRef.toColumnSet() }.after { reference }
-        val finalDf = intermediateDf.move { effectiveColsAfterRef.toColumnSet() }.before { reference }
+    //move cols before reference after reference itself ; move cols after reference before reference itself
+    if (columnsBeforeReferenceToMove.isNotEmpty() && columnsAfterReferenceToMove.isNotEmpty()) {
+        val intermediateDf = df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
+        val finalDf = intermediateDf.move { columnsAfterReferenceToMove.toColumnSet() }.before { reference }
         return finalDf
     }
-    if (effectiveColsBeforeRef.isNotEmpty())
-        return df.move { effectiveColsBeforeRef.toColumnSet() }.after { reference }
-    if (columnsAfterReference.isNotEmpty())
-        return df.move { effectiveColsAfterRef.toColumnSet() }.before { reference }
+    if (columnsBeforeReferenceToMove.isNotEmpty())
+        return df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
+    if (columnsAfterReferenceToMove.isNotEmpty())
+        return df.move { columnsAfterReferenceToMove.toColumnSet() }.before { reference }
 
     // if it is not needed to move any of the nested columns
     return df
