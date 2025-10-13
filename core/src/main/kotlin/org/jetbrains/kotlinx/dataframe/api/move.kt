@@ -539,7 +539,8 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
 
 /**
  * Moves columns, previously selected with [move] to a new position specified
- * by [columnIndex] within the column group (remaining inside the group).
+ * by [columnIndex]. If insideGroup is true, selected columns will be moved remaining within their [ColumnGroup],
+ * else they will be moved on top level.
  *
  * Returns a new [DataFrame] with updated columns structure.
  *
@@ -547,12 +548,15 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  *
  * ### Examples:
  * ```kotlin
- * df.move { age and weight }.to(0)
- * df.move("age", "weight").to(2)
+ * df.move { age and weight }.to(0, true)
+ * df.move("age", "weight").to(2, false)
  * ```
  *
  * @param [columnIndex] The index specifying the position in the [ColumnGroup] columns
- *  * where the selected columns will be moved.
+ * where the selected columns will be moved.
+ *
+ * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
+ * else they will be moved on top level.
  */
 @Refine
 @Interpretable("MoveTo")
@@ -713,7 +717,8 @@ public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
 
 /**
- * Moves columns, previously selected with [move] to the start of their [ColumnGroup] (remaining inside the group).
+ * If insideGroup is true, moves columns previously selected with [move] to the start of their [ColumnGroup].
+ * Else, selected columns will be moved to the start of their [DataFrame] (on top-level).
  *
  * Returns a new [DataFrame] with updated columns.
  *
@@ -721,10 +726,13 @@ public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
  *
  * ### Examples:
  * ```kotlin
- * df.move { age and weight }.toStart()
- * df.move { colsOf<String>() }.toStart()
- * df.move("age", "weight").toStart()
+ * df.move { age and weight }.toStart(true)
+ * df.move { colsOf<String>() }.toStart(true)
+ * df.move("age", "weight").toStart(false)
  * ```
+ *
+ * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
+ * else they will be moved to the start on top level.
  */
 @Refine
 @Interpretable("MoveToStart0")
