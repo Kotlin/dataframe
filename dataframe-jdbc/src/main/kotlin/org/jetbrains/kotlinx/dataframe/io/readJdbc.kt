@@ -12,31 +12,15 @@ import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import java.math.BigDecimal
-import java.sql.Blob
-import java.sql.Clob
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
-import java.sql.NClob
 import java.sql.PreparedStatement
-import java.sql.Ref
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
-import java.sql.RowId
-import java.sql.SQLXML
-import java.sql.Time
-import java.sql.Timestamp
-import java.sql.Types
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.OffsetTime
-import java.util.Date
-import java.util.UUID
 import javax.sql.DataSource
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.full.createType
 import kotlin.reflect.full.safeCast
 
 private val logger = KotlinLogging.logger {}
@@ -799,7 +783,7 @@ internal fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMeta
 
 internal fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
     dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
-        ?: ColumnSchema.Value(makeCommonSqlToKTypeMapping(tableColumnMetadata))
+        ?: ColumnSchema.Value(dbType.makeCommonSqlToKTypeMapping(tableColumnMetadata))
 
 /**
  * Retrieves the metadata of the columns in the result set.
@@ -996,97 +980,4 @@ internal fun convertNullabilityInference(inferNullability: Boolean) = if (inferN
  */
 internal fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType =
     dbType.convertSqlTypeToKType(tableColumnMetadata)
-        ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
-
-/**
- * Creates a mapping between common SQL types and their corresponding KTypes.
- *
- * @param tableColumnMetadata The metadata of the table column.
- * @return The KType associated with the SQL type or a default type if no mapping is found.
- */
-internal fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
-    val jdbcTypeToKTypeMapping = mapOf(
-        Types.BIT to Boolean::class,
-        Types.TINYINT to Int::class,
-        Types.SMALLINT to Int::class,
-        Types.INTEGER to Int::class,
-        Types.BIGINT to Long::class,
-        Types.FLOAT to Float::class,
-        Types.REAL to Float::class,
-        Types.DOUBLE to Double::class,
-        Types.NUMERIC to BigDecimal::class,
-        Types.DECIMAL to BigDecimal::class,
-        Types.CHAR to String::class,
-        Types.VARCHAR to String::class,
-        Types.LONGVARCHAR to String::class,
-        Types.DATE to Date::class,
-        Types.TIME to Time::class,
-        Types.TIMESTAMP to Timestamp::class,
-        Types.BINARY to ByteArray::class,
-        Types.VARBINARY to ByteArray::class,
-        Types.LONGVARBINARY to ByteArray::class,
-        Types.NULL to String::class,
-        Types.JAVA_OBJECT to Any::class,
-        Types.DISTINCT to Any::class,
-        Types.STRUCT to Any::class,
-        Types.ARRAY to Array::class,
-        Types.BLOB to ByteArray::class,
-        Types.CLOB to Clob::class,
-        Types.REF to Ref::class,
-        Types.DATALINK to Any::class,
-        Types.BOOLEAN to Boolean::class,
-        Types.ROWID to RowId::class,
-        Types.NCHAR to String::class,
-        Types.NVARCHAR to String::class,
-        Types.LONGNVARCHAR to String::class,
-        Types.NCLOB to NClob::class,
-        Types.SQLXML to SQLXML::class,
-        Types.REF_CURSOR to Ref::class,
-        Types.TIME_WITH_TIMEZONE to OffsetTime::class,
-        Types.TIMESTAMP_WITH_TIMEZONE to OffsetDateTime::class,
-    )
-
-    fun determineKotlinClass(tableColumnMetadata: TableColumnMetadata): KClass<*> =
-        when {
-            tableColumnMetadata.jdbcType == Types.OTHER -> when (tableColumnMetadata.javaClassName) {
-                "[B" -> ByteArray::class
-                else -> Any::class
-            }
-
-            tableColumnMetadata.javaClassName == "[B" -> ByteArray::class
-
-            tableColumnMetadata.javaClassName == "java.sql.Blob" -> Blob::class
-
-            tableColumnMetadata.jdbcType == Types.TIMESTAMP &&
-                tableColumnMetadata.javaClassName == "java.time.LocalDateTime" -> LocalDateTime::class
-
-            tableColumnMetadata.jdbcType == Types.BINARY &&
-                tableColumnMetadata.javaClassName == "java.util.UUID" -> UUID::class
-
-            tableColumnMetadata.jdbcType == Types.REAL &&
-                tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
-
-            tableColumnMetadata.jdbcType == Types.FLOAT &&
-                tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
-
-            tableColumnMetadata.jdbcType == Types.NUMERIC &&
-                tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
-
-            else -> jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
-        }
-
-    fun createArrayTypeIfNeeded(kClass: KClass<*>, isNullable: Boolean): KType =
-        if (kClass == Array::class) {
-            val typeParam = kClass.typeParameters[0].createType()
-            kClass.createType(
-                arguments = listOf(kotlin.reflect.KTypeProjection.invariant(typeParam)),
-                nullable = isNullable,
-            )
-        } else {
-            kClass.createType(nullable = isNullable)
-        }
-
-    val kClass: KClass<*> = determineKotlinClass(tableColumnMetadata)
-    val kType = createArrayTypeIfNeeded(kClass, tableColumnMetadata.isNullable)
-    return kType
-}
+        ?: dbType.makeCommonSqlToKTypeMapping(tableColumnMetadata)
