@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -26,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
-import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.path
 
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
@@ -181,19 +179,23 @@ internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: B
     }
 
     // move columns
-    if (columnsBeforeReferenceToMove.isNotEmpty() && columnsAfterReferenceToMove.isNotEmpty()) {
-        val intermediateDf = df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
-        val newReference = columnsBeforeReferenceToMove.last()
-        val finalDf = intermediateDf.move { columnsAfterReferenceToMove.toColumnSet() }.after { newReference }
-        return finalDf
-    }
-    if (columnsBeforeReferenceToMove.isNotEmpty()) {
-        return df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
-    }
-    if (columnsAfterReferenceToMove.isNotEmpty()) {
-        return df.move { columnsAfterReferenceToMove.toColumnSet() }.before { reference }
-    }
+    when {
+        columnsBeforeReferenceToMove.isNotEmpty() && columnsAfterReferenceToMove.isNotEmpty() -> {
+            val intermediateDf = df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
+            val newReference = columnsBeforeReferenceToMove.last()
+            val finalDf = intermediateDf.move { columnsAfterReferenceToMove.toColumnSet() }.after { newReference }
+            return finalDf
+        }
 
-    // if it is not needed to move any of the nested columns
-    return df
+        columnsBeforeReferenceToMove.isNotEmpty() -> {
+            return df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
+        }
+
+        columnsAfterReferenceToMove.isNotEmpty() -> {
+            return df.move { columnsAfterReferenceToMove.toColumnSet() }.before { reference }
+        }
+
+        // if it is not needed to move any of the nested columns
+        else -> return df
+    }
 }
