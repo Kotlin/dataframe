@@ -284,17 +284,27 @@ class MoveTests {
     }
 
     @Test
-    fun `move single top level column to the start`() {
-        val df = grouped.move("e").to(0, true)
-        df.columnNames() shouldBe listOf("e", "q", "a", "b", "w", "r")
-        df["e"].asColumnGroup().columnNames() shouldBe listOf("f")
+    fun `move single top level column to the start, insideGroup should make no difference`() {
+        // insideGroup is true
+        val dfInsideGroupIsTrue = grouped.move("e").to(0, true)
+        dfInsideGroupIsTrue.columnNames() shouldBe listOf("e", "q", "a", "b", "w", "r")
+        dfInsideGroupIsTrue["e"].asColumnGroup().columnNames() shouldBe listOf("f")
+        // insideGroup is false
+        val dfInsideGroupIsFalse = grouped.move("e").to(0, false)
+        dfInsideGroupIsFalse.columnNames() shouldBe listOf("e", "q", "a", "b", "w", "r")
+        dfInsideGroupIsFalse["e"].asColumnGroup().columnNames() shouldBe listOf("f")
     }
 
     @Test
-    fun `move multiple top level columns between columns`() {
-        val df = grouped.move("w", "e").to(1, true)
-        df.columnNames() shouldBe listOf("q", "w", "e", "a", "b", "r")
-        df["e"].asColumnGroup().columnNames() shouldBe listOf("f")
+    fun `move multiple top level columns between columns, insideGroup should make no difference`() {
+        // insideGroup is true
+        val dfInsideGroupIsTrue = grouped.move("w", "e").to(1, true)
+        dfInsideGroupIsTrue.columnNames() shouldBe listOf("q", "w", "e", "a", "b", "r")
+        dfInsideGroupIsTrue["e"].asColumnGroup().columnNames() shouldBe listOf("f")
+        // insideGroup is false
+        val dfInsideGroupIsFalse = grouped.move("w", "e").to(1, false)
+        dfInsideGroupIsFalse.columnNames() shouldBe listOf("q", "w", "e", "a", "b", "r")
+        dfInsideGroupIsFalse["e"].asColumnGroup().columnNames() shouldBe listOf("f")
     }
 
     @Test
