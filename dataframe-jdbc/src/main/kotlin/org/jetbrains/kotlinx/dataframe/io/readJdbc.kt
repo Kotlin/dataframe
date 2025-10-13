@@ -37,9 +37,7 @@ import javax.sql.DataSource
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
-import kotlin.reflect.full.isSupertypeOf
 import kotlin.reflect.full.safeCast
-import kotlin.reflect.full.starProjectedType
 
 private val logger = KotlinLogging.logger {}
 
@@ -371,8 +369,6 @@ public fun DbConnectionConfig.readDataFrame(
             "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
         )
     }
-
-
 
 /**
  * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
@@ -724,37 +720,63 @@ public fun DataFrame.Companion.readAllSqlTables(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
 ): Map<String, AnyFrame> {
-    val metaData = connection.metaData
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
+    val metaData = connection.metaData
+    val tablesResultSet = retrieveTableMetadata(metaData, catalogue, determinedDbType)
 
-    // exclude system- and other tables without data (it looks like it is supported badly for many databases)
-    val tableTypes = determinedDbType.tableTypes?.toTypedArray()
-    val tables = metaData.getTables(catalogue, null, null, tableTypes)
+    return buildMap {
+        while (tablesResultSet.next()) {
+            val tableMetadata = determinedDbType.buildTableMetadata(tablesResultSet)
 
-    val dataFrames = mutableMapOf<String, AnyFrame>()
-
-    while (tables.next()) {
-        val table = determinedDbType.buildTableMetadata(tables)
-        if (!determinedDbType.isSystemTable(table)) {
-            // we filter here a second time because of specific logic with SQLite and possible issues with future databases
-            val tableName = when {
-                catalogue != null && table.schemaName != null -> "$catalogue.${table.schemaName}.${table.name}"
-                catalogue != null && table.schemaName == null -> "$catalogue.${table.name}"
-                else -> table.name
+            // We filter here a second time because of specific logic with SQLite and possible issues with future databases
+            if (determinedDbType.isSystemTable(tableMetadata)) {
+                continue
             }
-            // TODO: both cases is schema specified or not in URL
-            // in h2 database name is recognized as a schema name https://www.h2database.com/html/features.html#database_url
-            // https://stackoverflow.com/questions/20896935/spring-hibernate-h2-database-schema-not-found
-            // could be Dialect/Database specific
-            logger.debug { "Reading table: $tableName" }
 
-            val dataFrame = readSqlTable(connection, tableName, limit, inferNullability, dbType)
-            dataFrames += tableName to dataFrame
-            logger.debug { "Finished reading table: $tableName" }
+            val fullTableName = buildFullTableName(catalogue, tableMetadata.schemaName, tableMetadata.name)
+            val dataFrame = readTableAsDataFrame(connection, fullTableName, limit, inferNullability, dbType)
+
+            put(fullTableName, dataFrame)
         }
     }
+}
 
-    return dataFrames
+private fun retrieveTableMetadata(
+    metaData: DatabaseMetaData,
+    catalogue: String?,
+    dbType: DbType
+): ResultSet {
+    // Exclude system- and other tables without data (it looks like it is supported badly for many databases)
+    val tableTypes = dbType.tableTypes?.toTypedArray()
+    return metaData.getTables(catalogue, null, null, tableTypes)
+}
+
+private fun buildFullTableName(catalogue: String?, schemaName: String?, tableName: String): String {
+    // TODO: both cases is schema specified or not in URL
+    // in h2 database name is recognized as a schema name https://www.h2database.com/html/features.html#database_url
+    // https://stackoverflow.com/questions/20896935/spring-hibernate-h2-database-schema-not-found
+    // could be Dialect/Database specific
+    return when {
+        catalogue != null && schemaName != null -> "$catalogue.$schemaName.$tableName"
+        catalogue != null -> "$catalogue.$tableName"
+        else -> tableName
+    }
+}
+
+private fun readTableAsDataFrame(
+    connection: Connection,
+    tableName: String,
+    limit: Int,
+    inferNullability: Boolean,
+    dbType: DbType?
+): AnyFrame {
+    logger.debug { "Reading table: $tableName" }
+
+    val dataFrame = DataFrame.readSqlTable(connection, tableName, limit, inferNullability, dbType)
+
+    logger.debug { "Finished reading table: $tableName" }
+
+    return dataFrame
 }
 
 /**
@@ -866,44 +888,9 @@ internal fun fetchAndConvertDataFromResultSet(
     limit: Int,
     inferNullability: Boolean,
 ): AnyFrame {
-    val data = List(tableColumns.size) { mutableListOf<Any?>() }
-
-    val kotlinTypesForSqlColumns = mutableMapOf<Int, KType>()
-    List(tableColumns.size) { index ->
-        kotlinTypesForSqlColumns[index] = generateKType(dbType, tableColumns[index])
-    }
-
-    var counter = 0
-
-    if (limit > 0) {
-        while (counter < limit && rs.next()) {
-            extractNewRowFromResultSetAndAddToData(tableColumns, data, rs, kotlinTypesForSqlColumns)
-            counter++
-            // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
-        }
-    } else {
-        while (rs.next()) {
-            extractNewRowFromResultSetAndAddToData(tableColumns, data, rs, kotlinTypesForSqlColumns)
-            counter++
-            // if (counter % 1000 == 0) logger.debug { "Loaded $counter rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
-        }
-    }
-
-    val dataFrame = data.mapIndexed { index, values ->
-        // TODO: add override handlers from dbType to intercept the final parsing before column creation
-        val correctedValues = if (kotlinTypesForSqlColumns[index]!!.classifier == Array::class) {
-            handleArrayValues(values)
-        } else {
-            values
-        }
-
-        DataColumn.createValueColumn(
-            name = tableColumns[index].name,
-            values = correctedValues,
-            infer = convertNullabilityInference(inferNullability),
-            type = kotlinTypesForSqlColumns[index]!!,
-        )
-    }.toDataFrame()
+    val columnKTypes = buildColumnKTypes(tableColumns, dbType)
+    val columnData = readAllRowsFromResultSet(rs, tableColumns, columnKTypes, dbType, limit)
+    val dataFrame = buildDataFrameFromColumnData(columnData, tableColumns, columnKTypes, dbType, inferNullability)
 
     logger.debug {
         "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query."
@@ -912,52 +899,92 @@ internal fun fetchAndConvertDataFromResultSet(
     return dataFrame
 }
 
-internal fun handleArrayValues(values: MutableList<Any?>): List<Any> {
-    // Intermediate variable for the first mapping
-    val sqlArrays = values.mapNotNull {
-        (it as? java.sql.Array)?.array?.let { array -> array as? Array<*> }
+/**
+ * Builds a map of column indices to their Kotlin types.
+ */
+private fun buildColumnKTypes(
+    tableColumns: List<TableColumnMetadata>,
+    dbType: DbType
+): Map<Int, KType> =
+    tableColumns.indices.associateWith { index ->
+        generateKType(dbType, tableColumns[index])
     }
 
-    // Flatten the arrays to iterate through all elements and filter out null values, then map to component types
-    val allElementTypes = sqlArrays
-        .flatMap { array ->
-            (array.javaClass.componentType?.kotlin?.let { listOf(it) } ?: emptyList())
-        } // Get the component type of each array and convert it to a Kotlin class, if available
+/**
+ * Reads all rows from ResultSet and returns a column-oriented data structure.
+ * Returns an immutable list of lists where each inner list contains values for one column.
+ */
+private fun readAllRowsFromResultSet(
+    rs: ResultSet,
+    tableColumns: List<TableColumnMetadata>,
+    columnKTypes: Map<Int, KType>,
+    dbType: DbType,
+    limit: Int
+): List<List<Any?>> {
+    val columnsCount = tableColumns.size
+    val columnData = List(columnsCount) { mutableListOf<Any?>() }
+    var rowsRead = 0
 
-    // Find distinct types and ensure there's only one distinct type
-    val commonElementType = allElementTypes
-        .distinct() // Get unique element types
-        .singleOrNull() // Ensure there's only one unique element type, otherwise return null
-        ?: Any::class // Fallback to Any::class if multiple distinct types or no elements found
-
-    return if (commonElementType != Any::class) {
-        sqlArrays.map { castArray(it, commonElementType).toTypedArray() }
-    } else {
-        sqlArrays
+    while (rs.next() && (limit !in 1..rowsRead)) {
+        repeat(columnsCount) { columnIndex ->
+            val value = dbType.extractValueFromResultSet(
+                rs = rs,
+                columnIndex = columnIndex,
+                columnMetadata = tableColumns[columnIndex],
+                kType = columnKTypes.getValue(columnIndex)
+            )
+            columnData[columnIndex].add(value)
+        }
+        rowsRead++
+        // if (rowsRead % 1000 == 0) logger.debug { "Loaded $rowsRead rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
     }
+
+    return columnData.map { it.toList() }
+}
+
+/**
+ * Builds DataFrame from column-oriented data.
+ */
+private fun buildDataFrameFromColumnData(
+    columnData: List<List<Any?>>,
+    tableColumns: List<TableColumnMetadata>,
+    columnKTypes: Map<Int, KType>,
+    dbType: DbType,
+    inferNullability: Boolean
+): AnyFrame =
+    columnData.mapIndexed { index, values ->
+        buildDataColumn(
+            name = tableColumns[index].name,
+            values = values,
+            kType = columnKTypes.getValue(index),
+            columnMetadata = tableColumns[index],
+            dbType = dbType,
+            inferNullability = inferNullability
+        )
+    }.toDataFrame()
+
+/**
+ * Builds a single DataColumn with proper type handling.
+ */
+private fun buildDataColumn(
+    name: String,
+    values: List<Any?>,
+    kType: KType,
+    columnMetadata: TableColumnMetadata,
+    dbType: DbType,
+    inferNullability: Boolean
+): DataColumn<*> {
+    val correctedValues = dbType.postProcessColumnValues(values, kType, columnMetadata)
+
+    return DataColumn.createValueColumn(
+        name = name,
+        values = correctedValues,
+        infer = convertNullabilityInference(inferNullability),
+        type = kType,
+    )
 }
 
 internal fun convertNullabilityInference(inferNullability: Boolean) = if (inferNullability) Infer.Nulls else Infer.None
-
-internal fun extractNewRowFromResultSetAndAddToData(
-    tableColumns: MutableList<TableColumnMetadata>,
-    data: List<MutableList<Any?>>,
-    rs: ResultSet,
-    kotlinTypesForSqlColumns: MutableMap<Int, KType>,
-) {
-    repeat(tableColumns.size) { i ->
-        data[i].add(
-            try {
-                rs.getObject(i + 1)
-                // TODO: add a special handler for Blob via Streams
-            } catch (_: Throwable) {
-                val kType = kotlinTypesForSqlColumns[i]!!
-                // TODO: expand for all the types like in generateKType function
-                if (kType.isSupertypeOf(String::class.starProjectedType)) rs.getString(i + 1) else rs.getString(i + 1)
-            },
-        )
-    }
-}
 
 /**
  * Generates a KType based on the given database type and table column metadata.
