@@ -21,6 +21,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Date
 import java.util.UUID
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.typeOf
 
 private const val URL =
@@ -182,7 +183,7 @@ class MSSQLH2Test {
         result[0][Table1MSSSQL::intColumn] shouldBe 123456
         result[0][Table1MSSSQL::ntextColumn] shouldBe "Sample1 text"
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
         schema.columns["binaryColumn"]!!.type shouldBe typeOf<ByteArray?>()
@@ -228,7 +229,7 @@ class MSSQLH2Test {
         val result = df.filter { it[Table1MSSSQL::id] == 1 }
         result[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
     }

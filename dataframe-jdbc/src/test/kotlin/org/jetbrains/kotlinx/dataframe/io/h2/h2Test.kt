@@ -34,6 +34,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test5;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
@@ -164,7 +165,7 @@ class JdbcTest {
         val df = DataFrame.readSqlTable(connection, tableName)
         df.rowsCount() shouldBe 0
 
-        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
+        val dataSchema = DataFrameSchema.getSchemaForSqlTable(connection, tableName)
         dataSchema.columns.size shouldBe 2
         dataSchema.columns["characterCol"]!!.type shouldBe typeOf<String?>()
 
@@ -292,7 +293,7 @@ class JdbcTest {
 
         BigDecimal("2.71").compareTo(result6[0][1] as BigDecimal) shouldBe 0
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, tableName)
+        val schema = DataFrameSchema.getSchemaForSqlTable(connection, tableName)
 
         schema.columns["characterCol"]!!.type shouldBe typeOf<String?>()
         schema.columns["tinyIntCol"]!!.type shouldBe typeOf<Int?>()
@@ -321,7 +322,7 @@ class JdbcTest {
         df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
         df1[0][1] shouldBe "John"
 
-        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
+        val dataSchema = DataFrameSchema.getSchemaForSqlTable(connection, tableName)
         dataSchema.columns.size shouldBe 3
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
@@ -338,7 +339,7 @@ class JdbcTest {
         df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
         df3[0][1] shouldBe "John"
 
-        val dataSchema1 = DataFrame.getSchemaForSqlTable(dbConfig, tableName)
+        val dataSchema1 = DataFrameSchema.getSchemaForSqlTable(dbConfig, tableName)
         dataSchema1.columns.size shouldBe 3
         dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
     }
@@ -845,7 +846,7 @@ class JdbcTest {
         df1.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df1[0][0] shouldBe "John"
 
-        val dataSchema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+        val dataSchema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery)
         dataSchema.columns.size shouldBe 2
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
@@ -862,7 +863,7 @@ class JdbcTest {
         df3.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df3[0][0] shouldBe "John"
 
-        val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery)
+        val dataSchema1 = DataFrameSchema.getSchemaForSqlQuery(dbConfig, sqlQuery)
         dataSchema1.columns.size shouldBe 2
         dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
     }
@@ -923,7 +924,7 @@ class JdbcTest {
             INNER JOIN Customer c2 ON c1.id = c2.id
             """.trimIndent()
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+        val schema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery)
         schema.columns.size shouldBe 2
         schema.columns.toList()[0].first shouldBe "name"
         schema.columns.toList()[1].first shouldBe "name_1"
@@ -939,7 +940,7 @@ class JdbcTest {
             INNER JOIN Customer c2 ON c1.id = c2.id
             """.trimIndent()
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+        val schema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery)
         schema.columns.size shouldBe 3
         schema.columns.toList()[0].first shouldBe "name"
         schema.columns.toList()[1].first shouldBe "name_1"
@@ -980,7 +981,7 @@ class JdbcTest {
         saleDf1.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataFrameSchemaMap = DataFrame.getSchemaForAllSqlTables(connection)
+        val dataFrameSchemaMap = DataFrameSchema.getSchemaForAllSqlTables(connection)
         dataFrameSchemaMap.containsKey("Customer") shouldBe true
         dataFrameSchemaMap.containsKey("Sale") shouldBe true
 
@@ -1024,7 +1025,7 @@ class JdbcTest {
         saleDf3.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig).values.toList()
+        val dataSchemas1 = DataFrameSchema.getSchemaForAllSqlTables(dbConfig).values.toList()
 
         val customerDataSchema1 = dataSchemas1[0]
         customerDataSchema1.columns.size shouldBe 3
@@ -1060,7 +1061,7 @@ class JdbcTest {
         df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
         df[0][1] shouldBe "John"
 
-        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName, dbType = CustomDB)
+        val dataSchema = DataFrameSchema.getSchemaForSqlTable(connection, tableName, dbType = CustomDB)
         dataSchema.columns.size shouldBe 3
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
@@ -1071,7 +1072,7 @@ class JdbcTest {
         df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
         df2[0][1] shouldBe "John"
 
-        val dataSchema1 = DataFrame.getSchemaForSqlTable(dbConfig, tableName, dbType = CustomDB)
+        val dataSchema1 = DataFrameSchema.getSchemaForSqlTable(dbConfig, tableName, dbType = CustomDB)
         dataSchema1.columns.size shouldBe 3
         dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
     }
@@ -1094,7 +1095,7 @@ class JdbcTest {
         df.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df[0][0] shouldBe "John"
 
-        val dataSchema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery, dbType = CustomDB)
+        val dataSchema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery, dbType = CustomDB)
         dataSchema.columns.size shouldBe 2
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
@@ -1105,7 +1106,7 @@ class JdbcTest {
         df2.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df2[0][0] shouldBe "John"
 
-        val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery, dbType = CustomDB)
+        val dataSchema1 = DataFrameSchema.getSchemaForSqlQuery(dbConfig, sqlQuery, dbType = CustomDB)
         dataSchema1.columns.size shouldBe 2
         dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
     }
@@ -1130,7 +1131,7 @@ class JdbcTest {
         saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataFrameSchemaMap = DataFrame.getSchemaForAllSqlTables(connection, dbType = CustomDB)
+        val dataFrameSchemaMap = DataFrameSchema.getSchemaForAllSqlTables(connection, dbType = CustomDB)
         dataFrameSchemaMap.containsKey("Customer") shouldBe true
         dataFrameSchemaMap.containsKey("Sale") shouldBe true
 
@@ -1160,7 +1161,7 @@ class JdbcTest {
         saleDf2.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig, dbType = CustomDB).values.toList()
+        val dataSchemas1 = DataFrameSchema.getSchemaForAllSqlTables(dbConfig, dbType = CustomDB).values.toList()
 
         val customerDataSchema1 = dataSchemas1[0]
         customerDataSchema1.columns.size shouldBe 3

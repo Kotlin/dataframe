@@ -22,6 +22,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.UUID
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.typeOf
 
 private const val URL =
@@ -224,7 +225,7 @@ class PostgresH2Test {
         result[0][15] shouldBe arrayOf("Hello", "World")
         result[0][16] shouldBe arrayOf(true, false, true)
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
+        val schema = DataFrameSchema.getSchemaForSqlTable(connection, tableName1)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
@@ -239,7 +240,7 @@ class PostgresH2Test {
         val result2 = df2.filter { it[Table2::id] == 1 }
         result2[0][4] shouldBe 1001
 
-        val schema2 = DataFrame.getSchemaForSqlTable(connection, tableName2)
+        val schema2 = DataFrameSchema.getSchemaForSqlTable(connection, tableName2)
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
     }
@@ -261,7 +262,7 @@ class PostgresH2Test {
         val result = df.filter { it[ViewTable::id] == 1 }
         result[0][2] shouldBe null
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintcol"]!!.type shouldBe typeOf<Long>()
         schema.columns["textcol"]!!.type shouldBe typeOf<String?>()
@@ -318,12 +319,12 @@ class PostgresH2Test {
             .add("serialcol2") { it[Table2::serialcol] }
         result8[0][1] shouldBe 1000001
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
+        val schema = DataFrameSchema.getSchemaForSqlTable(connection, tableName1)
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigserialcol"]!!.type shouldBe typeOf<Long>()
         schema.columns["doublecol"]!!.type shouldBe typeOf<Double>()
 
-        val schema1 = DataFrame.getSchemaForSqlTable(connection, tableName2)
+        val schema1 = DataFrameSchema.getSchemaForSqlTable(connection, tableName2)
         schema1.columns["numericcol"]!!.type shouldBe typeOf<BigDecimal>()
         schema1.columns["realcol"]!!.type shouldBe typeOf<Float>()
         schema1.columns["serialcol"]!!.type shouldBe typeOf<Int>()
