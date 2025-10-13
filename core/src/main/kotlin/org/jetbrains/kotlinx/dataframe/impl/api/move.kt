@@ -129,7 +129,11 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
     return newColumnList.toDataFrame().cast()
 }
 
-internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boolean): DataFrame<T> {
+internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: Boolean): DataFrame<T> {
+    if (!insideGroup) {
+        return moveTo(columnIndex)
+    }
+
     val columnsToMove = df.getColumns(columns)
 
     // check if columns to move have the same parent
@@ -142,7 +146,7 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
     }
 
     // if columns will be moved to top level or columns to move are at top level
-    if (!insideGroup || parentOfFirst.isEmpty()) {
+    if (parentOfFirst.isEmpty()) {
         return moveTo(columnIndex)
     }
 
@@ -151,10 +155,10 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
     val parentPath = df[parentOfFirst].path
     val referenceAndSiblings = df[parentOfFirst].asColumnGroup().columns()
     val referenceAndSiblingsPaths = referenceAndSiblings.map { parentPath + it.path }
-    val reference = if (columnIndex >= referenceAndSiblingsPaths.size){
+    val reference = if (columnIndex >= referenceAndSiblingsPaths.size) {
         referenceAndSiblingsPaths.last()
     } else {
-        referenceAndSiblingsPaths.get(columnIndex)
+        referenceAndSiblingsPaths[columnIndex]
     }
 
     // two cases : columns to move are before, or after, the reference
@@ -163,14 +167,15 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
     val columnsToMovePath = columnsToMove.map { it.path }
     var referenceWasIterated = false
     referenceAndSiblingsPaths.forEach {
-        if (it.path.last() == reference.path.last())
+        if (it.path.last() == reference.path.last()) {
             referenceWasIterated = true
-        else {
-            if (columnsToMovePath.contains(it)){
-                if (referenceWasIterated)
+        } else {
+            if (columnsToMovePath.contains(it)) {
+                if (referenceWasIterated) {
                     columnsAfterReferenceToMove.add(it)
-                else
+                } else {
                     columnsBeforeReferenceToMove.add(it)
+                }
             }
         }
     }
@@ -182,10 +187,12 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int, insideGroup: Boole
         val finalDf = intermediateDf.move { columnsAfterReferenceToMove.toColumnSet() }.after { newReference }
         return finalDf
     }
-    if (columnsBeforeReferenceToMove.isNotEmpty())
+    if (columnsBeforeReferenceToMove.isNotEmpty()) {
         return df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
-    if (columnsAfterReferenceToMove.isNotEmpty())
+    }
+    if (columnsAfterReferenceToMove.isNotEmpty()) {
         return df.move { columnsAfterReferenceToMove.toColumnSet() }.before { reference }
+    }
 
     // if it is not needed to move any of the nested columns
     return df

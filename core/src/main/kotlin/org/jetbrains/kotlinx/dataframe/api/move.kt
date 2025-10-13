@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
+import org.jetbrains.kotlinx.dataframe.impl.api.moveToImpl
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT
@@ -560,7 +561,8 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  */
 @Refine
 @Interpretable("MoveTo")
-public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): DataFrame<T> = moveTo(columnIndex, insideGroup)
+public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): DataFrame<T> =
+    moveToImpl(columnIndex, insideGroup)
 
 /**
  * Moves columns, previously selected with [move] to the top-level within the [DataFrame].
