@@ -23,6 +23,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Date
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1;MODE=MariaDB;DATABASE_TO_LOWER=TRUE"
@@ -309,7 +310,7 @@ class MariadbH2Test {
         val byteArray = "tinyblobValue".toByteArray()
         (result[0][22] as Blob).getBytes(1, byteArray.size) contentEquals byteArray
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textcol"]!!.type shouldBe typeOf<String>()
         schema.columns["varbinarycol"]!!.type shouldBe typeOf<ByteArray>()
@@ -326,7 +327,7 @@ class MariadbH2Test {
         val result2 = df2.filter { it[Table2MariaDb::id] == 1 }
         result2[0][26] shouldBe null
 
-        val schema2 = DataFrame.getSchemaForSqlTable(connection, "table2")
+        val schema2 = DataFrameSchema.getSchemaForSqlTable(connection, "table2")
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
     }
@@ -347,7 +348,7 @@ class MariadbH2Test {
         val result = df.filter { it[Table3MariaDb::id] == 1 }
         result[0][1] shouldBe "Value1"
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["enumcol"]!!.type shouldBe typeOf<Any>()
     }
@@ -407,7 +408,7 @@ class MariadbH2Test {
 
         result8[0][1] shouldBe BigDecimal("10")
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.getSchemaForSqlTable(connection, "table1")
 
         schema.columns["tinyintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int?>()

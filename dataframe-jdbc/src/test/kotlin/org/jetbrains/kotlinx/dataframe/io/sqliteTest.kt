@@ -13,6 +13,7 @@ import java.io.File
 import java.nio.file.Files
 import java.sql.Connection
 import java.sql.DriverManager
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.typeOf
 
 @DataSchema
@@ -156,7 +157,7 @@ class SqliteTest {
         val result = df.filter { it[CustomerSQLite::name] == "John Doe" }
         result[0][2] shouldBe 30
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, customerTableName)
+        val schema = DataFrameSchema.getSchemaForSqlTable(connection, customerTableName)
         schema.columns["id"]!!.type shouldBe typeOf<Int?>()
         schema.columns["name"]!!.type shouldBe typeOf<String?>()
         schema.columns["salary"]!!.type shouldBe typeOf<Double>()
@@ -167,7 +168,7 @@ class SqliteTest {
         val result2 = df2.filter { it[OrderSQLite::totalAmount] > 10 }
         result2[0][2] shouldBe "2023-07-21"
 
-        val schema2 = DataFrame.getSchemaForSqlTable(connection, orderTableName)
+        val schema2 = DataFrameSchema.getSchemaForSqlTable(connection, orderTableName)
         schema2.columns["id"]!!.type shouldBe typeOf<Int?>()
         schema2.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema2.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
@@ -183,7 +184,7 @@ class SqliteTest {
         val result = df.filter { it[CustomerSQLite::name] == "John Doe" }
         result[0][2] shouldBe 30
 
-        val schema = DataFrame.getSchemaForSqlTable(dbConnectionConfig, customerTableName)
+        val schema = DataFrameSchema.getSchemaForSqlTable(dbConnectionConfig, customerTableName)
         schema.columns["id"]!!.type shouldBe typeOf<Int?>()
         schema.columns["name"]!!.type shouldBe typeOf<String?>()
         schema.columns["salary"]!!.type shouldBe typeOf<Double>()
@@ -194,7 +195,7 @@ class SqliteTest {
         val result2 = df2.filter { it[OrderSQLite::totalAmount] > 10 }
         result2[0][2] shouldBe "2023-07-21"
 
-        val schema2 = DataFrame.getSchemaForSqlTable(dbConnectionConfig, orderTableName)
+        val schema2 = DataFrameSchema.getSchemaForSqlTable(dbConnectionConfig, orderTableName)
         schema2.columns["id"]!!.type shouldBe typeOf<Int?>()
         schema2.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema2.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
@@ -222,7 +223,7 @@ class SqliteTest {
         val result = df.filter { it[CustomerOrderSQLite::customerSalary] > 1 }
         result[0][3] shouldBe 2500.5
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["customerId"]!!.type shouldBe typeOf<Int?>()
         schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema.columns["customerAge"]!!.type shouldBe typeOf<Int?>()
@@ -237,7 +238,7 @@ class SqliteTest {
         val result = df.filter { it[CustomerOrderSQLite::customerSalary] > 1 }
         result[0][3] shouldBe 2500.5
 
-        val schema = DataFrame.getSchemaForSqlQuery(dbConnectionConfig, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.getSchemaForSqlQuery(dbConnectionConfig, sqlQuery = sqlQuery)
         schema.columns["customerId"]!!.type shouldBe typeOf<Int?>()
         schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema.columns["customerAge"]!!.type shouldBe typeOf<Int?>()
