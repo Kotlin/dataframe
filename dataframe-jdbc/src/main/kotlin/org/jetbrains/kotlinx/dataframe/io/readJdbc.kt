@@ -892,7 +892,7 @@ private fun buildColumnKTypes(
 
 /**
  * Reads all rows from ResultSet and returns a column-oriented data structure.
- * Returns an immutable list of lists where each inner list contains values for one column.
+ * Returns mutable lists to allow efficient post-processing without copying.
  */
 private fun readAllRowsFromResultSet(
     rs: ResultSet,
@@ -900,7 +900,7 @@ private fun readAllRowsFromResultSet(
     columnKTypes: Map<Int, KType>,
     dbType: DbType,
     limit: Int
-): List<List<Any?>> {
+): List<MutableList<Any?>> {
     val columnsCount = tableColumns.size
     val columnData = List(columnsCount) { mutableListOf<Any?>() }
     var rowsRead = 0
@@ -919,14 +919,15 @@ private fun readAllRowsFromResultSet(
         // if (rowsRead % 1000 == 0) logger.debug { "Loaded $rowsRead rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
     }
 
-    return columnData.map { it.toList() }
+    return columnData
 }
 
 /**
  * Builds DataFrame from column-oriented data.
+ * Accepts mutable lists to enable efficient in-place transformations.
  */
 private fun buildDataFrameFromColumnData(
-    columnData: List<List<Any?>>,
+    columnData: List<MutableList<Any?>>,
     tableColumns: List<TableColumnMetadata>,
     columnKTypes: Map<Int, KType>,
     dbType: DbType,
@@ -945,10 +946,11 @@ private fun buildDataFrameFromColumnData(
 
 /**
  * Builds a single DataColumn with proper type handling.
+ * Accepts mutable list to allow efficient post-processing.
  */
 private fun buildDataColumn(
     name: String,
-    values: List<Any?>,
+    values: MutableList<Any?>,
     kType: KType,
     columnMetadata: TableColumnMetadata,
     dbType: DbType,

@@ -232,7 +232,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @return a list of processed column values, with transformations applied where necessary, or the original list if no transformation is needed.
      */
     public open fun postProcessColumnValues(
-        values: List<Any?>,
+        values: MutableList<Any?>,
         kType: KType,
         columnMetadata: TableColumnMetadata
     ): List<Any?> {
@@ -241,7 +241,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 values.map { /* custom transformation */ }
             } */
             kType.classifier == Array::class -> {
-                handleArrayValues(values.toMutableList())
+                handleArrayValues(values)
             }
 
             else -> values
