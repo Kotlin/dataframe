@@ -30,6 +30,43 @@ import kotlin.reflect.typeOf
 @Suppress("ktlint:standard:argument-list-wrapping")
 class MedianTests {
 
+    @Suppress("ktlint:standard:argument-list-wrapping")
+    @Test
+    fun `median on personsDf with Float and BigInteger`() {
+        // Align with box tests: include a Float and a BigInteger column; BigInteger should be excluded from median results
+        val personsDf = dataFrameOf(
+            "name", "age", "city", "weight", "height", "yearsToRetirement", "workExperienceYears", "dependentsCount", "annualIncome", "bigNumber",
+        )(
+            "Alice", 15, "London", 99.5, "1.85", 50f, 0.toShort(), 0.toByte(), 0L, 1.toBigInteger(),
+            "Bob", 20, "Paris", 140.0, "1.35", 45f, 2.toShort(), 0.toByte(), 12_000L, 2.toBigInteger(),
+            "Charlie", 100, "Dubai", 75.0, "1.95", 0f, 70.toShort(), 0.toByte(), 0L, 3.toBigInteger(),
+            "Rose", 1, "Moscow", 45.33, "0.79", 64f, 0.toShort(), 2.toByte(), 0L, 4.toBigInteger(),
+            "Dylan", 35, "London", 23.4, "1.83", 30f, 15.toShort(), 1.toByte(), 90_000L, 5.toBigInteger(),
+            "Eve", 40, "Paris", 56.72, "1.85", 25f, 18.toShort(), 3.toByte(), 125_000L, 6.toBigInteger(),
+            "Frank", 55, "Dubai", 78.9, "1.35", 10f, 35.toShort(), 2.toByte(), 145_000L, 7.toBigInteger(),
+            "Grace", 29, "Moscow", 67.8, "1.65", 36f, 5.toShort(), 1.toByte(), 70_000L, 8.toBigInteger(),
+            "Hank", 60, "Paris", 80.22, "1.75", 5f, 40.toShort(), 4.toByte(), 200_000L, 9.toBigInteger(),
+            "Isla", 22, "London", 75.1, "1.85", 43f, 1.toShort(), 0.toByte(), 30_000L, 10.toBigInteger(),
+        )
+
+        val medians = personsDf.median()
+
+        // Should include numeric and string columns, but not BigInteger
+        ("bigNumber" in medians.columnNames()) shouldBe false
+
+        medians["age"] shouldBe 32.0
+        medians["weight"] shouldBe 75.05
+        medians["yearsToRetirement"] shouldBe 33.0
+        medians["workExperienceYears"] shouldBe 10.0
+        medians["dependentsCount"] shouldBe 1.0
+        medians["annualIncome"] shouldBe 50_000.0
+
+        // Also ensure string columns are present (values depend on ordering rules; avoid asserting exact value)
+        ("name" in medians.columnNames()) shouldBe true
+        ("city" in medians.columnNames()) shouldBe true
+        ("height" in medians.columnNames()) shouldBe true
+    }
+
     val personsDf = dataFrameOf("name", "age", "city", "weight", "height", "yearsToRetirement")(
         "Alice", 15, "London", 99.5, "1.85", 50,
         "Bob", 20, "Paris", 140.0, "1.35", 45,
