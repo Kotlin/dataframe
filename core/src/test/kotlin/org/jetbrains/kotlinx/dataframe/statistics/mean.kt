@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.meanOf
@@ -14,6 +15,43 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class MeanTests {
+
+    @Suppress("ktlint:standard:argument-list-wrapping")
+    @Test
+    fun `mean on personsDf with Float and BigInteger`() {
+        // Align with box tests: include a Float column and a BigInteger column; BigInteger is ignored for mean
+        val personsDf = dataFrameOf(
+            "name", "age", "city", "weight", "height", "yearsToRetirement", "workExperienceYears", "dependentsCount", "annualIncome", "bigNumber",
+        )(
+            "Alice", 15, "London", 99.5, "1.85", 50f, 0.toShort(), 0.toByte(), 0L, 1.toBigInteger(),
+            "Bob", 20, "Paris", 140.0, "1.35", 45f, 2.toShort(), 0.toByte(), 12_000L, 2.toBigInteger(),
+            "Charlie", 100, "Dubai", 75.0, "1.95", 0f, 70.toShort(), 0.toByte(), 0L, 3.toBigInteger(),
+            "Rose", 1, "Moscow", 45.33, "0.79", 64f, 0.toShort(), 2.toByte(), 0L, 4.toBigInteger(),
+            "Dylan", 35, "London", 23.4, "1.83", 30f, 15.toShort(), 1.toByte(), 90_000L, 5.toBigInteger(),
+            "Eve", 40, "Paris", 56.72, "1.85", 25f, 18.toShort(), 3.toByte(), 125_000L, 6.toBigInteger(),
+            "Frank", 55, "Dubai", 78.9, "1.35", 10f, 35.toShort(), 2.toByte(), 145_000L, 7.toBigInteger(),
+            "Grace", 29, "Moscow", 67.8, "1.65", 36f, 5.toShort(), 1.toByte(), 70_000L, 8.toBigInteger(),
+            "Hank", 60, "Paris", 80.22, "1.75", 5f, 40.toShort(), 4.toByte(), 200_000L, 9.toBigInteger(),
+            "Isla", 22, "London", 75.1, "1.85", 43f, 1.toShort(), 0.toByte(), 30_000L, 10.toBigInteger(),
+        )
+
+        val means = personsDf.mean()
+        // Should include primitive/mixed numeric columns
+        means["age"] shouldBe 37.7
+        means["weight"] shouldBe 74.197
+        means["yearsToRetirement"] shouldBe 30.8
+        means["workExperienceYears"] shouldBe 18.6
+        means["dependentsCount"] shouldBe 1.3
+        means["annualIncome"] shouldBe 67_200.0
+
+        // Should NOT include BigInteger column in mean()
+        ("bigNumber" in personsDf.columnNames()) shouldBe true
+        ("bigNumber" in means.columnNames()) shouldBe false
+
+        // meanFor of specific columns still works and returns Double
+        personsDf.mean("age") shouldBe 37.7
+        personsDf.mean("dependentsCount") shouldBe 1.3
+    }
 
     @Test
     fun `type for column with mixed numbers`() {
