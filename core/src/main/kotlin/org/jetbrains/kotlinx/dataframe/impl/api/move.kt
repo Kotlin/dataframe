@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.before
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
@@ -15,16 +16,21 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
+import org.jetbrains.kotlinx.dataframe.impl.last
 import org.jetbrains.kotlinx.dataframe.path
 
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
@@ -148,54 +154,15 @@ internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: B
         return moveTo(columnIndex)
     }
 
-    // columns are nested and will be eventually moved inside their own group
-    // finding reference column
+    //idea: remove columns to move and brothers (sons), apply moveTo to sons, insert sons
     val parentPath = df[parentOfFirst].path
-    val referenceAndSiblings = df[parentOfFirst].asColumnGroup().columns()
-    val referenceAndSiblingsPaths = referenceAndSiblings.map { parentPath + it.path }
-    val reference = if (columnIndex >= referenceAndSiblingsPaths.size) {
-        referenceAndSiblingsPaths.last()
-    } else {
-        referenceAndSiblingsPaths[columnIndex]
-    }
-
-    // two cases : columns to move are before, or after, the reference
-    val columnsBeforeReferenceToMove = mutableListOf<ColumnPath>()
-    val columnsAfterReferenceToMove = mutableListOf<ColumnPath>()
-    val columnsToMovePath = columnsToMove.map { it.path }
-    var referenceWasIterated = false
-    referenceAndSiblingsPaths.forEach {
-        if (it.path.last() == reference.path.last()) {
-            referenceWasIterated = true
-        } else {
-            if (columnsToMovePath.contains(it)) {
-                if (referenceWasIterated) {
-                    columnsAfterReferenceToMove.add(it)
-                } else {
-                    columnsBeforeReferenceToMove.add(it)
-                }
-            }
-        }
-    }
-
-    // move columns
-    when {
-        columnsBeforeReferenceToMove.isNotEmpty() && columnsAfterReferenceToMove.isNotEmpty() -> {
-            val intermediateDf = df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
-            val newReference = columnsBeforeReferenceToMove.last()
-            val finalDf = intermediateDf.move { columnsAfterReferenceToMove.toColumnSet() }.after { newReference }
-            return finalDf
-        }
-
-        columnsBeforeReferenceToMove.isNotEmpty() -> {
-            return df.move { columnsBeforeReferenceToMove.toColumnSet() }.after { reference }
-        }
-
-        columnsAfterReferenceToMove.isNotEmpty() -> {
-            return df.move { columnsAfterReferenceToMove.toColumnSet() }.before { reference }
-        }
-
-        // if it is not needed to move any of the nested columns
-        else -> return df
-    }
+    val sons = df[parentOfFirst].asColumnGroup()
+    // remove columns to move and their siblings
+    val sonsPaths = sons.columns().map { parentPath + it.path }
+    val intermediateDf = df.removeImpl { sonsPaths.toColumnSet() }
+    // move columns and insert back
+    val columnsToMoveWithReducedPath = columnsToMove.map { it.path.last(it.path.size - parentPath.size).toPath() }
+    val columnsMoved = sons.asDataFrame().move { columnsToMoveWithReducedPath.toColumnSet() }.to(columnIndex).columns()
+    val columnsMovedPaths = columnsMoved.map { ColumnToInsert(parentPath + it.path, it ) }
+    return intermediateDf.df.insertImpl(columnsMovedPaths)
 }
