@@ -376,6 +376,8 @@ internal interface MoveTo {
  * where the selected columns will be moved.
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
+@Refine
+@Interpretable("MoveTo1")
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector<T, *>): DataFrame<T> =
     move(columns).to(newColumnIndex)
 
@@ -824,6 +826,8 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
  * @param [column] The [Column With Path Selector][ColumnsSelector] used to specify
  * a path in the [DataFrame] to move columns.
  */
+@Refine
+@Interpretable("MoveInto1")
 public fun <T, C> MoveClause<T, C>.into(
     column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
 ): DataFrame<T> =
@@ -893,6 +897,8 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  * @param [column] The [Column With Path Selector And Indices][ColumnsSelector] used to specify
  * a path in the [DataFrame] to move columns.
  */
+@Refine
+@Interpretable("MoveInto2")
 public fun <T, C> MoveClause<T, C>.intoIndexed(
     newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>, Int) -> AnyColumnReference,
 ): DataFrame<T> {
