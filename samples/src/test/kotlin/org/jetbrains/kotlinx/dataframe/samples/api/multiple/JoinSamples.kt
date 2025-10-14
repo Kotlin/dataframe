@@ -265,7 +265,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.leftJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
-            .format().with { if (it == null) bold else null }
+            .format { all() except (name and city) }.with { if (it == null) bold else null }
             .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
@@ -281,7 +281,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.rightJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
-            .format().with { if (it == null) bold else null }
+            .format { all() except (name and city) }.with { if (it == null) bold else null }
             .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
@@ -295,7 +295,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.fullJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
-            .format().with { if (it == null) bold else null }
+            .format { all() except (name and city) }.with { if (it == null) bold else null }
             .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
