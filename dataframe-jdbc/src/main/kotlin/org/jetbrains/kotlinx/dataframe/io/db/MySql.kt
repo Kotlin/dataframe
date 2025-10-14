@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
@@ -54,5 +54,10 @@ public object MySql : DbType("mysql") {
             return Long::class.createType(nullable = tableColumnMetadata.isNullable)
         }
         return null
+    }
+
+    override fun quoteIdentifier(name: String): String {
+        // schema.table -> `schema`.`table`
+        return name.split(".").joinToString(".") { "`$it`" }
     }
 }
