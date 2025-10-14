@@ -29,13 +29,13 @@ import kotlin.use
  * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  */
-public fun DataFrameSchema.Companion.getSchemaForSqlTable(
+public fun DataFrameSchema.Companion.fromSqlTable(
     dbConfig: DbConnectionConfig,
     tableName: String,
     dbType: DbType? = null,
 ): DataFrameSchema =
     withReadOnlyConnection(dbConfig, dbType) { connection ->
-        getSchemaForSqlTable(connection, tableName, dbType)
+        fromSqlTable(connection, tableName, dbType)
     }
 
 /**
@@ -68,13 +68,13 @@ public fun DataFrameSchema.Companion.getSchemaForSqlTable(
  *
  * @see [DataSource.getConnection]
  */
-public fun DataFrameSchema.Companion.getSchemaForSqlTable(
+public fun DataFrameSchema.Companion.fromSqlTable(
     dataSource: DataSource,
     tableName: String,
     dbType: DbType? = null,
 ): DataFrameSchema {
     dataSource.connection.use { connection ->
-        return getSchemaForSqlTable(connection, tableName, dbType)
+        return fromSqlTable(connection, tableName, dbType)
     }
 }
 
@@ -89,7 +89,7 @@ public fun DataFrameSchema.Companion.getSchemaForSqlTable(
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrameSchema.Companion.getSchemaForSqlTable(
+public fun DataFrameSchema.Companion.fromSqlTable(
     connection: Connection,
     tableName: String,
     dbType: DbType? = null,
@@ -127,13 +127,13 @@ public fun DataFrameSchema.Companion.getSchemaForSqlTable(
  * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  */
-public fun DataFrameSchema.Companion.getSchemaForSqlQuery(
+public fun DataFrameSchema.Companion.fromSqlQuery(
     dbConfig: DbConnectionConfig,
     sqlQuery: String,
     dbType: DbType? = null,
 ): DataFrameSchema =
     withReadOnlyConnection(dbConfig, dbType) { connection ->
-        getSchemaForSqlQuery(connection, sqlQuery, dbType)
+        fromSqlQuery(connection, sqlQuery, dbType)
     }
 
 /**
@@ -169,13 +169,13 @@ public fun DataFrameSchema.Companion.getSchemaForSqlQuery(
  *
  * @see [DataSource.getConnection]
  */
-public fun DataFrameSchema.Companion.getSchemaForSqlQuery(
+public fun DataFrameSchema.Companion.fromSqlQuery(
     dataSource: DataSource,
     sqlQuery: String,
     dbType: DbType? = null,
 ): DataFrameSchema {
     dataSource.connection.use { connection ->
-        return getSchemaForSqlQuery(connection, sqlQuery, dbType)
+        return fromSqlQuery(connection, sqlQuery, dbType)
     }
 }
 
@@ -190,7 +190,7 @@ public fun DataFrameSchema.Companion.getSchemaForSqlQuery(
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrameSchema.Companion.getSchemaForSqlQuery(
+public fun DataFrameSchema.Companion.fromSqlQuery(
     connection: Connection,
     sqlQuery: String,
     dbType: DbType? = null,
@@ -232,9 +232,9 @@ public fun DbConnectionConfig.getDataFrameSchema(
     dbType: DbType? = null,
 ): DataFrameSchema =
     when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrameSchema.getSchemaForSqlQuery(this, sqlQueryOrTableName, dbType)
+        isSqlQuery(sqlQueryOrTableName) -> DataFrameSchema.fromSqlQuery(this, sqlQueryOrTableName, dbType)
 
-        isSqlTableName(sqlQueryOrTableName) -> DataFrameSchema.getSchemaForSqlTable(this, sqlQueryOrTableName, dbType)
+        isSqlTableName(sqlQueryOrTableName) -> DataFrameSchema.fromSqlTable(this, sqlQueryOrTableName, dbType)
 
         else -> throw IllegalArgumentException(
             "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
@@ -279,9 +279,9 @@ public fun DbConnectionConfig.getDataFrameSchema(
 public fun DataSource.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType? = null): DataFrameSchema {
     connection.use { conn ->
         return when {
-            isSqlQuery(sqlQueryOrTableName) -> DataFrameSchema.getSchemaForSqlQuery(conn, sqlQueryOrTableName, dbType)
+            isSqlQuery(sqlQueryOrTableName) -> DataFrameSchema.fromSqlQuery(conn, sqlQueryOrTableName, dbType)
 
-            isSqlTableName(sqlQueryOrTableName) -> DataFrameSchema.getSchemaForSqlTable(conn, sqlQueryOrTableName, dbType)
+            isSqlTableName(sqlQueryOrTableName) -> DataFrameSchema.fromSqlTable(conn, sqlQueryOrTableName, dbType)
 
             else -> throw IllegalArgumentException(
                 "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
@@ -300,9 +300,9 @@ public fun DataSource.getDataFrameSchema(sqlQueryOrTableName: String, dbType: Db
  */
 public fun Connection.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType? = null): DataFrameSchema =
     when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrameSchema.getSchemaForSqlQuery(this, sqlQueryOrTableName, dbType)
+        isSqlQuery(sqlQueryOrTableName) -> DataFrameSchema.fromSqlQuery(this, sqlQueryOrTableName, dbType)
 
-        isSqlTableName(sqlQueryOrTableName) -> DataFrameSchema.getSchemaForSqlTable(this, sqlQueryOrTableName, dbType)
+        isSqlTableName(sqlQueryOrTableName) -> DataFrameSchema.fromSqlTable(this, sqlQueryOrTableName, dbType)
 
         else -> throw IllegalArgumentException(
             "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
@@ -318,7 +318,7 @@ public fun Connection.getDataFrameSchema(sqlQueryOrTableName: String, dbType: Db
  * @param [dbType] the type of database that the [ResultSet] belongs to, could be a custom object, provided by user.
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
-public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
+public fun DataFrameSchema.Companion.fromResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
     val tableColumns = getTableColumnsMetadata(resultSet)
     return buildSchemaByTableColumns(tableColumns, dbType)
 }
@@ -331,7 +331,7 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
  * @param [dbType] the type of database that the [ResultSet] belongs to, could be a custom object, provided by user.
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
-public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataFrame.getSchemaForResultSet(this, dbType)
+public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataFrameSchema.fromResultSet(this, dbType)
 
 /**
  * Retrieves the schemas of all non-system tables in the database using the provided database configuration.
@@ -350,12 +350,12 @@ public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataF
  * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  */
-public fun DataFrameSchema.Companion.getSchemaForAllSqlTables(
+public fun DataFrameSchema.Companion.fromAllSqlTables(
     dbConfig: DbConnectionConfig,
     dbType: DbType? = null,
 ): Map<String, DataFrameSchema> =
     withReadOnlyConnection(dbConfig, dbType) { connection ->
-        getSchemaForAllSqlTables(connection, dbType)
+        fromAllSqlTables(connection, dbType)
     }
 
 /**
@@ -393,12 +393,12 @@ public fun DataFrameSchema.Companion.getSchemaForAllSqlTables(
  *
  * @see [DataSource.getConnection]
  */
-public fun DataFrameSchema.Companion.getSchemaForAllSqlTables(
+public fun DataFrameSchema.Companion.fromAllSqlTables(
     dataSource: DataSource,
     dbType: DbType? = null,
 ): Map<String, DataFrameSchema> {
     dataSource.connection.use { connection ->
-        return getSchemaForAllSqlTables(connection, dbType)
+        return fromAllSqlTables(connection, dbType)
     }
 }
 
@@ -410,7 +410,7 @@ public fun DataFrameSchema.Companion.getSchemaForAllSqlTables(
  * in that case the [dbType] will be recognized from the [connection].
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrameSchema.Companion.getSchemaForAllSqlTables(
+public fun DataFrameSchema.Companion.fromAllSqlTables(
     connection: Connection,
     dbType: DbType? = null,
 ): Map<String, DataFrameSchema> {
@@ -428,7 +428,7 @@ public fun DataFrameSchema.Companion.getSchemaForAllSqlTables(
         if (!determinedDbType.isSystemTable(jdbcTable)) {
             // we filter her a second time because of specific logic with SQLite and possible issues with future databases
             val tableName = jdbcTable.name
-            val dataFrameSchema = getSchemaForSqlTable(connection, tableName, determinedDbType)
+            val dataFrameSchema = fromSqlTable(connection, tableName, determinedDbType)
             dataFrameSchemas += tableName to dataFrameSchema
         }
     }

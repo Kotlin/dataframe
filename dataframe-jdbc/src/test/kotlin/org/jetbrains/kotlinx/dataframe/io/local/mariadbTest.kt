@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.fromSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.fromSqlTable
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
@@ -342,7 +342,7 @@ class MariadbTest {
         val byteArray = "tinyblobValue".toByteArray()
         (result[0][22] as Blob).getBytes(1, byteArray.size) contentEquals byteArray
 
-        val schema = DataFrameSchema.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.fromSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
         schema.columns["varbinaryCol"]!!.type shouldBe typeOf<ByteArray>()
@@ -359,7 +359,7 @@ class MariadbTest {
         val result2 = df2.filter { it[Table2MariaDb::id] == 1 }
         result2[0][26] shouldBe null
 
-        val schema2 = DataFrameSchema.getSchemaForSqlTable(connection, "table2")
+        val schema2 = DataFrameSchema.fromSqlTable(connection, "table2")
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["textCol"]!!.type shouldBe typeOf<String?>()
     }
@@ -381,7 +381,7 @@ class MariadbTest {
         val result = df.filter { it[Table3MariaDb::id] == 1 }
         result[0][2] shouldBe "Option1"
 
-        val schema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.fromSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["enumCol"]!!.type shouldBe typeOf<String>()
         schema.columns["setCol"]!!.type shouldBe typeOf<String?>()
@@ -458,7 +458,7 @@ class MariadbTest {
 
         result8[0][1] shouldBe BigDecimal("10")
 
-        val schema = DataFrameSchema.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.fromSqlTable(connection, "table1")
 
         schema.columns["tinyintCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["smallintCol"]!!.type shouldBe typeOf<Short?>()

@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.fromSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.fromSqlTable
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
@@ -224,7 +224,7 @@ class MSSQLTest {
         result[0][Table1MSSSQL::intColumn] shouldBe 123456
         result[0][Table1MSSSQL::ntextColumn] shouldBe "Sample1 text"
 
-        val schema = DataFrameSchema.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.fromSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
         schema.columns["binaryColumn"]!!.type shouldBe typeOf<ByteArray?>()
@@ -277,7 +277,7 @@ class MSSQLTest {
         val result = df.filter { it[Table1MSSSQL::id] == 1 }
         result[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
 
-        val schema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.fromSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
     }

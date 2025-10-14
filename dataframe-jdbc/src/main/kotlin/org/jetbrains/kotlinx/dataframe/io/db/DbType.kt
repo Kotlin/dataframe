@@ -4,7 +4,7 @@ import java.math.BigDecimal
 import java.sql.Blob
 import java.sql.Clob
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.fromAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.Connection
@@ -48,7 +48,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
     /**
      * The table type(s) (`TABLE_TYPE`) of ordinary tables in the SQL database, used by
-     * [getSchemaForAllSqlTables], and [readAllSqlTables] as a filter when querying the database
+     * [fromAllSqlTables], and [readAllSqlTables] as a filter when querying the database
      * for all the tables it has using [DatabaseMetaData.getTables].
      *
      * This is usually "TABLE" or "BASE TABLE", which is what [tableTypes] is set to by default,
@@ -58,7 +58,6 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * See [DatabaseMetaData.getTableTypes] for all supported table types of your specific database.
      */
     public open val tableTypes: List<String>? = listOf("TABLE", "BASE TABLE")
-
 
     /**
      * Specifies the default batch size for fetching rows from the database during query execution.
