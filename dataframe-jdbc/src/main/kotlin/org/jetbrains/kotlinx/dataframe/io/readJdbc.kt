@@ -143,21 +143,30 @@ public fun DataFrame.Companion.readSqlTable(
     // Build SQL query using DbType
     val sqlQuery = determinedDbType.buildSelectTableQueryWithLimit(tableName, limit)
 
-    connection.prepareStatement(sqlQuery).use { statement ->
-        logger.debug { "Connection with url:$url is established successfully." }
+    return readDataFrameFromDatabase(connection, sqlQuery, determinedDbType, configureStatement, limit, inferNullability)
+}
 
-        // Configure statement with DbType defaults
-        determinedDbType.configureReadStatement(statement) // TODO: what's about limit
+private fun readDataFrameFromDatabase(
+    connection: Connection,
+    sqlQuery: String,
+    determinedDbType: DbType,
+    configureStatement: (PreparedStatement) -> Unit,
+    limit: Int,
+    inferNullability: Boolean
+): AnyFrame = connection.prepareStatement(sqlQuery).use { statement ->
+    logger.debug { "Connection established successfully (${connection.metaData.databaseProductName})" }
 
-        // Apply user's custom configuration
-        configureStatement(statement)
+    // Configure statement with DbType defaults
+    determinedDbType.configureReadStatement(statement) // TODO: what's about limit
 
-        logger.debug { "Executing query: $sqlQuery on connection: ${connection.metaData.url}" }
+    // Apply user's custom configuration
+    configureStatement(statement)
 
-        statement.executeQuery().use { rs ->
-            val tableColumns = getTableColumnsMetadata(rs)
-            return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
-        }
+    logger.debug { "Executing query: $sqlQuery" }
+
+    statement.executeQuery().use { rs ->
+        val tableColumns = getTableColumnsMetadata(rs)
+        return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
     }
 }
 
@@ -278,20 +287,7 @@ public fun DataFrame.Companion.readSqlQuery(
 
     val internalSqlQuery = if (limit > 0) determinedDbType.buildSqlQueryWithLimit(sqlQuery, limit) else sqlQuery
 
-    logger.debug { "Executing SQL query: $internalSqlQuery" }
-
-    connection.prepareStatement(internalSqlQuery).use { statement ->
-        // Configure statement with DbType defaults
-        determinedDbType.configureReadStatement(statement)
-
-        // Apply user's custom configuration
-        configureStatement(statement)
-
-        statement.executeQuery().use { rs ->
-            val tableColumns = getTableColumnsMetadata(rs)
-            return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
-        }
-    }
+    return readDataFrameFromDatabase(connection, internalSqlQuery, determinedDbType, configureStatement, limit, inferNullability)
 }
 
 /**
