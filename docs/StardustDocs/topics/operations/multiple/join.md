@@ -144,7 +144,7 @@ dfRight
 ```kotlin
 // INNER JOIN on all same-named columns ("name" and "city"):
 // Merge when BOTH name AND city are equal; otherwise the row is dropped.
-dfLeft.join(dfRight) { name and city }
+dfLeft.join(dfRight)
 ```
 
 <!---END-->
@@ -202,8 +202,8 @@ dfRight
 
 ```kotlin
 // INNER JOIN:
-// Keep only rows where (name, city) match on both sides.
-// In this dataset both Charlies match twice (Moscow, Milan) → 2 merged rows.
+// Combines columns from the left and right dataframes
+// and keep only rows where (name, city) matches on both sides.
 dfLeft.innerJoin(dfRight) { name and city }
 ```
 
@@ -274,8 +274,10 @@ dfRight
 
 ```kotlin
 // LEFT JOIN:
-// Keep ALL left rows. If (name, city) matches, attach right columns;
-// if not, right columns are null (e.g., Alice–London has no right match).
+// Keep ALL left rows and add columns from the right dataframe.
+// If (name, city) matches, attach right columns values from
+// the corresponding row in the right dataframe;
+// if not (e.g. ("Bob", "Dubai") row), fill them with `null`.
 dfLeft.leftJoin(dfRight) { name and city }
 ```
 
@@ -310,8 +312,10 @@ dfRight
 
 ```kotlin
 // RIGHT JOIN:
-// Keep ALL right rows. If no left match, left columns become null
-// (e.g., Alice with city=null exists only on the right).
+// Keep ALL right rows and add columns from the left dataframe.
+// If (name, city) matches, attach left columns values from
+// the corresponding row in the left dataframe;
+// if not (e.g. ("Bob", "Tokyo") row), fill them with `null`.
 dfLeft.rightJoin(dfRight) { name and city }
 ```
 

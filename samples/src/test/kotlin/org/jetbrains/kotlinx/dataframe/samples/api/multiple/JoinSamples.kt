@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.dataframe.util.defaultHeaderFormatting
 import org.junit.Test
@@ -200,10 +201,10 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         // INNER JOIN on all same-named columns ("name" and "city"):
         // Merge when BOTH name AND city are equal; otherwise the row is dropped.
-        dfLeft.join(dfRight) { name and city }
+        dfLeft.join(dfRight)
             // SampleEnd
             .colorized()
-            .defaultHeaderFormatting { name and city }
+            .defaultHeaderFormatting { "name" and "city" }
             .saveDfHtmlSample()
     }
 
@@ -231,8 +232,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     fun notebook_test_join_15() {
         // SampleStart
         // INNER JOIN:
-        // Keep only rows where (name, city) match on both sides.
-        // In this dataset both Charlies match twice (Moscow, Milan) → 2 merged rows.
+        // Combines columns from the left and right dataframes
+        // and keep only rows where (name, city) matches on both sides.
         dfLeft.innerJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
@@ -257,11 +258,14 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     fun notebook_test_join_17() {
         // SampleStart
         // LEFT JOIN:
-        // Keep ALL left rows. If (name, city) matches, attach right columns;
-        // if not, right columns are null (e.g., Alice–London has no right match).
+        // Keep ALL left rows and add columns from the right dataframe.
+        // If (name, city) matches, attach right columns values from
+        // the corresponding row in the right dataframe;
+        // if not (e.g. ("Bob", "Dubai") row), fill them with `null`.
         dfLeft.leftJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .format().with { if (it == null) bold else null }
             .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
@@ -270,11 +274,14 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
     fun notebook_test_join_18() {
         // SampleStart
         // RIGHT JOIN:
-        // Keep ALL right rows. If no left match, left columns become null
-        // (e.g., Alice with city=null exists only on the right).
+        // Keep ALL right rows and add columns from the left dataframe.
+        // If (name, city) matches, attach left columns values from
+        // the corresponding row in the left dataframe;
+        // if not (e.g. ("Bob", "Tokyo") row), fill them with `null`.
         dfLeft.rightJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .format().with { if (it == null) bold else null }
             .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
@@ -288,6 +295,7 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         dfLeft.fullJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
+            .format().with { if (it == null) bold else null }
             .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
