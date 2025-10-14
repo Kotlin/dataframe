@@ -376,6 +376,8 @@ internal interface MoveTo {
  * where the selected columns will be moved.
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
+@Refine
+@Interpretable("MoveTo1")
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector<T, *>): DataFrame<T> =
     move(columns).to(newColumnIndex)
 
