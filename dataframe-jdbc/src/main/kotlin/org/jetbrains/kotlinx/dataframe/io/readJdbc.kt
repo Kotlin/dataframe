@@ -145,6 +145,18 @@ public fun DataFrame.Companion.readSqlTable(
     return readDataFrameFromDatabase(connection, sqlQuery, determinedDbType, configureStatement, limit, inferNullability)
 }
 
+/**
+ * Reads a data frame from the specified database using the provided SQL query and configurations.
+ *
+ * @param connection The database connection to be used for executing the query.
+ * @param sqlQuery The SQL query string to be executed.
+ * @param determinedDbType The type of database being accessed, which determines specific configurations.
+ * @param configureStatement A lambda function to configure the prepared statement before execution.
+ * @param limit The maximum number of rows to fetch from the query result.
+ * @param inferNullability A flag to determine whether to infer nullability for result set fields.
+ * @return The data frame constructed from the database query results.
+ * @throws IllegalStateException If an error occurs while reading from the database or processing the data.
+ */
 private fun readDataFrameFromDatabase(
     connection: Connection,
     sqlQuery: String,
@@ -152,21 +164,34 @@ private fun readDataFrameFromDatabase(
     configureStatement: (PreparedStatement) -> Unit,
     limit: Int,
     inferNullability: Boolean
-): AnyFrame = connection.prepareStatement(sqlQuery).use { statement ->
-    logger.debug { "Connection established successfully (${connection.metaData.databaseProductName})" }
-
-    // Configure statement with DbType defaults
-    determinedDbType.configureReadStatement(statement) // TODO: what's about limit
-
-    // Apply user's custom configuration
-    configureStatement(statement)
-
-    logger.debug { "Executing query: $sqlQuery" }
-
-    statement.executeQuery().use { rs ->
-        val tableColumns = getTableColumnsMetadata(rs)
-        return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
+): AnyFrame = try {
+    connection.prepareStatement(sqlQuery).use { statement ->
+        logger.debug { "Connection established successfully (${connection.metaData.databaseProductName})" }
+        
+        determinedDbType.configureReadStatement(statement)
+        configureStatement(statement)
+        
+        logger.debug { "Executing query: $sqlQuery" }
+        
+        statement.executeQuery().use { rs ->
+            val tableColumns = getTableColumnsMetadata(rs)
+            fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
+        }
     }
+} catch (e: IllegalStateException) {
+    // Re-throw our own exceptions to avoid additional stack traces in the logs
+    throw e
+} catch (e: java.sql.SQLException) {
+    // Provide the same type for all SQLExceptions from JDBC and enrich with additional information
+    logger.error(e) { "Database operation failed: $sqlQuery" }
+    throw IllegalStateException(
+        "Failed to read from database. Query: $sqlQuery, Database: ${determinedDbType.dbTypeInJdbcUrl}",
+        e
+    )
+} catch (e: Exception) {
+    // Provide the same type for all unexpected errors from JDBC
+    logger.error(e) { "Unexpected error: ${e.message}" }
+    throw IllegalStateException("Unexpected error while reading from database", e)
 }
 
 /**

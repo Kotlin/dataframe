@@ -10,11 +10,40 @@ package org.jetbrains.kotlinx.dataframe.io.db
  * @property [javaClassName] the class name in Java.
  * @property [isNullable] true if column could contain nulls.
  */
-public data class TableColumnMetadata(
-    val name: String,
-    val sqlTypeName: String,
-    val jdbcType: Int,
-    val size: Int,
-    val javaClassName: String,
-    val isNullable: Boolean = false,
-)
+public class TableColumnMetadata(
+    public val name: String,
+    public val sqlTypeName: String,
+    public val jdbcType: Int,
+    public val size: Int,
+    public val javaClassName: String,
+    public val isNullable: Boolean = false,
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TableColumnMetadata) return false
+
+        if (name != other.name) return false
+        if (sqlTypeName != other.sqlTypeName) return false
+        if (jdbcType != other.jdbcType) return false
+        if (size != other.size) return false
+        if (javaClassName != other.javaClassName) return false
+        if (isNullable != other.isNullable) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + sqlTypeName.hashCode()
+        result = 31 * result + jdbcType
+        result = 31 * result + size
+        result = 31 * result + javaClassName.hashCode()
+        result = 31 * result + isNullable.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "TableColumnMetadata(name='$name', sqlTypeName='$sqlTypeName', jdbcType=$jdbcType, " +
+            "size=$size, javaClassName='$javaClassName', isNullable=$isNullable)"
+    }
+}

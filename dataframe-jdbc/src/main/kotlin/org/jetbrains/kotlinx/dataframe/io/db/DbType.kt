@@ -119,7 +119,10 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @return the SQL query string.
      */
     public open fun buildSelectTableQueryWithLimit(tableName: String, limit: Int): String {
+        require(tableName.isNotBlank()) { "Table name cannot be blank" }
+
         val quotedTableName = quoteIdentifier(tableName)
+
         return if (limit > 0) {
             buildSqlQueryWithLimit("SELECT * FROM $quotedTableName", limit)
         } else {
@@ -141,11 +144,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         // Set fetch size for better streaming performance
         statement.fetchSize = defaultFetchSize
 
-
-        if (defaultQueryTimeout != null) {
-            statement.queryTimeout = defaultQueryTimeout!!
+        defaultQueryTimeout?.let {
+            statement.queryTimeout = it
         }
-
 
         // Set the fetch direction (forward-only for read-only operations)
         statement.fetchDirection = ResultSet.FETCH_FORWARD
@@ -164,6 +165,8 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @return the quoted identifier.
      */
     public open fun quoteIdentifier(name: String): String {
+        require(name.isNotBlank()) { "Identifier cannot be blank" }
+
         // Default: no quoting (works for SQLite, H2, simple names)
         return name
     }
