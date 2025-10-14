@@ -6,14 +6,13 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Ignore
 import org.junit.Test
 import java.sql.DriverManager
 import java.util.Properties
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:mariadb://localhost:3307/imdb"
@@ -55,7 +54,7 @@ class ImdbTestTest {
             val result = df.filter { it[ActorKDF::id] in 11..19 }
             result[0][1] shouldBe "Víctor"
 
-            val schema = DataFrame.getSchemaForSqlTable(connection, tableName)
+            val schema = DataFrameSchema.readSqlTable(connection, tableName)
             schema.columns["id"]!!.type shouldBe typeOf<Int>()
             schema.columns["first_name"]!!.type shouldBe typeOf<String?>()
         }
@@ -76,7 +75,7 @@ class ImdbTestTest {
             val result = df.filter { it[ActorKDF::id] in 11..19 }
             result[0][1] shouldBe "Víctor"
 
-            val schema = DataFrame.getSchemaForSqlTable(connection, imdbTableName)
+            val schema = DataFrameSchema.readSqlTable(connection, imdbTableName)
             schema.columns["id"]!!.type shouldBe typeOf<Int>()
             schema.columns["first_name"]!!.type shouldBe typeOf<String?>()
         }
@@ -109,7 +108,7 @@ class ImdbTestTest {
                 df.filter { it[RankedMoviesWithGenres::year] != null && it[RankedMoviesWithGenres::year]!! > 2000 }
             result[0][1] shouldBe 2003
 
-            val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+            val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
             schema.columns["name"]!!.type shouldBe typeOf<String?>()
             schema.columns["year"]!!.type shouldBe typeOf<Int?>()
         }
