@@ -204,10 +204,10 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     private fun areBothNotBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isNotBlank()
 
     private fun generateSchemaForTable(connection: Connection, tableName: String) =
-        DataFrame.readSqlTable(connection, tableName)
+        DataFrameSchema.readSqlTable(connection, tableName)
 
     private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) =
-        DataFrame.readSqlQuery(connection, sqlQuery)
+        DataFrameSchema.readSqlQuery(connection, sqlQuery)
 
     private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing =
         throw RuntimeException(
