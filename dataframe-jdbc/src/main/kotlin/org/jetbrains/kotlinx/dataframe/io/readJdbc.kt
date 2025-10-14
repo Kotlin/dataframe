@@ -137,7 +137,6 @@ public fun DataFrame.Companion.readSqlTable(
         logger.warn { "Strict validation is disabled. Make sure the table name '$tableName' is correct." }
     }
 
-    val url = connection.metaData.url
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     // Build SQL query using DbType
@@ -492,8 +491,6 @@ public fun DataSource.readDataFrame(
  * @param [dbType] the type of database that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
  * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
@@ -624,9 +621,10 @@ public fun DataFrame.Companion.readAllSqlTables(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): Map<String, AnyFrame> =
     withReadOnlyConnection(dbConfig, dbType) { connection ->
-        readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
+        readAllSqlTables(connection, catalogue, limit, inferNullability, dbType, configureStatement)
     }
 
 /**
@@ -671,9 +669,10 @@ public fun DataFrame.Companion.readAllSqlTables(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): Map<String, AnyFrame> {
     dataSource.connection.use { connection ->
-        return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
+        return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType, configureStatement)
     }
 }
 
@@ -699,6 +698,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): Map<String, AnyFrame> {
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
     val metaData = connection.metaData
@@ -714,7 +714,7 @@ public fun DataFrame.Companion.readAllSqlTables(
             }
 
             val fullTableName = buildFullTableName(catalogue, tableMetadata.schemaName, tableMetadata.name)
-            val dataFrame = readTableAsDataFrame(connection, fullTableName, limit, inferNullability, dbType)
+            val dataFrame = readTableAsDataFrame(connection, fullTableName, limit, inferNullability, dbType, configureStatement)
 
             put(fullTableName, dataFrame)
         }
@@ -748,11 +748,12 @@ private fun readTableAsDataFrame(
     tableName: String,
     limit: Int,
     inferNullability: Boolean,
-    dbType: DbType?
+    dbType: DbType?,
+    configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     logger.debug { "Reading table: $tableName" }
 
-    val dataFrame = DataFrame.readSqlTable(connection, tableName, limit, inferNullability, dbType)
+    val dataFrame = DataFrame.readSqlTable(connection, tableName, limit, inferNullability, dbType, true, configureStatement)
 
     logger.debug { "Finished reading table: $tableName" }
 
@@ -946,7 +947,7 @@ private fun buildDataFrameFromColumnData(
 
 /**
  * Builds a single DataColumn with proper type handling.
- * Accepts mutable list to allow efficient post-processing.
+ * Accepts a mutable list to allow efficient post-processing.
  */
 private fun buildDataColumn(
     name: String,
