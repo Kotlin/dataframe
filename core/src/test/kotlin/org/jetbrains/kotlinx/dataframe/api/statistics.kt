@@ -955,4 +955,34 @@ class StatisticsTests {
         val percentile35 = res3["name"] as String
         percentile35 shouldBe "Charlie"
     }
+    @Test
+    fun `mean and median with Float and BigInteger columns`() {
+        // DataFrame with Float primitives and a very large BigInteger column
+        val bigNums = dataFrameOf("f", "bi")(
+            1.0f, java.math.BigInteger("10000000000000000000"),
+            2.0f, java.math.BigInteger("20000000000000000000"),
+            3.0f, java.math.BigInteger("30000000000000000000"),
+        )
+
+        // mean should consider primitive number columns (Float), but exclude BigInteger
+        val meanRes = bigNums.mean()
+        meanRes.columnNames() shouldBe listOf("f")
+        val meanF = meanRes["f"] as Double
+        meanF shouldBe 2.0
+
+        // median should consider intra-comparable columns; Float included, BigInteger excluded
+        val medianRes = bigNums.median()
+        medianRes.columnNames() shouldBe listOf("f")
+        val medianF = medianRes["f"] as Double
+        medianF shouldBe 2.0
+
+        // Also verify the explicit selectors only compute for included columns
+        val meanFor = bigNums.meanFor("f")
+        meanFor.columnNames() shouldBe listOf("f")
+        (meanFor["f"] as Double) shouldBe 2.0
+
+        val medianFor = bigNums.medianFor("f")
+        medianFor.columnNames() shouldBe listOf("f")
+        (medianFor["f"] as Double) shouldBe 2.0
+    }
 }
