@@ -537,7 +537,7 @@ class JdbcTest {
 
     @Test
     fun `read from non-existing table`() {
-        shouldThrow<JdbcSQLSyntaxErrorException> {
+        shouldThrow<IllegalStateException> {
             DataFrame.readSqlTable(connection, "WrongTableName").cast<Customer>()
         }
     }
