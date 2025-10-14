@@ -6,8 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.io.fromSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.fromSqlTable
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Ignore
@@ -56,7 +54,7 @@ class ImdbTestTest {
             val result = df.filter { it[ActorKDF::id] in 11..19 }
             result[0][1] shouldBe "Víctor"
 
-            val schema = DataFrameSchema.fromSqlTable(connection, tableName)
+            val schema = DataFrameSchema.readSqlTable(connection, tableName)
             schema.columns["id"]!!.type shouldBe typeOf<Int>()
             schema.columns["first_name"]!!.type shouldBe typeOf<String?>()
         }
@@ -77,7 +75,7 @@ class ImdbTestTest {
             val result = df.filter { it[ActorKDF::id] in 11..19 }
             result[0][1] shouldBe "Víctor"
 
-            val schema = DataFrameSchema.fromSqlTable(connection, imdbTableName)
+            val schema = DataFrameSchema.readSqlTable(connection, imdbTableName)
             schema.columns["id"]!!.type shouldBe typeOf<Int>()
             schema.columns["first_name"]!!.type shouldBe typeOf<String?>()
         }
@@ -110,7 +108,7 @@ class ImdbTestTest {
                 df.filter { it[RankedMoviesWithGenres::year] != null && it[RankedMoviesWithGenres::year]!! > 2000 }
             result[0][1] shouldBe 2003
 
-            val schema = DataFrameSchema.fromSqlQuery(connection, sqlQuery)
+            val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
             schema.columns["name"]!!.type shouldBe typeOf<String?>()
             schema.columns["year"]!!.type shouldBe typeOf<Int?>()
         }

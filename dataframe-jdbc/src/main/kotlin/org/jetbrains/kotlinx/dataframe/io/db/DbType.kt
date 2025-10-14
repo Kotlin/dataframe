@@ -4,7 +4,6 @@ import java.math.BigDecimal
 import java.sql.Blob
 import java.sql.Clob
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.io.fromAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.Connection
@@ -48,7 +47,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
     /**
      * The table type(s) (`TABLE_TYPE`) of ordinary tables in the SQL database, used by
-     * [fromAllSqlTables], and [readAllSqlTables] as a filter when querying the database
+     * [readAllSqlTables], and [readAllSqlTables] as a filter when querying the database
      * for all the tables it has using [DatabaseMetaData.getTables].
      *
      * This is usually "TABLE" or "BASE TABLE", which is what [tableTypes] is set to by default,

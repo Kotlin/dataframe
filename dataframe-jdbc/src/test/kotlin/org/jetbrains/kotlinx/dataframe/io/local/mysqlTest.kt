@@ -8,12 +8,10 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.fromSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.fromSqlTable
-import org.jetbrains.kotlinx.dataframe.io.inferNullability
-import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+import org.jetbrains.kotlinx.dataframe.io.inferNullability
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Ignore
@@ -341,7 +339,7 @@ class MySqlTest {
         result[0][26] shouldBe "textValue1"
         result[0][22] shouldBe "tinyblobValue".toByteArray()
 
-        val schema = DataFrameSchema.fromSqlTable(connection, "table1")
+        val schema = DataFrameSchema.readSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
         schema.columns["dateCol"]!!.type shouldBe typeOf<Date>()
@@ -359,7 +357,7 @@ class MySqlTest {
         val result2 = df2.filter { it[Table2MySql::id] == 1 }
         result2[0][26] shouldBe null
 
-        val schema2 = DataFrameSchema.fromSqlTable(connection, "table2")
+        val schema2 = DataFrameSchema.readSqlTable(connection, "table2")
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["textCol"]!!.type shouldBe typeOf<String?>()
     }
@@ -381,7 +379,7 @@ class MySqlTest {
         val result = df.filter { it[Table3MySql::id] == 1 }
         result[0][2] shouldBe "Option1"
 
-        val schema = DataFrameSchema.fromSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["enumCol"]!!.type shouldBe typeOf<String>()
         schema.columns["setCol"]!!.type shouldBe typeOf<String?>()
@@ -456,7 +454,7 @@ class MySqlTest {
 
         result8[0][1] shouldBe BigDecimal("10")
 
-        val schema = DataFrameSchema.fromSqlTable(connection, "table1")
+        val schema = DataFrameSchema.readSqlTable(connection, "table1")
 
         schema.columns["tinyintCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["smallintCol"]!!.type shouldBe typeOf<Int>()

@@ -46,7 +46,7 @@ internal fun inferNullability(connection: Connection) {
     df.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
     df.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
-    val dataSchema = DataFrameSchema.fromSqlTable(connection, tableName)
+    val dataSchema = DataFrameSchema.readSqlTable(connection, tableName)
     dataSchema.columns.size shouldBe 4
     dataSchema.columns["id"]!!.type shouldBe typeOf<Int>()
     dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
@@ -78,7 +78,7 @@ internal fun inferNullability(connection: Connection) {
     df2.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
     df2.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
-    val dataSchema2 = DataFrameSchema.fromSqlQuery(connection, sqlQuery)
+    val dataSchema2 = DataFrameSchema.readSqlQuery(connection, sqlQuery)
     dataSchema2.columns.size shouldBe 3
     dataSchema2.columns["name"]!!.type shouldBe typeOf<String?>()
     dataSchema2.columns["surname"]!!.type shouldBe typeOf<String?>()
@@ -109,7 +109,7 @@ internal fun inferNullability(connection: Connection) {
 
             rs.beforeFirst()
 
-            val dataSchema3 = DataFrameSchema.fromResultSet(rs, MsSql)
+            val dataSchema3 = DataFrameSchema.readResultSet(rs, MsSql)
             dataSchema3.columns.size shouldBe 4
             dataSchema3.columns["id"]!!.type shouldBe typeOf<Int>()
             dataSchema3.columns["name"]!!.type shouldBe typeOf<String?>()
