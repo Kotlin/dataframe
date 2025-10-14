@@ -117,6 +117,7 @@ class SumTests {
         }
     }
 
+    @Suppress("DEPRECATION_ERROR")
     @Test
     fun `unknown number type`() {
         columnOf(1.toBigDecimal(), 2.toBigDecimal()).toDataFrame()
