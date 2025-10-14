@@ -17,13 +17,13 @@ import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
-import org.jetbrains.kotlinx.dataframe.util.IS_EMPTY_REPLACE
-import org.jetbrains.kotlinx.dataframe.util.IS_NOT_EMPTY_REPLACE
-import org.jetbrains.kotlinx.dataframe.util.GET_ROW_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.GET_ROWS_ITERABLE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.GET_ROWS_RANGE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.GET_ROW_OR_NULL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROW_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.IS_EMPTY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.IS_NOT_EMPTY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType

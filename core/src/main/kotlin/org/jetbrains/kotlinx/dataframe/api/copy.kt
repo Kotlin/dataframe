@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
 import org.jetbrains.kotlinx.dataframe.util.COPY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
 
 // region DataFrame
 
