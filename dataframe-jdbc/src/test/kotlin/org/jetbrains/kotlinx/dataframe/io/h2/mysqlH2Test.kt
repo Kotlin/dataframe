@@ -22,6 +22,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Date
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.typeOf
 
 // NOTE: the names of testing databases should be different to avoid collisions and should not contain the system names itself
@@ -305,7 +306,7 @@ class MySqlH2Test {
         val result = df1.filter { it[Table1MySql::id] == 1 }
         result[0][26] shouldBe "textValue1"
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textcol"]!!.type shouldBe typeOf<String>()
         schema.columns["datecol"]!!.type shouldBe typeOf<Date>()
@@ -322,7 +323,7 @@ class MySqlH2Test {
         val result2 = df2.filter { it[Table2MySql::id] == 1 }
         result2[0][26] shouldBe null
 
-        val schema2 = DataFrame.getSchemaForSqlTable(connection, "table2")
+        val schema2 = DataFrameSchema.getSchemaForSqlTable(connection, "table2")
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
     }
@@ -343,7 +344,7 @@ class MySqlH2Test {
         val result = df.filter { it[Table3MySql::id] == 1 }
         result[0][1] shouldBe "Value1"
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["enumcol"]!!.type shouldBe typeOf<Any>()
     }
@@ -407,7 +408,7 @@ class MySqlH2Test {
 
         result8[0][1] shouldBe BigDecimal("10")
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.getSchemaForSqlTable(connection, "table1")
 
         schema.columns["tinyintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
