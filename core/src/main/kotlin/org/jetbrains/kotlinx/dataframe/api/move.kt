@@ -540,7 +540,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
 
 /**
  * Moves columns, previously selected with [move] to a new position specified
- * by [columnIndex]. If insideGroup is true, selected columns will be moved remaining within their [ColumnGroup],
+ * by [columnIndex]. If [insideGroup] is true, selected columns will be moved remaining within their [ColumnGroup],
  * else they will be moved on top level.
  *
  * Returns a new [DataFrame] with updated columns structure.
@@ -557,7 +557,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  * where the selected columns will be moved.
  *
  * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
- * else they will be moved on top level.
+ * else they will be moved to the top level.
  */
 @Refine
 @Interpretable("MoveTo")
