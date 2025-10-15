@@ -111,7 +111,7 @@ val df = dataFrameOf(names).fill(15, true)
 
 ### toDataFrame
 
-`DataFrame` from `Map<String, List<*>>`:
+#### `DataFrame` from `Map<String, List<*>>`:
 
 <!---FUN createDataFrameFromMap-->
 
@@ -125,7 +125,7 @@ map.toDataFrame()
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html" width="100%"/>
 <!---END-->
 
-Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
+#### `DataFrame` from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
 
 The return type of these overloads is a typed [`DataFrame`](DataFrame.md).
 Its data schema defines the column that can be used right after the conversion for additional computations.
@@ -141,8 +141,8 @@ df.add("length") { value.length }
 
 <!---END-->
 
-Creates a [`DataFrame`](DataFrame.md) from an [`Iterable<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) with one column:
-"columnName: `DataColumn<T>`".
+#### [`DataFrame`](DataFrame.md) with one column from [`Iterable<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) 
+
 This is an easy way to create a [`DataFrame`](DataFrame.md) when you have a list of Files, URLs, or a structure
 you want to extract data from.
 In a notebook,
@@ -160,7 +160,7 @@ val df = files.toDataFrame(columnName = "data")
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html" width="100%"/>
 <!---END-->
 
-Creates a [`DataFrame`](DataFrame.md) from a `List<List<T>>`:
+#### [`DataFrame`](DataFrame.md) from `List<List<T>>`:
 
 This is useful for parsing text files. For example, the `.srt` subtitle format can be parsed like this:
 
@@ -183,7 +183,7 @@ lines.chunked(4) { it.take(3) }.toDataFrame(header = listOf("n", "timestamp", "t
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameLists.html" width="100%"/>
 <!---END-->
 
-Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
+#### [`DataFrame`](DataFrame.md) from [`Iterable<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/):
 
 <!---FUN readDataFrameFromObject-->
 
