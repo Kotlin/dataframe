@@ -700,4 +700,92 @@ class CreateDataFrameTests {
         val df = list.toDataFrame(maxDepth = 2)
         df["map"].type() shouldBe typeOf<Map<String, Int>>()
     }
+
+    @Test
+    fun `parsing row-major lines into structured dataframe`() {
+        // I think finding data in such format will be rare, so we need an optional header parameter.
+        val lines = buildList {
+            addAll(listOf("stamp", "header", "data"))
+            repeat(33) { row ->
+                add("stamp $row")
+                add("header $row")
+                add("data $row")
+            }
+        }
+
+        val df = lines.chunked(3).toDataFrame()
+
+        df.columnNames() shouldBe listOf("stamp", "header", "data")
+        df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+        df.rowsCount() shouldBe 33
+        df[0].values() shouldBe listOf("stamp 0", "header 0", "data 0")
+    }
+
+    @Test
+    fun `parsing srt lines into structured dataframe`() {
+        // *.srt subtitle file format
+        val lines = buildList {
+            repeat(33) { row ->
+                add("stamp $row")
+                add("header $row")
+                add("data $row")
+                add("\n")
+            }
+        }
+
+        val df = lines.chunked(4).map { it.dropLast(1) }.toDataFrame(header = listOf("stamp", "header", "data"))
+
+        df.columnNames() shouldBe listOf("stamp", "header", "data")
+        df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+        df.rowsCount() shouldBe 33
+        df[0].values() shouldBe listOf("stamp 0", "header 0", "data 0")
+
+        // Different approach. I think the dropLast one is better
+        lines.chunked(4)
+            .toDataFrame(header = listOf("stamp", "header", "data", "whitespace"))
+            .remove("whitespace") shouldBe df
+    }
+
+    @Test
+    fun `parsing column-major lines into structured dataframe`() {
+        val lines = buildList {
+            repeat(4) { col ->
+                repeat(5) { row ->
+                    add("data$col $row")
+                }
+                add("\n")
+            }
+        }
+
+        val header = List(4) { "col $it" }
+        val df = lines
+            .chunked(6)
+            .map { it.dropLast(1) }
+            .toDataFrame(header = header, containsColumns = true)
+        df.columnNames() shouldBe header
+        df.columnTypes() shouldBe List(4) { typeOf<String>() }
+        df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")
+    }
+
+    @Test
+    fun `parsing column-major lines with header into structured dataframe`() {
+        val lines = buildList {
+            repeat(4) { col ->
+                add("col $col")
+                repeat(5) { row ->
+                    add("data$col $row")
+                }
+                add("\n")
+            }
+        }
+
+        val header = List(4) { "col $it" }
+        val df = lines
+            .chunked(7)
+            .map { it.dropLast(1) }
+            .toDataFrame(header = null, containsColumns = true)
+        df.columnNames() shouldBe header
+        df.columnTypes() shouldBe List(4) { typeOf<String>() }
+        df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")
+    }
 }
