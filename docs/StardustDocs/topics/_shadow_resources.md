@@ -88,6 +88,7 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupBySingle.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.takeLast.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameLists.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateWith.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addRecurrent.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByWithoutAggregation.html"></resource>
