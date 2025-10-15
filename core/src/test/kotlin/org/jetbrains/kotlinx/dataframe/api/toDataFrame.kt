@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
@@ -784,7 +783,7 @@ class CreateDataFrameTests {
         val df = lines
             .chunked(7)
             .map { it.dropLast(1) }
-            .toDataFrame(containsColumns = true)
+            .toDataFrame(header = null, containsColumns = true)
         df.columnNames() shouldBe header
         df.columnTypes() shouldBe List(4) { typeOf<String>() }
         df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")
