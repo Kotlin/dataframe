@@ -6,10 +6,15 @@ plugins {
     val kotlinVersion = "2.2.20"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.dataframe") version kotlinVersion
+    application
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
+
+application {
+    mainClass.set("org.jetbrains.kotlinx.dataframe.examples.plugin.MainKt")
+}
 
 repositories {
     maven("https://packages.jetbrains.team/maven/p/kt/dev/")
