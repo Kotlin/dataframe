@@ -425,4 +425,22 @@ class Create : TestBase() {
         val df = files.toDataFrame(columnName = "data")
         // SampleEnd
     }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun toDataFrameLists() {
+        // SampleStart
+        val lines = """
+            1
+            00:00:05,000 --> 00:00:07,500
+            This is the first subtitle.
+
+            2
+            00:00:08,000 --> 00:00:10,250
+            This is the second subtitle.
+        """.trimIndent().lines()
+
+        lines.chunked(4) { it.take(3) }.toDataFrame(header = listOf("n", "timestamp", "text"))
+        // SampleEnd
+    }
 }

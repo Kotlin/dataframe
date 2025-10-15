@@ -160,6 +160,29 @@ val df = files.toDataFrame(columnName = "data")
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html" width="100%"/>
 <!---END-->
 
+Creates a [`DataFrame`](DataFrame.md) from a `List<List<T>>`:
+
+This is useful for parsing text files. For example, the `.srt` subtitle format can be parsed like this:
+
+<!---FUN toDataFrameLists-->
+
+```kotlin
+val lines = """
+    1
+    00:00:05,000 --> 00:00:07,500
+    This is the first subtitle.
+
+    2
+    00:00:08,000 --> 00:00:10,250
+    This is the second subtitle.
+""".trimIndent().lines()
+
+lines.chunked(4) { it.take(3) }.toDataFrame(header = listOf("n", "timestamp", "text"))
+```
+
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameLists.html" width="100%"/>
+<!---END-->
+
 Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
 
 <!---FUN readDataFrameFromObject-->
