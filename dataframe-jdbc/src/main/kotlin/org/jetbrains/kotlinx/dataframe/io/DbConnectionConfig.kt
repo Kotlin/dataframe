@@ -7,27 +7,19 @@ package org.jetbrains.kotlinx.dataframe.io
  * when the user does not provide one explicitly.
  * It is designed for safe, read-only access by default.
  *
- * @property url The JDBC URL of the database, e.g., `"jdbc:postgresql://localhost:5432/mydb"`.
- *               Must follow the standard format: `jdbc:subprotocol:subname`.
- *
- * @property user The username used for authentication.
- *                Optional, default is an empty string.
- *
- * @property password The password used for authentication.
- *                    Optional, default is an empty string.
- *
- * @property readOnly If `true` (default), the library will create the connection in read-only mode.
- *                    This enables the following behavior:
- *                    - `Connection.setReadOnly(true)`
- *                    - `Connection.setAutoCommit(false)`
- *                    - automatic `rollback()` at the end of execution
- *
- *                    If `false`, the connection will be created with JDBC defaults (usually read-write),
- *                    but the library will still reject any queries that appear to modify data
- *                    (e.g. contain `INSERT`, `UPDATE`, `DELETE`, etc.).
- *
- * Note: Connections created using this configuration are managed entirely by the library.
+ * __NOTE:__ Connections created using this configuration are managed entirely by the library.
  * Users do not have access to the underlying `Connection` instance and cannot commit or close it manually.
+ *
+ * ### Read-Only Mode Behavior:
+ *
+ * When [readOnly] is `true` (default), the connection operates in read-only mode with:
+ * - `Connection.setReadOnly(true)`
+ * - `Connection.setAutoCommit(false)`
+ * - automatic `rollback()` at the end of execution
+ *
+ * When [readOnly] is `false`, the connection uses JDBC defaults (usually read-write),
+ * but the library still rejects any queries that appear to modify data
+ * (e.g. contain `INSERT`, `UPDATE`, `DELETE`, etc.).
  *
  * ### Examples:
  *
@@ -42,6 +34,18 @@ package org.jetbrains.kotlinx.dataframe.io
  *     readOnly = false
  * )
  * ```
+ *
+ * @property [url] The JDBC URL of the database, e.g., `"jdbc:postgresql://localhost:5432/mydb"`.
+ *               Must follow the standard format: `jdbc:subprotocol:subname`.
+ *
+ * @property [user] The username used for authentication.
+ *                Optional, default is an empty string.
+ *
+ * @property [password] The password used for authentication.
+ *                    Optional, default is an empty string.
+ *
+ * @property [readOnly] If `true` (default), enables read-only mode. If `false`, uses JDBC defaults
+ *                      but still prevents data-modifying queries. See class documentation for details.
  */
 public class DbConnectionConfig(
     public val url: String,

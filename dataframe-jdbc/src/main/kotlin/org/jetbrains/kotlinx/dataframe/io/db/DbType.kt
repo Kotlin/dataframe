@@ -108,7 +108,6 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      */
     public abstract fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType?
 
-
     /**
      * Builds a SELECT query for reading from a table.
      *
@@ -137,7 +136,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param statement the `PreparedStatement` to be configured
      */
     public open fun configureReadStatement(
-        statement: PreparedStatement
+        statement: PreparedStatement,
     ) {
         // Set fetch size for better streaming performance
         statement.fetchSize = defaultFetchSize
@@ -156,7 +155,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * Examples:
      * - PostgreSQL: "tableName" or "schema"."table"
      * - MySQL: `tableName` or `schema`.`table`
-     * - MS SQL: [tableName] or [schema].[table]
+     * - MS SQL: `[tableName]` or `[schema].[table]`
      * - SQLite/H2: no quotes for simple names
      *
      * @param [name] the identifier to quote (can contain dots for schema.table).
@@ -210,16 +209,16 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         rs: ResultSet,
         columnIndex: Int,
         columnMetadata: TableColumnMetadata,
-        kType: KType
+        kType: KType,
     ): Any? =
         try {
             rs.getObject(columnIndex + 1)
             // TODO: add a special handler for Blob via Streams
         } catch (_: Throwable) {
             // TODO: expand for all the types like in generateKType function
-            if (kType.isSupertypeOf(String::class.starProjectedType)) rs.getString(columnIndex + 1) else rs.getString(
-                columnIndex + 1
-            )
+            if (kType.isSupertypeOf(String::class.starProjectedType))
+                rs.getString(columnIndex + 1)
+            else rs.getString(columnIndex + 1)
         }
 
     /**
@@ -235,21 +234,19 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     public open fun postProcessColumnValues(
         values: MutableList<Any?>,
         kType: KType,
-        columnMetadata: TableColumnMetadata
-    ): List<Any?> {
-        return when {
-            /* EXAMPLE: columnMetadata.sqlTypeName == "MY_CUSTOM_ARRAY" -> {
-                values.map { /* custom transformation */ }
-            } */
-            kType.classifier == Array::class -> {
-                handleArrayValues(values)
-            }
-
-            else -> values
+        columnMetadata: TableColumnMetadata,
+    ): List<Any?> = when {
+        /* EXAMPLE: columnMetadata.sqlTypeName == "MY_CUSTOM_ARRAY" -> {
+            values.map { /* custom transformation */ }
+        } */
+        kType.classifier == Array::class -> {
+            handleArrayValues(values)
         }
+
+        else -> values
     }
 
-    internal fun handleArrayValues(values: MutableList<Any?>): List<Any> {
+    private fun handleArrayValues(values: MutableList<Any?>): List<Any> {
         // Intermediate variable for the first mapping
         val sqlArrays = values.mapNotNull {
             (it as? java.sql.Array)?.array?.let { array -> array as? Array<*> }

@@ -79,10 +79,15 @@ internal fun isSqlQuery(sqlQueryOrTableName: String): Boolean {
     return queryPattern.containsMatchIn(sqlQueryOrTableName.trim())
 }
 
+/**
+ * SQL table name pattern matching: __catalog.schema.table__
+ * Allows alphanumeric characters and underscores, must start with letter or underscore
+ */
+private val SQL_TABLE_NAME_PATTERN = Regex("^[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*){0,2}$")
+
 internal fun isSqlTableName(sqlQueryOrTableName: String): Boolean {
     // Match table names with optional schema and catalog (e.g., catalog.schema.table)
-    val tableNamePattern = Regex("^[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*){0,2}$")
-    return tableNamePattern.matches(sqlQueryOrTableName.trim())
+    return SQL_TABLE_NAME_PATTERN.matches(sqlQueryOrTableName.trim())
 }
 
 internal val FORBIDDEN_PATTERNS_REGEX = listOf(

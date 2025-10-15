@@ -65,5 +65,6 @@ public open class H2(public val dialect: DbType = MySql) : DbType("h2") {
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
         dialect.convertSqlTypeToKType(tableColumnMetadata)
 
-    public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String = dialect.buildSqlQueryWithLimit(sqlQuery, limit)
+    public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
+        dialect.buildSqlQueryWithLimit(sqlQuery, limit)
 }
