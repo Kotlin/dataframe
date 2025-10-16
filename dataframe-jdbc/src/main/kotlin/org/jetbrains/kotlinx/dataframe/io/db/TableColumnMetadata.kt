@@ -45,4 +45,24 @@ public class TableColumnMetadata(
     override fun toString(): String =
         "TableColumnMetadata(name='$name', sqlTypeName='$sqlTypeName', jdbcType=$jdbcType, " +
             "size=$size, javaClassName='$javaClassName', isNullable=$isNullable)"
+
+    /**
+     * Creates a copy of the current `TableColumnMetadata` instance with optionally modified attributes.
+     *
+     * @param name The name of the table column. Defaults to the current instance's `name`.
+     * @param sqlTypeName The SQL type name of the column. Defaults to the current instance's `sqlTypeName`.
+     * @param jdbcType The JDBC type of the column, represented as an integer. Defaults to the current instance's `jdbcType`.
+     * @param size The size of the column. Defaults to the current instance's `size`.
+     * @param javaClassName The fully qualified name of the Java class representing the column type. Defaults to the current instance's `javaClassName`.
+     * @param isNullable Indicates whether the column is nullable. Defaults to the current instance's `isNullable`.
+     * @return A new `TableColumnMetadata` instance with the specified attribute values.
+     */
+    public fun copy(
+        name: String = this.name,
+        sqlTypeName: String = this.sqlTypeName,
+        jdbcType: Int = this.jdbcType,
+        size: Int = this.size,
+        javaClassName: String = this.javaClassName,
+        isNullable: Boolean = this.isNullable,
+    ): TableColumnMetadata = TableColumnMetadata(name, sqlTypeName, jdbcType, size, javaClassName, isNullable)
 }

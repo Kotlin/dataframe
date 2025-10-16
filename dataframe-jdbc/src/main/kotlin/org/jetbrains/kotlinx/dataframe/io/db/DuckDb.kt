@@ -102,7 +102,7 @@ public object DuckDb : DbType("duckdb") {
      * Follows exactly [org.duckdb.DuckDBVector.getObject].
      *
      * "// dataframe-jdbc" is added for all types that are covered correctly by
-     * [org.jetbrains.kotlinx.dataframe.io.makeCommonSqlToKTypeMapping] at the moment, however, to cover
+     * [org.jetbrains.kotlinx.dataframe.io.db.DbType.makeCommonSqlToKTypeMapping] at the moment, however, to cover
      * all nested types, we'll use a full type-map for all [DuckDB types][DuckDBColumnType] exactly.
      */
     @Suppress("ktlint:standard:blank-line-between-when-conditions")
@@ -199,7 +199,7 @@ public object DuckDb : DbType("duckdb") {
     /**
      * How to filter out system tables from user-created ones when using
      * [DataFrame.readAllSqlTables][DataFrame.Companion.readAllSqlTables] and
-     * [DataFrame.getSchemaForAllSqlTables][DataFrame.Companion.getSchemaForAllSqlTables].
+     * [DataFrameSchema.readAllSqlTables][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
      *
      * The names of these can sometimes be found in the specific JDBC integration.
      */
@@ -211,7 +211,7 @@ public object DuckDb : DbType("duckdb") {
     /**
      * How to retrieve the correct table metadata when using
      * [DataFrame.readAllSqlTables][DataFrame.Companion.readAllSqlTables] and
-     * [DataFrame.getSchemaForAllSqlTables][DataFrame.Companion.getSchemaForAllSqlTables].
+     * [DataFrameSchema.readAllSqlTables][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
      * The names of these can be found in the [DatabaseMetaData] implementation of the DuckDB JDBC integration.
      */
     override fun buildTableMetadata(tables: ResultSet): TableMetadata =

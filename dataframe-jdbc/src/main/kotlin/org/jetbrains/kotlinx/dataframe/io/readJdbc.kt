@@ -1003,7 +1003,6 @@ private fun buildDataFrameFromColumnData(
             name = tableColumns[index].name,
             values = values,
             kType = columnKTypes.getValue(index),
-            columnMetadata = tableColumns[index],
             inferNullability = inferNullability,
         )
     }.toDataFrame()

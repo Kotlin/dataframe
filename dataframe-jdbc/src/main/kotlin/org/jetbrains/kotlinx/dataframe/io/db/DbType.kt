@@ -231,10 +231,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         name: String,
         values: MutableList<Any?>,
         kType: KType,
-        columnMetadata: TableColumnMetadata,
         inferNullability: Boolean,
     ): DataColumn<*> {
-        val correctedValues = postProcessColumnValues(values, kType, columnMetadata)
+        val correctedValues = postProcessColumnValues(values, kType)
 
         return DataColumn.createValueColumn(
             name = name,
@@ -254,14 +253,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      *
      * @param values the list of raw values retrieved from the database for the column.
      * @param kType the Kotlin type that the column values should be transformed to.
-     * @param columnMetadata the metadata of the database column, including details such as SQL type name and size.
      * @return a list of processed column values, with transformations applied where necessary, or the original list if no transformation is needed.
      */
-    private fun postProcessColumnValues(
-        values: MutableList<Any?>,
-        kType: KType,
-        columnMetadata: TableColumnMetadata,
-    ): List<Any?> =
+    private fun postProcessColumnValues(values: MutableList<Any?>, kType: KType): List<Any?> =
         when {
             /* EXAMPLE: columnMetadata.sqlTypeName == "MY_CUSTOM_ARRAY" -> {
                 values.map { /* custom transformation */ }
