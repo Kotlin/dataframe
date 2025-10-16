@@ -8,12 +8,11 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Ignore
@@ -295,7 +294,7 @@ class PostgresTest {
         result[0][20] shouldBe arrayOf("Hello", "World")
         result[0][21] shouldBe arrayOf(true, false, true)
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
+        val schema = DataFrameSchema.readSqlTable(connection, tableName1)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
@@ -312,7 +311,7 @@ class PostgresTest {
         result2[0][11] shouldBe 1001
         result2[0][13] shouldBe null
 
-        val schema2 = DataFrame.getSchemaForSqlTable(connection, tableName2)
+        val schema2 = DataFrameSchema.readSqlTable(connection, tableName2)
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["pathcol"]!!.type shouldBe typeOf<Any>() // TODO: https://github.com/Kotlin/dataframe/issues/537
         schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
@@ -337,7 +336,7 @@ class PostgresTest {
         val result = df.filter { it[ViewTable::id] == 1 }
         result[0][3] shouldBe null
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintcol"]!!.type shouldBe typeOf<Long>()
         schema.columns["textcol"]!!.type shouldBe typeOf<String?>()
@@ -402,12 +401,12 @@ class PostgresTest {
             .add("serialcol2") { it[Table2::serialcol] }
         result8[0][1] shouldBe 1000001
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
+        val schema = DataFrameSchema.readSqlTable(connection, tableName1)
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigserialcol"]!!.type shouldBe typeOf<Long>()
         schema.columns["doublecol"]!!.type shouldBe typeOf<Double>()
 
-        val schema1 = DataFrame.getSchemaForSqlTable(connection, tableName2)
+        val schema1 = DataFrameSchema.readSqlTable(connection, tableName2)
         schema1.columns["moneycol"]!!.type shouldBe typeOf<String>()
         schema1.columns["numericcol"]!!.type shouldBe typeOf<BigDecimal>()
         schema1.columns["realcol"]!!.type shouldBe typeOf<Float>()
