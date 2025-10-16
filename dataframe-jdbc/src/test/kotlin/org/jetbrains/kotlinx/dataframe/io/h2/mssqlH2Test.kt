@@ -6,12 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
-import org.jetbrains.kotlinx.dataframe.io.inferNullability
-import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+import org.jetbrains.kotlinx.dataframe.io.inferNullability
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -21,6 +19,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Date
 import java.util.UUID
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.typeOf
 
 private const val URL =
@@ -182,7 +181,7 @@ class MSSQLH2Test {
         result[0][Table1MSSSQL::intColumn] shouldBe 123456
         result[0][Table1MSSSQL::ntextColumn] shouldBe "Sample1 text"
 
-        val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+        val schema = DataFrameSchema.readSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
         schema.columns["binaryColumn"]!!.type shouldBe typeOf<ByteArray?>()
@@ -228,7 +227,7 @@ class MSSQLH2Test {
         val result = df.filter { it[Table1MSSSQL::id] == 1 }
         result[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
 
-        val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
     }

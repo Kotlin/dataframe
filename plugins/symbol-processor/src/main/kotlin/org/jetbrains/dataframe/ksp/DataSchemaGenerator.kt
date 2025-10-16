@@ -30,8 +30,8 @@ import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TsvDeephaven
 import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
 import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
@@ -315,10 +315,10 @@ class DataSchemaGenerator(
     private fun areBothNotBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isNotBlank()
 
     private fun generateSchemaForTable(connection: Connection, tableName: String) =
-        DataFrame.getSchemaForSqlTable(connection, tableName)
+        DataFrame.readSqlTable(connection, tableName)
 
     private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) =
-        DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+        DataFrame.readSqlQuery(connection, sqlQuery)
 
     private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing =
         throw RuntimeException(
