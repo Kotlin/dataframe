@@ -38,6 +38,14 @@ public class Jdbc :
         DefaultReadJdbcMethod(pathRepresentation)
 }
 
+public abstract class AbstractJdbcSchemaReader : SchemaReader {
+    override fun accepts(path: String, qualifier: String): Boolean = qualifier == "jdbc"
+
+    public abstract fun config(): DbConnectionConfig
+
+    override fun read(path: String): DataFrame<*> = config().readDataFrame(path)
+}
+
 private fun DataFrame.Companion.readJDBC(stream: File): DataFrame<*> {
     TODO("Not yet implemented")
 }

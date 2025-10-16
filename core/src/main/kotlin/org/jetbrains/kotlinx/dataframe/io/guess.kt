@@ -60,6 +60,36 @@ public interface SupportedDataFrameFormat : SupportedFormat {
 }
 
 /**
+ * User-facing API implemented by a companion object of an imported schema [org.jetbrains.kotlinx.dataframe.annotations.DataSchemaSource]
+ * Intended use:
+ * 1. Interact with this API to read dataframe of a desired type
+ * 2. API is used to implement "generic dataframe reader" based on [schemaKType] and other available methods
+ */
+public interface DataFrameProvider<T> {
+    public val schemaKType: KType
+
+    public fun default(): DataFrame<T>
+
+    public fun read(path: String): DataFrame<T>
+}
+
+/**
+ * Handler of classes annotated with [org.jetbrains.kotlinx.dataframe.annotations.DataSchemaSource].
+ * Implementations must have a single zero-argument constructor
+ */
+public interface SchemaReader {
+    public companion object {
+        public const val DEFAULT_QUALIFIER: String = "default"
+    }
+
+    public fun accepts(path: String, qualifier: String): Boolean = qualifier == DEFAULT_QUALIFIER
+
+    public fun read(path: String): DataFrame<*>
+
+    public fun default(path: String): DataFrame<*> = read(path)
+}
+
+/**
  * Implement this interface to provide additional [DataSchema] interface generation formats for DataFrames (such as OpenAPI).
  * Note, this doesn't add functionality to [DataFrame.Companion.read], just [ImportDataSchema] and Gradle plugin.
  *

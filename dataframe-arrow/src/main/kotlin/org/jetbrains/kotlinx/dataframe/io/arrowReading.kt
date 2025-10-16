@@ -36,6 +36,13 @@ public class ArrowFeather : SupportedDataFrameFormat {
         DefaultReadArrowMethod(pathRepresentation)
 }
 
+public class ArrowSchemaReader : SchemaReader {
+    override fun accepts(path: String, qualifier: String): Boolean =
+        super.accepts(path, qualifier) && path.endsWith(".feather")
+
+    override fun read(path: String): DataFrame<*> = DataFrame.readArrowFeather(path)
+}
+
 private const val READ_ARROW_FEATHER = "readArrowFeather"
 
 internal const val ARROW_PARQUET_DEFAULT_BATCH_SIZE = 32768L
