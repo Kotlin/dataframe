@@ -310,7 +310,7 @@ class DuckDbTest {
             subset = DataFrame.readSqlQuery(connection, """SELECT test_table.name, test_table.age FROM test_table""")
         }
 
-        schema.compare(Person.expected.schema()).isSuperOrEqual() shouldBe true
+        schema.compare(Person.expected.schema()).isSuperOrMatches() shouldBe true
 
         df.cast<Person>(verify = true) shouldBe Person.expected
         df.assertInferredTypesMatchSchema()
@@ -355,7 +355,7 @@ class DuckDbTest {
             }
         }
 
-        schema.compare(Person.expected.schema()).isSuperOrEqual() shouldBe true
+        schema.compare(Person.expected.schema()).isSuperOrMatches() shouldBe true
 
         df.cast<Person>(verify = true) shouldBe Person.expected
         df.assertInferredTypesMatchSchema()
@@ -396,7 +396,7 @@ class DuckDbTest {
         val df = dfs["test_table"]!!
         val schema = schemas["test_table"]!!
 
-        schema.compare(Person.expected.schema()).isSuperOrEqual() shouldBe true
+        schema.compare(Person.expected.schema()).isSuperOrMatches() shouldBe true
 
         df.cast<Person>(verify = true) shouldBe Person.expected
         df.assertInferredTypesMatchSchema()
@@ -545,7 +545,7 @@ class DuckDbTest {
             df = DataFrame.readSqlTable(connection, "table1").reorderColumnsByName()
         }
 
-        schema.compare(GeneralPurposeTypes.expected.schema()).isSuperOrEqual() shouldBe true
+        schema.compare(GeneralPurposeTypes.expected.schema()).isSuperOrMatches() shouldBe true
 
         // on some systems OffsetDateTime's get converted to UTC sometimes, let's compare them as Instant instead
         fun AnyFrame.fixOffsetDateTime() = convert { colsOf<OffsetDateTime>() }.with { it.toInstant() }
