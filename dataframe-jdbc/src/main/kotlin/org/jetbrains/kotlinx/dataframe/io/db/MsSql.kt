@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
@@ -49,6 +49,11 @@ public object MsSql : DbType("sqlserver") {
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 
-    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String =
+    public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
         sqlQuery.replace("SELECT", "SELECT TOP $limit", ignoreCase = true)
+
+    override fun quoteIdentifier(name: String): String {
+        // schema.table -> [schema].[table]
+        return name.split(".").joinToString(".") { "[$it]" }
+    }
 }
