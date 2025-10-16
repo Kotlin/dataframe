@@ -260,6 +260,9 @@ internal const val GET_ROWS_RANGE_REPLACE = "df().getRows(indices)"
 internal const val GET_ROW_OR_NULL_REPLACE = "df().getRowOrNull(index)"
 internal const val COPY_REPLACE = "columns().toDataFrame().cast()"
 
+internal const val LISTS_TO_DATAFRAME_MIGRATION =
+    "Function moved from io to api package, and a new `header` parameter is introduced. $MESSAGE_1_1"
+
 // endregion
 
 // region keep across releases

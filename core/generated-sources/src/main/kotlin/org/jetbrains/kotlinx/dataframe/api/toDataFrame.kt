@@ -256,3 +256,49 @@ public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
     }.toDataFrameFromPairs<Unit>()
 
 // endregion
+
+/**
+ * Converts a list of lists into a [DataFrame].
+ *
+ * By default, treats lists as row values. If [header] is not provided, the first inner list becomes a header (column names), and the remaining lists are treated as data.
+ *
+ * With [containsColumns] = `true`, interprets each inner list as a column.
+ * If [header] is not provided, the first element will be used as the column name, and the remaining elements as values.
+ *
+ * @param T The type of elements contained in the nested lists.
+ * @param containsColumns If `true`, treats each nested list as a column.
+ *                        Otherwise, each nested list is a row.
+ *                        Defaults to `false`.
+ * @param header overrides extraction of column names from lists - all values are treated as data instead.
+ * @return A [DataFrame] containing the data from the nested list structure.
+ *         Returns an empty [DataFrame] if the input is empty or invalid.
+ */
+@Refine
+@Interpretable("ValuesListsToDataFrame")
+public fun <T> List<List<T>>.toDataFrame(header: List<String>?, containsColumns: Boolean = false): AnyFrame =
+    when {
+        containsColumns -> {
+            mapIndexedNotNull { index, list ->
+                if (list.isEmpty()) return@mapIndexedNotNull null
+                val name = header?.get(index) ?: list[0].toString()
+                val values = if (header == null) list.drop(1) else list
+                createColumnGuessingType(name, values)
+            }.toDataFrame()
+        }
+
+        isEmpty() -> DataFrame.Empty
+
+        else -> {
+            val data = if (header == null) drop(1) else this
+            (header ?: get(0).map { it.toString() }).mapIndexed { colIndex, name ->
+                val values = data.map { row ->
+                    if (row.size <= colIndex) {
+                        null
+                    } else {
+                        row[colIndex]
+                    }
+                }
+                createColumnGuessingType(name, values)
+            }.toDataFrame()
+        }
+    }
