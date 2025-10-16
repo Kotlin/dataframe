@@ -6781,11 +6781,14 @@ public final class org/jetbrains/kotlinx/dataframe/schema/CompareResult : java/l
 	public static final field Equals Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static final field IsDerived Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static final field IsSuper Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public static final field Matches Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static final field None Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public final fun combine (Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun isEqual ()Z
 	public final fun isSuperOrEqual ()Z
+	public final fun isSuperOrMatches ()Z
+	public final fun matches ()Z
 	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 }
