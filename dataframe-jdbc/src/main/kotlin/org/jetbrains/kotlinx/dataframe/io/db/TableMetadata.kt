@@ -40,7 +40,5 @@ public class TableMetadata {
         return result
     }
 
-    override fun toString(): String {
-        return "TableMetadata(name='$name', schemaName=$schemaName, catalogue=$catalogue)"
-    }
+    override fun toString(): String = "TableMetadata(name='$name', schemaName=$schemaName, catalogue=$catalogue)"
 }

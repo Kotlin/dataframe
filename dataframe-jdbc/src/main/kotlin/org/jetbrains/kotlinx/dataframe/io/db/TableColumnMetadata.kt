@@ -42,8 +42,7 @@ public class TableColumnMetadata(
         return result
     }
 
-    override fun toString(): String {
-        return "TableColumnMetadata(name='$name', sqlTypeName='$sqlTypeName', jdbcType=$jdbcType, " +
+    override fun toString(): String =
+        "TableColumnMetadata(name='$name', sqlTypeName='$sqlTypeName', jdbcType=$jdbcType, " +
             "size=$size, javaClassName='$javaClassName', isNullable=$isNullable)"
-    }
 }

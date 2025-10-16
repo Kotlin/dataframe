@@ -2,16 +2,11 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
@@ -19,9 +14,7 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
 import javax.sql.DataSource
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.full.safeCast
 
 private val logger = KotlinLogging.logger {}
 
@@ -103,7 +96,7 @@ public fun DataFrame.Companion.readSqlTable(
             inferNullability,
             dbType,
             strictValidation,
-            configureStatement
+            configureStatement,
         )
     }
 }
@@ -156,9 +149,10 @@ public fun DataFrame.Companion.readSqlTable(
         determinedDbType,
         configureStatement,
         limit,
-        inferNullability
+        inferNullability,
     )
 }
+
 /**
  * Reads a data frame from the specified database using the provided SQL query and configurations.
  *
@@ -178,30 +172,31 @@ private fun executeQueryAndBuildDataFrame(
     determinedDbType: DbType,
     configureStatement: (PreparedStatement) -> Unit,
     limit: Int?,
-    inferNullability: Boolean
-): AnyFrame = try {
-    connection.prepareStatement(sqlQuery).use { statement ->
-        logger.debug { "Connection established successfully (${connection.metaData.databaseProductName})" }
-        determinedDbType.configureReadStatement(statement)
-        configureStatement(statement)
-        logger.debug { "Executing query: $sqlQuery" }
-        statement.executeQuery().use { rs ->
-            val tableColumns = getTableColumnsMetadata(rs)
-            fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
+    inferNullability: Boolean,
+): AnyFrame =
+    try {
+        connection.prepareStatement(sqlQuery).use { statement ->
+            logger.debug { "Connection established successfully (${connection.metaData.databaseProductName})" }
+            determinedDbType.configureReadStatement(statement)
+            configureStatement(statement)
+            logger.debug { "Executing query: $sqlQuery" }
+            statement.executeQuery().use { rs ->
+                val tableColumns = getTableColumnsMetadata(rs)
+                fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
+            }
         }
+    } catch (e: java.sql.SQLException) {
+        // Provide the same type for all SQLExceptions from JDBC and enrich with additional information
+        logger.error(e) { "Database operation failed: $sqlQuery" }
+        throw IllegalStateException(
+            "Failed to read from database. Query: $sqlQuery, Database: ${determinedDbType.dbTypeInJdbcUrl}",
+            e,
+        )
+    } catch (e: Exception) {
+        // Provide the same type for all unexpected errors from JDBC
+        logger.error(e) { "Unexpected error: ${e.message}" }
+        throw IllegalStateException("Unexpected error while reading from database", e)
     }
-} catch (e: java.sql.SQLException) {
-    // Provide the same type for all SQLExceptions from JDBC and enrich with additional information
-    logger.error(e) { "Database operation failed: $sqlQuery" }
-    throw IllegalStateException(
-        "Failed to read from database. Query: $sqlQuery, Database: ${determinedDbType.dbTypeInJdbcUrl}",
-        e
-    )
-} catch (e: Exception) {
-    // Provide the same type for all unexpected errors from JDBC
-    logger.error(e) { "Unexpected error: ${e.message}" }
-    throw IllegalStateException("Unexpected error while reading from database", e)
-}
 
 /**
  * Converts the result of an SQL query to the DataFrame.
@@ -331,7 +326,14 @@ public fun DataFrame.Companion.readSqlQuery(
         determinedDbType.buildSqlQueryWithLimit(sqlQuery, it)
     } ?: sqlQuery
 
-    return executeQueryAndBuildDataFrame(connection, internalSqlQuery, determinedDbType, configureStatement, limit, inferNullability)
+    return executeQueryAndBuildDataFrame(
+        connection,
+        internalSqlQuery,
+        determinedDbType,
+        configureStatement,
+        limit,
+        inferNullability,
+    )
 }
 
 /**
@@ -584,11 +586,7 @@ public fun DataFrame.Companion.readResultSet(
  *
  * @see [java.sql.ResultSet]
  */
-public fun ResultSet.readDataFrame(
-    dbType: DbType,
-    limit: Int? = null,
-    inferNullability: Boolean = true,
-): AnyFrame {
+public fun ResultSet.readDataFrame(dbType: DbType, limit: Int? = null, inferNullability: Boolean = true): AnyFrame {
     validateLimit(limit)
     return DataFrame.readResultSet(this, dbType, limit, inferNullability)
 }
@@ -803,7 +801,7 @@ public fun DataFrame.Companion.readAllSqlTables(
                 limit,
                 inferNullability,
                 dbType,
-                configureStatement
+                configureStatement,
             )
 
             put(fullTableName, dataFrame)
@@ -811,11 +809,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     }
 }
 
-private fun retrieveTableMetadata(
-    metaData: DatabaseMetaData,
-    catalogue: String?,
-    dbType: DbType,
-): ResultSet {
+private fun retrieveTableMetadata(metaData: DatabaseMetaData, catalogue: String?, dbType: DbType): ResultSet {
     // Exclude system- and other tables without data (it looks like it is supported badly for many databases)
     val tableTypes = dbType.tableTypes?.toTypedArray()
     return metaData.getTables(catalogue, null, null, tableTypes)
@@ -857,8 +851,6 @@ private fun readTableAsDataFrame(
 
     return dataFrame
 }
-
-
 
 /**
  * Retrieves the metadata of the columns in the result set.
@@ -958,10 +950,7 @@ internal fun fetchAndConvertDataFromResultSet(
 /**
  * Builds a map of column indices to their Kotlin types.
  */
-private fun buildColumnKTypes(
-    tableColumns: List<TableColumnMetadata>,
-    dbType: DbType,
-): Map<Int, KType> =
+private fun buildColumnKTypes(tableColumns: List<TableColumnMetadata>, dbType: DbType): Map<Int, KType> =
     tableColumns.indices.associateWith { index ->
         generateKType(dbType, tableColumns[index])
     }
@@ -1018,7 +1007,6 @@ private fun buildDataFrameFromColumnData(
             inferNullability = inferNullability,
         )
     }.toDataFrame()
-
 
 /**
  * Generates a KType based on the given database type and table column metadata.

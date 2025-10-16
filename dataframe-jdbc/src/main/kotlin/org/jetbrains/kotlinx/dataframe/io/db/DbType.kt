@@ -2,12 +2,12 @@ package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.Infer
-import java.math.BigDecimal
-import java.sql.Blob
-import java.sql.Clob
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import java.math.BigDecimal
+import java.sql.Blob
+import java.sql.Clob
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
@@ -137,9 +137,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      *
      * @param statement the `PreparedStatement` to be configured
      */
-    public open fun configureReadStatement(
-        statement: PreparedStatement,
-    ) {
+    public open fun configureReadStatement(statement: PreparedStatement) {
         // Set fetch size for better streaming performance
         statement.fetchSize = defaultFetchSize
 
@@ -218,11 +216,13 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             // TODO: add a special handler for Blob via Streams
         } catch (_: Throwable) {
             // TODO: expand for all the types like in generateKType function
-            if (kType.isSupertypeOf(String::class.starProjectedType))
+            if (kType.isSupertypeOf(String::class.starProjectedType)) {
                 rs.getString(columnIndex + 1)
-            else rs.getString(columnIndex + 1)
+            } else {
+                rs.getString(columnIndex + 1)
+            }
         }
-    
+
     /**
      * Builds a single DataColumn with proper type handling.
      * Accepts a mutable list to allow efficient post-processing.
@@ -244,7 +244,8 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         )
     }
 
-    private fun convertNullabilityInference(inferNullability: Boolean) = if (inferNullability) Infer.Nulls else Infer.None
+    private fun convertNullabilityInference(inferNullability: Boolean) =
+        if (inferNullability) Infer.Nulls else Infer.None
 
     /**
      * Processes the column values retrieved from the database and performs transformations based on the provided
@@ -260,16 +261,17 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         values: MutableList<Any?>,
         kType: KType,
         columnMetadata: TableColumnMetadata,
-    ): List<Any?> = when {
-        /* EXAMPLE: columnMetadata.sqlTypeName == "MY_CUSTOM_ARRAY" -> {
-            values.map { /* custom transformation */ }
-        } */
-        kType.classifier == Array::class -> {
-            handleArrayValues(values)
-        }
+    ): List<Any?> =
+        when {
+            /* EXAMPLE: columnMetadata.sqlTypeName == "MY_CUSTOM_ARRAY" -> {
+                values.map { /* custom transformation */ }
+            } */
+            kType.classifier == Array::class -> {
+                handleArrayValues(values)
+            }
 
-        else -> values
-    }
+            else -> values
+        }
 
     /**
      * Converts SQL Array objects to strongly-typed arrays.

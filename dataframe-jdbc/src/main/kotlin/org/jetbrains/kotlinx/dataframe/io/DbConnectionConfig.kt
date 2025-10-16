@@ -73,8 +73,7 @@ public class DbConnectionConfig(
         return result
     }
 
-    override fun toString(): String =
-        "DbConnectionConfig(url='$url', user='$user', password='***', readOnly=$readOnly)"
+    override fun toString(): String = "DbConnectionConfig(url='$url', user='$user', password='***', readOnly=$readOnly)"
 
     /**
      * Creates a copy of this configuration with the option to override specific properties.

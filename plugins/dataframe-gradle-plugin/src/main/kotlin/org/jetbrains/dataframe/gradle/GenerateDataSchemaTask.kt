@@ -7,7 +7,6 @@ import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
@@ -23,9 +22,9 @@ import org.jetbrains.kotlinx.dataframe.io.Excel
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TsvDeephaven
+import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
 import java.net.URL
