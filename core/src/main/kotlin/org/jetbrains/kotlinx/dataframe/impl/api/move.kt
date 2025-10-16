@@ -18,18 +18,17 @@ import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.exceptions.ColumnsWithDifferentParentException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
-import org.jetbrains.kotlinx.dataframe.impl.last
 import org.jetbrains.kotlinx.dataframe.path
 import kotlin.collections.first
 
@@ -144,7 +143,7 @@ internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: B
     val columnsToMoveParents = columnsToMove.map { it.path.dropLast() }
     val parentOfFirst = columnsToMoveParents.first()
     if (columnsToMoveParents.any { it != parentOfFirst }) {
-        throw IllegalArgumentException(
+        throw ColumnsWithDifferentParentException(
             "Cannot move columns to an index remaining inside group if they have different parent",
         )
     }
