@@ -63,7 +63,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                 if (currentMarker.isOpen) {
                     val columnSchema = currentMarker.schema
                     // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual dataframe type
-                    if (wasProcessedBefore || columnSchema == targetSchema) {
+                    if (wasProcessedBefore || columnSchema.compare(targetSchema).matches()) {
                         // property scheme is valid for current dataframe, but we should also check that all compatible open markers are implemented by it
                         val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
