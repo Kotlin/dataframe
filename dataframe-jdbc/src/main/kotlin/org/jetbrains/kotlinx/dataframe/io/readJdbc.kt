@@ -26,16 +26,6 @@ import kotlin.reflect.full.safeCast
 private val logger = KotlinLogging.logger {}
 
 /**
- * The default limit value.
- *
- * This constant represents the default limit value to be used in cases where no specific limit
- * is provided.
- *
- * @see Int.MIN_VALUE
- */
-private const val DEFAULT_LIMIT = Int.MIN_VALUE
-
-/**
  * Reads data from an SQL table and converts it into a DataFrame.
  *
  * ### Default Behavior:
@@ -50,6 +40,7 @@ private const val DEFAULT_LIMIT = Int.MIN_VALUE
  * @param [dbConfig] the configuration for the database, including URL, user, and password.
  * @param [tableName] the name of the table to read data from.
  * @param [limit] the maximum number of rows to retrieve from the table.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
@@ -62,7 +53,7 @@ private const val DEFAULT_LIMIT = Int.MIN_VALUE
 public fun DataFrame.Companion.readSqlTable(
     dbConfig: DbConnectionConfig,
     tableName: String,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
@@ -78,6 +69,7 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [dataSource] the [DataSource] to get a database connection from.
  * @param [tableName] the name of the table to read data from.
  * @param [limit] the maximum number of rows to retrieve from the table.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dataSource].
@@ -92,7 +84,7 @@ public fun DataFrame.Companion.readSqlTable(
 public fun DataFrame.Companion.readSqlTable(
     dataSource: DataSource,
     tableName: String,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
@@ -117,6 +109,7 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [connection] the database connection to read tables from.
  * @param [tableName] the name of the table to read data from.
  * @param [limit] the maximum number of rows to retrieve from the table.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
@@ -131,7 +124,7 @@ public fun DataFrame.Companion.readSqlTable(
 public fun DataFrame.Companion.readSqlTable(
     connection: Connection,
     tableName: String,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
@@ -166,7 +159,8 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [sqlQuery]  The SQL query string to be executed.
  * @param [determinedDbType]  The type of database being accessed, which determines specific configurations.
  * @param [configureStatement]  A lambda function to configure the prepared statement before execution.
- * @param [limit]  The maximum number of rows to fetch from the query result.
+ * @param [limit] the maximum number of rows to retrieve from the table.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability]  A flag to determine whether to infer nullability for result set fields.
  * @return The data frame constructed from the database query results.
  * @throws [IllegalStateException]  If an error occurs while reading from the database or processing the data.
@@ -176,7 +170,7 @@ private fun readDataFrameFromDatabase(
     sqlQuery: String,
     determinedDbType: DbType,
     configureStatement: (PreparedStatement) -> Unit,
-    limit: Int,
+    limit: Int?,
     inferNullability: Boolean
 ): AnyFrame = try {
     connection.prepareStatement(sqlQuery).use { statement ->
@@ -223,6 +217,7 @@ private fun readDataFrameFromDatabase(
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
@@ -235,7 +230,7 @@ private fun readDataFrameFromDatabase(
 public fun DataFrame.Companion.readSqlQuery(
     dbConfig: DbConnectionConfig,
     sqlQuery: String,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
@@ -254,6 +249,7 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [dataSource] the [DataSource] to obtain a database connection from.
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dataSource].
@@ -268,7 +264,7 @@ public fun DataFrame.Companion.readSqlQuery(
 public fun DataFrame.Companion.readSqlQuery(
     dataSource: DataSource,
     sqlQuery: String,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
@@ -288,6 +284,7 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [connection] the database connection to execute the SQL query.
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
@@ -302,7 +299,7 @@ public fun DataFrame.Companion.readSqlQuery(
 public fun DataFrame.Companion.readSqlQuery(
     connection: Connection,
     sqlQuery: String,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
@@ -319,7 +316,9 @@ public fun DataFrame.Companion.readSqlQuery(
 
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    val internalSqlQuery = if (limit > 0) determinedDbType.buildSqlQueryWithLimit(sqlQuery, limit) else sqlQuery
+    val internalSqlQuery = limit?.let {
+        determinedDbType.buildSqlQueryWithLimit(sqlQuery, it)
+    } ?: sqlQuery
 
     return readDataFrameFromDatabase(connection, internalSqlQuery, determinedDbType, configureStatement, limit, inferNullability)
 }
@@ -341,6 +340,7 @@ public fun DataFrame.Companion.readSqlQuery(
  * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
  * It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [DbConnectionConfig].
@@ -352,7 +352,7 @@ public fun DataFrame.Companion.readSqlQuery(
  */
 public fun DbConnectionConfig.readDataFrame(
     sqlQueryOrTableName: String,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
@@ -392,6 +392,7 @@ public fun DbConnectionConfig.readDataFrame(
  * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
  * It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [Connection].
@@ -403,7 +404,7 @@ public fun DbConnectionConfig.readDataFrame(
  */
 public fun Connection.readDataFrame(
     sqlQueryOrTableName: String,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
@@ -462,6 +463,7 @@ public fun Connection.readDataFrame(
  * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
  * It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [DataSource].
@@ -475,7 +477,7 @@ public fun Connection.readDataFrame(
  */
 public fun DataSource.readDataFrame(
     sqlQueryOrTableName: String,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     strictValidation: Boolean = true,
@@ -525,6 +527,7 @@ public fun DataSource.readDataFrame(
  * Its state may be altered after the read operation.
  * @param [dbType] the type of database that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
@@ -533,7 +536,7 @@ public fun DataSource.readDataFrame(
 public fun DataFrame.Companion.readResultSet(
     resultSet: ResultSet,
     dbType: DbType,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
 ): AnyFrame {
     val tableColumns = getTableColumnsMetadata(resultSet)
@@ -553,6 +556,7 @@ public fun DataFrame.Companion.readResultSet(
  *
  * @param [dbType] the type of database that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
@@ -560,7 +564,7 @@ public fun DataFrame.Companion.readResultSet(
  */
 public fun ResultSet.readDataFrame(
     dbType: DbType,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
 ): AnyFrame = DataFrame.readResultSet(this, dbType, limit, inferNullability)
 
@@ -580,6 +584,7 @@ public fun ResultSet.readDataFrame(
  * @param [connection] the connection to the database (it's required to extract the database type)
  * that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [resultSet].
@@ -590,7 +595,7 @@ public fun ResultSet.readDataFrame(
 public fun DataFrame.Companion.readResultSet(
     resultSet: ResultSet,
     connection: Connection,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
 ): AnyFrame {
@@ -613,6 +618,7 @@ public fun DataFrame.Companion.readResultSet(
  * @param [connection] the connection to the database (it's required to extract the database type)
  * that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [ResultSet].
@@ -622,7 +628,7 @@ public fun DataFrame.Companion.readResultSet(
  */
 public fun ResultSet.readDataFrame(
     connection: Connection,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
 ): AnyFrame = DataFrame.readResultSet(this, connection, limit, inferNullability, dbType)
@@ -642,6 +648,7 @@ public fun ResultSet.readDataFrame(
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [limit] the maximum number of rows to read from each table.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
@@ -653,7 +660,7 @@ public fun ResultSet.readDataFrame(
 public fun DataFrame.Companion.readAllSqlTables(
     dbConfig: DbConnectionConfig,
     catalogue: String? = null,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     configureStatement: (PreparedStatement) -> Unit = {},
@@ -689,6 +696,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [dataSource] the [DataSource] to get a database connection from.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [limit] the maximum number of rows to read from each table.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dataSource].
@@ -701,7 +709,7 @@ public fun DataFrame.Companion.readAllSqlTables(
 public fun DataFrame.Companion.readAllSqlTables(
     dataSource: DataSource,
     catalogue: String? = null,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     configureStatement: (PreparedStatement) -> Unit = {},
@@ -717,6 +725,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  *
  * @param [connection] the database connection to read tables from.
  * @param [limit] the maximum number of rows to read from each table.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
@@ -730,7 +739,7 @@ public fun DataFrame.Companion.readAllSqlTables(
 public fun DataFrame.Companion.readAllSqlTables(
     connection: Connection,
     catalogue: String? = null,
-    limit: Int = DEFAULT_LIMIT,
+    limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     configureStatement: (PreparedStatement) -> Unit = {},
@@ -789,7 +798,7 @@ private fun buildFullTableName(catalogue: String?, schemaName: String?, tableNam
 private fun readTableAsDataFrame(
     connection: Connection,
     tableName: String,
-    limit: Int,
+    limit: Int?,
     inferNullability: Boolean,
     dbType: DbType?,
     configureStatement: (PreparedStatement) -> Unit = {},
@@ -912,7 +921,8 @@ internal fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<
  * @param [tableColumns] a list containing the column metadata for the table.
  * @param [rs] the ResultSet object containing the data to be fetched and converted.
  * @param [dbType] the type of the database.
- * @param [limit] the maximum number of rows to fetch and convert.
+ * @param [limit] the maximum number of rows to retrieve from the table.
+ *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @return A mutable map containing the fetched and converted data.
  */
@@ -920,7 +930,7 @@ internal fun fetchAndConvertDataFromResultSet(
     tableColumns: MutableList<TableColumnMetadata>,
     rs: ResultSet,
     dbType: DbType,
-    limit: Int,
+    limit: Int?,
     inferNullability: Boolean,
 ): AnyFrame {
     val columnKTypes = buildColumnKTypes(tableColumns, dbType)
@@ -954,13 +964,13 @@ private fun readAllRowsFromResultSet(
     tableColumns: List<TableColumnMetadata>,
     columnKTypes: Map<Int, KType>,
     dbType: DbType,
-    limit: Int,
+    limit: Int?,
 ): List<MutableList<Any?>> {
     val columnsCount = tableColumns.size
     val columnData = List(columnsCount) { mutableListOf<Any?>() }
     var rowsRead = 0
 
-    while (rs.next() && (limit !in 1..rowsRead)) {
+    while (rs.next() && (limit == null || rowsRead < limit)) {
         repeat(columnsCount) { columnIndex ->
             val value = dbType.extractValueFromResultSet(
                 rs = rs,

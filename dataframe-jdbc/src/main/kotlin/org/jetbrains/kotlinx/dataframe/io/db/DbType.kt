@@ -115,7 +115,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param [limit] the maximum number of rows to retrieve. If 0 or negative, no limit is applied.
      * @return the SQL query string.
      */
-    public open fun buildSelectTableQueryWithLimit(tableName: String, limit: Int): String {
+    public open fun buildSelectTableQueryWithLimit(tableName: String, limit: Int?): String {
         require(tableName.isNotBlank()) { "Table name cannot be blank" }
 
         val quotedTableName = quoteIdentifier(tableName)
