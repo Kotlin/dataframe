@@ -21,6 +21,6 @@ class MsSqlTest {
 
     @Test
     fun `test SQL Server TOP limit functionality`() {
-        MsSql.sqlQueryLimit("SELECT * FROM TestTable1", 1) shouldBe "SELECT TOP 1 * FROM TestTable1"
+        MsSql.buildSqlQueryWithLimit("SELECT * FROM TestTable1", 1) shouldBe "SELECT TOP 1 * FROM TestTable1"
     }
 }
