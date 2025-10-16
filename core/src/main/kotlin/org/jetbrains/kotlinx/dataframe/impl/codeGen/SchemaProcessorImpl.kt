@@ -159,7 +159,7 @@ internal class SchemaProcessorImpl(
         val markerName: String
         val required = schema.getRequiredMarkers()
         val existingMarker = registeredMarkers.firstOrNull {
-            (!isOpen || it.isOpen) && it.schema == schema && it.implementsAll(required)
+            (!isOpen || it.isOpen) && it.schema.compare(schema).isEqual() && it.implementsAll(required)
         }
         if (existingMarker != null) {
             return existingMarker
