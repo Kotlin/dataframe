@@ -9,6 +9,18 @@ import java.sql.SQLException
 private val logger = KotlinLogging.logger {}
 
 /**
+ * Validates the provided limit to ensure it is either null or a positive integer.
+ * Throws an [IllegalArgumentException] if the limit is negative or zero.
+ *
+ * @param limit The maximum allowed number of rows. Use `null` for unlimited rows.
+ */
+internal fun validateLimit(limit: Int?) {
+    require(limit == null || limit > 0) {
+        "Parameter 'limit' must be positive, but was: $limit. Use null for unlimited rows."
+    }
+}
+
+/**
  * Executes the given block with a managed JDBC connection created from [DbConnectionConfig].
  *
  * If [DbConnectionConfig.readOnly] is `true` (default), the connection will be:

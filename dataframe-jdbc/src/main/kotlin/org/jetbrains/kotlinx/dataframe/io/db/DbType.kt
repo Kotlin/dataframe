@@ -120,7 +120,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
         val quotedTableName = quoteIdentifier(tableName)
 
-        return if (limit > 0) {
+        return if (limit != null && limit > 0) {
             buildSqlQueryWithLimit("SELECT * FROM $quotedTableName", limit)
         } else {
             "SELECT * FROM $quotedTableName"

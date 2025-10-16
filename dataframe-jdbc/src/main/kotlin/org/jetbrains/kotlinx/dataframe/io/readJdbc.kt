@@ -183,9 +183,6 @@ private fun readDataFrameFromDatabase(
             fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
         }
     }
-} catch (e: IllegalStateException) {
-    // Re-throw our own exceptions to avoid additional stack traces in the logs
-    throw e
 } catch (e: java.sql.SQLException) {
     // Provide the same type for all SQLExceptions from JDBC and enrich with additional information
     logger.error(e) { "Database operation failed: $sqlQuery" }
