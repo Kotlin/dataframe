@@ -235,7 +235,6 @@ class MoveTests {
         df["b"].asColumnGroup().columnNames() shouldBe listOf("d", "c")
     }
 
-    // not working
     @Test
     fun `move single nested column between columns remaining inside the group`() {
         // creating an appropriate df for the test
