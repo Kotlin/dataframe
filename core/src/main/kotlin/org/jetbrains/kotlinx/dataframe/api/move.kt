@@ -541,7 +541,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
 /**
  * Moves columns, previously selected with [move] to a new position specified
  * by [columnIndex]. If [insideGroup] is true, selected columns will be moved remaining within their [ColumnGroup],
- * else they will be moved on top level.
+ * else they will be moved to the top level.
  *
  * Returns a new [DataFrame] with updated columns structure.
  *
@@ -720,7 +720,7 @@ public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
 
 /**
  * If insideGroup is true, moves columns previously selected with [move] to the start of their [ColumnGroup].
- * Else, selected columns will be moved to the start of their [DataFrame] (on top-level).
+ * Else, selected columns will be moved to the start of their [DataFrame] (to the top-level).
  *
  * Returns a new [DataFrame] with updated columns.
  *
@@ -760,6 +760,28 @@ public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 @Refine
 @Interpretable("MoveToEnd0")
 public fun <T, C> MoveClause<T, C>.toEnd(): DataFrame<T> = to(df.ncol)
+
+/**
+ * If insideGroup is true, moves columns previously selected with [move] to the end of their [ColumnGroup].
+ * Else, selected columns will be moved to the end of their [DataFrame] (to the top-level).
+ *
+ * Returns a new [DataFrame] with updated columns.
+ *
+ * For more information: {@include [DocumentationUrls.Move]}
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.toEnd(true)
+ * df.move { colsOf<String>() }.toEnd(true)
+ * df.move("age", "weight").toEnd(false)
+ * ```
+ *
+ * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
+ * else they will be moved to the end on top level.
+ */
+@Refine
+@Interpretable("MoveToEnd0")
+public fun <T, C> MoveClause<T, C>.toEnd(insideGroup: Boolean): DataFrame<T> = to(df.ncol, insideGroup)
 
 /**
  * An intermediate class used in the [move] operation.
