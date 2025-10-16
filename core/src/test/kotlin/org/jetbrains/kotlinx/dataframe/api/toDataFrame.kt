@@ -713,7 +713,7 @@ class CreateDataFrameTests {
             }
         }
 
-        val df = lines.chunked(3).toDataFrame()
+        val df = lines.chunked(3).toDataFrame(header = null)
 
         df.columnNames() shouldBe listOf("stamp", "header", "data")
         df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
