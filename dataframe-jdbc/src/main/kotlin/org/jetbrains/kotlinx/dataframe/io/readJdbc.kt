@@ -58,10 +58,12 @@ public fun DataFrame.Companion.readSqlTable(
     dbType: DbType? = null,
     strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
-): AnyFrame =
-    withReadOnlyConnection(dbConfig, dbType) { conn ->
+): AnyFrame {
+    validateLimit(limit)
+    return withReadOnlyConnection(dbConfig, dbType) { conn ->
         readSqlTable(conn, tableName, limit, inferNullability, dbType, strictValidation, configureStatement)
     }
+}
 
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
@@ -90,6 +92,7 @@ public fun DataFrame.Companion.readSqlTable(
     strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
+    validateLimit(limit)
     dataSource.connection.use { connection ->
         return readSqlTable(
             connection,
@@ -130,6 +133,7 @@ public fun DataFrame.Companion.readSqlTable(
     strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
+    validateLimit(limit)
     if (strictValidation) {
         require(isValidTableName(tableName)) {
             "The provided table name '$tableName' is invalid. Please ensure it matches a valid table name in the database schema."
@@ -232,10 +236,12 @@ public fun DataFrame.Companion.readSqlQuery(
     dbType: DbType? = null,
     strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
-): AnyFrame =
-    withReadOnlyConnection(dbConfig, dbType) { conn ->
+): AnyFrame {
+    validateLimit(limit)
+    return withReadOnlyConnection(dbConfig, dbType) { conn ->
         readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, strictValidation, configureStatement)
     }
+}
 
 /**
  * Converts the result of an SQL query to the DataFrame.
@@ -267,6 +273,7 @@ public fun DataFrame.Companion.readSqlQuery(
     strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
+    validateLimit(limit)
     dataSource.connection.use { connection ->
         return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, strictValidation, configureStatement)
     }
@@ -302,6 +309,7 @@ public fun DataFrame.Companion.readSqlQuery(
     strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
+    validateLimit(limit)
     if (strictValidation) {
         require(isValidSqlQuery(sqlQuery)) {
             "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
@@ -354,8 +362,9 @@ public fun DbConnectionConfig.readDataFrame(
     dbType: DbType? = null,
     strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
-): AnyFrame =
-    when {
+): AnyFrame {
+    validateLimit(limit)
+    return when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
             this,
             sqlQueryOrTableName,
@@ -380,6 +389,7 @@ public fun DbConnectionConfig.readDataFrame(
             "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
         )
     }
+}
 
 /**
  * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
@@ -406,8 +416,9 @@ public fun Connection.readDataFrame(
     dbType: DbType? = null,
     strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
-): AnyFrame =
-    when {
+): AnyFrame {
+    validateLimit(limit)
+    return when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
             this,
             sqlQueryOrTableName,
@@ -432,6 +443,7 @@ public fun Connection.readDataFrame(
             "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
         )
     }
+}
 
 /**
  * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
@@ -480,6 +492,7 @@ public fun DataSource.readDataFrame(
     strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
+    validateLimit(limit)
     connection.use { conn ->
         return when {
             isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
@@ -536,6 +549,7 @@ public fun DataFrame.Companion.readResultSet(
     limit: Int? = null,
     inferNullability: Boolean = true,
 ): AnyFrame {
+    validateLimit(limit)
     val tableColumns = getTableColumnsMetadata(resultSet)
     return fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit, inferNullability)
 }
@@ -563,7 +577,10 @@ public fun ResultSet.readDataFrame(
     dbType: DbType,
     limit: Int? = null,
     inferNullability: Boolean = true,
-): AnyFrame = DataFrame.readResultSet(this, dbType, limit, inferNullability)
+): AnyFrame {
+    validateLimit(limit)
+    return DataFrame.readResultSet(this, dbType, limit, inferNullability)
+}
 
 /**
  * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
@@ -596,6 +613,7 @@ public fun DataFrame.Companion.readResultSet(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
 ): AnyFrame {
+    validateLimit(limit)
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     return readResultSet(resultSet, determinedDbType, limit, inferNullability)
@@ -628,7 +646,10 @@ public fun ResultSet.readDataFrame(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-): AnyFrame = DataFrame.readResultSet(this, connection, limit, inferNullability, dbType)
+): AnyFrame {
+    validateLimit(limit)
+    return DataFrame.readResultSet(this, connection, limit, inferNullability, dbType)
+}
 
 /**
  * Reads all non-system tables from a database and returns them
@@ -661,10 +682,12 @@ public fun DataFrame.Companion.readAllSqlTables(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
     configureStatement: (PreparedStatement) -> Unit = {},
-): Map<String, AnyFrame> =
-    withReadOnlyConnection(dbConfig, dbType) { connection ->
+): Map<String, AnyFrame> {
+    validateLimit(limit)
+    return withReadOnlyConnection(dbConfig, dbType) { connection ->
         readAllSqlTables(connection, catalogue, limit, inferNullability, dbType, configureStatement)
     }
+}
 
 /**
  * Reads all non-system tables from a database and returns them
@@ -711,6 +734,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     dbType: DbType? = null,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): Map<String, AnyFrame> {
+    validateLimit(limit)
     dataSource.connection.use { connection ->
         return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType, configureStatement)
     }
@@ -741,6 +765,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     dbType: DbType? = null,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): Map<String, AnyFrame> {
+    validateLimit(limit)
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
     val metaData = connection.metaData
     val tablesResultSet = retrieveTableMetadata(metaData, catalogue, determinedDbType)
