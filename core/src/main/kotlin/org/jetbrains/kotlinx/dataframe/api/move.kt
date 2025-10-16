@@ -736,6 +736,8 @@ public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
  * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
  * else they will be moved to the start on top level.
  */
+@Refine
+@Interpretable("MoveToStart0")
 public fun <T, C> MoveClause<T, C>.toStart(insideGroup: Boolean): DataFrame<T> = to(0, insideGroup)
 
 @Deprecated(TO_RIGHT, ReplaceWith(TO_RIGHT_REPLACE), DeprecationLevel.ERROR)

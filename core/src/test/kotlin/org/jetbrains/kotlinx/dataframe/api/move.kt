@@ -310,6 +310,6 @@ class MoveTests {
     fun `should throw when moving columns of different groups`() {
         shouldThrow<IllegalArgumentException> {
             grouped.move { "a"["b"] and "b"["c"] }.to(0, true)
-        }.message shouldBe "Cannot move columns with different parent to an index"
+        }.message shouldBe "Cannot move columns to an index remaining inside group if they have different parent"
     }
 }

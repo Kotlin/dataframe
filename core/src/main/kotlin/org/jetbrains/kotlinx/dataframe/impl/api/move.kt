@@ -15,9 +15,11 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toPath
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
@@ -143,7 +145,7 @@ internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: B
     val parentOfFirst = columnsToMoveParents.first()
     if (columnsToMoveParents.any { it != parentOfFirst }) {
         throw IllegalArgumentException(
-            "Cannot move columns with different parent to an index",
+            "Cannot move columns to an index remaining inside group if they have different parent",
         )
     }
 
@@ -152,22 +154,11 @@ internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: B
         return moveTo(columnIndex)
     }
 
-    // logic: remove columns to move and their siblings (from this point, sons), apply them moveTo, reinsert them
-    val parentPath = df[parentOfFirst].path
-    val sons = df[parentOfFirst].asColumnGroup()
-    // remove sons
-    val sonsWithFullPaths = sons.columns().map { parentPath + it.path }
-    val intermediateDf = df.removeImpl { sonsWithFullPaths.toColumnSet() }
-    // move sons and reinsert them
-    val columnsToMoveWithReducedPath = columnsToMove.map { it.path.last(it.path.size - parentPath.size).toPath() }
-    val sonsHaveBeenMoved = sons.asDataFrame().move {
-        columnsToMoveWithReducedPath.toColumnSet()
-    }.to(columnIndex).columns()
-    val sonsToInsert = sonsHaveBeenMoved.map { ColumnToInsert(parentPath + it.path, it) }
-    val secondIntermediateDf = intermediateDf.df.insertImpl(sonsToInsert)
-    // nested level is good but order of top level is changed -> need to fix it
-    val rootOfColumnsToMove = df[listOf(parentPath.first()).toPath()]
-    val indexOfRootOfColumnsToMove = df.columns().indexOf(rootOfColumnsToMove)
-    val finalDf = secondIntermediateDf.move { listOf(parentPath.first()).toPath() }.to(indexOfRootOfColumnsToMove)
-    return finalDf
+    // replace the level where columns to move are with a new one where columns are moved
+    val columnsToMoveNames = columnsToMove.map { it.name() }
+    return df.replace { parentOfFirst.asColumnGroup() }.with {
+        it.asDataFrame()
+            .move { columnsToMoveNames.toColumnSet() }.to(columnIndex)
+            .asColumnGroup(it.name())
+    }
 }
