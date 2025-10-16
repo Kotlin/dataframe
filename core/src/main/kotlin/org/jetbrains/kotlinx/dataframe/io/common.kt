@@ -48,6 +48,7 @@ public fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFram
 @Deprecated(
     LISTS_TO_DATAFRAME_MIGRATION,
     ReplaceWith("this.toDataFrame(header = null, containsColumns)", "org.jetbrains.kotlinx.dataframe.api.toDataFrame"),
+    level = DeprecationLevel.WARNING,
 )
 public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyFrame =
     toDataFrame(header = null, containsColumns)
