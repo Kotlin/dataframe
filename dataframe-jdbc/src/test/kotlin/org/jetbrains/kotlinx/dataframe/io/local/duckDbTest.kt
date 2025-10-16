@@ -23,10 +23,10 @@ import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.assertInferredTypesMatchSchema
 import org.jetbrains.kotlinx.dataframe.io.db.DuckDb
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
-import org.jetbrains.kotlinx.dataframe.io.readResultSet
-import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.io.readDataFrame
+import org.jetbrains.kotlinx.dataframe.io.readResultSet
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
 import java.math.BigDecimal
