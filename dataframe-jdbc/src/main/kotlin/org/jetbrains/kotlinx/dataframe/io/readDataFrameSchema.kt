@@ -2,8 +2,11 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.sql.Connection
 import java.sql.DriverManager
@@ -434,3 +437,28 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
 
     return dataFrameSchemas
 }
+
+/**
+ * Builds a DataFrame schema based on the given table columns.
+ *
+ * @param [tableColumns] a mutable map containing the table columns, where the key represents the column name
+ * and the value represents the metadata of the column
+ * @param [dbType] the type of database.
+ * @return a [DataFrameSchema] object representing the schema built from the table columns.
+ */
+internal fun buildSchemaByTableColumns(
+    tableColumns: MutableList<TableColumnMetadata>,
+    dbType: DbType,
+): DataFrameSchema {
+    val schemaColumns = tableColumns.associate {
+        Pair(it.name, generateColumnSchemaValue(dbType, it))
+    }
+
+    return DataFrameSchemaImpl(
+        columns = schemaColumns,
+    )
+}
+
+internal fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
+    dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
+        ?: ColumnSchema.Value(dbType.makeCommonSqlToKTypeMapping(tableColumnMetadata))

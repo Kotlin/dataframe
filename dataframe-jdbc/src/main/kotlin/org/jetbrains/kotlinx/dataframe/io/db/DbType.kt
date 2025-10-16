@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import java.math.BigDecimal
 import java.sql.Blob
 import java.sql.Clob
@@ -23,11 +25,11 @@ import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.util.Date
 import java.util.UUID
-import org.jetbrains.kotlinx.dataframe.io.castArray
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSupertypeOf
+import kotlin.reflect.full.safeCast
 import kotlin.reflect.full.starProjectedType
 
 /**
@@ -220,6 +222,29 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 rs.getString(columnIndex + 1)
             else rs.getString(columnIndex + 1)
         }
+    
+    /**
+     * Builds a single DataColumn with proper type handling.
+     * Accepts a mutable list to allow efficient post-processing.
+     */
+    public open fun buildDataColumn(
+        name: String,
+        values: MutableList<Any?>,
+        kType: KType,
+        columnMetadata: TableColumnMetadata,
+        inferNullability: Boolean,
+    ): DataColumn<*> {
+        val correctedValues = postProcessColumnValues(values, kType, columnMetadata)
+
+        return DataColumn.createValueColumn(
+            name = name,
+            values = correctedValues,
+            infer = convertNullabilityInference(inferNullability),
+            type = kType,
+        )
+    }
+
+    private fun convertNullabilityInference(inferNullability: Boolean) = if (inferNullability) Infer.Nulls else Infer.None
 
     /**
      * Processes the column values retrieved from the database and performs transformations based on the provided
@@ -231,7 +256,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param columnMetadata the metadata of the database column, including details such as SQL type name and size.
      * @return a list of processed column values, with transformations applied where necessary, or the original list if no transformation is needed.
      */
-    public open fun postProcessColumnValues(
+    private fun postProcessColumnValues(
         values: MutableList<Any?>,
         kType: KType,
         columnMetadata: TableColumnMetadata,
@@ -246,6 +271,15 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         else -> values
     }
 
+    /**
+     * Converts SQL Array objects to strongly-typed arrays.
+     *
+     * Extracts arrays from SQL Array objects and converts them to a consistent type
+     * if all elements share the same type. Returns original arrays if types vary.
+     *
+     * @param values raw values containing SQL Array objects
+     * @return list of consistently typed arrays, or original arrays if no common type exists
+     */
     private fun handleArrayValues(values: MutableList<Any?>): List<Any> {
         // Intermediate variable for the first mapping
         val sqlArrays = values.mapNotNull {
@@ -271,13 +305,17 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         }
     }
 
+    /** Utility function to cast arrays based on the type of elements */
+    private fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> =
+        array.mapNotNull { elementType.safeCast(it) }
+
     /**
      * Creates a mapping between common SQL types and their corresponding KTypes.
      *
      * @param tableColumnMetadata The metadata of the table column.
      * @return The KType associated with the SQL type or a default type if no mapping is found.
      */
-    internal fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
+    public open fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
         val jdbcTypeToKTypeMapping = mapOf(
             Types.BIT to Boolean::class,
             Types.TINYINT to Int::class,

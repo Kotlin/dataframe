@@ -858,30 +858,7 @@ private fun readTableAsDataFrame(
     return dataFrame
 }
 
-/**
- * Builds a DataFrame schema based on the given table columns.
- *
- * @param [tableColumns] a mutable map containing the table columns, where the key represents the column name
- * and the value represents the metadata of the column
- * @param [dbType] the type of database.
- * @return a [DataFrameSchema] object representing the schema built from the table columns.
- */
-internal fun buildSchemaByTableColumns(
-    tableColumns: MutableList<TableColumnMetadata>,
-    dbType: DbType,
-): DataFrameSchema {
-    val schemaColumns = tableColumns.associate {
-        Pair(it.name, generateColumnSchemaValue(dbType, it))
-    }
 
-    return DataFrameSchemaImpl(
-        columns = schemaColumns,
-    )
-}
-
-internal fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
-    dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
-        ?: ColumnSchema.Value(dbType.makeCommonSqlToKTypeMapping(tableColumnMetadata))
 
 /**
  * Retrieves the metadata of the columns in the result set.
@@ -948,10 +925,6 @@ internal fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, I
 
     return name
 }
-
-// Utility function to cast arrays based on the type of elements
-internal fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> =
-    array.mapNotNull { elementType.safeCast(it) }
 
 /**
  * Fetches and converts data from a ResultSet into a mutable map.
@@ -1037,39 +1010,15 @@ private fun buildDataFrameFromColumnData(
     inferNullability: Boolean,
 ): AnyFrame =
     columnData.mapIndexed { index, values ->
-        buildDataColumn(
+        dbType.buildDataColumn(
             name = tableColumns[index].name,
             values = values,
             kType = columnKTypes.getValue(index),
             columnMetadata = tableColumns[index],
-            dbType = dbType,
             inferNullability = inferNullability,
         )
     }.toDataFrame()
 
-/**
- * Builds a single DataColumn with proper type handling.
- * Accepts a mutable list to allow efficient post-processing.
- */
-private fun buildDataColumn(
-    name: String,
-    values: MutableList<Any?>,
-    kType: KType,
-    columnMetadata: TableColumnMetadata,
-    dbType: DbType,
-    inferNullability: Boolean,
-): DataColumn<*> {
-    val correctedValues = dbType.postProcessColumnValues(values, kType, columnMetadata)
-
-    return DataColumn.createValueColumn(
-        name = name,
-        values = correctedValues,
-        infer = convertNullabilityInference(inferNullability),
-        type = kType,
-    )
-}
-
-internal fun convertNullabilityInference(inferNullability: Boolean) = if (inferNullability) Infer.Nulls else Infer.None
 
 /**
  * Generates a KType based on the given database type and table column metadata.
