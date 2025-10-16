@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.sqlite.SQLiteConfig
 import java.sql.Connection
