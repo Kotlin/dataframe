@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
@@ -67,5 +65,6 @@ public open class H2(public val dialect: DbType = MySql) : DbType("h2") {
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
         dialect.convertSqlTypeToKType(tableColumnMetadata)
 
-    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String = dialect.sqlQueryLimit(sqlQuery, limit)
+    public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
+        dialect.buildSqlQueryWithLimit(sqlQuery, limit)
 }
