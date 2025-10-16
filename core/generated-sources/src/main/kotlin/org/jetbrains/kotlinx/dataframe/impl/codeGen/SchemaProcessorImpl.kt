@@ -23,8 +23,9 @@ internal class SchemaProcessorImpl(
     override val generatedMarkers = mutableListOf<Marker>()
 
     private fun DataFrameSchema.getAllSuperMarkers() =
-        registeredMarkers
-            .filter { it.isOpen && it.schema.compare(this, ComparisonMode.STRICT_FOR_NESTED_SCHEMAS).isSuperOrEqual() }
+        registeredMarkers.filter {
+            it.isOpen && it.schema.compare(this, ComparisonMode.STRICT_FOR_NESTED_SCHEMAS).isSuperOrMatches()
+        }
 
     private fun List<Marker>.onlyLeafs(): List<Marker> {
         val skip = flatMap { it.allSuperMarkers.keys }.toSet()
@@ -81,8 +82,6 @@ internal class SchemaProcessorImpl(
                         columnSchema.nullable,
                         renderAsList = true,
                     )
-
-                else -> throw NotImplementedError()
             }
 
         return schema.columns.asIterable().sortedBy { it.key }.flatMapIndexed { index, column ->
@@ -159,7 +158,7 @@ internal class SchemaProcessorImpl(
         val markerName: String
         val required = schema.getRequiredMarkers()
         val existingMarker = registeredMarkers.firstOrNull {
-            (!isOpen || it.isOpen) && it.schema == schema && it.implementsAll(required)
+            (!isOpen || it.isOpen) && it.schema.compare(schema).matches() && it.implementsAll(required)
         }
         if (existingMarker != null) {
             return existingMarker
