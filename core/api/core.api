@@ -6810,9 +6810,13 @@ public final class org/jetbrains/kotlinx/dataframe/schema/ComparisonMode : java/
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/schema/DataFrameSchema {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;
 	public abstract fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static synthetic fun compare$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public abstract fun getColumns ()Ljava/util/Map;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/util/DeprecationMessagesKt {
