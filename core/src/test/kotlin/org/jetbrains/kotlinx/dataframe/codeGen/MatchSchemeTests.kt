@@ -5,11 +5,15 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.generateCode
+import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsDerived
@@ -195,5 +199,49 @@ class MatchSchemeTests {
         scheme2.compare(scheme1, STRICT) shouldBe None
         scheme1.compare(scheme3, STRICT) shouldBe None
         scheme3.compare(scheme1, STRICT) shouldBe None
+    }
+
+    @Test
+    fun `comparison with order`() {
+        val scheme1 = dataFrameOf(
+            "a" to columnOf(1, 2, 3, 4),
+            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
+        ).schema()
+
+        val scheme1a = dataFrameOf(
+            "a" to columnOf(1, 2, 3, 4),
+            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
+        ).schema()
+
+        val scheme2 = dataFrameOf(
+            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
+            "a" to columnOf(1, 2, 3, 4),
+        ).schema()
+
+        scheme1.compare(scheme1a).matches() shouldBe true
+        (scheme1 == scheme1a) shouldBe true
+
+        scheme1.compare(scheme2).matches() shouldBe true
+        (scheme1 == scheme2) shouldBe false
+    }
+
+    @Test
+    fun `nested comparison with order`() {
+        typed.schema().compare(typed.schema()).matches() shouldBe true
+        (typed.schema() == typed.schema()) shouldBe true
+
+        val movedInGroup = typed.move { pageInfo.resultsPerPage }.after { pageInfo.snippets }
+
+        typed.schema().compare(movedInGroup.schema()).matches() shouldBe true
+        (typed.schema() == movedInGroup.schema()) shouldBe false
+
+        val movedInFrameAndGroup = typed
+            .update { items }.with {
+                it.move { kind }.after { id }
+                    .move { snippet.position }.after { snippet.info }
+            }
+
+        typed.schema().compare(movedInFrameAndGroup.schema()).matches() shouldBe true
+        (typed.schema() == movedInFrameAndGroup.schema()) shouldBe false
     }
 }
