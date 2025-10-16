@@ -43,7 +43,7 @@ public sealed class ColumnSchema {
 
         public fun compare(other: Value, comparisonMode: ComparisonMode = LENIENT): CompareResult =
             when {
-                type == other.type -> CompareResult.Equals
+                type == other.type -> CompareResult.Matches
                 comparisonMode == STRICT -> CompareResult.None
                 type.isSubtypeOf(other.type) -> CompareResult.IsDerived
                 type.isSupertypeOf(other.type) -> CompareResult.IsSuper
@@ -80,7 +80,7 @@ public sealed class ColumnSchema {
             ) + CompareResult.compareNullability(thisIsNullable = nullable, otherIsNullable = other.nullable)
     }
 
-    /** Checks equality just on kind, type, or schema. */
+    /** Checks equality by kind, type, or schema. TODO was matching, check if == works. */
     override fun equals(other: Any?): Boolean {
         val otherType = other as? ColumnSchema ?: return false
         if (otherType.kind != kind) return false
@@ -94,7 +94,7 @@ public sealed class ColumnSchema {
 
     public fun compare(other: ColumnSchema, comparisonMode: ComparisonMode = LENIENT): CompareResult {
         if (kind != other.kind) return CompareResult.None
-        if (this === other) return CompareResult.Equals
+        if (this === other) return CompareResult.Matches
         return when (this) {
             is Value -> compare(other as Value, comparisonMode)
             is Group -> compare(other as Group, comparisonMode)
