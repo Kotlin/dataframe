@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.schema.plus
-import kotlin.collections.forEach
 
 public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
 
@@ -54,11 +53,47 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
         return result
     }
 
-    override fun equals(other: Any?): Boolean = other is DataFrameSchema && this.compare(other).isEqual()
+    /**
+     * Returns `true` if, and only if,
+     * [this schema][this] has the same columns **in the same order** as the [other schema][other].
+     * The types must also match exactly.
+     *
+     * Use [compare][DataFrameSchema.compare] it the order does not matter and
+     * for other comparison options.
+     *
+     * @see [DataFrameSchema.compare]
+     * @see [CompareResult.matches]
+     */
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is DataFrameSchema) return false
+        if (this.compare(other) != Matches) return false
+        if (columns.keys.toList() != other.columns.keys.toList()) return false
+
+        for ((name, col) in columns) {
+            val other = other.columns[name]!!
+            when (col) {
+                is ColumnSchema.Group -> {
+                    other as ColumnSchema.Group // safe to cast because of compare
+                    if (col.schema != other.schema) return false
+                }
+
+                is ColumnSchema.Frame -> {
+                    other as ColumnSchema.Frame // safe to cast because of compare
+                    if (col.schema != other.schema) return false
+                }
+
+                // already checked by compare
+                is ColumnSchema.Value -> Unit
+            }
+        }
+
+        return true
+    }
 
     override fun toString(): String = render()
 
-    override fun hashCode(): Int = columns.hashCode()
+    override fun hashCode(): Int = columns.toList().hashCode()
 }
 
 internal fun DataFrameSchemaImpl.render(): String {
