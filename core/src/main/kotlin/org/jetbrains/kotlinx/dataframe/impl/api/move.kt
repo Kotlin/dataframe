@@ -32,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 import org.jetbrains.kotlinx.dataframe.impl.last
 import org.jetbrains.kotlinx.dataframe.path
+import kotlin.collections.first
 
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
     val removeResult = df.removeImpl(columns = columns)
@@ -154,15 +155,22 @@ internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: B
         return moveTo(columnIndex)
     }
 
-    //idea: remove columns to move and brothers (sons), apply moveTo to sons, insert sons
+    // logic: remove columns to move and their siblings (from this point, sons), apply them moveTo, reinsert them
     val parentPath = df[parentOfFirst].path
     val sons = df[parentOfFirst].asColumnGroup()
-    // remove columns to move and their siblings
-    val sonsPaths = sons.columns().map { parentPath + it.path }
-    val intermediateDf = df.removeImpl { sonsPaths.toColumnSet() }
-    // move columns and insert back
+    // remove sons
+    val sonsWithFullPaths = sons.columns().map { parentPath + it.path }
+    val intermediateDf = df.removeImpl { sonsWithFullPaths.toColumnSet() }
+    // move sons and reinsert them
     val columnsToMoveWithReducedPath = columnsToMove.map { it.path.last(it.path.size - parentPath.size).toPath() }
-    val columnsMoved = sons.asDataFrame().move { columnsToMoveWithReducedPath.toColumnSet() }.to(columnIndex).columns()
-    val columnsMovedPaths = columnsMoved.map { ColumnToInsert(parentPath + it.path, it ) }
-    return intermediateDf.df.insertImpl(columnsMovedPaths)
+    val sonsHaveBeenMoved = sons.asDataFrame().move {
+        columnsToMoveWithReducedPath.toColumnSet()
+    }.to(columnIndex).columns()
+    val sonsToInsert = sonsHaveBeenMoved.map { ColumnToInsert(parentPath + it.path, it) }
+    val secondIntermediateDf = intermediateDf.df.insertImpl(sonsToInsert)
+    // nested level is good but order of top level is changed -> need to fix it
+    val rootOfColumnsToMove = df[listOf(parentPath.first()).toPath()]
+    val indexOfRootOfColumnsToMove = df.columns().indexOf(rootOfColumnsToMove)
+    val finalDf = secondIntermediateDf.move { listOf(parentPath.first()).toPath() }.to(indexOfRootOfColumnsToMove)
+    return finalDf
 }
