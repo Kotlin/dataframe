@@ -3,9 +3,9 @@ package org.jetbrains.kotlinx.dataframe.impl.schema
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult
-import org.jetbrains.kotlinx.dataframe.schema.CompareResult.Equals
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsDerived
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsSuper
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.Matches
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.None
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
@@ -18,9 +18,9 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
 
     override fun compare(other: DataFrameSchema, comparisonMode: ComparisonMode): CompareResult {
         require(other is DataFrameSchemaImpl)
-        if (this === other) return Equals
+        if (this === other) return Matches
 
-        var result: CompareResult = Equals
+        var result: CompareResult = Matches
 
         // check for each column in this schema if there is a column with the same name in the other schema
         // - if so, check those schemas for equality, taking comparisonMode into account
