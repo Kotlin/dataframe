@@ -152,6 +152,6 @@ fun AnyFrame.assertInferredTypesMatchSchema() {
         |${schema().toString().lines().joinToString("\n|")}
         """.trimMargin()
     }) {
-        schema().compare(inferType().schema()).isSuperOrEqual() shouldBe true
+        schema().compare(inferType().schema()).isSuperOrMatches() shouldBe true
     }
 }
