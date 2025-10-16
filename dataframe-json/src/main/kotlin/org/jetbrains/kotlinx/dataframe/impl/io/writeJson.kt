@@ -176,7 +176,7 @@ internal fun encodeValue(col: AnyCol, index: Int, customEncoders: List<CustomEnc
         matchingEncoder != null -> matchingEncoder.encode(col[index])
 
         col.isList() -> col[index]?.let { list ->
-            val values = (list as List<*>).map { convert(it) }
+            val values = list.map { convert(it) }
             JsonArray(values)
         } ?: JsonArray(emptyList())
 
