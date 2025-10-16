@@ -15,10 +15,11 @@ such as [`filter`](filter.md), [`take`](sliceRows.md#take),
 [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
 
 [`DataFrame`](DataFrame.md) has two-way compatibility with [`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/) and [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/):
-* `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#todataframe)
+* `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#dataframe-from-iterable-t)
 * `DataFrame<T>` -> `List<T>`: [toList](toList.md)
-* `Map<String, List<*>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#todataframe)
+* `Map<String, List<*>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#dataframe-from-map-string-list)
 * `DataFrame<*>` -> `Map<String, List<*>>`: [toMap](toMap.md)
+* `List<List<T>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#dataframe-from-list-list-t)
 
 Columns, rows, and values of [`DataFrame`](DataFrame.md)
 can be accessed as [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/),
