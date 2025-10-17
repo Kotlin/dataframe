@@ -220,6 +220,53 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColum
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KProperty<*>): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
+/**
+ * Moves the specified [columns\] to a new position specified
+ * by [columnIndex]. If [insideGroup] is true selected columns
+ * will be moved remaining within their [ColumnGroup],
+ * else they will be moved to the top level.
+ *
+ * @include [CommonMoveToDocs]
+ * @include [SelectingColumns.Dsl] {@include [SetMoveToOperationArg]}
+ * ### Examples:
+ * ```kotlin
+ * df.moveTo(0, true) { length and age }
+ * df.moveTo(2, false) { cols(1..5) }
+ * ```
+ * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
+ * where the selected columns will be moved.
+ * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
+ * else they will be moved to the top level.
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ */
+public fun <T> DataFrame<T>.moveTo(
+    newColumnIndex: Int,
+    insideGroup: Boolean,
+    columns: ColumnsSelector<T, *>,
+): DataFrame<T> = move(columns).to(newColumnIndex, insideGroup)
+
+/**
+ * * Moves the specified [columns\] to a new position specified
+ *  * by [columnIndex]. If [insideGroup] is true selected columns
+ *  * will be moved remaining within their [ColumnGroup],
+ *  * else they will be moved to the top level.
+ *
+ * @include [CommonMoveToDocs]
+ * @include [SelectingColumns.ColumnNames] {@include [SetMoveToOperationArg]}
+ * ### Examples:
+ * ```kotlin
+ * df.moveTo(0, true) { length and age }
+ * df.moveTo(2, false) { cols(1..5) }
+ * ```
+ * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
+ * where the selected columns will be moved.
+ * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
+ * else they will be moved to the top level.
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ */
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, insideGroup: Boolean, vararg columns: String): DataFrame<T> =
+    moveTo(newColumnIndex, insideGroup) { columns.toColumnSet() }
+
 // endregion
 
 // region moveToStart
