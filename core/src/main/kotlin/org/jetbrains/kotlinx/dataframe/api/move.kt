@@ -246,10 +246,10 @@ public fun <T> DataFrame<T>.moveTo(
 ): DataFrame<T> = move(columns).to(newColumnIndex, insideGroup)
 
 /**
- * * Moves the specified [columns\] to a new position specified
- *  * by [columnIndex]. If [insideGroup] is true selected columns
- *  * will be moved remaining within their [ColumnGroup],
- *  * else they will be moved to the top level.
+ * Moves the specified [columns\] to a new position specified
+ * by [columnIndex]. If [insideGroup] is true selected columns
+ * will be moved remaining within their [ColumnGroup],
+ * else they will be moved to the top level.
  *
  * @include [CommonMoveToDocs]
  * @include [SelectingColumns.ColumnNames] {@include [SetMoveToOperationArg]}
