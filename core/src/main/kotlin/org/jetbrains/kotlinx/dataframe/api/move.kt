@@ -570,8 +570,10 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  */
 @Refine
 @Interpretable("ToTop")
+public fun <T, C> MoveClause<T, C>.toTop(): DataFrame<T> = toTop { it.name() }
+
 public fun <T, C> MoveClause<T, C>.toTop(
-    newColumnName: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String = { it.name() },
+    newColumnName: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String,
 ): DataFrame<T> = into { newColumnName(it).toColumnAccessor() }
 
 // endregion
