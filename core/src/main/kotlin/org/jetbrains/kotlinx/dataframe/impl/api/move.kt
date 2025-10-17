@@ -8,22 +8,29 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.replace
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.exceptions.ColumnsWithDifferentParentException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 import org.jetbrains.kotlinx.dataframe.path
+import kotlin.collections.first
 
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
     val removeResult = df.removeImpl(columns = columns)
@@ -123,4 +130,34 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
                 emptyList()
             }
     return newColumnList.toDataFrame().cast()
+}
+
+internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: Boolean): DataFrame<T> {
+    if (!insideGroup) {
+        return moveTo(columnIndex)
+    }
+
+    val columnsToMove = df.getColumns(columns)
+
+    // check if columns to move have the same parent
+    val columnsToMoveParents = columnsToMove.map { it.path.dropLast() }
+    val parentOfFirst = columnsToMoveParents.first()
+    if (columnsToMoveParents.any { it != parentOfFirst }) {
+        throw ColumnsWithDifferentParentException(
+            "Cannot move columns to an index remaining inside group if they have different parent",
+        )
+    }
+
+    // if columns will be moved to top level or columns to move are at top level
+    if (parentOfFirst.isEmpty()) {
+        return moveTo(columnIndex)
+    }
+
+    // replace the level where columns to move are with a new one where columns are moved
+    val columnsToMoveNames = columnsToMove.map { it.name() }
+    return df.replace { parentOfFirst.asColumnGroup() }.with {
+        it.asDataFrame()
+            .move { columnsToMoveNames.toColumnSet() }.to(columnIndex)
+            .asColumnGroup(it.name())
+    }
 }
