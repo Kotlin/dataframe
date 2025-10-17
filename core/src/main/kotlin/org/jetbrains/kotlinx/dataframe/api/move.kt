@@ -341,7 +341,7 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = 
  * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
  * else they will be moved to the start of the top level.
  */
-public fun <T> DataFrame<T>.moveToStart(vararg columns: String, insideGroup: Boolean): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToStart(insideGroup: Boolean, vararg columns: String): DataFrame<T> =
     moveToStart(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
@@ -438,7 +438,7 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = mo
  * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
  * else they will be moved to the end of the top level.
  */
-public fun <T> DataFrame<T>.moveToEnd(vararg columns: String, insideGroup: Boolean): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToEnd(insideGroup: Boolean, vararg columns: String): DataFrame<T> =
     moveToEnd(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
