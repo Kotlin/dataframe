@@ -312,6 +312,17 @@ public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFram
 @Interpretable("MoveToStart1")
 public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
 
+/**
+ * @include [CommonMoveToStartDocs]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToStartOperationArg]}
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
+ * else they will be moved to the start of the top level.
+ */
+@Refine
+@Interpretable("MoveToStart1")
+public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>, insideGroup: Boolean): DataFrame<T> = move(columns).toStart(insideGroup)
+
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
 
@@ -321,6 +332,15 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = m
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
+
+/**
+ * @include [CommonMoveToStartDocs]
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToStartOperationArg]}
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
+ * else they will be moved to the start of the top level.
+ */
+public fun <T> DataFrame<T>.moveToStart(vararg columns: String, insideGroup: Boolean): DataFrame<T> = moveToStart ({ columns.toColumnSet() }, insideGroup)
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
@@ -387,6 +407,17 @@ public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFra
 @Interpretable("MoveToEnd1")
 public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
 
+/**
+ * @include [CommonMoveToEndDocs]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToEndOperationArg]}
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
+ * else they will be moved to the end of the top level.
+ */
+@Refine
+@Interpretable("MoveToEnd1")
+public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>, insideGroup: Boolean): DataFrame<T> = move(columns).toEnd(insideGroup)
+
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
 
@@ -396,6 +427,15 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = 
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
+
+/**
+ * @include [CommonMoveToEndDocs]
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToEndOperationArg]}
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
+ * else they will be moved to the end of the top level.
+ */
+public fun <T> DataFrame<T>.moveToEnd(vararg columns: String, insideGroup: Boolean): DataFrame<T> = moveToEnd ({ columns.toColumnSet() }, insideGroup)
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
