@@ -321,7 +321,8 @@ public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFra
  */
 @Refine
 @Interpretable("MoveToStart1")
-public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>, insideGroup: Boolean): DataFrame<T> = move(columns).toStart(insideGroup)
+public fun <T> DataFrame<T>.moveToStart(insideGroup: Boolean, columns: ColumnsSelector<T, *>): DataFrame<T> =
+    move(columns).toStart(insideGroup)
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
@@ -340,7 +341,8 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = 
  * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
  * else they will be moved to the start of the top level.
  */
-public fun <T> DataFrame<T>.moveToStart(vararg columns: String, insideGroup: Boolean): DataFrame<T> = moveToStart ({ columns.toColumnSet() }, insideGroup)
+public fun <T> DataFrame<T>.moveToStart(vararg columns: String, insideGroup: Boolean): DataFrame<T> =
+    moveToStart(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
@@ -416,7 +418,8 @@ public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame
  */
 @Refine
 @Interpretable("MoveToEnd1")
-public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>, insideGroup: Boolean): DataFrame<T> = move(columns).toEnd(insideGroup)
+public fun <T> DataFrame<T>.moveToEnd(insideGroup: Boolean, columns: ColumnsSelector<T, *>): DataFrame<T> =
+    move(columns).toEnd(insideGroup)
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
@@ -435,7 +438,8 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = mo
  * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
  * else they will be moved to the end of the top level.
  */
-public fun <T> DataFrame<T>.moveToEnd(vararg columns: String, insideGroup: Boolean): DataFrame<T> = moveToEnd ({ columns.toColumnSet() }, insideGroup)
+public fun <T> DataFrame<T>.moveToEnd(vararg columns: String, insideGroup: Boolean): DataFrame<T> =
+    moveToEnd(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
