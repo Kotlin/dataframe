@@ -345,6 +345,64 @@ internal fun <T> InsertClause<T>.afterImpl(columnPath: ColumnPath): DataFrame<T>
 
 // endregion
 
+// region before
+
+/**
+ * Inserts the new column previously specified with [insert]
+ * at the position immediately before the selected [column] (on the same level).
+ *
+ * For more information: {@include [DocumentationUrls.Insert]}
+ *
+ * See [Grammar][InsertDocs.Grammar] for more details.
+ *
+ * See also: [SelectingColumns.Dsl].
+ *
+ * ### Examples:
+ * ```kotlin
+ * // Insert a new column "age" before the "name" column
+ * df.insert(age).before { name }
+ *
+ * // Insert a new column "sum" before the nested "min" column (inside the "stats" column group)
+ * val dfWithSum = df.insert("sum") { a + b }.before { stats.min }
+ * ```
+ *
+ * @param [column] The [ColumnSelector] used to choose an existing column in this [DataFrame],
+ * before which the new column will be inserted.
+ * @return A new [DataFrame] with the inserted column placed before the selected column.
+ */
+@Refine
+@Interpretable("InsertBefore0")
+public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T> = beforeImpl(df.getColumnPath(column))
+
+/**
+ * Inserts the new column previously specified with [insert]
+ * at the position immediately before the column with the given [name][column].
+ *
+ * For more information: {@include [DocumentationUrls.Insert]}
+ *
+ * See [Grammar][InsertDocs.Grammar] for more details.
+ *
+ * See also: [SelectingColumns.ColumnNames].
+ *
+ * ### Example
+ * ```kotlin
+ * // Insert a new column "age" before the "name" column
+ * df.insert(age).before("name")
+ * ```
+ *
+ * @param [column] The [String] name of the column in this [DataFrame]
+ * before which the new column will be inserted.
+ * @return A new [DataFrame] with the inserted column placed before the specified column.
+ */
+public fun <T> InsertClause<T>.before(column: String): DataFrame<T> = df.add(this.column).move(this.column).before(column)
+
+internal fun <T> InsertClause<T>.beforeImpl(columnPath: ColumnPath): DataFrame<T> {
+    val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
+    return df.insertImpl(dstPath, column).move { dstPath }.before { columnPath }
+}
+
+// endregion
+
 // region at
 
 /**
