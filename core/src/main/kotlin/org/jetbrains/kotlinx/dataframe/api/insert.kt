@@ -394,7 +394,8 @@ public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T
  * before which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed before the specified column.
  */
-public fun <T> InsertClause<T>.before(column: String): DataFrame<T> = df.add(this.column).move(this.column).before(column)
+public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
+    df.add(this.column).move(this.column).before(column)
 
 internal fun <T> InsertClause<T>.beforeImpl(columnPath: ColumnPath): DataFrame<T> {
     val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
