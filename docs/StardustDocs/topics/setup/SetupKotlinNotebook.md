@@ -117,3 +117,10 @@ showcasing how Kotlin DataFrame can help with a variety of data tasks.
 
 * Discover powerful [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)that
 make exploring and understanding your data easier and more effective.
+
+## Memory Errors?
+
+* If you are experiencing `OutOfMemoryError`s and heap space errors, you can adjust Notebook's
+memory settings independently of IntelliJ IDEA's memory settings.
+
+* In IntelliJ IDEA, go to Settings... Tools... Kotlin Notebook and increase the `Max heap size`
