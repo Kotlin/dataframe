@@ -73,42 +73,6 @@ val df = dataFrameOf("name", "age")(
 
 <!---END-->
 
-<!---FUN createDataFrameWithFill-->
-
-```kotlin
-// Multiplication table
-dataFrameOf(1..10) { x -> (1..10).map { x * it } }
-```
-
-<!---END-->
-
-<!---FUN createDataFrameWithRandom-->
-
-```kotlin
-// 5 columns filled with 7 random double values:
-val names = (1..5).map { "column$it" }
-dataFrameOf(names).randomDouble(7)
-
-// 5 columns filled with 7 random double values between 0 and 1 (inclusive)
-dataFrameOf(names).randomDouble(7, 0.0..1.0).print()
-
-// 5 columns filled with 7 random int values between 0 and 100 (inclusive)
-dataFrameOf(names).randomInt(7, 0..100).print()
-```
-
-<!---END-->
-
-<!---FUN createDataFrameFillConstant-->
-
-```kotlin
-val names = listOf("first", "second", "third")
-
-// DataFrame with 3 columns, fill each column with 15 `true` values
-val df = dataFrameOf(names).fill(15, true)
-```
-
-<!---END-->
-
 ### toDataFrame
 
 #### `DataFrame` from `Map<String, List<*>>`:
@@ -123,6 +87,86 @@ map.toDataFrame()
 ```
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html" width="100%"/>
+<!---END-->
+
+#### `DataFrame` from random data:
+
+Use `IntRange` to generate rows filled with random values:
+
+<!---FUN createRandomDataFrame-->
+
+```kotlin
+val categories = listOf("Electronics", "Books", "Clothing")
+// DataFrame with 4 columns and 7 rows
+(0 until 7).toDataFrame {
+    "productId" from { "P${1000 + it}" }
+    "category" from { categories.random() }
+    "price" from { Random.nextDouble(10.0, 500.0) }
+    "inStock" from { Random.nextInt(0, 100) }
+}
+```
+
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createRandomDataFrame.html" width="100%"/>
+<!---END-->
+
+Generate DataFrame with nested ColumnGroup and FrameColumn:
+
+<!---FUN createNestedRandomDataFrame-->
+
+```kotlin
+val categories = listOf("Electronics", "Books", "Clothing")
+// DataFrame with 5 columns and 7 rows
+(0 until 7).toDataFrame {
+    "productId" from { "P${1000 + it}" }
+    "category" from { categories.random() }
+    "price" from { Random.nextDouble(10.0, 500.0) }
+
+    // Column Group
+    "manufacturer" {
+        "country" from { listOf("USA", "China", "Germany", "Japan").random() }
+        "yearEstablished" from { Random.nextInt(1950, 2020) }
+    }
+
+    // Frame Column
+    "reviews" from {
+        val reviewCount = Random.nextInt(0, 8)
+        (0 until reviewCount).toDataFrame {
+            val ratings: DataColumn<Int> = expr { Random.nextInt(1, 6) }
+            val comments = ratings.map {
+                when (it) {
+                    5 -> listOf("Amazing quality!", "Best purchase ever!", "Highly recommend!", "Absolutely perfect!")
+                    4 -> listOf("Great product!", "Very satisfied", "Good value for money", "Would buy again")
+                    3 -> listOf("It's okay", "Does the job", "Average quality", "Neither good nor bad")
+                    2 -> listOf("Could be better", "Disappointed", "Not what I expected", "Poor quality")
+                    else -> listOf("Terrible!", "Not worth the price", "Complete waste of money", "Do not buy!")
+                }.random()
+            }
+
+            "author" from { "User${Random.nextInt(1000, 9999)}" }
+            ratings into "rating"
+            comments into "comment"
+        }
+    }
+}
+```
+
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createNestedRandomDataFrame.html" width="100%"/>
+<!---END-->
+
+Use `from` in combination with loops to generate DataFrame:
+
+<!---FUN createDataFrameWithFill-->
+
+```kotlin
+// Multiplication table
+(1..10).toDataFrame {
+    (1..10).forEach { x ->
+        "$x" from { x * it }
+    }
+}
+```
+
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html" width="100%"/>
 <!---END-->
 
 #### `DataFrame` from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
@@ -184,7 +228,7 @@ lines.chunked(4) { it.take(3) }.toDataFrame(header = listOf("n", "timestamp", "t
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameLists.html" width="100%"/>
 <!---END-->
 
-#### [`DataFrame`](DataFrame.md) from [`Iterable<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/):
+#### [`DataFrame`](DataFrame.md) from `Iterable<T>`:
 
 <!---FUN readDataFrameFromObject-->
 
@@ -196,6 +240,7 @@ val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 2
 val df = persons.toDataFrame()
 ```
 
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromObject.html" width="100%"/>
 <!---END-->
 
 Scans object properties using reflection and creates a [ValueColumn](DataColumn.md#valuecolumn) for every property. 
