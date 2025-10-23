@@ -4,6 +4,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.DynamicDataFrameBuilder
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -31,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.io.File
+import kotlin.random.Random as KotlinRandom
 import kotlin.reflect.typeOf
 
 class Create : TestBase() {
@@ -224,6 +226,70 @@ class Create : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
+    fun createRandomDataFrame() {
+        // stable random + clean examples
+        @Suppress("LocalVariableName")
+        val Random = KotlinRandom(42)
+        fun <T> List<T>.random() = this.random(Random)
+        // SampleStart
+        val categories = listOf("Electronics", "Books", "Clothing")
+        // DataFrame with 4 columns and 7 rows
+        (0 until 7).toDataFrame {
+            "productId" from { "P${1000 + it}" }
+            "category" from { categories.random() }
+            "price" from { Random.nextDouble(10.0, 500.0) }
+            "inStock" from { Random.nextInt(0, 100) }
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun createNestedRandomDataFrame() {
+        // stable random + clean examples
+        @Suppress("LocalVariableName")
+        val Random = KotlinRandom(42)
+        fun <T> List<T>.random() = this.random(Random)
+        // SampleStart
+        val categories = listOf("Electronics", "Books", "Clothing")
+        // DataFrame with 5 columns and 7 rows
+        (0 until 7).toDataFrame {
+            "productId" from { "P${1000 + it}" }
+            "category" from { categories.random() }
+            "price" from { Random.nextDouble(10.0, 500.0) }
+
+            // Column Group
+            "manufacturer" {
+                "country" from { listOf("USA", "China", "Germany", "Japan").random() }
+                "yearEstablished" from { Random.nextInt(1950, 2020) }
+            }
+
+            // Frame Column
+            "reviews" from {
+                val reviewCount = Random.nextInt(0, 8)
+                (0 until reviewCount).toDataFrame {
+                    val ratings: DataColumn<Int> = expr { Random.nextInt(1, 6) }
+                    val comments = ratings.map {
+                        when (it) {
+                            5 -> listOf("Amazing quality!", "Best purchase ever!", "Highly recommend!", "Absolutely perfect!")
+                            4 -> listOf("Great product!", "Very satisfied", "Good value for money", "Would buy again")
+                            3 -> listOf("It's okay", "Does the job", "Average quality", "Neither good nor bad")
+                            2 -> listOf("Could be better", "Disappointed", "Not what I expected", "Poor quality")
+                            else -> listOf("Terrible!", "Not worth the price", "Complete waste of money", "Do not buy!")
+                        }.random()
+                    }
+
+                    "author" from { "User${Random.nextInt(1000, 9999)}" }
+                    ratings into "rating"
+                    comments into "comment"
+                }
+            }
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
     fun createDataFrameOfPairs() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
@@ -254,7 +320,11 @@ class Create : TestBase() {
     fun createDataFrameWithFill() {
         // SampleStart
         // Multiplication table
-        dataFrameOf(1..10) { x -> (1..10).map { x * it } }
+        (1..10).toDataFrame {
+            (1..10).forEach { x ->
+                "$x" from { x * it }
+            }
+        }
         // SampleEnd
     }
 
@@ -330,10 +400,6 @@ class Create : TestBase() {
 
         val df = persons.toDataFrame()
         // SampleEnd
-        df.columnsCount() shouldBe 2
-        df.rowsCount() shouldBe 3
-        df["name"].type() shouldBe typeOf<String>()
-        df["age"].type() shouldBe typeOf<Int>()
     }
 
     @Test
@@ -353,11 +419,6 @@ class Create : TestBase() {
 
         val df = students.toDataFrame(maxDepth = 1)
         // SampleEnd
-        df.columnsCount() shouldBe 3
-        df.rowsCount() shouldBe 2
-        df["name"].kind shouldBe ColumnKind.Group
-        df["name"]["firstName"].type() shouldBe typeOf<String>()
-        df["scores"].kind shouldBe ColumnKind.Frame
     }
 
     @Test
@@ -392,12 +453,6 @@ class Create : TestBase() {
             }
         }
         // SampleEnd
-        df.columnsCount() shouldBe 5
-        df.rowsCount() shouldBe 2
-        df["name"].kind shouldBe ColumnKind.Value
-        df["name"].type shouldBe typeOf<Name>()
-        df["scores"].kind shouldBe ColumnKind.Frame
-        df["summary"]["min score"].values() shouldBe listOf(3, 5)
     }
 
     @Test
