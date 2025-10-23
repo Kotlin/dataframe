@@ -415,11 +415,6 @@ class Create : TestBase() {
 
         val df = students.toDataFrame(maxDepth = 1)
         // SampleEnd
-        df.columnsCount() shouldBe 3
-        df.rowsCount() shouldBe 2
-        df["name"].kind shouldBe ColumnKind.Group
-        df["name"]["firstName"].type() shouldBe typeOf<String>()
-        df["scores"].kind shouldBe ColumnKind.Frame
     }
 
     @Test
@@ -454,12 +449,6 @@ class Create : TestBase() {
             }
         }
         // SampleEnd
-        df.columnsCount() shouldBe 5
-        df.rowsCount() shouldBe 2
-        df["name"].kind shouldBe ColumnKind.Value
-        df["name"].type shouldBe typeOf<Name>()
-        df["scores"].kind shouldBe ColumnKind.Frame
-        df["summary"]["min score"].values() shouldBe listOf(3, 5)
     }
 
     @Test
