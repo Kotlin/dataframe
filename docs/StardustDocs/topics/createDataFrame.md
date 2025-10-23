@@ -267,6 +267,7 @@ val students = listOf(
 val df = students.toDataFrame(maxDepth = 1)
 ```
 
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObject.html" width="100%"/>
 <!---END-->
 
 For detailed control over object graph transformations, use the configuration DSL.
@@ -294,6 +295,7 @@ val df = students.toDataFrame {
 }
 ```
 
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObjectWithExclude.html" width="100%"/>
 <!---END-->
 
 ### DynamicDataFrameBuilder
