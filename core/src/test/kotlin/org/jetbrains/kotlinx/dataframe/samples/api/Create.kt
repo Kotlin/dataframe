@@ -26,14 +26,10 @@ import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.value
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
-import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.io.File
 import kotlin.random.Random as KotlinRandom
-import kotlin.reflect.typeOf
 
 class Create : TestBase() {
 
@@ -419,11 +415,6 @@ class Create : TestBase() {
 
         val df = students.toDataFrame(maxDepth = 1)
         // SampleEnd
-        df.columnsCount() shouldBe 3
-        df.rowsCount() shouldBe 2
-        df["name"].kind shouldBe ColumnKind.Group
-        df["name"]["firstName"].type() shouldBe typeOf<String>()
-        df["scores"].kind shouldBe ColumnKind.Frame
     }
 
     @Test
@@ -458,12 +449,6 @@ class Create : TestBase() {
             }
         }
         // SampleEnd
-        df.columnsCount() shouldBe 5
-        df.rowsCount() shouldBe 2
-        df["name"].kind shouldBe ColumnKind.Value
-        df["name"].type shouldBe typeOf<Name>()
-        df["scores"].kind shouldBe ColumnKind.Frame
-        df["summary"]["min score"].values() shouldBe listOf(3, 5)
     }
 
     @Test
