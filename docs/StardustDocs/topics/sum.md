@@ -16,8 +16,6 @@ All operations on `Double`/`Float`/`Number` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
 When it's set to `true`, `NaN` values are ignored.
 
-```kotlin
-
 <!---FUN statisticModes -->
 
 ```kotlin
