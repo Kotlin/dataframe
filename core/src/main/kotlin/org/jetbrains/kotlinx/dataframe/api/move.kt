@@ -222,7 +222,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KPropert
 
 /**
  * Moves the specified [columns\] to a new position specified
- * by [columnIndex]. If [insideGroup] is true selected columns
+ * by [newColumnIndex]. If [insideGroup] is true selected columns
  * will be moved remaining within their [ColumnGroup],
  * else they will be moved to the top level.
  *
