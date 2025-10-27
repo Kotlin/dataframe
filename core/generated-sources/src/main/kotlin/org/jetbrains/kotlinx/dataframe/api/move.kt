@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
+import org.jetbrains.kotlinx.dataframe.impl.api.moveToImpl
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT
@@ -417,6 +418,93 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColum
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KProperty<*>): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
+/**
+ * Moves the specified [columns] to a new position specified
+ * by [newColumnIndex]. If [insideGroup] is true selected columns
+ * will be moved remaining within their [ColumnGroup],
+ * else they will be moved to the top level.
+ *
+ * Moves the specified [columns] to a new position specified by
+ * [newColumnIndex] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveTo.MoveToSelectingOptions].
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ * ### This MoveTo Overload
+ * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+ *
+ * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * #### NOTE:
+ * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+ * in this DSL directly with any function, they are NOT valid return types for the
+ * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
+ * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+ *
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ * ### Examples:
+ * ```kotlin
+ * df.moveTo(0, true) { length and age }
+ * df.moveTo(2, false) { cols(1..5) }
+ * ```
+ * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
+ * where the selected columns will be moved.
+ * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
+ * else they will be moved to the top level.
+ * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ */
+public fun <T> DataFrame<T>.moveTo(
+    newColumnIndex: Int,
+    insideGroup: Boolean,
+    columns: ColumnsSelector<T, *>,
+): DataFrame<T> = move(columns).to(newColumnIndex, insideGroup)
+
+/**
+ * Moves the specified [columns] to a new position specified
+ * by [columnIndex]. If [insideGroup] is true selected columns
+ * will be moved remaining within their [ColumnGroup],
+ * else they will be moved to the top level.
+ *
+ * Moves the specified [columns] to a new position specified by
+ * [newColumnIndex] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveTo.MoveToSelectingOptions].
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ * ### This MoveTo Overload
+ * Select columns using their [column names][String]
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * ### Examples:
+ * ```kotlin
+ * df.moveTo(0, true) { length and age }
+ * df.moveTo(2, false) { cols(1..5) }
+ * ```
+ * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
+ * where the selected columns will be moved.
+ * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
+ * else they will be moved to the top level.
+ * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ */
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, insideGroup: Boolean, vararg columns: String): DataFrame<T> =
+    moveTo(newColumnIndex, insideGroup) { columns.toColumnSet() }
+
 // endregion
 
 // region moveToStart
@@ -553,6 +641,55 @@ public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFram
 @Interpretable("MoveToStart1")
 public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
 
+/**
+ * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToStart.MoveToStartSelectingOptions].
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ * ### This MoveToStart Overload
+ * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+ *
+ * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * #### NOTE:
+ * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+ * in this DSL directly with any function, they are NOT valid return types for the
+ * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
+ * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+ *
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * #### For example:
+ *
+ * `df.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+ *
+ * `df.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ *
+ * `df.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ *
+ *
+ * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
+ * else they will be moved to the start of the top level.
+ */
+@Refine
+@Interpretable("MoveToStart1")
+public fun <T> DataFrame<T>.moveToStart(insideGroup: Boolean, columns: ColumnsSelector<T, *>): DataFrame<T> =
+    move(columns).toStart(insideGroup)
+
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
 
@@ -576,6 +713,30 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = m
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
+
+/**
+ * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToStart.MoveToStartSelectingOptions].
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ * ### This MoveToStart Overload
+ * Select columns using their [column names][String]
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
+ * #### For example:
+ *
+ * `df.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`("length", "age")`
+ *
+ * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
+ * else they will be moved to the start of the top level.
+ */
+public fun <T> DataFrame<T>.moveToStart(insideGroup: Boolean, vararg columns: String): DataFrame<T> =
+    moveToStart(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
@@ -733,6 +894,55 @@ public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFra
 @Interpretable("MoveToEnd1")
 public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
 
+/**
+ * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] end.
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToEnd.MoveToEndSelectingOptions].
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ * ### This MoveToEnd Overload
+ * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+ *
+ * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * #### NOTE:
+ * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+ * in this DSL directly with any function, they are NOT valid return types for the
+ * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
+ * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+ *
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ *
+ * #### For example:
+ *
+ * `df.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+ *
+ * `df.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ *
+ * `df.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ *
+ *
+ * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
+ * else they will be moved to the end of the top level.
+ */
+@Refine
+@Interpretable("MoveToEnd1")
+public fun <T> DataFrame<T>.moveToEnd(insideGroup: Boolean, columns: ColumnsSelector<T, *>): DataFrame<T> =
+    move(columns).toEnd(insideGroup)
+
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
 
@@ -756,6 +966,30 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = 
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
+
+/**
+ * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] end.
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToEnd.MoveToEndSelectingOptions].
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ * ### This MoveToEnd Overload
+ * Select columns using their [column names][String]
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
+ * #### For example:
+ *
+ * `df.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`("length", "age")`
+ *
+ * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
+ * else they will be moved to the end of the top level.
+ */
+public fun <T> DataFrame<T>.moveToEnd(insideGroup: Boolean, vararg columns: String): DataFrame<T> =
+    moveToEnd(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
@@ -1018,6 +1252,32 @@ public fun <T, C> MoveClause<T, C>.under(
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(columnIndex)
 
 /**
+ * Moves columns, previously selected with [move] to a new position specified
+ * by [columnIndex]. If [insideGroup] is true, selected columns will be moved remaining within their [ColumnGroup],
+ * else they will be moved to the top level.
+ *
+ * Returns a new [DataFrame] with updated columns structure.
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.to(0, true)
+ * df.move("age", "weight").to(2, false)
+ * ```
+ *
+ * @param [columnIndex] The index specifying the position in the [ColumnGroup] columns
+ * where the selected columns will be moved.
+ *
+ * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
+ * else they will be moved to the top level.
+ */
+@Refine
+@Interpretable("MoveTo")
+public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): DataFrame<T> =
+    moveToImpl(columnIndex, insideGroup)
+
+/**
  * Moves columns, previously selected with [move] to the top-level within the [DataFrame].
  * Moved columns name can be specified via special ColumnSelectionDsl.
  *
@@ -1217,6 +1477,28 @@ public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 @Interpretable("MoveToStart0")
 public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
 
+/**
+ * If insideGroup is true, moves columns previously selected with [move] to the start of their [ColumnGroup].
+ * Else, selected columns will be moved to the start of their [DataFrame] (to the top-level).
+ *
+ * Returns a new [DataFrame] with updated columns.
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.toStart(true)
+ * df.move { colsOf<String>() }.toStart(true)
+ * df.move("age", "weight").toStart(false)
+ * ```
+ *
+ * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
+ * else they will be moved to the start on top level.
+ */
+@Refine
+@Interpretable("MoveToStart0")
+public fun <T, C> MoveClause<T, C>.toStart(insideGroup: Boolean): DataFrame<T> = to(0, insideGroup)
+
 @Deprecated(TO_RIGHT, ReplaceWith(TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 
@@ -1237,6 +1519,28 @@ public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 @Refine
 @Interpretable("MoveToEnd0")
 public fun <T, C> MoveClause<T, C>.toEnd(): DataFrame<T> = to(df.ncol)
+
+/**
+ * If insideGroup is true, moves columns previously selected with [move] to the end of their [ColumnGroup].
+ * Else, selected columns will be moved to the end of their [DataFrame] (to the top-level).
+ *
+ * Returns a new [DataFrame] with updated columns.
+ *
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.toEnd(true)
+ * df.move { colsOf<String>() }.toEnd(true)
+ * df.move("age", "weight").toEnd(false)
+ * ```
+ *
+ * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
+ * else they will be moved to the end on top level.
+ */
+@Refine
+@Interpretable("MoveToEnd0")
+public fun <T, C> MoveClause<T, C>.toEnd(insideGroup: Boolean): DataFrame<T> = to(df.ncol, insideGroup)
 
 /**
  * An intermediate class used in the [move] operation.
