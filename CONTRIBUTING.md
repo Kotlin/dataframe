@@ -53,7 +53,7 @@ so do familiarize yourself with the following guidelines.
 ## PR workflow
 
 0. The contributor builds the library locally and runs all unit tests via the Gradle task 
-   `dataframe:test -Pkotlin.dataframe.debug=true` (see the ["Building"](#building) chapter).
+   `build -Pkotlin.dataframe.debug=true` (see the ["Building"](#building) chapter).
 1. The contributor submits the PR if the local build is successful and the tests are green.
 2. The reviewer puts their name in the "Reviewers" section of the proposed PR at the start of the review process.
 3. The reviewer leaves comments or marks the PR with the abbreviation "LGTM" (Looks good to me).
