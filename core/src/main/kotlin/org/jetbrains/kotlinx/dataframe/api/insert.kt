@@ -16,6 +16,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.impl.api.afterImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.beforeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
@@ -338,11 +340,6 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
     return df.insertImpl(dstPath, column).move { dstPath }.after { columnPath }
 }
 
-internal fun <T> InsertClause<T>.afterImpl(columnPath: ColumnPath): DataFrame<T> {
-    val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
-    return df.insertImpl(dstPath, column).move { dstPath }.after { columnPath }
-}
-
 // endregion
 
 // region before
@@ -396,11 +393,6 @@ public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T
  */
 public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
     df.add(this.column).move(this.column).before(column)
-
-internal fun <T> InsertClause<T>.beforeImpl(columnPath: ColumnPath): DataFrame<T> {
-    val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
-    return df.insertImpl(dstPath, column).move { dstPath }.before { columnPath }
-}
 
 // endregion
 
