@@ -466,6 +466,8 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KPropert
  * else they will be moved to the top level.
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
+@Refine
+@Interpretable("MoveTo1")
 public fun <T> DataFrame<T>.moveTo(
     newColumnIndex: Int,
     insideGroup: Boolean,
