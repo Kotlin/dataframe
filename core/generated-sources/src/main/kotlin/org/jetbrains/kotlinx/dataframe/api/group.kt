@@ -19,7 +19,8 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 /**
- * Groups the specified [columns] within the [DataFrame].
+ * Groups the specified [columns] within the [DataFrame] into
+ * [column group][ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
  * returns a [GroupClause],
@@ -142,7 +143,8 @@ internal interface GroupDocs {
 }
 
 /**
- * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] into
+ * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
  * returns a [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause],
@@ -197,7 +199,8 @@ internal interface GroupDocs {
 public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClause<T, C> = GroupClause(this, columns)
 
 /**
- * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] into
+ * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
  * returns a [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause],

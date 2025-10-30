@@ -275,6 +275,34 @@ internal fun <T> Pivot<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>): 
 internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -> DataFrame<T>): DataRow<T> =
     body(groupBy { none() })[0]
 
+internal interface PivotGroupByDocs {
+
+    /**
+     * [PivotGroupBy] is a dataframe-like structure, combining [Pivot] and [GroupBy]
+     * and representing a matrix table with vertical [Pivot] groups (as columns)
+     * and horizontal [GroupBy] groups (as rows), and each cell
+     * represents a group corresponding both to [GroupBy] and [Pivot] key.
+     *
+     * Reversed order of `pivot` and `groupBy`
+     * (i.e., [DataFrame.pivot] + [Pivot.groupBy] or [DataFrame.groupBy] + [GroupBy.pivot])
+     * will produce the same result.
+     *
+     * [PivotGroupBy] can be [reduced][PivotGroupByDocs.Reducing]
+     * or [aggregated][PivotGroupByDocs.Aggregation].
+     *
+     * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar].
+     *
+     * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#pivot-groupby)
+     */
+    interface CommonDescription
+
+    interface Grammar
+
+    interface Reducing
+
+    interface Aggregation
+}
+
 public interface PivotGroupBy<out T> : Aggregatable<T> {
 
     public fun <R> aggregate(separate: Boolean = false, body: AggregateBody<T, R>): DataFrame<T>
