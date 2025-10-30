@@ -4,6 +4,7 @@ import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.key
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.transpose
@@ -33,7 +34,7 @@ class AnimalsTests {
         val mean = df.mean().transpose()
         mean.columnsCount() shouldBe 2
         mean.rowsCount() shouldBe 2
-        mean.name.values() shouldBe listOf("age", "visits")
+        mean.key.values() shouldBe listOf("age", "visits")
         mean.value.type() shouldBe typeOf<Double>()
     }
 
