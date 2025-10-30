@@ -85,6 +85,7 @@ import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.api.isNumber
+import org.jetbrains.kotlinx.dataframe.api.key
 import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
@@ -2601,7 +2602,7 @@ class DataFrameTests : BaseTest() {
         typed[2]
             .transpose()
             .dropNulls { value }
-            .name
+            .key
             .toList() shouldBe listOf("name", "age", "city")
     }
 
