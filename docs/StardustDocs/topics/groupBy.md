@@ -142,6 +142,10 @@ df.groupBy { name }.concat()
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html" width="100%"/>
 <!---END-->
 
+## Reducing
+
+TODO
+
 ## Aggregation
 
 To compute one or several [statistics](summaryStatistics.md) per every group of `GroupBy` use `aggregate` function. 
