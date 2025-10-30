@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.diffOrNull
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.isNaN
+import org.jetbrains.kotlinx.dataframe.api.key
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.minBy
@@ -78,8 +79,8 @@ class MediumTests {
             .sum()
             .transposeTo<Double>()
             .minBy { value }
-            .name shouldBe "b"
-        df.sum().transpose().minBy("value")["name"] shouldBe "b"
+            .key shouldBe "b"
+        df.sum().transpose().minBy("value")["key"] shouldBe "b"
     }
 
     @Test
