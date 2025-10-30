@@ -147,6 +147,9 @@ internal const val DISPLAY_CONFIGURATION = "This constructor is only here for bi
 
 internal const val DISPLAY_CONFIGURATION_COPY = "This function is only here for binary compatibility. $MESSAGE_1_0"
 
+internal const val COMPARE_RESULT_EQUALS =
+    "'Equals' is deprecated in favor of 'Matches' to clarify column order is irrelevant. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
@@ -256,6 +259,9 @@ internal const val GET_ROWS_ITERABLE_REPLACE = "df().getRows(indices)"
 internal const val GET_ROWS_RANGE_REPLACE = "df().getRows(indices)"
 internal const val GET_ROW_OR_NULL_REPLACE = "df().getRowOrNull(index)"
 internal const val COPY_REPLACE = "columns().toDataFrame().cast()"
+
+internal const val LISTS_TO_DATAFRAME_MIGRATION =
+    "Function moved from io to api package, and a new `header` parameter is introduced. $MESSAGE_1_1"
 
 // endregion
 

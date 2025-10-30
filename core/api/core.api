@@ -2609,6 +2609,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/InsertKt {
 	public static final fun after (Lorg/jetbrains/kotlinx/dataframe/api/InsertClause;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun after (Lorg/jetbrains/kotlinx/dataframe/api/InsertClause;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun at (Lorg/jetbrains/kotlinx/dataframe/api/InsertClause;I)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun before (Lorg/jetbrains/kotlinx/dataframe/api/InsertClause;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun before (Lorg/jetbrains/kotlinx/dataframe/api/InsertClause;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun insert (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/api/InsertClause;
 	public static final fun under (Lorg/jetbrains/kotlinx/dataframe/api/InsertClause;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun under (Lorg/jetbrains/kotlinx/dataframe/api/InsertClause;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -3424,10 +3426,14 @@ public final class org/jetbrains/kotlinx/dataframe/api/MoveKt {
 	public static final fun move (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;
 	public static final fun move (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;
 	public static final fun moveTo (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ILkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun moveTo (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun moveTo (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IZ[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveTo (Lorg/jetbrains/kotlinx/dataframe/DataFrame;I[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveTo (Lorg/jetbrains/kotlinx/dataframe/DataFrame;I[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveTo (Lorg/jetbrains/kotlinx/dataframe/DataFrame;I[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveToEnd (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun moveToEnd (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun moveToEnd (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveToEnd (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveToEnd (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveToEnd (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -3440,14 +3446,19 @@ public final class org/jetbrains/kotlinx/dataframe/api/MoveKt {
 	public static final fun moveToRight (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveToRight (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveToStart (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun moveToStart (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun moveToStart (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveToStart (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveToStart (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun moveToStart (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun to (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;I)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun to (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;IZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toEnd (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toEnd (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLeft (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toRight (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toStart (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toStart (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toTop (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun toTop$default (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun under (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -4462,7 +4473,9 @@ public final class org/jetbrains/kotlinx/dataframe/api/TakeKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ToDataFrameKt {
+	public static final fun toDataFrame (Ljava/util/List;Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toDataFrame (Ljava/util/Map;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun toDataFrame$default (Ljava/util/List;Ljava/util/List;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toDataFrameAnyColumn (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toDataFrameColumnPathAnyNullable (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toDataFrameColumnPathAnyNullable (Ljava/util/Map;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -5589,6 +5602,11 @@ public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnNotFoundExce
 public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnTypeMismatchesColumnValuesException : java/lang/RuntimeException {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/Throwable;)V
 	public final fun getColumn ()Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnsWithDifferentParentException : java/lang/IllegalArgumentException, org/jetbrains/kotlinx/dataframe/exceptions/DataFrameError {
+	public fun <init> (Ljava/lang/String;)V
+	public fun getMessage ()Ljava/lang/String;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/exceptions/DataFrameError {
@@ -6781,11 +6799,14 @@ public final class org/jetbrains/kotlinx/dataframe/schema/CompareResult : java/l
 	public static final field Equals Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static final field IsDerived Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static final field IsSuper Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
+	public static final field Matches Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static final field None Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public final fun combine (Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun isEqual ()Z
 	public final fun isSuperOrEqual ()Z
+	public final fun isSuperOrMatches ()Z
+	public final fun matches ()Z
 	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 }
@@ -6808,9 +6829,13 @@ public final class org/jetbrains/kotlinx/dataframe/schema/ComparisonMode : java/
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/schema/DataFrameSchema {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;
 	public abstract fun compare (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public static synthetic fun compare$default (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lorg/jetbrains/kotlinx/dataframe/schema/ComparisonMode;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/schema/CompareResult;
 	public abstract fun getColumns ()Ljava/util/Map;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/util/DeprecationMessagesKt {

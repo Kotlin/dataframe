@@ -23,7 +23,7 @@ interface JoinDsl: LeftDataFrame {
 }
 ```
 
-`joinColumns` is a [column selector](ColumnSelectors.md) that defines column mapping for join:
+`joinColumns` is a special case of [columns selector](ColumnSelectors.md) that defines column mapping for join.
 
 Related operations: [](multipleDataFrames.md)
 
@@ -34,7 +34,7 @@ Related operations: [](multipleDataFrames.md)
 Use the Join DSL when the key column names differ:
 
 - access the right `DataFrame` via `right`;
-- define the join condition with **match()**.
+- define the join condition with **`match`**.
 
 <!---FUN notebook_test_join_3-->
 

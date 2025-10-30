@@ -6,7 +6,6 @@ import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSFile
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
@@ -30,9 +29,9 @@ import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TsvDeephaven
 import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
 import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
 import org.jetbrains.kotlinx.dataframe.io.isUrl
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
 import java.net.MalformedURLException
@@ -315,10 +314,10 @@ class DataSchemaGenerator(
     private fun areBothNotBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isNotBlank()
 
     private fun generateSchemaForTable(connection: Connection, tableName: String) =
-        DataFrame.getSchemaForSqlTable(connection, tableName)
+        DataFrameSchema.readSqlTable(connection, tableName)
 
     private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) =
-        DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+        DataFrameSchema.readSqlQuery(connection, sqlQuery)
 
     private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing =
         throw RuntimeException(

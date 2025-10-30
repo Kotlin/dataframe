@@ -22,9 +22,6 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.assertInferredTypesMatchSchema
 import org.jetbrains.kotlinx.dataframe.io.db.DuckDb
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForResultSet
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readDataFrame
 import org.jetbrains.kotlinx.dataframe.io.readResultSet
@@ -308,12 +305,12 @@ class DuckDbTest {
             ).executeUpdate()
 
             df = DataFrame.readSqlTable(connection, "test_table")
-            schema = DataFrame.getSchemaForSqlTable(connection, "test_table")
+            schema = DataFrameSchema.readSqlTable(connection, "test_table")
 
             subset = DataFrame.readSqlQuery(connection, """SELECT test_table.name, test_table.age FROM test_table""")
         }
 
-        schema.compare(Person.expected.schema()).isSuperOrEqual() shouldBe true
+        schema.compare(Person.expected.schema()).isSuperOrMatches() shouldBe true
 
         df.cast<Person>(verify = true) shouldBe Person.expected
         df.assertInferredTypesMatchSchema()
@@ -354,11 +351,11 @@ class DuckDbTest {
 
             connection.prepareStatement("SELECT * FROM test_table").executeQuery().use { rs ->
                 df = DataFrame.readResultSet(rs, DuckDb)
-                schema = DataFrame.getSchemaForResultSet(rs, DuckDb)
+                schema = DataFrameSchema.readResultSet(rs, DuckDb)
             }
         }
 
-        schema.compare(Person.expected.schema()).isSuperOrEqual() shouldBe true
+        schema.compare(Person.expected.schema()).isSuperOrMatches() shouldBe true
 
         df.cast<Person>(verify = true) shouldBe Person.expected
         df.assertInferredTypesMatchSchema()
@@ -393,13 +390,13 @@ class DuckDbTest {
             ).executeUpdate()
 
             dfs = DataFrame.readAllSqlTables(connection = connection)
-            schemas = DataFrame.getSchemaForAllSqlTables(connection = connection)
+            schemas = DataFrameSchema.readAllSqlTables(connection = connection)
         }
 
         val df = dfs["test_table"]!!
         val schema = schemas["test_table"]!!
 
-        schema.compare(Person.expected.schema()).isSuperOrEqual() shouldBe true
+        schema.compare(Person.expected.schema()).isSuperOrMatches() shouldBe true
 
         df.cast<Person>(verify = true) shouldBe Person.expected
         df.assertInferredTypesMatchSchema()
@@ -544,11 +541,11 @@ class DuckDbTest {
                 """.trimIndent(),
             ).executeUpdate()
 
-            schema = DataFrame.getSchemaForSqlTable(connection, "table1")
+            schema = DataFrameSchema.readSqlTable(connection, "table1")
             df = DataFrame.readSqlTable(connection, "table1").reorderColumnsByName()
         }
 
-        schema.compare(GeneralPurposeTypes.expected.schema()).isSuperOrEqual() shouldBe true
+        schema.compare(GeneralPurposeTypes.expected.schema()).isSuperOrMatches() shouldBe true
 
         // on some systems OffsetDateTime's get converted to UTC sometimes, let's compare them as Instant instead
         fun AnyFrame.fixOffsetDateTime() = convert { colsOf<OffsetDateTime>() }.with { it.toInstant() }
@@ -599,7 +596,7 @@ class DuckDbTest {
                 """.trimIndent(),
             ).executeUpdate()
 
-            schema = DataFrame.getSchemaForSqlTable(connection, "table2")
+            schema = DataFrameSchema.readSqlTable(connection, "table2")
             df = DataFrame.readSqlTable(connection, "table2")
         }
 

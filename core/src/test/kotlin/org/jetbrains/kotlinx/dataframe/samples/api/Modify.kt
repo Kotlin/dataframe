@@ -536,9 +536,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun splitRegex1() {
         // SampleStart
-        val name by column<String>()
-
-        merged.split { name }
+        merged.split { "name"<String>() }
             .match("""(.*) \((.*)\)""")
             .inward("firstName", "lastName")
         // SampleEnd
@@ -557,11 +555,12 @@ class Modify : TestBase() {
             7, 8,
             9, 10,
         )
-        val group by columnOf(df1, df2)
-        val id by columnOf("x", "y")
-        val df = dataFrameOf(id, group)
+        val df = dataFrameOf(
+            "id" to columnOf("x", "y"),
+            "group" to columnOf(df1, df2)
+        )
 
-        df.split { group }.intoColumns()
+        df.split { "group"<AnyFrame>() }.intoColumns()
         // SampleEnd
     }
 

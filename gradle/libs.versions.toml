@@ -1,14 +1,14 @@
 [versions]
-ksp = "2.2.20-2.0.2"
+ksp = "2.2.21-2.0.4"
 kotlinJupyter = "0.15.0-629"
 
 ktlint = "12.3.0"
 
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 # make sure to sync manually with :plugins:keywords-generator module
 kotlinpoet = "2.2.0"
 
-dokka = "2.0.0"
+dokka = "2.1.0"
 libsPublisher = "2.2.0-dev-61"
 
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
@@ -46,7 +46,7 @@ kotestAsserions = "6.0.0.M1"
 
 jsoup = "1.18.3"
 arrow = "18.3.0"
-kodex = "0.4.4"
+kodex = "0.5.0"
 simpleGit = "2.2.1"
 dependencyVersions = "0.52.0"
 plugin-publish = "1.3.0"
@@ -58,7 +58,7 @@ duckdb = "1.3.1.0"
 buildconfig = "5.6.7"
 benchmark = "0.4.12"
 
-geotools = "32.1"
+geotools = "33.2"
 jai-core = "1.1.3"
 jts = "1.20.0"
 
