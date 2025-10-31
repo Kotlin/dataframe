@@ -75,7 +75,6 @@ internal class GroupByImpl<T, G>(
 internal fun <T, G, R> aggregateGroupBy(
     df: DataFrame<T>,
     selector: ColumnSelector<T, DataFrame<G>?>,
-    removeColumns: Boolean,
     body: AggregateGroupedBody<G, R>,
 ): DataFrame<T> {
     val defaultAggregateName = "aggregated"
@@ -126,13 +125,11 @@ internal fun <T, G, R> aggregateGroupBy(
     val removedNode = removed.removedColumns.single()
     val insertPath = removedNode.pathFromRoot().dropLast(1)
 
-    if (!removeColumns) removedNode.data.wasRemoved = false
-
     val columnsToInsert = groupedFrame.getColumnsWithPaths {
         colsAtAnyDepth().filter { !it.isColumnGroup() }
     }.map {
         ColumnToInsert(insertPath + it.path, it, removedNode)
     }
-    val src = if (removeColumns) removed.df else df
-    return src.insertImpl(columnsToInsert)
+
+    return removed.df.insertImpl(columnsToInsert)
 }
