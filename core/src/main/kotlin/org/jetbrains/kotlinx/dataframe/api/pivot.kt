@@ -276,6 +276,9 @@ internal fun <T> Pivot<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>): 
 internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -> DataFrame<T>): DataRow<T> =
     body(groupBy { none() })[0]
 
+/**
+ * TODO (#1536)
+ */
 internal interface PivotGroupByDocs {
 
     /**

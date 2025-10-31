@@ -38,7 +38,7 @@ import kotlin.reflect.KProperty
 /**
  * Groups the rows of this [DataFrame] based on the values in one or more specified [key columns][cols].
  * Each unique value in a key column — or a unique tuple of values for multiple columns —
- * defines a group consisting of all rows where the column(s) contain that value combination.
+ * defines the group consisting of all rows where the column(s) contain that value combination.
  *
  * Returns a [GroupBy] — a dataframe-like structure that contains all unique combinations of key values
  * along with the corresponding groups of rows (each represented as a [DataFrame]).
@@ -76,40 +76,40 @@ internal interface GroupByDocs {
      *
      * ### Create and transform [GroupBy]
      *
-     * [**`groupBy`**][groupBy]**`(`**`moveToTop: `[`Boolean`][Boolean]**` = true)  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * [**`groupBy`**][groupBy]**`(`**`moveToTop: `[`Boolean`][Boolean]**`  = true)  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByGroup`**][GroupBy.sortByGroup]**`() `**
+     * `\[ `__`.`__[**`sortByGroup`**][GroupBy.sortByGroup]**`() `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**
+     * `\[ `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**
+     * `\[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**
+     * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**
+     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
+     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` } `**
+     * `\[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`sortByDesc`**][GroupBy.sortByDesc]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` } `**`]`
+     * `\[ `__`.`__[**`sortByDesc`**][GroupBy.sortByDesc]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`updateGroups`**][GroupBy.updateGroups]**`  {  `**`frameExpression`**` } `**`]`
+     * `\[ `__`.`__[**`updateGroups`**][GroupBy.updateGroups]**`  {  `**`frameExpression`**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`filter`**][GroupBy.filter]**` {  `**`predicate: `[`GroupedRowFilter`][GroupedRowFilter]**` } `**`]`
+     * `\[ `__`.`__[**`filter`**][GroupBy.filter]**`  {  `**`predicate: `[`GroupedRowFilter`][GroupedRowFilter]**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`add`**][GroupBy.add]**`(`**`column: `[`DataColumn`][DataColumn]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
+     * `\[ `__`.`__[**`add`**][GroupBy.add]**`(`**`column: `[`DataColumn`][DataColumn]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**`  }  `**`]`
      *
      * ### Reduce [GroupBy] into [DataFrame]
      *
@@ -120,10 +120,10 @@ internal interface GroupByDocs {
      * `| `__`.`__[**`maxBy`**][GroupBy.maxBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`first`**][GroupBy.first]`  \[ `**` {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
+     * `| `__`.`__[**`first`**][GroupBy.first]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`last`**][GroupBy.last]`  \[ `**`{  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
+     * `| `__`.`__[**`last`**][GroupBy.last]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
      * {@include [Indent]}
      * __`.`__[**`concat`**][ReducedGroupBy.concat]**`() `**
@@ -207,7 +207,7 @@ internal interface GroupByDocs {
      * * [sortBy][GroupBy.sortBy] / [sortByDesc][GroupBy.sortByDesc] — sorts the **order of rows within each group**
      *   by one or more column values;
      * * [updateGroups][GroupBy.updateGroups] — transforms each group into a new one;
-     * * [filter][GroupBy.filter] — filters group rows by the given predicate (as usual [DataFrame.filter]).
+     * * [filter][GroupBy.filter] — filters group rows by the given predicate (as usual [DataFrame.filter]);
      * * [add][GroupBy.add] — adds a new column to each group.
      *
      * Each method returns a new [GroupBy] with updated group order or modified group content.
@@ -363,7 +363,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
  * @include [PivotGroupByDocs.CommonDescription]
  */
 @ExcludeFromSources
-internal interface GroupByForPivotDocs
+private interface GroupByForPivotDocs
 
 /**
  * {@include [GroupByForPivotDocs]}
@@ -479,7 +479,7 @@ public val <T, G> GroupedDataRow<T, G>.group: DataFrame<G>
 public data class GroupWithKey<T, G>(val key: DataRow<T>, val group: DataFrame<G>)
 
 /**
- * A dataframe-like structure that contains all unique combinations of key values
+ * A dataframe-like structure that contains all unique combinations of key-values
  * along with the corresponding groups of rows (each represented as a [DataFrame]).
  *
  * Consists of two main parts:
