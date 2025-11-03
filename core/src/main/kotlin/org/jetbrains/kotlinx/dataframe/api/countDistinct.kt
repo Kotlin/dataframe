@@ -46,7 +46,7 @@ public fun AnyFrame.countDistinct(): Int = countDistinct { all() }
  * ### This [countDistinct] overload
  */
 @ExcludeFromSources
-internal interface CountDistinctDocs
+internal typealias CountDistinctDocs = Nothing
 
 /**
  * {@include [CountDistinctDocs]}
