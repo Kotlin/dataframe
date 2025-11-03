@@ -39,26 +39,26 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 internal interface TakeAndDropColumnsSelectionDslGrammar {
 
     // Like "Take"/"Drop"
-    interface TITLE
+    typealias TITLE = Nothing
 
     // Operation, like "take"/"drop"
-    interface OPERATION
+    typealias OPERATION = Nothing
 
     /** [**\`{@get [OPERATION]}\`**][ColumnsSelectionDsl.{@get [OPERATION]}]`(`[**`Last`**][ColumnsSelectionDsl.{@get [OPERATION]}Last]`)` */
-    interface PlainDslName
+    typealias PlainDslName = Nothing
 
     /** __`.`__[**\`{@get [OPERATION]}\`**][ColumnsSelectionDsl.{@get [OPERATION]}]`(`[**`Last`**][ColumnSet.{@get [OPERATION]}Last]`)` */
-    interface ColumnSetName
+    typealias ColumnSetName = Nothing
 
     /** __`.`__[**\`{@get [OPERATION]}\`**][ColumnsSelectionDsl.{@get [OPERATION]}Cols]`(`[**`Last`**][ColumnsSelectionDsl.{@get [OPERATION]}LastCols]`)`[**`Cols`**][ColumnsSelectionDsl.{@get [OPERATION]}Cols] */
-    interface ColumnGroupName
+    typealias ColumnGroupName = Nothing
 
     /** [**\`{@get [OPERATION]}\`**][ColumnsSelectionDsl.{@get [OPERATION]}While]`(`[**`Last`**][ColumnsSelectionDsl.{@get [OPERATION]}LastWhile]`)`[**`While`**][ColumnsSelectionDsl.{@get [OPERATION]}While] */
-    interface PlainDslWhileName
+    typealias PlainDslWhileName = Nothing
 
     /** __`.`__[**\`{@get [OPERATION]}\`**][ColumnsSelectionDsl.{@get [OPERATION]}While]`(`[**`Last`**][ColumnsSelectionDsl.{@get [OPERATION]}LastWhile]`)`[**`While`**][ColumnsSelectionDsl.{@get [OPERATION]}While] */
-    interface ColumnSetWhileName
+    typealias ColumnSetWhileName = Nothing
 
     /** __`.`__[**\`{@get [OPERATION]}\`**][ColumnsSelectionDsl.{@get [OPERATION]}ColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.{@get [OPERATION]}LastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.{@get [OPERATION]}ColsWhile] */
-    interface ColumnGroupWhileName
+    typealias ColumnGroupWhileName = Nothing
 }

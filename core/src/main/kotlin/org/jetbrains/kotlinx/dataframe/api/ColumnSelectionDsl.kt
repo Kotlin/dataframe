@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /** [Column Selection DSL][ColumnSelectionDsl] */
-internal interface ColumnSelectionDslLink
+internal typealias ColumnSelectionDslLink = Nothing
 
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
@@ -27,7 +27,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * This is a shorthand for [get][ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
-    private interface CommonColumnReferenceInvokeDocs
+    private typealias CommonColumnReferenceInvokeDocs = Nothing
 
     /**
      * @include [CommonColumnReferenceInvokeDocs]
@@ -67,7 +67,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * This is a shorthand for [get][ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
-    private interface CommonKPropertyInvokeDocs
+    private typealias CommonKPropertyInvokeDocs = Nothing
 
     /**
      * @include [CommonKPropertyInvokeDocs]
@@ -106,7 +106,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * @throws [IllegalArgumentException] if the column is not found.
      */
-    private interface CommonKPropertyGetDocs
+    private typealias CommonKPropertyGetDocs = Nothing
 
     /**
      * @include [CommonKPropertyGetDocs]
