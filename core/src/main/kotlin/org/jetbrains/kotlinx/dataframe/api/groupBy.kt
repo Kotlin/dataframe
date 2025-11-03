@@ -542,7 +542,7 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * a row from [keys] and its corresponding group of rows (as [DataFrame]).
      *
      * If [groupedColumnName] is provided, the groups will be stored
-     * in a [FrameColumn] with that name; otherwise, a default name is used.
+     * in a [FrameColumn] with that name; otherwise, a default name "group" is used.
      *
      * @param groupedColumnName The name of the column in which to store grouped data;
      * if `null`, a default name will be used.
