@@ -114,7 +114,7 @@ internal interface GroupDocs {
      * `df.`[group][org.jetbrains.kotlinx.dataframe.api.group]`(Person::length, Person::age)`
      *
      */
-    interface GroupSelectingOptions
+    typealias GroupSelectingOptions = Nothing
 
     /**
      * ## Group Operation Grammar
@@ -138,7 +138,7 @@ internal interface GroupDocs {
      * __`.`__[**`into`**][GroupClause.into]` { column: `[`ColumnsSelectionDsl<T>`][ColumnsSelectionDsl]`.(`[`ColumnWithPath<C>`][ColumnWithPath]`) -> `[`AnyColumnReference`][AnyColumnReference]` }`
      *
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /**

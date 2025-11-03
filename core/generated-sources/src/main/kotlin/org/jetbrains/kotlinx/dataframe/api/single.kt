@@ -129,13 +129,13 @@ public interface SingleColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`single`**][ColumnsSelectionDsl.single] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`single`**][ColumnsSelectionDsl.single] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`singleCol`**][ColumnsSelectionDsl.singleCol] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -167,7 +167,7 @@ public interface SingleColumnsSelectionDsl {
     private interface CommonSingleDocs {
 
         /** Examples key */
-        interface Examples
+        typealias Examples = Nothing
     }
 
     /**

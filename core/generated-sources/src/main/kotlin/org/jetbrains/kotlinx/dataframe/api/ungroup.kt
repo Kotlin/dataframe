@@ -95,7 +95,7 @@ internal interface UngroupDocs {
      * `df.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`(Person::length, Person::age)`
      *
      */
-    interface UngroupSelectingOptions
+    typealias UngroupSelectingOptions = Nothing
 }
 
 /**

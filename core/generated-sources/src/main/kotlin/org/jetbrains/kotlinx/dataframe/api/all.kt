@@ -148,25 +148,25 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`all`**][ColumnsSelectionDsl.all] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`all`**][ColumnsSelectionDsl.all] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`allCols`**][ColumnsSelectionDsl.allCols] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
 
         /** [**`Before`**][ColumnsSelectionDsl.allColsBefore] */
-        public interface Before
+        public typealias Before = Nothing
 
         /** [**`After`**][ColumnsSelectionDsl.allAfter] */
-        public interface After
+        public typealias After = Nothing
 
         /** [**`From`**][ColumnsSelectionDsl.allColsFrom] */
-        public interface From
+        public typealias From = Nothing
 
         /** [**`UpTo`**][ColumnsSelectionDsl.allColsUpTo] */
-        public interface UpTo
+        public typealias UpTo = Nothing
     }
 
     // region all
@@ -544,7 +544,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
-    private interface AllAfterDocs
+    private typealias AllAfterDocs = Nothing
 
     /** ## All (Cols) After
      *
@@ -2451,7 +2451,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
-    private interface AllFromDocs
+    private typealias AllFromDocs = Nothing
 
     /** ## All (Cols) From
      *
@@ -4356,7 +4356,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
-    private interface AllBeforeDocs
+    private typealias AllBeforeDocs = Nothing
 
     /** ## All (Cols) Before
      *
@@ -6262,7 +6262,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
-    private interface AllUpToDocs
+    private typealias AllUpToDocs = Nothing
 
     /** ## All (Cols) Up To
      *
