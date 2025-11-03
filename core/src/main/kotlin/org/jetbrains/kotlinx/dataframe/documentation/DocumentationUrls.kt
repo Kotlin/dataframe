@@ -153,6 +153,12 @@ internal interface DocumentationUrls {
     /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
     interface GroupByAggregation
 
-    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/groupby.html#pivot-groupby) */
+    /** [See "`groupBy` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#groupby-statistics) */
+    interface GroupByStatistics
+
+    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/pivot.html#pivot-groupby) */
     interface PivotGroupBy
+
+    /** [See `pivot`  on the documentation website.]({@include [Url]}/pivot.html) */
+    interface Pivot
 }

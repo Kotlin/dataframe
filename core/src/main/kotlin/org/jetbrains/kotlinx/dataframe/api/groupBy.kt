@@ -41,13 +41,14 @@ import kotlin.reflect.KProperty
  * defines a group consisting of all rows where the column(s) contain that value combination.
  *
  * Returns a [GroupBy] — a dataframe-like structure that contains all unique combinations of key values
- * along with the corresponding groups of rows (each represented as a [DataFrame]).
+ * along with the corresponding groups of rows (each represented as a [DataFrame]) as rows.
  *
  * A [GroupBy] can then be:
  * * [transformed][Transformation] into a new [GroupBy];
  * * [reduced][Reducing] into a [DataFrame], where each group is collapsed into a single representative row;
  * * [aggregated][Aggregation] into a [DataFrame], where each group is transformed into one or more rows of derived values;
- * * [pivoted][Pivoting] into a [PivotGroupBy] structure, which combines [pivot] and [groupBy] operations.
+ * * [pivoted][Pivoting] into a [PivotGroupBy] structure, which combines [pivot] and [groupBy] operations
+ *   and then reduced or aggregated into a [DataFrame].
  *
  * Grouping keys can also be created inline:
  * ```kotlin
@@ -66,6 +67,8 @@ import kotlin.reflect.KProperty
  *
  * Don't confuse this with [group], which groups column into
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * See also [pivot][DataFrame.pivot] that groups rows of [DataFrame] vertically.
  */
 internal interface GroupByDocs {
     /**
@@ -183,16 +186,40 @@ internal interface GroupByDocs {
 
     /**
      * ### [GroupBy] aggregation statistics
-     * * [count][Grouped.count]
-     * * [max][Grouped.max]/[maxOf][Grouped.maxOf]/[maxFor][Grouped.maxFor]
-     * * [min][Grouped.min]/[minOf][Grouped.minOf]/[minFor][Grouped.minFor]
-     * * [sum][Grouped.sum]/[sumOf][Grouped.sumOf]/[sumFor][Grouped.sumFor]
-     * * [mean][Grouped.mean]/[meanOf][Grouped.meanOf]/[meanFor][Grouped.meanFor]
-     * * [std][Grouped.std]/[stdOf][Grouped.stdOf]/[stdFor][Grouped.stdFor]
-     * * [median][Grouped.median]/[medianOf][Grouped.medianOf]/[medianFor][Grouped.medianFor]
-     * * [percentile][Grouped.percentile]/[percentileOf][Grouped.percentileOf]/[percentileFor][Grouped.percentileFor]
+     *
+     * Provides predefined shortcuts for the most common statistical aggregation operations
+     * that can be applied to each group within a [GroupBy].
+     *
+     * Each function computes a statistic across the rows of a group and returns the result as
+     * a new column (or several columns) in the resulting [DataFrame].
+     *
+     * * [count][Grouped.count] — calculate the number of rows in each group;
+     * * [max][Grouped.max] / [maxOf][Grouped.maxOf] / [maxFor][Grouped.maxFor] —
+     *   calculate the maximum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [min][Grouped.min] / [minOf][Grouped.minOf] / [minFor][Grouped.minFor] —
+     *   calculate the minimum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [sum][Grouped.sum] / [sumOf][Grouped.sumOf] / [sumFor][Grouped.sumFor] —
+     *   calculate the sum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [mean][Grouped.mean] / [meanOf][Grouped.meanOf] / [meanFor][Grouped.meanFor] —
+     *   calculate the mean (average) of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [std][Grouped.std] / [stdOf][Grouped.stdOf] / [stdFor][Grouped.stdFor] —
+     *   calculate the standard deviation of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [median][Grouped.median] / [medianOf][Grouped.medianOf] / [medianFor][Grouped.medianFor] —
+     *   calculate the median of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [percentile][Grouped.percentile] / [percentileOf][Grouped.percentileOf] / [percentileFor][Grouped.percentileFor] —
+     *   calculate a specified percentile of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group.
+     *
+     * For more information: {@include [DocumentationUrls.GroupByStatistics]}
      */
     interface AggregationStatistics
+
 
     /**
      * ### [GroupBy] transformations
