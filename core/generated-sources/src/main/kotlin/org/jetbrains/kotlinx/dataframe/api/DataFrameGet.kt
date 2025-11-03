@@ -82,7 +82,10 @@ public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): Colum
  * df.properties().
  * ```
  */
-@Deprecated("Renamed for clarity: use columnsScope() to access generated column properties only", ReplaceWith("columnsScope()"))
+@Deprecated(
+    "Renamed for clarity: use columnsScope() to access generated column properties only",
+    ReplaceWith("columnsScope()"),
+)
 public fun <T> DataFrame<T>.properties(): ColumnsScope<T> = this
 
 /**
