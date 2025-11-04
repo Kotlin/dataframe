@@ -110,13 +110,13 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`col`**][ColumnsSelectionDsl.col] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -166,31 +166,31 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { `[col][col]`() }`
          */
-        interface SingleExample
+        typealias SingleExample = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { `[col][col]`() }`
          *
          * `df.`[select][DataFrame.select]` { `[col][col]`<`[String][String]`>() }`
          */
-        interface DoubleExample
+        typealias DoubleExample = Nothing
 
         // Receiver argument for the example(s)
-        interface RECEIVER
+        typealias RECEIVER = Nothing
 
         // Argument for the example(s)
-        interface ARG
+        typealias ARG = Nothing
 
         // Optional note
-        interface NOTE
+        typealias NOTE = Nothing
 
         /** @param [C] The type of the column. */
-        interface ColumnTypeParam
+        typealias ColumnTypeParam = Nothing
     }
 
     // region reference
@@ -243,7 +243,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [ColumnAccessor] pointing to the column.
      * @param [C] The type of the column.
      */
-    private interface ColReferenceDocs
+    private typealias ColReferenceDocs = Nothing
 
     /**
      * ## Col
@@ -620,7 +620,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * @param [name] The name of the column.
      */
-    private interface ColNameDocs
+    private typealias ColNameDocs = Nothing
 
     /**
      * ## Col
@@ -1327,7 +1327,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * @param [path] The path to the column.
      */
-    private interface ColPathDocs
+    private typealias ColPathDocs = Nothing
 
     /**
      * ## Col
@@ -2024,7 +2024,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the column.
      * @param [C] The type of the column.
      */
-    private interface ColKPropertyDocs
+    private typealias ColKPropertyDocs = Nothing
 
     /**
      * ## Col
@@ -2396,7 +2396,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [index] The index of the column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
-    private interface ColIndexDocs
+    private typealias ColIndexDocs = Nothing
 
     /**
      * ## Col

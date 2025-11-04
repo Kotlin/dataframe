@@ -181,7 +181,7 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
  * @param [C] The type of the (group) column.
  * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C]`>>`.
  */
-private interface SingleColumnAsColumnGroupDocs
+private typealias SingleColumnAsColumnGroupDocs = Nothing
 
 /** ## As ColumnGroup
  *
@@ -308,7 +308,7 @@ public enum class Infer {
      * @param [infer] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
      * Either [None], [Nulls], or [Type].
      */
-    internal interface ParamDoc
+    internal typealias ParamDoc = Nothing
 }
 
 /**
