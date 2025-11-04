@@ -29,7 +29,7 @@ import kotlin.reflect.KProperty
  *
  * For more information: [See `remove` on the documentation website.](https://kotlin.github.io/dataframe/remove.html)
  */
-internal interface Remove
+internal typealias Remove = Nothing
 
 /**
  * ## The Remove Operation

@@ -24,8 +24,8 @@ internal interface ColumnExpression {
      *
      * See [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] for more information.
      */
-    interface CommonDocs
+    typealias CommonDocs = Nothing
 }
 
 /** [Column Expression][ColumnExpression] */
-internal interface ColumnExpressionLink
+internal typealias ColumnExpressionLink = Nothing

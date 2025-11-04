@@ -155,22 +155,22 @@ public interface TakeColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`take`**][ColumnsSelectionDsl.take]`(`[**`Last`**][ColumnsSelectionDsl.takeLast]`)` */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.take]`(`[**`Last`**][ColumnSet.takeLast]`)` */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.takeCols]`(`[**`Last`**][ColumnsSelectionDsl.takeLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.takeCols] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
 
         /** [**`take`**][ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][ColumnsSelectionDsl.takeWhile] */
-        public interface PlainDslWhileName
+        public typealias PlainDslWhileName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][ColumnsSelectionDsl.takeWhile] */
-        public interface ColumnSetWhileName
+        public typealias ColumnSetWhileName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.takeColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.takeColsWhile] */
-        public interface ColumnGroupWhileName
+        public typealias ColumnGroupWhileName = Nothing
     }
 
     // region take
@@ -205,7 +205,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
-    private interface CommonTakeFirstDocs
+    private typealias CommonTakeFirstDocs = Nothing
 
     /**
      * ## Take (Cols)
@@ -443,7 +443,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    private interface CommonTakeLastDocs
+    private typealias CommonTakeLastDocs = Nothing
 
     /**
      * ## Take Last (Cols)
@@ -680,7 +680,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    private interface CommonTakeFirstWhileDocs
+    private typealias CommonTakeFirstWhileDocs = Nothing
 
     /**
      * ## Take (Cols) While
@@ -913,7 +913,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    private interface CommonTakeLastWhileDocs
+    private typealias CommonTakeLastWhileDocs = Nothing
 
     /**
      * ## Take Last (Cols) While

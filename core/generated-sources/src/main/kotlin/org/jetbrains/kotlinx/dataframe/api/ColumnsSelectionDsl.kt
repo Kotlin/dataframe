@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
-internal interface ColumnsSelectionDslLink
+internal typealias ColumnsSelectionDslLink = Nothing
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi

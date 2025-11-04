@@ -103,7 +103,7 @@ internal interface Select {
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`(Person::length, Person::age)`
      *
      */
-    interface SelectSelectingOptions
+    typealias SelectSelectingOptions = Nothing
 }
 
 /**
@@ -294,7 +294,7 @@ public interface SelectColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`select`**][ColumnsSelectionDsl.select] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -339,7 +339,7 @@ public interface SelectColumnsSelectionDsl {
      */
     private interface CommonSelectDocs {
 
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**

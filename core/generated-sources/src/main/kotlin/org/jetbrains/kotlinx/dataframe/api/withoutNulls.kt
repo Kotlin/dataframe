@@ -90,13 +90,13 @@ public interface WithoutNullsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`withoutNulls`**][ColumnsSelectionDsl.withoutNulls] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`withoutNulls`**][ColumnsSelectionDsl.withoutNulls] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsWithoutNulls`**][ColumnsSelectionDsl.colsWithoutNulls] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -125,7 +125,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      */
     private interface CommonWithoutNullsDocs {
 
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**
