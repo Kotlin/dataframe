@@ -1948,6 +1948,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataFrameGetKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DataRowApiKt {
+	public static final fun NameValuePairAny_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValuePairAny_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun NameValuePairAny_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NameValuePairAny_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun NameValuePairAny_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -1960,6 +1962,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataRowApiKt {
 	public static final fun containsKey (Lorg/jetbrains/kotlinx/dataframe/DataRow;Ljava/lang/String;)Z
 	public static final fun containsKey (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/reflect/KProperty;)Z
 	public static final fun containsKey (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Z
+	public static final fun copy (Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;Ljava/lang/String;Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;Ljava/lang/String;Ljava/lang/Object;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;
 	public static final fun diff (Lorg/jetbrains/kotlinx/dataframe/DataRow;DLkotlin/jvm/functions/Function2;)D
 	public static final fun diff (Lorg/jetbrains/kotlinx/dataframe/DataRow;FLkotlin/jvm/functions/Function2;)F
 	public static final fun diff (Lorg/jetbrains/kotlinx/dataframe/DataRow;ILkotlin/jvm/functions/Function2;)I
@@ -1968,6 +1972,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataRowApiKt {
 	public static final fun diffOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/jvm/functions/Function2;)Ljava/lang/Float;
 	public static final fun diffOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/jvm/functions/Function2;)Ljava/lang/Integer;
 	public static final fun diffOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/jvm/functions/Function2;)Ljava/lang/Long;
+	public static final fun getName (Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;)Ljava/lang/String;
 	public static final fun getRow (Lorg/jetbrains/kotlinx/dataframe/DataRow;I)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun getRowOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;I)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun getRows (Lorg/jetbrains/kotlinx/dataframe/DataRow;Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -3466,26 +3471,31 @@ public final class org/jetbrains/kotlinx/dataframe/api/MoveKt {
 	public static final fun under (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair {
+public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair : org/jetbrains/kotlinx/dataframe/api/KeyValueProperty {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/Object;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/Object;
 	public final fun copy (Ljava/lang/String;Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;
 	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;Ljava/lang/String;Ljava/lang/Object;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getName ()Ljava/lang/String;
-	public final fun getValue ()Ljava/lang/Object;
+	public fun getKey ()Ljava/lang/String;
+	public fun getValue ()Ljava/lang/Object;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair$Companion {
+	public final fun invoke (Ljava/lang/String;Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair_ExtensionsKt {
-	public static final fun NameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NameValuePair_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValuePair_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun NameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NullableNameValuePair_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableNameValuePair_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
