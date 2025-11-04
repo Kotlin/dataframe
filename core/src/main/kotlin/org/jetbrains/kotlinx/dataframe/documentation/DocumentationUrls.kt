@@ -140,4 +140,19 @@ internal interface DocumentationUrls {
 
     /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
     typealias Rename = Nothing
+
+    /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
+    typealias GroupBy = Nothing
+
+    /** [See "`GroupBy` Transformation" on the documentation website.]({@include [Url]}/groupby.html#transformation) */
+    typealias GroupByTransformation = Nothing
+
+    /** [See "`GroupBy` Reducing" on the documentation website.]({@include [Url]}/groupby.html#reducing) */
+    typealias GroupByReducing = Nothing
+
+    /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
+    typealias GroupByAggregation = Nothing
+
+    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/groupby.html#pivot-groupby) */
+    typealias PivotGroupBy = Nothing
 }

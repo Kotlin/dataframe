@@ -24,7 +24,8 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 /**
- * Groups the specified [columns\] within the [DataFrame].
+ * Groups the specified [columns\] within the [DataFrame] into
+ * [column group][ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
  * returns a [GroupClause],
