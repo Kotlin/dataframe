@@ -140,4 +140,19 @@ internal interface DocumentationUrls {
 
     /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
     interface Rename
+
+    /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
+    interface GroupBy
+
+    /** [See "`GroupBy` Transformation" on the documentation website.]({@include [Url]}/groupby.html#transformation) */
+    interface GroupByTransformation
+
+    /** [See "`GroupBy` Reducing" on the documentation website.]({@include [Url]}/groupby.html#reducing) */
+    interface GroupByReducing
+
+    /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
+    interface GroupByAggregation
+
+    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/groupby.html#pivot-groupby) */
+    interface PivotGroupBy
 }
