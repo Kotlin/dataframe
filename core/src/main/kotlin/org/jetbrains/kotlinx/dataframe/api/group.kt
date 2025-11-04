@@ -55,7 +55,7 @@ internal interface GroupDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetGroupOperationArg]}
      */
-    interface GroupSelectingOptions
+    typealias GroupSelectingOptions = Nothing
 
     /**
      * ## Group Operation Grammar
@@ -75,19 +75,19 @@ internal interface GroupDocs {
      * __`.`__[**`into`**][GroupClause.into]` { column: `[`ColumnsSelectionDsl<T>`][ColumnsSelectionDsl]`.(`[`ColumnWithPath<C>`][ColumnWithPath]`) -> `[`AnyColumnReference`][AnyColumnReference]` }`
      *
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [group][group]} */
 @ExcludeFromSources
-private interface SetGroupOperationArg
+private typealias SetGroupOperationArg = Nothing
 
 /**
  * {@include [GroupDocs]}
  * ### This Group Overload
  */
 @ExcludeFromSources
-private interface CommonGroupDocs
+private typealias CommonGroupDocs = Nothing
 
 /**
  * @include [CommonGroupDocs]

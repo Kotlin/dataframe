@@ -29,6 +29,7 @@ This document explains how to use KoDEx in the DataFrame project.
         * [`\`: Escape Character](#-escape-character)
         * [
           `@ExcludeFromSources` Annotation: Excluding code content from sources](#excludefromsources-annotation-excluding-code-content-from-sources)
+        * [Using Typealiases to save Byte Size](#using-nested-typealiases-instead-of-interfaces)
     * [KoDEx Conventions in DataFrame](#kodex-conventions-in-dataframe)
         * [Common Concepts and Definitions](#common-concepts-and-definitions)
         * [Link Interfaces](#link-interfaces)
@@ -356,6 +357,31 @@ Since [v0.3.9](https://github.com/Jolanrensen/KoDEx/releases/tag/v0.3.9) it's al
 exclude a whole file from the `sources.jar` by adding the annotation to the top of the file,
 like `@file:ExcludeFromSources`.
 
+### Using (nested) Type Aliases Instead of Interfaces
+
+([Nested](https://kotlinlang.org/docs/type-aliases.html#nested-type-aliases))
+[Type aliases](https://kotlinlang.org/docs/type-aliases.html)
+can be used to save byte size in the published library.jar file.
+This is useful when you have a lot of documentation interfaces without a body that are only used to host KDoc.
+
+For example:
+
+```kt
+/** [Common doc][CommonDoc] */
+typealias CommonDocLink = Nothing
+
+/**
+ * ## {@include [CommonDocLink]}
+ * Hello from $[NAME]!
+ */
+interface CommonDoc {
+
+    // name argument
+    typealias NAME = Nothing
+}
+```
+
+
 ## KoDEx Conventions in DataFrame
 
 ### Common Concepts and Definitions
@@ -385,24 +411,24 @@ and include things like:
 - [`NA`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/NA.kt) / [`NaN`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/NaN.kt)
     - To be linked to for more information on the concepts
 - [DslGrammar](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt)
-    - To be linked to from each DSL grammar by the link interface
+    - To be linked to from each DSL grammar by the link KDoc
 - Check the folder to see if there are more and feel free to add them if needed :)
 
-### Link Interfaces
+### Link KDocs
 
-As can be seen, interfaces that can be "linked" to, like [`AccessApi`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/AccessApi.kt), are often
-accompanied by a `-Link` interface, like
+As can be seen, KDocs that can be "linked" to, like [`AccessApi`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/AccessApi.kt), are often
+accompanied by a `-Link` doc, like
 
 ```kt
 /** [Access API][AccessApi] */
-internal interface AccessApiLink
+internal typealias AccessApiLink = Nothing
 ```
 
 This allows other docs to simply `{@include [AccessApiLink]}` if they want to refer to
 Access APIs, and it provides a single place of truth for if we ever want to rename this concept.
 
-In general, docs accompanied by a `-Link` interface are meant to be linked to, while docs without
-a `-Link` interface are meant to be included in other docs
+In general, docs accompanied by a `-Link` KDoc are meant to be linked to, while docs without
+a `-Link` doc are meant to be included in other docs
 (and are often accompanied by [`@ExcludeFromSources`](#excludefromsources-annotation-excluding-code-content-from-sources)).
 We can deviate from this convention if it makes sense, of course.
 
@@ -416,10 +442,10 @@ We can deviate from this convention if it makes sense, of course.
 interface CommonDoc {
 
     // The name to be greeted from
-    interface NameArg
+    typealias NameArg = Nothing
     
     // alternative recommended notation
-    interface NAME
+    typealias NAME = Nothing
 }
 ```
 
@@ -432,15 +458,15 @@ A good example of this concept can be found in the
 This interface provides a template for all overloads of `allBefore`,
 `allAfter`, `allFrom`, and `allUpTo` in a single place.
 
-Nested in the documentation interface, there are several other interfaces that define the expected arguments
+Nested in the documentation interface, there are several type aliases that define the expected arguments
 of the template.
-These interfaces are named `TitleArg`/`TITLE`, `FunctionArg`/`FUNCTION`, etc. and commonly have no KDocs itself,
+These are named `TitleArg`/`TITLE`, `FunctionArg`/`FUNCTION`, etc. and commonly have no KDocs itself,
 just a simple comment explaining what the argument is for.
 
-Other documentation interfaces like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set
+Other documentation holders like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set
 all the arguments accordingly.
 
-It's recommended to name argument interfaces `-Arg`, or to write their name in `ALL_CAPS` (if the linter is shushed) 
+It's recommended to name arguments `-Arg`, or to write their name in `ALL_CAPS` (if the linter is shushed) 
 and have them nested in the documentation interface, though,
 this has not always been done in the past.
 
@@ -455,9 +481,9 @@ it easier to update the documentation whenever (part of) a URL changes.
 
 ### Utils
 
-The [`utils.kt` file](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/utils.kt) contains all sorts of helper interfaces for the documentation.
-For instance `{@include [LineBreak]}` can insert a line break in the KDoc and the family of `Indent`
-documentation interfaces can provide you with different non-breaking-space-based indents.
+The [`utils.kt` file](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/utils.kt) contains all sorts of helpers for the documentation.
+For instance `{@include [LineBreak]}` can insert a line break in the KDoc, and the family of `Indent`
+documentation type aliases can provide you with different non-breaking-space-based indents.
 
 If you need a new utility, feel free to add it to this file.
 
@@ -499,7 +525,7 @@ some [helpful templates](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/do
   ![selectingColumns.png](docs/imgs/selectingColumns.png)
 
   This is a bit large, so it's best if we just link to it. Also, you'll see the examples have
-  the generic `operation` name. So let's create our own interface `SelectSelectingOptions` we can let users link to and
+  the generic `operation` name. So let's create our own type `SelectSelectingOptions` we can let users link to and
   `{@set [SelectingColumns.OPERATION] [select][select]}`.
   Actually, we can even put this setting the operation arg in a central place, since we reuse it a lot.
 
@@ -559,7 +585,7 @@ But keep these things in mind:
 ![dslgrammar.png](docs/imgs/dslgrammar.png)
 
 Any family of functions or operations can show off their notation in a DSL grammar.
-This is done by creating a documentation interface like
+This is done by creating a documentation type like
 [`Update.Grammar`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/update.kt) and linking to it
 from each function.
 
@@ -650,13 +676,13 @@ All other parts are filled in like:
 interface Grammar {
 
     /** [**`first`**][ColumnsSelectionDsl.first] */
-    interface PlainDslName
+    typealias PlainDslName = Nothing
 
     /** __`.`__[**`first`**][ColumnsSelectionDsl.first] */
-    interface ColumnSetName
+    typealias ColumnSetName = Nothing
 
     /** __`.`__[**`firstCol`**][ColumnsSelectionDsl.firstCol] */
-    interface ColumnGroupName
+    typealias ColumnGroupName = Nothing
 }
 ```
 
@@ -664,7 +690,7 @@ When a reference to a certain definition is used, we take `DslGrammarTemplate.XR
 Clicking on them takes users to the respective
 `XDef` and thus provides them with the formal name and type of the definition.
 
-You may also notice that the `PlainDslName`, `ColumnSetName`, and `ColumnGroupName` interfaces are defined separately.
+You may also notice that the `PlainDslName`, `ColumnSetName`, and `ColumnGroupName` types are defined separately.
 This is to make sure they can be reused in the large Columns Selection DSL grammar and on the website.
 
 You don't always need all three parts in the grammar; not all functions can be used in each context.
@@ -691,7 +717,7 @@ A fully interactive, single-source-of-truth grammar for the Columns Selection DS
 ## KDoc -> WriterSide
 
 There's a special annotation, `@ExportAsHtml`, that allows you to export the content of the KDoc of the annotated
-function, interface, or class as HTML.
+function, interface, type alias, or class as HTML.
 The Markdown of the KDoc is rendered to HTML using [JetBrains/markdown](https://github.com/JetBrains/markdown) and, in
 the case of DataFrame, put in [./docs/StardustDocs/resources/snippets/kdocs](docs/StardustDocs/resources/snippets/kdocs).
 From there, the HTML can be included in any WriterSide page as an iFrame.
