@@ -93,7 +93,7 @@ internal interface FormatDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetFormatOperationArg]}
      */
-    interface FormatSelectingColumns
+    typealias FormatSelectingColumns = Nothing
 
     /**
      * ## Format Operation Grammar
@@ -141,7 +141,7 @@ internal interface FormatDocs {
          */
         @ExportAsHtml
         @ExcludeFromSources
-        interface ForHtml
+        typealias ForHtml = Nothing
 
         /**
          * ## Formatting DSL Grammar
@@ -178,61 +178,60 @@ internal interface FormatDocs {
          *
          * `| `[**`linear`**][FormattingDsl.linear]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
          */
-        interface FormattingDslGrammarDef
+        typealias FormattingDslGrammarDef = Nothing
 
         /**
          * `cellFormatter: `{@include [FormattingDslGrammarRef]}`.(cell: C) -> `[CellAttributes][CellAttributes]`?`
          */
-        interface CellFormatterDef
+        typealias CellFormatterDef = Nothing
 
         /**
          * `rowColFormatter: `{@include [FormattingDslGrammarRef]}`.(row: `[DataRow][DataRow]`<T>, col: `[ColumnWithPath][ColumnWithPath]`<C>) -> `[CellAttributes][CellAttributes]`?`
          */
-        interface RowColFormatterDef
+        typealias RowColFormatterDef = Nothing
 
         /**
          * `cellAttributes: `[CellAttributes][CellAttributes]
          */
-        interface CellAttributesDef
+        typealias CellAttributesDef = Nothing
 
         /**
          * `color: `[RgbColor][RgbColor]
          */
-        interface RgbColorDef
+        typealias RgbColorDef = Nothing
 
         /** [cellFormatter][CellFormatterDef] */
         @ExcludeFromSources
-        interface CellFormatterRef
+        typealias CellFormatterRef = Nothing
 
         /** [rowColFormatter][RowColFormatterDef] */
         @ExcludeFromSources
-        interface RowColFormatterRef
+        typealias RowColFormatterRef = Nothing
 
         /** [FormattingDsl][FormattingDslGrammarDef] */
         @ExcludeFromSources
-        interface FormattingDslGrammarRef
+        typealias FormattingDslGrammarRef = Nothing
 
         /** [cellAttributes][CellAttributesDef] */
         @ExcludeFromSources
-        interface CellAttributesRef
+        typealias CellAttributesRef = Nothing
 
         /** [color][RgbColorDef] */
         @ExcludeFromSources
-        interface RgbColorRef
+        typealias RgbColorRef = Nothing
     }
 }
 
 /** {@set [SelectingColumns.OPERATION] [format][format]} */
 @ExcludeFromSources
-private interface SetFormatOperationArg
+private typealias SetFormatOperationArg = Nothing
 
 /**
  * @include [FormatDocs]
  * ### This Format Overload
  */
 @ExcludeFromSources
-private interface CommonFormatDocs
-
+private typealias CommonFormatDocs = Nothing
 // endregion
 
 // region DataFrame format
@@ -406,7 +405,7 @@ public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): Format
  * ### Examples using [at]
  */
 @ExcludeFromSources
-private interface CommonFormatAtDocs
+private typealias CommonFormatAtDocs = Nothing
 
 /**
  * @include [CommonFormatAtDocs]

@@ -123,13 +123,13 @@ public interface FirstColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`first`**][ColumnsSelectionDsl.first] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`first`**][ColumnsSelectionDsl.first] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`firstCol`**][ColumnsSelectionDsl.firstCol] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -163,7 +163,7 @@ public interface FirstColumnsSelectionDsl {
     private interface CommonFirstDocs {
 
         /** Examples key */
-        interface Examples
+        typealias Examples = Nothing
     }
 
     /**

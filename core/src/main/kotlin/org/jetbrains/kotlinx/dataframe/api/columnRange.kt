@@ -40,7 +40,7 @@ public interface ColumnRangeColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`..`**][ColumnsSelectionDsl.rangeTo] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
     }
 
     /**
@@ -70,7 +70,7 @@ public interface ColumnRangeColumnsSelectionDsl {
     private interface CommonRangeOfColumnsDocs {
 
         /** Examples key */
-        interface Example
+        typealias Example = Nothing
     }
 
     /**

@@ -61,7 +61,7 @@ internal interface Move {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetMoveOperationArg]}
      */
-    interface MoveSelectingOptions
+    typealias MoveSelectingOptions = Nothing
 
     /**
      * ## Move Operation Grammar
@@ -95,19 +95,19 @@ internal interface Move {
      * {@include [Indent]}
      * `| `__`.`__[**`toEnd`**][MoveClause.toEnd]**`()`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [move][move]} */
 @ExcludeFromSources
-private interface SetMoveOperationArg
+private typealias SetMoveOperationArg = Nothing
 
 /**
  * {@include [Move]}
  * ### This Move Overload
  */
 @ExcludeFromSources
-private interface CommonMoveDocs
+private typealias CommonMoveDocs = Nothing
 
 /**
  * @include [CommonMoveDocs]
@@ -165,19 +165,19 @@ internal interface MoveTo {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetMoveToOperationArg]}
      */
-    interface MoveToSelectingOptions
+    typealias MoveToSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [moveTo][moveTo]} */
 @ExcludeFromSources
-private interface SetMoveToOperationArg
+private typealias SetMoveToOperationArg = Nothing
 
 /**
  * {@include [MoveTo]}
  * ### This MoveTo Overload
  */
 @ExcludeFromSources
-private interface CommonMoveToDocs
+private typealias CommonMoveToDocs = Nothing
 
 /**
  * @include [CommonMoveToDocs]
@@ -289,19 +289,19 @@ internal interface MoveToStart {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetMoveToStartOperationArg]}
      */
-    interface MoveToStartSelectingOptions
+    typealias MoveToStartSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [moveToStart][moveToStart]} */
 @ExcludeFromSources
-private interface SetMoveToStartOperationArg
+private typealias SetMoveToStartOperationArg = Nothing
 
 /**
  * {@include [MoveToStart]}
  * ### This MoveToStart Overload
  */
 @ExcludeFromSources
-private interface CommonMoveToStartDocs
+private typealias CommonMoveToStartDocs = Nothing
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
@@ -386,19 +386,19 @@ internal interface MoveToEnd {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetMoveToEndOperationArg]}
      */
-    interface MoveToEndSelectingOptions
+    typealias MoveToEndSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [moveToEnd][moveToEnd]} */
 @ExcludeFromSources
-private interface SetMoveToEndOperationArg
+private typealias SetMoveToEndOperationArg = Nothing
 
 /**
  * {@include [MoveToEnd]}
  * ### This MoveToEnd Overload
  */
 @ExcludeFromSources
-private interface CommonMoveToEndDocs
+private typealias CommonMoveToEndDocs = Nothing
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
@@ -711,7 +711,7 @@ public fun <T, C> MoveClause<T, C>.toTop(
  * ### This After Overload
  */
 @ExcludeFromSources
-internal interface MoveAfter
+internal typealias MoveAfter = Nothing
 
 /**
  * {@include [MoveAfter]}
@@ -768,7 +768,7 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
  * ### This Before Overload
  */
 @ExcludeFromSources
-internal interface MoveBefore
+internal typealias MoveBefore = Nothing
 
 /**
  * {@include [MoveBefore]}
