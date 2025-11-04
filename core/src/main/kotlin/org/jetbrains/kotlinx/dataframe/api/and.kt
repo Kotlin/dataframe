@@ -58,10 +58,10 @@ public interface AndColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`and`**][ColumnsSelectionDsl.and] */
-        public interface InfixName
+        public typealias InfixName = Nothing
 
         /** __`.`__[**`and`**][ColumnsSelectionDsl.and] */
-        public interface Name
+        public typealias Name = Nothing
     }
 
     /**
@@ -97,7 +97,7 @@ public interface AndColumnsSelectionDsl {
      */
     private interface CommonAndDocs {
 
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     // region ColumnsResolver
@@ -110,7 +110,7 @@ public interface AndColumnsSelectionDsl {
      */
     private interface ColumnsResolverAndDocs {
 
-        interface Argument
+        typealias Argument = Nothing
     }
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
@@ -140,7 +140,7 @@ public interface AndColumnsSelectionDsl {
      */
     private interface StringAndDocs {
 
-        interface Argument
+        typealias Argument = Nothing
     }
 
     /** @include [StringAndDocs] {@set [StringAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
@@ -169,7 +169,7 @@ public interface AndColumnsSelectionDsl {
      */
     private interface KPropertyAndDocs {
 
-        interface Argument
+        typealias Argument = Nothing
     }
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */

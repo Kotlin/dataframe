@@ -54,5 +54,5 @@ public interface UnifyingNumbers {
      */
     @ExcludeFromSources
     @ExportAsHtml
-    private interface Graph
+    private typealias Graph = Nothing
 }

@@ -44,19 +44,19 @@ internal interface Select {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetSelectOperationArg]}
      */
-    interface SelectSelectingOptions
+    typealias SelectSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [select][select]} */
 @ExcludeFromSources
-private interface SetSelectOperationArg
+private typealias SetSelectOperationArg = Nothing
 
 /**
  * {@include [Select]}
  * ### This Select Overload
  */
 @ExcludeFromSources
-private interface CommonSelectDocs
+private typealias CommonSelectDocs = Nothing
 
 /**
  * @include [CommonSelectDocs]
@@ -129,7 +129,7 @@ public interface SelectColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`select`**][ColumnsSelectionDsl.select] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -172,7 +172,7 @@ public interface SelectColumnsSelectionDsl {
      */
     private interface CommonSelectDocs {
 
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**
