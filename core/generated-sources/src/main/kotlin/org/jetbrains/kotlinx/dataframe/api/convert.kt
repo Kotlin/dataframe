@@ -72,7 +72,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  * See also [parse] — a specialized form of the [convert] operation that parses [String] columns
  * into other types without requiring explicit type specification.
  */
-internal interface SeeAlsoParse
+internal typealias SeeAlsoParse = Nothing
 
 /**
  * Converts the values in the specified [columns] either to a supported target type
@@ -178,7 +178,7 @@ internal interface ConvertDocs {
      * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`(Person::length, Person::age)`
      *
      */
-    interface ConvertSelectingOptions
+    typealias ConvertSelectingOptions = Nothing
 
     /**
      * List of types, supported in [convert to][Convert.to] operation:
@@ -195,7 +195,7 @@ internal interface ConvertDocs {
      *   To convert [Char]->[Int] the way it is written, use [parse()][parse] instead, or,
      *   in either case, use [String] as intermediary type.
      */
-    interface SupportedTypes
+    typealias SupportedTypes = Nothing
 
     /**
      * ## Convert Operation Grammar
@@ -275,7 +275,7 @@ internal interface ConvertDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`toDataFrames`**][Convert.toDataFrames]`()`
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /**

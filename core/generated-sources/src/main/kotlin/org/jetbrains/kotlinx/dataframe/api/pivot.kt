@@ -297,13 +297,13 @@ internal interface PivotGroupByDocs {
      *
      * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#pivot-groupby)
      */
-    interface CommonDescription
+    typealias CommonDescription = Nothing
 
-    interface Grammar
+    typealias Grammar = Nothing
 
-    interface Reducing
+    typealias Reducing = Nothing
 
-    interface Aggregation
+    typealias Aggregation = Nothing
 }
 
 public interface PivotGroupBy<out T> : Aggregatable<T> {

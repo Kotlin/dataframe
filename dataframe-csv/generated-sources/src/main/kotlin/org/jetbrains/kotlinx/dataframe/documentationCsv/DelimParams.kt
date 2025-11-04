@@ -21,40 +21,40 @@ internal object DelimParams {
      * @param path The file path to read.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
-    interface PATH_READ
+    typealias PATH_READ = Nothing
 
     /**
      * @param file The file to read.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
-    interface FILE_READ
+    typealias FILE_READ = Nothing
 
     /**
      * @param url The URL from which to fetch the data.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
-    interface URL_READ
+    typealias URL_READ = Nothing
 
     /**
      * @param fileOrUrl The file path or URL to read the data from.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
-    interface FILE_OR_URL_READ
+    typealias FILE_OR_URL_READ = Nothing
 
     /** @param inputStream Represents the file to read. */
-    interface INPUT_STREAM_READ
+    typealias INPUT_STREAM_READ = Nothing
 
     /** @param text The raw data to read in the form of a [String]. */
-    interface TEXT_READ
+    typealias TEXT_READ = Nothing
 
     /** @param file The file to write to. */
-    interface FILE_WRITE
+    typealias FILE_WRITE = Nothing
 
     /** @param path The path pointing to a file to write to. */
-    interface PATH_WRITE
+    typealias PATH_WRITE = Nothing
 
     /** @param writer The [Appendable] to write to. */
-    interface WRITER_WRITE
+    typealias WRITER_WRITE = Nothing
 
     /**
      * @param delimiter The field delimiter character. Default: ','.

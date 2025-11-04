@@ -58,7 +58,7 @@ public interface SimplifyColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`simplify`**][ColumnsSelectionDsl.simplify] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
     }
 
     /**
