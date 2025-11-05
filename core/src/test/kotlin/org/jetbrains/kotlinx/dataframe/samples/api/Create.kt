@@ -29,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 import java.io.File
+import kotlin.random.nextInt
 import kotlin.random.Random as KotlinRandom
 
 class Create : TestBase() {
@@ -234,7 +235,7 @@ class Create : TestBase() {
             "productId" from { "P${1000 + it}" }
             "category" from { categories.random() }
             "price" from { Random.nextDouble(10.0, 500.0) }
-            "inStock" from { Random.nextInt(0, 100) }
+            "inStock" from { Random.nextInt(0..100) }
         }
         // SampleEnd
     }
@@ -257,14 +258,14 @@ class Create : TestBase() {
             // Column Group
             "manufacturer" {
                 "country" from { listOf("USA", "China", "Germany", "Japan").random() }
-                "yearEstablished" from { Random.nextInt(1950, 2020) }
+                "yearEstablished" from { Random.nextInt(1950..2020) }
             }
 
             // Frame Column
             "reviews" from {
-                val reviewCount = Random.nextInt(0, 8)
+                val reviewCount = Random.nextInt(0..7)
                 (0 until reviewCount).toDataFrame {
-                    val ratings: DataColumn<Int> = expr { Random.nextInt(1, 6) }
+                    val ratings: DataColumn<Int> = expr { Random.nextInt(1..5) }
                     val comments = ratings.map {
                         when (it) {
                             5 -> listOf("Amazing quality!", "Best purchase ever!", "Highly recommend!", "Absolutely perfect!")
@@ -275,7 +276,7 @@ class Create : TestBase() {
                         }.random()
                     }
 
-                    "author" from { "User${Random.nextInt(1000, 9999)}" }
+                    "author" from { "User${Random.nextInt(1000..10000)}" }
                     ratings into "rating"
                     comments into "comment"
                 }
