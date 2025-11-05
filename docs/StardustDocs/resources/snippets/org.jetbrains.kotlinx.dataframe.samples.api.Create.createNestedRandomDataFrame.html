@@ -177,18 +177,9 @@ summary {
 </style>
 </head>
 <body>
-                                <details>
-                                <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
-                                 <table class="dataframe" id="df_0"></table>
+<table class="dataframe" id="df_0"></table>
 
 <p class="dataframe_description"></p>
-                                </details>
-                                <details>
-                                <summary>Output DataFrame: rowsCount = 7, columnsCount = 5</summary>
-                                 <table class="dataframe" id="df_1"></table>
-
-<p class="dataframe_description"></p>
-                                </details>
 </body>
 <script>
 (function () {
@@ -570,30 +561,66 @@ window.addEventListener('load', () => {
     observer.observe(document.body, {childList: true, subtree: true, characterData: true});
 });
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
-{ name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
-{ name: "<span title=\"name: DataRow<*>\">name</span>", children: [0, 1], rightAlign: false, values: ["<span class=\"formatted\" title=\"firstName: Alice\nlastName: Cooper\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Alice<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Cooper<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Bob\nlastName: Dylan\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Bob<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Dylan<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Daniels\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Dan<span class=\"structural\">...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Chaplin\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Cha<span class=\"structural\">...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Bob\nlastName: Marley\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Bob<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Marley<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Alice\nlastName: Wolf\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Alice<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Wolf<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Byrd\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Byrd<span class=\"structural\"> }</span></span>"] }, 
-{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">40</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>"] }, 
-{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","Moscow"] }, 
-{ name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">54</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">87</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">68</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">55</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">90</span></span>"] }, 
-{ name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true","true","false","true","true","false","true"] }, 
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"productId: String\">productId</span>", children: [], rightAlign: false, values: ["P1000","P1001","P1002","P1003","P1004","P1005","P1006"] }, 
+{ name: "<span title=\"category: String\">category</span>", children: [], rightAlign: false, values: ["Clothing","Electronics","Clothing","Clothing","Books","Electronics","Books"] }, 
+{ name: "<span title=\"price: Double\">price</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">489.054329</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">41.332037</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">339.555785</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">367.194829</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">471.963710</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">65.576163</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">103.849144</span></span>"] }, 
+{ name: "<span title=\"country: String\">country</span>", children: [], rightAlign: false, values: ["China","Japan","China","China","China","China","Germany"] }, 
+{ name: "<span title=\"yearEstablished: Int\">yearEstablished</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">1951</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1998</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2012</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1972</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1984</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1997</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1995</span></span>"] }, 
+{ name: "<span title=\"manufacturer: DataRow<*>\">manufacturer</span>", children: [3, 4], rightAlign: false, values: ["<span class=\"formatted\" title=\"country: China\nyearEstablished: 1951\"><span class=\"structural\">{ </span><span class=\"structural\">country: </span>China<span class=\"structural\">, </span><span class=\"structural\">yearEstablished: </span><span class=\"numbers\"><span class=\"structural\">...</span></span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"country: Japan\nyearEstablished: 1998\"><span class=\"structural\">{ </span><span class=\"structural\">country: </span>Japan<span class=\"structural\">, </span><span class=\"structural\">yearEstablished: </span><span class=\"numbers\"><span class=\"structural\">...</span></span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"country: China\nyearEstablished: 2012\"><span class=\"structural\">{ </span><span class=\"structural\">country: </span>China<span class=\"structural\">, </span><span class=\"structural\">yearEstablished: </span><span class=\"numbers\"><span class=\"structural\">...</span></span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"country: China\nyearEstablished: 1972\"><span class=\"structural\">{ </span><span class=\"structural\">country: </span>China<span class=\"structural\">, </span><span class=\"structural\">yearEstablished: </span><span class=\"numbers\"><span class=\"structural\">...</span></span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"country: China\nyearEstablished: 1984\"><span class=\"structural\">{ </span><span class=\"structural\">country: </span>China<span class=\"structural\">, </span><span class=\"structural\">yearEstablished: </span><span class=\"numbers\"><span class=\"structural\">...</span></span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"country: China\nyearEstablished: 1997\"><span class=\"structural\">{ </span><span class=\"structural\">country: </span>China<span class=\"structural\">, </span><span class=\"structural\">yearEstablished: </span><span class=\"numbers\"><span class=\"structural\">...</span></span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"country: Germany\nyearEstablished: 1995\"><span class=\"structural\">{ </span><span class=\"structural\">country: </span>Germany<span class=\"structural\">, </span><span class=\"structural\">yearEstablished...</span><span class=\"structural\"> }</span></span>"] }, 
+{ name: "<span title=\"reviews: DataFrame<*>\">reviews</span>", children: [], rightAlign: false, values: [{ frameId: 1, value: "<b>DataFrame 7 x 3</b>" },{ frameId: 2, value: "<b>DataFrame 1 x 3</b>" },{ frameId: 3, value: "<b>DataFrame 3 x 3</b>" },{ frameId: 4, value: "<b>DataFrame 1 x 3</b>" },{ frameId: 5, value: "<b>DataFrame 1 x 3</b>" },{ frameId: 6, value: "<b>DataFrame 5 x 3</b>" },{ frameId: 7, value: "<b>DataFrame 4 x 3</b>" }] }, 
 ], id: 0, rootId: 0, totalRows: 7 } ) });
 /*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(0) });
-
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Alice","Charlie","Bob","Charlie","Charlie","Bob"] }, 
-{ name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Wolf","Daniels","Marley","Byrd","Chaplin","Dylan"] }, 
-{ name: "<span title=\"name: DataRow<*>\">name</span>", children: [0, 1], rightAlign: false, values: ["<span class=\"formatted\" title=\"firstName: Alice\nlastName: Cooper\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Alice<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Cooper<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Alice\nlastName: Wolf\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Alice<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Wolf<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Daniels\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Dan<span class=\"structural\">...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Bob\nlastName: Marley\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Bob<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Marley<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Byrd\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Byrd<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Chaplin\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Cha<span class=\"structural\">...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Bob\nlastName: Dylan\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Bob<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Dylan<span class=\"structural\"> }</span></span>"] }, 
-{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">40</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>"] }, 
-{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","Moscow","Tokyo","Moscow","Milan","Dubai"] }, 
-{ name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">54</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">55</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">68</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">90</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">87</span></span>"] }, 
-{ name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true","false","false","true","true","true","true"] }, 
-], id: 1, rootId: 1, totalRows: 7 } ) });
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"author: String\">author</span>", children: [], rightAlign: false, values: ["User2982","User3295","User2521","User8279","User4899"] }, 
+{ name: "<span title=\"rating: Int\">rating</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">3</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">3</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>"] }, 
+{ name: "<span title=\"comment: String\">comment</span>", children: [], rightAlign: false, values: ["It&#39;s okay","Not what I expected","Neither good nor bad","Not what I expected","Not worth the price"] }, 
+], id: 1, rootId: 0, totalRows: 7 } ) });
 /*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(1) });
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"author: String\">author</span>", children: [], rightAlign: false, values: ["User5188"] }, 
+{ name: "<span title=\"rating: Int\">rating</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>"] }, 
+{ name: "<span title=\"comment: String\">comment</span>", children: [], rightAlign: false, values: ["Do not buy!"] }, 
+], id: 2, rootId: 0, totalRows: 1 } ) });
+/*-->*/
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"author: String\">author</span>", children: [], rightAlign: false, values: ["User7766","User5615","User5972"] }, 
+{ name: "<span title=\"rating: Int\">rating</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">3</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">4</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">5</span></span>"] }, 
+{ name: "<span title=\"comment: String\">comment</span>", children: [], rightAlign: false, values: ["Neither good nor bad","Good value for money","Highly recommend!"] }, 
+], id: 3, rootId: 0, totalRows: 3 } ) });
+/*-->*/
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"author: String\">author</span>", children: [], rightAlign: false, values: ["User9297"] }, 
+{ name: "<span title=\"rating: Int\">rating</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">5</span></span>"] }, 
+{ name: "<span title=\"comment: String\">comment</span>", children: [], rightAlign: false, values: ["Absolutely perfect!"] }, 
+], id: 4, rootId: 0, totalRows: 1 } ) });
+/*-->*/
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"author: String\">author</span>", children: [], rightAlign: false, values: ["User1263"] }, 
+{ name: "<span title=\"rating: Int\">rating</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>"] }, 
+{ name: "<span title=\"comment: String\">comment</span>", children: [], rightAlign: false, values: ["Could be better"] }, 
+], id: 5, rootId: 0, totalRows: 1 } ) });
+/*-->*/
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"author: String\">author</span>", children: [], rightAlign: false, values: ["User6799","User1199","User6496","User2531","User2767"] }, 
+{ name: "<span title=\"rating: Int\">rating</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">3</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>"] }, 
+{ name: "<span title=\"comment: String\">comment</span>", children: [], rightAlign: false, values: ["Average quality","Disappointed","Could be better","Could be better","Could be better"] }, 
+], id: 6, rootId: 0, totalRows: 5 } ) });
+/*-->*/
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"author: String\">author</span>", children: [], rightAlign: false, values: ["User2143","User7435","User7399","User6613"] }, 
+{ name: "<span title=\"rating: Int\">rating</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">5</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">3</span></span>"] }, 
+{ name: "<span title=\"comment: String\">comment</span>", children: [], rightAlign: false, values: ["Disappointed","Complete waste of money","Highly recommend!","Does the job"] }, 
+], id: 7, rootId: 0, totalRows: 4 } ) });
+/*-->*/
+
+call_DataFrame(function() { DataFrame.renderTable(0) });
 
 </script>
 </html>
