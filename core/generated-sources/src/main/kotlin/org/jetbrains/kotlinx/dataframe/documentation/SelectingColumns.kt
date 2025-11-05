@@ -144,7 +144,7 @@ internal interface SelectingColumns {
          *
          *
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /**
@@ -200,7 +200,7 @@ internal interface SelectingColumns {
          * `df.`<code>`operation`</code>`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
          *
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /**
@@ -218,7 +218,7 @@ internal interface SelectingColumns {
          * `df.`<code>`operation`</code>`("length", "age")`
          *
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /**
@@ -240,7 +240,7 @@ internal interface SelectingColumns {
          * `df.`<code>`operation`</code>`(length, age)`
          *
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]). */
@@ -257,6 +257,6 @@ internal interface SelectingColumns {
          * `df.`<code>`operation`</code>`(Person::length, Person::age)`
          *
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 }

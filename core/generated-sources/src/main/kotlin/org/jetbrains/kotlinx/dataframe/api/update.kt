@@ -96,7 +96,7 @@ public class Update<T, C>(
      *
      *
      */
-    public interface Grammar
+    public typealias Grammar = Nothing
 
     /**
      * The columns to update need to be selected. See [Selecting Columns][UpdateSelectingOptions]
@@ -106,7 +106,7 @@ public class Update<T, C>(
 
         // Optional argument that can be set to redirect where the [Selecting Columns] link points to
         @Suppress("ClassName")
-        public interface SELECTING_COLUMNS
+        public typealias SELECTING_COLUMNS = Nothing
     }
 
     /**
@@ -178,20 +178,19 @@ public class Update<T, C>(
      * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(Person::length, Person::age)`
      *
      */
-    public interface UpdateSelectingOptions
+    public typealias UpdateSelectingOptions = Nothing
 
     /** @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to update. */
-    internal interface DslParam
+    internal typealias DslParam = Nothing
 
     /** @param [columns] The [Column References][ColumnReference] of this [DataFrame] to update. */
-    internal interface ColumnAccessorsParam
+    internal typealias ColumnAccessorsParam = Nothing
 
     /** @param [columns] The [KProperties][KProperty] corresponding to columns of this [DataFrame] to update. */
-    internal interface KPropertiesParam
+    internal typealias KPropertiesParam = Nothing
 
     /** @param [columns] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame] to update. */
-    internal interface ColumnNamesParam
-
+    internal typealias ColumnNamesParam = Nothing
     // endregion
 }
 
