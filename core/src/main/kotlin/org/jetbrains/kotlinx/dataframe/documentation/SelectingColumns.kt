@@ -68,6 +68,8 @@ internal interface SelectingColumns {
      * expects you to return a [SingleColumn] or [ColumnSet] (so, a [ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     * This also allows you to use [Extension Properties API][ExtensionPropertiesAPIDocs]
+     * for type- and name-safe columns selection.
      *
      * #### NOTE:
      * While you can use the {@include [AccessApi.StringApiLink]} and {@include [AccessApi.KPropertiesApiLink]}

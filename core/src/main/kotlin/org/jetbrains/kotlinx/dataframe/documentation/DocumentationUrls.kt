@@ -159,6 +159,15 @@ internal interface DocumentationUrls {
     /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/pivot.html#pivot-groupby) */
     interface PivotGroupBy
 
-    /** [See `pivot`  on the documentation website.]({@include [Url]}/pivot.html) */
+    /** [See `pivot` on the documentation website.]({@include [Url]}/pivot.html) */
     interface Pivot
+
+    /** [See `pivotMatches` on the documentation website.]({@include [Url]}/pivot.html#pivotmatches) */
+    interface PivotMatches
+
+    /** [See `pivotCounts` on the documentation website.]({@include [Url]}/pivot.html#pivotcounts) */
+    interface PivotCounts
+
+    /** [See "`pivot` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#pivot-statistics) */
+    interface PivotStatistics
 }

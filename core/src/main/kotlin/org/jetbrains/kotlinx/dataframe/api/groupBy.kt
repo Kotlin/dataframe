@@ -163,16 +163,16 @@ internal interface GroupByDocs {
      * ### Pivot [GroupBy] into [PivotGroupBy] and reduce / aggregate it
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`pivot`**][GroupBy.pivot]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * [GroupBy][GroupBy]`.`[**`pivot`**][GroupBy.pivot]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * {@include [Indent]}
      * `    \[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[<pivot_reducer>][PivotGroupByDocs.Reducing]
+     * __`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
      *
      * {@include [Indent]}
-     * `| `__`.`__[<pivot_aggregator>][PivotGroupByDocs.Aggregation]
+     * `| `__`.`__[<pivot_groupBy_groupBy>][PivotGroupByDocs.Aggregation]
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
@@ -262,8 +262,8 @@ internal interface GroupByDocs {
      * These functions return a [ReducedGroupBy], which can then be transformed into a new [DataFrame]
      * containing the reduced rows (either original or transformed) using one of the following methods:
      * * [concat][ReducedGroupBy.concat] — simply concatenates all reduced rows;
-     * * [values][ReducedGroupBy.values] — creates a [DataFrame] with new rows by transforming each reduced row
-     *   using [ColumnsForAggregateSelectionDsl];
+     * * [values][ReducedGroupBy.values] — creates a [DataFrame] containing the values
+     *   from the reduced rows in the selected columns.
      * * [into][ReducedGroupBy.into] — creates a new column with values computed with [RowExpression] on each row,
      *   or a new [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      *   containing each group reduced to a single row;
@@ -289,14 +289,16 @@ internal interface GroupByDocs {
      * The following aggregation methods are available:
      * * [concat][GroupBy.concat] — concatenates all rows from all groups into a single [DataFrame],
      *   without preserving grouping keys;
+     * * [toDataFrame][GroupBy.toDataFrame] — returns this [GroupBy] as [DataFrame] with the grouping keys and
+     *  corresponding groups in [FrameColumn].
      * * [concatWithKeys][GroupBy.concatWithKeys] — a variant of [concat][GroupBy.concat] that also includes
      *   grouping keys that were not present in the original [DataFrame];
      * * [into][GroupBy.into] — creates a new column containing a list of values computed with a [RowExpression]
      *   for each group, or a new [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]
      *   containing the groups themselves;
-     * * [values][ReducedGroupBy.values] — creates a [DataFrame] with new rows produced by transforming
-     *   each group using [ColumnsForAggregateSelectionDsl];
-     * * [count][Grouped.count] — returns a [DataFrame] containing the grouping key columns and an additional column
+     * * [values][Grouped.values] — creates a [DataFrame] containing values collected into a single [List]
+     *   from all rows of each group for the selected columns.
+     * * [count][Grouped.count] — creates a [DataFrame] containing the grouping key columns and an additional column
      *   with the number of rows in each corresponding group;
      * * [aggregate][Grouped.aggregate] — performs a set of custom aggregations using [AggregateDsl],
      *   allowing you to compute one or more derived values per group;
@@ -375,7 +377,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
 // endregion
 
 /**
- * Groups the rows of this [Pivot] into [PivotGroupBy]
+ * Groups the rows of this [Pivot] groups
  * based on the values in one or more specified [key columns][\columns].
  *
  * Works like regular [DataFrame.groupBy] on pivot groups.

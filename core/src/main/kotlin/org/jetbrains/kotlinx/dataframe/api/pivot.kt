@@ -12,11 +12,15 @@ import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -32,7 +36,7 @@ import kotlin.reflect.KProperty
  * into new columns based on values from one or several provided [\columns] of the original [DataFrame].
  *
  * Returns a [Pivot] — a dataframe-like structure that contains all unique combinations of key values
- * as columns (or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]s) with a single row
+ * as columns (or [column groups][ColumnGroup] for multiple keys) with a single row
  * with the corresponding groups for each key combination (each represented as a [DataFrame]).
  *
  * Works like [DataFrame.groupBy] but groups rows horizontally.
@@ -42,6 +46,12 @@ import kotlin.reflect.KProperty
  * * [aggregated][Aggregation] into a [DataRow], where each group is transformed into a new row of derived values;
  * * [grouped][Grouping] into a [PivotGroupBy] structure, which combines [pivot] and [groupBy] operations
  *   and then reduced or aggregated into a [DataFrame].
+ *
+ * Check out [Grammar].
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Pivot]}
  */
@@ -101,136 +111,177 @@ internal interface PivotDocs {
      * {@include [Indent]}
      * `| `__`.`__[<aggregation_statistic>][PivotDocs.AggregationStatistics]
      *
-     * ### Convert [Pivot] into [PivotGroupBy] and then reduce / aggregate
+     * ### Group [Pivot] into [PivotGroupBy] and reduce / aggregate it
+     *
+     * [Pivot][Pivot]`.`[**`groupBy`**][Pivot.groupBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * {@include [Indent]}
-     * [Pivot][Pivot]`.`[**`groupBy`**][Pivot.groupBy]**`  {  `**`indexColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`groupByOther`**][Pivot.groupByOther]**`() `**
+     * `| `__`.`__[**`groupByOther`**][Pivot.groupByOther]**`()`**
      *
      * {@include [Indent]}
      * `    \[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`minBy`**][PivotGroupBy.minBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * `| `__`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`maxBy`**][PivotGroupBy.maxBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * `| `__`.`__[<pivot_groupBy_aggregator>][PivotGroupByDocs.Aggregation]
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`first`**][PivotGroupBy.first]`  \[ `**` {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`last`**][PivotGroupBy.last]`  \[ `**`{  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`medianBy`**][PivotGroupBy.medianBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`percentileBy`**][PivotGroupBy.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`with`**][PivotGroupBy.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`values`**][PivotGroupBy.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`count`**][PivotGroupBy.count]**`() `**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`matches`**][PivotGroupBy.matches]**`  {  `**`predicate: `[`RowFilter`][RowFilter]**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`frames`**][PivotGroupBy.frames]**`() `**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`aggregate`**][PivotGroupBy.aggregate]**`  {  `**`aggregations: `[`AggregateDsl`][AggregateDsl]**` }`**
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[<aggregation_statistic>][PivotDocs.AggregationStatistics]
+     * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
     interface Grammar
 
     /**
-     * ### [Pivot] common description
-     *
-     * A pivot reorganizes data **horizontally**:
-     * * pivot key values → **new columns**;
-     * * index columns (from [groupBy][Pivot.groupBy] / [groupByOther][Pivot.groupByOther]) → **rows**;
-     * * each cell is produced either by a **reducer** (single selected row → single value)
-     *   or an **aggregator** (all rows in the cell → one or more values).
-     *
-     * If a [default][PivotGroupBy.default] value is set, missing cells are filled with it.
-     */
-    interface CommonDescription
-
-    /**
      * ### [Pivot] reducing
      *
-     * Produces a [DataFrame] with **exactly one value per pivot cell**.
+     * Each [Pivot] group can be collapsed into a single row and then concatenated
+     * into a new [DataRow] with these row values (or their derived representation)
+     * with [pivot] keys as top-level columns or as [column groups][ColumnGroup].
      *
-     * Available reducers (both for [Pivot] and [PivotGroupBy]):
-     * * [minBy] / [maxBy] — select the row with the minimum/maximum value of a column;
-     * * [first] / [last] — take the first/last row (optionally with a [RowFilter]);
-     * * [medianBy] / [percentileBy] — select the row at median / a given percentile;
-     * * [with] — compute the cell value via a [RowExpression] from the selected row;
-     * * [values] — copy one or more columns from the selected row into cells.
+     * Reducing is a specific case of [aggregation][Aggregation].
+     *
+     * First, choose a [Pivot] reducing method:
+     * * [first][Pivot.first], [last][Pivot.last] — take the first or last row
+     *   (optionally, the first or last one that satisfies a predicate) of each group;
+     * * [minBy][Pivot.minBy] / [maxBy][Pivot.maxBy] — take the row with the minimum or maximum value
+     *   of the given [RowExpression] evaluated on rows within each group;
+     * * [medianBy][Pivot.medianBy] / [percentileBy][Pivot.percentileBy] — take the row with
+     *   the median or a specific percentile value of the given [RowExpression] evaluated on rows within each group.
+     *
+     * These functions return a [ReducedPivot], which can then be transformed into a new [DataFrame]
+     * containing a single combined row (either using the original reduced rows or their transformed versions)
+     * through one of the following methods:
+     * * [values][ReducedPivot.values] — creates a new row containing the values
+     *   from the reduced rows in the selected columns and produces a [DataRow] of
+     *   these values;
+     * * [with][ReducedPivot.with] — computes a new value for each reduced row using a [RowExpression],
+     *   and produces a [DataRow] containing these computed values.
+     *
+     * Each method returns a new [DataRow] with [pivot] keys as top-level columns
+     * (or as [column groups][ColumnGroup]) and values composed of the reduced results from each group.
+     *
+     * Check out [`Pivot grammar`][Grammar].
      */
     interface Reducing
 
     /**
      * ### [Pivot] aggregation
      *
-     * Produces a [DataFrame] with **one or more values per pivot cell** by combining **all rows** in the cell.
+     * Each [Pivot] group can be aggregated — that is, transformed into a new value, [DataRow], or [DataFrame] —
+     * and then concatenated into a single [DataRow] composed of these aggregated results,
+     * with [pivot] keys as top-level columns or as [column groups][ColumnGroup].
      *
-     * Available aggregators (both for [Pivot] and [PivotGroupBy]):
-     * * [count] — number of rows in the cell;
-     * * [matches] — number of rows satisfying a predicate;
-     * * [frames] — collect rows as a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn];
-     * * [with] — compute a value using a [RowExpression] over all rows in the cell;
-     * * [values] — project one or more columns as aggregated cell values;
-     * * [aggregate] — custom multi-aggregation via [AggregateDsl];
-     * * [Various aggregation statistics][PivotDocs.AggregationStatistics] — predefined shortcuts
-     *   such as sum/mean/median/std/percentile, etc.
+     * The following aggregation methods are available:
+     * * [frames][Pivot.frames] — returns this [Pivot] as a [DataRow] with pivot keys as columns
+     *   (or [column groups][ColumnGroup]) and corresponding groups stored as [FrameColumn]s;
+     * * [values][Pivot.values] — creates a [DataRow] containing values collected into a single [List]
+     *   from all rows of each group for the selected columns;
+     * * [count][Pivot.count] — creates a [DataRow] containing the pivot key columns and an additional column
+     *   with the number of rows in each corresponding group;
+     * * [with][Pivot.with] — creates a [DataRow] containing values computed using a [RowExpression]
+     *   across all rows of each group and collected into a single [List] for every group;
+     * * [aggregate][Pivot.aggregate] — performs a set of custom aggregations using [AggregateDsl],
+     *   allowing computation of one or more derived values per group;
+     * * [Various aggregation statistics][AggregationStatistics] — predefined shortcuts
+     *   for common statistical aggregations such as [sum][Pivot.sum], [mean][Pivot.mean],
+     *   [median][Pivot.median], and others.
+     *
+     * Each of these methods returns a new [DataRow] with [pivot] keys as top-level columns
+     * (or as [column groups][ColumnGroup]) and values representing the aggregated results of each group.
+     *
+     * Check out [`Pivot grammar`][Grammar].
      */
     interface Aggregation
 
-
+    /**
+     * ### [Pivot] grouping
+     *
+     * [Pivot] can be pivoted with [groupBy][Pivot.groupBy] method. It will produce a [PivotGroupBy].
+     *
+     * @include [PivotGroupByDocs.CommonDescription]
+     */
     interface Grouping
 
     /**
      * ### [Pivot] aggregation statistics
-     * * [count][Pivot.count]
-     * * [max][Pivot.max]/[maxOf][Pivot.maxOf]/[maxFor][Pivot.maxFor]
-     * * [min][Pivot.min]/[minOf][Pivot.minOf]/[minFor][Pivot.minFor]
-     * * [sum][Pivot.sum]/[sumOf][Pivot.sumOf]/[sumFor][Pivot.sumFor]
-     * * [mean][Pivot.mean]/[meanOf][Pivot.meanOf]/[meanFor][Pivot.meanFor]
-     * * [std][Pivot.std]/[stdOf][Pivot.stdOf]/[stdFor][Pivot.stdFor]
-     * * [median][Pivot.median]/[medianOf][Pivot.medianOf]/[medianFor][Pivot.medianFor]
-     * * [percentile][Pivot.percentile]/[percentileOf][Pivot.percentileOf]/[percentileFor][Pivot.percentileFor]
+     *
+     * Provides predefined shortcuts for the most common statistical aggregation operations
+     * that can be applied to each group within a [Pivot].
+     *
+     * Each function computes a statistic across the rows of a group and returns the result as
+     * a new row of computed values in the resulting [DataFrame].
+     *
+     * * [count][Pivot.count] — calculate the number of rows in each group;
+     * * [max][Pivot.max] / [maxOf][Pivot.maxOf] / [maxFor][Pivot.maxFor] —
+     *   calculate the maximum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [min][Pivot.min] / [minOf][Pivot.minOf] / [minFor][Pivot.minFor] —
+     *   calculate the minimum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [sum][Pivot.sum] / [sumOf][Pivot.sumOf] / [sumFor][Pivot.sumFor] —
+     *   calculate the sum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [mean][Pivot.mean] / [meanOf][Pivot.meanOf] / [meanFor][Pivot.meanFor] —
+     *   calculate the mean (average) of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [std][Pivot.std] / [stdOf][Pivot.stdOf] / [stdFor][Pivot.stdFor] —
+     *   calculate the standard deviation of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [median][Pivot.median] / [medianOf][Pivot.medianOf] / [medianFor][Pivot.medianFor] —
+     *   calculate the median of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [percentile][Pivot.percentile] / [percentileOf][Pivot.percentileOf] / [percentileFor][Pivot.percentileFor] —
+     *   calculate a specified percentile of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group.
+     *
+     * For more information: {@include [DocumentationUrls.PivotStatistics]}
      */
     interface AggregationStatistics
 
-    /**
-     * {@comment Version of SelectingColumns with correctly filled examples for pivot keys and index columns}
-     * @include [SelectingColumns] {@include [SetPivotOperationArg]}
-     */
-    interface PivotSelectingOptions
 }
 
-
+/**
+ * A specialized [ColumnsSelectionDsl] that allows specifying [pivot] key ordering
+ * using the [then] function.
+ *
+ * @include [PivotDslDocs]
+ */
 public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
 
+    /**
+     * @include [ThenDocs]
+     */
     public infix fun <C> ColumnsResolver<C>.then(other: ColumnsResolver<C>): ColumnSet<C> =
         PivotChainColumnSet(this, other)
 
+    /**
+     * @include [ThenDocs]
+     */
     public infix fun <C> String.then(other: ColumnsResolver<C>): ColumnSet<C> = toColumnOf<C>() then other
 
+    /**
+     * @include [ThenDocs]
+     */
     public infix fun <C> ColumnsResolver<C>.then(other: String): ColumnSet<C> = this then other.toColumnOf()
 
+    /**
+     * @include [ThenDocs]
+     */
     public infix fun String.then(other: String): ColumnSet<Any?> = toColumnAccessor() then other.toColumnAccessor()
+
+    /**
+     * Specifies the ordering of the [pivot] key columns.
+     *
+     * In the resulting [Pivot], the receiver column (or columns) will appear
+     * one level above the keys from columns provided by [\other].
+     *
+     * @receiver pivot key column(s) that appear **above** in the hierarchy.
+     * @param [\other] pivot key column(s) that appear **below** (as child keys of the receiver
+     * columns keys) in the hierarchy.
+     * @return A special [ColumnSet] representing the hierarchical pivot key ordering.
+     */
+    @ExcludeFromSources
+    private interface ThenDocs
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -254,13 +305,88 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
     public infix fun <C> String.then(other: KProperty<C>): ColumnSet<C> = toColumnOf<C>() then other.toColumnAccessor()
 }
 
+/**
+ * [PivotDsl] defines how key columns are selected and structured in a [pivot]:
+ * * [pivot] with a single key column produces a [Pivot] containing one column for each unique key
+ *   (i.e., key column unique values) with the corresponding group;
+ * * [pivot] with multiple keys combined using [and] produces a [Pivot]
+ *   with independent [column groups][ColumnGroup] for each key column, each having subcolumns
+ *   with the keys corresponding to their unique values;
+ * * [pivot] with multiple keys ordered using [then] produces a [Pivot]
+ *   with nested [column groups][ColumnGroup], representing a hierarchical structure of
+ *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
+ *
+ * See [Columns Selection via DSL][SelectingColumns.Dsl].
+ *
+ * ### Examples
+ * ```kotlin
+ * // Pivot by the "city" column
+ * df.pivot { city }
+ *
+ * // Independent pivot by "city" and "lastName" (from the "name" column group)
+ * df.pivot { city and name.lastName }
+ *
+ * // Hierarchical pivot by two columns with composite ("city", "lastName") keys
+ * df.pivot { city then name.lastName }
+ * ```
+ */
+@ExcludeFromSources
+private interface PivotDslDocs
+
 // region DataFrame
+
+/**
+ * {@include [PivotDocs]}
+ * ### This `pivot` Overload
+ */
+@ExcludeFromSources
+private interface CommonPivotDocs
+
 
 // region pivot
 
+/**
+ * @include [CommonPivotDocs]
+ * Select or express pivot columns using the [PivotDsl].
+ *
+ * @include [PivotDslDocs]
+ * @param inward If `true` (default), the generated pivoted columns are nested inside the original column;
+ * otherwise, they are placed at the top level.
+ * @param columns The [Pivot Columns Selector][PivotColumnsSelector] that defines which columns are used
+ * as keys for pivoting and in which order.
+ * @return A new [Pivot] containing the unique values of the selected column as new columns
+ * (or as [column groups][ColumnGroup] for multiple key columns),
+ * with their corresponding groups of rows represented as [DataFrame]s.
+ */
 public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumnsSelector<T, *>): Pivot<T> =
     PivotImpl(this, columns, inward)
 
+/**
+ * @include [CommonPivotDocs]
+ * @include [SelectingColumns.ColumnNames]
+ * * [pivot] with a single key column produces a [Pivot] containing one column for each unique key
+ *   (i.e., key column unique values) with the corresponding group;
+ * * [pivot] with multiple keys combined using [and] produces a [Pivot]
+ *   with independent [column groups][ColumnGroup] for each key column, each having subcolumns
+ *   with the keys corresponding to their unique values;
+ *
+ * For pivoting by multiple keys combinations from different columns, use the [pivot] overload with [PivotDsl].
+ * ### Examples
+ * ```kotlin
+ * // Pivot by the "city" column
+ * df.pivot("city")
+ *
+ * // Independent pivot by "city" and "lastName"
+ * df.pivot("city", "lastName")
+ * ```
+ * @param inward If `true` (default), the generated pivoted columns are nested inside the original column;
+ * otherwise, they are placed at the top level.
+ * @param columns The [Column Names][String] that defines which columns are used
+ * as keys for pivoting.
+ * @return A new [Pivot] containing the unique values of the selected column as new columns
+ * (or as [column groups][ColumnGroup] for multiple key columns),
+ * with their corresponding groups of rows represented as [DataFrame]s.
+ */
 public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = null): Pivot<T> =
     pivot(inward) { columns.toColumnSet() }
 
@@ -278,9 +404,79 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
 
 // region pivotMatches
 
+/**
+ * * Cell values are [Boolean] indicators showing whether matching rows exist
+ *   for each pivoting/grouping key combination.
+ */
+internal interface PivotMatchesResultDescription
+
+/**
+ * Computes whether matching rows exist in this [DataFrame] for all unique values of the
+ * selected columns (independently) across all possible combinations
+ * of values in the remaining columns (all expecting selected).
+ *
+ * Performs a [pivot] operation on the specified [\columns] of this [DataFrame],
+ * then [groups it by][Pivot.groupByOther] the remaining columns,
+ * and produces a new matrix-like [DataFrame].
+ *
+ * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
+ * @include [PivotMatchesResultDescription]
+ *
+ * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
+ * and [matches][PivotGroupBy.matches] operations into a single call.
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * See [Selecting Columns][SelectSelectingOptions].
+ *
+ * For more information: {@include [DocumentationUrls.PivotMatches]}
+ *
+ * See also: [pivotCounts], which performs a similar operation
+ * but counts the number of matching rows instead of checking for their presence.
+ *
+ * ### This `pivotMatches` Overload
+ */
+internal interface DataFramePivotMatchesCommonDocs
+
+/**
+ * @include [DataFramePivotMatchesCommonDocs]
+ * @include [SelectingColumns.Dsl]
+ *
+ * ### Example
+ * ```kotlin
+ * // Compute whether matching rows exist for all unique values of "city"
+ * // and "name" (independently) across all possible combinations
+ * // of values in the remaining columns.
+ * df.pivotMatches { city and name }
+ * ```
+ *
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
+ *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
+ */
 public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> =
     pivot(inward, columns).groupByOther().matches()
 
+/**
+ * @include [DataFramePivotMatchesCommonDocs]
+ * @include [SelectingColumns.ColumnNames]
+ *
+ * ### Example
+ * ```kotlin
+ * // Compute whether matching rows exist for all unique values of "city"
+ * // and "name" (independently) across all possible combinations
+ * // of values in the remaining columns.
+ * df.pivotMatches("city", "name")
+ * ```
+ *
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Column Names][String] that defines which columns are used as [pivot] keys for the operation.
+ * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
+ *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
+ */
 public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<T> =
     pivotMatches(inward) { columns.toColumnSet() }
 
@@ -298,9 +494,79 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
 
 // region pivotCounts
 
+/**
+ * * Cell values represent the number of matching rows
+ *   for each pivoting/grouping key combination.
+ */
+internal interface PivotCountsResultDescription
+
+/**
+ * Computes number of matching rows in this [DataFrame] for all unique values of the
+ * selected columns (independently) across all possible combinations
+ * of values in the remaining columns (all expecting selected).
+ *
+ * Performs a [pivot] operation on the specified [\columns] of this [DataFrame],
+ * then [groups it by][Pivot.groupByOther] the remaining columns,
+ * and produces a new matrix-like [DataFrame].
+ *
+ * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
+ * @include [PivotCountsResultDescription]
+ *
+ * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
+ * and [count][PivotGroupBy.count] operations into a single call.
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * See [Selecting Columns][SelectSelectingOptions].
+ *
+ * For more information: {@include [DocumentationUrls.PivotMatches]}
+ *
+ * See also: [pivotMatches], which performs a similar operation
+ * but check if there is any matching row instead of counting then.
+ *
+ * ### This `pivotCounts` Overload
+ */
+internal interface DataFramePivotCountsCommonDocs
+
+/**
+ * @include [DataFramePivotCountsCommonDocs]
+ * @include [SelectingColumns.Dsl]
+ *
+ * ### Example
+ * ```kotlin
+ * // Compute number of matching rows for all unique values of "city"
+ * // and "name" (independently) across all possible combinations
+ * // of values in the remaining columns.
+ * df.pivotCounts { city and name }
+ * ```
+ *
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
+ *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
+ */
 public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> =
     pivot(inward, columns).groupByOther().count()
 
+/**
+ * @include [DataFramePivotCountsCommonDocs]
+ * @include [SelectingColumns.ColumnNames]
+ *
+ * ### Example
+ * ```kotlin
+ * // Compute number of matching rows for all unique values of "city"
+ * // and "name" (independently) across all possible combinations
+ * // of values in the remaining columns.
+ * df.pivotCounts("city", "name")
+ * ```
+ *
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Column Names][String] that defines which columns are used as [pivot] keys for the operation.
+ * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
+ *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
+ */
 public fun <T> DataFrame<T>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<T> =
     pivotCounts(inward) { columns.toColumnSet() }
 
@@ -478,6 +744,15 @@ internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -
     body(groupBy { none() })[0]
 
 internal interface PivotGroupByDocs {
+
+    /**
+     * In the resulting [DataFrame]:
+     * * Pivoted columns are displayed vertically — as [column groups][ColumnGroup] for each pivoted column,
+     *   with subcolumns corresponding to their unique values;
+     * * Grouping key columns are displayed horizontally — as columns representing
+     *   unique combinations of grouping key values;
+     */
+    interface ResultingMatrixCommonDescription
 
     /**
      * [PivotGroupBy] is a dataframe-like structure, combining [Pivot] and [GroupBy]
