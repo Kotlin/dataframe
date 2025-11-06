@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
+import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
@@ -101,7 +102,7 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
 }
 
 internal fun AnyFrame.hasFormattedColumns() =
-    this.getColumns { colsAtAnyDepth().colsOf<FormattedFrame<*>?>() }.isNotEmpty()
+    this.getColumns { colsAtAnyDepth().colsOf<FormattedFrame<*>?> { !it.allNulls() } }.isNotEmpty()
 
 private fun KotlinNotebookPluginUtils.IdeBuildNumber?.supportsDynamicNestedTables() =
     this != null && majorVersion >= MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA
