@@ -5727,8 +5727,6 @@ public final class org/jetbrains/kotlinx/dataframe/impl/UtilsKt {
 	public static final fun headPlusArray (Z[Z)[Z
 	public static final fun toCamelCaseByDelimiters (Ljava/lang/String;Lkotlin/text/Regex;Ljava/lang/String;)Ljava/lang/String;
 	public static synthetic fun toCamelCaseByDelimiters$default (Ljava/lang/String;Lkotlin/text/Regex;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
-	public static final fun zero (Lkotlin/reflect/KClass;)Ljava/lang/Number;
-	public static final fun zeroOrNull (Lkotlin/reflect/KClass;)Ljava/lang/Number;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/AggregatableInternalKt {
