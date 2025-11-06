@@ -828,39 +828,63 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
 
 
 /**
- * A special [pivot][GroupBy.pivot] override for usage in [aggregate][Grouped.aggregate] method
- * of [GroupBy].
- * This allows combining [column pivoting aggregations][PivotGroupByDocs.Aggregation]
- * with common [GroupBy] aggregations in [aggregate][Grouped.aggregate].
+ * Pivots the selected [\columns] within each group for further
+ * [pivot aggregations][PivotGroupByDocs.Aggregation].
  *
- * This function itself doesn't affect [aggregate][Grouped.aggregate] result, but
- * it allows putting results of [PivotGroupBy aggregations][PivotGroupByDocs.Aggregation] into
- * [aggregate][Grouped.aggregate] resulting [DataFrame] by simply calling them.
- * See [GroupBy.pivot] and [PivotGroupByDocs.Aggregation] for more information.
+ * This function itself does not directly affect the [aggregate][Grouped.aggregate] result,
+ * but instead creates an intermediate [PivotGroupBy].
+ * The resulting columns of its [aggregations][PivotGroupByDocs.Aggregation] are then
+ * putted into the final [DataFrame] produced by [aggregate][Grouped.aggregate]
+ * when those aggregation functions are invoked.
  *
- * Resulting columns added as common [aggregations][Grouped.aggregate] result columns;
- * their structure depends on exact
- * [PivotGroupBy aggregations][PivotGroupByDocs.Aggregation] used.
+ * See [GroupBy.pivot] and [PivotGroupByDocs.Aggregation] for detailed information.
+ *
+ * The resulting columns are added as standard [aggregate][Grouped.aggregate] result columns.
+ * Their structure depends on the specific [PivotGroupBy aggregations][PivotGroupByDocs.Aggregation] used.
+ *
+ * For more information: {@include [DocumentationUrls.PivotInsideAggregationStatistics]}
+ *
+ * Check out [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ *
+ * ### This `pivot` overload
  *
  * ### Example
  * ```kotlin
  * df.groupBy { name.firstName }.aggregate {
- *     // Pivot "city" column of each group, resulting into
- *     // `PivotGroupBy` with "firstName" groping keys and "city" values columns
+ *     // Pivot the "city" column within each group,
+ *     // creating a PivotGroupBy with "firstName" as grouping keys and "city" as pivoted columns
  *     pivot { city }.aggregate {
- *         // Aggregate mean of "age" column values of each of
- *         // `groupBy` x `pivot` group into "meanAge" column
+ *         // Aggregate the mean of "age" column values for each
+ *         // groupBy × pivot combination into the "meanAge" column
  *         mean { age } into "meanAge"
- *         // Aggregate size of each `PivotGroupBy` group into "count" column
+ *
+ *         // Aggregate the size of each PivotGroupBy group into the "count" column
  *         count() into "count"
  *     }
- *     // Shortcut for `count` aggregation in
- *     // "firstName" x "lastName" groups
- *     pivot { name.lastName }.count()
- *     // Common `count` aggregation
+ *
+ *     // Shortcut for `count` aggregation in "firstName" × "lastName" groups
+ *     // into "namesCount" column
+ *     pivot { name.lastName }.count() into "namesCount"
+ *
+ *     // Standard `count` aggregation across all rows in each "firstName" group
+ *     // into "total" column
  *     count() into "total"
  * }
  * ```
+ */
+internal interface AggregateGroupedDslPivotDocs
+
+/**
+ * @include [AggregateGroupedDslPivotDocs]
+ * Select or express pivot columns using the [PivotDsl].
+ *
+ * @param inward If `true` (default), the generated pivoted columns are nested inside the original column;
+ * otherwise, they are placed at the top level.
+ * @param columns The [Pivot Columns Selector][PivotColumnsSelector] that defines which columns are used
+ * as keys for pivoting and in which order.
+ * @return A new [Pivot] containing the unique values of the selected column as new columns
+ * (or as [column groups][ColumnGroup] for multiple key columns),
+ * with their corresponding groups of rows represented as [DataFrame]s.
  */
 public fun <T> AggregateGroupedDsl<T>.pivot(
     inward: Boolean = true,
