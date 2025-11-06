@@ -47,6 +47,8 @@ import kotlin.reflect.KProperty
  * * [grouped][Grouping] into a [PivotGroupBy] structure, which combines [pivot] and [groupBy] operations
  *   and then reduced or aggregated into a [DataFrame].
  *
+ * @include [PivotedColumnsInline]
+ *
  * Check out [Grammar].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
@@ -238,7 +240,22 @@ internal interface PivotDocs {
      */
     interface AggregationStatistics
 
+    /**
+     * Pivoted columns can also be created inline:
+     * ```kotlin
+     * // Create a new column "newName" based on existing "oldName" values
+     * // and pivot it:
+     * df.pivot { expr("newName") { oldName.drop(5) } }
+     * ```
+     */
+    @ExcludeFromSources
+    interface PivotedColumnsInline
 }
+
+/** {@set [SelectingColumns.OPERATION] [pivot][pivot]} */
+@ExcludeFromSources
+private interface SetPivotOperationArg
+
 
 /**
  * A specialized [ColumnsSelectionDsl] that allows specifying [pivot] key ordering
@@ -412,7 +429,7 @@ internal interface PivotMatchesResultDescription
 
 /**
  * Computes whether matching rows exist in this [DataFrame] for all unique values of the
- * selected columns (independently) across all possible combinations
+ * selected [\columns] (independently) across all possible combinations
  * of values in the remaining columns (all expecting selected).
  *
  * Performs a [pivot] operation on the specified [\columns] of this [DataFrame],
@@ -431,8 +448,9 @@ internal interface PivotMatchesResultDescription
  *
  * For more information: {@include [DocumentationUrls.PivotMatches]}
  *
- * See also: [pivotCounts], which performs a similar operation
- * but counts the number of matching rows instead of checking for their presence.
+ * See also:
+ * * [pivotCounts], which performs a similar operation
+ *   but counts the number of matching rows instead of checking for their presence.
  *
  * ### This `pivotMatches` Overload
  */
@@ -502,7 +520,7 @@ internal interface PivotCountsResultDescription
 
 /**
  * Computes number of matching rows in this [DataFrame] for all unique values of the
- * selected columns (independently) across all possible combinations
+ * selected [\columns] (independently) across all possible combinations
  * of values in the remaining columns (all expecting selected).
  *
  * Performs a [pivot] operation on the specified [\columns] of this [DataFrame],
@@ -519,7 +537,7 @@ internal interface PivotCountsResultDescription
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
- * For more information: {@include [DocumentationUrls.PivotMatches]}
+ * For more information: {@include [DocumentationUrls.PivotCounts]}
  *
  * See also: [pivotMatches], which performs a similar operation
  * but check if there is any matching row instead of counting then.
@@ -588,6 +606,33 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
 
 // region pivot
 
+/**
+ * Pivots the selected [\columns] of this [GroupBy] groups.
+ * Returns a [PivotGroupBy].
+ *
+ * @include [PivotGroupByDocs.CommonDescription]
+ *
+ * @include [PivotDocs.PivotedColumnsInline]
+ */
+@ExcludeFromSources
+private interface PivotForGroupByDocs
+
+/**
+ * {@include [PivotForGroupByDocs]}
+ * ### This `pivot` Overload
+ */
+@ExcludeFromSources
+private interface CommonPivotForGroupByDocs
+
+/**
+ * @include [CommonPivotForGroupByDocs]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are pivoted.
+ * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
+ * and pivots the provided columns.
+ */
 public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: ColumnsSelector<G, *>): PivotGroupBy<G> =
     PivotGroupByImpl(this, columns, inward)
 
@@ -596,6 +641,15 @@ public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: ColumnsSelec
 public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: Boolean = true): PivotGroupBy<G> =
     pivot(inward) { columns.toColumnSet() }
 
+/**
+ * @include [CommonPivotForGroupByDocs]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Column names][String] that defines which columns are pivoted.
+ * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
+ * and pivots the provided columns.
+ */
 public fun <G> GroupBy<*, G>.pivot(vararg columns: String, inward: Boolean = true): PivotGroupBy<G> =
     pivot(inward) { columns.toColumnSet() }
 
@@ -608,9 +662,69 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
 
 // region pivotMatches
 
+/**
+ * Computes whether matching rows exist in groups of this [GroupBy] for all unique values of the
+ * selected columns (independently) across all [groupBy] key combinations.
+ *
+ * Performs a [pivot][GroupBy.pivot] operation on the specified [\columns] of this [GroupBy] groups,
+ * and produces a new matrix-like [DataFrame].
+ *
+ * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
+ * @include [PivotMatchesResultDescription]
+ *
+ * This function combines [pivot][GroupBy.pivot]
+ * and [matches][PivotGroupBy.matches] operations into a single call.
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * See [Selecting Columns][SelectSelectingOptions].
+ *
+ * For more information: {@include [DocumentationUrls.PivotMatches]}
+ *
+ * See also: [pivotCounts][GroupBy.pivotCounts], which performs a similar operation
+ * but counts the number of matching rows instead of checking for their presence.
+ *
+ * ### This `pivotMatches` Overload
+ */
+internal interface GroupByPivotMatchesCommonDocs
+
+/**
+ * @include [GroupByPivotMatchesCommonDocs]
+ * @include [SelectingColumns.Dsl]
+ *
+ * ### Example
+ * ```kotlin
+ * // Compute whether matching rows exist for all unique values of "city"
+ * // and "name" (independently) across all grouping key combinations
+ * gb.pivotMatches { city and name }
+ * ```
+ *
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
+ *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
+ */
 public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<G, *>): DataFrame<G> =
     pivot(inward, columns).matches()
 
+/**
+ * @include [GroupByPivotMatchesCommonDocs]
+ * @include [SelectingColumns.ColumnNames]
+ *
+ * ### Example
+ * ```kotlin
+ * // Compute whether matching rows exist for all unique values of "city"
+ * // and "name" (independently) across all grouping key combinations
+ * df.pivotMatches("city", "name")
+ * ```
+ *
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Column Names][String] that defines which columns are used as [pivot] keys for the operation.
+ * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
+ *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
+ */
 public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<G> =
     pivotMatches(inward) { columns.toColumnSet() }
 
@@ -628,9 +742,69 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
 
 // region pivotCounts
 
+/**
+ * Computes number of matching rows in groups of this [GroupBy] for all unique values of the
+ * selected [\columns] (independently) across all [groupBy] key combinations.
+ *
+ * Performs a [pivot] operation on the specified [\columns] of this [DataFrame]
+ * and produces a new matrix-like [DataFrame].
+ *
+ * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
+ * @include [PivotCountsResultDescription]
+ *
+ * This function combines [pivot][GroupBy.pivot]
+ * and [count][PivotGroupBy.count] operations into a single call.
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * See [Selecting Columns][SelectSelectingOptions].
+ *
+ * For more information: {@include [DocumentationUrls.PivotCounts]}
+ *
+ * See also: [pivotMatches][GroupBy.pivotMatches], which performs a similar operation
+ * but check if there is any matching row instead of counting then.
+ *
+ * ### This `pivotCounts` Overload
+ */
+internal interface GroupByPivotCountsCommonDocs
+
+/**
+ * @include [GroupByPivotCountsCommonDocs]
+ * @include [SelectingColumns.Dsl]
+ *
+ * ### Example
+ * ```kotlin
+ * // Compute number of matching rows for all unique values of "city"
+ * // and "name" (independently) across all grouping key combinations.
+ * df.pivotCounts { city and name }
+ * ```
+ *
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
+ *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
+ */
 public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: ColumnsSelector<G, *>): DataFrame<G> =
     pivot(inward, columns).count()
 
+/**
+ * @include [GroupByPivotCountsCommonDocs]
+ * @include [SelectingColumns.ColumnNames]
+ *
+ * ### Example
+ * ```kotlin
+ * // Compute number of matching rows for all unique values of "city"
+ * // and "name" (independently) across all grouping key combinations.
+ * df.pivotCounts("city", "name")
+ * ```
+ *
+ * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
+ *               if `false`, they are placed at the top level.
+ * @param [columns] The [Column Names][String] that defines which columns are used as [pivot] keys for the operation.
+ * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
+ *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
+ */
 public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<G> =
     pivotCounts(inward) { columns.toColumnSet() }
 
@@ -652,6 +826,42 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
 
 // region pivot
 
+
+/**
+ * A special [pivot][GroupBy.pivot] override for usage in [aggregate][Grouped.aggregate] method
+ * of [GroupBy].
+ * This allows combining [column pivoting aggregations][PivotGroupByDocs.Aggregation]
+ * with common [GroupBy] aggregations in [aggregate][Grouped.aggregate].
+ *
+ * This function itself doesn't affect [aggregate][Grouped.aggregate] result, but
+ * it allows putting results of [PivotGroupBy aggregations][PivotGroupByDocs.Aggregation] into
+ * [aggregate][Grouped.aggregate] resulting [DataFrame] by simply calling them.
+ * See [GroupBy.pivot] and [PivotGroupByDocs.Aggregation] for more information.
+ *
+ * Resulting columns added as common [aggregations][Grouped.aggregate] result columns;
+ * their structure depends on exact
+ * [PivotGroupBy aggregations][PivotGroupByDocs.Aggregation] used.
+ *
+ * ### Example
+ * ```kotlin
+ * df.groupBy { name.firstName }.aggregate {
+ *     // Pivot "city" column of each group, resulting into
+ *     // `PivotGroupBy` with "firstName" groping keys and "city" values columns
+ *     pivot { city }.aggregate {
+ *         // Aggregate mean of "age" column values of each of
+ *         // `groupBy` x `pivot` group into "meanAge" column
+ *         mean { age } into "meanAge"
+ *         // Aggregate size of each `PivotGroupBy` group into "count" column
+ *         count() into "count"
+ *     }
+ *     // Shortcut for `count` aggregation in
+ *     // "firstName" x "lastName" groups
+ *     pivot { name.lastName }.count()
+ *     // Common `count` aggregation
+ *     count() into "total"
+ * }
+ * ```
+ */
 public fun <T> AggregateGroupedDsl<T>.pivot(
     inward: Boolean = true,
     columns: PivotColumnsSelector<T, *>,

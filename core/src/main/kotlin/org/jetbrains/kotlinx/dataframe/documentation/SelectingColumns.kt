@@ -53,11 +53,21 @@ internal interface SelectingColumns {
     @ExcludeFromSources
     interface OPERATION
 
+    /**
+     * Operation receiver variable name
+     */
+    @ExcludeFromSources
+    interface RECEIVER
+
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
     @ExcludeFromSources
     interface SetDefaultOperationArg
+
+    /** {@set [RECEIVER] <code>`df`</code>} */
+    @ExcludeFromSources
+    interface SetDefaultReceiverArg
 
     /**
      * Select or express columns using the {@include [ColumnsSelectionDslLink]}.
@@ -88,13 +98,14 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
          *
          * @include [SetDefaultOperationArg]
+         * @include [SetDefaultReceiverArg]
          */
         interface WithExample
     }

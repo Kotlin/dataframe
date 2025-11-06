@@ -50,12 +50,7 @@ import kotlin.reflect.KProperty
  * * [pivoted][Pivoting] into a [PivotGroupBy] structure, which combines [pivot] and [groupBy] operations
  *   and then reduced or aggregated into a [DataFrame].
  *
- * Grouping keys can also be created inline:
- * ```kotlin
- * // Create a new column "newName" based on existing "oldName" values
- * // and use it as a grouping key:
- * df.groupBy { expr("newName") { oldName.drop(5) } }
- * ```
+ * @include [GroupingKeysInline]
  *
  * Check out [Grammar].
  *
@@ -324,6 +319,17 @@ internal interface GroupByDocs {
      * @include [PivotGroupByDocs.CommonDescription]
      */
     interface Pivoting
+
+    /**
+     * Grouping key columns can also be created inline:
+     * ```kotlin
+     * // Create a new column "newName" based on existing "oldName" values
+     * // and use it as a grouping key:
+     * df.groupBy { expr("newName") { oldName.drop(5) } }
+     * ```
+     */
+    @ExcludeFromSources
+    interface GroupingKeysInline
 }
 
 /** {@set [SelectingColumns.OPERATION] [groupBy][groupBy]} */
@@ -379,17 +385,11 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
 /**
  * Groups the rows of this [Pivot] groups
  * based on the values in one or more specified [key columns][\columns].
- *
- * Works like regular [DataFrame.groupBy] on pivot groups.
- *
- * Grouping keys can also be created inline:
- * ```kotlin
- * // Create a new column "newName" based on existing "oldName" values
- * // and use it as a grouping key:
- * pivot.groupBy { expr("newName") { oldName.drop(5) } }
- * ```
+ * Returns a [PivotGroupBy].
  *
  * @include [PivotGroupByDocs.CommonDescription]
+ *
+ * @include [GroupByDocs.GroupingKeysInline]
  */
 @ExcludeFromSources
 private interface GroupByForPivotDocs
@@ -405,17 +405,8 @@ private interface CommonGroupByForPivotDocs
 
 /**
  * {@include [CommonGroupByForPivotDocs]}
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetGroupByOperationArg] {@set [SelectingColumns.RECEIVER] <code>`pivot`</code>}}
  *
- * #### For example:
- *
- * `pivot.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
- *
- * `pivot.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
- *
- * `pivot.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
- *
- * {@include [SetGroupByOperationArg]}
  * @param moveToTop Specifies whether nested grouping columns should be moved to the top level
  * or kept inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  * Defaults to `true`.
