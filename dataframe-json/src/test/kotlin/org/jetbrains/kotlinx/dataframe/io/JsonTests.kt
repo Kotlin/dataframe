@@ -861,12 +861,12 @@ class JsonTests {
                     it["a"][1].let { it as AnyFrame }.alsoDebug()
                 }
 //        ⌌------------------------------⌍
-//        |  | a:[key:String, value:Any?]|
+//        |  | a:[name:String, value:Any?]|
 //        |--|---------------------------|
-//        | 0| [1 x 2] { key:b, value:1 }|
-//        | 1|                    [3 x 2]| ->  { key:c, value:2 }
-//        | 2|                    [0 x 2]|     { key:d, value:null }
-//        | 3|                    [0 x 2]|     { key:b, value:[1,2,3] }
+//        | 0| [1 x 2] { name:b, value:1 }|
+//        | 1|                    [3 x 2]| ->  { name:c, value:2 }
+//        | 2|                    [0 x 2]|     { name:d, value:null }
+//        | 3|                    [0 x 2]|     { name:b, value:[1,2,3] }
 //        | 4|                    [0 x 2]|
 //        | 5|                    [0 x 2]|
 //        ⌎------------------------------⌏
@@ -880,7 +880,7 @@ class JsonTests {
             it[0].let {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 1
-                it["key"].let {
+                it["name"].let {
                     it.type() shouldBe typeOf<String>()
                     it[0] shouldBe "b"
                 }
@@ -892,7 +892,7 @@ class JsonTests {
             it[1].let {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 3
-                it["key"].let {
+                it["name"].let {
                     it.type() shouldBe typeOf<String>()
                     it[0] shouldBe "c"
                     it[1] shouldBe "d"
@@ -907,7 +907,7 @@ class JsonTests {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 0
 
-                it["key"].type() shouldBe typeOf<String>()
+                it["name"].type() shouldBe typeOf<String>()
                 it["value"].type() shouldBeIn listOf(typeOf<Any?>(), typeOf<Any>()) // no data, so Any(?) ValueColumn
             }
         }
@@ -974,12 +974,12 @@ class JsonTests {
         }
 
 //        ⌌------------------------------⌍
-//        |  | a:[key:String, value:Any?]|
+//        |  | a:[name:String, value:Any?]|
 //        |--|---------------------------|
-//        | 0| [1 x 2] { key:b, value:1 }|
-//        | 1|                    [3 x 2]| ->  { key:c, value:2 }
-//        | 2|                    [0 x 2]|     { key:d, value:null }
-//        | 3|                    [0 x 2]|     { key:b, value:[1,2,3] }
+//        | 0| [1 x 2] { name:b, value:1 }|
+//        | 1|                    [3 x 2]| ->  { name:c, value:2 }
+//        | 2|                    [0 x 2]|     { name:d, value:null }
+//        | 3|                    [0 x 2]|     { name:b, value:[1,2,3] }
 //        | 4|                    [0 x 2]|
 //        | 5|                    [0 x 2]|
 //        ⌎------------------------------⌏
@@ -992,7 +992,7 @@ class JsonTests {
             it[0].let {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 1
-                it["key"].let {
+                it["name"].let {
                     it.type() shouldBe typeOf<String>()
                     it[0] shouldBe "b"
                 }
@@ -1004,7 +1004,7 @@ class JsonTests {
             it[1].let {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 3
-                it["key"].let {
+                it["name"].let {
                     it.type() shouldBe typeOf<String>()
                     it[0] shouldBe "c"
                     it[1] shouldBe "d"
@@ -1020,7 +1020,7 @@ class JsonTests {
                 it.columnsCount() shouldBe 2
                 it.rowsCount() shouldBe 0
 
-                it["key"].type() shouldBe typeOf<String>()
+                it["name"].type() shouldBe typeOf<String>()
                 it["value"].type() shouldBeIn listOf(typeOf<Any?>(), typeOf<Any>()) // no data, so Any(?) ValueColumn
             }
         }
