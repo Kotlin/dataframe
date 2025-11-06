@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.nrow
 import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -120,25 +119,6 @@ internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
 
 @PublishedApi
 internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())
-
-@PublishedApi
-internal fun <T : Number> KClass<T>.zeroOrNull(): T? =
-    when (this) {
-        Int::class -> 0 as T
-        Byte::class -> 0.toByte() as T
-        Short::class -> 0.toShort() as T
-        Long::class -> 0.toLong() as T
-        Double::class -> 0.toDouble() as T
-        Float::class -> 0.toFloat() as T
-        BigDecimal::class -> BigDecimal.ZERO as T
-        BigInteger::class -> BigInteger.ZERO as T
-        Number::class -> 0 as? T
-        else -> null
-    }
-
-@PublishedApi
-internal fun <T : Number> KClass<T>.zero(): T =
-    zeroOrNull() ?: throw NotImplementedError("Zero value for $this is not supported")
 
 internal fun <T> catchSilent(body: () -> T): T? =
     try {
