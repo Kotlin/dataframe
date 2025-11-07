@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.impl.api.convertTo
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -13,7 +12,7 @@ import kotlin.reflect.typeOf
 
 // region DataRow
 
-public fun <T> DataRow<T>.transpose(): DataFrame<NameValuePair<*>> {
+public fun AnyRow.transpose(): DataFrame<NameValuePair<*>> {
     val valueColumn = DataColumn.createByInference(NameValuePair<*>::value.columnName, values)
     val nameColumn = owner.columnNames().toValueColumn(NameValuePair<*>::name.name)
     return dataFrameOf(nameColumn, valueColumn).cast()
