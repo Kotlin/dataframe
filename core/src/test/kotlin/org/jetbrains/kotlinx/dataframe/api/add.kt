@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.impl.api.compareImpl
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -57,5 +58,29 @@ class AddTests {
 
         df["fibonacci1"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
         df["fibonacci2"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
+    }
+
+    @Test
+    fun `compare`() {
+        val path = compareImpl("abcabba", "cbabac")
+        path shouldBe listOf<Pair<Int, Int>>(Pair(0,0), Pair(3, 1))
+    }
+
+    @Test
+    fun `compare2`() {
+        val path = compareImpl("a", "a")
+        path shouldBe 0
+    }
+
+    @Test
+    fun `compare3`() {
+        val path = compareImpl("a", "ab")
+        path shouldBe 1
+    }
+
+    @Test
+    fun `compare4`() {
+        val path = compareImpl("ab", "a")
+        path shouldBe 1
     }
 }
