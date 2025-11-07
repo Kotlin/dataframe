@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.comparables.shouldBeLessThan
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain

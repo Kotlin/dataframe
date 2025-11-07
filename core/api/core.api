@@ -5940,6 +5940,12 @@ public final class org/jetbrains/kotlinx/dataframe/impl/api/UnfoldKt {
 	public static final fun unfoldImpl (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/impl/api/UpdateException : java/lang/IllegalStateException, org/jetbrains/kotlinx/dataframe/exceptions/DataFrameError {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getMessage ()Ljava/lang/String;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/impl/api/UpdateKt {
 	public static final fun updateImpl (Lorg/jetbrains/kotlinx/dataframe/api/Update;Lkotlin/jvm/functions/Function3;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
