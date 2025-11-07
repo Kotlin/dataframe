@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.exceptions.DataFrameError
 import org.jetbrains.kotlinx.dataframe.impl.columns.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
@@ -94,6 +95,10 @@ private fun <C, R> ColumnGroup<C>.replaceRowsIf(
         .asColumnGroup()
         .cast()
 
+public class UpdateException(override val message: String, cause: Throwable? = null) :
+    IllegalStateException(message, cause),
+    DataFrameError
+
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
     filter: RowValueFilter<T, C>?,
@@ -101,21 +106,25 @@ internal fun <T, C> DataColumn<C>.updateImpl(
 ): DataColumn<C> {
     val collector = createDataCollector<C>(size, type)
     val src = this
-    if (filter == null) {
-        df.indices().forEach { rowIndex ->
-            val row = AddDataRowImpl(rowIndex, df, collector.values)
-            collector.add(expression(row, src, src[rowIndex]))
+    try {
+        if (filter == null) {
+            df.indices().forEach { rowIndex ->
+                val row = AddDataRowImpl(rowIndex, df, collector.values)
+                collector.add(expression(row, src, src[rowIndex]))
+            }
+        } else {
+            df.indices().forEach { rowIndex ->
+                val row = AddDataRowImpl(rowIndex, df, collector.values)
+                val currentValue = row[src]
+                val newValue =
+                    if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
+                collector.add(newValue)
+            }
         }
-    } else {
-        df.indices().forEach { rowIndex ->
-            val row = AddDataRowImpl(rowIndex, df, collector.values)
-            val currentValue = row[src]
-            val newValue =
-                if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
-            collector.add(newValue)
-        }
+        return collector.toColumn(src.name).cast()
+    } catch (e: Throwable) {
+        throw UpdateException("Could not update column '${src.name}': ${e.message}", e)
     }
-    return collector.toColumn(src.name).cast()
 }
 
 /**

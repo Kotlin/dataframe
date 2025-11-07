@@ -168,6 +168,7 @@ import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
+import org.jetbrains.kotlinx.dataframe.impl.api.UpdateException
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
@@ -1712,7 +1713,7 @@ class DataFrameTests : BaseTest() {
         df.update("name").at(0).with { "ALICE" }
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = UpdateException::class)
     fun `update with wrong type`() {
         typed.update("age").with { "string" }
     }

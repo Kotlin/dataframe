@@ -96,6 +96,11 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][colsOf]`<T?>()`.
+     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[filter][ColumnsSelectionDsl.filter]` { !it.`[allNulls][DataColumn.allNulls]`() }`
+     *   after it.
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
