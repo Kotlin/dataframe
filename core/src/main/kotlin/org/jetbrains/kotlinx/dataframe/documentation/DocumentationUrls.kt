@@ -171,6 +171,9 @@ internal interface DocumentationUrls {
     /** [See "`pivot` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#pivot-statistics) */
     interface PivotStatistics
 
+    /** [See "Pivot` reducing" on the documentation website.]({@include [Url]}/pivot.html#reducing) */
+    interface PivotReducing
+
     /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
     interface PivotInsideAggregationStatistics
 }
