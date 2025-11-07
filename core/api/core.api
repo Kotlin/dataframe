@@ -2739,17 +2739,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/KeyValueProp
 	public abstract fun getValue ()Ljava/lang/Object;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/api/KeyValueProperty_ExtensionsKt {
-	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/LastColumnsSelectionDsl {
 	public fun last (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public fun last (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
@@ -3466,15 +3455,15 @@ public final class org/jetbrains/kotlinx/dataframe/api/MoveKt {
 	public static final fun under (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair {
+public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair : org/jetbrains/kotlinx/dataframe/api/NameValueProperty {
 	public fun <init> (Ljava/lang/String;Ljava/lang/Object;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/Object;
 	public final fun copy (Ljava/lang/String;Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;
 	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;Ljava/lang/String;Ljava/lang/Object;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getName ()Ljava/lang/String;
-	public final fun getValue ()Ljava/lang/Object;
+	public fun getName ()Ljava/lang/String;
+	public fun getValue ()Ljava/lang/Object;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -3488,6 +3477,37 @@ public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair_ExtensionsK
 	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/api/NameValueProperty {
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getValue ()Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/api/NameValuePropertyKt {
+	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun KeyValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NullableKeyValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/api/NameValueProperty_ExtensionsKt {
+	public static final fun NameValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NameValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+	public static final fun NullableNameValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableNameValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NullableNameValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableNameValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/NoneColumnsSelectionDsl {

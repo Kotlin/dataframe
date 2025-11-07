@@ -21,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
-import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
+import org.jetbrains.kotlinx.dataframe.api.NameValueProperty
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -67,7 +67,7 @@ private enum class AnyColType {
     OBJECTS,
 }
 
-internal interface AnyKeyValueProperty : KeyValueProperty<Any?> {
+internal interface AnyNameValueProperty : NameValueProperty<Any?> {
     override val value: Any?
 }
 
@@ -122,7 +122,7 @@ internal fun readJsonImpl(
  *
  * @param records List of json elements to be converted to a [DataFrame].
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param header Optional list of column names. If given, [records] will be read like an object with [header] being the keys.
  * @return [DataFrame] from the given [records].
@@ -340,22 +340,22 @@ internal fun fromJsonListAnyColumns(
                         valueTypes += valueType
 
                         dataFrameOf(
-                            columnOf(*map.keys.toTypedArray()).named(KeyValueProperty<*>::key.name),
+                            columnOf(*map.keys.toTypedArray()).named(NameValueProperty<*>::name.name),
                             createColumnGuessingType(
                                 values = map.values,
                                 suggestedType = TypeSuggestion.Use(valueType),
                                 unifyNumbers = unifyNumbers,
-                            ).named(KeyValueProperty<*>::value.name),
+                            ).named(NameValueProperty<*>::value.name),
                         )
                     }
 
-                    is JsonNull, null -> DataFrame.emptyOf<AnyKeyValueProperty>()
+                    is JsonNull, null -> DataFrame.emptyOf<AnyNameValueProperty>()
 
                     else -> error("Expected JsonObject, got $record")
                 }
             }
 
-            val valueColumns = dataFrames.map { it[KeyValueProperty<*>::value.name] }
+            val valueColumns = dataFrames.map { it[NameValueProperty<*>::value.name] }
             val valueColumnSchema = when {
                 // in these cases we can safely combine the columns to get a single column schema
                 valueColumns.all { it is ColumnGroup<*> } || valueColumns.all { it is FrameColumn<*> } ->
@@ -373,8 +373,8 @@ internal fun fromJsonListAnyColumns(
                         schema = lazy {
                             DataFrameSchemaImpl(
                                 columns = mapOf(
-                                    KeyValueProperty<*>::key.name to ColumnSchema.Value(typeOf<String>()),
-                                    KeyValueProperty<*>::value.name to valueColumnSchema,
+                                    NameValueProperty<*>::name.name to ColumnSchema.Value(typeOf<String>()),
+                                    NameValueProperty<*>::value.name to valueColumnSchema,
                                 ),
                             )
                         },
@@ -443,7 +443,7 @@ private fun AnyFrame.isSingleUnnamedColumn() = columnsCount() == 1 && getColumn(
  *
  * @param records List of json elements to be converted to a [DataFrame].
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param header Optional list of column names. If given, [records] will be read like an object with [header] being the keys.
  * @return [DataFrame] from the given [records].
@@ -527,16 +527,16 @@ internal fun fromJsonListArrayAndValueColumns(
                                 .commonType()
 
                         dataFrameOf(
-                            columnOf(*map.keys.toTypedArray()).named(KeyValueProperty<*>::key.name),
+                            columnOf(*map.keys.toTypedArray()).named(NameValueProperty<*>::name.name),
                             createColumnGuessingType(
                                 values = map.values,
                                 suggestedType = TypeSuggestion.Use(valueType),
                                 unifyNumbers = unifyNumbers,
-                            ).named(KeyValueProperty<*>::value.name),
+                            ).named(NameValueProperty<*>::value.name),
                         )
                     }
 
-                    is JsonNull, null -> DataFrame.emptyOf<AnyKeyValueProperty>()
+                    is JsonNull, null -> DataFrame.emptyOf<AnyNameValueProperty>()
 
                     else -> error("Expected JsonObject, got $record")
                 }
