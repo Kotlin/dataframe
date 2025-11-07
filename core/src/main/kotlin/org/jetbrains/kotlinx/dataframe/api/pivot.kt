@@ -1159,7 +1159,7 @@ public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnsResol
  *
  * Serves as a transitional step between performing a reduction on pivot groups
  * and specifying how the resulting reduced rows should be represented
- * in a resulting [DataFrame].
+ * in a resulting [DataRow].
  *
  * Available transformation methods:
  * * [values][ReducedPivot.values] — creates a new row containing the values
