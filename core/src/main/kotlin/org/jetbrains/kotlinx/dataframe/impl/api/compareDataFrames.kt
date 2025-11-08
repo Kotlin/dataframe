@@ -46,6 +46,7 @@ internal fun compareImpl(dfA: String, dfB: String): MutableList<Pair<Int, Int>> 
         }
         d++ // try with a longer edit script
     }
+    path.reverse()
     return path
 }
 
@@ -70,9 +71,9 @@ internal fun recoursive_path_fill(
 //    mine whether it is at the end of a maximal snake following a vertical edge from Vd−1[k+1] or a horizontal edge
 //    from Vd−1[k−1]
 
-    if(d>0) {
-        var kTry1 = k + 1
-        var kTry2 = k - 1
+    if (d > 0) {
+        val kTry1 = k + 1
+        val kTry2 = k - 1
         val tries = listOf<Int>(kTry1, kTry2)
         for (kT in tries) {
             var xPrev = v[d - 1][kT + sum_of_length]
@@ -83,7 +84,8 @@ internal fun recoursive_path_fill(
                 xPrev++
             }
             val snake = mutableListOf<Pair<Int, Int>>()
-            while (xPrev <= xCurrent && yPrev <= yCurrent) { //loop is done at least once
+            var skipThisRoundOfOuterLoop = false
+            do {
                 snake.add(Pair(xPrev, yPrev))
                 if (xPrev == xCurrent && yPrev == yCurrent) {
                     if (snake.isNotEmpty()) {
@@ -95,16 +97,14 @@ internal fun recoursive_path_fill(
                     recoursive_path_fill(path, v, d - 1, kT, sum_of_length, dfA, dfB)
                     return
                 }
-                if(xPrev < dfA.length && yPrev < dfB.length && xPrev >= 0 && yPrev >= 0 && dfA[xPrev] == dfB[yPrev]) {
+                if (xPrev < dfA.length && yPrev < dfB.length && xPrev >= 0 && yPrev >= 0 && dfA[xPrev] == dfB[yPrev]) {
                     xPrev += 1
                     yPrev += 1
+                } else {
+                    skipThisRoundOfOuterLoop = true
                 }
-                else
-                    break
             }
+            while (xPrev <= xCurrent && yPrev <= yCurrent && !skipThisRoundOfOuterLoop)
         }
     }
 }
-
-
-

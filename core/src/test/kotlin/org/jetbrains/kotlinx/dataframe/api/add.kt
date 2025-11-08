@@ -76,8 +76,8 @@ class AddTests {
 
     @Test
     fun `compare2`() {
-        val path = compareImpl("a", "a")
-        path shouldBe 0
+        val path = compareImpl("aaaab", "aaaac")
+        path shouldBe listOf()
     }
 
     @Test
