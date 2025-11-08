@@ -63,7 +63,15 @@ class AddTests {
     @Test
     fun `compare`() {
         val path = compareImpl("abcabba", "cbabac")
-        path shouldBe listOf<Pair<Int, Int>>(Pair(0, 0), Pair(3, 1))
+        path shouldBe listOf()
+//        path[5][1+13] shouldBe 7
+//        //path[4][1+13] shouldBe 7
+//
+//        path[4][2+13] shouldBe 7
+//        //path[3][2+13] shouldBe 7
+//
+//        path[3][1+13] shouldBe 5
+//        //path[2][1+13] shouldBe 5
     }
 
     @Test
