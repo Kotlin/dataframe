@@ -4,7 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.impl.api.compareImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.myersDifferenceAlgorithmImpl
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -62,7 +62,7 @@ class AddTests {
 
     @Test
     fun `compare`() {
-        val path = compareImpl("abcabba", "cbabac")
+        val path = myersDifferenceAlgorithmImpl("abcabba", "cbabac")
         path shouldBe listOf()
 //        path[5][1+13] shouldBe 7
 //        //path[4][1+13] shouldBe 7
@@ -76,19 +76,19 @@ class AddTests {
 
     @Test
     fun `compare2`() {
-        val path = compareImpl("aaaab", "aaaac")
+        val path = myersDifferenceAlgorithmImpl("aaaab", "aaaac")
         path shouldBe listOf()
     }
 
     @Test
     fun `compare3`() {
-        val path = compareImpl("a", "ab")
+        val path = myersDifferenceAlgorithmImpl("a", "ab")
         path shouldBe 1
     }
 
     @Test
     fun `compare4`() {
-        val path = compareImpl("ab", "a")
+        val path = myersDifferenceAlgorithmImpl("ab", "a")
         path shouldBe 1
     }
 }
