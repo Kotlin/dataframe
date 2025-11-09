@@ -1,11 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-
 /**
- * dfs (will be) with same schema, returns the path from origin to (N,M) in the edit path.
- * N is dfA.nrow, M is dfB.nrow
- * knowing this path is knowing the differences between dfA and dfB.
- * cost of this alg's worst case in O( (N+M)D ), D is the length of shortest edit script
+ * dfs (will be) with same schema. Returns the path from origin to (N,M) in the edit path.
+ * N is dfA.nrow, M is dfB.nrow.
+ * Knowing this path is knowing the differences between dfA and dfB
+ * and the shortest edit script to get B from A.
+ * cost of this alg's worst case in O( (N+M)D ), D is the length of shortest edit script.
+ * snake: a set of diagonal edges, possibly empty
  */
 internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList<Pair<Int, Int>> {
     // what i want from Myers alg
@@ -52,7 +53,6 @@ internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList
         }
         d++ // try with a longer edit script
     }
-    path.reverse()
     return path
 }
 
@@ -65,10 +65,6 @@ internal fun recoursivePathFill(
     dfA: String,
     dfB: String,
 ) {
-    //basic step
-    if (d < 0) {
-        return
-    }
     // enlist my self
     val xCurrent = v[d][k + normalizer]
     val yCurrent = xCurrent - k
@@ -97,7 +93,7 @@ internal fun recoursivePathFill(
                     if (snake.isNotEmpty()) {
                         snake.removeFirst()
                         for (e in snake) {
-                            path.add(e) // da cambiare
+                            path.add(e)
                         }
                     }
                     recoursivePathFill(path, v, d - 1, kT, normalizer, dfA, dfB)
@@ -112,5 +108,22 @@ internal fun recoursivePathFill(
             }
             while (xPrev <= xCurrent && yPrev <= yCurrent && !skipThisRoundOfOuterLoop)
         }
+    }
+    // step base,
+    // eventually need to build the snake from origin to the furthest reaching point with d=0
+    // moreover the path is reversed so that it can be read from left to right correctly
+    if (d == 0) {
+        if (path.last().first != 0 && path.last().second != 0) {
+            val last = path.last()
+            var x = last.first - 1
+            var y = last.second - 1
+            while (x >= 0 && y >= 0) {
+                path.add(Pair(x, y))
+                x -= 1
+                y -= 1
+            }
+        }
+        path.reverse()
+        return
     }
 }

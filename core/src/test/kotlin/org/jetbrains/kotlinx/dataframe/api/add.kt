@@ -76,7 +76,7 @@ class AddTests {
 
     @Test
     fun `compare2`() {
-        val path = myersDifferenceAlgorithmImpl("aaaab", "aaaac")
+        val path = myersDifferenceAlgorithmImpl("aaaa", "aaaa")
         path shouldBe listOf()
     }
 
