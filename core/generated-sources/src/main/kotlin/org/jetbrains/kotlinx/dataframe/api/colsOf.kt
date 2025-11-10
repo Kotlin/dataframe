@@ -140,6 +140,11 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][colsOf]`<T?>()`.
+     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[filter][ColumnsSelectionDsl.filter]` { !it.`[allNulls][DataColumn.allNulls]`() }`
+     *   after it.
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -186,6 +191,11 @@ public interface ColsOfColumnsSelectionDsl {
      * by [filter].
      *
      * This function operates solely on columns at the top-level.
+     *
+     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+     *   after it.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
@@ -234,6 +244,11 @@ public interface ColsOfColumnsSelectionDsl {
      * by [filter].
      *
      * This function operates solely on columns at the top-level.
+     *
+     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+     *   after it.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
@@ -285,6 +300,11 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+     *   after it.
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -334,6 +354,11 @@ public interface ColsOfColumnsSelectionDsl {
  *
  * This function operates solely on columns at the top-level.
  *
+ * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ *   after it.
+ *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
@@ -381,6 +406,11 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true
  * by [filter].
  *
  * This function operates solely on columns at the top-level.
+ *
+ * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ *   after it.
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
@@ -431,6 +461,11 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: ColumnFilter<
  *
  * This function operates solely on columns at the top-level.
  *
+ * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ *   after it.
+ *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
@@ -476,6 +511,11 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(type: KType, filter: ColumnFilter<C
  * by [filter].
  *
  * This function operates solely on columns at the top-level.
+ *
+ * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ *   after it.
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
@@ -525,6 +565,11 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
  *
  * This function operates solely on columns at the top-level.
  *
+ * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ *   after it.
+ *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
@@ -572,6 +617,11 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(type: KType, filter: ColumnFilter
  * by [filter].
  *
  * This function operates solely on columns at the top-level.
+ *
+ * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ *   after it.
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
