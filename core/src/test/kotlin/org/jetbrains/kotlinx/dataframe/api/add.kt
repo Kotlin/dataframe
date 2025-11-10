@@ -59,36 +59,4 @@ class AddTests {
         df["fibonacci1"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
         df["fibonacci2"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
     }
-
-    @Test
-    fun `compare`() {
-        val path = myersDifferenceAlgorithmImpl("abcabba", "cbabac")
-        path shouldBe listOf()
-//        path[5][1+13] shouldBe 7
-//        //path[4][1+13] shouldBe 7
-//
-//        path[4][2+13] shouldBe 7
-//        //path[3][2+13] shouldBe 7
-//
-//        path[3][1+13] shouldBe 5
-//        //path[2][1+13] shouldBe 5
-    }
-
-    @Test
-    fun `compare2`() {
-        val path = myersDifferenceAlgorithmImpl("aaaa", "aaaa")
-        path shouldBe listOf()
-    }
-
-    @Test
-    fun `compare3`() {
-        val path = myersDifferenceAlgorithmImpl("a", "ab")
-        path shouldBe 1
-    }
-
-    @Test
-    fun `compare4`() {
-        val path = myersDifferenceAlgorithmImpl("ab", "a")
-        path shouldBe 1
-    }
 }

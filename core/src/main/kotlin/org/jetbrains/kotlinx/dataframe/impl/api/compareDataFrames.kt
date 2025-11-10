@@ -9,9 +9,11 @@ package org.jetbrains.kotlinx.dataframe.impl.api
  * snake: a set of diagonal edges, possibly empty
  */
 internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList<Pair<Int, Int>> {
-    // what i want from Myers alg
+    // what I want from Myers alg
     val path = mutableListOf<Pair<Int, Int>>()
-    var sesLength: Int? // ses stands for shortest edit script
+    // 'ses' stands for shortest edit script, next var is never returned, it is in the code
+    // to show the capabilities of the algorithm
+    var sesLength: Int?
     // Myers algorithm, preparing
     val sumOfLength = dfA.length + dfB.length
     val v = arrayListOf<IntArray>()
@@ -45,9 +47,8 @@ internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList
             //
             if (x >= dfA.length && y >= dfB.length) {
                 isOver = true
-                val d1 = d
-                recoursivePathFill(path, v, d1, k, normalizer, dfA, dfB)
-                // if i am the last (not only) i am a furthest reaching endpoint
+                sesLength = d
+                recoursivePathFill(path, v, d, k, normalizer, dfA, dfB)
                 break
             }
         }
