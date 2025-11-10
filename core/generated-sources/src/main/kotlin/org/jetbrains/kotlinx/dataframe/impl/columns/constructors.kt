@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
@@ -43,9 +42,9 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.CREATE_COLUMN
 import org.jetbrains.kotlinx.dataframe.util.GUESS_COLUMN_TYPE
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
@@ -277,10 +276,10 @@ internal fun <T> createColumnGuessingType(
         return { value -> if (value != null && value is Number) converter(value) else value }
     }
 
-    return when (type.classifier!! as KClass<*>) {
+    return when (type.classifier?.starProjectedType) {
         // guessValueType can only return DataRow if all values are `AnyRow?`
         // or allColsMakesColGroup == true, and all values are `AnyCol`
-        DataRow::class ->
+        typeOf<AnyRow>() ->
             if (allColsMakesColGroup && values.firstOrNull() is AnyCol) {
                 val df = dataFrameOf(values as Iterable<AnyCol>)
                 DataColumn.createColumnGroup(name, df)
@@ -291,7 +290,7 @@ internal fun <T> createColumnGuessingType(
                 DataColumn.createColumnGroup(name, df)
             }.asDataColumn().cast()
 
-        DataFrame::class -> {
+        typeOf<AnyFrame>() -> {
             val frames = values.map {
                 when (it) {
                     null -> DataFrame.empty()
@@ -304,7 +303,7 @@ internal fun <T> createColumnGuessingType(
             DataColumn.createFrameColumn(name, frames).asDataColumn().cast()
         }
 
-        List::class -> {
+        typeOf<List<*>>() -> {
             val nullable = type.isMarkedNullable
             var isListOfRows: Boolean? = null
             val subType = type.arguments.first().type!! // List<T> -> T
