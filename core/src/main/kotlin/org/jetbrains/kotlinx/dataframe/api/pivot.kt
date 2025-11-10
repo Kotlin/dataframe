@@ -271,13 +271,11 @@ internal interface PivotDocs {
      */
     @ExcludeFromSources
     interface InwardKDocsForGrouped
-
 }
 
 /** {@set [SelectingColumns.OPERATION] [pivot][pivot]} */
 @ExcludeFromSources
 private interface SetPivotOperationArg
-
 
 /**
  * A specialized [ColumnsSelectionDsl] that allows specifying [pivot] key ordering
@@ -380,7 +378,6 @@ private interface PivotDslDocs
  */
 @ExcludeFromSources
 private interface CommonPivotDocs
-
 
 // region pivot
 
@@ -836,7 +833,6 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
 // region GroupBy.aggregate
 
 // region pivot
-
 
 /**
  * Pivots the selected [\columns] within each group for further

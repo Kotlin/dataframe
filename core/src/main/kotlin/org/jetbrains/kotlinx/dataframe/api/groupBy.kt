@@ -215,7 +215,6 @@ internal interface GroupByDocs {
      */
     interface AggregationStatistics
 
-
     /**
      * ### [GroupBy] transformations
      *
