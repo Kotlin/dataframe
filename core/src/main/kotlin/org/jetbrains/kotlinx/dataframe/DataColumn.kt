@@ -218,7 +218,9 @@ public interface DataColumn<out T> : BaseColumn<T> {
         ): DataColumn<T> = createByType(name, values, typeOf<T>(), infer)
 
         /**
-         * Creates an empty [DataColumn] with given [name].
+         * Creates an empty [DataColumn] with given [name] of type [Nothing].
+         * If you want to specify another type, use [`emptyOf<T>()`][emptyOf].
+         *
          * @see emptyOf
          */
         public fun empty(name: String = ""): DataColumn<Nothing> =
