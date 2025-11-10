@@ -1712,7 +1712,7 @@ class DataFrameTests : BaseTest() {
         df.update("name").at(0).with { "ALICE" }
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = IllegalStateException::class)
     fun `update with wrong type`() {
         typed.update("age").with { "string" }
     }

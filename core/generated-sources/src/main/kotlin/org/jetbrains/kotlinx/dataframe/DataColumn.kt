@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.util.CHUNKED_IMPL_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.CREATE
@@ -216,8 +217,18 @@ public interface DataColumn<out T> : BaseColumn<T> {
             infer: Infer = Infer.None,
         ): DataColumn<T> = createByType(name, values, typeOf<T>(), infer)
 
-        /** Creates an empty [DataColumn] with given [name]. */
-        public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
+        /**
+         * Creates an empty [DataColumn] with given [name] of type [Nothing].
+         * If you want to specify another type, use [`emptyOf<T>()`][emptyOf].
+         *
+         * @see emptyOf
+         */
+        public fun empty(name: String = ""): DataColumn<Nothing> =
+            createValueColumn(name, emptyList<Unit>(), nothingType).cast()
+
+        /** Creates an empty [DataColumn] of type [T] with given [name]. */
+        public inline fun <reified T> emptyOf(name: String = ""): DataColumn<T> =
+            createValueColumn(name, emptyList<T>(), typeOf<T>()).cast()
 
         // region deprecated
 

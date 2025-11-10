@@ -263,6 +263,10 @@ internal const val COPY_REPLACE = "columns().toDataFrame().cast()"
 internal const val LISTS_TO_DATAFRAME_MIGRATION =
     "Function moved from io to api package, and a new `header` parameter is introduced. $MESSAGE_1_1"
 
+internal const val KEY_VALUE_PROPERTY = "Deprecated in favor of NameValueProperty. $MESSAGE_1_1"
+internal const val KEY_VALUE_PROPERTY_KEY =
+    "This column will be renamed to 'name' when KeyValueProperty will be replaced with NameValueProperty. $MESSAGE_1_1"
+
 // endregion
 
 // region keep across releases
