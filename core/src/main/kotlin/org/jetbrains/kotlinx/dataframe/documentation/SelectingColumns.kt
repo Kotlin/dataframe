@@ -53,11 +53,21 @@ internal interface SelectingColumns {
     @ExcludeFromSources
     interface OPERATION
 
+    /**
+     * Operation receiver variable name
+     */
+    @ExcludeFromSources
+    interface RECEIVER
+
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
     @ExcludeFromSources
     interface SetDefaultOperationArg
+
+    /** {@set [RECEIVER] <code>`df`</code>} */
+    @ExcludeFromSources
+    interface SetDefaultReceiverArg
 
     /**
      * Select or express columns using the {@include [ColumnsSelectionDslLink]}.
@@ -68,6 +78,8 @@ internal interface SelectingColumns {
      * expects you to return a [SingleColumn] or [ColumnSet] (so, a [ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     * This also allows you to use [Extension Properties API][ExtensionPropertiesAPIDocs]
+     * for type- and name-safe columns selection.
      *
      * #### NOTE:
      * While you can use the {@include [AccessApi.StringApiLink]} and {@include [AccessApi.KPropertiesApiLink]}
@@ -86,13 +98,14 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
          *
          * @include [SetDefaultOperationArg]
+         * @include [SetDefaultReceiverArg]
          */
         interface WithExample
     }

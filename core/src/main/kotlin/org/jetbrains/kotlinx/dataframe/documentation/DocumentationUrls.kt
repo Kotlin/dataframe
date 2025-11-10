@@ -153,6 +153,27 @@ internal interface DocumentationUrls {
     /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
     interface GroupByAggregation
 
-    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/groupby.html#pivot-groupby) */
+    /** [See "`groupBy` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#groupby-statistics) */
+    interface GroupByStatistics
+
+    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/pivot.html#pivot-groupby) */
     interface PivotGroupBy
+
+    /** [See `pivot` on the documentation website.]({@include [Url]}/pivot.html) */
+    interface Pivot
+
+    /** [See `pivotMatches` on the documentation website.]({@include [Url]}/pivot.html#pivotmatches) */
+    interface PivotMatches
+
+    /** [See `pivotCounts` on the documentation website.]({@include [Url]}/pivot.html#pivotcounts) */
+    interface PivotCounts
+
+    /** [See "`pivot` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#pivot-statistics) */
+    interface PivotStatistics
+
+    /** [See "Pivot` reducing" on the documentation website.]({@include [Url]}/pivot.html#reducing) */
+    interface PivotReducing
+
+    /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
+    interface PivotInsideAggregationStatistics
 }
