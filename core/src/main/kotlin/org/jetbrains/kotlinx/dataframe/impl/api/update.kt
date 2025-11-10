@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.exceptions.DataFrameError
 import org.jetbrains.kotlinx.dataframe.impl.columns.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
@@ -95,10 +94,6 @@ private fun <C, R> ColumnGroup<C>.replaceRowsIf(
         .asColumnGroup()
         .cast()
 
-public class UpdateException(override val message: String, cause: Throwable? = null) :
-    IllegalStateException(message, cause),
-    DataFrameError
-
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
     filter: RowValueFilter<T, C>?,
@@ -123,7 +118,7 @@ internal fun <T, C> DataColumn<C>.updateImpl(
         }
         return collector.toColumn(src.name).cast()
     } catch (e: Throwable) {
-        throw UpdateException("Could not update column '${src.name}': ${e.message}", e)
+        throw IllegalStateException("Could not update column '${src.name}': ${e.message}", e)
     }
 }
 

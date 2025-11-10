@@ -5,7 +5,6 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.impl.api.UpdateException
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.size
@@ -101,7 +100,7 @@ class UpdateTests {
             .schema() shouldBe nullFilledDf.schema()
 
         // or 'Nothing', aka, return early/throw exception
-        shouldThrow<UpdateException> {
+        shouldThrow<IllegalStateException> {
             nullFilledDf.update { "a"<Nothing?>() }.with { error("Nothing") }
         }.cause!!.message shouldBe "Nothing"
     }
