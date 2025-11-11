@@ -36,7 +36,7 @@ You can write your [`DataFrame`](DataFrame.md) in JSON format to file, to string
 <!---FUN writeJson-->
 
 ```kotlin
-df.writeJson(file)
+df.writeJson(file.toPath())
 ```
 
 <!---END-->
@@ -160,9 +160,9 @@ The first approach is quite easy:
 <!---FUN writeArrowFile-->
 
 ```kotlin
-df.writeArrowIPC(file)
+df.writeArrowIPC(file.toPath())
 // or
-df.writeArrowFeather(file)
+df.writeArrowFeather(file.toPath())
 ```
 
 <!---END-->
@@ -211,7 +211,7 @@ df.arrowWriter(
     ).use { writer: ArrowWriter ->
 
     // Save to any format and sink, like in the previous example
-    writer.writeArrowFeather(file)
+    writer.writeArrowFeather(file.toPath())
 }
 ```
 
