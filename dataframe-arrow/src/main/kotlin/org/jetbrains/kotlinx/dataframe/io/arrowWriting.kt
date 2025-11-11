@@ -54,9 +54,7 @@ public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
 
 /** Path overload for IPC writing. */
 public fun AnyFrame.writeArrowIPC(path: Path, append: Boolean = true) {
-    this.arrowWriter().use { writer ->
-        writer.writeArrowIPC(path, append)
-    }
+    writeArrowIPC(path.toFile(), append)
 }
 
 /**
@@ -99,9 +97,7 @@ public fun AnyFrame.writeArrowFeather(file: File) {
 
 /** Path overload for Feather writing. */
 public fun AnyFrame.writeArrowFeather(path: Path) {
-    this.arrowWriter().use { writer ->
-        writer.writeArrowFeather(path)
-    }
+    writeArrowFeather(path.toFile())
 }
 
 /**

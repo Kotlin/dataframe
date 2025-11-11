@@ -75,7 +75,7 @@ public fun DataFrame.Companion.readArrowFeather(
 public fun DataFrame.Companion.readArrowIPC(
     file: File,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowIPC(it, nullability = nullability) }
+): AnyFrame = readArrowIPC(file.toPath(), nullability)
 
 /** Path overload for reading Arrow IPC from file path. */
 public fun DataFrame.Companion.readArrowIPC(
@@ -134,7 +134,7 @@ public fun DataFrame.Companion.readArrowIPC(
 public fun DataFrame.Companion.readArrowFeather(
     file: File,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowFeather(it, nullability = nullability) }
+): AnyFrame = readArrowFeather(file.toPath(), nullability)
 
 /** Path overload for reading Arrow Feather from file path. */
 public fun DataFrame.Companion.readArrowFeather(

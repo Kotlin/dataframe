@@ -100,12 +100,7 @@ public interface ArrowWriter : AutoCloseable {
 
     /** Path overload for Arrow IPC writing. */
     public fun writeArrowIPC(path: Path, append: Boolean = true) {
-        // For append=true use FileOutputStream on File to preserve semantics; otherwise use Files.newOutputStream
-        if (append) {
-            writeArrowIPC(FileOutputStream(path.toFile(), /* append = */ true))
-        } else {
-            Files.newOutputStream(path).use { os -> writeArrowIPC(os) }
-        }
+        writeArrowIPC(path.toFile(), append)
     }
 
     /**
@@ -147,7 +142,7 @@ public interface ArrowWriter : AutoCloseable {
 
     /** Path overload for Arrow Feather writing. */
     public fun writeArrowFeather(path: Path) {
-        Files.newOutputStream(path).use { os -> writeArrowFeather(os) }
+        writeArrowFeather(path.toFile())
     }
 
     /**
