@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import java.io.File
 import java.io.InputStream
 import java.net.URI
 import java.net.URL
@@ -18,13 +17,14 @@ import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 
 public class ArrowFeather : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
-        DataFrame.readArrowFeather(file, NullabilityOptions.Widening)
+    override fun readDataFrame(file: java.io.File, header: List<String>): AnyFrame =
+        DataFrame.readArrowFeather(file.toPath(), NullabilityOptions.Widening)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "feather"
 
@@ -73,9 +73,9 @@ public fun DataFrame.Companion.readArrowFeather(
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [file]
  */
 public fun DataFrame.Companion.readArrowIPC(
-    file: File,
+    path: Path,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowIPC(it, nullability = nullability) }
+): AnyFrame = Files.newByteChannel(path).use { readArrowIPC(it, nullability = nullability) }
 
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [byteArray]
@@ -101,7 +101,7 @@ public fun DataFrame.Companion.readArrowIPC(
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
     when {
-        isFile(url) -> readArrowIPC(urlAsFile(url), nullability)
+        isFile(url) -> readArrowIPC(urlAsFile(url).toPath(), nullability)
 
         isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it, nullability) }
 
@@ -117,7 +117,7 @@ public fun DataFrame.Companion.readArrowIPC(
     if (isUrl(path)) {
         readArrowIPC(URI(path).toURL(), nullability)
     } else {
-        readArrowIPC(File(path), nullability)
+        readArrowIPC(Paths.get(path), nullability)
     }
 
 // Feather reading block
@@ -126,9 +126,9 @@ public fun DataFrame.Companion.readArrowIPC(
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [file]
  */
 public fun DataFrame.Companion.readArrowFeather(
-    file: File,
+    path: Path,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowFeather(it, nullability = nullability) }
+): AnyFrame = Files.newByteChannel(path).use { readArrowFeather(it, nullability = nullability) }
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [byteArray]
@@ -154,7 +154,7 @@ public fun DataFrame.Companion.readArrowFeather(
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
     when {
-        isFile(url) -> readArrowFeather(urlAsFile(url), nullability)
+        isFile(url) -> readArrowFeather(urlAsFile(url).toPath(), nullability)
 
         isProtocolSupported(url) -> readArrowFeather(url.readBytes(), nullability)
 
@@ -173,7 +173,7 @@ public fun DataFrame.Companion.readArrowFeather(
     if (isUrl(path)) {
         readArrowFeather(URI(path).toURL(), nullability)
     } else {
-        readArrowFeather(File(path), nullability)
+        readArrowFeather(Paths.get(path), nullability)
     }
 
 /**
@@ -233,19 +233,4 @@ public fun DataFrame.Companion.readParquet(
         batchSize,
     )
 
-/**
- * Read [Parquet](https://parquet.apache.org/) data from existing [files] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
- */
-public fun DataFrame.Companion.readParquet(
-    vararg files: File,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-    batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
-): AnyFrame =
-    readArrowDatasetImpl(
-        files.map {
-            it.toURI().toString()
-        }.toTypedArray(),
-        FileFormat.PARQUET,
-        nullability,
-        batchSize,
-    )
+// (File-based overload removed in favor of Path)

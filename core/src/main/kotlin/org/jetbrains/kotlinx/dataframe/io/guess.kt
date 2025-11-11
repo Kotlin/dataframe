@@ -16,6 +16,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Path
 import java.util.ServiceLoader
 import kotlin.reflect.KType
 
@@ -248,21 +249,15 @@ internal data class GeneratedCode(val format: SupportedCodeGenerationFormat, val
 
 internal infix fun SupportedCodeGenerationFormat.to(code: Code) = GeneratedCode(this, code)
 
-public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
-    read(
-        file = file,
-        format = guessFormat(file)?.also {
-            if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
-        } as SupportedDataFrameFormat?,
-        header = header,
-    ).df
+public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList()): AnyFrame =
+    read(path.toUri().toURL(), header)
 
-public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow =
-    DataFrame.read(file, header).single()
+public fun DataRow.Companion.read(path: Path, header: List<String> = emptyList()): AnyRow =
+    DataFrame.read(path, header).single()
 
 public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame =
     when {
-        isFile(url) -> read(urlAsFile(url), header)
+        isFile(url) -> read(file = urlAsFile(url), header = header).df
 
         isProtocolSupported(url) -> catchHttpResponse(url) {
             read(
@@ -290,6 +285,6 @@ public fun URL.readDataFrame(header: List<String> = emptyList()): AnyFrame = Dat
 
 public fun URL.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
 
-public fun File.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
+public fun Path.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 
-public fun File.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
+public fun Path.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)

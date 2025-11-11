@@ -22,7 +22,7 @@ It can be displayed in the browser and has parameters for customization.
 
 ```kotlin
 df.toStandaloneHtml(DisplayConfiguration(rowsLimit = null)).openInBrowser()
-df.toStandaloneHtml(DisplayConfiguration(rowsLimit = null)).writeHtml(File("/path/to/file"))
+df.toStandaloneHtml(DisplayConfiguration(rowsLimit = null)).writeHtml(Path("/path/to/file"))
 df.toStandaloneHtml(DisplayConfiguration(rowsLimit = null)).writeHtml(Path("/path/to/file"))
 ```
 

@@ -8,26 +8,27 @@ import org.geotools.geojson.feature.FeatureJSON
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.geotools.toSimpleFeatureCollection
 import java.io.File
+import java.nio.file.Path
+import kotlin.io.path.createDirectories
+import kotlin.io.path.outputStream
 
-fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(path))
+fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(path).toPath())
 
-fun GeoDataFrame<*>.writeGeoJson(file: File) {
+fun GeoDataFrame<*>.writeGeoJson(path: Path) {
     // TODO: adds ids that breaks order of reading
     val featureJSON = FeatureJSON()
-    file.outputStream().use { outputStream ->
+    path.outputStream().use { outputStream ->
         featureJSON.writeFeatureCollection(toSimpleFeatureCollection(), outputStream)
     }
 }
 
-fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath))
+fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath).toPath())
 
-fun GeoDataFrame<*>.writeShapefile(directory: File) {
-    if (!directory.exists()) {
-        directory.mkdirs()
-    }
-    val fileName = directory.name
+fun GeoDataFrame<*>.writeShapefile(directory: Path) {
+    directory.createDirectories()
+    val fileName = directory.fileName.toString()
 
-    val file = File(directory, "$fileName.shp")
+    val file = directory.resolve("$fileName.shp").toFile()
 
     val creationParams = mutableMapOf<String, java.io.Serializable>()
     creationParams["url"] = file.toURI().toURL()

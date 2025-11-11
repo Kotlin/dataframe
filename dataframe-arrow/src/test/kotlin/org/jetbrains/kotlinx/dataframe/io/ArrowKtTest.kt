@@ -301,8 +301,8 @@ internal class ArrowKtTest {
         }
 
         val testFile = File.createTempFile("cities", "arrow")
-        citiesExampleFrame.writeArrowFeather(testFile)
-        assertEstimation(DataFrame.readArrowFeather(testFile))
+        citiesExampleFrame.writeArrowFeather(testFile.toPath())
+        assertEstimation(DataFrame.readArrowFeather(testFile.toPath()))
 
         val testByteArray = citiesExampleFrame.saveArrowIPCToByteArray()
         assertEstimation(DataFrame.readArrowIPC(testByteArray))
@@ -311,8 +311,8 @@ internal class ArrowKtTest {
     @Test
     fun testWritingBySchema() {
         val testFile = File.createTempFile("cities", "arrow")
-        citiesExampleFrame.arrowWriter(Schema.fromJSON(citiesExampleSchema)).use { it.writeArrowFeather(testFile) }
-        val citiesDeserialized = DataFrame.readArrowFeather(testFile, NullabilityOptions.Checking)
+        citiesExampleFrame.arrowWriter(Schema.fromJSON(citiesExampleSchema)).use { it.writeArrowFeather(testFile.toPath()) }
+        val citiesDeserialized = DataFrame.readArrowFeather(testFile.toPath(), NullabilityOptions.Checking)
         citiesDeserialized["population"].type() shouldBe typeOf<Long?>()
         citiesDeserialized["area"].type() shouldBe typeOf<Float>()
         citiesDeserialized["settled"].type() shouldBe typeOf<LocalDateTime>()
@@ -675,7 +675,7 @@ internal class ArrowKtTest {
         val resourceUrl = testResource("test.arrow.parquet")
         val resourcePath = resourceUrl.toURI().toPath()
 
-        val dataFrame = DataFrame.readParquet(resourcePath.toFile())
+        val dataFrame = DataFrame.readParquet(resourcePath)
 
         dataFrame.rowsCount() shouldBe 300
         assertEstimations(
