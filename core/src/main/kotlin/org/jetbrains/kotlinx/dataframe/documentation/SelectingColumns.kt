@@ -53,7 +53,7 @@ internal interface SelectingColumns {
     @ExcludeFromSources
     interface OPERATION
 
-    /**
+    /*
      * Operation receiver variable name
      */
     @ExcludeFromSources

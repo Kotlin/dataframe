@@ -68,14 +68,14 @@ internal interface PivotDocs {
      *
      * ### Create [Pivot]
      *
-     * [**`pivot`**][pivot]**`(`**`inward: `[`Boolean`][Boolean]**` = true)  {  `**`pivotColumns: `[`PivotColumnsSelector`][PivotColumnsSelector]**` }`**
+     * [**`pivot`**][pivot]**`(`**`inward: `[`Boolean`][Boolean]**` = true) {  `**`pivotColumns: `[`PivotColumnsSelector`][PivotColumnsSelector]**` }`**
      *
      * ### Reduce [Pivot] into [DataRow]
      *
-     * [Pivot][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**`  }`**
+     * [Pivot][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`maxBy`**][Pivot.maxBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**`  }`**
+     * `| `__`.`__[**`maxBy`**][Pivot.maxBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
      * `| `__`.`__[**`first`**][Pivot.first]`  \[ `**` {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
@@ -84,23 +84,23 @@ internal interface PivotDocs {
      * `| `__`.`__[**`last`**][Pivot.last]`  \[ `**`{  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`medianBy`**][Pivot.medianBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**`  }`**
+     * `| `__`.`__[**`medianBy`**][Pivot.medianBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`percentileBy`**][Pivot.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`column: `[`RowExpression`][RowExpression]**`  }`**
+     * `| `__`.`__[**`percentileBy`**][Pivot.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * __`.`__[**`with`**][Pivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**`  }`**
+     * __`.`__[**`with`**][Pivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
      * `| `__`.`__[**`values`**][Pivot.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * ### Aggregate [Pivot] into [DataRow]
      *
-     * [Pivot][Pivot]`.`[**`count`**][Pivot.count]**`() `**
+     * [Pivot][Pivot]`.`[**`count`**][Pivot.count]**`()`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`frames`**][Pivot.frames]**`() `**
+     * `| `__`.`__[**`frames`**][Pivot.frames]**`()`**
      *
      * {@include [Indent]}
      * `| `__`.`__[**`with`**][Pivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
@@ -122,7 +122,7 @@ internal interface PivotDocs {
      * `| `__`.`__[**`groupByOther`**][Pivot.groupByOther]**`()`**
      *
      * {@include [Indent]}
-     * `    \[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
+     * `\[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
      * {@include [Indent]}
      * `| `__`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
@@ -164,6 +164,8 @@ internal interface PivotDocs {
      * (or as [column groups][ColumnGroup]) and values composed of the reduced results from each group.
      *
      * Check out [`Pivot grammar`][Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.PivotReducing]}
      */
     interface Reducing
 
@@ -193,13 +195,15 @@ internal interface PivotDocs {
      * (or as [column groups][ColumnGroup]) and values representing the aggregated results of each group.
      *
      * Check out [`Pivot grammar`][Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.PivotAggregation]}
      */
     interface Aggregation
 
     /**
      * ### [Pivot] grouping
      *
-     * [Pivot] can be pivoted with [groupBy][Pivot.groupBy] method. It will produce a [PivotGroupBy].
+     * [Pivot] can be grouped with [groupBy][Pivot.groupBy] method. It will produce a [PivotGroupBy].
      *
      * @include [PivotGroupByDocs.CommonDescription]
      */
@@ -242,7 +246,9 @@ internal interface PivotDocs {
     interface AggregationStatistics
 
     /**
-     * Pivoted columns can also be created inline:
+     * Pivoted columns can also be created inline
+     * (i.g. by creating a new column using [expr] or simply renaming the old one
+     * using [named]) :
      * ```kotlin
      * // Create a new column "newName" based on existing "oldName" values
      * // and pivot it:
@@ -442,16 +448,17 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
  * * Cell values are [Boolean] indicators showing whether matching rows exist
  *   for each pivoting/grouping key combination.
  */
+@ExcludeFromSources
 internal interface PivotMatchesResultDescription
 
 /**
  * Computes whether matching rows exist in this [DataFrame] for all unique values of the
- * selected [\columns] (independently) across all possible combinations
+ * selected [\columns] across all possible combinations
  * of values in the remaining columns (all expecting selected).
  *
  * Performs a [pivot] operation on the specified [\columns] of this [DataFrame],
  * then [groups it by][Pivot.groupByOther] the remaining columns,
- * and produces a new matrix-like [DataFrame].
+ * and produces a new [Boolean] matrix (in the form of a [DataFrame]).
  *
  * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
  * @include [PivotMatchesResultDescription]
@@ -467,10 +474,12 @@ internal interface PivotMatchesResultDescription
  *
  * See also:
  * * [pivotCounts], which performs a similar operation
- *   but counts the number of matching rows instead of checking for their presence.
+ *   but counts the number of matching rows instead of checking for their presence
+ *   to produce a count matrix.
  *
  * ### This `pivotMatches` Overload
  */
+@ExcludeFromSources
 internal interface DataFramePivotMatchesCommonDocs
 
 /**
@@ -488,7 +497,7 @@ internal interface DataFramePivotMatchesCommonDocs
  * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
  *               if `false`, they are placed at the top level.
  * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
- * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
+ * @return A new [DataFrame] representing a [Boolean] presence matrix — with grouping key columns as rows,
  *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  */
 public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> =
@@ -532,6 +541,7 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
  * * Cell values represent the number of matching rows
  *   for each pivoting/grouping key combination.
  */
+@ExcludeFromSources
 internal interface PivotCountsResultDescription
 
 /**
@@ -541,7 +551,7 @@ internal interface PivotCountsResultDescription
  *
  * Performs a [pivot] operation on the specified [\columns] of this [DataFrame],
  * then [groups it by][Pivot.groupByOther] the remaining columns,
- * and produces a new matrix-like [DataFrame].
+ * and produces a new count matrix (in the form of a [DataFrame]).
  *
  * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
  * @include [PivotCountsResultDescription]
@@ -556,7 +566,8 @@ internal interface PivotCountsResultDescription
  * For more information: {@include [DocumentationUrls.PivotCounts]}
  *
  * See also: [pivotMatches], which performs a similar operation
- * but check if there is any matching row instead of counting then.
+ * but check if there is any matching row instead of counting then
+ * to produce a [Boolean] matrix.
  *
  * ### This `pivotCounts` Overload
  */
@@ -1143,7 +1154,7 @@ public interface Pivot<T> : Aggregatable<T>
 /**
  * A specialized [ColumnsSelector] used for selecting columns in a [pivot] operation.
  *
- * Provides a [PivotDsl] both as the receiver and the lambda parameter, and expects
+ * Provides [PivotDsl] both as the receiver and the lambda parameter, and expects
  * a [ColumnsResolver] as the return value.
  *
  * Enables defining the hierarchy of pivot columns using [then][PivotDsl.then].
@@ -1201,10 +1212,11 @@ internal interface PivotGroupByDocs {
     interface ResultingMatrixCommonDescription
 
     /**
-     * [PivotGroupBy] is a dataframe-like structure, combining [Pivot] and [GroupBy]
-     * and representing a matrix table with vertical [Pivot] groups (as columns)
-     * and horizontal [GroupBy] groups (as rows), and each cell
-     * represents a group corresponding both to [GroupBy] and [Pivot] key.
+     * [PivotGroupBy] is a dataframe-like structure that combines [Pivot] and [GroupBy],
+     * representing a matrix table with vertical [Pivot] groups (as columns)
+     * and horizontal [GroupBy] groups (as rows),
+     * where each cell represents a group corresponding
+     * to both the [GroupBy] and [Pivot] key.
      *
      * Reversed order of `pivot` and `groupBy`
      * (i.e., [DataFrame.pivot] + [Pivot.groupBy] or [DataFrame.groupBy] + [GroupBy.pivot])
