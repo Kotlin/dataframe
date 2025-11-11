@@ -41,7 +41,7 @@ class Write : TestBase {
     fun writeJson() {
         useTempFile { file ->
             // SampleStart
-            df.writeJson(file)
+            df.writeJson(file.toPath())
             // SampleEnd
         }
     }
@@ -138,9 +138,9 @@ class Write : TestBase {
     fun writeArrowFile() {
         useTempFile { file ->
             // SampleStart
-            df.writeArrowIPC(file)
+            df.writeArrowIPC(file.toPath())
             // or
-            df.writeArrowFeather(file)
+            df.writeArrowFeather(file.toPath())
             // SampleEnd
         }
     }
@@ -218,7 +218,7 @@ class Write : TestBase {
                 ).use { writer: ArrowWriter ->
 
                 // Save to any format and sink, like in the previous example
-                writer.writeArrowFeather(file)
+                writer.writeArrowFeather(file.toPath())
             }
             // SampleEnd
         }

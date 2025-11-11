@@ -187,7 +187,7 @@ fun main() {
     val rootMetaDir = pipelineRoot.resolve("metadata")
     val rootMetaFiles = listTextOrJsonFiles(rootMetaDir)
     for (file in rootMetaFiles) {
-        val df = DataFrame.readJson(file.toFile())
+        val df = DataFrame.readJson(file)
         println("Step 9: Pipeline root metadata JSON (${file.fileName}) head:")
         df.head().print()
         metaKdfs += df
@@ -196,7 +196,7 @@ fun main() {
     // 10.2) Stage 0 (VectorAssembler) metadata/data
     val stage0MetaDir = stage0Dir.resolve("metadata")
     for (file in listTextOrJsonFiles(stage0MetaDir)) {
-        val df = DataFrame.readJson(file.toFile())
+        val df = DataFrame.readJson(file)
         println("Step 9: Stage 0 metadata (${file.fileName}) head:")
         df.head().print()
         metaKdfs += df
@@ -215,7 +215,7 @@ fun main() {
     // 10.3) Stage 1 (LinearRegressionModel) metadata/data
     val stage1MetaDir = stage1Dir.resolve("metadata")
     for (file in listTextOrJsonFiles(stage1MetaDir)) {
-        val df = DataFrame.readJson(file.toFile())
+        val df = DataFrame.readJson(file)
         println("Step 9: Stage 1 metadata (${file.fileName}) head:")
         df.head().print()
         metaKdfs += df

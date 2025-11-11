@@ -8,11 +8,11 @@ import io.kotest.matchers.shouldBe
 import kotlinx.serialization.SerializationException
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
+import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Test
-import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.net.URL
@@ -20,12 +20,13 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.sql.DriverManager
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.writeText
 
 class DataFrameReadTest {
     @Test
     fun `file that does not exists`() {
-        val temp = Files.createTempDirectory("").toFile()
-        val definitelyDoesNotExists = File(temp, "absolutelyRandomName")
+        val temp = Files.createTempDirectory("")
+        val definitelyDoesNotExists = temp.resolve("absolutelyRandomName")
         shouldThrow<FileNotFoundException> {
             DataFrame.read(definitelyDoesNotExists)
         }
@@ -33,8 +34,8 @@ class DataFrameReadTest {
 
     @Test
     fun `file with invalid json`() {
-        val temp = Files.createTempDirectory("").toFile()
-        val invalidJson = File(temp, "test.json").also { it.writeText(".") }
+        val temp = Files.createTempDirectory("")
+        val invalidJson = temp.resolve("test.json").also { it.writeText(".") }
         shouldThrow<IllegalStateException> {
             DataFrame.read(invalidJson)
         }
@@ -42,8 +43,8 @@ class DataFrameReadTest {
 
     @Test
     fun `file with invalid csv`() {
-        val temp = Files.createTempDirectory("").toFile()
-        val invalidCsv = File(temp, "test.csv").also { it.writeText("") }
+        val temp = Files.createTempDirectory("")
+        val invalidCsv = temp.resolve("test.csv").also { it.writeText("") }
         DataFrame.read(invalidCsv).isEmpty() shouldBe true
     }
 
@@ -89,7 +90,7 @@ class DataFrameReadTest {
 
     @Test
     fun `csvSample is valid csv`() {
-        val temp = Files.createTempFile("f", "csv").toFile()
+        val temp = Files.createTempFile("f", "csv")
         temp.writeText(TestData.csvSample)
 
         val df = DataFrame.read(temp)

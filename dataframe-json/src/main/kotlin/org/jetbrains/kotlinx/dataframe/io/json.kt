@@ -29,6 +29,9 @@ import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_C
 import java.io.File
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Path
+import java.nio.file.Paths
+import kotlin.io.path.writeText
 import kotlin.reflect.typeOf
 
 public class JSON(
@@ -48,7 +51,7 @@ public class JSON(
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame =
         DataFrame.readJson(
-            file = file,
+            path = file.toPath(),
             header = header,
             typeClashTactic = typeClashTactic,
             keyValuePaths = keyValuePaths,
@@ -140,12 +143,12 @@ internal const val VALUE_COLUMN_NAME: String = "value"
  * @return [DataFrame] from the given [file].
  */
 public fun DataFrame.Companion.readJson(
-    file: File,
+    path: Path,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyFrame = DataFrame.readJson(file.toURI().toURL(), header, keyValuePaths, typeClashTactic, unifyNumbers)
+): AnyFrame = DataFrame.readJson(path.toUri().toURL(), header, keyValuePaths, typeClashTactic, unifyNumbers)
 
 /**
  * @param file Where to fetch the Json as [InputStream] to be converted to a [DataRow].
@@ -157,12 +160,12 @@ public fun DataFrame.Companion.readJson(
  * @return [DataRow] from the given [file].
  */
 public fun DataRow.Companion.readJson(
-    file: File,
+    path: Path,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJson(file, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+): AnyRow = DataFrame.readJson(path, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
 
 /**
  * @param path URL or file path from where to fetch the Json as [InputStream] to be converted to a [DataFrame].
@@ -408,22 +411,22 @@ public fun AnyRow.toJson(prettyPrint: Boolean = false): String {
     return json.encodeToString(JsonElement.serializer(), encodeRow(df(), index()))
 }
 
-public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false) {
-    file.writeText(toJson(prettyPrint))
+public fun AnyFrame.writeJson(path: Path, prettyPrint: Boolean = false) {
+    path.writeText(toJson(prettyPrint))
 }
 
-public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false): Unit = writeJson(File(path), prettyPrint)
+public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false): Unit = writeJson(Paths.get(path), prettyPrint)
 
 public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false) {
     writer.append(toJson(prettyPrint))
 }
 
-public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false) {
-    file.writeText(toJson(prettyPrint))
+public fun AnyRow.writeJson(path: Path, prettyPrint: Boolean = false) {
+    path.writeText(toJson(prettyPrint))
 }
 
 public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false) {
-    writeJson(File(path), prettyPrint)
+    writeJson(Paths.get(path), prettyPrint)
 }
 
 public fun AnyRow.writeJson(writer: Appendable, prettyPrint: Boolean = false) {

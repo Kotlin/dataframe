@@ -8,11 +8,12 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.io.OutputStream
 import java.nio.channels.Channels
 import java.nio.channels.WritableByteChannel
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
+import kotlin.io.path.outputStream
 
 public val ignoreMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> }
 public val writeMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch ->
@@ -89,11 +90,19 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing file at [path].
      * If file exists, it can be recreated or expanded.
      */
-    public fun writeArrowIPC(file: File, append: Boolean = true) {
-        writeArrowIPC(FileOutputStream(file, append))
+    public fun writeArrowIPC(path: Path, append: Boolean = true) {
+        val options = if (append) arrayOf(
+            StandardOpenOption.CREATE,
+            StandardOpenOption.APPEND,
+        ) else arrayOf(
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.WRITE,
+        )
+        writeArrowIPC(path.outputStream(*options))
     }
 
     /**
@@ -126,11 +135,11 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
+     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing file at [path].
      * If file exists, it would be recreated.
      */
-    public fun writeArrowFeather(file: File) {
-        writeArrowFeather(FileOutputStream(file))
+    public fun writeArrowFeather(path: Path) {
+        writeArrowFeather(path.outputStream(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE))
     }
 
     /**

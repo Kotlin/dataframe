@@ -60,7 +60,7 @@ class IOTest {
     fun writeShapefile() {
         val tempDir = Files.createTempDirectory("shapefiles").toFile()
         val tempShapefileDir = File(tempDir, "simple_points").also { it.mkdir() }
-        simplePointsGeoDf.writeShapefile(tempShapefileDir)
+        simplePointsGeoDf.writeShapefile(tempShapefileDir.toPath())
         val shapefile = File("${tempShapefileDir.path}/simple_points.shp")
         assertEquals(simplePointsGeoDf, GeoDataFrame.readShapefile(shapefile.toURI().toURL()))
         tempDir.deleteOnExit()

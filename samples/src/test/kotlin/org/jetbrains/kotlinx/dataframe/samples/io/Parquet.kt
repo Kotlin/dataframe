@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.io.readParquet
 import org.jetbrains.kotlinx.dataframe.testParquet
 import org.junit.Test
-import java.io.File
 import java.nio.file.Paths
 
 class Parquet {
@@ -36,7 +35,7 @@ class Parquet {
     @Test
     fun readParquetFile() {
         val url = testParquet("sales")
-        val file = File(url.toURI())
+        val file = Paths.get(url.toURI())
 
         // SampleStart
         // Read from File objects
@@ -49,7 +48,7 @@ class Parquet {
     @Test
     fun readParquetFileWithParameters() {
         val url = testParquet("sales")
-        val file = File(url.toURI())
+        val file = Paths.get(url.toURI())
 
         // SampleStart
         val df = DataFrame.readParquet(
@@ -65,9 +64,9 @@ class Parquet {
     @Test
     fun readMultipleParquetFiles() {
         val url = testParquet("sales")
-        val file = File(url.toURI())
-        val file1 = File(url.toURI())
-        val file2 = File(url.toURI())
+        val file = Paths.get(url.toURI())
+        val file1 = Paths.get(url.toURI())
+        val file2 = Paths.get(url.toURI())
 
         // SampleStart
         val df = DataFrame.readParquet(file, file1, file2)
