@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import java.io.File
 import java.io.OutputStream
 import java.nio.channels.WritableByteChannel
+import java.nio.file.Path
 
 /**
  * Create [ArrowWriter] for [this] DataFrame with target schema matching actual data
@@ -51,6 +52,13 @@ public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
     }
 }
 
+/** Path overload for IPC writing. */
+public fun AnyFrame.writeArrowIPC(path: Path, append: Boolean = true) {
+    this.arrowWriter().use { writer ->
+        writer.writeArrowIPC(path, append)
+    }
+}
+
 /**
  * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new [ByteArray]
  */
@@ -86,6 +94,13 @@ public fun AnyFrame.writeArrowFeather(stream: OutputStream) {
 public fun AnyFrame.writeArrowFeather(file: File) {
     this.arrowWriter().use { writer ->
         writer.writeArrowFeather(file)
+    }
+}
+
+/** Path overload for Feather writing. */
+public fun AnyFrame.writeArrowFeather(path: Path) {
+    this.arrowWriter().use { writer ->
+        writer.writeArrowFeather(path)
     }
 }
 

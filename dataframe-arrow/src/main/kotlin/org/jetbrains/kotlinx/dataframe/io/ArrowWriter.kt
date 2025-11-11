@@ -13,6 +13,8 @@ import java.io.FileOutputStream
 import java.io.OutputStream
 import java.nio.channels.Channels
 import java.nio.channels.WritableByteChannel
+import java.nio.file.Files
+import java.nio.file.Path
 
 public val ignoreMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> }
 public val writeMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch ->
@@ -96,6 +98,16 @@ public interface ArrowWriter : AutoCloseable {
         writeArrowIPC(FileOutputStream(file, append))
     }
 
+    /** Path overload for Arrow IPC writing. */
+    public fun writeArrowIPC(path: Path, append: Boolean = true) {
+        // For append=true use FileOutputStream on File to preserve semantics; otherwise use Files.newOutputStream
+        if (append) {
+            writeArrowIPC(FileOutputStream(path.toFile(), /* append = */ true))
+        } else {
+            Files.newOutputStream(path).use { os -> writeArrowIPC(os) }
+        }
+    }
+
     /**
      * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new [ByteArray]
      */
@@ -131,6 +143,11 @@ public interface ArrowWriter : AutoCloseable {
      */
     public fun writeArrowFeather(file: File) {
         writeArrowFeather(FileOutputStream(file))
+    }
+
+    /** Path overload for Arrow Feather writing. */
+    public fun writeArrowFeather(path: Path) {
+        Files.newOutputStream(path).use { os -> writeArrowFeather(os) }
     }
 
     /**
