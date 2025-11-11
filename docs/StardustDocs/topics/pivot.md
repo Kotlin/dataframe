@@ -109,6 +109,8 @@ df.pivot { city }.groupByOther()
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupByOther.html" width="100%"/>
 <!---END-->
 
+<!---TODO ## Reducing--->
+
 ## Aggregation
 
 To aggregate data groups with one or several statistics use `aggregate`:

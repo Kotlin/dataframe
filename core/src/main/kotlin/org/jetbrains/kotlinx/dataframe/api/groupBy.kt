@@ -41,20 +41,16 @@ import kotlin.reflect.KProperty
  * defines the group consisting of all rows where the column(s) contain that value combination.
  *
  * Returns a [GroupBy] — a dataframe-like structure that contains all unique combinations of key values
- * along with the corresponding groups of rows (each represented as a [DataFrame]).
+ * along with the corresponding groups of rows (each represented as a [DataFrame]) as rows.
  *
  * A [GroupBy] can then be:
  * * [transformed][Transformation] into a new [GroupBy];
  * * [reduced][Reducing] into a [DataFrame], where each group is collapsed into a single representative row;
  * * [aggregated][Aggregation] into a [DataFrame], where each group is transformed into one or more rows of derived values;
- * * [pivoted][Pivoting] into a [PivotGroupBy] structure, which combines [pivot] and [groupBy] operations.
+ * * [pivoted][Pivoting] into a [PivotGroupBy] structure, which combines [pivot] and [groupBy] operations
+ *   and then reduced or aggregated into a [DataFrame].
  *
- * Grouping keys can also be created inline:
- * ```kotlin
- * // Create a new column "newName" based on existing "oldName" values
- * // and use it as a grouping key:
- * df.groupBy { expr("newName") { oldName.drop(5) } }
- * ```
+ * @include [GroupingKeysInline]
  *
  * Check out [Grammar].
  *
@@ -66,6 +62,8 @@ import kotlin.reflect.KProperty
  *
  * Don't confuse this with [group], which groups column into
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * See also [pivot][DataFrame.pivot] that groups rows of [DataFrame] vertically.
  */
 internal interface GroupByDocs {
     /**
@@ -160,16 +158,16 @@ internal interface GroupByDocs {
      * ### Pivot [GroupBy] into [PivotGroupBy] and reduce / aggregate it
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`pivot`**][GroupBy.pivot]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * [GroupBy][GroupBy]`.`[**`pivot`**][GroupBy.pivot]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * {@include [Indent]}
      * `    \[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[<pivot_reducer>][PivotGroupByDocs.Reducing]
+     * __`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
      *
      * {@include [Indent]}
-     * `| `__`.`__[<pivot_aggregator>][PivotGroupByDocs.Aggregation]
+     * `| `__`.`__[<pivot_groupBy_groupBy>][PivotGroupByDocs.Aggregation]
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
@@ -183,14 +181,37 @@ internal interface GroupByDocs {
 
     /**
      * ### [GroupBy] aggregation statistics
-     * * [count][Grouped.count]
-     * * [max][Grouped.max]/[maxOf][Grouped.maxOf]/[maxFor][Grouped.maxFor]
-     * * [min][Grouped.min]/[minOf][Grouped.minOf]/[minFor][Grouped.minFor]
-     * * [sum][Grouped.sum]/[sumOf][Grouped.sumOf]/[sumFor][Grouped.sumFor]
-     * * [mean][Grouped.mean]/[meanOf][Grouped.meanOf]/[meanFor][Grouped.meanFor]
-     * * [std][Grouped.std]/[stdOf][Grouped.stdOf]/[stdFor][Grouped.stdFor]
-     * * [median][Grouped.median]/[medianOf][Grouped.medianOf]/[medianFor][Grouped.medianFor]
-     * * [percentile][Grouped.percentile]/[percentileOf][Grouped.percentileOf]/[percentileFor][Grouped.percentileFor]
+     *
+     * Provides predefined shortcuts for the most common statistical aggregation operations
+     * that can be applied to each group within a [GroupBy].
+     *
+     * Each function computes a statistic across the rows of a group and returns the result as
+     * a new column (or several columns) in the resulting [DataFrame].
+     *
+     * * [count][Grouped.count] — calculate the number of rows in each group;
+     * * [max][Grouped.max] / [maxOf][Grouped.maxOf] / [maxFor][Grouped.maxFor] —
+     *   calculate the maximum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [min][Grouped.min] / [minOf][Grouped.minOf] / [minFor][Grouped.minFor] —
+     *   calculate the minimum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [sum][Grouped.sum] / [sumOf][Grouped.sumOf] / [sumFor][Grouped.sumFor] —
+     *   calculate the sum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [mean][Grouped.mean] / [meanOf][Grouped.meanOf] / [meanFor][Grouped.meanFor] —
+     *   calculate the mean (average) of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [std][Grouped.std] / [stdOf][Grouped.stdOf] / [stdFor][Grouped.stdFor] —
+     *   calculate the standard deviation of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [median][Grouped.median] / [medianOf][Grouped.medianOf] / [medianFor][Grouped.medianFor] —
+     *   calculate the median of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [percentile][Grouped.percentile] / [percentileOf][Grouped.percentileOf] / [percentileFor][Grouped.percentileFor] —
+     *   calculate a specified percentile of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group.
+     *
+     * For more information: {@include [DocumentationUrls.GroupByStatistics]}
      */
     interface AggregationStatistics
 
@@ -235,8 +256,8 @@ internal interface GroupByDocs {
      * These functions return a [ReducedGroupBy], which can then be transformed into a new [DataFrame]
      * containing the reduced rows (either original or transformed) using one of the following methods:
      * * [concat][ReducedGroupBy.concat] — simply concatenates all reduced rows;
-     * * [values][ReducedGroupBy.values] — creates a [DataFrame] with new rows by transforming each reduced row
-     *   using [ColumnsForAggregateSelectionDsl];
+     * * [values][ReducedGroupBy.values] — creates a [DataFrame] containing the values
+     *   from the reduced rows in the selected columns.
      * * [into][ReducedGroupBy.into] — creates a new column with values computed with [RowExpression] on each row,
      *   or a new [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      *   containing each group reduced to a single row;
@@ -262,14 +283,16 @@ internal interface GroupByDocs {
      * The following aggregation methods are available:
      * * [concat][GroupBy.concat] — concatenates all rows from all groups into a single [DataFrame],
      *   without preserving grouping keys;
+     * * [toDataFrame][GroupBy.toDataFrame] — returns this [GroupBy] as [DataFrame] with the grouping keys and
+     *  corresponding groups in [FrameColumn].
      * * [concatWithKeys][GroupBy.concatWithKeys] — a variant of [concat][GroupBy.concat] that also includes
      *   grouping keys that were not present in the original [DataFrame];
      * * [into][GroupBy.into] — creates a new column containing a list of values computed with a [RowExpression]
      *   for each group, or a new [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]
      *   containing the groups themselves;
-     * * [values][ReducedGroupBy.values] — creates a [DataFrame] with new rows produced by transforming
-     *   each group using [ColumnsForAggregateSelectionDsl];
-     * * [count][Grouped.count] — returns a [DataFrame] containing the grouping key columns and an additional column
+     * * [values][Grouped.values] — creates a [DataFrame] containing values collected into a single [List]
+     *   from all rows of each group for the selected columns.
+     * * [count][Grouped.count] — creates a [DataFrame] containing the grouping key columns and an additional column
      *   with the number of rows in each corresponding group;
      * * [aggregate][Grouped.aggregate] — performs a set of custom aggregations using [AggregateDsl],
      *   allowing you to compute one or more derived values per group;
@@ -295,6 +318,19 @@ internal interface GroupByDocs {
      * @include [PivotGroupByDocs.CommonDescription]
      */
     interface Pivoting
+
+    /**
+     * Grouping key can also be created inline
+     * (i.g. by creating a new column using [expr] or simply renaming the old one
+     * using [named]) :
+     * ```kotlin
+     * // Create a new column "newName" based on existing "oldName" values
+     * // and use it as a grouping key:
+     * df.groupBy { expr("newName") { oldName.drop(5) } }
+     * ```
+     */
+    @ExcludeFromSources
+    interface GroupingKeysInline
 }
 
 /** {@set [SelectingColumns.OPERATION] [groupBy][groupBy]} */
@@ -348,19 +384,13 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
 // endregion
 
 /**
- * Groups the rows of this [Pivot] into [PivotGroupBy]
+ * Groups the rows of this [Pivot] groups
  * based on the values in one or more specified [key columns][\columns].
- *
- * Works like regular [DataFrame.groupBy] on pivot groups.
- *
- * Grouping keys can also be created inline:
- * ```kotlin
- * // Create a new column "newName" based on existing "oldName" values
- * // and use it as a grouping key:
- * pivot.groupBy { expr("newName") { oldName.drop(5) } }
- * ```
+ * Returns a [PivotGroupBy].
  *
  * @include [PivotGroupByDocs.CommonDescription]
+ *
+ * @include [GroupByDocs.GroupingKeysInline]
  */
 @ExcludeFromSources
 private interface GroupByForPivotDocs
@@ -376,17 +406,8 @@ private interface CommonGroupByForPivotDocs
 
 /**
  * {@include [CommonGroupByForPivotDocs]}
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetGroupByOperationArg] {@set [SelectingColumns.RECEIVER] <code>`pivot`</code>}}
  *
- * #### For example:
- *
- * `pivot.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
- *
- * `pivot.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
- *
- * `pivot.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
- *
- * {@include [SetGroupByOperationArg]}
  * @param moveToTop Specifies whether nested grouping columns should be moved to the top level
  * or kept inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  * Defaults to `true`.
