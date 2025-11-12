@@ -2,6 +2,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/IsOpenApiKt {
 	public static final fun isOpenApi (Ljava/io/File;)Z
 	public static final fun isOpenApi (Ljava/lang/String;)Z
 	public static final fun isOpenApi (Ljava/net/URL;)Z
+	public static final fun isOpenApi (Ljava/nio/file/Path;)Z
 	public static final fun isOpenApiStr (Ljava/lang/String;)Z
 }
 

@@ -8,6 +8,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/CsvDeephaven : org/jetbrai
 	public fun getTestOrder ()I
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/QuoteMode : java/lang/Enum {
@@ -57,7 +58,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/ReadDelimStrKt {
 	public static synthetic fun readDelimStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/ReadTsvDeephavenKt {
+public final class org/jetbrains/kotlinx/dataframe/io/ReadTsvKt {
 	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLorg/jetbrains/kotlinx/dataframe/io/Compression;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLorg/jetbrains/kotlinx/dataframe/io/Compression;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLorg/jetbrains/kotlinx/dataframe/io/Compression;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -100,6 +101,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/TsvDeephaven : org/jetbrai
 	public fun getTestOrder ()I
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/UtilKt {
