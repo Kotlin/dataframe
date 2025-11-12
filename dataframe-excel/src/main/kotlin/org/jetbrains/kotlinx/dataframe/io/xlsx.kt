@@ -40,9 +40,9 @@ import java.io.OutputStream
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlin.io.path.outputStream
-import kotlin.io.path.inputStream
 import java.util.Calendar
+import kotlin.io.path.inputStream
+import kotlin.io.path.outputStream
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.util.Date as JavaDate
@@ -630,14 +630,15 @@ public fun <T> DataFrame<T>.writeExcel(
     writeHeader: Boolean = true,
     workBookType: WorkBookType = WorkBookType.XLSX,
     keepFile: Boolean = false,
-): Unit = writeExcel(
-    path = file.toPath(),
-    columnsSelector = columnsSelector,
-    sheetName = sheetName,
-    writeHeader = writeHeader,
-    workBookType = workBookType,
-    keepFile = keepFile,
-)
+): Unit =
+    writeExcel(
+        path = file.toPath(),
+        columnsSelector = columnsSelector,
+        sheetName = sheetName,
+        writeHeader = writeHeader,
+        workBookType = workBookType,
+        keepFile = keepFile,
+    )
 
 /** Path overload for writing this DataFrame to an Excel file. */
 public fun <T> DataFrame<T>.writeExcel(

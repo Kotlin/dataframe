@@ -6,6 +6,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/Excel : org/jetbrains/kotl
 	public fun getTestOrder ()I
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/FormattingOptions {
@@ -77,10 +78,12 @@ public final class org/jetbrains/kotlinx/dataframe/io/XlsxKt {
 	public static final fun writeExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;Z)V
 	public static final fun writeExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/OutputStream;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/apache/poi/ss/usermodel/Workbook;)V
 	public static final fun writeExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;Z)V
+	public static final fun writeExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;Z)V
 	public static final fun writeExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/poi/ss/usermodel/Workbook;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Z)Lorg/apache/poi/ss/usermodel/Sheet;
 	public static synthetic fun writeExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;ZILjava/lang/Object;)V
 	public static synthetic fun writeExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/OutputStream;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/apache/poi/ss/usermodel/Workbook;ILjava/lang/Object;)V
 	public static synthetic fun writeExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;ZILjava/lang/Object;)V
+	public static synthetic fun writeExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;ZILjava/lang/Object;)V
 	public static synthetic fun writeExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/poi/ss/usermodel/Workbook;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZILjava/lang/Object;)Lorg/apache/poi/ss/usermodel/Sheet;
 }
 

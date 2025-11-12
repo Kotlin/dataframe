@@ -6310,23 +6310,31 @@ public final class org/jetbrains/kotlinx/dataframe/io/GuessKt {
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/net/URL;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/net/URL;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun readDataFrame (Ljava/net/URL;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Ljava/net/URL;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDataFrame$default (Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun readDataRow (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun readDataRow (Ljava/net/URL;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun readDataRow (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun readDataRow$default (Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun readDataRow$default (Ljava/net/URL;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun readDataRow$default (Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/HtmlKt {
@@ -6394,8 +6402,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedCode
 public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat : org/jetbrains/kotlinx/dataframe/io/SupportedFormat {
 	public abstract fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public abstract fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat;Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat;Ljava/io/InputStream;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat;Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedFormat {

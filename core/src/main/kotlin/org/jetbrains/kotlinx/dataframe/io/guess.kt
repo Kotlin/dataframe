@@ -309,8 +309,6 @@ public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList
 public fun DataRow.Companion.read(path: Path, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(path, header).single()
 
-public fun Path.readDataFrame(header: List<String> = emptyList()): AnyFrame =
-    DataFrame.read(this, header)
+public fun Path.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 
-public fun Path.readDataRow(header: List<String> = emptyList()): AnyRow =
-    DataRow.read(this, header)
+public fun Path.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
