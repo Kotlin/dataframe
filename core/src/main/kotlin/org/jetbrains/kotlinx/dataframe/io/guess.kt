@@ -16,6 +16,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Path
 import java.util.ServiceLoader
 import kotlin.reflect.KType
 
@@ -57,6 +58,9 @@ public interface SupportedDataFrameFormat : SupportedFormat {
     public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): DataFrame<*>
 
     public fun readDataFrame(file: File, header: List<String> = emptyList()): DataFrame<*>
+     = readDataFrame(file.toPath(), header)
+
+    public fun readDataFrame(path: Path, header: List<String> = emptyList()): DataFrame<*>
 }
 
 /**
@@ -135,12 +139,6 @@ internal fun guessFormatForExtension(
     formats: List<SupportedFormat> = supportedFormats,
     sample: SupportedFormatSample? = null,
 ): SupportedFormat? = formats.firstOrNull { it.acceptsExtension(ext) && (sample == null || it.acceptsSample(sample)) }
-
-internal fun guessFormat(
-    file: File,
-    formats: List<SupportedFormat> = supportedFormats,
-    sample: SupportedFormatSample.DataFile? = SupportedFormatSample.DataFile(file),
-): SupportedFormat? = guessFormatForExtension(file.extension.lowercase(), formats, sample = sample)
 
 internal fun guessFormat(
     url: URL,
@@ -223,15 +221,15 @@ internal fun DataFrame.Companion.read(
 }
 
 internal fun DataFrame.Companion.read(
-    file: File,
+    path: Path,
     format: SupportedDataFrameFormat? = null,
     header: List<String> = emptyList(),
     formats: List<SupportedDataFrameFormat> = supportedFormats.filterIsInstance<SupportedDataFrameFormat>(),
 ): ReadAnyFrame {
-    if (format != null) return format to format.readDataFrame(file, header = header)
+    if (format != null) return format to format.readDataFrame(path, header = header)
     formats.sortedBy { it.testOrder }.forEach {
         try {
-            return it to it.readDataFrame(file, header = header)
+            return it to it.readDataFrame(path, header = header)
         } catch (e: FileNotFoundException) {
             throw e
         } catch (e: Exception) {
@@ -249,16 +247,10 @@ internal data class GeneratedCode(val format: SupportedCodeGenerationFormat, val
 internal infix fun SupportedCodeGenerationFormat.to(code: Code) = GeneratedCode(this, code)
 
 public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
-    read(
-        file = file,
-        format = guessFormat(file)?.also {
-            if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
-        } as SupportedDataFrameFormat?,
-        header = header,
-    ).df
+    read(file.toPath(), header)
 
 public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow =
-    DataFrame.read(file, header).single()
+    DataFrame.read(file.toPath(), header).single()
 
 public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame =
     when {
@@ -293,3 +285,20 @@ public fun URL.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow
 public fun File.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 
 public fun File.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
+
+// Path-based overloads and extensions
+public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList()): AnyFrame =
+    read(
+        path = path,
+        format = guessFormat(path.toString())?.also {
+            if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
+        } as SupportedDataFrameFormat?,
+        header = header,
+    ).df
+
+public fun DataRow.Companion.read(path: Path, header: List<String> = emptyList()): AnyRow =
+    DataFrame.read(path, header).single()
+
+public fun Path.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
+
+public fun Path.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
