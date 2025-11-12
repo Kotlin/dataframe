@@ -16,6 +16,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Path
 import java.util.ServiceLoader
 import kotlin.reflect.KType
 
@@ -57,6 +58,13 @@ public interface SupportedDataFrameFormat : SupportedFormat {
     public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): DataFrame<*>
 
     public fun readDataFrame(file: File, header: List<String> = emptyList()): DataFrame<*>
+
+    /**
+     * Path overload for reading a DataFrame. Default implementation delegates to the [File] overload.
+     * Implementors are not required to override this method.
+     */
+    public fun readDataFrame(path: Path, header: List<String> = emptyList()): DataFrame<*> =
+        readDataFrame(path.toFile(), header)
 }
 
 /**
@@ -293,3 +301,14 @@ public fun URL.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow
 public fun File.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 
 public fun File.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
+
+// Path-based overloads and extensions
+public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList()): AnyFrame =
+    read(path.toFile(), header)
+
+public fun DataRow.Companion.read(path: Path, header: List<String> = emptyList()): AnyRow =
+    DataFrame.read(path, header).single()
+
+public fun Path.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
+
+public fun Path.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)

@@ -8,8 +8,18 @@ import org.geotools.geojson.feature.FeatureJSON
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.geotools.toSimpleFeatureCollection
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 
 fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(path))
+
+/** Path overload for writing GeoJSON */
+fun GeoDataFrame<*>.writeGeoJson(path: Path) {
+    val featureJSON = FeatureJSON()
+    Files.newOutputStream(path).use { outputStream ->
+        featureJSON.writeFeatureCollection(toSimpleFeatureCollection(), outputStream)
+    }
+}
 
 fun GeoDataFrame<*>.writeGeoJson(file: File) {
     // TODO: adds ids that breaks order of reading
@@ -20,6 +30,11 @@ fun GeoDataFrame<*>.writeGeoJson(file: File) {
 }
 
 fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath))
+
+/** Path overload for writing Shapefile to a directory */
+fun GeoDataFrame<*>.writeShapefile(directory: Path) {
+    writeShapefile(directory.toFile())
+}
 
 fun GeoDataFrame<*>.writeShapefile(directory: File) {
     if (!directory.exists()) {
