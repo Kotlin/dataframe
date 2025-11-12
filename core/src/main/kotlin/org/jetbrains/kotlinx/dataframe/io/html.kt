@@ -761,7 +761,7 @@ public class DataFrameHtmlData(
         )
 
     public fun writeHtml(destination: File) {
-        destination.writeText(toString())
+        writeHtml(destination.toPath())
     }
 
     public fun writeHtml(destination: String) {
@@ -774,7 +774,7 @@ public class DataFrameHtmlData(
 
     @Deprecated(WRITE_HTML, ReplaceWith(WRITE_HTML_REPLACE), DeprecationLevel.ERROR)
     public fun writeHTML(destination: File) {
-        destination.writeText(toString())
+        writeHtml(destination.toPath())
     }
 
     @Deprecated(WRITE_HTML, ReplaceWith(WRITE_HTML_REPLACE), DeprecationLevel.ERROR)

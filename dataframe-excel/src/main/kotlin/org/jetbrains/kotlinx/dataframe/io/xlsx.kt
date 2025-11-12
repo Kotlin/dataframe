@@ -52,6 +52,8 @@ public class Excel : SupportedDataFrameFormat {
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readExcel(file)
 
+    override fun readDataFrame(path: Path, header: List<String>): AnyFrame = DataFrame.readExcel(path.toFile())
+
     override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
 
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough

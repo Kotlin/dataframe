@@ -23,29 +23,21 @@ fun GeoDataFrame<*>.writeGeoJson(path: Path) {
 
 fun GeoDataFrame<*>.writeGeoJson(file: File) {
     // TODO: adds ids that breaks order of reading
-    val featureJSON = FeatureJSON()
-    file.outputStream().use { outputStream ->
-        featureJSON.writeFeatureCollection(toSimpleFeatureCollection(), outputStream)
-    }
+    writeGeoJson(file.toPath())
 }
 
 fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath))
 
 /** Path overload for writing Shapefile to a directory */
 fun GeoDataFrame<*>.writeShapefile(directory: Path) {
-    writeShapefile(directory.toFile())
-}
-
-fun GeoDataFrame<*>.writeShapefile(directory: File) {
-    if (!directory.exists()) {
-        directory.mkdirs()
+    if (!Files.exists(directory)) {
+        Files.createDirectories(directory)
     }
-    val fileName = directory.name
-
-    val file = File(directory, "$fileName.shp")
+    val fileName = directory.fileName.toString()
+    val shp = directory.resolve("$fileName.shp")
 
     val creationParams = mutableMapOf<String, java.io.Serializable>()
-    creationParams["url"] = file.toURI().toURL()
+    creationParams["url"] = shp.toUri().toURL()
 
     val factory = FileDataStoreFinder.getDataStoreFactory("shp")
     val dataStore = factory.createNewDataStore(creationParams)
@@ -70,4 +62,8 @@ fun GeoDataFrame<*>.writeShapefile(directory: File) {
         dataStore.dispose()
         transaction.close()
     }
+}
+
+fun GeoDataFrame<*>.writeShapefile(directory: File) {
+    writeShapefile(directory.toPath())
 }

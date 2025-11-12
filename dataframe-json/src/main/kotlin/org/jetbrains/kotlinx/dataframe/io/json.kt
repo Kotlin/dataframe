@@ -57,6 +57,15 @@ public class JSON(
             unifyNumbers = unifyNumbers,
         )
 
+    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
+        DataFrame.readJson(
+            path = path,
+            header = header,
+            keyValuePaths = keyValuePaths,
+            typeClashTactic = typeClashTactic,
+            unifyNumbers = unifyNumbers,
+        )
+
     override fun acceptsExtension(ext: String): Boolean = ext == "json"
 
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
@@ -147,7 +156,7 @@ public fun DataFrame.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyFrame = DataFrame.readJson(file.toURI().toURL(), header, keyValuePaths, typeClashTactic, unifyNumbers)
+): AnyFrame = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers)
 
 /** Path overload for reading JSON into DataFrame. */
 public fun DataFrame.Companion.readJson(
@@ -173,7 +182,7 @@ public fun DataRow.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJson(file, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+): AnyRow = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers).single()
 
 /** Path overload for reading JSON into DataRow. */
 public fun DataRow.Companion.readJson(
@@ -429,7 +438,7 @@ public fun AnyRow.toJson(prettyPrint: Boolean = false): String {
 }
 
 public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false) {
-    file.writeText(toJson(prettyPrint))
+    writeJson(file.toPath(), prettyPrint)
 }
 
 public fun AnyFrame.writeJson(path: Path, prettyPrint: Boolean = false) {
@@ -443,7 +452,7 @@ public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false) 
 }
 
 public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false) {
-    file.writeText(toJson(prettyPrint))
+    writeJson(file.toPath(), prettyPrint)
 }
 
 public fun AnyRow.writeJson(path: Path, prettyPrint: Boolean = false) {

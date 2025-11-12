@@ -26,6 +26,9 @@ public class ArrowFeather : SupportedDataFrameFormat {
     override fun readDataFrame(file: File, header: List<String>): AnyFrame =
         DataFrame.readArrowFeather(file, NullabilityOptions.Widening)
 
+    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
+        DataFrame.readArrowFeather(path, NullabilityOptions.Widening)
+
     override fun acceptsExtension(ext: String): Boolean = ext == "feather"
 
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough

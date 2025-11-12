@@ -47,14 +47,14 @@ public fun AnyFrame.writeArrowIPC(stream: OutputStream) {
  * If file exists, it can be recreated or expanded.
  */
 public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
-    this.arrowWriter().use { writer ->
-        writer.writeArrowIPC(file, append)
-    }
+    writeArrowIPC(file.toPath(), append)
 }
 
 /** Path overload for IPC writing. */
 public fun AnyFrame.writeArrowIPC(path: Path, append: Boolean = true) {
-    writeArrowIPC(path.toFile(), append)
+    this.arrowWriter().use { writer ->
+        writer.writeArrowIPC(path, append)
+    }
 }
 
 /**
@@ -90,14 +90,14 @@ public fun AnyFrame.writeArrowFeather(stream: OutputStream) {
  * If file exists, it would be recreated.
  */
 public fun AnyFrame.writeArrowFeather(file: File) {
-    this.arrowWriter().use { writer ->
-        writer.writeArrowFeather(file)
-    }
+    writeArrowFeather(file.toPath())
 }
 
 /** Path overload for Feather writing. */
 public fun AnyFrame.writeArrowFeather(path: Path) {
-    writeArrowFeather(path.toFile())
+    this.arrowWriter().use { writer ->
+        writer.writeArrowFeather(path)
+    }
 }
 
 /**

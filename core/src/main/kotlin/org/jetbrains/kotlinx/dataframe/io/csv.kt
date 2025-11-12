@@ -58,6 +58,7 @@ import java.math.BigInteger
 import java.net.URL
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
+import java.nio.file.Path
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -72,6 +73,10 @@ public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame =
         DataFrame.readCSV(file = file, delimiter = delimiter, header = header)
+
+    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
+        // core CSV impl is deprecated, delegate via File to preserve module boundaries
+        DataFrame.readCSV(file = path.toFile(), delimiter = delimiter, header = header)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "csv"
 
