@@ -6086,7 +6086,6 @@ public final class org/jetbrains/kotlinx/dataframe/io/CSV : org/jetbrains/kotlin
 	public fun getTestOrder ()I
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/CSVType : java/lang/Enum {
@@ -6401,9 +6400,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedCode
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat : org/jetbrains/kotlinx/dataframe/io/SupportedFormat {
-	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public abstract fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public abstract fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public abstract fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat;Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat;Ljava/io/InputStream;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat;Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -6484,7 +6483,6 @@ public final class org/jetbrains/kotlinx/dataframe/io/TSV : org/jetbrains/kotlin
 	public fun getTestOrder ()I
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/TsvKt {
@@ -6532,7 +6530,6 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema {
 	public fun <init> (Ljava/io/File;)V
 	public fun <init> (Ljava/lang/String;)V
 	public fun <init> (Ljava/net/URL;)V
-	public fun <init> (Ljava/nio/file/Path;)V
 	public final fun getUrl ()Ljava/net/URL;
 }
 
@@ -6540,7 +6537,6 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchemaKt {
 	public static final fun importDataSchema (Ljava/io/File;)Lorg/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema;
 	public static final fun importDataSchema (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema;
 	public static final fun importDataSchema (Ljava/net/URL;)Lorg/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema;
-	public static final fun importDataSchema (Ljava/nio/file/Path;)Lorg/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/jupyter/JupyterConfiguration {

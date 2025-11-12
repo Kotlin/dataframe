@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import kotlin.io.path.createTempDirectory
 
 class ArrowOverloadsSmokeTest {
@@ -13,10 +14,8 @@ class ArrowOverloadsSmokeTest {
     @Test
     fun feather_overloads_roundtrip() {
         val df = dataFrameOf("name", "age")(
-            "Alice",
-            15,
-            "Bob",
-            20,
+            "Alice", 15,
+            "Bob", 20,
         )
         val tmp: Path = createTempDirectory("arrow_overloads_")
         try {

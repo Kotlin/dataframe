@@ -5,6 +5,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import kotlin.io.path.createTempDirectory
 import kotlin.io.path.writeText
 
@@ -14,12 +15,9 @@ class IsOpenApiOverloadsTest {
     fun isOpenApi_overloads_yaml_json_and_negative() {
         val tmp: Path = createTempDirectory("openapi_overloads_")
         try {
-            val yaml = tmp.resolve("api.yml")
-            yaml.writeText("openapi: 3.0.0\ncomponents:\n  schemas: {}\n")
-            val json = tmp.resolve("api.json")
-            json.writeText("{" + "\"openapi\":\"3.0.0\",\"components\":{\"schemas\":{}}}")
-            val txt = tmp.resolve("not_openapi.txt")
-            txt.writeText("just text")
+            val yaml = tmp.resolve("api.yml"); yaml.writeText("openapi: 3.0.0\ncomponents:\n  schemas: {}\n")
+            val json = tmp.resolve("api.json"); json.writeText("{" + "\"openapi\":\"3.0.0\",\"components\":{\"schemas\":{}}}" )
+            val txt = tmp.resolve("not_openapi.txt"); txt.writeText("just text")
 
             assertTrue(isOpenApi(yaml.toString()))
             assertTrue(isOpenApi(yaml))

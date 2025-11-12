@@ -10,13 +10,12 @@ import kotlin.io.path.writeText
 
 class GuessOverloadsTest {
 
-    private fun sampleJson(): String =
-        """
+    private fun sampleJson(): String = """
         [
           {"name":"Alice","age":15},
           {"name":"Bob","age":20}
         ]
-        """.trimIndent()
+    """.trimIndent()
 
     @Test
     fun read_guess_overloads_String_Path_File_produce_same_df() {

@@ -57,8 +57,8 @@ public sealed interface SupportedFormatSample {
 public interface SupportedDataFrameFormat : SupportedFormat {
     public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): DataFrame<*>
 
-    public fun readDataFrame(file: File, header: List<String> = emptyList()): DataFrame<*> =
-        readDataFrame(file.toPath(), header)
+    public fun readDataFrame(file: File, header: List<String> = emptyList()): DataFrame<*>
+     = readDataFrame(file.toPath(), header)
 
     public fun readDataFrame(path: Path, header: List<String> = emptyList()): DataFrame<*>
 }

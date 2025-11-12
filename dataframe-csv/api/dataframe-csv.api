@@ -58,7 +58,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/ReadDelimStrKt {
 	public static synthetic fun readDelimStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/ReadTsvKt {
+public final class org/jetbrains/kotlinx/dataframe/io/ReadTsvDeephavenKt {
 	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLorg/jetbrains/kotlinx/dataframe/io/Compression;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLorg/jetbrains/kotlinx/dataframe/io/Compression;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLorg/jetbrains/kotlinx/dataframe/io/Compression;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
