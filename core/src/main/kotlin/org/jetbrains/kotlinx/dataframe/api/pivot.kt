@@ -445,23 +445,23 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
 // region pivotMatches
 
 /**
- * * Cell values are [Boolean] indicators showing whether matching rows exist
- *   for each pivoting/grouping key combination.
+ * Computes a **presence matrix** (similar to one-hot encoding) for the values in the
+ * specified [\columns] of this [DataFrame], returning a new [DataFrame] where:
  */
 @ExcludeFromSources
-internal interface PivotMatchesResultDescription
+internal interface PivotMatchesCommonDescription
 
 /**
- * Computes whether matching rows exist in this [DataFrame] for all unique values of the
- * selected [\columns] across all possible combinations
- * of values in the remaining columns (all expecting selected).
- *
- * Performs a [pivot] operation on the specified [\columns] of this [DataFrame],
- * then [groups it by][Pivot.groupByOther] the remaining columns,
- * and produces a new [Boolean] matrix (in the form of a [DataFrame]).
- *
- * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
- * @include [PivotMatchesResultDescription]
+ * * **Cells** contain a [Boolean] value indicating whether a row with the corresponding
+ *   combination of values (horizontal and vertical) exists in the [DataFrame].
+ */
+@ExcludeFromSources
+internal interface PivotMatchesResultCellDescription
+
+/**
+ * {@include [PivotMatchesCommonDescription]}
+ * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GroupingColumns] remaining}
+ * @include [PivotMatchesResultCellDescription]
  *
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
  * and [matches][PivotGroupBy.matches] operations into a single call.
@@ -538,23 +538,23 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
 // region pivotCounts
 
 /**
- * * Cell values represent the number of matching rows
- *   for each pivoting/grouping key combination.
+ * Computes a **count matrix** (similar to frequency encoding) for the values in the
+ * specified [\columns] of this [DataFrame], returning a new [DataFrame] where:
  */
 @ExcludeFromSources
-internal interface PivotCountsResultDescription
+internal interface PivotCountsCommonDescription
 
 /**
- * Computes number of matching rows in this [DataFrame] for all unique values of the
- * selected [\columns] (independently) across all possible combinations
- * of values in the remaining columns (all expecting selected).
- *
- * Performs a [pivot] operation on the specified [\columns] of this [DataFrame],
- * then [groups it by][Pivot.groupByOther] the remaining columns,
- * and produces a new count matrix (in the form of a [DataFrame]).
- *
- * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
- * @include [PivotCountsResultDescription]
+ * * **Cells** contain a [Int] value indicating number a row with the corresponding
+ *   combination of values (horizontal and vertical) exists in the [DataFrame].
+ */
+@ExcludeFromSources
+internal interface PivotCountsResultCellDescription
+
+/**
+ * {@include [PivotCountsCommonDescription]}
+ * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription] {@set [PivotGroupByDocs.GroupingColumns] remaining}
+ * @include [PivotCountsResultCellDescription]
  *
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
  * and [count][PivotGroupBy.count] operations into a single call.
@@ -686,14 +686,10 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
 // region pivotMatches
 
 /**
- * Computes whether matching rows exist in groups of this [GroupBy] for all unique values of the
- * selected columns (independently) across all [groupBy] key combinations.
- *
- * Performs a [pivot][GroupBy.pivot] operation on the specified [\columns] of this [GroupBy] groups,
- * and produces a new matrix-like [DataFrame].
- *
- * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
- * @include [PivotMatchesResultDescription]
+ * Computes a **presence matrix** (similar to one-hot encoding) for the values in the
+ * specified [\columns] within each group of this [GroupBy], returning a new [DataFrame] where:
+ * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription]
+ * @include [PivotMatchesResultCellDescription]
  *
  * This function combines [pivot][GroupBy.pivot]
  * and [matches][PivotGroupBy.matches] operations into a single call.
@@ -764,14 +760,10 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
 // region pivotCounts
 
 /**
- * Computes number of matching rows in groups of this [GroupBy] for all unique values of the
- * selected [\columns] (independently) across all [groupBy] key combinations.
- *
- * Performs a [pivot] operation on the specified [\columns] of this [DataFrame]
- * and produces a new matrix-like [DataFrame].
- *
- * @include [PivotGroupByDocs.ResultingMatrixCommonDescription]
- * @include [PivotCountsResultDescription]
+ * Computes a **count matrix** (similar to frequency encoding) for the values in the
+ * specified [\columns] within each group of this [GroupBy], returning a new [DataFrame] where:
+ * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription]
+ * @include [PivotCountsResultCellDescription]
  *
  * This function combines [pivot][GroupBy.pivot]
  * and [count][PivotGroupBy.count] operations into a single call.
@@ -1202,14 +1194,19 @@ internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -
  */
 internal interface PivotGroupByDocs {
 
+    interface GroupingColumns
+
     /**
-     * In the resulting [DataFrame]:
-     * * Pivoted columns are displayed vertically — as [column groups][ColumnGroup] for each pivoted column,
-     *   with subcolumns corresponding to their unique values;
-     * * Grouping key columns are displayed horizontally — as columns representing
-     *   unique combinations of grouping key values;
+     * * **Columns** represent all unique values from the selected [\columns]
+     *   (they become [column groups][ColumnGroup]
+     *   corresponding to value combinations when using [then][PivotDsl.then],
+     *   similar to [pivot]);
+     * * **Rows** correspond to all unique combinations of values from the {@get [GroupingColumns] grouping} columns;
+     *   each combination is represented in dedicated key columns that store
+     *   a distinct set of values for each row
+     *   (similar to [keys][GroupBy.keys] in [GroupBy]).
      */
-    interface ResultingMatrixCommonDescription
+    interface ResultingMatrixShortcutDescription
 
     /**
      * [PivotGroupBy] is a dataframe-like structure that combines [Pivot] and [GroupBy],
