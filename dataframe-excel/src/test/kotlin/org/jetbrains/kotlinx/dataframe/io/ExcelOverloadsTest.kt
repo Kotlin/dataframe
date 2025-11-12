@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.junit.Test
 import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -13,8 +13,10 @@ class ExcelOverloadsTest {
     @Test
     fun writeExcel_overloads_String_Path_File_create_nonempty_files() {
         val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", 20,
+            "Alice",
+            15,
+            "Bob",
+            20,
         )
 
         val tmpDir: Path = createTempDirectory("excel_overloads_write_")

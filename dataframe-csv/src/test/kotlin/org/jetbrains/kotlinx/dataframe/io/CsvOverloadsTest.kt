@@ -1,24 +1,22 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.junit.Test
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createTempDirectory
-import kotlin.io.path.createTempFile
-import kotlin.io.path.deleteExisting
 import kotlin.io.path.writeText
 
 class CsvOverloadsTest {
 
-    private fun sampleCsv(): String = buildString {
-        appendLine("name,age")
-        appendLine("Alice,15")
-        appendLine("Bob,20")
-    }
+    private fun sampleCsv(): String =
+        buildString {
+            appendLine("name,age")
+            appendLine("Alice,15")
+            appendLine("Bob,20")
+        }
 
     @Test
     fun readCsv_overloads_String_Path_File_produce_same_df() {
@@ -48,8 +46,10 @@ class CsvOverloadsTest {
     @Test
     fun writeDelim_overloads_String_Path_File_roundtrip() {
         val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", 20,
+            "Alice",
+            15,
+            "Bob",
+            20,
         )
 
         val tmpDir: Path = createTempDirectory("csv_overloads_write_")

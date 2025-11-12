@@ -29,7 +29,6 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
 import java.io.File
-import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 import java.nio.file.Path

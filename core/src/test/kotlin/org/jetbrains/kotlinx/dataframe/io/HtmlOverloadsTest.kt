@@ -1,18 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import org.junit.Test
 import org.junit.Assert.assertEquals
-import java.io.File
+import org.junit.Test
 import java.nio.file.Files
-import java.nio.file.Paths
 import java.nio.file.Path
+import java.nio.file.Paths
 import kotlin.io.path.createTempDirectory
 
 class HtmlOverloadsTest {
 
     @Test
     fun writeHtml_overloads_String_Path_File_produce_same_content() {
-        val html = DataFrameHtmlData(style = "body{color:black;}", body = "<div>hello</div>", script = "console.log('x')")
+        val html =
+            DataFrameHtmlData(style = "body{color:black;}", body = "<div>hello</div>", script = "console.log('x')")
         val expected = html.toString()
 
         val tmpDir: Path = createTempDirectory("html_overloads_")

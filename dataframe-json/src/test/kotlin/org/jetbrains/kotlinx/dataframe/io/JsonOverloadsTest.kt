@@ -4,22 +4,22 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import kotlin.test.Test
-import kotlin.test.assertTrue
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createTempDirectory
 import kotlin.io.path.writeText
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class JsonOverloadsTest {
 
-    private fun sampleJson(): String = """
+    private fun sampleJson(): String =
+        """
         [
           {"name":"Alice","age":15},
           {"name":"Bob","age":20}
         ]
-    """.trimIndent()
+        """.trimIndent()
 
     @Test
     fun readJson_overloads_String_Path_File_produce_same_df() {
@@ -48,8 +48,10 @@ class JsonOverloadsTest {
     @Test
     fun writeJson_overloads_String_Path_File_roundtrip_df_and_row() {
         val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", 20,
+            "Alice",
+            15,
+            "Bob",
+            20,
         )
         val row: AnyRow = df[0]
 
