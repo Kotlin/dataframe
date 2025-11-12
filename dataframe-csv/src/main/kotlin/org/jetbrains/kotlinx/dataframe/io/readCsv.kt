@@ -114,28 +114,25 @@ public fun DataFrame.Companion.readCsv(
     parseParallel: Boolean = PARSE_PARALLEL,
     compression: Compression<*> = Compression.of(file),
 ): DataFrame<*> =
-    FileInputStream(file).use {
-        readDelimImpl(
-            inputStream = it,
-            delimiter = delimiter,
-            header = header,
-            hasFixedWidthColumns = hasFixedWidthColumns,
-            fixedColumnWidths = fixedColumnWidths,
-            colTypes = colTypes,
-            skipLines = skipLines,
-            readLines = readLines,
-            parserOptions = parserOptions,
-            ignoreEmptyLines = ignoreEmptyLines,
-            allowMissingColumns = allowMissingColumns,
-            ignoreExcessColumns = ignoreExcessColumns,
-            quote = quote,
-            ignoreSurroundingSpaces = ignoreSurroundingSpaces,
-            trimInsideQuoted = trimInsideQuoted,
-            parseParallel = parseParallel,
-            compression = compression,
-            adjustCsvSpecs = ADJUST_CSV_SPECS,
-        )
-    }
+    readCsv(
+        path = file.toPath(),
+        delimiter = delimiter,
+        header = header,
+        hasFixedWidthColumns = hasFixedWidthColumns,
+        fixedColumnWidths = fixedColumnWidths,
+        colTypes = colTypes,
+        skipLines = skipLines,
+        readLines = readLines,
+        parserOptions = parserOptions,
+        ignoreEmptyLines = ignoreEmptyLines,
+        allowMissingColumns = allowMissingColumns,
+        ignoreExcessColumns = ignoreExcessColumns,
+        quote = quote,
+        ignoreSurroundingSpaces = ignoreSurroundingSpaces,
+        trimInsideQuoted = trimInsideQuoted,
+        parseParallel = parseParallel,
+        compression = Compression.of(file.toPath()),
+    )
 
 /**
  * @include [CommonReadDelimDocs.CsvDocs]
