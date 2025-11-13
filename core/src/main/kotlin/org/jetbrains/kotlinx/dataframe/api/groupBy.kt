@@ -173,13 +173,13 @@ internal interface GroupByDocs {
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetGroupByOperationArg]}
      */
-    interface GroupBySelectingOptions
+    typealias GroupBySelectingOptions = Nothing
 
     /**
      * ### [GroupBy] aggregation statistics
@@ -192,7 +192,7 @@ internal interface GroupByDocs {
      * * [median][Grouped.median]/[medianOf][Grouped.medianOf]/[medianFor][Grouped.medianFor]
      * * [percentile][Grouped.percentile]/[percentileOf][Grouped.percentileOf]/[percentileFor][Grouped.percentileFor]
      */
-    interface AggregationStatistics
+    typealias AggregationStatistics = Nothing
 
     /**
      * ### [GroupBy] transformations
@@ -214,7 +214,7 @@ internal interface GroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.GroupByTransformation]}
      */
-    interface Transformation
+    typealias Transformation = Nothing
 
     /**
      * ### [GroupBy] reducing
@@ -249,7 +249,7 @@ internal interface GroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.GroupByReducing]}
      */
-    interface Reducing
+    typealias Reducing = Nothing
 
     /**
      * ### [GroupBy] aggregation
@@ -285,7 +285,7 @@ internal interface GroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.GroupByAggregation]}
      */
-    interface Aggregation
+    typealias Aggregation = Nothing
 
     /**
      * ### [GroupBy] pivoting
@@ -294,19 +294,19 @@ internal interface GroupByDocs {
      *
      * @include [PivotGroupByDocs.CommonDescription]
      */
-    interface Pivoting
+    typealias Pivoting = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [groupBy][groupBy]} */
 @ExcludeFromSources
-private interface SetGroupByOperationArg
+private typealias SetGroupByOperationArg = Nothing
 
 /**
  * {@include [GroupByDocs]}
  * ### This `groupBy` Overload
  */
 @ExcludeFromSources
-private interface CommonGroupByDocs
+private typealias CommonGroupByDocs = Nothing
 
 /**
  * @include [CommonGroupByDocs]
@@ -363,15 +363,14 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
  * @include [PivotGroupByDocs.CommonDescription]
  */
 @ExcludeFromSources
-private interface GroupByForPivotDocs
+private typealias GroupByForPivotDocs = Nothing
 
 /**
  * {@include [GroupByForPivotDocs]}
  * ### This `groupBy` Overload
  */
 @ExcludeFromSources
-private interface CommonGroupByForPivotDocs
-
+private typealias CommonGroupByForPivotDocs = Nothing
 // region Pivot
 
 /**

@@ -42,17 +42,17 @@ import kotlin.reflect.KProperty
 internal interface FillNulls {
 
     /** @include [Update.Grammar] {@set [UPDATE_OPERATION] [**fillNulls**][fillNulls]} */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetFillNullsOperationArg]}
      */
-    interface FillNullsSelectingOptions
+    typealias FillNullsSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [fillNulls][fillNulls]} */
-private interface SetFillNullsOperationArg
+private typealias SetFillNullsOperationArg = Nothing
 
 /**
  * @include [FillNulls] {@comment Description of the fillNulls operation.}
@@ -63,7 +63,7 @@ private interface SetFillNullsOperationArg
  *
  */
 @ExcludeFromSources
-private interface CommonFillNullsFunctionDoc
+private typealias CommonFillNullsFunctionDoc = Nothing
 
 /**
  * @include [CommonFillNullsFunctionDoc]
@@ -172,18 +172,18 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 internal interface FillNaNs {
 
     /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [fillNaNs][fillNaNs]} */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetFillNaNsOperationArg]}
      */
-    interface FillNaNsSelectingOptions
+    typealias FillNaNsSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [fillNaNs][fillNaNs]} */
 @ExcludeFromSources
-internal interface SetFillNaNsOperationArg
+internal typealias SetFillNaNsOperationArg = Nothing
 
 /**
  * @include [FillNaNs] {@comment Description of the fillNaNs operation.}
@@ -193,7 +193,7 @@ internal interface SetFillNaNsOperationArg
  * ### This Fill NaNs Overload
  */
 @ExcludeFromSources
-private interface CommonFillNaNsFunctionDoc
+private typealias CommonFillNaNsFunctionDoc = Nothing
 
 /**
  * @include [CommonFillNaNsFunctionDoc]
@@ -247,18 +247,18 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
 internal interface FillNA {
 
     /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [fillNA][fillNA]} */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetFillNAOperationArg]}
      */
-    interface FillNASelectingOptions
+    typealias FillNASelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [fillNA][fillNA]} */
 @ExcludeFromSources
-internal interface SetFillNAOperationArg
+internal typealias SetFillNAOperationArg = Nothing
 
 /**
  * @include [FillNA] {@comment Description of the fillNA operation.}
@@ -268,7 +268,7 @@ internal interface SetFillNAOperationArg
  * ### This Fill NA Overload
  */
 @ExcludeFromSources
-private interface CommonFillNAFunctionDoc
+private typealias CommonFillNAFunctionDoc = Nothing
 
 /**
  * @include [CommonFillNAFunctionDoc]
@@ -309,20 +309,19 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
 
 /** @param columns The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to drop rows in. */
 @ExcludeFromSources
-private interface DropDslParam
+private typealias DropDslParam = Nothing
 
 /** @param columns The [KProperties][KProperty] used to select the columns of this [DataFrame] to drop rows in. */
 @ExcludeFromSources
-private interface DropKPropertiesParam
+private typealias DropKPropertiesParam = Nothing
 
 /** @param columns The [Strings][String] corresponding to the names of columns in this [DataFrame] to drop rows in. */
 @ExcludeFromSources
-private interface DropColumnNamesParam
+private typealias DropColumnNamesParam = Nothing
 
 /** @param columns The [Column References][ColumnReference] used to select the columns of this [DataFrame] to drop rows in. */
 @ExcludeFromSources
-private interface DropColumnAccessorsParam
-
+private typealias DropColumnAccessorsParam = Nothing
 // region dropNulls
 
 /**
@@ -345,25 +344,25 @@ internal interface DropNulls {
      *   If `true`, rows are dropped if all selected cells are `null`.
      *   If `false`, rows are dropped if any of the selected cells is `null`.
      */
-    interface WhereAllNullParam
+    typealias WhereAllNullParam = Nothing
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetDropNullsOperationArg]}
      */
-    interface DropNullsSelectingOptions
+    typealias DropNullsSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [dropNulls][dropNulls]} */
 @ExcludeFromSources
-private interface SetDropNullsOperationArg
+private typealias SetDropNullsOperationArg = Nothing
 
 /**
  * @include [DropNulls] {@comment Description of the dropNulls operation.}
  * ### This Drop Nulls Overload
  */
 @ExcludeFromSources
-private interface CommonDropNullsFunctionDoc
+private typealias CommonDropNullsFunctionDoc = Nothing
 
 /**
  * @include [CommonDropNullsFunctionDoc]
@@ -466,25 +465,25 @@ internal interface DropNA {
      *   If `true`, rows are dropped if all selected cells are [`NA`][NA].
      *   If `false`, rows are dropped if any of the selected cells is [`NA`][NA].
      */
-    interface WhereAllNAParam
+    typealias WhereAllNAParam = Nothing
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetDropNAOperationArg]}
      */
-    interface DropNASelectingOptions
+    typealias DropNASelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [dropNA][dropNA]} */
 @ExcludeFromSources
-private interface SetDropNAOperationArg
+private typealias SetDropNAOperationArg = Nothing
 
 /**
  * @include [DropNA] {@comment Description of the dropNA operation.}
  * ### This Drop NA Overload
  */
 @ExcludeFromSources
-private interface CommonDropNAFunctionDoc
+private typealias CommonDropNAFunctionDoc = Nothing
 
 /**
  * @include [CommonDropNAFunctionDoc]
@@ -581,25 +580,25 @@ internal interface DropNaNs {
      *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
      *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
      */
-    interface WhereAllNaNParam
+    typealias WhereAllNaNParam = Nothing
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetDropNaNsOperationArg]}
      */
-    interface DropNaNsSelectingOptions
+    typealias DropNaNsSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [dropNaNs][dropNaNs]} */
 @ExcludeFromSources
-private interface SetDropNaNsOperationArg
+private typealias SetDropNaNsOperationArg = Nothing
 
 /**
  * @include [DropNaNs] {@comment Description of the dropNaNs operation.}
  * ### This Drop NaNs Overload
  */
 @ExcludeFromSources
-private interface CommonDropNaNsFunctionDoc
+private typealias CommonDropNaNsFunctionDoc = Nothing
 
 /**
  * @include [CommonDropNaNsFunctionDoc]

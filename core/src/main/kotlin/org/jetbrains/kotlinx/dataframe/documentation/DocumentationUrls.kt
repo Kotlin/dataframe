@@ -5,154 +5,154 @@ package org.jetbrains.kotlinx.dataframe.documentation
 internal interface DocumentationUrls {
 
     /** https://kotlin.github.io/dataframe */
-    interface Url
+    typealias Url = Nothing
 
     /** [See Access APIs on the documentation website.]({@include [Url]}/apilevels.html) */
     interface AccessApis {
 
         /** [See String API on the documentation website.]({@include [Url]}/stringapi.html) */
-        interface StringApi
+        typealias StringApi = Nothing
 
         /** [See Column Accessors API on the documentation website.]({@include [Url]}/columnaccessorsapi.html) */
-        interface ColumnAccessorsApi
+        typealias ColumnAccessorsApi = Nothing
 
         /** [See KProperties API on the documentation website.]({@include [Url]}/kpropertiesapi.html) */
-        interface KPropertiesApi
+        typealias KPropertiesApi = Nothing
 
         /** [See Extension Properties API on the documentation website.]({@include [Url]}/extensionpropertiesapi.html) */
-        interface ExtensionPropertiesApi
+        typealias ExtensionPropertiesApi = Nothing
     }
 
     /** [See Column Selectors on the documentation website.]({@include [Url]}/columnselectors.html) */
-    interface ColumnSelectors
+    typealias ColumnSelectors = Nothing
 
     /** [See Extension Properties API on the documentation website.]({@include [Url]}/extensionpropertiesapi.html) */
-    interface ExtensionPropertiesApi
+    typealias ExtensionPropertiesApi = Nothing
 
     /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
-    interface CompilerPlugin
+    typealias CompilerPlugin = Nothing
 
     interface DataRow {
         /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
-        interface RowExpressions
+        typealias RowExpressions = Nothing
 
         /** [See Row Conditions on the documentation website.]({@include [Url]}/datarow.html#row-conditions) */
-        interface RowConditions
+        typealias RowConditions = Nothing
     }
 
     /** [See `drop` on the documentation website.]({@include [Url]}/drop.html) */
     interface Drop {
 
         /** [See `dropNulls` on the documentation website.]({@include [Url]}/drop.html#dropnulls) */
-        interface DropNulls
+        typealias DropNulls = Nothing
 
         /** [See `dropNaNs` on the documentation website.]({@include [Url]}/drop.html#dropnans) */
-        interface DropNaNs
+        typealias DropNaNs = Nothing
 
         /** [See `dropNA` on the documentation website.]({@include [Url]}/drop.html#dropna) */
-        interface DropNA
+        typealias DropNA = Nothing
     }
 
     /** [See `fill` on the documentation website.]({@include [Url]}/fill.html) */
     interface Fill {
         /** [See `fillNulls` on the documentation website.]({@include [Url]}/fill.html#fillnulls) */
-        interface FillNulls
+        typealias FillNulls = Nothing
 
         /** [See `fillNaNs` on the documentation website.]({@include [Url]}/fill.html#fillnans) */
-        interface FillNaNs
+        typealias FillNaNs = Nothing
 
         /** [See `fillNA` on the documentation website.]({@include [Url]}/fill.html#fillna) */
-        interface FillNA
+        typealias FillNA = Nothing
     }
 
     /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
     interface NanAndNa {
 
         /** [See `NaN` on the documentation website.]({@include [Url]}/nanAndNa.html#nan) */
-        interface NaN
+        typealias NaN = Nothing
 
         /** [See `NA` on the documentation website.]({@include [Url]}/nanAndNa.html#na) */
-        interface NA
+        typealias NA = Nothing
     }
 
     /** [See `select` on the documentation website.]({@include [Url]}/select.html) */
-    interface Select
+    typealias Select = Nothing
 
     /** [See `update` on the documentation website.]({@include [Url]}/update.html) */
-    interface Update
+    typealias Update = Nothing
 
     /** [See `remove` on the documentation website.]({@include [Url]}/remove.html) */
-    interface Remove
+    typealias Remove = Nothing
 
     /** <a href="{@include [Url]}/distinct.html">See `distinct` on the documentation website.</a> */
-    interface Distinct
+    typealias Distinct = Nothing
 
     /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
-    interface Flatten
+    typealias Flatten = Nothing
 
     /** <a href="{@include [Url]}/cumsum.html">See `cumSum` on the documentation website.</a> */
-    interface CumSum
+    typealias CumSum = Nothing
 
     /** [See `describe` on the documentation website.]({@include [Url]}/describe.html) */
-    interface Describe
+    typealias Describe = Nothing
 
     /** [See `move` on the documentation website.]({@include [Url]}/move.html) */
-    interface Move
+    typealias Move = Nothing
 
     /** [See `group` on the documentation website.]({@include [Url]}/group.html) */
-    interface Group
+    typealias Group = Nothing
 
     /** [See `group` on the documentation website.]({@include [Url]}/ungroup.html) */
-    interface Ungroup
+    typealias Ungroup = Nothing
 
     /** [See `convert` on the documentation website.]({@include [Url]}/convert.html) */
-    interface Convert
+    typealias Convert = Nothing
 
     /** [See `convert` on the documentation website.]({@include [Url]}/corr.html) */
-    interface Corr
+    typealias Corr = Nothing
 
     /** [See `add` on the documentation website.]({@include [Url]}/add.html) */
-    interface Add
+    typealias Add = Nothing
 
     /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
-    interface Gather
+    typealias Gather = Nothing
 
     /** [See `filter` on the documentation website.]({@include [Url]}/filter.html) */
-    interface Filter
+    typealias Filter = Nothing
 
     /** [See `count` on the documentation website.]({@include [Url]}/count.html) */
-    interface Count
+    typealias Count = Nothing
 
     /** [See `countDistinct` on the documentation website.]({@include [Url]}/countdistinct.html) */
-    interface CountDistinct
+    typealias CountDistinct = Nothing
 
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
-    interface Explode
+    typealias Explode = Nothing
 
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
-    interface DataSchemaGeneration
+    typealias DataSchemaGeneration = Nothing
 
     /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
-    interface Format
+    typealias Format = Nothing
 
     /** [See `insert` on the documentation website.]({@include [Url]}/insert.html) */
-    interface Insert
+    typealias Insert = Nothing
 
     /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
-    interface Rename
+    typealias Rename = Nothing
 
     /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
-    interface GroupBy
+    typealias GroupBy = Nothing
 
     /** [See "`GroupBy` Transformation" on the documentation website.]({@include [Url]}/groupby.html#transformation) */
-    interface GroupByTransformation
+    typealias GroupByTransformation = Nothing
 
     /** [See "`GroupBy` Reducing" on the documentation website.]({@include [Url]}/groupby.html#reducing) */
-    interface GroupByReducing
+    typealias GroupByReducing = Nothing
 
     /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
-    interface GroupByAggregation
+    typealias GroupByAggregation = Nothing
 
     /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/groupby.html#pivot-groupby) */
-    interface PivotGroupBy
+    typealias PivotGroupBy = Nothing
 }

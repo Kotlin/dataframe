@@ -40,4 +40,4 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  *
  * For more information, see: {@include [DocumentationUrls.ExtensionPropertiesApi]}
  */
-internal interface ExtensionPropertiesAPIDocs
+internal typealias ExtensionPropertiesAPIDocs = Nothing

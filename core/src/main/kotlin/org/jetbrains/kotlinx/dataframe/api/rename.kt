@@ -59,7 +59,7 @@ internal interface RenameDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetRenameOperationArg]}
      */
-    interface RenameSelectingOptions
+    typealias RenameSelectingOptions = Nothing
 
     /**
      * ## Rename Operation Grammar
@@ -78,19 +78,19 @@ internal interface RenameDocs {
      * {@include [Indent]}
      * `| `__`.`__[**`toCamelCase`**][RenameClause.toCamelCase]**`()`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [rename][rename]} */
 @ExcludeFromSources
-private interface SetRenameOperationArg
+private typealias SetRenameOperationArg = Nothing
 
 /**
  * {@include [RenameDocs]}
  * ### This Rename Overload
  */
 @ExcludeFromSources
-private interface CommonRenameDocs
+private typealias CommonRenameDocs = Nothing
 
 /**
  * Renames columns in the [DataFrame].
@@ -426,16 +426,16 @@ public interface RenameColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**named**][ColumnsSelectionDsl.named] */
-        public interface InfixNamedName
+        public typealias InfixNamedName = Nothing
 
         /** [**into**][ColumnsSelectionDsl.into] */
-        public interface InfixIntoName
+        public typealias InfixIntoName = Nothing
 
         /** __`.`__[**named**][ColumnsSelectionDsl.named] */
-        public interface NamedName
+        public typealias NamedName = Nothing
 
         /** __`.`__[**into**][ColumnsSelectionDsl.into] */
-        public interface IntoName
+        public typealias IntoName = Nothing
     }
 
     /**
@@ -466,64 +466,61 @@ public interface RenameColumnsSelectionDsl {
     @Suppress("ClassName")
     private interface CommonRenameDocs {
 
-        interface RECEIVER
-
-        interface RECEIVER_TYPE
+        typealias RECEIVER = Nothing
+        typealias RECEIVER_TYPE = Nothing
 
         /** "named" or "into" */
-        interface FUNCTION_NAME
+        typealias FUNCTION_NAME = Nothing
 
         /** "newName" or "nameOf" */
-        interface PARAM_NAME
-
-        interface PARAM
-
-        interface PARAM_TYPE
+        typealias PARAM_NAME = Nothing
+        typealias PARAM = Nothing
+        typealias PARAM_TYPE = Nothing
 
         /**
          * @set [RECEIVER] columnA
          * @set [RECEIVER_TYPE] ColumnReference
          */
-        interface ColumnReferenceReceiver
+        typealias ColumnReferenceReceiver = Nothing
 
         /**
          * @set [RECEIVER] "columnA"
          * @set [RECEIVER_TYPE] String
          */
-        interface StringReceiver
+        typealias StringReceiver = Nothing
 
         /**
          * @set [RECEIVER] Type::columnA
          * @set [RECEIVER_TYPE] KProperty
          */
-        interface KPropertyReceiver
+        typealias KPropertyReceiver = Nothing
 
         /**
          * @set [PARAM] columnB
          * @set [PARAM_NAME] nameOf
          * @set [PARAM_TYPE] ColumnReference
          */
-        interface ColumnReferenceParam
+        typealias ColumnReferenceParam = Nothing
 
         /**
          * @set [PARAM] "columnB"
          * @set [PARAM_NAME] newName
          * @set [PARAM_TYPE] String
          */
-        interface StringParam
+        typealias StringParam = Nothing
 
         /**
          * @set [PARAM] Type::columnB
          * @set [PARAM_NAME] nameOf
          * @set [PARAM_TYPE] KProperty
          */
-        interface KPropertyParam
+        typealias KPropertyParam = Nothing
 
         /** @set [CommonRenameDocs.FUNCTION_NAME] named */
-        interface NamedFunctionName
+        typealias NamedFunctionName = Nothing
 
         /** @set [CommonRenameDocs.FUNCTION_NAME] into */
-        interface IntoFunctionName
+        typealias IntoFunctionName = Nothing
     }
 
     // region named

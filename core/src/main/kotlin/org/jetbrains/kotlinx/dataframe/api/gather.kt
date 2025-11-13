@@ -95,19 +95,19 @@ internal interface GatherDocs {
      * {@include [Indent]}
      * `| `__`.`__[**`valuesInto`**][Gather.valuesInto]**`(`**`valueColumn: `[`String`][String]**`)`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [gather][gather]} */
 @ExcludeFromSources
-private interface SetGatherOperationArg
+private typealias SetGatherOperationArg = Nothing
 
 /**
  * {@include [GatherDocs]}
  * ### This Gather Overload
  */
 @ExcludeFromSources
-private interface CommonGatherDocs
+private typealias CommonGatherDocs = Nothing
 
 /**
  * @include [CommonGatherDocs]

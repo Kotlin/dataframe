@@ -40,7 +40,7 @@ import kotlin.reflect.KProperty
 @ExcludeFromSources
 @Suppress("ClassName")
 private interface DistinctDocs {
-    interface DISTINCT_PARAM
+    typealias DISTINCT_PARAM = Nothing
 }
 
 /**
@@ -148,7 +148,7 @@ public interface DistinctColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`distinct`**][ColumnsSelectionDsl.distinct] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
     }
 
     /**

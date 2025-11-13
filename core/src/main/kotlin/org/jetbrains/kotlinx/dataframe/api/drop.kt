@@ -90,22 +90,22 @@ public interface DropColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnsSelectionDsl.dropLast]`)` */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnSet.dropLast]`)` */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropCols]`(`[**`Last`**][ColumnsSelectionDsl.dropLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.dropCols] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
 
         /** [**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile] */
-        public interface PlainDslWhileName
+        public typealias PlainDslWhileName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile] */
-        public interface ColumnSetWhileName
+        public typealias ColumnSetWhileName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.dropColsWhile] */
-        public interface ColumnGroupWhileName
+        public typealias ColumnGroupWhileName = Nothing
     }
 
     // region drop
@@ -117,7 +117,7 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.NOUN] drop
      * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] first
      */
-    private interface CommonDropFirstDocs
+    private typealias CommonDropFirstDocs = Nothing
 
     /**
      * @include [CommonDropFirstDocs]
@@ -186,7 +186,7 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.NOUN] drop
      * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] last
      */
-    private interface CommonDropLastDocs
+    private typealias CommonDropLastDocs = Nothing
 
     /**
      * @include [CommonDropLastDocs]
@@ -255,7 +255,7 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.NOUN] drop
      * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] first
      */
-    private interface CommonDropWhileDocs
+    private typealias CommonDropWhileDocs = Nothing
 
     /**
      * @include [CommonDropWhileDocs]
@@ -326,7 +326,7 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.NOUN] drop
      * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] last
      */
-    private interface CommonDropLastWhileDocs
+    private typealias CommonDropLastWhileDocs = Nothing
 
     /**
      * @include [CommonDropLastWhileDocs]

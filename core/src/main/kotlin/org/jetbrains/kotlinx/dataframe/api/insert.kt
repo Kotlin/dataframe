@@ -60,7 +60,7 @@ internal interface InsertDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetInsertOperationArg]}
      */
-    interface InsertSelectingOptions
+    typealias InsertSelectingOptions = Nothing
 
     /**
      * ## Insert Operation Grammar
@@ -84,12 +84,12 @@ internal interface InsertDocs {
      * {@include [Indent]}
      * `| `__`.`__[**`at`**][InsertClause.at]**`(`**`position: `[`Int`][Int]**`)`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [insert][insert]} */
 @ExcludeFromSources
-private interface SetInsertOperationArg
+private typealias SetInsertOperationArg = Nothing
 
 /**
  * Inserts the given [column] into this [DataFrame].

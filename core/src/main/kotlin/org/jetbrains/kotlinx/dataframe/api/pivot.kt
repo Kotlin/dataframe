@@ -298,13 +298,13 @@ internal interface PivotGroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.PivotGroupBy]}
      */
-    interface CommonDescription
+    typealias CommonDescription = Nothing
 
-    interface Grammar
+    typealias Grammar = Nothing
 
-    interface Reducing
+    typealias Reducing = Nothing
 
-    interface Aggregation
+    typealias Aggregation = Nothing
 }
 
 public interface PivotGroupBy<out T> : Aggregatable<T> {

@@ -64,7 +64,7 @@ public interface NoneColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`none`**][ColumnsSelectionDsl.none] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
     }
 
     /**

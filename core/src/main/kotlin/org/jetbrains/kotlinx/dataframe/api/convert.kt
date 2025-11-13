@@ -80,7 +80,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  * See also [parse] — a specialized form of the [convert] operation that parses [String] columns
  * into other types without requiring explicit type specification.
  */
-internal interface SeeAlsoParse
+internal typealias SeeAlsoParse = Nothing
 
 /**
  * Converts the values in the specified [columns\] either to a supported target type
@@ -120,7 +120,7 @@ internal interface ConvertDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetConvertOperationArg]}
      */
-    interface ConvertSelectingOptions
+    typealias ConvertSelectingOptions = Nothing
 
     /**
      * List of types, supported in [convert to][Convert.to] operation:
@@ -137,7 +137,7 @@ internal interface ConvertDocs {
      *   To convert [Char]->[Int] the way it is written, use [parse()][parse] instead, or,
      *   in either case, use [String] as intermediary type.
      */
-    interface SupportedTypes
+    typealias SupportedTypes = Nothing
 
     /**
      * ## Convert Operation Grammar
@@ -213,19 +213,19 @@ internal interface ConvertDocs {
      * {@include [Indent]}
      * `| `__`.`__[**`toDataFrames`**][Convert.toDataFrames]`()`
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [convert][convert]} */
 @ExcludeFromSources
-private interface SetConvertOperationArg
+private typealias SetConvertOperationArg = Nothing
 
 /**
  * {@include [ConvertDocs]}
  * ### This Convert Overload
  */
 @ExcludeFromSources
-private interface CommonConvertDocs
+private typealias CommonConvertDocs = Nothing
 
 /**
  * @include [CommonConvertDocs]
@@ -418,11 +418,11 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
 
 /** [Convert per row col][Convert.perRowCol] to provide a new value for every selected cell giving its column. */
 @ExcludeFromSources
-private interface SeeAlsoConvertPerRowCol
+private typealias SeeAlsoConvertPerRowCol = Nothing
 
 /** [Convert as column][Convert.asColumn] to convert using a column converter */
 @ExcludeFromSources
-private interface SeeAlsoConvertAsColumn
+private typealias SeeAlsoConvertAsColumn = Nothing
 
 /**
  * Converts values in columns previously selected by [convert] using the specified [rowConverter],
@@ -519,7 +519,7 @@ public inline fun <T, C, R> Convert<T, C>.asColumn(
 /** [Convert with][Convert.with] to provide a new value for every selected cell
  * giving its row and its previous value. */
 @ExcludeFromSources
-private interface SeeAlsoConvertWith
+private typealias SeeAlsoConvertWith = Nothing
 
 /**
  * Converts values in the columns previously selected with [convert]
@@ -766,7 +766,7 @@ public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = con
  * @return A new [DataColumn] with the [Double] values.
  */
 @ExcludeFromSources
-private interface DataColumnStringConvertToDoubleDoc
+private typealias DataColumnStringConvertToDoubleDoc = Nothing
 
 /** @include [DataColumnStringConvertToDoubleDoc] */
 @JvmName("convertToDoubleFromString")

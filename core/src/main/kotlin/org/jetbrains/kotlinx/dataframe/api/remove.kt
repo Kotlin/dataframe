@@ -32,18 +32,18 @@ import kotlin.reflect.KProperty
  *
  * For more information: {@include [DocumentationUrls.Remove]}
  */
-internal interface Remove
+internal typealias Remove = Nothing
 
 /** {@set [SelectingColumns.OPERATION] [remove][remove]} */
 @ExcludeFromSources
-private interface SetRemoveOperationArg
+private typealias SetRemoveOperationArg = Nothing
 
 /**
  * {@include [Remove]}
  * ### This Remove Overload
  */
 @ExcludeFromSources
-private interface CommonRemoveDocs
+private typealias CommonRemoveDocs = Nothing
 
 /**
  * @include [CommonRemoveDocs]

@@ -24,8 +24,8 @@ internal interface ColumnExpression {
      *
      * See {@include [ColumnExpressionLink]} for more information.
      */
-    interface CommonDocs
+    typealias CommonDocs = Nothing
 }
 
 /** [Column Expression][ColumnExpression] */
-internal interface ColumnExpressionLink
+internal typealias ColumnExpressionLink = Nothing
