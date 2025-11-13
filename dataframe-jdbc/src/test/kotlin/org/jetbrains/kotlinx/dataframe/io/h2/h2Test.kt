@@ -96,16 +96,25 @@ class JdbcTest {
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            connection = DriverManager.getConnection(URL)
+            initializeConnection()
+            initializeDataSource()
+            createTablesAndData()
+        }
 
-            // Initialize DataSource
+        private fun initializeConnection() {
+            connection = DriverManager.getConnection(URL)
+        }
+
+        private fun initializeDataSource() {
             val config = HikariConfig().apply {
                 jdbcUrl = URL
                 maximumPoolSize = 10
                 minimumIdle = 2
             }
             dataSource = HikariDataSource(config)
+        }
 
+        private fun createTablesAndData() {
             // Create table Customer
             @Language("SQL")
             val createCustomerTableQuery = """
@@ -155,24 +164,15 @@ class JdbcTest {
         }
 
         // Helper assertion functions
-        private fun assertCustomerData(df: AnyFrame) {
+        private fun assertCustomerData(df: AnyFrame, expectedRows: Int = 4) {
             val casted = df.cast<Customer>()
-            casted.rowsCount() shouldBe 4
-            casted.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
-            casted[0][1] shouldBe "John"
-        }
-
-        private fun assertCustomerDataWithLimit(df: AnyFrame) {
-            val casted = df.cast<Customer>()
-            casted.rowsCount() shouldBe 1
-            casted.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
-            casted[0][1] shouldBe "John"
-        }
-
-        private fun assertCustomerDataWithLimitTwo(df: AnyFrame) {
-            val casted = df.cast<Customer>()
-            casted.rowsCount() shouldBe 2
-            casted.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
+            casted.rowsCount() shouldBe expectedRows
+            val expectedOlderThan30 = when (expectedRows) {
+                4 -> 2
+                2 -> 1
+                else -> 1 // for 1 row or other small limits in tests
+            }
+            casted.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe expectedOlderThan30
             casted[0][1] shouldBe "John"
         }
 
@@ -181,16 +181,10 @@ class JdbcTest {
             schema.columns["name"]!!.type shouldBe typeOf<String?>()
         }
 
-        private fun assertCustomerSalesData(df: AnyFrame) {
+        private fun assertCustomerSalesData(df: AnyFrame, expectedRows: Int = 2) {
             val casted = df.cast<CustomerSales>()
-            casted.rowsCount() shouldBe 2
-            casted.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
-            casted[0][0] shouldBe "John"
-        }
-
-        private fun assertCustomerSalesDataWithLimit(df: AnyFrame) {
-            val casted = df.cast<CustomerSales>()
-            casted.rowsCount() shouldBe 1
+            casted.rowsCount() shouldBe expectedRows
+            // In current tests, regardless of limit (2 or 1), the count of totalSalesAmount > 100 is 1
             casted.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
             casted[0][0] shouldBe "John"
         }
@@ -425,7 +419,7 @@ class JdbcTest {
         assertCustomerData(df)
 
         val df1 = DataFrame.readSqlTable(connection, tableName, 1)
-        assertCustomerDataWithLimit(df1)
+        assertCustomerData(df1, 1)
 
         val dataSchema = DataFrameSchema.readSqlTable(connection, tableName)
         assertCustomerSchema(dataSchema)
@@ -435,7 +429,7 @@ class JdbcTest {
         assertCustomerData(df2)
 
         val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1)
-        assertCustomerDataWithLimit(df3)
+        assertCustomerData(df3, 1)
 
         val dataSchema1 = DataFrameSchema.readSqlTable(dbConfig, tableName)
         assertCustomerSchema(dataSchema1)
@@ -448,7 +442,7 @@ class JdbcTest {
         assertCustomerData(df)
 
         val df1 = connection.readDataFrame(tableName, 1)
-        assertCustomerDataWithLimit(df1)
+        assertCustomerData(df1, 1)
 
         val dataSchema = connection.readDataFrameSchema(tableName)
         assertCustomerSchema(dataSchema)
@@ -458,7 +452,7 @@ class JdbcTest {
         assertCustomerData(df2)
 
         val df3 = dbConfig.readDataFrame(tableName, 1)
-        assertCustomerDataWithLimit(df3)
+        assertCustomerData(df3, 1)
 
         val dataSchema1 = dbConfig.readDataFrameSchema(tableName)
         assertCustomerSchema(dataSchema1)
@@ -470,11 +464,11 @@ class JdbcTest {
 
         repeat(10) {
             val df1 = DataFrame.readSqlTable(connection, tableName, 2)
-            assertCustomerDataWithLimitTwo(df1)
+            assertCustomerData(df1, 2)
 
             val dbConfig = DbConnectionConfig(url = URL)
             val df2 = DataFrame.readSqlTable(dbConfig, tableName, 2)
-            assertCustomerDataWithLimitTwo(df2)
+            assertCustomerData(df2, 2)
         }
     }
 
@@ -491,7 +485,7 @@ class JdbcTest {
                 rs.beforeFirst()
 
                 val df1 = DataFrame.readResultSet(rs, H2(MySql), 1)
-                assertCustomerDataWithLimit(df1)
+                assertCustomerData(df1, 1)
 
                 rs.beforeFirst()
 
@@ -506,7 +500,7 @@ class JdbcTest {
                 rs.beforeFirst()
 
                 val df3 = DataFrame.readResultSet(rs, connection, 1)
-                assertCustomerDataWithLimit(df3)
+                assertCustomerData(df3, 1)
 
                 rs.beforeFirst()
 
@@ -529,7 +523,7 @@ class JdbcTest {
                 rs.beforeFirst()
 
                 val df1 = rs.readDataFrame(H2(MySql), 1)
-                assertCustomerDataWithLimit(df1)
+                assertCustomerData(df1, 1)
 
                 rs.beforeFirst()
 
@@ -544,7 +538,7 @@ class JdbcTest {
                 rs.beforeFirst()
 
                 val df3 = rs.readDataFrame(connection, 1)
-                assertCustomerDataWithLimit(df3)
+                assertCustomerData(df3, 1)
 
                 rs.beforeFirst()
 
@@ -566,12 +560,12 @@ class JdbcTest {
                     rs.beforeFirst()
 
                     val df1 = DataFrame.readResultSet(rs, H2(MySql), 2)
-                    assertCustomerDataWithLimitTwo(df1)
+                    assertCustomerData(df1, 2)
 
                     rs.beforeFirst()
 
                     val df2 = DataFrame.readResultSet(rs, connection, 2)
-                    assertCustomerDataWithLimitTwo(df2)
+                    assertCustomerData(df2, 2)
                 }
             }
         }
@@ -870,7 +864,7 @@ class JdbcTest {
         assertCustomerSalesData(df)
 
         val df1 = DataFrame.readSqlQuery(connection, CUSTOMER_SALES_QUERY, 1)
-        assertCustomerSalesDataWithLimit(df1)
+        assertCustomerSalesData(df1, 1)
 
         val dataSchema = DataFrameSchema.readSqlQuery(connection, CUSTOMER_SALES_QUERY)
         assertCustomerSalesSchema(dataSchema)
@@ -880,7 +874,7 @@ class JdbcTest {
         assertCustomerSalesData(df2)
 
         val df3 = DataFrame.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY, 1)
-        assertCustomerSalesDataWithLimit(df3)
+        assertCustomerSalesData(df3, 1)
 
         val dataSchema1 = DataFrameSchema.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY)
         assertCustomerSalesSchema(dataSchema1)
@@ -892,7 +886,7 @@ class JdbcTest {
         assertCustomerSalesData(df)
 
         val df1 = connection.readDataFrame(CUSTOMER_SALES_QUERY, 1)
-        assertCustomerSalesDataWithLimit(df1)
+        assertCustomerSalesData(df1, 1)
 
         val dataSchema = connection.readDataFrameSchema(CUSTOMER_SALES_QUERY)
         assertCustomerSalesSchema(dataSchema)
@@ -902,7 +896,7 @@ class JdbcTest {
         assertCustomerSalesData(df2)
 
         val df3 = dbConfig.readDataFrame(CUSTOMER_SALES_QUERY, 1)
-        assertCustomerSalesDataWithLimit(df3)
+        assertCustomerSalesData(df3, 1)
 
         val dataSchema1 = dbConfig.readDataFrameSchema(CUSTOMER_SALES_QUERY)
         assertCustomerSalesSchema(dataSchema1)
@@ -1052,7 +1046,7 @@ class JdbcTest {
         assertCustomerData(df)
 
         val df1 = DataFrame.readSqlTable(dataSource, tableName, 1)
-        assertCustomerDataWithLimit(df1)
+        assertCustomerData(df1, 1)
 
         val dataSchema = DataFrameSchema.readSqlTable(dataSource, tableName)
         assertCustomerSchema(dataSchema)
@@ -1065,7 +1059,7 @@ class JdbcTest {
         assertCustomerData(df)
 
         val df1 = dataSource.readDataFrame(tableName, 1)
-        assertCustomerDataWithLimit(df1)
+        assertCustomerData(df1, 1)
 
         val dataSchema = dataSource.readDataFrameSchema(tableName)
         assertCustomerSchema(dataSchema)
@@ -1077,7 +1071,7 @@ class JdbcTest {
         assertCustomerSalesData(df)
 
         val df1 = DataFrame.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY, 1)
-        assertCustomerSalesDataWithLimit(df1)
+        assertCustomerSalesData(df1, 1)
 
         val dataSchema = DataFrameSchema.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY)
         assertCustomerSalesSchema(dataSchema)
@@ -1089,7 +1083,7 @@ class JdbcTest {
         assertCustomerSalesData(df)
 
         val df1 = dataSource.readDataFrame(CUSTOMER_SALES_QUERY, 1)
-        assertCustomerSalesDataWithLimit(df1)
+        assertCustomerSalesData(df1, 1)
 
         val dataSchema = dataSource.readDataFrameSchema(CUSTOMER_SALES_QUERY)
         assertCustomerSalesSchema(dataSchema)
@@ -1146,7 +1140,7 @@ class JdbcTest {
 
         repeat(10) {
             val df = DataFrame.readSqlTable(dataSource, tableName, 2)
-            assertCustomerDataWithLimitTwo(df)
+            assertCustomerData(df, 2)
         }
     }
 
