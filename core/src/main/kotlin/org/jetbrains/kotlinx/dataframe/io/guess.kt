@@ -18,6 +18,7 @@ import java.io.InputStream
 import java.net.URL
 import java.nio.file.Path
 import java.util.ServiceLoader
+import kotlin.io.path.extension
 import kotlin.reflect.KType
 
 public sealed interface SupportedFormat {
@@ -36,7 +37,7 @@ public sealed interface SupportedFormat {
 public sealed interface SupportedFormatSample {
 
     @JvmInline
-    public value class DataFile(public val sampleFile: File) : SupportedFormatSample
+    public value class DataFile(public val sampleFilePath: Path) : SupportedFormatSample
 
     @JvmInline
     public value class DataUrl(public val sampleUrl: URL) : SupportedFormatSample
@@ -139,6 +140,12 @@ internal fun guessFormatForExtension(
     formats: List<SupportedFormat> = supportedFormats,
     sample: SupportedFormatSample? = null,
 ): SupportedFormat? = formats.firstOrNull { it.acceptsExtension(ext) && (sample == null || it.acceptsSample(sample)) }
+
+internal fun guessFormat(
+    path: Path,
+    formats: List<SupportedFormat> = supportedFormats,
+    sample: SupportedFormatSample.DataFile? = SupportedFormatSample.DataFile(path),
+): SupportedFormat? = guessFormatForExtension(path.extension.lowercase(), formats, sample = sample)
 
 internal fun guessFormat(
     url: URL,
@@ -286,7 +293,6 @@ public fun File.readDataFrame(header: List<String> = emptyList()): AnyFrame = Da
 
 public fun File.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
 
-// Path-based overloads and extensions
 public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList()): AnyFrame =
     read(
         path = path,

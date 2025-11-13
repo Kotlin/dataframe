@@ -1,3 +1,5 @@
+@file:JvmName("ReadTsvDeephavenKt")
+
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -27,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
 import java.io.File
+import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 import java.nio.file.Path
@@ -111,25 +114,28 @@ public fun DataFrame.Companion.readTsv(
     parseParallel: Boolean = PARSE_PARALLEL,
     compression: Compression<*> = Compression.of(file),
 ): DataFrame<*> =
-    readTsv(
-        path = file.toPath(),
-        delimiter = delimiter,
-        header = header,
-        hasFixedWidthColumns = hasFixedWidthColumns,
-        fixedColumnWidths = fixedColumnWidths,
-        colTypes = colTypes,
-        skipLines = skipLines,
-        readLines = readLines,
-        parserOptions = parserOptions,
-        ignoreEmptyLines = ignoreEmptyLines,
-        allowMissingColumns = allowMissingColumns,
-        ignoreExcessColumns = ignoreExcessColumns,
-        quote = quote,
-        ignoreSurroundingSpaces = ignoreSurroundingSpaces,
-        trimInsideQuoted = trimInsideQuoted,
-        parseParallel = parseParallel,
-        compression = Compression.of(file.toPath()),
-    )
+    FileInputStream(file).use {
+        readDelimImpl(
+            inputStream = it,
+            delimiter = delimiter,
+            header = header,
+            hasFixedWidthColumns = hasFixedWidthColumns,
+            fixedColumnWidths = fixedColumnWidths,
+            colTypes = colTypes,
+            skipLines = skipLines,
+            readLines = readLines,
+            parserOptions = parserOptions,
+            ignoreEmptyLines = ignoreEmptyLines,
+            allowMissingColumns = allowMissingColumns,
+            ignoreExcessColumns = ignoreExcessColumns,
+            quote = quote,
+            ignoreSurroundingSpaces = ignoreSurroundingSpaces,
+            trimInsideQuoted = trimInsideQuoted,
+            parseParallel = parseParallel,
+            compression = compression,
+            adjustCsvSpecs = ADJUST_CSV_SPECS,
+        )
+    }
 
 /**
  * @include [CommonReadDelimDocs.TsvDocs]

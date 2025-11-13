@@ -76,8 +76,9 @@ public fun AnyFrame.writeDelim(
     headerComments: List<String> = HEADER_COMMENTS,
     recordSeparator: String = RECORD_SEPARATOR,
 ): Unit =
-    writeDelim(
-        path = file.toPath(),
+    writeDelimImpl(
+        df = this,
+        writer = FileWriter(file),
         delimiter = delimiter,
         includeHeader = includeHeader,
         quote = quote,
@@ -86,6 +87,7 @@ public fun AnyFrame.writeDelim(
         commentChar = commentChar,
         headerComments = headerComments,
         recordSeparator = recordSeparator,
+        adjustCsvFormat = ADJUST_CSV_FORMAT,
     )
 
 /**
