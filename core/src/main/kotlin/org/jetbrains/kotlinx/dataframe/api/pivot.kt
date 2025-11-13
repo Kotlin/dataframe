@@ -498,11 +498,11 @@ internal interface DataFramePivotMatchesCommonDocs
  *
  * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
  *               if `false`, they are placed at the top level.
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used as [pivot] keys for the operation.
  * @return A new [DataFrame] representing a [Boolean] presence matrix — with grouping key columns as rows,
  *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  */
-public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotColumnsSelector<T, *>): DataFrame<T> =
     pivot(inward, columns).groupByOther().matches()
 
 /**
@@ -588,11 +588,11 @@ internal interface DataFramePivotCountsCommonDocs
  * ```
  *
  * @include [PivotDocs.InwardKDocs]
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used as [pivot] keys for the operation.
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
  */
-public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotColumnsSelector<T, *>): DataFrame<T> =
     pivot(inward, columns).groupByOther().count()
 
 /**
@@ -655,11 +655,11 @@ private interface CommonPivotForGroupByDocs
  * @include [CommonPivotForGroupByDocs]
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
  * @include [PivotDocs.InwardKDocsForGrouped]
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are pivoted.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are pivoted.
  * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
  * and pivots the provided columns.
  */
-public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: ColumnsSelector<G, *>): PivotGroupBy<G> =
+public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): PivotGroupBy<G> =
     PivotGroupByImpl(this, columns, inward)
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -723,11 +723,11 @@ internal interface GroupByPivotMatchesCommonDocs
  * ```
  *
  * @include [PivotDocs.InwardKDocsForGrouped]
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used as [pivot] keys for the operation.
  * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
  *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  */
-public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<G, *>): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): DataFrame<G> =
     pivot(inward, columns).matches()
 
 /**
@@ -797,11 +797,11 @@ internal interface GroupByPivotCountsCommonDocs
  * ```
  *
  * @include [PivotDocs.InwardKDocsForGrouped]
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used as [pivot] keys for the operation.
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
  */
-public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: ColumnsSelector<G, *>): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): DataFrame<G> =
     pivot(inward, columns).count()
 
 /**
@@ -994,7 +994,7 @@ internal interface AggregateGroupedDslPivotMatchesDocs
  * ```
  *
  * @include [PivotDocs.InwardKDocsForGrouped]
- * @param columns The [Columns Selector][ColumnsSelector] that defines which columns are used
+ * @param columns The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used
  * as keys for pivoting and in which order.
  * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
  * pivot key values as columns, and `true`/`false` cells indicating existing combinations.
@@ -1002,7 +1002,7 @@ internal interface AggregateGroupedDslPivotMatchesDocs
  */
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(
     inward: Boolean = true,
-    columns: ColumnsSelector<T, *>,
+    columns: PivotColumnsSelector<T, *>,
 ): DataFrame<T> = pivot(inward, columns).matches()
 
 /**
@@ -1079,7 +1079,7 @@ internal interface AggregateGroupedDslPivotCountsDocs
  * ```
  *
  * @include [PivotDocs.InwardKDocsForGrouped]
- * @param columns The [Columns Selector][ColumnsSelector] that defines which columns are used
+ * @param columns The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used
  * as keys for pivoting and in which order.
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  * pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
@@ -1087,7 +1087,7 @@ internal interface AggregateGroupedDslPivotCountsDocs
  */
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(
     inward: Boolean = true,
-    columns: ColumnsSelector<T, *>,
+    columns: PivotColumnsSelector<T, *>,
 ): DataFrame<T> = pivot(inward, columns).count()
 
 /**
