@@ -29,6 +29,8 @@ import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_C
 import java.io.File
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Path
+import kotlin.io.path.writeText
 import kotlin.reflect.typeOf
 
 public class JSON(
@@ -52,6 +54,15 @@ public class JSON(
             header = header,
             typeClashTactic = typeClashTactic,
             keyValuePaths = keyValuePaths,
+            unifyNumbers = unifyNumbers,
+        )
+
+    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
+        DataFrame.readJson(
+            path = path,
+            header = header,
+            keyValuePaths = keyValuePaths,
+            typeClashTactic = typeClashTactic,
             unifyNumbers = unifyNumbers,
         )
 
@@ -145,7 +156,16 @@ public fun DataFrame.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyFrame = DataFrame.readJson(file.toURI().toURL(), header, keyValuePaths, typeClashTactic, unifyNumbers)
+): AnyFrame = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers)
+
+/** Path overload for reading JSON into DataFrame. */
+public fun DataFrame.Companion.readJson(
+    path: Path,
+    header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
+    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+    unifyNumbers: Boolean = true,
+): AnyFrame = DataFrame.readJson(path.toUri().toURL(), header, keyValuePaths, typeClashTactic, unifyNumbers)
 
 /**
  * @param file Where to fetch the Json as [InputStream] to be converted to a [DataRow].
@@ -162,7 +182,16 @@ public fun DataRow.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJson(file, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+): AnyRow = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+
+/** Path overload for reading JSON into DataRow. */
+public fun DataRow.Companion.readJson(
+    path: Path,
+    header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
+    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+    unifyNumbers: Boolean = true,
+): AnyRow = DataFrame.readJson(path, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
 
 /**
  * @param path URL or file path from where to fetch the Json as [InputStream] to be converted to a [DataFrame].
@@ -409,7 +438,11 @@ public fun AnyRow.toJson(prettyPrint: Boolean = false): String {
 }
 
 public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false) {
-    file.writeText(toJson(prettyPrint))
+    writeJson(file.toPath(), prettyPrint)
+}
+
+public fun AnyFrame.writeJson(path: Path, prettyPrint: Boolean = false) {
+    path.writeText(toJson(prettyPrint))
 }
 
 public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false): Unit = writeJson(File(path), prettyPrint)
@@ -419,7 +452,11 @@ public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false) 
 }
 
 public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false) {
-    file.writeText(toJson(prettyPrint))
+    writeJson(file.toPath(), prettyPrint)
+}
+
+public fun AnyRow.writeJson(path: Path, prettyPrint: Boolean = false) {
+    path.writeText(toJson(prettyPrint))
 }
 
 public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false) {

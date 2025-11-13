@@ -8,29 +8,36 @@ import org.geotools.geojson.feature.FeatureJSON
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.geotools.toSimpleFeatureCollection
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 
 fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(path))
 
-fun GeoDataFrame<*>.writeGeoJson(file: File) {
-    // TODO: adds ids that breaks order of reading
+/** Path overload for writing GeoJSON */
+fun GeoDataFrame<*>.writeGeoJson(path: Path) {
     val featureJSON = FeatureJSON()
-    file.outputStream().use { outputStream ->
+    Files.newOutputStream(path).use { outputStream ->
         featureJSON.writeFeatureCollection(toSimpleFeatureCollection(), outputStream)
     }
 }
 
+fun GeoDataFrame<*>.writeGeoJson(file: File) {
+    // TODO: adds ids that breaks order of reading
+    writeGeoJson(file.toPath())
+}
+
 fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath))
 
-fun GeoDataFrame<*>.writeShapefile(directory: File) {
-    if (!directory.exists()) {
-        directory.mkdirs()
+/** Path overload for writing Shapefile to a directory */
+fun GeoDataFrame<*>.writeShapefile(directory: Path) {
+    if (!Files.exists(directory)) {
+        Files.createDirectories(directory)
     }
-    val fileName = directory.name
-
-    val file = File(directory, "$fileName.shp")
+    val fileName = directory.fileName.toString()
+    val shp = directory.resolve("$fileName.shp")
 
     val creationParams = mutableMapOf<String, java.io.Serializable>()
-    creationParams["url"] = file.toURI().toURL()
+    creationParams["url"] = shp.toUri().toURL()
 
     val factory = FileDataStoreFinder.getDataStoreFactory("shp")
     val dataStore = factory.createNewDataStore(creationParams)
@@ -55,4 +62,8 @@ fun GeoDataFrame<*>.writeShapefile(directory: File) {
         dataStore.dispose()
         transaction.close()
     }
+}
+
+fun GeoDataFrame<*>.writeShapefile(directory: File) {
+    writeShapefile(directory.toPath())
 }

@@ -39,7 +39,10 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.URL
 import java.nio.file.Files
+import java.nio.file.Path
 import java.util.Calendar
+import kotlin.io.path.inputStream
+import kotlin.io.path.outputStream
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.util.Date as JavaDate
@@ -48,6 +51,8 @@ public class Excel : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readExcel(file)
+
+    override fun readDataFrame(path: Path, header: List<String>): AnyFrame = DataFrame.readExcel(path.toFile())
 
     override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
 
@@ -627,11 +632,28 @@ public fun <T> DataFrame<T>.writeExcel(
     writeHeader: Boolean = true,
     workBookType: WorkBookType = WorkBookType.XLSX,
     keepFile: Boolean = false,
+): Unit =
+    writeExcel(
+        path = file.toPath(),
+        columnsSelector = columnsSelector,
+        sheetName = sheetName,
+        writeHeader = writeHeader,
+        workBookType = workBookType,
+        keepFile = keepFile,
+    )
+
+/** Path overload for writing this DataFrame to an Excel file. */
+public fun <T> DataFrame<T>.writeExcel(
+    path: Path,
+    columnsSelector: ColumnsSelector<T, *> = { all() },
+    sheetName: String? = null,
+    writeHeader: Boolean = true,
+    workBookType: WorkBookType = WorkBookType.XLSX,
+    keepFile: Boolean = false,
 ) {
     val factory =
-        // Write to an existing file with `keepFile` flag
-        if (keepFile && file.exists() && file.length() > 0L) {
-            val fis = file.inputStream()
+        if (keepFile && Files.exists(path) && Files.size(path) > 0L) {
+            val fis = path.inputStream()
             when (workBookType) {
                 WorkBookType.XLS -> HSSFWorkbook(fis)
                 WorkBookType.XLSX -> XSSFWorkbook(fis)
@@ -639,12 +661,10 @@ public fun <T> DataFrame<T>.writeExcel(
         } else {
             when (workBookType) {
                 WorkBookType.XLS -> HSSFWorkbook()
-
-                // Use streaming mode for a new XLSX file
                 WorkBookType.XLSX -> SXSSFWorkbook()
             }
         }
-    return file.outputStream().use {
+    return path.outputStream().use {
         writeExcel(it, columnsSelector, sheetName, writeHeader, factory)
     }
 }
