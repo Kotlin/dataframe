@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.parser.OpenAPIParser
-import java.io.File
 import java.net.URL
 import java.nio.file.Path
 import kotlin.io.path.extension
@@ -32,7 +31,6 @@ public fun isOpenApi(url: URL): Boolean {
 
     return isOpenApiStr(url.readText())
 }
-
 
 public fun isOpenApi(path: Path): Boolean {
     if (path.extension.lowercase() in listOf("yml", "yaml")) {

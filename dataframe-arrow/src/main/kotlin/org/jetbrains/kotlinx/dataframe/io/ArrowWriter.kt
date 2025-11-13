@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.io.OutputStream
 import java.nio.channels.Channels
 import java.nio.channels.WritableByteChannel
@@ -101,8 +100,11 @@ public interface ArrowWriter : AutoCloseable {
 
     /** Path overload for Arrow IPC writing. */
     public fun writeArrowIPC(path: Path, append: Boolean = true) {
-        val options = if (append) arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
-        else arrayOf(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+        val options = if (append) {
+            arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+        } else {
+            arrayOf(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+        }
         Files.newOutputStream(path, *options).use { os ->
             writeArrowIPC(os)
         }
@@ -148,7 +150,9 @@ public interface ArrowWriter : AutoCloseable {
     /** Path overload for Arrow Feather writing. */
     public fun writeArrowFeather(path: Path) {
         Files.newOutputStream(
-            path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
+            path,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING,
         ).use { os ->
             writeArrowFeather(os)
         }
