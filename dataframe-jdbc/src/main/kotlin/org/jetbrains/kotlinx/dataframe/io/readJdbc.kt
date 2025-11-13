@@ -937,8 +937,15 @@ internal fun fetchAndConvertDataFromResultSet(
     inferNullability: Boolean,
 ): AnyFrame {
     val columnKTypes = buildColumnKTypes(tableColumns, dbType)
-    val columnData = readAllRowsFromResultSet(rs, tableColumns, columnKTypes, dbType, limit)
+
+    val progressTracker = ProgressTracker.create(logger)
+
+    progressTracker.onStart()
+
+    val columnData = readAllRowsFromResultSet(rs, tableColumns, columnKTypes, dbType, limit, progressTracker)
     val dataFrame = buildDataFrameFromColumnData(columnData, tableColumns, columnKTypes, dbType, inferNullability)
+
+    progressTracker.onComplete(dataFrame.rowsCount())
 
     logger.debug {
         "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query."
@@ -965,6 +972,7 @@ private fun readAllRowsFromResultSet(
     columnKTypes: Map<Int, KType>,
     dbType: DbType,
     limit: Int?,
+    progressTracker: ProgressTracker,
 ): List<MutableList<Any?>> {
     val columnsCount = tableColumns.size
     val columnData = List(columnsCount) { mutableListOf<Any?>() }
@@ -981,10 +989,27 @@ private fun readAllRowsFromResultSet(
             columnData[columnIndex].add(value)
         }
         rowsRead++
-        // if (rowsRead % 1000 == 0) logger.debug { "Loaded $rowsRead rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
+        // Progress tracking
+        trackProgress(rowsRead, columnData, tableColumns, rs, progressTracker)
     }
 
     return columnData
+}
+
+private fun trackProgress(
+    rowsRead: Int,
+    columnData: List<MutableList<Any?>>,
+    tableColumns: List<TableColumnMetadata>,
+    rs: ResultSet,
+    progressTracker: ProgressTracker,
+) {
+    // Memory estimation on first row (only for DetailedProgressTracker)
+    if (rowsRead == 1 && progressTracker is DetailedProgressTracker) {
+        progressTracker.estimateMemoryOnFirstRow(columnData, tableColumns, rs)
+    }
+
+    // Progress update
+    progressTracker.onRowLoaded()
 }
 
 /**
