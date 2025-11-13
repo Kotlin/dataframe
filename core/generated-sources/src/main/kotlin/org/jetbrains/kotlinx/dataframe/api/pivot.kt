@@ -592,11 +592,11 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
  *
  * @param [inward] If `true` (default), the generated pivoted columns are nested inside the original column;
  *               if `false`, they are placed at the top level.
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used as [pivot] keys for the operation.
  * @return A new [DataFrame] representing a [Boolean] presence matrix — with grouping key columns as rows,
  *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  */
-public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotColumnsSelector<T, *>): DataFrame<T> =
     pivot(inward, columns).groupByOther().matches()
 
 /**
@@ -764,11 +764,11 @@ internal interface DataFramePivotCountsCommonDocs
  *   - `false` — pivot key columns are not nested (i.e., placed at the top level);
  *   - `null` (default) — inferred automatically: `true` for multiple pivoted columns
  *     or when the [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] has been grouped; `false` otherwise.
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used as [pivot] keys for the operation.
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
  */
-public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotColumnsSelector<T, *>): DataFrame<T> =
     pivot(inward, columns).groupByOther().count()
 
 /**
@@ -908,11 +908,11 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
  *   - `true` (default) — pivot key columns are nested under a supercolumn named after
  *     the original pivoted column (independently for multiple pivoted columns);
  *   - `false` — pivot key columns are not nested (i.e., placed at the top level);
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are pivoted.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are pivoted.
  * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
  * and pivots the provided columns.
  */
-public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: ColumnsSelector<G, *>): PivotGroupBy<G> =
+public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): PivotGroupBy<G> =
     PivotGroupByImpl(this, columns, inward)
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1098,11 +1098,11 @@ internal interface GroupByPivotMatchesCommonDocs
  *   - `true` (default) — pivot key columns are nested under a supercolumn named after
  *     the original pivoted column (independently for multiple pivoted columns);
  *   - `false` — pivot key columns are not nested (i.e., placed at the top level);
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used as [pivot] keys for the operation.
  * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
  *         pivot key values as columns, and `true`/`false` cells indicating existing combinations.
  */
-public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<G, *>): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): DataFrame<G> =
     pivot(inward, columns).matches()
 
 /**
@@ -1260,11 +1260,11 @@ internal interface GroupByPivotCountsCommonDocs
  *   - `true` (default) — pivot key columns are nested under a supercolumn named after
  *     the original pivoted column (independently for multiple pivoted columns);
  *   - `false` — pivot key columns are not nested (i.e., placed at the top level);
- * @param [columns] The [Columns Selector][ColumnsSelector] that defines which columns are used as [pivot] keys for the operation.
+ * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used as [pivot] keys for the operation.
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  *         pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
  */
-public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: ColumnsSelector<G, *>): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotColumnsSelector<G, *>): DataFrame<G> =
     pivot(inward, columns).count()
 
 /**
@@ -1525,7 +1525,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: KProperty<*>, inward
  *   - `true` (default) — pivot key columns are nested under a supercolumn named after
  *     the original pivoted column (independently for multiple pivoted columns);
  *   - `false` — pivot key columns are not nested (i.e., placed at the top level);
- * @param columns The [Columns Selector][ColumnsSelector] that defines which columns are used
+ * @param columns The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used
  * as keys for pivoting and in which order.
  * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
  * pivot key values as columns, and `true`/`false` cells indicating existing combinations.
@@ -1533,7 +1533,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: KProperty<*>, inward
  */
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(
     inward: Boolean = true,
-    columns: ColumnsSelector<T, *>,
+    columns: PivotColumnsSelector<T, *>,
 ): DataFrame<T> = pivot(inward, columns).matches()
 
 /**
@@ -1645,7 +1645,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>,
  * ```
  *
  * @include [PivotDocs.InwardKDocsForGrouped]
- * @param columns The [Columns Selector][ColumnsSelector] that defines which columns are used
+ * @param columns The [Pivot Columns Selector][PivotColumnsSelector]that defines which columns are used
  * as keys for pivoting and in which order.
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  * pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
@@ -1653,7 +1653,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>,
  */
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(
     inward: Boolean = true,
-    columns: ColumnsSelector<T, *>,
+    columns: PivotColumnsSelector<T, *>,
 ): DataFrame<T> = pivot(inward, columns).count()
 
 /**
