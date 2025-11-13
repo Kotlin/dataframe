@@ -296,7 +296,7 @@ public fun File.readDataRow(header: List<String> = emptyList()): AnyRow = DataRo
 public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList()): AnyFrame =
     read(
         path = path,
-        format = guessFormat(path.toString())?.also {
+        format = guessFormat(path)?.also {
             if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
         } as SupportedDataFrameFormat?,
         header = header,
