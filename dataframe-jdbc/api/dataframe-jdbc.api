@@ -22,6 +22,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/Jdbc : org/jetbrains/kotli
 	public fun readCodeForGeneration (Ljava/io/InputStream;Ljava/lang/String;Z)Ljava/lang/String;
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/JdbcSchemaKt {

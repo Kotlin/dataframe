@@ -4,6 +4,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.parser.OpenAPIParser
 import java.io.File
 import java.net.URL
+import java.nio.file.Path
+import kotlin.io.path.extension
+import kotlin.io.path.readText
 
 private val logger = KotlinLogging.logger {}
 
@@ -30,14 +33,15 @@ public fun isOpenApi(url: URL): Boolean {
     return isOpenApiStr(url.readText())
 }
 
-public fun isOpenApi(file: File): Boolean {
-    if (file.extension.lowercase() in listOf("yml", "yaml")) {
+
+public fun isOpenApi(path: Path): Boolean {
+    if (path.extension.lowercase() in listOf("yml", "yaml")) {
         return true
     }
 
-    if (file.extension.lowercase() != "json") {
+    if (path.extension.lowercase() != "json") {
         return false
     }
 
-    return isOpenApiStr(file.readText())
+    return isOpenApiStr(path.readText())
 }
