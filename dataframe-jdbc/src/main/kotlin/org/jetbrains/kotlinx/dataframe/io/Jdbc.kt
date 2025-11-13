@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import java.io.File
 import java.io.InputStream
+import java.nio.file.Path
 
 // TODO: https://github.com/Kotlin/dataframe/issues/450
 public class Jdbc :
@@ -14,7 +15,7 @@ public class Jdbc :
     SupportedDataFrameFormat {
     public override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJDBC(stream)
 
-    public override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJDBC(file)
+    public override fun readDataFrame(path: Path, header: List<String>): AnyFrame = DataFrame.readJDBC(path)
 
     override fun readCodeForGeneration(
         stream: InputStream,
@@ -39,6 +40,10 @@ public class Jdbc :
 }
 
 private fun DataFrame.Companion.readJDBC(stream: File): DataFrame<*> {
+    TODO("Not yet implemented")
+}
+
+private fun DataFrame.Companion.readJDBC(path: Path): DataFrame<*> {
     TODO("Not yet implemented")
 }
 
