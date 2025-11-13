@@ -37,6 +37,8 @@ import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test5;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
 
+private const val MAXIMUM_POOL_SIZE = 5
+
 @DataSchema
 interface Customer {
     val id: Int?
@@ -108,7 +110,7 @@ class JdbcTest {
         private fun initializeDataSource() {
             val config = HikariConfig().apply {
                 jdbcUrl = URL
-                maximumPoolSize = 10
+                maximumPoolSize = MAXIMUM_POOL_SIZE
                 minimumIdle = 2
             }
             dataSource = HikariDataSource(config)
@@ -172,7 +174,9 @@ class JdbcTest {
                 2 -> 1
                 else -> 1 // for 1 row or other small limits in tests
             }
-            casted.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe expectedOlderThan30
+            casted.filter {
+                it[Customer::age] != null && it[Customer::age]!! > 30
+            }.rowsCount() shouldBe expectedOlderThan30
             casted[0][1] shouldBe "John"
         }
 
@@ -1133,34 +1137,31 @@ class JdbcTest {
 
     @Test
     fun `repeated read from table with limit using DataSource`() {
-        // Verify our DataSource integration handles repeated reads correctly.
+        // Verify DataSource integration handles repeated sequential reads correctly.
         // Covers issue #494 where repeated reads with limit produced incorrect results.
-
         val tableName = "Customer"
-
-        repeat(10) {
+        repeat(MAXIMUM_POOL_SIZE * 2) {
             val df = DataFrame.readSqlTable(dataSource, tableName, 2)
             assertCustomerData(df, 2)
         }
     }
 
     @Test
-    fun `DataSource connection pooling - multiple concurrent reads`() {
-        // Verify our code properly closes connections and returns them to the pool.
-        // Would fail on the 11th iteration if connections leak (maximumPoolSize=10).
-
-        repeat(10) {
+    fun `DataSource sequential reads return connections to pool`() {
+        // Verify connections are properly closed and returned to the pool after each read.
+        // Would fail on iteration 6 if connections leak (maximumPoolSize=5).
+        repeat(MAXIMUM_POOL_SIZE * 2) {
             val df = DataFrame.readSqlTable(dataSource, "Customer", limit = 1)
             df.rowsCount() shouldBe 1
+            assertCustomerData(df, 1)
         }
     }
 
     @Test
-    fun `DataSource connection pooling - alternating table reads`() {
-        // Test connection reuse across different table schemas.
-        // Ensures no state pollution when switching between tables.
-
-        repeat(10) { i ->
+    fun `DataSource sequential reads with alternating tables`() {
+        // Test connection reuse when sequentially reading from different tables.
+        // Ensures no state pollution when switching between table schemas.
+        repeat(MAXIMUM_POOL_SIZE * 2) { i ->
             val tableName = if (i % 2 == 0) "Customer" else "Sale"
             val df = DataFrame.readSqlTable(dataSource, tableName, limit = 1)
             df.rowsCount() shouldBe 1
@@ -1168,16 +1169,17 @@ class JdbcTest {
     }
 
     @Test
-    fun `DataSource connection pooling - query and table mix`() {
-        // Verify both readSqlTable and readSqlQuery manage the connection lifecycle correctly.
-        // Tests that different code paths can alternate without resource leaks.
-
-        repeat(5) {
+    fun `DataSource sequential reads with mixed query and table operations`() {
+        // Verify both readSqlTable and readSqlQuery properly manage the connection lifecycle.
+        // Tests that different code paths can alternate sequentially without resource leaks.
+        repeat(MAXIMUM_POOL_SIZE * 2) {
             val dfTable = DataFrame.readSqlTable(dataSource, "Customer", limit = 1)
             dfTable.rowsCount() shouldBe 1
+            assertCustomerData(dfTable, 1)
 
             val dfQuery = DataFrame.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY, limit = 1)
             dfQuery.rowsCount() shouldBe 1
+            assertCustomerSalesData(dfQuery, 1)
         }
     }
 }
