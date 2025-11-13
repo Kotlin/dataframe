@@ -248,7 +248,7 @@ internal interface PivotDocs {
     /**
      * Pivoted columns can also be created inline
      * (i.g. by creating a new column using [expr] or simply renaming the old one
-     * using [named]) :
+     * using [named]):
      * ```kotlin
      * // Create a new column "newName" based on existing "oldName" values
      * // and pivot it:
@@ -445,7 +445,9 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
 // region pivotMatches
 
 /**
- * Computes a **presence matrix** (similar to one-hot encoding) for the values in the
+ * Computes a **presence matrix**
+ * (similar to [one-hot encoding](https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics))
+ * for the values in the
  * specified [\columns] of this [DataFrame], returning a new [DataFrame] where:
  */
 @ExcludeFromSources
@@ -686,7 +688,9 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
 // region pivotMatches
 
 /**
- * Computes a **presence matrix** (similar to one-hot encoding) for the values in the
+ * Computes a **presence matrix**
+ * (similar to [one-hot encoding](https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics))
+ * for the values in the
  * specified [\columns] within each group of this [GroupBy], returning a new [DataFrame] where:
  * @include [PivotGroupByDocs.ResultingMatrixShortcutDescription]
  * @include [PivotMatchesResultCellDescription]

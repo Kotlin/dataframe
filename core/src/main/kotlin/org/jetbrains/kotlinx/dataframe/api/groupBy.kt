@@ -320,9 +320,9 @@ internal interface GroupByDocs {
     interface Pivoting
 
     /**
-     * Grouping key can also be created inline
+     * Grouping keys can also be created inline
      * (i.g. by creating a new column using [expr] or simply renaming the old one
-     * using [named]) :
+     * using [named]):
      * ```kotlin
      * // Create a new column "newName" based on existing "oldName" values
      * // and use it as a grouping key:
