@@ -17,6 +17,7 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 import java.nio.charset.Charset
+import java.nio.file.Path
 
 @Deprecated(
     message = APACHE_CSV,
@@ -27,6 +28,10 @@ public class TSV : SupportedDataFrameFormat {
         DataFrame.readTSV(stream, header = header)
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readTSV(file, header = header)
+
+    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
+        // legacy TSV implementation lives in this module; delegate via File to keep behavior
+        DataFrame.readTSV(path.toFile(), header = header)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "tsv"
 
