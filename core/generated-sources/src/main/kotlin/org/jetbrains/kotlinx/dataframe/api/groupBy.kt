@@ -20,6 +20,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.getPivotColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl
@@ -34,15 +37,18 @@ import kotlin.reflect.KProperty
  * defines the group consisting of all rows where the column(s) contain that value combination.
  *
  * Returns a [GroupBy] — a dataframe-like structure that contains all unique combinations of key values
- * along with the corresponding groups of rows (each represented as a [DataFrame]).
+ * along with the corresponding groups of rows (each represented as a [DataFrame]) as rows.
  *
  * A [GroupBy] can then be:
  * * [transformed][Transformation] into a new [GroupBy];
  * * [reduced][Reducing] into a [DataFrame], where each group is collapsed into a single representative row;
  * * [aggregated][Aggregation] into a [DataFrame], where each group is transformed into one or more rows of derived values;
- * * [pivoted][Pivoting] into a [PivotGroupBy] structure, which combines [pivot] and [groupBy] operations.
+ * * [pivoted][Pivoting] into a [PivotGroupBy] structure, which combines [pivot] and [groupBy] operations
+ *   and then reduced or aggregated into a [DataFrame].
  *
- * Grouping keys can also be created inline:
+ * Grouping keys can also be created inline
+ * (i.g. by creating a new column using [expr][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * using [named][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
  * // and use it as a grouping key:
@@ -59,114 +65,112 @@ import kotlin.reflect.KProperty
  *
  * Don't confuse this with [group], which groups column into
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * See also [pivot][DataFrame.pivot] that groups rows of [DataFrame] vertically.
  */
 internal interface GroupByDocs {
     /**
      * ## [groupBy][groupBy] Operation Grammar
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
+     * {@include [LineBreak]}
+     * {@include [DslGrammarLink]}
+     * {@include [LineBreak]}
      *
      * ### Create and transform [GroupBy]
      *
      * [**`groupBy`**][groupBy]**`(`**`moveToTop: `[`Boolean`][Boolean]**`  = true)  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`sortByGroup`**][GroupBy.sortByGroup]**`() `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`sortByGroup`**][GroupBy.sortByGroup]**`() `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`sortByDesc`**][GroupBy.sortByDesc]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`sortByDesc`**][GroupBy.sortByDesc]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`updateGroups`**][GroupBy.updateGroups]**`  {  `**`frameExpression`**`  }  `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`updateGroups`**][GroupBy.updateGroups]**`  {  `**`frameExpression`**`  }  `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`filter`**][GroupBy.filter]**`  {  `**`predicate: `[`GroupedRowFilter`][GroupedRowFilter]**`  }  `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`filter`**][GroupBy.filter]**`  {  `**`predicate: `[`GroupedRowFilter`][GroupedRowFilter]**`  }  `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`add`**][GroupBy.add]**`(`**`column: `[`DataColumn`][DataColumn]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**`  }  `**`]`
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`add`**][GroupBy.add]**`(`**`column: `[`DataColumn`][DataColumn]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**`  }  `**`]`
      *
      * ### Reduce [GroupBy] into [DataFrame]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * [GroupBy][GroupBy]`.`[**`minBy`**][GroupBy.minBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * `| `__`.`__[**`maxBy`**][GroupBy.maxBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`first`**][GroupBy.first]`  [ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
+     * {@include [Indent]}
+     * `| `__`.`__[**`first`**][GroupBy.first]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`last`**][GroupBy.last]`  [ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
+     * {@include [Indent]}
+     * `| `__`.`__[**`last`**][GroupBy.last]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * __`.`__[**`concat`**][ReducedGroupBy.concat]**`() `**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`into`**][ReducedGroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  [ `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
+     * {@include [Indent]}
+     * `| `__`.`__[**`into`**][ReducedGroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  \[ `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * `| `__`.`__[**`values`**][ReducedGroupBy.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * ### Aggregate [GroupBy] into [DataFrame]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * [GroupBy][GroupBy]`.`[**`concat`**][GroupBy.concat]**`() `**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * `| `__`.`__[**`concatWithKeys`**][GroupBy.concatWithKeys]**`() `**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`into`**][GroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  [  `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
+     * {@include [Indent]}
+     * `| `__`.`__[**`into`**][GroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  \[  `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * `| `__`.`__[**`values`**][Grouped.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * `| `__`.`__[**`count`**][Grouped.count]**`() `**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * `| `__`.`__[**`aggregate`**][Grouped.aggregate]**`  {  `**`aggregations: `[`AggregateDsl`][AggregateDsl]**` }`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * {@include [Indent]}
      * `| `__`.`__[<aggregation_statistic>][AggregationStatistics]
      *
      * ### Pivot [GroupBy] into [PivotGroupBy] and reduce / aggregate it
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`pivot`**][GroupBy.pivot]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * {@include [Indent]}
+     * [GroupBy][GroupBy]`.`[**`pivot`**][GroupBy.pivot]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `    [ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
+     * {@include [Indent]}
+     * `    \[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[<pivot_reducer>][PivotGroupByDocs.Reducing]
+     * {@include [Indent]}
+     * __`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[<pivot_aggregator>][PivotGroupByDocs.Aggregation]
+     * {@include [Indent]}
+     * `| `__`.`__[<pivot_groupBy_groupBy>][PivotGroupByDocs.Aggregation]
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
@@ -187,6 +191,8 @@ internal interface GroupByDocs {
      * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+     * for type- and name-safe columns selection.
      *
      * #### NOTE:
      * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -202,11 +208,12 @@ internal interface GroupByDocs {
      *
      * #### For example:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     *
      *
      *
      * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
@@ -245,14 +252,37 @@ internal interface GroupByDocs {
 
     /**
      * ### [GroupBy] aggregation statistics
-     * * [count][Grouped.count]
-     * * [max][Grouped.max]/[maxOf][Grouped.maxOf]/[maxFor][Grouped.maxFor]
-     * * [min][Grouped.min]/[minOf][Grouped.minOf]/[minFor][Grouped.minFor]
-     * * [sum][Grouped.sum]/[sumOf][Grouped.sumOf]/[sumFor][Grouped.sumFor]
-     * * [mean][Grouped.mean]/[meanOf][Grouped.meanOf]/[meanFor][Grouped.meanFor]
-     * * [std][Grouped.std]/[stdOf][Grouped.stdOf]/[stdFor][Grouped.stdFor]
-     * * [median][Grouped.median]/[medianOf][Grouped.medianOf]/[medianFor][Grouped.medianFor]
-     * * [percentile][Grouped.percentile]/[percentileOf][Grouped.percentileOf]/[percentileFor][Grouped.percentileFor]
+     *
+     * Provides predefined shortcuts for the most common statistical aggregation operations
+     * that can be applied to each group within a [GroupBy].
+     *
+     * Each function computes a statistic across the rows of a group and returns the result as
+     * a new column (or several columns) in the resulting [DataFrame].
+     *
+     * * [count][Grouped.count] — calculate the number of rows in each group;
+     * * [max][Grouped.max] / [maxOf][Grouped.maxOf] / [maxFor][Grouped.maxFor] —
+     *   calculate the maximum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [min][Grouped.min] / [minOf][Grouped.minOf] / [minFor][Grouped.minFor] —
+     *   calculate the minimum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [sum][Grouped.sum] / [sumOf][Grouped.sumOf] / [sumFor][Grouped.sumFor] —
+     *   calculate the sum of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [mean][Grouped.mean] / [meanOf][Grouped.meanOf] / [meanFor][Grouped.meanFor] —
+     *   calculate the mean (average) of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [std][Grouped.std] / [stdOf][Grouped.stdOf] / [stdFor][Grouped.stdFor] —
+     *   calculate the standard deviation of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [median][Grouped.median] / [medianOf][Grouped.medianOf] / [medianFor][Grouped.medianFor] —
+     *   calculate the median of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group;
+     * * [percentile][Grouped.percentile] / [percentileOf][Grouped.percentileOf] / [percentileFor][Grouped.percentileFor] —
+     *   calculate a specified percentile of all values on the selected columns / by a row expression /
+     *   for each of the selected columns within each group.
+     *
+     * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics)
      */
     interface AggregationStatistics
 
@@ -297,8 +327,8 @@ internal interface GroupByDocs {
      * These functions return a [ReducedGroupBy], which can then be transformed into a new [DataFrame]
      * containing the reduced rows (either original or transformed) using one of the following methods:
      * * [concat][ReducedGroupBy.concat] — simply concatenates all reduced rows;
-     * * [values][ReducedGroupBy.values] — creates a [DataFrame] with new rows by transforming each reduced row
-     *   using [ColumnsForAggregateSelectionDsl];
+     * * [values][ReducedGroupBy.values] — creates a [DataFrame] containing the values
+     *   from the reduced rows in the selected columns.
      * * [into][ReducedGroupBy.into] — creates a new column with values computed with [RowExpression] on each row,
      *   or a new [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      *   containing each group reduced to a single row;
@@ -324,14 +354,16 @@ internal interface GroupByDocs {
      * The following aggregation methods are available:
      * * [concat][GroupBy.concat] — concatenates all rows from all groups into a single [DataFrame],
      *   without preserving grouping keys;
+     * * [toDataFrame][GroupBy.toDataFrame] — returns this [GroupBy] as [DataFrame] with the grouping keys and
+     *  corresponding groups in [FrameColumn].
      * * [concatWithKeys][GroupBy.concatWithKeys] — a variant of [concat][GroupBy.concat] that also includes
      *   grouping keys that were not present in the original [DataFrame];
      * * [into][GroupBy.into] — creates a new column containing a list of values computed with a [RowExpression]
      *   for each group, or a new [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]
      *   containing the groups themselves;
-     * * [values][ReducedGroupBy.values] — creates a [DataFrame] with new rows produced by transforming
-     *   each group using [ColumnsForAggregateSelectionDsl];
-     * * [count][Grouped.count] — returns a [DataFrame] containing the grouping key columns and an additional column
+     * * [values][Grouped.values] — creates a [DataFrame] containing values collected into a single [List]
+     *   from all rows of each group for the selected columns.
+     * * [count][Grouped.count] — creates a [DataFrame] containing the grouping key columns and an additional column
      *   with the number of rows in each corresponding group;
      * * [aggregate][Grouped.aggregate] — performs a set of custom aggregations using [AggregateDsl],
      *   allowing you to compute one or more derived values per group;
@@ -354,21 +386,22 @@ internal interface GroupByDocs {
      *
      * [GroupBy] can be pivoted with [pivot][GroupBy.pivot] method. It will produce a [PivotGroupBy].
      *
-     * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] is a dataframe-like structure, combining [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] and [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]
-     * and representing a matrix table with vertical [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups (as columns)
-     * and horizontal [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] groups (as rows), and each cell
-     * represents a group corresponding both to [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] and [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] key.
+     * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] is a dataframe-like structure that combines [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] and [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy],
+     * representing a matrix table with vertical [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups (as columns)
+     * and horizontal [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] groups (as rows),
+     * where each cell represents a group corresponding
+     * to both the [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] and [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] key.
      *
      * Reversed order of `pivot` and `groupBy`
      * (i.e., [DataFrame.pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] + [Pivot.groupBy][org.jetbrains.kotlinx.dataframe.api.Pivot.groupBy] or [DataFrame.groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy] + [GroupBy.pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot])
      * will produce the same result.
      *
      * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] can be [reduced][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Reducing]
-     * or [aggregated][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation].
+     * or [aggregated][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation] into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
      * Check out [PivotGroupBy Grammar][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Grammar].
      *
-     * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#pivot-groupby)
+     * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
      */
     interface Pivoting
 }
@@ -379,15 +412,18 @@ internal interface GroupByDocs {
  * defines the group consisting of all rows where the column(s) contain that value combination.
  *
  * Returns a [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] — a dataframe-like structure that contains all unique combinations of key values
- * along with the corresponding groups of rows (each represented as a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]).
+ * along with the corresponding groups of rows (each represented as a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]) as rows.
  *
  * A [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] can then be:
  * * [transformed][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Transformation] into a new [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy];
  * * [reduced][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], where each group is collapsed into a single representative row;
  * * [aggregated][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Aggregation] into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], where each group is transformed into one or more rows of derived values;
- * * [pivoted][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Pivoting] into a [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] structure, which combines [pivot][org.jetbrains.kotlinx.dataframe.api.pivot] and [groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy] operations.
+ * * [pivoted][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Pivoting] into a [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] structure, which combines [pivot][org.jetbrains.kotlinx.dataframe.api.pivot] and [groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy] operations
+ *   and then reduced or aggregated into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Grouping keys can also be created inline:
+ * Grouping keys can also be created inline
+ * (i.g. by creating a new column using [expr][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * using [named][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
  * // and use it as a grouping key:
@@ -404,6 +440,8 @@ internal interface GroupByDocs {
  *
  * Don't confuse this with [group][org.jetbrains.kotlinx.dataframe.api.group], which groups column into
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * See also [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] vertically.
  * ### This `groupBy` Overload
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
@@ -413,6 +451,8 @@ internal interface GroupByDocs {
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+ * for type- and name-safe columns selection.
  *
  * #### NOTE:
  * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -428,11 +468,12 @@ internal interface GroupByDocs {
  *
  * #### For example:
  *
- * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
- * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ *
  *
  *
  *
@@ -459,15 +500,18 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  * defines the group consisting of all rows where the column(s) contain that value combination.
  *
  * Returns a [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] — a dataframe-like structure that contains all unique combinations of key values
- * along with the corresponding groups of rows (each represented as a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]).
+ * along with the corresponding groups of rows (each represented as a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]) as rows.
  *
  * A [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] can then be:
  * * [transformed][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Transformation] into a new [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy];
  * * [reduced][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], where each group is collapsed into a single representative row;
  * * [aggregated][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Aggregation] into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], where each group is transformed into one or more rows of derived values;
- * * [pivoted][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Pivoting] into a [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] structure, which combines [pivot][org.jetbrains.kotlinx.dataframe.api.pivot] and [groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy] operations.
+ * * [pivoted][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Pivoting] into a [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] structure, which combines [pivot][org.jetbrains.kotlinx.dataframe.api.pivot] and [groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy] operations
+ *   and then reduced or aggregated into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Grouping keys can also be created inline:
+ * Grouping keys can also be created inline
+ * (i.g. by creating a new column using [expr][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * using [named][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
  * // and use it as a grouping key:
@@ -484,6 +528,8 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  *
  * Don't confuse this with [group][org.jetbrains.kotlinx.dataframe.api.group], which groups column into
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ * See also [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] vertically.
  * ### This `groupBy` Overload
  * Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
@@ -510,33 +556,35 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
 // region Pivot
 
 /**
- * Groups the rows of this [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] into [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy]
+ * Groups the rows of this [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups
  * based on the values in one or more specified [key columns][columns].
+ * Returns a [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy].
  *
- * Works like regular [DataFrame.groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy] on pivot groups.
- *
- * Grouping keys can also be created inline:
- * ```kotlin
- * // Create a new column "newName" based on existing "oldName" values
- * // and use it as a grouping key:
- * pivot.groupBy { expr("newName") { oldName.drop(5) } }
- * ```
- *
- * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] is a dataframe-like structure, combining [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] and [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]
- * and representing a matrix table with vertical [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups (as columns)
- * and horizontal [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] groups (as rows), and each cell
- * represents a group corresponding both to [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] and [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] key.
+ * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] is a dataframe-like structure that combines [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] and [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy],
+ * representing a matrix table with vertical [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups (as columns)
+ * and horizontal [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] groups (as rows),
+ * where each cell represents a group corresponding
+ * to both the [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] and [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] key.
  *
  * Reversed order of `pivot` and `groupBy`
  * (i.e., [DataFrame.pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] + [Pivot.groupBy][org.jetbrains.kotlinx.dataframe.api.Pivot.groupBy] or [DataFrame.groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy] + [GroupBy.pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot])
  * will produce the same result.
  *
  * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] can be [reduced][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Reducing]
- * or [aggregated][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation].
+ * or [aggregated][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation] into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Check out [PivotGroupBy Grammar][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Grammar].
  *
- * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#pivot-groupby)
+ * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
+ *
+ * Grouping keys can also be created inline
+ * (i.g. by creating a new column using [expr][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * using [named][org.jetbrains.kotlinx.dataframe.api.named]):
+ * ```kotlin
+ * // Create a new column "newName" based on existing "oldName" values
+ * // and use it as a grouping key:
+ * df.groupBy { expr("newName") { oldName.drop(5) } }
+ * ```
  * ### This `groupBy` Overload
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
@@ -546,6 +594,8 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+ * for type- and name-safe columns selection.
  *
  * #### NOTE:
  * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -561,11 +611,13 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
  *
  * #### For example:
  *
- * `pivot.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`pivot`</code>`.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
- * `pivot.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`pivot`</code>`.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `pivot.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`pivot`</code>`.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ *
+ *
  *
  *
  * @param moveToTop Specifies whether nested grouping columns should be moved to the top level
@@ -584,33 +636,35 @@ public fun <T> Pivot<T>.groupBy(moveToTop: Boolean = true, columns: ColumnsSelec
 public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
 /**
- * Groups the rows of this [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] into [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy]
+ * Groups the rows of this [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups
  * based on the values in one or more specified [key columns][columns].
+ * Returns a [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy].
  *
- * Works like regular [DataFrame.groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy] on pivot groups.
- *
- * Grouping keys can also be created inline:
- * ```kotlin
- * // Create a new column "newName" based on existing "oldName" values
- * // and use it as a grouping key:
- * pivot.groupBy { expr("newName") { oldName.drop(5) } }
- * ```
- *
- * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] is a dataframe-like structure, combining [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] and [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]
- * and representing a matrix table with vertical [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups (as columns)
- * and horizontal [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] groups (as rows), and each cell
- * represents a group corresponding both to [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] and [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] key.
+ * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] is a dataframe-like structure that combines [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] and [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy],
+ * representing a matrix table with vertical [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups (as columns)
+ * and horizontal [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] groups (as rows),
+ * where each cell represents a group corresponding
+ * to both the [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] and [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] key.
  *
  * Reversed order of `pivot` and `groupBy`
  * (i.e., [DataFrame.pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] + [Pivot.groupBy][org.jetbrains.kotlinx.dataframe.api.Pivot.groupBy] or [DataFrame.groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy] + [GroupBy.pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot])
  * will produce the same result.
  *
  * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] can be [reduced][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Reducing]
- * or [aggregated][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation].
+ * or [aggregated][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation] into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Check out [PivotGroupBy Grammar][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Grammar].
  *
- * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#pivot-groupby)
+ * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
+ *
+ * Grouping keys can also be created inline
+ * (i.g. by creating a new column using [expr][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * using [named][org.jetbrains.kotlinx.dataframe.api.named]):
+ * ```kotlin
+ * // Create a new column "newName" based on existing "oldName" values
+ * // and use it as a grouping key:
+ * df.groupBy { expr("newName") { oldName.drop(5) } }
+ * ```
  * ### This `groupBy` Overload
  * Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
@@ -637,21 +691,22 @@ public fun <T> Pivot<T>.groupBy(vararg columns: KProperty<*>): PivotGroupBy<T> =
  * For example, if a [DataFrame] has columns `"a"`, `"b"`, `"c"`, `"d"` and is pivoted by
  * `"a"` and `"c"`, then this [Pivot] will be grouped by the remaining columns `"b"` and `"d"`.
  *
- * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] is a dataframe-like structure, combining [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] and [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]
- * and representing a matrix table with vertical [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups (as columns)
- * and horizontal [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] groups (as rows), and each cell
- * represents a group corresponding both to [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] and [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] key.
+ * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] is a dataframe-like structure that combines [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] and [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy],
+ * representing a matrix table with vertical [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups (as columns)
+ * and horizontal [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] groups (as rows),
+ * where each cell represents a group corresponding
+ * to both the [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] and [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] key.
  *
  * Reversed order of `pivot` and `groupBy`
  * (i.e., [DataFrame.pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] + [Pivot.groupBy][org.jetbrains.kotlinx.dataframe.api.Pivot.groupBy] or [DataFrame.groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy] + [GroupBy.pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot])
  * will produce the same result.
  *
  * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] can be [reduced][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Reducing]
- * or [aggregated][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation].
+ * or [aggregated][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation] into a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Check out [PivotGroupBy Grammar][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Grammar].
  *
- * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#pivot-groupby)
+ * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  * @return A new [PivotGroupBy] that preserves the original [pivot] key columns
  * and uses the remaining columns as [groupBy] keys.
  */
