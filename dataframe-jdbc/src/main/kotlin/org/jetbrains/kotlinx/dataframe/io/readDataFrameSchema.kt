@@ -321,7 +321,7 @@ public fun Connection.readDataFrameSchema(sqlQueryOrTableName: String, dbType: D
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
 public fun DataFrameSchema.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
-    val tableColumns = getTableColumnsMetadata(resultSet)
+    val tableColumns = getTableColumnsMetadata(resultSet, dbType)
     return buildSchemaByTableColumns(tableColumns, dbType)
 }
 
