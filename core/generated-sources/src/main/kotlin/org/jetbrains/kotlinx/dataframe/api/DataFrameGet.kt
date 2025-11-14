@@ -82,7 +82,18 @@ public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): Colum
  * df.properties().
  * ```
  */
+@Deprecated("Renamed for clarity: use columnsScope() to access generated column properties only", ReplaceWith("columnsScope()"))
 public fun <T> DataFrame<T>.properties(): ColumnsScope<T> = this
+
+/**
+ * Returns a ColumnsScope that exposes only generated column accessor properties for code completion,
+ * hiding the rest of the DataFrame API. Useful to quickly discover available columns.
+ *
+ * Example:
+ * val df = DataFrame.read("file.csv")
+ * df.columnsScope(). // shows only column accessors in auto-complete
+ */
+public fun <T> DataFrame<T>.columnsScope(): ColumnsScope<T> = this
 
 // region getColumn
 
