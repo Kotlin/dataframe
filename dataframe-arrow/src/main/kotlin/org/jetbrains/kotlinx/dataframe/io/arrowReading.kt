@@ -23,9 +23,6 @@ public class ArrowFeather : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
-        DataFrame.readArrowFeather(file, NullabilityOptions.Widening)
-
     override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
         DataFrame.readArrowFeather(path, NullabilityOptions.Widening)
 
@@ -80,7 +77,10 @@ public fun DataFrame.Companion.readArrowIPC(
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = readArrowIPC(file.toPath(), nullability)
 
-/** Path overload for reading Arrow IPC from file path. */
+/**
+ * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
+ * data from existing file on the given [path].
+ */
 public fun DataFrame.Companion.readArrowIPC(
     path: Path,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
@@ -139,7 +139,10 @@ public fun DataFrame.Companion.readArrowFeather(
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = readArrowFeather(file.toPath(), nullability)
 
-/** Path overload for reading Arrow Feather from file path. */
+/**
+ * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
+ * data from an existing file on the given [path].
+ */
 public fun DataFrame.Companion.readArrowFeather(
     path: Path,
     nullability: NullabilityOptions = NullabilityOptions.Infer,

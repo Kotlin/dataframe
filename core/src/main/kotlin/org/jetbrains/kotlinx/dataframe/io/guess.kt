@@ -37,7 +37,10 @@ public sealed interface SupportedFormat {
 public sealed interface SupportedFormatSample {
 
     @JvmInline
-    public value class DataFile(public val sampleFilePath: Path) : SupportedFormatSample
+    public value class DataFile(public val sampleFile: File) : SupportedFormatSample
+
+    @JvmInline
+    public value class DataPath(public val samplePath: Path) : SupportedFormatSample
 
     @JvmInline
     public value class DataUrl(public val sampleUrl: URL) : SupportedFormatSample
@@ -144,7 +147,7 @@ internal fun guessFormatForExtension(
 internal fun guessFormat(
     path: Path,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: SupportedFormatSample.DataFile? = SupportedFormatSample.DataFile(path),
+    sample: SupportedFormatSample.DataPath? = SupportedFormatSample.DataPath(path),
 ): SupportedFormat? = guessFormatForExtension(path.extension.lowercase(), formats, sample = sample)
 
 internal fun guessFormat(

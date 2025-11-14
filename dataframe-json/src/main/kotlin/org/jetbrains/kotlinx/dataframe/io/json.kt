@@ -48,15 +48,6 @@ public class JSON(
             unifyNumbers = unifyNumbers,
         )
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
-        DataFrame.readJson(
-            file = file,
-            header = header,
-            typeClashTactic = typeClashTactic,
-            keyValuePaths = keyValuePaths,
-            unifyNumbers = unifyNumbers,
-        )
-
     override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
         DataFrame.readJson(
             path = path,
@@ -158,7 +149,15 @@ public fun DataFrame.Companion.readJson(
     unifyNumbers: Boolean = true,
 ): AnyFrame = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers)
 
-/** Path overload for reading JSON into DataFrame. */
+/**
+ * @param path Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
+ *     will be created.
+ * @param typeClashTactic How to handle type clashes when reading a JSON file.
+ * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
+ * @return [DataFrame] from the given [path].
+ */
 public fun DataFrame.Companion.readJson(
     path: Path,
     header: List<String> = emptyList(),
@@ -184,7 +183,15 @@ public fun DataRow.Companion.readJson(
     unifyNumbers: Boolean = true,
 ): AnyRow = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers).single()
 
-/** Path overload for reading JSON into DataRow. */
+/**
+ * @param path Where to fetch the Json as [InputStream] to be converted to a [DataRow].
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
+ *     will be created.
+ * @param typeClashTactic How to handle type clashes when reading a JSON file.
+ * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
+ * @return [DataRow] from the given [path].
+ */
 public fun DataRow.Companion.readJson(
     path: Path,
     header: List<String> = emptyList(),

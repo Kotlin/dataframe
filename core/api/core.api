@@ -6421,12 +6421,26 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedForm
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/SupportedFormatSample$DataFile : org/jetbrains/kotlinx/dataframe/io/SupportedFormatSample {
-	public static final synthetic fun box-impl (Ljava/nio/file/Path;)Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample$DataFile;
+	public static final synthetic fun box-impl (Ljava/io/File;)Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample$DataFile;
+	public static fun constructor-impl (Ljava/io/File;)Ljava/io/File;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/io/File;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/io/File;Ljava/io/File;)Z
+	public final fun getSampleFile ()Ljava/io/File;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/io/File;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/io/File;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/io/File;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/SupportedFormatSample$DataPath : org/jetbrains/kotlinx/dataframe/io/SupportedFormatSample {
+	public static final synthetic fun box-impl (Ljava/nio/file/Path;)Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample$DataPath;
 	public static fun constructor-impl (Ljava/nio/file/Path;)Ljava/nio/file/Path;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/nio/file/Path;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/nio/file/Path;Ljava/nio/file/Path;)Z
-	public final fun getSampleFilePath ()Ljava/nio/file/Path;
+	public final fun getSamplePath ()Ljava/nio/file/Path;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Ljava/nio/file/Path;)I
 	public fun toString ()Ljava/lang/String;
