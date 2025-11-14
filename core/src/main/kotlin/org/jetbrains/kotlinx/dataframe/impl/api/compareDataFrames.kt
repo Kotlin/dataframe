@@ -1,21 +1,27 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 /**
- * dfs (will be) with same schema. Returns the path from origin to (N,M) in the edit path.
+ * dfs (will be) with same schema. Returns the path from origin to (N,M) in the edit graph.
  * N is dfA.nrow, M is dfB.nrow.
  * Knowing this path is knowing the differences between dfA and dfB
  * and the shortest edit script to get B from A.
- * cost of this alg's worst case in O( (N+M)D ), D is the length of shortest edit script.
- * snake: a set of diagonal edges, possibly empty
+ * The cost of this alg's worst case in O( (N+M)D ), D is the length of shortest edit script.
+ *
+ * The idea of the algorithm is the following: try to cross the edit graph making 'd' non-diagonal moves,
+ * increase 'd' until you succeed.
+ * Non-diagonal moves make edit script longer, while diagonal moves do not.
+ *
+ * snake: non-diagonal edge and then a possibly empty sequence of diagonal edges called a
+ * furthest reaching D-path endpoint: The endpoint of the longest d-path
  */
 internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList<Pair<Int, Int>> {
-    // what I want from Myers alg
+    // Return value
     val path = mutableListOf<Pair<Int, Int>>()
     // 'ses' stands for shortest edit script, next var is never returned, it is in the code
     // to show the capabilities of the algorithm
     var sesLength: Int?
-    // Myers algorithm, preparing
     val sumOfLength = dfA.length + dfB.length
+    // matrix containing the furthest reaching endpoints for each d
     val v = arrayListOf<IntArray>()
     for (d in 0..sumOfLength) {
         v.add(IntArray(sumOfLength * 2 + 1))
@@ -40,11 +46,11 @@ internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList
                 y += 1
             }
             v[d][k + normalizer] = x
-            // need these datas in next iteration
+            // need this data in the next iteration
             if (d < sumOfLength) {
                 v[d + 1][k + normalizer] = x
             }
-            //
+            // Edit graph was fully crossed
             if (x >= dfA.length && y >= dfB.length) {
                 isOver = true
                 sesLength = d
@@ -52,7 +58,8 @@ internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList
                 break
             }
         }
-        d++ // try with a longer edit script
+        // try with a longer edit script
+        d++
     }
     return path
 }
@@ -66,53 +73,53 @@ internal fun recoursivePathFill(
     dfA: String,
     dfB: String,
 ) {
-    // enlist my self
+    // Enlist my self
     val xCurrent = v[d][k + normalizer]
     val yCurrent = xCurrent - k
     path.add(Pair(xCurrent, yCurrent))
-    // choose the furthest reaching endpoint that precedes me
-    // To list an optimal path from (0,0) to the point Vd[k] first determine
-    // whether it is at the end of a maximal snake following a vertical edge from Vd−1[k+1] or a horizontal edge
-    // from Vd−1[k−1]
+    // I look for the furthest reaching endpoint that precedes me, it is represented by kPrev.
+    // It will be an argument of the next recoursive step.
+    // The idea is the following: knowing my d and my k means knowing the f.r.e. that precedes me.
+    // Moreover, I need to enlist the points composing the snake that precedes me (it may be empty).
     if (d > 0) {
-        val kTry1 = k + 1
-        val kTry2 = k - 1
-        val tries = listOf<Int>(kTry1, kTry2)
-        for (kT in tries) {
-            var xPrev = v[d - 1][kT + normalizer]
-            var yPrev = xPrev - kT
-            if (kT == kTry1) {
-                yPrev++
-            } else {
-                xPrev++
-            }
-            val snake = mutableListOf<Pair<Int, Int>>()
-            var skipThisRoundOfOuterLoop = false
-            do {
-                snake.add(0, Pair(xPrev, yPrev))
-                if (xPrev == xCurrent && yPrev == yCurrent) {
-                    if (snake.isNotEmpty()) {
-                        snake.removeFirst()
-                        for (e in snake) {
-                            path.add(e)
-                        }
-                    }
-                    recoursivePathFill(path, v, d - 1, kT, normalizer, dfA, dfB)
-                    return
-                }
-                if (xPrev < dfA.length && yPrev < dfB.length && xPrev >= 0 && yPrev >= 0 && dfA[xPrev] == dfB[yPrev]) {
-                    xPrev += 1
-                    yPrev += 1
-                } else {
-                    skipThisRoundOfOuterLoop = true
-                }
-            }
-            while (xPrev <= xCurrent && yPrev <= yCurrent && !skipThisRoundOfOuterLoop)
+        var kPrev: Int? = null
+        var xSnake: Int? = null
+        if (k == -d || k != d && v[d][k - 1 + normalizer] < v[d][k + 1 + normalizer]) {
+            kPrev = k + 1
+            xSnake = v[d - 1][kPrev + normalizer]
+        } else {
+            kPrev = k - 1
+            xSnake = v[d - 1][kPrev + normalizer] + 1
         }
+        var ySnake = xSnake - k
+        val snake = mutableListOf<Pair<Int, Int>>()
+        do {
+            snake.add(0, Pair(xSnake, ySnake))
+            if (xSnake == xCurrent && ySnake == yCurrent) {
+                if (snake.isNotEmpty()) {
+                    snake.removeFirst()
+                    for (e in snake) {
+                        path.add(e)
+                    }
+                }
+                recoursivePathFill(path, v, d - 1, kPrev, normalizer, dfA, dfB)
+                return
+            }
+            if (xSnake < dfA.length &&
+                ySnake < dfB.length &&
+                xSnake >= 0 &&
+                ySnake >= 0 &&
+                dfA[xSnake] == dfB[ySnake]
+            ) {
+                xSnake += 1
+                ySnake += 1
+            }
+        }
+        while (xSnake <= xCurrent && ySnake <= yCurrent)
     }
-    // step base,
-    // eventually need to build the snake from origin to the furthest reaching point with d=0
-    // moreover the path is reversed so that it can be read from left to right correctly
+    // Step base.
+    // Eventually need to add diagonal edges from origin to the furthest reaching point with d=0.
+    // Moreover, the path is reversed so that it can be read from left to right correctly
     if (d == 0) {
         if (path.last().first != 0 && path.last().second != 0) {
             val last = path.last()
