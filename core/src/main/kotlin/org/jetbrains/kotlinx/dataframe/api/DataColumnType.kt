@@ -1,8 +1,9 @@
-@file:OptIn(ExperimentalContracts::class)
+@file:OptIn(ExperimentalContracts::class, ExperimentalExtendedContracts::class)
 
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -17,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.IS_INTER_COMPARABLE_IMPORT
 import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.ExperimentalExtendedContracts
 import kotlin.contracts.contract
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -40,21 +42,36 @@ public fun AnyCol.isValueColumn(): Boolean {
 public fun AnyCol.isSubtypeOf(type: KType): Boolean =
     this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
 
-public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf<T>())
+public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean {
+    contract { returns(true) implies (this@isSubtypeOf is DataColumn<T>) }
+    return isSubtypeOf(typeOf<T>())
+}
 
-public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
+public inline fun <reified T> AnyCol.isType(): Boolean {
+    contract { returns(true) implies (this@isType is DataColumn<T>) }
+    return type() == typeOf<T>()
+}
 
 /** Returns `true` when this column's type is a subtype of `Number?` */
-public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
+public fun AnyCol.isNumber(): Boolean {
+    contract { returns(true) implies (this@isNumber is ValueColumn<Number?>) }
+    return isSubtypeOf<Number?>()
+}
 
 /** Returns `true` only when this column's type is exactly `Number` or `Number?`. */
-public fun AnyCol.isMixedNumber(): Boolean = type().isMixedNumber()
+public fun AnyCol.isMixedNumber(): Boolean {
+    contract { returns(true) implies (this@isMixedNumber is ValueColumn<Number?>) }
+    return type().isMixedNumber()
+}
 
 /**
  * Returns `true` when this column has the (nullable) type of either:
  * [Byte], [Short], [Int], [Long], [Float], or [Double].
  */
-public fun AnyCol.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
+public fun AnyCol.isPrimitiveNumber(): Boolean {
+    contract { returns(true) implies (this@isPrimitiveNumber is ValueColumn<Number?>) }
+    return type().isPrimitiveNumber()
+}
 
 /**
  * Returns `true` when this column has the (nullable) type of either:
@@ -63,9 +80,15 @@ public fun AnyCol.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
  * Careful: Will return `true` if the column contains multiple number types that
  * might NOT be primitive.
  */
-public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixedNumber()
+public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean {
+    contract { returns(true) implies (this@isPrimitiveOrMixedNumber is ValueColumn<Number?>) }
+    return type().isPrimitiveOrMixedNumber()
+}
 
-public fun AnyCol.isList(): Boolean = typeClass == List::class
+public fun AnyCol.isList(): Boolean {
+    contract { returns(true) implies (this@isList is ValueColumn<List<*>>) }
+    return typeClass == List::class
+}
 
 /** @include [valuesAreComparable] */
 @Deprecated(
@@ -84,4 +107,7 @@ public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
  *
  * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)`
  */
-public fun AnyCol.valuesAreComparable(): Boolean = isValueColumn() && type().isIntraComparable()
+public fun <T> DataColumn<T>.valuesAreComparable(): Boolean {
+    contract { returns(true) implies (this@valuesAreComparable is ValueColumn<Comparable<T>>) }
+    return isValueColumn() && type().isIntraComparable()
+}
