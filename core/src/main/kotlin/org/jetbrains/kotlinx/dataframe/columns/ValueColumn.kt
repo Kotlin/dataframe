@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.maxBy
-import kotlin.getValue
 import kotlin.reflect.KProperty
 
 /**
