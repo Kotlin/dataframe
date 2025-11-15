@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.impl.api.myersDifferenceAlgorithmImpl
 import org.junit.Test
 import kotlin.Pair
@@ -93,18 +92,12 @@ class CompareDataFramesTest {
     }
 
     @Test
-    fun `compare rows`() {
-        val x by columnOf(1, 1)
-        val y by columnOf("a", "a")
-        val df = dataFrameOf(x, y)
-        df[0] shouldBe df[1]
-    }
-
-    @Test
-    fun `compare rows2`() {
-        val x by columnOf(1, 2)
-        val y by columnOf("a", "b")
-        val df = dataFrameOf(x, y)
-        df[0] shouldNotBe df[1]
+    fun `describe`() {
+        //dfA
+        val x by columnOf(0, 1, 2, 0, 1, 1, 0)
+        val y by columnOf("a", "b", "c", "a", "b", "b", "a")
+        val dfA = dataFrameOf(x, y)
+        val r = dfA.describe()
+        r shouldBe emptyDataFrame()
     }
 }

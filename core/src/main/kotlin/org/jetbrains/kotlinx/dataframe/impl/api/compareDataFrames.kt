@@ -4,7 +4,32 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.nrow
 
 /**
- * dfs (will be) with same schema. Returns the path from origin to (N,M) in the edit graph.
+ * returns a DataFrame whose rows communicate the differences between dfA and dfB
+ */
+internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): DataFrame<*> {
+    val shortestEditScript = myersDifferenceAlgorithmImpl(dfA, dfB)
+    var x: Int?
+    var y: Int?
+    var xPrev: Int?
+    var yPrev: Int?
+
+    for(i in 1 until shortestEditScript.size) {
+        x=shortestEditScript[i].first
+        y=shortestEditScript[i].second
+        xPrev=shortestEditScript[i-1].first
+        yPrev=shortestEditScript[i-1].second
+        when {
+            xPrev+1==x&&yPrev+1==y -> //row in position 'x' of dfA was not removed
+
+            xPrev+1==x -> //row in position 'x' of dfA was removed
+
+            yPrev+1==y -> //row in position 'y' of dfB was inserted after row in position 'x' of dfA
+        }
+    }
+}
+
+/**
+ * dfs with same schema. Returns the path from origin to (N,M) in the edit graph.
  * N is dfA.nrow, M is dfB.nrow.
  * Knowing this path is knowing the differences between dfA and dfB
  * and the shortest edit script to get B from A.
@@ -17,7 +42,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
  * snake: non-diagonal edge and then a possibly empty sequence of diagonal edges
  * D-path: a path starting at (0,0) that has exactly D non-diagonal edges
  */
-internal fun <T> myersDifferenceAlgorithmImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): MutableList<Pair<Int, Int>> {
+internal fun <T> myersDifferenceAlgorithmImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): List<Pair<Int, Int>> {
     // Return value
     val path = mutableListOf<Pair<Int, Int>>()
     // 'ses' stands for shortest edit script, next var is never returned, it is in the code
@@ -68,7 +93,8 @@ internal fun <T> myersDifferenceAlgorithmImpl(dfA: DataFrame<T>, dfB: DataFrame<
         // try with a longer edit script
         d++
     }
-    return path
+    val immutablePath = path.toList()
+    return immutablePath
 }
 
 internal fun <T> recoursivePathFill(
