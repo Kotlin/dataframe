@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.impl.api.myersDifferenceAlgorithmImpl
 import org.junit.Test
 import kotlin.Pair
@@ -8,7 +9,15 @@ import kotlin.Pair
 class CompareDataFramesTest {
     @Test
     fun `Need both to delete and insert rows, preserving some rows`() {
-        val path = myersDifferenceAlgorithmImpl("abcabba", "cbabac")
+        //dfA
+        val x by columnOf(0, 1, 2, 0, 1, 1, 0)
+        val y by columnOf("a", "b", "c", "a", "b", "b", "a")
+        val dfA = dataFrameOf(x, y)
+        //dfB
+        val k by columnOf(2, 1, 0, 1, 0, 2)
+        val z by columnOf("c", "b", "a", "b", "a", "c")
+        val dfB = dataFrameOf(k, z)
+        val path = myersDifferenceAlgorithmImpl(dfA, dfB)
         path shouldBe listOf(
             Pair(0, 0),
             Pair(1, 0),
@@ -25,40 +34,77 @@ class CompareDataFramesTest {
 
     @Test
     fun `need to do nothing`() {
-        val path = myersDifferenceAlgorithmImpl("aaaa", "aaaa")
+        //dfA
+        val x by columnOf(0, 0, 0)
+        val y by columnOf("a", "a", "a")
+        val dfA = dataFrameOf(x, y)
+        //dfB
+        val k by columnOf(0, 0, 0)
+        val z by columnOf("a", "a", "a")
+        val dfB = dataFrameOf(k, z)
+        val path = myersDifferenceAlgorithmImpl(dfA, dfB)
         path shouldBe listOf(
             Pair(0, 0),
             Pair(1, 1),
             Pair(2, 2),
             Pair(3, 3),
-            Pair(4, 4),
         )
     }
 
     @Test
     fun `need to remove each row of dfA and insert each row of dfB`() {
-        val path = myersDifferenceAlgorithmImpl("abcd", "efgh")
+        //dfA
+        val x by columnOf(0, 1, 2)
+        val y by columnOf("a", "b", "c")
+        val dfA = dataFrameOf(x, y)
+        //dfB
+        val k by columnOf(3, 4, 5)
+        val z by columnOf("d", "e", "f")
+        val dfB = dataFrameOf(k, z)
+        val path = myersDifferenceAlgorithmImpl(dfA, dfB)
         path shouldBe listOf(
             Pair(0, 0),
             Pair(1, 0),
             Pair(2, 0),
             Pair(3, 0),
-            Pair(4, 0),
-            Pair(4, 1),
-            Pair(4, 2),
-            Pair(4, 3),
-            Pair(4, 4),
+            Pair(3, 1),
+            Pair(3, 2),
+            Pair(3, 3),
         )
     }
 
     @Test
     fun `need to add each row`() {
-        val path = myersDifferenceAlgorithmImpl("", "abc")
+        //dfA
+        val x by columnOf(listOf())
+        val y by columnOf(listOf())
+        val dfA = dataFrameOf(x, y)
+        //dfB
+        val k by columnOf(0, 1, 2)
+        val z by columnOf("a", "b", "c")
+        val dfB = dataFrameOf(k, z)
+        val path = myersDifferenceAlgorithmImpl(dfA, dfB)
         path shouldBe listOf(
             Pair(0, 0),
             Pair(0, 1),
             Pair(0, 2),
             Pair(0, 3),
         )
+    }
+
+    @Test
+    fun `compare rows`() {
+        val x by columnOf(1, 1)
+        val y by columnOf("a", "a")
+        val df = dataFrameOf(x, y)
+        df[0] shouldBe df[1]
+    }
+
+    @Test
+    fun `compare rows2`() {
+        val x by columnOf(1, 2)
+        val y by columnOf("a", "b")
+        val df = dataFrameOf(x, y)
+        df[0] shouldNotBe df[1]
     }
 }

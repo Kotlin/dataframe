@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.nrow
+
 /**
  * dfs (will be) with same schema. Returns the path from origin to (N,M) in the edit graph.
  * N is dfA.nrow, M is dfB.nrow.
@@ -14,13 +17,13 @@ package org.jetbrains.kotlinx.dataframe.impl.api
  * snake: non-diagonal edge and then a possibly empty sequence of diagonal edges
  * D-path: a path starting at (0,0) that has exactly D non-diagonal edges
  */
-internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList<Pair<Int, Int>> {
+internal fun <T> myersDifferenceAlgorithmImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): MutableList<Pair<Int, Int>> {
     // Return value
     val path = mutableListOf<Pair<Int, Int>>()
     // 'ses' stands for shortest edit script, next var is never returned, it is in the code
     // to show the capabilities of the algorithm
     var sesLength: Int?
-    val sumOfLength = dfA.length + dfB.length
+    val sumOfLength = dfA.nrow + dfB.nrow
     // matrix containing the endpoint of the furthest reaching D-path ending in diagonal k
     // for each d-k couple of interest
     val v = arrayListOf<IntArray>()
@@ -45,7 +48,7 @@ internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList
                 x = v[d][k - 1 + normalizer] + 1
             }
             var y = x - k
-            while (x < dfA.length && y < dfB.length && dfA[x] == dfB[y]) {
+            while (x < dfA.nrow && y < dfB.nrow && dfA[x] == dfB[y]) {
                 x += 1
                 y += 1
             }
@@ -55,7 +58,7 @@ internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList
                 v[d + 1][k + normalizer] = x
             }
             // Edit graph was fully crossed
-            if (x >= dfA.length && y >= dfB.length) {
+            if (x >= dfA.nrow && y >= dfB.nrow) {
                 isOver = true
                 sesLength = d
                 recoursivePathFill(path, v, d, k, normalizer, dfA, dfB)
@@ -68,14 +71,14 @@ internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList
     return path
 }
 
-internal fun recoursivePathFill(
+internal fun <T> recoursivePathFill(
     path: MutableList<Pair<Int, Int>>,
     v: ArrayList<IntArray>,
     d: Int,
     k: Int,
     normalizer: Int,
-    dfA: String,
-    dfB: String,
+    dfA: DataFrame<T>,
+    dfB: DataFrame<T>,
 ) {
     // Enlist my self
     val xCurrent = v[d][k + normalizer]
@@ -108,8 +111,8 @@ internal fun recoursivePathFill(
                 recoursivePathFill(path, v, d - 1, kPrev, normalizer, dfA, dfB)
                 return
             }
-            if (xSnake < dfA.length &&
-                ySnake < dfB.length &&
+            if (xSnake < dfA.nrow &&
+                ySnake < dfB.nrow &&
                 xSnake >= 0 &&
                 ySnake >= 0 &&
                 dfA[xSnake] == dfB[ySnake]
