@@ -11,8 +11,8 @@ package org.jetbrains.kotlinx.dataframe.impl.api
  * increase 'd' until you succeed.
  * Non-diagonal moves make edit script longer, while diagonal moves do not.
  *
- * snake: non-diagonal edge and then a possibly empty sequence of diagonal edges called a
- * furthest reaching D-path endpoint: The endpoint of the longest d-path
+ * snake: non-diagonal edge and then a possibly empty sequence of diagonal edges
+ * D-path: a path starting at (0,0) that has exactly D non-diagonal edges
  */
 internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList<Pair<Int, Int>> {
     // Return value
@@ -21,7 +21,8 @@ internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList
     // to show the capabilities of the algorithm
     var sesLength: Int?
     val sumOfLength = dfA.length + dfB.length
-    // matrix containing the furthest reaching endpoints for each d
+    // matrix containing the endpoint of the furthest reaching D-path ending in diagonal k
+    // for each d-k couple of interest
     val v = arrayListOf<IntArray>()
     for (d in 0..sumOfLength) {
         v.add(IntArray(sumOfLength * 2 + 1))
@@ -31,10 +32,13 @@ internal fun myersDifferenceAlgorithmImpl(dfA: String, dfB: String): MutableList
     // 0 position is -(M+N) position in the alg's paper -> need to normalize each access to v
     val normalizer = sumOfLength
     v[0][1 + normalizer] = 0 // fitticious
+    // d is the number of non-diagonal edges
     var d = 0
     while (d <= sumOfLength && !isOver) {
         for (k in -d..d step 2) {
             var x: Int?
+            // Each furthest reaching D-path ending in diagonal k
+            // is built by exploiting the furthest reaching (D-1)-path ending in k-1 or (exclusive or) k+1
             if (k == -d || k != d && v[d][k - 1 + normalizer] < v[d][k + 1 + normalizer]) {
                 x = v[d][k + 1 + normalizer]
             } else {
@@ -77,9 +81,8 @@ internal fun recoursivePathFill(
     val xCurrent = v[d][k + normalizer]
     val yCurrent = xCurrent - k
     path.add(Pair(xCurrent, yCurrent))
-    // I look for the furthest reaching endpoint that precedes me, it is represented by kPrev.
+    // I look for endpoint I was built from, it is represented by kPrev.
     // It will be an argument of the next recoursive step.
-    // The idea is the following: knowing my d and my k means knowing the f.r.e. that precedes me.
     // Moreover, I need to enlist the points composing the snake that precedes me (it may be empty).
     if (d > 0) {
         var kPrev: Int? = null
