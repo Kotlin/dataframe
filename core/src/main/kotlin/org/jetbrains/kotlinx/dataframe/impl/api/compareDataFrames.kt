@@ -1,31 +1,58 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
+import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.nrow
 
+internal class ComparisonDescription(
+    val rowAtIndex: Int,
+    val of: String,
+    val wasRemoved: Boolean?,
+    val wasInserted: Boolean?,
+    val afterRow: Int?,
+) : DataRowSchema
+
 /**
- * returns a DataFrame whose rows communicate the differences between dfA and dfB
+ * Returns a DataFrame whose rows explain the differences between dfA and dfB.
+ * One must think of the set of commands in a script as being executed simultaneously
  */
-internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): DataFrame<*> {
+internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): DataFrame<ComparisonDescription> {
+    var comparisonDf = emptyDataFrame<ComparisonDescription>()
+    // make the comparison exploiting Myers difference algorithm
     val shortestEditScript = myersDifferenceAlgorithmImpl(dfA, dfB)
     var x: Int?
     var y: Int?
     var xPrev: Int?
     var yPrev: Int?
-
-    for(i in 1 until shortestEditScript.size) {
-        x=shortestEditScript[i].first
-        y=shortestEditScript[i].second
-        xPrev=shortestEditScript[i-1].first
-        yPrev=shortestEditScript[i-1].second
+    for (i in 1 until shortestEditScript.size) {
+        x = shortestEditScript[i].first
+        y = shortestEditScript[i].second
+        xPrev = shortestEditScript[i - 1].first
+        yPrev = shortestEditScript[i - 1].second
         when {
-            xPrev+1==x&&yPrev+1==y -> //row in position 'x' of dfA was not removed
+            // row in position 'x' of dfA was removed
+            xPrev + 1 == x && yPrev + 1 != y -> {
+                comparisonDf = comparisonDf.concat(
+                    dataFrameOf
+                        (ComparisonDescription(x-1, "dfA", true, null, null)),
+                )
+            }
 
-            xPrev+1==x -> //row in position 'x' of dfA was removed
-
-            yPrev+1==y -> //row in position 'y' of dfB was inserted after row in position 'x' of dfA
+            // row in position 'y' of dfB was inserted after row in position 'x' of dfA
+            yPrev + 1 == y && xPrev + 1 != x -> {
+                comparisonDf = comparisonDf.concat(
+                    dataFrameOf(
+                        ComparisonDescription
+                            (y-1, "dfB", null, true, x-1),
+                    ),
+                )
+            }
         }
     }
+    return comparisonDf
 }
 
 /**
