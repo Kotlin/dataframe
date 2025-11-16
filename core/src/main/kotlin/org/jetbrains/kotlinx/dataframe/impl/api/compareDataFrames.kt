@@ -21,7 +21,7 @@ internal class ComparisonDescription(
  */
 internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): DataFrame<ComparisonDescription> {
     var comparisonDf = emptyDataFrame<ComparisonDescription>()
-    // make the comparison exploiting Myers difference algorithm
+    // compare by exploiting Myers difference algorithm
     val shortestEditScript = myersDifferenceAlgorithmImpl(dfA, dfB)
     var x: Int?
     var y: Int?
@@ -33,20 +33,20 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
         xPrev = shortestEditScript[i - 1].first
         yPrev = shortestEditScript[i - 1].second
         when {
-            // row in position 'x' of dfA was removed
+            // row at index 'x-1' of dfA was removed
             xPrev + 1 == x && yPrev + 1 != y -> {
                 comparisonDf = comparisonDf.concat(
                     dataFrameOf
-                        (ComparisonDescription(x-1, "dfA", true, null, null)),
+                        (ComparisonDescription(x - 1, "dfA", true, null, null)),
                 )
             }
 
-            // row in position 'y' of dfB was inserted after row in position 'x' of dfA
+            // row at index 'y-1' of dfB was inserted after row in position 'x-1' of dfA
             yPrev + 1 == y && xPrev + 1 != x -> {
                 comparisonDf = comparisonDf.concat(
                     dataFrameOf(
                         ComparisonDescription
-                            (y-1, "dfB", null, true, x-1),
+                            (y - 1, "dfB", null, true, x - 1),
                     ),
                 )
             }
@@ -56,7 +56,7 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
 }
 
 /**
- * dfs with same schema. Returns the path from origin to (N,M) in the edit graph.
+ * dfs with same schema. Returns an optimal path from origin to (N,M) in the edit graph.
  * N is dfA.nrow, M is dfB.nrow.
  * Knowing this path is knowing the differences between dfA and dfB
  * and the shortest edit script to get B from A.
