@@ -852,7 +852,7 @@ private fun readTableAsDataFrame(
 }
 
 internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): MutableList<TableColumnMetadata> =
-    dbType.getTableColumnsMetadata(resultSet)
+    dbType.getTableColumnsMetadata(resultSet).toMutableList()
 
 /**
  * Fetches and converts data from a ResultSet into a mutable map.

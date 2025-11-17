@@ -412,9 +412,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * where `DatabaseMetaData.getColumns` is known to be slow).
      *
      * @param resultSet The [ResultSet] containing query results.
-     * @return A mutable list of [TableColumnMetadata] objects.
+     * @return A list of [TableColumnMetadata] objects.
      */
-    public open fun getTableColumnsMetadata(resultSet: ResultSet): MutableList<TableColumnMetadata> {
+    public open fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata> {
         val rsMetaData = resultSet.metaData
         val connection = resultSet.statement.connection
         val dbMetaData = connection.metaData
@@ -446,8 +446,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             } catch (_: Exception) {
                 // Some drivers may throw for unsupported features
                 // In that case, fallback to DatabaseMetaData
-                val cols = dbMetaData.getColumns(catalog, schema, tableName, columnName)
-                if (cols.next()) cols.getString("IS_NULLABLE") == "YES" else true
+                dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols ->
+                    if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
+                }
             }
 
             val columnType = rsMetaData.getColumnTypeName(index)
