@@ -42,8 +42,10 @@ private interface JoinBehavior
  *
  * @include [JoinBehavior]
  *
- * See also shortcuts with each of join types:
- * [innerJoin], [leftJoin], [rightJoin], [fullJoin], [filterJoin], [excludeJoin].
+ * Each join type has a corresponding shortcut function:
+ * [innerJoin], [leftJoin], [rightJoin], [fullJoin], [filterJoin], and [excludeJoin].
+ *
+ * See also [joinWith], which performs a join by matching row values condition.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -95,7 +97,7 @@ private interface SelectingColumnsJoinDsl
  * @include [JoinDocs]
  * @include [SelectingColumnsJoinDsl]
  * @param other [DataFrame] to join with.
- * @param type [JoinType] defining how rows are matched and combined.
+ * @param type [JoinType] defining how the resulting rows are constructed.
  * @param selector [JoinColumnsSelector] specifying join columns;
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
@@ -123,7 +125,7 @@ private interface JoinStringApiExample
  * @include [JoinStringApiExample]
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
- * @param type [JoinType] defining how rows are matched and combined.
+ * @param type [JoinType] defining how the resulting rows are constructed.
  * @return joined [DataFrame].
  */
 public fun <A, B> DataFrame<A>.join(
@@ -582,19 +584,19 @@ public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>)
 public enum class JoinType {
 
     /**
-     * Includes all rows from the left [DataFrame]; rows with matching keys are merged,
+     * Includes all rows from the left [DataFrame]; matching rows are merged,
      * unmatched right-side values are filled with `null`.
      */
     Left,
 
     /**
-     * Includes all rows from the right [DataFrame]; rows with matching keys are merged,
+     * Includes all rows from the right [DataFrame]; matching rows are merged,
      * unmatched left-side values are filled with `null`.
      */
     Right,
 
     /**
-     * Includes only rows with matching keys from both [DataFrame]s;
+     * Includes only matching rows from both [DataFrame]s;
      * rows are merged.
      */
     Inner,

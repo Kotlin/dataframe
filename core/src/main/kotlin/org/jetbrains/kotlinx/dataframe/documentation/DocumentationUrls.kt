@@ -182,4 +182,7 @@ internal interface DocumentationUrls {
 
     /** [See `join` on the documentation website.]({@include [Url]}/join.html) */
     interface Join
+
+    /** [See `joinWith` on the documentation website.]({@include [Url]}/joinWith.html) */
+    interface JoinWith
 }
