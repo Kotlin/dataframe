@@ -24,6 +24,10 @@ import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
+import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_COLUMNS
+import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_COLUMNS_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_FRAMES
+import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_FRAMES_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
@@ -41,7 +45,26 @@ import kotlin.reflect.KProperty
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
+@Deprecated(
+    message = ADD_VARARG_COLUMNS,
+    replaceWith = ReplaceWith(ADD_VARARG_COLUMNS_REPLACE),
+    level = DeprecationLevel.WARNING,
+)
 public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
+
+/**
+ * Adds new [columns] to the end of this [DataFrame] (at the top level).
+ *
+ * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
+ *
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ *
+ * @param columns columns to add.
+ * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
+ * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
+ * @return new [DataFrame] with added columns.
+ */
+public fun <T> DataFrame<T>.addAll(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
 
 /**
  * Adds new [columns] to the end of this [DataFrame] (at the top level).
@@ -71,7 +94,29 @@ public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> 
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
+@Deprecated(
+    message = ADD_VARARG_FRAMES,
+    replaceWith = ReplaceWith(ADD_VARARG_FRAMES_REPLACE),
+    level = DeprecationLevel.WARNING,
+)
 public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
+
+/**
+ * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
+ *
+ * Returns a new [DataFrame] with the columns from the specified
+ * [dataFrames] appended to the original list of [DataFrame.columns].
+ *
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ *
+ * @param dataFrames dataFrames to get columns from.
+ * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
+ * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
+ * @return new [DataFrame] with added columns.
+ */
+@Refine
+@Interpretable("DataFrameAddAll")
+public fun <T> DataFrame<T>.addAll(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
  * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
@@ -250,6 +295,7 @@ public class AddDsl<T>(
 
     public fun add(column: AnyColumnReference): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
+    @Interpretable("AddDslReferencePlus")
     public operator fun AnyColumnReference.unaryPlus(): Boolean = add(this)
 
     public operator fun String.unaryPlus(): Boolean = add(df[this])
@@ -320,8 +366,10 @@ public class AddDsl<T>(
         add(dsl.columns.toColumnGroup(name))
     }
 
+    @Interpretable("AddDslAddGroup")
     public fun group(body: AddDsl<T>.() -> Unit): AddGroup<T> = AddGroup(body)
 
+    @Interpretable("AddDslAddGroupInto")
     public infix fun AddGroup<T>.into(groupName: String): Unit = group(groupName, body)
 
     @Deprecated(DEPRECATED_ACCESS_API)

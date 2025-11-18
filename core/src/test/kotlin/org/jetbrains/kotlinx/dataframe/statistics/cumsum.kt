@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -8,7 +9,10 @@ import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
+import org.jetbrains.kotlinx.dataframe.math.cumSumTypeConversion
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class CumsumTests {
@@ -91,5 +95,45 @@ class CumsumTests {
                 "c", null,
                 "c", 4,
             )
+    }
+
+    @Test
+    fun `df cumSum default`() {
+        val df = dataFrameOf(
+            "doubles" to columnOf(1.0, 2.0, null),
+            "shorts" to columnOf(1.toShort(), 2.toShort(), null),
+            "bigInts" to columnOf(1.toBigInteger(), 2.toBigInteger(), null),
+            "mixed" to columnOf<Number?>(1.0, 2, null),
+            "group" to columnOf(
+                "ints" to columnOf(1, 2, 3),
+            ),
+        )
+
+        val res = df.cumSum()
+
+        // works for Doubles, turns nulls into NaNs
+        res["doubles"].values() shouldBe columnOf(1.0, 3.0, Double.NaN).values()
+        // works for Shorts, turns into Ints, skips nulls
+        res["shorts"].values() shouldBe columnOf(1, 3, null).values()
+        // does not work for big numbers, keeps them as is
+        res["bigInts"].values() shouldBe columnOf(1.toBigInteger(), 2.toBigInteger(), null).values()
+        // works for mixed columns of primitives, number-unifies them; in this case to Doubles
+        res["mixed"].values() shouldBe columnOf(1.0, 3.0, Double.NaN).values()
+        // runs at any depth
+        res["group"]["ints"].values() shouldBe columnOf(1, 3, 6).values()
+    }
+
+    @Test
+    fun `cumSumTypeConversion tests`() {
+        cumSumTypeConversion(typeOf<Int>(), false) shouldBe typeOf<Int>()
+        cumSumTypeConversion(typeOf<Long?>(), false) shouldBe typeOf<Long?>()
+        cumSumTypeConversion(typeOf<Short?>(), false) shouldBe typeOf<Int?>()
+        cumSumTypeConversion(typeOf<Byte>(), false) shouldBe typeOf<Int>()
+        cumSumTypeConversion(typeOf<Float?>(), false) shouldBe typeOf<Float>()
+        cumSumTypeConversion(typeOf<Double?>(), false) shouldBe typeOf<Double>()
+        cumSumTypeConversion(typeOf<Double>(), false) shouldBe typeOf<Double>()
+        cumSumTypeConversion(nullableNothingType, false) shouldBe nullableNothingType
+
+        shouldThrow<IllegalStateException> { cumSumTypeConversion(typeOf<String>(), false) }
     }
 }

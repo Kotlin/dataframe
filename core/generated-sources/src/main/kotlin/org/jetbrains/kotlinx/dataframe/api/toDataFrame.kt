@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.impl.api.canBeUnfolded
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -21,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 // region read DataFrame from objects
 
@@ -28,21 +28,13 @@ import kotlin.reflect.KProperty
 @Interpretable("toDataFrameDefault")
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
     toDataFrame {
-        // check if type is value: primitives, primitive arrays, datetime types etc.,
-        // or has no properties
-        if (!T::class.canBeUnfolded) {
-            // create a single `value` column
-            ValueProperty<T>::value.name from { it }
-        } else {
-            // otherwise creates columns based on properties
-            properties()
-        }
+        properties()
     }
 
 @Refine
 @Interpretable("toDataFrameDsl")
 public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
-    createDataFrameImpl(T::class, body)
+    createDataFrameImpl(typeOf<T>(), body)
 
 @Refine
 @Interpretable("toDataFrame")
@@ -71,6 +63,9 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
         map { it.toDataFrame() }.concat()
     }
 }
+
+@JvmName("toDataFrameMapStringAnyNullable")
+public fun Iterable<Map<String, *>>.toDataFrame(): DataFrame<*> = map { it.toDataRow() }.toDataFrame()
 
 @JvmName("toDataFrameAnyColumn")
 public fun Iterable<AnyBaseCol>.toDataFrame(): AnyFrame = dataFrameOf(this)
@@ -169,6 +164,10 @@ public interface TraversePropertiesDsl {
     public fun preserve(vararg properties: KCallable<*>)
 }
 
+/**
+ * Store values of given type [T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+ */
+@Interpretable("PreserveT")
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
 
 public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
@@ -177,8 +176,10 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     public abstract fun add(column: AnyBaseCol, path: ColumnPath? = null)
 
+    @Interpretable("ToDataFrameDslIntoString")
     public infix fun AnyBaseCol.into(name: String): Unit = add(this, pathOf(name))
 
+    @Interpretable("ToDataFrameDslIntoPath")
     public infix fun AnyBaseCol.into(path: ColumnPath): Unit = add(this, path)
 
     @Interpretable("Properties0")
@@ -191,6 +192,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn(infer = infer)
 
+    @Interpretable("ToDataFrameDslAdd")
     public inline fun <reified R> add(name: String, noinline expression: (T) -> R): Unit =
         add(source.map { expression(it) }.toColumn(name, Infer.Nulls))
 
@@ -202,6 +204,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
 
+    @Interpretable("ToDataFrameDslFromInferType")
     public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(this, source.map { inferType.expression(it) }))
 
@@ -253,3 +256,49 @@ public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
     }.toDataFrameFromPairs<Unit>()
 
 // endregion
+
+/**
+ * Converts a list of lists into a [DataFrame].
+ *
+ * By default, treats lists as row values. If [header] is not provided, the first inner list becomes a header (column names), and the remaining lists are treated as data.
+ *
+ * With [containsColumns] = `true`, interprets each inner list as a column.
+ * If [header] is not provided, the first element will be used as the column name, and the remaining elements as values.
+ *
+ * @param T The type of elements contained in the nested lists.
+ * @param containsColumns If `true`, treats each nested list as a column.
+ *                        Otherwise, each nested list is a row.
+ *                        Defaults to `false`.
+ * @param header overrides extraction of column names from lists - all values are treated as data instead.
+ * @return A [DataFrame] containing the data from the nested list structure.
+ *         Returns an empty [DataFrame] if the input is empty or invalid.
+ */
+@Refine
+@Interpretable("ValuesListsToDataFrame")
+public fun <T> List<List<T>>.toDataFrame(header: List<String>?, containsColumns: Boolean = false): AnyFrame =
+    when {
+        containsColumns -> {
+            mapIndexedNotNull { index, list ->
+                if (list.isEmpty()) return@mapIndexedNotNull null
+                val name = header?.get(index) ?: list[0].toString()
+                val values = if (header == null) list.drop(1) else list
+                createColumnGuessingType(name, values)
+            }.toDataFrame()
+        }
+
+        isEmpty() -> DataFrame.Empty
+
+        else -> {
+            val data = if (header == null) drop(1) else this
+            (header ?: get(0).map { it.toString() }).mapIndexed { colIndex, name ->
+                val values = data.map { row ->
+                    if (row.size <= colIndex) {
+                        null
+                    } else {
+                        row[colIndex]
+                    }
+                }
+                createColumnGuessingType(name, values)
+            }.toDataFrame()
+        }
+    }

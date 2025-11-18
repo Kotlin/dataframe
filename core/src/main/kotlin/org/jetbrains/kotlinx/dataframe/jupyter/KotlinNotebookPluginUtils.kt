@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.FormatClause
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
@@ -50,6 +51,7 @@ public object KotlinNotebookPluginUtils {
      * Returns a subset of rows from the given dataframe for rendering.
      * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
      */
+    @RequiredByIntellijPlugin
     public fun getRowsSubsetForRendering(dataFrameLike: Any?, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
         when (dataFrameLike) {
             null -> throw IllegalArgumentException("Dataframe is null")
@@ -76,6 +78,7 @@ public object KotlinNotebookPluginUtils {
      *
      * @return The sorted dataframe.
      */
+    @RequiredByIntellijPlugin
     public fun sortByColumns(dataFrameLike: Any?, columnPaths: List<List<String>>, desc: List<Boolean>): AnyFrame =
         when (dataFrameLike) {
             null -> throw IllegalArgumentException("Dataframe is null")
@@ -233,13 +236,13 @@ public object KotlinNotebookPluginUtils {
 
             is FormattedFrame<*> -> dataframeLike.df
 
-            is AnyCol -> dataFrameOf(dataframeLike)
+            is AnyFrame -> dataframeLike
 
             is AnyRow -> dataframeLike.toDataFrame()
 
             is GroupBy<*, *> -> dataframeLike.toDataFrame()
 
-            is AnyFrame -> dataframeLike
+            is AnyCol -> dataFrameOf(dataframeLike)
 
             is DisableRowsLimitWrapper -> dataframeLike.value
 

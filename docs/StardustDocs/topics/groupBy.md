@@ -142,7 +142,7 @@ df.groupBy { name }.concat()
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html" width="100%"/>
 <!---END-->
 
-## Aggregation
+<!---TODO ## Reducing--->
 
 To compute one or several [statistics](summaryStatistics.md) per every group of `GroupBy` use `aggregate` function. 
 Its body will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) that represents current data group being aggregated.
@@ -221,7 +221,7 @@ df.groupBy { city }.max { age } // max age into column "age"
 df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
 df.groupBy { city }.count() // number of rows into column "count"
 df.groupBy { city }
-    .max { name.firstName.length() and name.lastName.length() } // maximum length of firstName or lastName into column "max"
+    .max { name.firstName.map { it.length } and name.lastName.map { it.length } } // maximum length of firstName or lastName into column "max"
 df.groupBy { city }
     .medianFor { age and weight } // median age into column "age", median weight into column "weight"
 df.groupBy { city }
@@ -239,7 +239,7 @@ df.groupBy("city").max("age") // max age into column "age"
 df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"
 df.groupBy("city").count() // number of rows into column "count"
 df.groupBy("city").max {
-    "name"["firstName"]<String>().length() and "name"["lastName"]<String>().length()
+    "name"["firstName"]<String>().map { it.length } and "name"["lastName"]<String>().map { it.length }
 } // maximum length of firstName or lastName into column "max"
 df.groupBy("city")
     .medianFor("age", "weight") // median age into column "age", median weight into column "weight"
@@ -251,7 +251,6 @@ df.groupBy("city").meanOf("mean ratio") {
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html" width="100%"/>
 <!---END-->
 
 To get all column values for every group without aggregation use `values` function:

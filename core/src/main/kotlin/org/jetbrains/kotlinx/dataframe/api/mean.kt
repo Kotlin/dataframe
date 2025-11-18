@@ -150,7 +150,7 @@ public fun <T, C : Number?> Grouped<T>.meanFor(
 ): DataFrame<T> = meanFor(skipNaN) { columns.toColumnSet() }
 
 @Refine
-@Interpretable("GroupByMean0")
+@Interpretable("GroupByMean2")
 public fun <T, C : Number?> Grouped<T>.mean(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -353,13 +353,9 @@ public fun <T, C : Number?> DataFrame<T>.mean(vararg columns: KProperty<C>): Dou
 public inline fun <T, reified D : Number?> DataFrame<T>.meanOf(crossinline expression: RowExpression<T, D>): Double =
     meanOf(skipNaN = skipNaNDefault, expression = expression)
 
-@Refine
-@Interpretable("GroupByMean1")
 @Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> Grouped<T>.mean(): DataFrame<T> = mean(skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMean0")
 @Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T, C : Number?> Grouped<T>.meanFor(columns: ColumnsForAggregateSelector<T, C>): DataFrame<T> =
     meanFor(skipNaN = skipNaNDefault, columns = columns)
@@ -378,8 +374,6 @@ public fun <T, C : Number?> Grouped<T>.meanFor(vararg columns: ColumnReference<C
 public fun <T, C : Number?> Grouped<T>.meanFor(vararg columns: KProperty<C>): DataFrame<T> =
     meanFor(columns = columns, skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMean0")
 @Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T, C : Number?> Grouped<T>.mean(name: String? = null, columns: ColumnsSelector<T, C>): DataFrame<T> =
     mean(name, skipNaN = skipNaNDefault, columns = columns)
@@ -398,8 +392,6 @@ public fun <T, C : Number?> Grouped<T>.mean(vararg columns: ColumnReference<C>, 
 public fun <T, C : Number?> Grouped<T>.mean(vararg columns: KProperty<C>, name: String? = null): DataFrame<T> =
     mean(columns = columns, name = name, skipNaN = skipNaNDefault)
 
-@Refine
-@Interpretable("GroupByMeanOf")
 @Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public inline fun <T, reified R : Number?> Grouped<T>.meanOf(
     name: String? = null,

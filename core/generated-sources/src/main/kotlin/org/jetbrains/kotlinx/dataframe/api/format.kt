@@ -97,6 +97,8 @@ internal interface FormatDocs {
      * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+     * for type- and name-safe columns selection.
      *
      * #### NOTE:
      * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -112,11 +114,12 @@ internal interface FormatDocs {
      *
      * #### For example:
      *
-     * `df.`[format][org.jetbrains.kotlinx.dataframe.api.format]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[format][org.jetbrains.kotlinx.dataframe.api.format]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
      *
-     * `df.`[format][org.jetbrains.kotlinx.dataframe.api.format]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[format][org.jetbrains.kotlinx.dataframe.api.format]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * `df.`[format][org.jetbrains.kotlinx.dataframe.api.format]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[format][org.jetbrains.kotlinx.dataframe.api.format]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     *
      *
      *
      * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
@@ -344,6 +347,8 @@ internal interface FormatDocs {
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+ * for type- and name-safe columns selection.
  *
  * #### NOTE:
  * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -539,6 +544,8 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+ * for type- and name-safe columns selection.
  *
  * #### NOTE:
  * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -566,7 +573,7 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  *   If unspecified, all columns will be formatted.
  */
 public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> =
-    FormatClause(df, columns, formatter)
+    FormatClause(df, columns, formatter, oldHeaderFormatter = headerFormatter)
 
 /**
  * Formats the specified [columns] or cells within this dataframe such that
@@ -702,7 +709,13 @@ public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(
  * Check out the full [Grammar][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> =
-    FormatClause(filter = this.filter and filter, df = df, columns = columns, oldFormatter = oldFormatter)
+    FormatClause(
+        filter = this.filter and filter,
+        df = df,
+        columns = columns,
+        oldFormatter = oldFormatter,
+        oldHeaderFormatter = oldHeaderFormatter,
+    )
 
 /**
  * Only format the selected columns at given row indices.
@@ -1173,7 +1186,11 @@ public typealias CellFormatter<C> = FormattingDsl.(cell: C) -> CellAttributes?
  *
  * You can apply further formatting to this [FormattedFrame] by calling [format()][FormattedFrame.format] once again.
  */
-public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val formatter: RowColFormatter<T, *>? = null) {
+public class FormattedFrame<T>(
+    internal val df: DataFrame<T>,
+    internal val formatter: RowColFormatter<T, *>? = null,
+    internal val headerFormatter: HeaderColFormatter<*>? = null,
+) {
 
     /**
      * Returns a [DataFrameHtmlData] without additional definitions.
@@ -1219,7 +1236,10 @@ public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val forma
     /** Applies this formatter to the given [configuration] and returns a new instance. */
     @Suppress("UNCHECKED_CAST")
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration =
-        configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)
+        configuration.copy(
+            cellFormatter = formatter as RowColFormatter<*, *>?,
+            headerFormatter = headerFormatter,
+        )
 }
 
 /**
@@ -1251,6 +1271,7 @@ public class FormatClause<T, C>(
     internal val columns: ColumnsSelector<T, C> = { all().cast() },
     internal val oldFormatter: RowColFormatter<T, C>? = null,
     internal val filter: RowValueFilter<T, C> = { true },
+    internal val oldHeaderFormatter: HeaderColFormatter<*>? = null,
 ) {
     override fun toString(): String =
         "FormatClause(df=$df, columns=$columns, oldFormatter=$oldFormatter, filter=$filter)"

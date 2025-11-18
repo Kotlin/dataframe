@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -402,6 +403,11 @@ public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G
 public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
 public fun AnyRow.toMap(): Map<String, Any?> = df().columns().associate { it.name() to it[index] }
+
+public fun Map<String, Any?>.toDataRow(): DataRow<*> {
+    val df = mapValues { listOf(it.value) }.toDataFrame()
+    return DataRowImpl(0, df)
+}
 
 // endregion
 

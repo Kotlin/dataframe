@@ -10,15 +10,29 @@ At the moment, these integrations are still part of the `:core` module:
 - (deprecated) csv/tsv
 - html
 
-### Korro code samples
+### KoDEx
 
-Code samples for the documentation website reside
-in [core/.../test/.../samples/api](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api) (for samples that depend solely on `dataframe-core`),
-and [tests/.../samples/api](../tests/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api) (for samples can depend on other I/O modules)
-and they are copied over to Markdown files in [docs/StardustDocs/topics](../docs/StardustDocs/topics)
-by [Korro](https://github.com/devcrocod/korro).
+The code you're working on needs to be edited in [src](src), but the KDocs are processed by
+[KoDEx](https://github.com/Jolanrensen/kodex) when the project is published (or the task
+is run manually). The generated sources with adjusted KDocs will be overwritten
+in [generated-sources](generated-sources).
+See the [KDoc Preprocessing Guide](../KDOC_PREPROCESSING.md) for more information.
 
-### ~~Explainer dataframes~~ NOTE: This is being moved to [tests](../tests)
+KDocs can also be exported to HTML, for them to be reused on the website.
+Elements annotated with `@ExportAsHtml` will have their generated content be copied over to
+[docs/StardustDocs/resources/snippets/kdocs](../docs/StardustDocs/resources/snippets/kdocs).
+
+### ~~Korro~~ (NOTE: This is being moved to [:samples](../samples))
+
+> [Should be removed and moved to `:samples` module](https://github.com/Kotlin/dataframe/issues/898).
+
+Tests in this module contain code samples used for import into documentation 
+using [Korro](https://github.com/devcrocod/korro).
+
+
+### ~~Explainer dataframes~~ (NOTE: This is being moved to [:samples](../samples))
+
+> [Should be removed and migrated to SampleHelper](https://github.com/Kotlin/dataframe/issues/898).
 
 Aside from code samples, `@TransformDataFrameExpressions` annotated test functions also generate sample
 dataframe HTML files that can be used as iFrames on the documentation website.
@@ -31,15 +45,3 @@ retrieves the intermediate DataFrame expressions thanks to our "explainer" compi
 We can also generate "normal" DataFrame samples for the website. This can be done using the
 [OtherSamples class](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/OtherSamples.kt). Generated
 HTML files will be stored in [docs/StardustDocs/resources/snippets/manual](../docs/StardustDocs/resources/snippets/manual).
-
-### KoDEx
-
-The code you're working on needs to be edited in [src](src), but the KDocs are processed by
-[KoDEx](https://github.com/Jolanrensen/kodex) when the project is published (or the task
-is run manually). The generated sources with adjusted KDocs will be overwritten
-in [generated-sources](generated-sources).
-See the [KDoc Preprocessing Guide](../KDOC_PREPROCESSING.md) for more information.
-
-KDocs can also be exported to HTML, for them to be reused on the website.
-Elements annotated with `@ExportAsHtml` will have their generated content be copied over to
-[docs/StardustDocs/resources/snippets/kdocs](../docs/StardustDocs/resources/snippets/kdocs).

@@ -14,6 +14,11 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.format
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.jupyter.SerializationKeys.DATA
 import org.jetbrains.kotlinx.dataframe.jupyter.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.jupyter.SerializationKeys.METADATA
@@ -605,6 +610,21 @@ class RenderingTests : JupyterReplTestCase() {
         json.extractColumn<String>(2, "mixed") shouldBe "2"
         json.extractColumn<String>(3, "mixed") shouldBe "10"
         json.extractColumn<String>(4, "mixed") shouldBe "1"
+    }
+
+    // Issue #1546
+    @Test
+    fun `hasFormattedFrame false positive`() {
+        val df = dataFrameOf(
+            "a" to columnOf(1, 2, 3, null),
+            "b" to DataColumn.createByInference("", listOf(null, null, null, null)),
+            "c" to columnOf(7, 3, 2, 65),
+        )
+
+        df.hasFormattedColumns() shouldBe false
+
+        val formatted = dataFrameOf("a" to columnOf(df.format { "c"() }.with { background(black) }))
+        formatted.hasFormattedColumns() shouldBe true
     }
 
     companion object {

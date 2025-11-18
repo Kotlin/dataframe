@@ -6,8 +6,6 @@ import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.math.round
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -31,11 +29,6 @@ internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double
                 "Unable to compute the percentile for ${
                     renderType(type)
                 }. Only primitive numbers or self-comparables are supported.",
-            )
-
-        type == typeOf<BigDecimal>() || type == typeOf<BigInteger>() ->
-            throw IllegalArgumentException(
-                "Cannot calculate the percentile for big numbers in DataFrame. Only primitive numbers are supported.",
             )
 
         // TODO kdocs: note about loss of precision for Long
@@ -98,11 +91,6 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
                 "Unable to compute the percentile for ${
                     renderType(type)
                 }. Only primitive numbers or self-comparables are supported.",
-            )
-
-        nonNullType == typeOf<BigDecimal>() || nonNullType == typeOf<BigInteger>() ->
-            throw IllegalArgumentException(
-                "Cannot calculate the percentile for big numbers in DataFrame. Only primitive numbers are supported.",
             )
     }
 

@@ -37,7 +37,7 @@ val WritersideStyle = DataFrameHtmlData(
 function sendHeight() {
     let totalHeight = 0;
 
-    document.querySelectorAll('body > details, body > br').forEach(element => {
+    document.querySelectorAll('body > details, body > br, body > table').forEach(element => {
         if (element.tagName === 'DETAILS') {
             totalHeight += getElementHeight(element.querySelector(':scope > summary'));
 
@@ -45,6 +45,8 @@ function sendHeight() {
                 totalHeight += getVisibleContentHeight(element);
             }
         } else if (element.tagName === 'BR') {
+            totalHeight += getElementHeight(element);
+        } else if (element.tagName === 'TABLE') {
             totalHeight += getElementHeight(element);
         }
     });
@@ -99,10 +101,12 @@ function isElementVisible(el) {
 function sendInitialHeight() {
     let initialHeight = 0;
 
-    document.querySelectorAll('body > details, body > br').forEach(element => {
+    document.querySelectorAll('body > details, body > br, body > table').forEach(element => {
         if (element.tagName === 'DETAILS') {
             initialHeight += getElementHeight(element.querySelector(':scope > summary'));
         } else if (element.tagName === 'BR') {
+            initialHeight += getElementHeight(element);
+        } else if (element.tagName === `TABLE`) {
             initialHeight += getElementHeight(element);
         }
     });

@@ -200,15 +200,7 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun getColumnsByName_properties() {
-        // SampleStart
-        df[df.age, df.weight]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getColumnsByName_strings() {
+    fun getColumnsByName() {
         // SampleStart
         df["age", "weight"]
         // SampleEnd

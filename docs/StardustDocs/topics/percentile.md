@@ -25,6 +25,8 @@ The operation is also available for self-comparable columns
 In this case, the return type remains `T?`.
 The index of the result of the operation on these types is rounded using
 [Quantile Estimation Method](#quantile-estimation-methods) R3.
+NOTE: This logic also applies to other self-comparable `Number` types, like `BigDecimal`.
+They will not be interpolated.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
@@ -52,7 +54,7 @@ In the future we might add an option to change the quantile estimation method.
 ```kotlin
 df.percentile(25.0) // 25th percentile of values per every comparable column
 df.percentile(75.0) { age and weight } // 75th percentile of all values in `age` and `weight`
-df.percentileFor(50.0, skipNaN = true) { age and weight } // 50th percentile of values per `age` and `weight` separately
+df.percentileFor(50.0, skipNaN = true) { age and name.firstName } // 50th percentile of values per `age` and `firstName` separately
 df.percentileOf(75.0) { (weight ?: 0) / age } // 75th percentile of expression evaluated for every row
 df.percentileBy(25.0) { age } // DataRow where the 25th percentile of `age` lies (index rounded using R3)
 ```

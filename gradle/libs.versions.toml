@@ -1,19 +1,19 @@
 [versions]
-ksp = "2.2.0-2.0.2"
-kotlinJupyter = "0.15.0-587"
+ksp = "2.2.21-2.0.4"
+kotlinJupyter = "0.15.0-629"
 
 ktlint = "12.3.0"
 
-# make sure to sync both manually with :generator module
-kotlin = "2.2.0" # needs jupyter compatibility with Kotlin 2.1 to update
+kotlin = "2.2.21"
+# make sure to sync manually with :plugins:keywords-generator module
 kotlinpoet = "2.2.0"
 
-dokka = "2.0.0"
+dokka = "2.1.0"
 libsPublisher = "2.2.0-dev-61"
 
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
-dataframe = "1.0.0-dev-6538"
+dataframe = "1.0.0-dev-8808"
 korro = "0.1.6"
 
 binaryCompatibilityValidator = "0.17.0"
@@ -46,7 +46,7 @@ kotestAsserions = "6.0.0.M1"
 
 jsoup = "1.18.3"
 arrow = "18.3.0"
-kodex = "0.4.4"
+kodex = "0.5.0"
 simpleGit = "2.2.1"
 dependencyVersions = "0.52.0"
 plugin-publish = "1.3.0"
@@ -54,18 +54,24 @@ shadow = "8.3.5"
 android-gradle-api = "7.3.1" # need to revise our tests to update
 ktor = "3.0.1" # needs jupyter compatibility with Kotlin 2.1 to update
 kotlin-compile-testing = "0.7.1"
+hikari = "7.0.2"
 duckdb = "1.3.1.0"
 buildconfig = "5.6.7"
 benchmark = "0.4.12"
 
-geotools = "32.1"
+geotools = "33.2"
 jai-core = "1.1.3"
 jts = "1.20.0"
 
-kandy = "0.8.1-dev-73"
+# Normal examples Kandy versions
+kandy = "0.8.2-dev-90"
+
+# Example notebooks Kandy versions
+kandy-notebook = "0.8.1n"
+kandy-stats-notebook = "0.5.0n"
+
 exposed = "1.0.0-beta-2"
 hibernate = "6.5.2.Final"
-hikari = "5.1.0"
 
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
@@ -102,6 +108,12 @@ postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "pos
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
 jts = { group = "org.locationtech.jts", name = "jts-core", version.ref = "jtsCore" }
 
+# Example notebooks Kandy versions
+kandy-notebook = { group = "org.jetbrains.kotlinx", name = "kandy-lets-plot", version.ref = "kandy-notebook" }
+# -- Requires repo: https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven
+kandy-stats = { group = "org.jetbrains.kotlinx", name = "kotlin-statistics-jvm", version.ref = "kandy-stats-notebook" }
+
+# Normal examples Kandy versions
 kandy = { group = "org.jetbrains.kotlinx", name = "kandy-lets-plot", version.ref = "kandy" }
 kandy-samples-utils = { group = "org.jetbrains.kotlinx", name = "kandy-samples-utils", version.ref = "kandy" }
 
@@ -168,6 +180,7 @@ kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupy
 kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "benchmark" }
 dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
 
+hikari = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref = "duckdb" }
 
 exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
@@ -209,3 +222,4 @@ plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publi
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark" }
+dataframe-compiler-plugin = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }

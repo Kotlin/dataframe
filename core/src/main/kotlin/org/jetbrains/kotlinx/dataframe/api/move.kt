@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
-import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -22,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
+import org.jetbrains.kotlinx.dataframe.impl.api.moveToImpl
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT
@@ -191,6 +191,8 @@ private interface CommonMoveToDocs
  * where the selected columns will be moved.
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
+@Refine
+@Interpretable("MoveTo1")
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector<T, *>): DataFrame<T> =
     move(columns).to(newColumnIndex)
 
@@ -218,6 +220,55 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColum
 @AccessApiOverload
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KProperty<*>): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
+
+/**
+ * Moves the specified [columns\] to a new position specified
+ * by [newColumnIndex]. If [insideGroup] is true selected columns
+ * will be moved remaining within their [ColumnGroup],
+ * else they will be moved to the top level.
+ *
+ * @include [CommonMoveToDocs]
+ * @include [SelectingColumns.Dsl] {@include [SetMoveToOperationArg]}
+ * ### Examples:
+ * ```kotlin
+ * df.moveTo(0, true) { length and age }
+ * df.moveTo(2, false) { cols(1..5) }
+ * ```
+ * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
+ * where the selected columns will be moved.
+ * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
+ * else they will be moved to the top level.
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ */
+@Refine
+@Interpretable("MoveTo1")
+public fun <T> DataFrame<T>.moveTo(
+    newColumnIndex: Int,
+    insideGroup: Boolean,
+    columns: ColumnsSelector<T, *>,
+): DataFrame<T> = move(columns).to(newColumnIndex, insideGroup)
+
+/**
+ * Moves the specified [columns\] to a new position specified
+ * by [columnIndex]. If [insideGroup] is true selected columns
+ * will be moved remaining within their [ColumnGroup],
+ * else they will be moved to the top level.
+ *
+ * @include [CommonMoveToDocs]
+ * @include [SelectingColumns.ColumnNames] {@include [SetMoveToOperationArg]}
+ * ### Examples:
+ * ```kotlin
+ * df.moveTo(0, true) { length and age }
+ * df.moveTo(2, false) { cols(1..5) }
+ * ```
+ * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
+ * where the selected columns will be moved.
+ * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
+ * else they will be moved to the top level.
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ */
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, insideGroup: Boolean, vararg columns: String): DataFrame<T> =
+    moveTo(newColumnIndex, insideGroup) { columns.toColumnSet() }
 
 // endregion
 
@@ -264,6 +315,18 @@ public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFram
 @Interpretable("MoveToStart1")
 public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
 
+/**
+ * @include [CommonMoveToStartDocs]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToStartOperationArg]}
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
+ * else they will be moved to the start of the top level.
+ */
+@Refine
+@Interpretable("MoveToStart1")
+public fun <T> DataFrame<T>.moveToStart(insideGroup: Boolean, columns: ColumnsSelector<T, *>): DataFrame<T> =
+    move(columns).toStart(insideGroup)
+
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
 
@@ -273,6 +336,16 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = m
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
+
+/**
+ * @include [CommonMoveToStartDocs]
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToStartOperationArg]}
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
+ * else they will be moved to the start of the top level.
+ */
+public fun <T> DataFrame<T>.moveToStart(insideGroup: Boolean, vararg columns: String): DataFrame<T> =
+    moveToStart(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
@@ -339,6 +412,18 @@ public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFra
 @Interpretable("MoveToEnd1")
 public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
 
+/**
+ * @include [CommonMoveToEndDocs]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToEndOperationArg]}
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
+ * else they will be moved to the end of the top level.
+ */
+@Refine
+@Interpretable("MoveToEnd1")
+public fun <T> DataFrame<T>.moveToEnd(insideGroup: Boolean, columns: ColumnsSelector<T, *>): DataFrame<T> =
+    move(columns).toEnd(insideGroup)
+
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
 
@@ -348,6 +433,16 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = 
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
+
+/**
+ * @include [CommonMoveToEndDocs]
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToEndOperationArg]}
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
+ * else they will be moved to the end of the top level.
+ */
+public fun <T> DataFrame<T>.moveToEnd(insideGroup: Boolean, vararg columns: String): DataFrame<T> =
+    moveToEnd(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
@@ -407,9 +502,20 @@ public fun <T, C> MoveClause<T, C>.into(
     )
 
 /**
- * Move a single selected column to top level with a new name
+ * Moves the selected column, previously specified with [move],
+ * to the top level of the [DataFrame] and assigns it a new name.
+ *
+ * For more information, see {@include [DocumentationUrls.Move]}.
+ *
+ * ### Example:
+ * ```kotlin
+ * // Move "info"."salary" column to the top level with a new name "income"
+ * df.move { info.salary }.into("income")
+ * ```
+ *
+ * @param column The new [String] name of the column after the move.
+ * @return A new [DataFrame] with the column moved and renamed.
  */
-@CandidateForRemoval
 @Refine
 @Interpretable("MoveInto0")
 public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
@@ -538,6 +644,32 @@ public fun <T, C> MoveClause<T, C>.under(
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(columnIndex)
 
 /**
+ * Moves columns, previously selected with [move] to a new position specified
+ * by [columnIndex]. If [insideGroup] is true, selected columns will be moved remaining within their [ColumnGroup],
+ * else they will be moved to the top level.
+ *
+ * Returns a new [DataFrame] with updated columns structure.
+ *
+ * For more information: {@include [DocumentationUrls.Move]}
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.to(0, true)
+ * df.move("age", "weight").to(2, false)
+ * ```
+ *
+ * @param [columnIndex] The index specifying the position in the [ColumnGroup] columns
+ * where the selected columns will be moved.
+ *
+ * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
+ * else they will be moved to the top level.
+ */
+@Refine
+@Interpretable("MoveTo")
+public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): DataFrame<T> =
+    moveToImpl(columnIndex, insideGroup)
+
+/**
  * Moves columns, previously selected with [move] to the top-level within the [DataFrame].
  * Moved columns name can be specified via special ColumnSelectionDsl.
  *
@@ -621,13 +753,54 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 
 // endregion
 
-/* TODO: implement 'before'
-fun <T, C> MoveColsClause<T, C>.before(columnPath: ColumnPath) = before { columnPath.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: Column) = before { column }
-fun <T, C> MoveColsClause<T, C>.before(column: KProperty<*>) = before { column.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: String) = before { column.toColumnDef() }
-fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBefore(column, false)
-*/
+// region before
+
+/**
+ * Moves columns, previously selected with [move] to the position before the
+ * specified [column] within the [DataFrame].
+ *
+ * Returns a new [DataFrame] with updated columns.
+ *
+ * See [Selecting Columns][SelectingColumns].
+ *
+ * For more information: {@include [DocumentationUrls.Move]}
+ *
+ * ### This Before Overload
+ */
+@ExcludeFromSources
+internal interface MoveBefore
+
+/**
+ * {@include [MoveBefore]}
+ * @include [SelectingColumns.Dsl]
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.before { surname }
+ * df.move { cols(3..5) }.before { col(2) }
+ * ```
+ *
+ * @param [column] A [ColumnSelector] specifying the column
+ * before which the selected columns will be placed.
+ */
+@Refine
+@Interpretable("MoveBefore0")
+public fun <T, C> MoveClause<T, C>.before(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, false)
+
+/**
+ * {@include [MoveBefore]}
+ * @include [SelectingColumns.ColumnNames]
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move("age", "weight").before("surname")
+ * ```
+ * @param [column] The [Column Name][String] specifying the column
+ * before which the selected columns will be placed.
+ */
+public fun <T, C> MoveClause<T, C>.before(column: String): DataFrame<T> = before { column.toColumnAccessor() }
+
+// endregion
 
 @Deprecated(TO_LEFT, ReplaceWith(TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
@@ -650,6 +823,28 @@ public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 @Interpretable("MoveToStart0")
 public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
 
+/**
+ * If insideGroup is true, moves columns previously selected with [move] to the start of their [ColumnGroup].
+ * Else, selected columns will be moved to the start of their [DataFrame] (to the top-level).
+ *
+ * Returns a new [DataFrame] with updated columns.
+ *
+ * For more information: {@include [DocumentationUrls.Move]}
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.toStart(true)
+ * df.move { colsOf<String>() }.toStart(true)
+ * df.move("age", "weight").toStart(false)
+ * ```
+ *
+ * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
+ * else they will be moved to the start on top level.
+ */
+@Refine
+@Interpretable("MoveToStart0")
+public fun <T, C> MoveClause<T, C>.toStart(insideGroup: Boolean): DataFrame<T> = to(0, insideGroup)
+
 @Deprecated(TO_RIGHT, ReplaceWith(TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 
@@ -670,6 +865,28 @@ public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 @Refine
 @Interpretable("MoveToEnd0")
 public fun <T, C> MoveClause<T, C>.toEnd(): DataFrame<T> = to(df.ncol)
+
+/**
+ * If insideGroup is true, moves columns previously selected with [move] to the end of their [ColumnGroup].
+ * Else, selected columns will be moved to the end of their [DataFrame] (to the top-level).
+ *
+ * Returns a new [DataFrame] with updated columns.
+ *
+ * For more information: {@include [DocumentationUrls.Move]}
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.move { age and weight }.toEnd(true)
+ * df.move { colsOf<String>() }.toEnd(true)
+ * df.move("age", "weight").toEnd(false)
+ * ```
+ *
+ * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
+ * else they will be moved to the end on top level.
+ */
+@Refine
+@Interpretable("MoveToEnd0")
+public fun <T, C> MoveClause<T, C>.toEnd(insideGroup: Boolean): DataFrame<T> = to(df.ncol, insideGroup)
 
 /**
  * An intermediate class used in the [move] operation.

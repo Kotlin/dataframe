@@ -1,0 +1,8 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "excludeFolders": [
+    "docs/StardustDocs/resources/snippets/*.html",
+    "docs/StardustDocs/resources/api/*.html"
+    "**/*.fix.txt"
+  ]
+}

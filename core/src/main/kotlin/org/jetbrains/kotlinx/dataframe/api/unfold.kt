@@ -13,9 +13,10 @@ import org.jetbrains.kotlinx.dataframe.impl.api.unfoldImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KCallable
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 public inline fun <reified T> DataColumn<T>.unfold(vararg roots: KCallable<*>, maxDepth: Int = 0): AnyCol =
-    unfoldImpl { properties(roots = roots, maxDepth) }
+    unfoldImpl(typeOf<T>()) { properties(roots = roots, maxDepth) }
 
 @Refine
 @Interpretable("DataFrameUnfold")
@@ -23,7 +24,7 @@ public fun <T> DataFrame<T>.unfold(
     vararg roots: KCallable<*>,
     maxDepth: Int = 0,
     columns: ColumnsSelector<T, *>,
-): DataFrame<T> = replace(columns).with { it.unfoldImpl { properties(roots = roots, maxDepth) } }
+): DataFrame<T> = replace(columns).with { it.unfoldImpl(it.type()) { properties(roots = roots, maxDepth) } }
 
 public fun <T> DataFrame<T>.unfold(vararg columns: String): DataFrame<T> = unfold { columns.toColumnSet() }
 

@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
-import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -18,21 +18,30 @@ import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.GET_ROWS_ITERABLE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROWS_RANGE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROW_OR_NULL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.GET_ROW_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.IS_EMPTY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.IS_NOT_EMPTY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-@CandidateForRemoval
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(IS_EMPTY_REPLACE), DeprecationLevel.WARNING)
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 
-@CandidateForRemoval
+@Suppress("DEPRECATION_ERROR")
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(IS_NOT_EMPTY_REPLACE), DeprecationLevel.WARNING)
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
 
 // region DataSchema
 @DataSchema
-public data class NameValuePair<V>(val name: String, val value: V)
+@RequiredByIntellijPlugin
+public data class NameValuePair<V>(override val name: String, override val value: V) : NameValueProperty<V>
 
 // Without these overloads row.transpose().name or row.map { name } won't resolve
 public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String>
@@ -56,6 +65,7 @@ public val DataRow<NameValuePair<*>>.value: Any?
 public inline fun <reified R> AnyRow.namedValuesOf(): List<NameValuePair<R>> =
     values().zip(columnNames()).filter { it.first is R }.map { NameValuePair(it.second, it.first as R) }
 
+@RequiredByIntellijPlugin
 public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
     values().zip(columnNames()) { value, name -> NameValuePair(name, value) }
 
@@ -172,41 +182,57 @@ public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>):
 public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
+@RequiredByIntellijPlugin
 public fun AnyRow.columnsCount(): Int = df().ncol
 
 public fun AnyRow.columnNames(): List<String> = df().columnNames()
 
 public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
 
-@CandidateForRemoval
+@Suppress("DEPRECATION_ERROR")
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROW_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
-@CandidateForRemoval
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROWS_ITERABLE_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRows(indices: Iterable<Int>): DataFrame<T> = df().getRows(indices)
 
-@CandidateForRemoval
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROWS_RANGE_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRows(indices: IntRange): DataFrame<T> = df().getRows(indices)
 
-@CandidateForRemoval
+@Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROW_OR_NULL_REPLACE), DeprecationLevel.WARNING)
 public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {
     val df = df()
     return if (index >= 0 && index < df.nrow) df[index] else null
 }
 
+/**
+ * Returns the previous [row][DataRow] in the [DataFrame] relative to the current row.
+ * If the current row is the first row in the [DataFrame], it returns `null`.
+ *
+ * @return The previous [DataRow] if it exists, or `null` if the current row is the first in the [DataFrame].
+ */
 public fun <T> DataRow<T>.prev(): DataRow<T>? {
     val index = index()
     return if (index > 0) df()[index - 1] else null
 }
 
+/**
+ * Returns the next [row][DataRow] in the [DataFrame] relative to the current row.
+ * If the current row is the last row in the [DataFrame], it returns `null`.
+ *
+ * @return The previous [DataRow] if it exists, or `null` if the current row is the last in the [DataFrame].
+ */
 public fun <T> DataRow<T>.next(): DataRow<T>? {
     val index = index()
     val df = df()
     return if (index < df.nrow - 1) df[index + 1] else null
 }
 
+@Suppress("DEPRECATION_ERROR")
 public fun <T> DataRow<T>.relative(relativeIndices: Iterable<Int>): DataFrame<T> =
     getRows(relativeIndices.mapNotNull { (index + it).let { if (it >= 0 && it < df().rowsCount()) it else null } })
 
+@Suppress("DEPRECATION_ERROR")
 public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
     getRows(
         (relativeIndices.first + index).coerceIn(df().indices)..(relativeIndices.last + index).coerceIn(df().indices),

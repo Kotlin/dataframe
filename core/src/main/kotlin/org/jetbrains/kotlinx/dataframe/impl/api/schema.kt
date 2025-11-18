@@ -8,8 +8,9 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 
 @PublishedApi
-internal fun compileTimeSchemaImpl(runtimeSchema: DataFrameSchema, klass: KClass<*>): DataFrameSchema {
+internal fun compileTimeSchemaImpl(runtimeSchema: DataFrameSchema?, klass: KClass<*>): DataFrameSchema {
     val compileSchema = getSchema(klass)
+    if (runtimeSchema == null) return compileSchema
     val root = ColumnPath(emptyList())
     val order = buildMap {
         putColumnsOrder(runtimeSchema, path = root)
@@ -41,8 +42,6 @@ internal fun DataFrameSchema.sortedBy(order: Map<ColumnPath, Int>, path: ColumnP
             is ColumnSchema.Group -> ColumnSchema.Group(column.schema.sortedBy(order, path + name), column.contentType)
 
             is ColumnSchema.Value -> column
-
-            else -> TODO("unexpected ColumnSchema class ${column::class}")
         }
     }.sortedBy { (name, _) ->
         order[path + name]

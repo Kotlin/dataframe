@@ -65,6 +65,7 @@ tasks.withType<ShadowJar> {
     exclude("**.html")
     exclude("**.js")
     exclude("**.css")
+    exclude("META-INF/kotlin-jupyter-libraries/**")
 }
 
 kotlinPublications {

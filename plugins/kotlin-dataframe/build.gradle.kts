@@ -4,8 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 plugins {
     id("java")
     kotlin("jvm")
-    kotlin("libs.publisher")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
     kotlin("plugin.serialization")
 }
 
@@ -110,16 +108,6 @@ fun Test.setLibraryProperty(propName: String, jarName: String) {
         ?.absolutePath
         ?: return
     systemProperty(propName, path)
-}
-
-kotlinPublications {
-    fairDokkaJars = false
-    publication {
-        publicationName = "api"
-        artifactId = "compiler-plugin-all"
-        description = "Data processing in Kotlin"
-        packageName = artifactId
-    }
 }
 
 // Disabling all tests before removing the compiler plugin here

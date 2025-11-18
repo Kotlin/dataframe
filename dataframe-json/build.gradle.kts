@@ -45,18 +45,17 @@ tasks.withType<KotlinCompile> {
     friendPaths.from(project(projects.core.path).projectDir)
 }
 
+tasks.withType<Javadoc> {
+    enabled = false
+}
+
 tasks.test {
     useJUnitPlatform()
 }
 
-val instrumentedJars: Configuration by configurations.creating {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-}
-
-artifacts {
-    add("instrumentedJars", tasks.jar.get().archiveFile) {
-        builtBy(tasks.jar)
+sourceSets {
+    main {
+        java.srcDirs("src/main/kotlin")
     }
 }
 

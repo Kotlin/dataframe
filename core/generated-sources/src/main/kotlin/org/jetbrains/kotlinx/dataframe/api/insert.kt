@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.impl.api.afterImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.beforeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
@@ -64,6 +66,8 @@ internal interface InsertDocs {
      * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+     * for type- and name-safe columns selection.
      *
      * #### NOTE:
      * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -79,11 +83,12 @@ internal interface InsertDocs {
      *
      * #### For example:
      *
-     * `df.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
      *
-     * `df.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * `df.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     *
      *
      *
      * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
@@ -446,10 +451,59 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
     return df.insertImpl(dstPath, column).move { dstPath }.after { columnPath }
 }
 
-internal fun <T> InsertClause<T>.afterImpl(columnPath: ColumnPath): DataFrame<T> {
-    val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
-    return df.insertImpl(dstPath, column).move { dstPath }.after { columnPath }
-}
+// endregion
+
+// region before
+
+/**
+ * Inserts the new column previously specified with [insert]
+ * at the position immediately before the selected [column] (on the same level).
+ *
+ * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
+ *
+ * See [Grammar][InsertDocs.Grammar] for more details.
+ *
+ * See also: [SelectingColumns.Dsl].
+ *
+ * ### Examples:
+ * ```kotlin
+ * // Insert a new column "age" before the "name" column
+ * df.insert(age).before { name }
+ *
+ * // Insert a new column "sum" before the nested "min" column (inside the "stats" column group)
+ * val dfWithSum = df.insert("sum") { a + b }.before { stats.min }
+ * ```
+ *
+ * @param [column] The [ColumnSelector] used to choose an existing column in this [DataFrame],
+ * before which the new column will be inserted.
+ * @return A new [DataFrame] with the inserted column placed before the selected column.
+ */
+@Refine
+@Interpretable("InsertBefore0")
+public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T> = beforeImpl(df.getColumnPath(column))
+
+/**
+ * Inserts the new column previously specified with [insert]
+ * at the position immediately before the column with the given [name][column].
+ *
+ * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
+ *
+ * See [Grammar][InsertDocs.Grammar] for more details.
+ *
+ * See also: [SelectingColumns.ColumnNames].
+ *
+ * ### Example
+ * ```kotlin
+ * // Insert a new column "age" before the "name" column
+ * df.insert(age).before("name")
+ * ```
+ *
+ * @param [column] The [String] name of the column in this [DataFrame]
+ * before which the new column will be inserted.
+ * @return A new [DataFrame] with the inserted column placed before the specified column.
+ */
+public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
+    df.add(this.column).move(this.column).before(column)
 
 // endregion
 

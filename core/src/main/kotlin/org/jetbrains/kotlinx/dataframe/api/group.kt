@@ -24,7 +24,8 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 /**
- * Groups the specified [columns\] within the [DataFrame].
+ * Groups the specified [columns\] within the [DataFrame] into
+ * [column group][ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
  * returns a [GroupClause],
@@ -171,9 +172,11 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  * where that column should be grouped.
  * All selected columns will be moved under the groups defined by this expression.
  */
+@Refine
 @JvmName("intoString")
 @OverloadResolutionByLambdaReturnType
 @OptIn(ExperimentalTypeInference::class)
+@Interpretable("IntoStringLambda")
 public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String): DataFrame<T> =
     df.move(columns).under { column(it).toColumnAccessor() }
 

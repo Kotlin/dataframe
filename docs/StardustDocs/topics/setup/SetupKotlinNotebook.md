@@ -71,6 +71,13 @@ You can explicitly define the version you want:
 Or use the latest stable version of Kotlin DataFrame
 (specified in [Kotlin Jupyter descriptors](https://github.com/Kotlin/kotlin-jupyter-libraries)):
 
+<warning>
+For version `1.0.0-Beta3`, in notebooks use version `1.0.0-Beta3n` instead.
+This uses the patch of [#1435](https://github.com/Kotlin/dataframe/pull/1435) for issue 
+[#1116](https://github.com/Kotlin/dataframe/issues/1116), avoiding `DefinitelyNotNullable` errors.
+
+When using `%use dataframe` this version is applied automatically.
+</warning>
 
 ```
 %useLatestDescriptors
@@ -110,3 +117,10 @@ showcasing how Kotlin DataFrame can help with a variety of data tasks.
 
 * Discover powerful [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)that
 make exploring and understanding your data easier and more effective.
+
+## Memory Errors?
+
+* If you are experiencing `OutOfMemoryError`s and heap space errors, you can adjust Notebook's
+memory settings independently of IntelliJ IDEA's memory settings.
+
+* In IntelliJ IDEA, go to Settings... Tools... Kotlin Notebook and increase the `Max heap size`
