@@ -179,4 +179,7 @@ internal interface DocumentationUrls {
 
     /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
     interface PivotInsideAggregationStatistics
+
+    /** [See `join` on the documentation website.]({@include [Url]}/join.html) */
+    interface Join
 }
