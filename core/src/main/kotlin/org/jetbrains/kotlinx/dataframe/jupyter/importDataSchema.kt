@@ -4,15 +4,19 @@ import org.intellij.lang.annotations.Language
 import java.io.File
 import java.net.URI
 import java.net.URL
+import java.nio.file.Path
 
 public class ImportDataSchema(public val url: URL) {
     public constructor(path: String) : this(URI(path).toURL())
+    public constructor(path: Path) : this(path.toUri().toURL())
     public constructor(file: File) : this(file.toURI().toURL())
 }
 
 public fun importDataSchema(url: URL): ImportDataSchema = ImportDataSchema(url)
 
 public fun importDataSchema(path: String): ImportDataSchema = ImportDataSchema(path)
+
+public fun importDataSchema(path: Path): ImportDataSchema = ImportDataSchema(path)
 
 public fun importDataSchema(file: File): ImportDataSchema = ImportDataSchema(file)
 
@@ -49,6 +53,9 @@ internal val importDataSchema =
 
     /** Import the type-only data schema from [path]. */
     fun importDataSchema(path: String, name: String): Unit = importDataSchema(URI(path).toURL(), name)
+
+    /** Import the type-only data schema from [path]. */
+    fun importDataSchema(path: Path, name: String): Unit = importDataSchema(path.toUri().toURL(), name)
 
     /** Import the type-only data schema from [file]. */
     fun importDataSchema(file: File, name: String): Unit = importDataSchema(file.toURI().toURL(), name)
