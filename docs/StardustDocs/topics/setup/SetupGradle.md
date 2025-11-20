@@ -71,10 +71,11 @@ For flexible dependencies configuration see [Custom configuration](SetupCustomGr
 
 ## Hello World
 
-Let’s create your first [`DataFrame`](DataFrame.md) in the notebook — a simple "Hello, World!" style example:
+Let’s create your first [`DataFrame`](DataFrame.md) — a simple "Hello, World!" style example:
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.print
 
 fun main() {
     val df = dataFrameOf(
@@ -82,7 +83,7 @@ fun main() {
         "age" to listOf(25, 30)
     )
 
-    println(df)
+    df.print()
 }
 ```
 
