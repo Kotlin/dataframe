@@ -624,32 +624,38 @@ internal interface ExcludeJoinTypeDocs
 public enum class JoinType {
 
     /**
-     * @include [LeftJoinTypeDocs]
+     * Includes all rows from the left [DataFrame]; matching rows are merged,
+     * unmatched right-side values are filled with `null`.
      */
     Left,
 
     /**
-     * @include [RightJoinTypeDocs]
+     * Includes all rows from the right [DataFrame]; matching rows are merged,
+     * unmatched left-side values are filled with `null`.
      */
     Right,
 
     /**
-     * @include [InnerJoinTypeDocs]
+     * Includes only matching rows from both [DataFrame]s;
+     * rows are merged.
      */
     Inner,
 
     /**
-     * @include [FilterJoinTypeDocs]
+     * Includes only rows from the left [DataFrame] that have a match in the right one;
+     * right-side columns are not merged.
      */
     Filter,
 
     /**
-     * @include [FullJoinTypeDocs]
+     * Includes all rows from both [DataFrame]s; matching rows are merged,
+     * all mismatches are filled with `null`.
      */
     Full,
 
     /**
-     * @include [ExcludeJoinTypeDocs]
+     * Includes only rows from the left [DataFrame] that do *not* have a match in the right one;
+     * right-side columns are not merged.
      */
     Exclude,
 }
