@@ -27,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.joinWithImpl
 private interface JoinWithCommonDescription
 
 // `joinWith` method used in the example
+@Suppress("ktlint:standard:class-naming")
 @ExcludeFromSources
 private interface JOIN_WITH_METHOD
 

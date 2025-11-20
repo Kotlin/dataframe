@@ -61,6 +61,7 @@ private interface JoinBehavior
 private interface JoinDocs
 
 // `join` method used in the example
+@Suppress("ktlint:standard:class-naming")
 @ExcludeFromSources
 private interface JOIN_METHOD
 
