@@ -6,21 +6,19 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls.Join
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnGroupsAndNestedColumnsMention
 import org.jetbrains.kotlinx.dataframe.impl.api.joinWithImpl
 
 /**
  * A [JoinExpression] defines the matching condition between [rows][DataRow] of the two [DataFrame]s.
  * It provides access to row values from both the left and right [DataFrame]s
  * and expects a [Boolean] result indicating whether the rows match.
- * All combinations of rows from the left and right [DataFrame]s that satisfies
+ * All combinations of rows from the left- and right [DataFrame] that satisfies
  * this condition are matched.
  *
- * This method is useful when the data was not originally designed relationally, or when
- * rows should be matched based on custom logic rather than simple equality.
+ * This method is useful when rows should be matched based on custom logic
+ * rather than simple values equality.
  *
  * Creates a new [DataFrame] by combining [rows][DataRow]
  * from both inputs according to the [\joinExpression] matching rule.
@@ -29,21 +27,27 @@ import org.jetbrains.kotlinx.dataframe.impl.api.joinWithImpl
 private interface JoinWithCommonDescription
 
 // `joinWith` method used in the example
-private interface JoinWithMethod
+@ExcludeFromSources
+private interface JOIN_WITH_METHOD
 
 /**
  * ### Examples
  * ```kotlin
- * // Join rows where the `fullName` value in the left DataFrame
- * // contains the `firstName` value in the right DataFrame.
+ * // Join rows where the `fullName` value in the left `DataFrame`
+ * // contains the `firstName` value in the right `DataFrame`.
  * dfLeft.{@get [JoinWithMethod] joinWith}(dfRight) { left -> left.fullName.contains(right.firstName) }
  *
- * // Join rows where the `date` value in the right DataFrame
+ * // Join rows where the `date` value in the right `DataFrame`
  * // falls within the interval defined by the `startDate` and `endDate`
- * // values in the left DataFrame.
+ * // values in the left `DataFrame`.
  * dfLeft.{@get [JoinWithMethod] joinWith}(dfRight) { right.date in startDate..endDate }
+ *
+ * // String API; join rows where `score` value in the left `DataFrame` is higher than 3.4
+ * // and the `passed` value in the right `DataFrame` is `true`.
+ * dfLeft.{@get [JoinWithMethod] joinWith}(dfRight) { "score"<Int>() > 3.4 && right["passed"] as Boolean }
  * ```
  */
+@ExcludeFromSources
 private interface JoinWithExample
 
 /**
@@ -83,7 +87,7 @@ public typealias JoinExpression<A, B> = Selector<JoinedDataRow<A, B>, Boolean>
  * Each join type has a corresponding shortcut function:
  * [innerJoinWith], [leftJoinWith], [rightJoinWith], [fullJoinWith], [filterJoinWith], and [excludeJoinWith].
  *
- * See also [join], which performs a join by simply matching columns.
+ * See also [join], which performs a join by exact values equality in the selected columns.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -92,7 +96,7 @@ public typealias JoinExpression<A, B> = Selector<JoinedDataRow<A, B>, Boolean>
  * @include [JoinWithExample]
  * @param [right] [DataFrame] to join with.
  * @param [type] [JoinType] defining how rows are matched and combined.
- * @param [joinExpression] [JoinExpression] specifying rows join condition.
+ * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
 @Refine
@@ -104,7 +108,7 @@ public fun <A, B> DataFrame<A>.joinWith(
 ): DataFrame<A> = joinWithImpl(right, type, addNewColumns = type.addNewColumns, joinExpression)
 
 /**
- * Performs [inner join][JoinType.Inner] of this [DataFrame] with the [right][\right] [DataFrame]
+ * Performs a [inner join][JoinType.Inner] of this [DataFrame] with the [right][\right] [DataFrame]
  * using the provided [\joinExpression]. {@include [JoinType.Inner]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Inner].
@@ -120,9 +124,9 @@ public fun <A, B> DataFrame<A>.joinWith(
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
- * @include [JoinWithExample] {@set [JoinWithMethod] innerJoinWith}
+ * @include [JoinWithExample] {@set [JOIN_WITH_METHOD] innerJoinWith}
  * @param [right] [DataFrame] to join with.
- * @param [joinExpression] [JoinExpression] specifying rows join condition.
+ * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
 @Refine
@@ -131,7 +135,7 @@ public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression
     joinWith(right, JoinType.Inner, joinExpression)
 
 /**
- * Performs [left join][JoinType.Left] of this [DataFrame] with the [right][\right] [DataFrame]
+ * Performs a [left join][JoinType.Left] of this [DataFrame] with the [right][\right] [DataFrame]
  * using the provided [\joinExpression]. {@include [JoinType.Left]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Left].
@@ -147,9 +151,9 @@ public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
- * @include [JoinWithExample] {@set [JoinWithMethod] leftJoinWith}
+ * @include [JoinWithExample] {@set [JOIN_WITH_METHOD] leftJoinWith}
  * @param [right] [DataFrame] to join with.
- * @param [joinExpression] [JoinExpression] specifying rows join condition.
+ * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
 @Refine
@@ -158,7 +162,7 @@ public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression:
     joinWith(right, JoinType.Left, joinExpression)
 
 /**
- * Performs [right join][JoinType.Right] of this [DataFrame] with the [right][\right] [DataFrame]
+ * Performs a [right join][JoinType.Right] of this [DataFrame] with the [right][\right] [DataFrame]
  * using the provided [\joinExpression]. {@include [JoinType.Right]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Right].
@@ -174,9 +178,9 @@ public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression:
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
- * @include [JoinWithExample] {@set [JoinWithMethod] rightJoinWith}
+ * @include [JoinWithExample] {@set [JOIN_WITH_METHOD] rightJoinWith}
  * @param [right] [DataFrame] to join with.
- * @param [joinExpression] [JoinExpression] specifying rows join condition.
+ * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
 @Refine
@@ -185,7 +189,7 @@ public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression
     joinWith(right, JoinType.Right, joinExpression)
 
 /**
- * Performs [full join][JoinType.Full] of this [DataFrame] with the [right][\right] [DataFrame]
+ * Performs a [full join][JoinType.Full] of this [DataFrame] with the [right][\right] [DataFrame]
  * using the provided [\joinExpression]. {@include [JoinType.Full]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Full].
@@ -201,9 +205,9 @@ public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
- * @include [JoinWithExample] {@set [JoinWithMethod] fullJoinWith}
+ * @include [JoinWithExample] {@set [JOIN_WITH_METHOD] fullJoinWith}
  * @param [right] [DataFrame] to join with.
- * @param [joinExpression] [JoinExpression] specifying rows join condition.
+ * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
 @Refine
@@ -212,7 +216,7 @@ public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression:
     joinWith(right, JoinType.Full, joinExpression)
 
 /**
- * Performs [filter join][JoinType.Filter] of this [DataFrame] with the [right][\right] [DataFrame]
+ * Performs a [filter join][JoinType.Filter] of this [DataFrame] with the [right][\right] [DataFrame]
  * using the provided [\joinExpression]. {@include [JoinType.Filter]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Filter].
@@ -228,9 +232,9 @@ public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression:
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
- * @include [JoinWithExample] {@set [JoinWithMethod] filterJoinWith}
+ * @include [JoinWithExample] {@set [JOIN_WITH_METHOD] filterJoinWith}
  * @param [right] [DataFrame] to join with.
- * @param [joinExpression] [JoinExpression] specifying rows join condition.
+ * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
 @Refine
@@ -239,7 +243,7 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
     joinWithImpl(right, JoinType.Filter, addNewColumns = false, joinExpression)
 
 /**
- * Performs [exclude join][JoinType.Exclude] of this [DataFrame] with the [right][\right] [DataFrame]
+ * Performs a [exclude join][JoinType.Exclude] of this [DataFrame] with the [right][\right] [DataFrame]
  * using the provided [\joinExpression]. {@include [JoinType.Exclude]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Exclude].
@@ -255,9 +259,9 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
- * @include [JoinWithExample] {@set [JoinWithMethod] excludeJoinWith}
+ * @include [JoinWithExample] {@set [JOIN_WITH_METHOD] excludeJoinWith}
  * @param [right] [DataFrame] to join with.
- * @param [joinExpression] [JoinExpression] specifying rows join condition.
+ * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
 @Refine
