@@ -110,7 +110,7 @@ public fun <A, B> DataFrame<A>.joinWith(
 
 /**
  * Performs a [inner join][JoinType.Inner] of this [DataFrame] with the [right][\right] [DataFrame]
- * using the provided [\joinExpression]. {@include [JoinType.Inner]}
+ * using the provided [\joinExpression]. {@include [InnerJoinTypeDocs]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Inner].
  *
@@ -137,7 +137,7 @@ public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression
 
 /**
  * Performs a [left join][JoinType.Left] of this [DataFrame] with the [right][\right] [DataFrame]
- * using the provided [\joinExpression]. {@include [JoinType.Left]}
+ * using the provided [\joinExpression]. {@include [LeftJoinTypeDocs]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Left].
  *
@@ -164,7 +164,7 @@ public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression:
 
 /**
  * Performs a [right join][JoinType.Right] of this [DataFrame] with the [right][\right] [DataFrame]
- * using the provided [\joinExpression]. {@include [JoinType.Right]}
+ * using the provided [\joinExpression]. {@include [RightJoinTypeDocs]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Right].
  *
@@ -191,7 +191,7 @@ public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression
 
 /**
  * Performs a [full join][JoinType.Full] of this [DataFrame] with the [right][\right] [DataFrame]
- * using the provided [\joinExpression]. {@include [JoinType.Full]}
+ * using the provided [\joinExpression]. {@include [FullJoinTypeDocs]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Full].
  *
@@ -218,7 +218,7 @@ public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression:
 
 /**
  * Performs a [filter join][JoinType.Filter] of this [DataFrame] with the [right][\right] [DataFrame]
- * using the provided [\joinExpression]. {@include [JoinType.Filter]}
+ * using the provided [\joinExpression]. {@include [FilterJoinTypeDocs]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Filter].
  *
@@ -245,7 +245,7 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
 
 /**
  * Performs a [exclude join][JoinType.Exclude] of this [DataFrame] with the [right][\right] [DataFrame]
- * using the provided [\joinExpression]. {@include [JoinType.Exclude]}
+ * using the provided [\joinExpression]. {@include [ExcludeJoinTypeDocs]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Exclude].
  *

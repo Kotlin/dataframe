@@ -143,7 +143,7 @@ public fun <A, B> DataFrame<A>.join(
 /**
  * Performs a [inner join][JoinType.Inner] of this [DataFrame] with the [other][\other] [DataFrame]
  * using the selected key columns.
- * @include [JoinType.Inner]
+ * @include [InnerJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Inner].
  *
@@ -192,7 +192,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
 /**
  * Performs a [left join][JoinType.Left] of this [DataFrame] with the [other][\other] [DataFrame]
  * using the selected key columns.
- * @include [JoinType.Left]
+ * @include [LeftJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Left].
  *
@@ -241,7 +241,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
 /**
  * Performs a [right join][JoinType.Right] of this [DataFrame] with [other][\other] [DataFrame]
  * using selected key columns.
- * @include [JoinType.Right]
+ * @include [RightJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Right].
  *
@@ -290,7 +290,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
 /**
  * Performs a [full join][JoinType.Full] of this [DataFrame] with [other][\other] [DataFrame]
  * using selected key columns.
- * @include [JoinType.Full]
+ * @include [FullJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Full].
  *
@@ -339,7 +339,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
 /**
  * Performs a [filter join][JoinType.Filter] of this [DataFrame] with [other][\other] [DataFrame]
  * using selected key columns.
- * @include [JoinType.Filter]
+ * @include [FilterJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Filter].
  *
@@ -388,7 +388,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
 /**
  * Performs a [exclude join][JoinType.Exclude] of this [DataFrame] with [other][\other] [DataFrame]
  * using selected key columns.
- * @include [JoinType.Exclude]
+ * @include [ExcludeJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Exclude].
  *
@@ -575,6 +575,48 @@ public fun <C> ColumnMatch(left: ColumnReference<C>, right: ColumnReference<C>):
 public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnsResolver<*>
 
 /**
+ * Includes only matching rows from both [DataFrame]s;
+ * rows are merged.
+ */
+@ExcludeFromSources
+internal interface InnerJoinTypeDocs
+
+/**
+ * Includes all rows from the left [DataFrame]; matching rows are merged,
+ * unmatched right-side values are filled with `null`.
+ */
+@ExcludeFromSources
+internal interface LeftJoinTypeDocs
+
+/**
+ * Includes all rows from the right [DataFrame]; matching rows are merged,
+ * unmatched left-side values are filled with `null`.
+ */
+@ExcludeFromSources
+internal interface RightJoinTypeDocs
+
+/**
+ * Includes only rows from the left [DataFrame] that have a match in the right one;
+ * right-side columns are not merged.
+ */
+@ExcludeFromSources
+internal interface FilterJoinTypeDocs
+
+/**
+ * Includes all rows from both [DataFrame]s; matching rows are merged,
+ * all mismatches are filled with `null`.
+ */
+@ExcludeFromSources
+internal interface FullJoinTypeDocs
+
+/**
+ * Includes only rows from the left [DataFrame] that do *not* have a match in the right one;
+ * right-side columns are not merged.
+ */
+@ExcludeFromSources
+internal interface ExcludeJoinTypeDocs
+
+/**
  * Represents the type of [join] operation.
  *
  * {@include [JoinTypeDescription]}
@@ -582,38 +624,32 @@ public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>)
 public enum class JoinType {
 
     /**
-     * Includes all rows from the left [DataFrame]; matching rows are merged,
-     * unmatched right-side values are filled with `null`.
+     * @include [LeftJoinTypeDocs]
      */
     Left,
 
     /**
-     * Includes all rows from the right [DataFrame]; matching rows are merged,
-     * unmatched left-side values are filled with `null`.
+     * @include [RightJoinTypeDocs]
      */
     Right,
 
     /**
-     * Includes only matching rows from both [DataFrame]s;
-     * rows are merged.
+     * @include [InnerJoinTypeDocs]
      */
     Inner,
 
     /**
-     * Includes only rows from the left [DataFrame] that have a match in the right one;
-     * right-side columns are not merged.
+     * @include [FilterJoinTypeDocs]
      */
     Filter,
 
     /**
-     * Includes all rows from both [DataFrame]s; matching rows are merged,
-     * all mismatches are filled with `null`.
+     * @include [FullJoinTypeDocs]
      */
     Full,
 
     /**
-     * Includes only rows from the left [DataFrame] that do *not* have a match in the right one;
-     * right-side columns are not merged.
+     * @include [ExcludeJoinTypeDocs]
      */
     Exclude,
 }
@@ -627,14 +663,14 @@ public enum class JoinType {
  * The exact behavior depends on the specified [join type][\type]:
  *
  * **Merging joins:**
- * * [JoinType.Inner] (default) — {@include [JoinType.Inner]}
- * * [JoinType.Left] — {@include [JoinType.Left]}
- * * [JoinType.Right] — {@include [JoinType.Right]}
- * * [JoinType.Full] — {@include [JoinType.Full]}
+ * * [JoinType.Inner] (default) — {@include [InnerJoinTypeDocs]}
+ * * [JoinType.Left] — {@include [LeftJoinTypeDocs]}
+ * * [JoinType.Right] — {@include [RightJoinTypeDocs]}
+ * * [JoinType.Full] — {@include [FullJoinTypeDocs]}
  *
  * **Non-merging joins:**
- * * [JoinType.Filter] — {@include [JoinType.Filter]}
- * * [JoinType.Exclude] — {@include [JoinType.Exclude]}
+ * * [JoinType.Filter] — {@include [FilterJoinTypeDocs]}
+ * * [JoinType.Exclude] — {@include [ExcludeJoinTypeDocs]}
  */
 @ExcludeFromSources
 internal interface JoinTypeDescription
