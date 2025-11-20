@@ -70,7 +70,7 @@ public interface JoinedDataRow<out A, out B> : DataRow<A> {
  * allowing you to reference its values directly.
  *
  * The [row][DataRow] of the right [DataFrame] is available
- * via [right][JoinedDataRow.right].
+ * as [right][JoinedDataRow.right].
  *
  * The expression must return a [Boolean] indicating whether
  * the rows from the left and right [DataFrame]s match.

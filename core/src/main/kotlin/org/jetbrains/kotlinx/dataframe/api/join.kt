@@ -91,7 +91,7 @@ private interface JOIN_METHOD
 internal interface JoinDslDescription
 
 /**
- * Select join columns (incl. with different names in `this` and [other][other] [DataFrame]s)
+ * Select join columns (including those that have different names in different [DataFrame]s)
  * using [JoinDsl].
  *
  * @include [JoinDslDescription]
