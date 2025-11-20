@@ -636,6 +636,7 @@ public enum class JoinType {
  * * [JoinType.Filter] — {@include [JoinType.Filter]}
  * * [JoinType.Exclude] — {@include [JoinType.Exclude]}
  */
+@ExcludeFromSources
 internal interface JoinTypeDescription
 
 internal val JoinType.addNewColumns: Boolean
