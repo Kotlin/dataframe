@@ -43,7 +43,7 @@ that significantly enhance the development experience
     </tr>
     <tr>
       <td><code><a href="#dataframe-arrow">dataframe-arrow</a></code></td>
-      <td>Provides support for <a href="https://arrow.apache.org">Apache Arrow</a> format writing and reading.</td>
+      <td>Provides support for <a href="https://arrow.apache.org">Apache Arrow</a> format writing and reading. Provides support for reading <a href="https://parquet.apache.org/">Apache Parquet</a> files through <a href="https://arrow.apache.org/docs/java/dataset.html">Apache Arrow Dataset</a></td>
     </tr>
     <tr><td colspan="2"><strong><a href="#experimental-modules">Experimental modules</a></strong></td></tr>
     <tr>
