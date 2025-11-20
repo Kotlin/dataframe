@@ -16,7 +16,7 @@ a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
 </link-summary>
 
 
-> Now available in Gradle projects, is coming soon to Kotlin Notebook and Maven projects.
+> Now available in Gradle (IDEA 2025.2+) and Maven (IDEA 2025.3+) projects, is coming soon to Kotlin Notebook.
 
 **Kotlin DataFrame Compiler Plugin** is a Kotlin compiler plugin that automatically generates  
 **[type-safe extension properties](extensionPropertiesApi.md)** for your dataframes,  
@@ -34,9 +34,13 @@ Check out this video that shows how expressions update the schema of a dataframe
 
 ## Setup
 
-We recommend using up-to-date IntelliJ IDEA and Kotlin for the best experience. Minimal supported versions: 2025.2 and 2.2.0. 
+We recommend using an up-to-date IntelliJ IDEA and Kotlin version for the best experience. Requires at least versions 2025.2 and 2.2.20, respectively. 
 
-Setup plugins in `build.gradle.kts`:
+<tabs>
+
+<tab title="Gradle">
+
+Setup plugins in build.gradle.kts:
 
 ```kotlin
 kotlin("jvm") version "%compilerPluginKotlinVersion%"
@@ -51,15 +55,61 @@ Setup library dependency:
 implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
 ```
 
-Add this line to `gradle.properties`: 
+Add this line to `gradle.properties`:
 ```properties
 kotlin.incremental=false
 ```
- 
-`Sync` the project.
+
+Sync the project.
 
 Disabling incremental compilation will no longer be necessary
 when https://youtrack.jetbrains.com/issue/KT-66735 is resolved.
+
+</tab>
+
+<tab title="Maven">
+
+The DataFrame compiler plugin can be used in Maven projects starting from IntelliJ IDEA 2025.3, available now as EAP builds
+
+Setup plugin in pom.xml:
+
+```xml
+<plugin>
+    <artifactId>kotlin-maven-plugin</artifactId>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <version>%compilerPluginKotlinVersion%</version>
+
+    <configuration>
+        <compilerPlugins>
+            <plugin>kotlin-dataframe</plugin>
+        </compilerPlugins>
+    </configuration>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-dataframe</artifactId>
+            <version>%compilerPluginKotlinVersion%</version>
+        </dependency>
+    </dependencies>
+</plugin>
+```
+
+Setup library dependency:
+
+```xml
+<dependency>
+    <groupId>org.jetbrains.kotlinx</groupId>
+    <artifactId>dataframe</artifactId>
+    <version>%dataFrameVersion%</version>
+</dependency>
+```
+
+Sync the project.
+
+</tab>
+
+</tabs>
 
 ## Features overview
 
