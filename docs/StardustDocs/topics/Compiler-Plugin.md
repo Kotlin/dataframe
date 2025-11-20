@@ -1,4 +1,4 @@
-# Setup and overview
+# Setup And Overview
 
 <web-summary>
 Explore the Kotlin DataFrame Compiler Plugin —  
