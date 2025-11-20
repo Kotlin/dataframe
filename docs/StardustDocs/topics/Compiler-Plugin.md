@@ -34,9 +34,7 @@ Check out this video that shows how expressions update the schema of a dataframe
 
 ## Setup
 
-Install [IntelliJ IDEA EAP](https://www.jetbrains.com/idea/nextversion/). 
-Going forward, compiler plugin updates will be released with Kotlin plugin updates. 
-Next release: 2025.2
+We recommend using up-to-date IntelliJ IDEA and Kotlin for the best experience. Minimal supported versions: 2025.2 and 2.2.0. 
 
 Setup plugins in `build.gradle.kts`:
 
