@@ -1,4 +1,4 @@
-# Static interpretation of DataFrame API
+# Static Interpretation of DataFrame API
 
 Plugin evaluates dataframe operations, given compile-time known arguments such as constant String, resolved types, property access calls.
 It updates the return type of the function call to provide properties that match column names and types.

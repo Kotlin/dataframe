@@ -1,4 +1,4 @@
-[//]: # (title: Compiler plugin examples)
+[//]: # (title: Compiler Plugin Examples)
 
 This page provides a few examples that you can copy directly to your project.
 [Schema info](staticInterpretation.md#schema-info) will be a convenient way to observe the result of different operations.
