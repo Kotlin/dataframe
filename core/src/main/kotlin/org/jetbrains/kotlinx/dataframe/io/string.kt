@@ -48,7 +48,7 @@ public fun AnyFrame.renderToString(
     }
     val values = cols.map {
         val top = it.take(rowsLimit)
-        val precision = if (top.isNumber()) top.asNumbers().scale() else 0
+        val precision = if (top.isNumber()) top.scale() else 0
         val decimalFormat =
             if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
         top.values().map {
