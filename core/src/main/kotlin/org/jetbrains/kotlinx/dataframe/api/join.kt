@@ -123,6 +123,7 @@ public fun <A, B> DataFrame<A>.join(
  * dfLeft.{@get [JoinMethod] join}(dfRight, "name", "city")
  * ```
  */
+@ExcludeFromSources
 private interface JoinStringApiExample
 
 /**
@@ -239,8 +240,8 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
     leftJoin(other) { columns.toColumnSet() }
 
 /**
- * Performs a [right join][JoinType.Right] of this [DataFrame] with [other][\other] [DataFrame]
- * using selected key columns.
+ * Performs a [right join][JoinType.Right] of this [DataFrame] with the [other][\other] [DataFrame]
+ * using the selected key columns.
  * @include [RightJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Right].
@@ -288,8 +289,8 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
     rightJoin(other) { columns.toColumnSet() }
 
 /**
- * Performs a [full join][JoinType.Full] of this [DataFrame] with [other][\other] [DataFrame]
- * using selected key columns.
+ * Performs a [full join][JoinType.Full] of this [DataFrame] with the [other][\other] [DataFrame]
+ * using the selected key columns.
  * @include [FullJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Full].
@@ -337,8 +338,8 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
     fullJoin(other) { columns.toColumnSet() }
 
 /**
- * Performs a [filter join][JoinType.Filter] of this [DataFrame] with [other][\other] [DataFrame]
- * using selected key columns.
+ * Performs a [filter join][JoinType.Filter] of this [DataFrame] with the [other][\other] [DataFrame]
+ * using the selected key columns.
  * @include [FilterJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Filter].
@@ -386,8 +387,8 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
     filterJoin(other) { columns.toColumnSet() }
 
 /**
- * Performs an [exclude join][JoinType.Exclude] of this [DataFrame] with [other][\other] [DataFrame]
- * using selected key columns.
+ * Performs an [exclude join][JoinType.Exclude] of this [DataFrame] with the [other][\other] [DataFrame]
+ * using the selected key columns.
  * @include [ExcludeJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Exclude].
