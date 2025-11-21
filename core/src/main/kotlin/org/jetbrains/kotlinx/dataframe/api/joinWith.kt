@@ -88,7 +88,7 @@ public typealias JoinExpression<A, B> = Selector<JoinedDataRow<A, B>, Boolean>
  * Each join type has a corresponding shortcut function:
  * [innerJoinWith], [leftJoinWith], [rightJoinWith], [fullJoinWith], [filterJoinWith], and [excludeJoinWith].
  *
- * See also [join], which performs a join by exact values equality in the selected columns.
+ * See also [join], which performs a join by exact value equality in the selected columns.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -119,7 +119,7 @@ public fun <A, B> DataFrame<A>.joinWith(
  * See also general [joinWith] as well as other shortcuts with each of join types:
  * [leftJoinWith], [rightJoinWith], [fullJoinWith], [filterJoinWith], [excludeJoinWith].
  *
- * See also [join], which performs a join by simply matching columns.
+ * See also [join], which performs a join by exact value equality in the selected columns.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -146,7 +146,7 @@ public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression
  * See also general [joinWith] as well as other shortcuts with each of join types:
  * [innerJoinWith], [rightJoinWith], [fullJoinWith], [filterJoinWith], [excludeJoinWith].
  *
- * See also [join], which performs a join by simply matching columns.
+ * See also [join], which performs a join by exact value equality in the selected columns.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -173,7 +173,7 @@ public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression:
  * See also general [joinWith] as well as other shortcuts with each of join types:
  * [innerJoinWith], [leftJoinWith], [fullJoinWith], [filterJoinWith], [excludeJoinWith].
  *
- * See also [join], which performs a join by simply matching columns.
+ * See also [join], which performs a join by exact value equality in the selected columns.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -200,7 +200,7 @@ public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression
  * See also general [joinWith] as well as other shortcuts with each of join types:
  * [leftJoinWith], [rightJoinWith], [innerJoinWith], [filterJoinWith], [excludeJoinWith].
  *
- * See also [join], which performs a join by simply matching columns.
+ * See also [join], which performs a join by exact value equality in the selected columns.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -227,7 +227,7 @@ public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression:
  * See also general [joinWith] as well as other shortcuts with each of join types:
  * [leftJoinWith], [rightJoinWith], [fullJoinWith], [innerJoinWith], [excludeJoinWith].
  *
- * See also [join], which performs a join by simply matching columns.
+ * See also [join], which performs a join by exact value equality in the selected columns.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -254,7 +254,7 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
  * See also general [joinWith] as well as other shortcuts with each of join types:
  * [leftJoinWith], [rightJoinWith], [fullJoinWith], [filterJoinWith], [innerJoinWith].
  *
- * See also [join], which performs a join by simply matching columns.
+ * See also [join], which performs a join by exact value equality in the selected columns.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *

@@ -66,9 +66,9 @@ private interface JoinDocs
 private interface JOIN_METHOD
 
 /**
- * [JoinDsl] defines the columns used for joining [DataFrame]s
+ * [JoinDsl] allows you to define the columns used for joining [DataFrame]s
  * and provides methods to match columns with different names
- * between the left and right sides.
+ * between the left and right side.
  *
  * Provides the left [DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
@@ -85,6 +85,9 @@ private interface JOIN_METHOD
  * // Join by one column with different names —
  * // "firstName" in the left dataframe and "name" in the right one
  * dfLeft.{@get [JoinMethod] join}(dfRight) { left -> left.firstName match right.name }
+ *
+ * // Match columns using String API
+ * dfLeft.{@get [JoinMethod] join}(dfRight) { "symbol" match right.getValue<Char>("char") }
  * ```
  */
 @ExcludeFromSources
