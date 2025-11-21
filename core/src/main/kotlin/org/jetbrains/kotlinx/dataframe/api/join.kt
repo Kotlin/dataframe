@@ -61,7 +61,7 @@ private interface JoinBehavior
 private interface JoinDocs
 
 // `join` method used in the example
-@Suppress("ktlint:standard:class-naming")
+@Suppress("ClassName")
 @ExcludeFromSources
 private interface JOIN_METHOD
 
@@ -141,7 +141,7 @@ public fun <A, B> DataFrame<A>.join(
 ): DataFrame<A> = join(other, type) { columns.toColumnSet() }
 
 /**
- * Performs a [inner join][JoinType.Inner] of this [DataFrame] with the [other][\other] [DataFrame]
+ * Performs an [inner join][JoinType.Inner] of this [DataFrame] with the [other][\other] [DataFrame]
  * using the selected key columns.
  * @include [InnerJoinTypeDocs]
  *
@@ -386,7 +386,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
     filterJoin(other) { columns.toColumnSet() }
 
 /**
- * Performs a [exclude join][JoinType.Exclude] of this [DataFrame] with [other][\other] [DataFrame]
+ * Performs an [exclude join][JoinType.Exclude] of this [DataFrame] with [other][\other] [DataFrame]
  * using selected key columns.
  * @include [ExcludeJoinTypeDocs]
  *

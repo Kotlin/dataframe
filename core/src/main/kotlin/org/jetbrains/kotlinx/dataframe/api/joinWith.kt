@@ -27,7 +27,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.joinWithImpl
 private interface JoinWithCommonDescription
 
 // `joinWith` method used in the example
-@Suppress("ktlint:standard:class-naming")
+@Suppress("ClassName")
 @ExcludeFromSources
 private interface JOIN_WITH_METHOD
 
@@ -109,7 +109,7 @@ public fun <A, B> DataFrame<A>.joinWith(
 ): DataFrame<A> = joinWithImpl(right, type, addNewColumns = type.addNewColumns, joinExpression)
 
 /**
- * Performs a [inner join][JoinType.Inner] of this [DataFrame] with the [right][\right] [DataFrame]
+ * Performs an [inner join][JoinType.Inner] of this [DataFrame] with the [right][\right] [DataFrame]
  * using the provided [\joinExpression]. {@include [InnerJoinTypeDocs]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Inner].
@@ -244,7 +244,7 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
     joinWithImpl(right, JoinType.Filter, addNewColumns = false, joinExpression)
 
 /**
- * Performs a [exclude join][JoinType.Exclude] of this [DataFrame] with the [right][\right] [DataFrame]
+ * Performs an [exclude join][JoinType.Exclude] of this [DataFrame] with the [right][\right] [DataFrame]
  * using the provided [\joinExpression]. {@include [ExcludeJoinTypeDocs]}
  *
  * This is a shortcut for [joinWith] with [JoinType.Exclude].
