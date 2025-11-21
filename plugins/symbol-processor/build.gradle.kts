@@ -22,6 +22,7 @@ dependencies {
     implementation(projects.dataframe)
     // experimental
     implementation(projects.dataframeOpenapiGenerator)
+    implementation(libs.serialization.json)
 
     implementation(libs.ksp.api)
     implementation(libs.kotlin.reflect)
