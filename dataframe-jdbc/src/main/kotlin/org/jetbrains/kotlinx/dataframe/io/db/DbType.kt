@@ -15,6 +15,7 @@ import java.sql.NClob
 import java.sql.PreparedStatement
 import java.sql.Ref
 import java.sql.ResultSet
+import java.sql.ResultSetMetaData
 import java.sql.RowId
 import java.sql.SQLXML
 import java.sql.Time
@@ -396,5 +397,102 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         val kClass: KClass<*> = determineKotlinClass(tableColumnMetadata)
         val kType = createArrayTypeIfNeeded(kClass, tableColumnMetadata.isNullable)
         return kType
+    }
+
+    /**
+     * Retrieves column metadata from a JDBC ResultSet.
+     *
+     * By default, this method reads column metadata from [ResultSetMetaData],
+     * which is fast and supported by most JDBC drivers.
+     * If the driver does not provide sufficient information (e.g., `isNullable` unknown),
+     * it falls back to using [DatabaseMetaData.getColumns] for affected columns.
+     *
+     * Override this method in subclasses to provide database-specific behavior
+     * (for example, to disable fallback for databases like Teradata or Oracle
+     * where `DatabaseMetaData.getColumns` is known to be slow).
+     *
+     * @param resultSet The [ResultSet] containing query results.
+     * @return A list of [TableColumnMetadata] objects.
+     */
+    public open fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata> {
+        val rsMetaData = resultSet.metaData
+        val connection = resultSet.statement.connection
+        val dbMetaData = connection.metaData
+        val catalog = connection.catalog.takeUnless { it.isNullOrBlank() }
+        val schema = connection.schema.takeUnless { it.isNullOrBlank() }
+
+        val columnCount = rsMetaData.columnCount
+        val columns = mutableListOf<TableColumnMetadata>()
+        val nameCounter = mutableMapOf<String, Int>()
+
+        for (index in 1..columnCount) {
+            val columnName = rsMetaData.getColumnName(index)
+            val tableName = rsMetaData.getTableName(index)
+
+            // Try to detect nullability from ResultSetMetaData
+            val isNullable = try {
+                when (rsMetaData.isNullable(index)) {
+                    ResultSetMetaData.columnNoNulls -> false
+
+                    ResultSetMetaData.columnNullable -> true
+
+                    ResultSetMetaData.columnNullableUnknown -> {
+                        // Unknown nullability: assume it nullable, may trigger fallback
+                        true
+                    }
+
+                    else -> true
+                }
+            } catch (_: Exception) {
+                // Some drivers may throw for unsupported features
+                // In that case, fallback to DatabaseMetaData
+                dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols ->
+                    if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
+                }
+            }
+
+            val columnType = rsMetaData.getColumnTypeName(index)
+            val jdbcType = rsMetaData.getColumnType(index)
+            val displaySize = rsMetaData.getColumnDisplaySize(index)
+            val javaClassName = rsMetaData.getColumnClassName(index)
+
+            val uniqueName = manageColumnNameDuplication(nameCounter, columnName)
+
+            columns += TableColumnMetadata(
+                uniqueName,
+                columnType,
+                jdbcType,
+                displaySize,
+                javaClassName,
+                isNullable,
+            )
+        }
+
+        return columns
+    }
+
+    /**
+     * Manages the duplication of column names by appending a unique identifier to the original name if necessary.
+     *
+     * @param columnNameCounter a mutable map that keeps track of the count for each column name.
+     * @param originalName the original name of the column to be managed.
+     * @return the modified column name that is free from duplication.
+     */
+    internal fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, Int>, originalName: String): String {
+        var name = originalName
+        val count = columnNameCounter[originalName]
+
+        if (count != null) {
+            var incrementedCount = count + 1
+            while (columnNameCounter.containsKey("${originalName}_$incrementedCount")) {
+                incrementedCount++
+            }
+            columnNameCounter[originalName] = incrementedCount
+            name = "${originalName}_$incrementedCount"
+        } else {
+            columnNameCounter[originalName] = 0
+        }
+
+        return name
     }
 }
