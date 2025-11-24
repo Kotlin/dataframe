@@ -401,7 +401,7 @@ tasks.withType<KotlinCompile> {
     compilerOptions {
         optIn.addAll("kotlin.RequiresOptIn")
         freeCompilerArgs.addAll("-Xinline-classes")
-        freeCompilerArgs.addAll("-Xjvm-default=all")
+        freeCompilerArgs.addAll("-jvm-default=no-compatibility")
     }
 }
 
