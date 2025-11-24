@@ -27,7 +27,7 @@ dependencies {
     testImplementation(libs.mssql)
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)
-    testImplementation(libs.jts)
+    testImplementation(libs.jts.core)
     testImplementation(libs.duckdb.jdbc)
     testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
