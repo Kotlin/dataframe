@@ -30,8 +30,10 @@ import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 /* TODO KDocs
- * numbers -> Double or null
+ * primitive numbers -> Double or null
  * comparable -> itself or null
+ *
+ * Careful! non-primitive numbers will thus follow comparable rules
  *
  * TODO cases where the lambda dictates the return type require explicit type arguments for
  *  non-number, comparable overloads: https://youtrack.jetbrains.com/issue/KT-76683
@@ -419,7 +421,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
 ): DataFrame<T> = percentileFor(percentile, skipNaN) { columns.toColumnSet() }
 
 @Refine
-@Interpretable("GroupByPercentile0")
+@Interpretable("GroupByPercentile2")
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
     percentile: Double,
     name: String? = null,

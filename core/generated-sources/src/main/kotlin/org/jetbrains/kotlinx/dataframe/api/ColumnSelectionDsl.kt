@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -257,6 +258,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("stringInvokeTyped")
+    @Interpretable("StringInvokeTyped")
     public operator fun <C> String.invoke(): DataColumn<C> = getColumn(this).cast()
 
     /**
@@ -270,6 +272,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("stringInvokeUntyped")
+    @Interpretable("StringInvokeUntyped")
     public operator fun String.invoke(): DataColumn<*> = getColumn(this)
 
     /**

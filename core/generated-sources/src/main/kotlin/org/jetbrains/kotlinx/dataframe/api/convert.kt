@@ -124,6 +124,8 @@ internal interface ConvertDocs {
      * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+     * for type- and name-safe columns selection.
      *
      * #### NOTE:
      * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -139,11 +141,12 @@ internal interface ConvertDocs {
      *
      * #### For example:
      *
-     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
      *
-     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     *
      *
      *
      * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
@@ -190,6 +193,10 @@ internal interface ConvertDocs {
      * * [LocalDateTime], [LocalDate], [LocalTime],
      *   `Instant` ([kotlinx.datetime][DeprecatedInstant], [kotlin.time][StdlibInstant], and [java.time]),
      * * [URL], [IMG], [IFRAME].
+     *
+     * __NOTE__: Conversion between [Int] and [Char] is done by UTF-16 [Char.code].
+     *   To convert [Char]->[Int] the way it is written, use [parse()][parse] instead, or,
+     *   in either case, use [String] as intermediary type.
      */
     interface SupportedTypes
 
@@ -315,6 +322,8 @@ internal interface ConvertDocs {
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+ * for type- and name-safe columns selection.
  *
  * #### NOTE:
  * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -434,6 +443,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * @param [expression] The [Row Value Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample] to update the rows with.
  * @return A new [DataFrame] with the converted values.
  */
+@Refine
 @Interpretable("Convert6")
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
@@ -442,6 +452,8 @@ public inline fun <T, reified R> DataFrame<T>.convert(
     noinline expression: RowValueExpression<T, Any?, R>,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
+@Refine
+@Interpretable("ConvertNotNull")
 public inline fun <T, C, reified R> Convert<T, C?>.notNull(
     crossinline expression: RowValueExpression<T, C, R>,
 ): DataFrame<T> =
@@ -498,7 +510,7 @@ public class Convert<T, out C>(
      * preserving their original names and positions within the [DataFrame].
      *
      * The target type is provided as a reified type argument.
-     * For the full list of supported types, see [ConvertDocs.SupportedTypes].
+     * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
      *
      * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
      *
@@ -526,7 +538,7 @@ public class Convert<T, out C>(
  * preserving their original names and positions within the [DataFrame].
  *
  * The target type is provided as a [KType].
- * For the full list of supported types, see [ConvertDocs.SupportedTypes].
+ * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
  *
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
@@ -684,7 +696,7 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
  *
  * The target type is provided as a reified type argument.
  *
- * For the full list of supported types, see [ConvertDocs.SupportedTypes].
+ * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
  *
  * @param [C] The target type to convert values to.
  * @return A new [DataColumn] with the values converted to type [C].
@@ -694,7 +706,7 @@ public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(type
 /**
  * Converts values in this column to the specified [type].
  *
- * For the full list of supported types, see [ConvertDocs.SupportedTypes].
+ * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
  *
  * @param type The target type, provided as a [KType], to convert values to.
  * @return A new [DataColumn] with the values converted to [type].
@@ -2671,4 +2683,4 @@ public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolea
  *  @return A new [DataColumn] with the values converted to [DataFrame].
  */
 public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =
-    map { it.toDataFrame(containsColumns) }
+    map { it.toDataFrame(containsColumns = containsColumns) }

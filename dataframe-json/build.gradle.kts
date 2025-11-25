@@ -53,14 +53,9 @@ tasks.test {
     useJUnitPlatform()
 }
 
-val instrumentedJars: Configuration by configurations.creating {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-}
-
-artifacts {
-    add("instrumentedJars", tasks.jar.get().archiveFile) {
-        builtBy(tasks.jar)
+sourceSets {
+    main {
+        java.srcDirs("src/main/kotlin")
     }
 }
 

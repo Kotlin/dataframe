@@ -25,6 +25,8 @@ The operation is also available for self-comparable columns
 In this case, the return type remains `T?`.
 The index of the result of the operation on these types is rounded using
 [Quantile Estimation Method](#quantile-estimation-methods) R3.
+NOTE: This logic also applies to other self-comparable `Number` types, like `BigDecimal`.
+They will not be interpolated.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.

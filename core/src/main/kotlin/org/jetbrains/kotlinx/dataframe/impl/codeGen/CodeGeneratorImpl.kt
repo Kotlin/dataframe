@@ -42,7 +42,7 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
 internal fun Iterable<Marker>.filterRequiredForSchema(schema: DataFrameSchema) =
-    filter { it.isOpen && it.schema.compare(schema, ComparisonMode.STRICT_FOR_NESTED_SCHEMAS).isSuperOrEqual() }
+    filter { it.isOpen && it.schema.compare(schema, ComparisonMode.STRICT_FOR_NESTED_SCHEMAS).isSuperOrMatches() }
 
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 

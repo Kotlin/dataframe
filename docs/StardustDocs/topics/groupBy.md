@@ -142,7 +142,7 @@ df.groupBy { name }.concat()
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html" width="100%"/>
 <!---END-->
 
-## Aggregation
+<!---TODO ## Reducing--->
 
 To compute one or several [statistics](summaryStatistics.md) per every group of `GroupBy` use `aggregate` function. 
 Its body will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) that represents current data group being aggregated.

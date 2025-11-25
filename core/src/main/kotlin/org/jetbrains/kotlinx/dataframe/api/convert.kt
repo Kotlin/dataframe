@@ -132,6 +132,10 @@ internal interface ConvertDocs {
      * * [LocalDateTime], [LocalDate], [LocalTime],
      *   `Instant` ([kotlinx.datetime][DeprecatedInstant], [kotlin.time][StdlibInstant], and [java.time]),
      * * [URL], [IMG], [IFRAME].
+     *
+     * __NOTE__: Conversion between [Int] and [Char] is done by UTF-16 [Char.code].
+     *   To convert [Char]->[Int] the way it is written, use [parse()][parse] instead, or,
+     *   in either case, use [String] as intermediary type.
      */
     interface SupportedTypes
 
@@ -295,6 +299,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  * @return A new [DataFrame] with the converted values.
  */
+@Refine
 @Interpretable("Convert6")
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
@@ -303,6 +308,8 @@ public inline fun <T, reified R> DataFrame<T>.convert(
     noinline expression: RowValueExpression<T, Any?, R>,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
+@Refine
+@Interpretable("ConvertNotNull")
 public inline fun <T, C, reified R> Convert<T, C?>.notNull(
     crossinline expression: RowValueExpression<T, C, R>,
 ): DataFrame<T> =
@@ -359,7 +366,7 @@ public class Convert<T, out C>(
      * preserving their original names and positions within the [DataFrame].
      *
      * The target type is provided as a reified type argument.
-     * For the full list of supported types, see [ConvertDocs.SupportedTypes].
+     * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
      *
      * For more information: {@include [DocumentationUrls.Convert]}
      *
@@ -387,7 +394,7 @@ public class Convert<T, out C>(
  * preserving their original names and positions within the [DataFrame].
  *
  * The target type is provided as a [KType].
- * For the full list of supported types, see [ConvertDocs.SupportedTypes].
+ * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
@@ -551,7 +558,7 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
  *
  * The target type is provided as a reified type argument.
  *
- * For the full list of supported types, see [ConvertDocs.SupportedTypes].
+ * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
  *
  * @param [C] The target type to convert values to.
  * @return A new [DataColumn] with the values converted to type [C].
@@ -561,7 +568,7 @@ public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(type
 /**
  * Converts values in this column to the specified [type].
  *
- * For the full list of supported types, see [ConvertDocs.SupportedTypes].
+ * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
  *
  * @param type The target type, provided as a [KType], to convert values to.
  * @return A new [DataColumn] with the values converted to [type].
@@ -2518,4 +2525,4 @@ public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolea
  *  @return A new [DataColumn] with the values converted to [DataFrame].
  */
 public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =
-    map { it.toDataFrame(containsColumns) }
+    map { it.toDataFrame(containsColumns = containsColumns) }

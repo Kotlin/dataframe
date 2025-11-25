@@ -1712,7 +1712,7 @@ class DataFrameTests : BaseTest() {
         df.update("name").at(0).with { "ALICE" }
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = IllegalStateException::class)
     fun `update with wrong type`() {
         typed.update("age").with { "string" }
     }
@@ -2464,6 +2464,7 @@ class DataFrameTests : BaseTest() {
         df.comparableNothing.valuesAreComparable() shouldBe false
     }
 
+    @Suppress("DEPRECATION_ERROR")
     // https://github.com/Kotlin/dataframe/pull/1077#discussion_r1981352374
     @Test
     fun `values are comparable difficult`() {

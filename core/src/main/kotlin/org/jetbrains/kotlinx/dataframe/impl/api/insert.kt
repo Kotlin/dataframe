@@ -4,7 +4,11 @@ import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.InsertClause
+import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.before
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -12,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ReadonlyTreeNode
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ReferenceData
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getAncestor
 import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
+import org.jetbrains.kotlinx.dataframe.impl.removeAt
 
 internal data class ColumnToInsert(
     val insertionPath: ColumnPath,
@@ -147,4 +152,14 @@ internal fun <T> insertImpl(
     }
 
     return newColumns.toDataFrame().cast()
+}
+
+internal fun <T> InsertClause<T>.afterImpl(columnPath: ColumnPath): DataFrame<T> {
+    val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
+    return df.insertImpl(dstPath, column).move { dstPath }.after { columnPath }
+}
+
+internal fun <T> InsertClause<T>.beforeImpl(columnPath: ColumnPath): DataFrame<T> {
+    val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
+    return df.insertImpl(dstPath, column).move { dstPath }.before { columnPath }
 }

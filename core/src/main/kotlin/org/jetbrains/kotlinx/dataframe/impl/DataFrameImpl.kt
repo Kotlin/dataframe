@@ -93,7 +93,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
 
     override fun columns() = columns
 
-    override fun columnNames() = columns.map { it.name() }
+    override fun columnNames(): List<String> = columns.map { it.name() }
 
     override fun columnTypes() = columns.map { it.type() }
 

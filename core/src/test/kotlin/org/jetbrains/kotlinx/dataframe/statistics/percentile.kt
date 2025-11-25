@@ -225,33 +225,37 @@ class PercentileTests {
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe percentile`() {
         val df = dataFrameOf(
-            "a", "b", "c",
+            "a", "b", "c", "d",
         )(
-            1, 2f, 3.0,
-            4, 5f, 6.0,
-            7, 8f, 9.0,
+            1, 2f, 3.0, 1.toBigInteger(),
+            4, 5f, 6.0, 2.toBigInteger(),
+            7, 8f, 9.0, 4.toBigInteger(),
         )
 
         // Get row with percentile values for each column
         val percentiles50 = df.percentile(50.0)
-        percentiles50["a"] shouldBe 4
-        percentiles50["b"] shouldBe 5f
+        percentiles50["a"] shouldBe 4.0
+        percentiles50["b"] shouldBe 5.0
         percentiles50["c"] shouldBe 6.0
+        percentiles50["d"] shouldBe 2.toBigInteger() // not interpolated!
 
         val percentiles25 = df.percentile(25.0)
         percentiles25["a"] shouldBe 1.5000000000000002
-        percentiles25["b"] shouldBe 2.5f
+        percentiles25["b"] shouldBe 2.5
         percentiles25["c"] shouldBe 3.5
+        percentiles25["d"] shouldBe 1.toBigInteger() // not interpolated!
 
         val percentiles75 = df.percentile(75.0)
         percentiles75["a"] shouldBe 6.5
-        percentiles75["b"] shouldBe 7.5f
+        percentiles75["b"] shouldBe 7.5
         percentiles75["c"] shouldBe 8.5
+        percentiles75["d"] shouldBe 2.toBigInteger() // not interpolated!
 
         // Test percentile for specific columns
-        val percentileFor50 = df.percentileFor(50.0, "a", "c")
-        percentileFor50["a"] shouldBe 4
+        val percentileFor50 = df.percentileFor(50.0, "a", "c", "d")
+        percentileFor50["a"] shouldBe 4.0
         percentileFor50["c"] shouldBe 6.0
+        percentileFor50["d"] shouldBe 2.toBigInteger() // not interpolated!
     }
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]

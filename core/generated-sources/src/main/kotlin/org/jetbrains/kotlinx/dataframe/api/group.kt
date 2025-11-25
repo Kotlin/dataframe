@@ -19,7 +19,8 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 /**
- * Groups the specified [columns] within the [DataFrame].
+ * Groups the specified [columns] within the [DataFrame] into
+ * [column group][ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
  * returns a [GroupClause],
@@ -60,6 +61,8 @@ internal interface GroupDocs {
      * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+     * for type- and name-safe columns selection.
      *
      * #### NOTE:
      * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -75,11 +78,12 @@ internal interface GroupDocs {
      *
      * #### For example:
      *
-     * `df.`[group][org.jetbrains.kotlinx.dataframe.api.group]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
      *
-     * `df.`[group][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * `df.`[group][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     *
      *
      *
      * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
@@ -142,7 +146,8 @@ internal interface GroupDocs {
 }
 
 /**
- * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] into
+ * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
  * returns a [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause],
@@ -174,6 +179,8 @@ internal interface GroupDocs {
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+ * for type- and name-safe columns selection.
  *
  * #### NOTE:
  * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -197,7 +204,8 @@ internal interface GroupDocs {
 public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClause<T, C> = GroupClause(this, columns)
 
 /**
- * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] into
+ * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
  * returns a [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause],
@@ -291,9 +299,11 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  * where that column should be grouped.
  * All selected columns will be moved under the groups defined by this expression.
  */
+@Refine
 @JvmName("intoString")
 @OverloadResolutionByLambdaReturnType
 @OptIn(ExperimentalTypeInference::class)
+@Interpretable("IntoStringLambda")
 public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String): DataFrame<T> =
     df.move(columns).under { column(it).toColumnAccessor() }
 
@@ -316,6 +326,8 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+ * for type- and name-safe columns selection.
  *
  * #### NOTE:
  * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]

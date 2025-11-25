@@ -182,7 +182,7 @@ Think of Kotlin DataFrame as a **data analysis/ETL tool**, not an ORM.
 | `SUM(amount)`                                                                                                                                          | `.aggregate {  sum { amount } }`           |
 | `JOIN`                                                                                                                                                 | `.join(otherDf) { id match right.id }` |
 | `LIMIT 5`                                                                                                                                              | `.take(5)`                             |
-| **Pivot:** <br>`SELECT * FROM crosstab('SELECT region, year, SUM(amount) FROM sales GROUP BY region, year') AS ct(region text, y2023 int, y2024 int);` | `.pivot(region, year) {  sum { amount } }` |
+| **Pivot:** <br>`SELECT * FROM crosstab('SELECT region, year, SUM(amount) FROM sales GROUP BY region, year') AS ct(region text, y2023 int, y2024 int);` | `.groupBy { region }.pivot { year }. sum { amount }` |
 | **Explode array column:** <br>`SELECT id, unnest(tags) AS tag FROM products;`                                                                          | `.explode { tags }`                    |
 | **Update column:** <br>`UPDATE sales SET amount = amount * 1.2;`                                                                                       | `.update { amount }.with { it * 1.2 }` |
 
@@ -201,7 +201,7 @@ ORDER BY total DESC LIMIT 5;
 ```kotlin
 sales.filter { amount > 0 }
     .groupBy { region }
-    .aggregate { sum(amount).into("total") }
+    .aggregate { sum { amount } into "total" }
     .sortByDesc { total }
     .take(5)
 ```

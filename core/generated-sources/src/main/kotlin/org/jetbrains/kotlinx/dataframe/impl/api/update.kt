@@ -101,21 +101,25 @@ internal fun <T, C> DataColumn<C>.updateImpl(
 ): DataColumn<C> {
     val collector = createDataCollector<C>(size, type)
     val src = this
-    if (filter == null) {
-        df.indices().forEach { rowIndex ->
-            val row = AddDataRowImpl(rowIndex, df, collector.values)
-            collector.add(expression(row, src, src[rowIndex]))
+    try {
+        if (filter == null) {
+            df.indices().forEach { rowIndex ->
+                val row = AddDataRowImpl(rowIndex, df, collector.values)
+                collector.add(expression(row, src, src[rowIndex]))
+            }
+        } else {
+            df.indices().forEach { rowIndex ->
+                val row = AddDataRowImpl(rowIndex, df, collector.values)
+                val currentValue = row[src]
+                val newValue =
+                    if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
+                collector.add(newValue)
+            }
         }
-    } else {
-        df.indices().forEach { rowIndex ->
-            val row = AddDataRowImpl(rowIndex, df, collector.values)
-            val currentValue = row[src]
-            val newValue =
-                if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
-            collector.add(newValue)
-        }
+        return collector.toColumn(src.name).cast()
+    } catch (e: Throwable) {
+        throw IllegalStateException("Could not update column '${src.name}': ${e.message}", e)
     }
-    return collector.toColumn(src.name).cast()
 }
 
 /**

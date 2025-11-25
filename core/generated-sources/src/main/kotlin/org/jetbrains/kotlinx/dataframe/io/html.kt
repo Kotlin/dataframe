@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.CellAttributes
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
+import org.jetbrains.kotlinx.dataframe.api.HeaderColFormatter
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -38,6 +39,8 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.util.DISPLAY_CONFIGURATION
+import org.jetbrains.kotlinx.dataframe.util.DISPLAY_CONFIGURATION_COPY
 import org.jetbrains.kotlinx.dataframe.util.TO_HTML
 import org.jetbrains.kotlinx.dataframe.util.TO_HTML_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.TO_STANDALONE_HTML
@@ -68,6 +71,7 @@ internal data class ColumnDataForJs(
     val nested: List<ColumnDataForJs>,
     val rightAlign: Boolean,
     val values: List<CellContent>,
+    val headerStyle: String?,
 )
 
 internal val formatter = DataFrameFormatter(
@@ -98,7 +102,8 @@ internal fun getResourceText(resource: String, vararg replacement: Pair<String, 
 
 internal fun ColumnDataForJs.renderHeader(): String {
     val tooltip = "${column.name}: ${renderType(column.type())}"
-    return "<span title=\"$tooltip\">${column.name()}</span>"
+    val styleAttr = if (headerStyle != null) " style=\"$headerStyle\"" else ""
+    return "<span title=\"$tooltip\"$styleAttr>${column.name()}</span>"
 }
 
 internal fun tableJs(
@@ -234,6 +239,29 @@ internal fun AnyFrame.toHtmlData(
                 HtmlContent(html, style)
             }
         }
+        val headerStyle = run {
+            val hf = configuration.headerFormatter
+            if (hf == null) {
+                null
+            } else {
+                // collect attributes from parents
+                val parentCols = col.path.indices
+                    .map { i -> col.path.take(i + 1) }
+                    .dropLast(1)
+                    .map { ColumnWithPath(this@toHtmlData[it], it) }
+                val parentAttributes = parentCols
+                    .map { hf(FormattingDsl, it) }
+                    .reduceOrNull(CellAttributes?::and)
+                val selfAttributes = hf(FormattingDsl, col)
+                val attrs = parentAttributes and selfAttributes
+                attrs
+                    ?.attributes()
+                    ?.ifEmpty { null }
+                    ?.toMap()
+                    ?.entries
+                    ?.joinToString(";") { "${it.key}:${it.value}" }
+            }
+        }
         val nested = if (col is ColumnGroup<*>) {
             col.columns().map {
                 col.columnToJs(it.addParentPath(col.path), rowsLimit, configuration)
@@ -246,6 +274,7 @@ internal fun AnyFrame.toHtmlData(
             nested = nested,
             rightAlign = col.isSubtypeOf<Number?>(),
             values = contents,
+            headerStyle = headerStyle,
         )
     }
 
@@ -275,7 +304,7 @@ private fun Any?.toDataFrameLikeOrNull(): DataFrameLike? =
     when (this) {
         is AnyFrame -> {
             object : DataFrameLike {
-                override fun configuration(default: DisplayConfiguration) = default
+                override fun configuration(default: DisplayConfiguration) = default.copy(cellFormatter = null)
 
                 override fun df(): AnyFrame = this@toDataFrameLikeOrNull
             }
@@ -826,12 +855,15 @@ public class DataFrameHtmlData(
  * @param cellContentLimit -1 to disable content trimming
  * @param enableFallbackStaticTables true to add additional pure HTML table that will be visible only if JS  is disabled;
  * For example hosting *.ipynb files with outputs on GitHub
+ * @param cellFormatter Optional cell formatter applied to data cells during HTML rendering.
+ * @param headerFormatter Optional header formatter applied to column headers; supports inheritance for nested column groups.
  */
 public data class DisplayConfiguration(
     var rowsLimit: Int? = 20,
     var nestedRowsLimit: Int? = 5,
     var cellContentLimit: Int = 40,
     var cellFormatter: RowColFormatter<*, *>? = null,
+    var headerFormatter: HeaderColFormatter<*>? = null,
     var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
     var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
@@ -842,6 +874,67 @@ public data class DisplayConfiguration(
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
     }
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = DISPLAY_CONFIGURATION,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public constructor(
+        rowsLimit: Int? = 20,
+        nestedRowsLimit: Int? = 5,
+        cellContentLimit: Int = 40,
+        cellFormatter: RowColFormatter<*, *>? = null,
+        decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
+        isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
+        localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
+        useDarkColorScheme: Boolean = false,
+        enableFallbackStaticTables: Boolean = true,
+        downsizeBufferedImage: Boolean = true,
+    ) : this (
+        rowsLimit,
+        nestedRowsLimit,
+        cellContentLimit,
+        cellFormatter,
+        null,
+        decimalFormat,
+        isolatedOutputs,
+        localTesting,
+        useDarkColorScheme,
+        enableFallbackStaticTables,
+        downsizeBufferedImage,
+    )
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = DISPLAY_CONFIGURATION_COPY,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public fun copy(
+        rowsLimit: Int? = this.rowsLimit,
+        nestedRowsLimit: Int? = this.nestedRowsLimit,
+        cellContentLimit: Int = this.cellContentLimit,
+        cellFormatter: RowColFormatter<*, *>? = this.cellFormatter,
+        decimalFormat: RendererDecimalFormat = this.decimalFormat,
+        isolatedOutputs: Boolean = this.isolatedOutputs,
+        localTesting: Boolean = this.localTesting,
+        useDarkColorScheme: Boolean = this.useDarkColorScheme,
+        enableFallbackStaticTables: Boolean = this.enableFallbackStaticTables,
+        downsizeBufferedImage: Boolean = this.downsizeBufferedImage,
+    ): DisplayConfiguration =
+        DisplayConfiguration(
+            rowsLimit,
+            nestedRowsLimit,
+            cellContentLimit,
+            cellFormatter,
+            null,
+            decimalFormat,
+            isolatedOutputs,
+            localTesting,
+            useDarkColorScheme,
+            enableFallbackStaticTables,
+            downsizeBufferedImage,
+        )
 
     /** DSL accessor. */
     public operator fun invoke(block: DisplayConfiguration.() -> Unit): DisplayConfiguration = apply(block)

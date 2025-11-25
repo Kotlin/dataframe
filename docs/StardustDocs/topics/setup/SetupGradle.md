@@ -71,10 +71,11 @@ For flexible dependencies configuration see [Custom configuration](SetupCustomGr
 
 ## Hello World
 
-Let’s create your first [`DataFrame`](DataFrame.md) in the notebook — a simple "Hello, World!" style example:
+Let’s create your first [`DataFrame`](DataFrame.md) — a simple "Hello, World!" style example:
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.print
 
 fun main() {
     val df = dataFrameOf(
@@ -82,7 +83,7 @@ fun main() {
         "age" to listOf(25, 30)
     )
 
-    println(df)
+    df.print()
 }
 ```
 
@@ -103,7 +104,7 @@ To enable the plugin in your Gradle project, add it to the `plugins` section:
 
 ```kotlin
 plugins {
-    kotlin("plugin.dataframe") version "2.2.20-Beta1"
+    kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
 }
 ```
 
@@ -113,7 +114,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'org.jetbrains.kotlin.plugin.dataframe' version '2.2.20-Beta1'
+    id 'org.jetbrains.kotlin.plugin.dataframe' version '%compilerPluginKotlinVersion%'
 }
 ```
 

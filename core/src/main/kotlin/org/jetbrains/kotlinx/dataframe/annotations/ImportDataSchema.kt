@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
-import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
+import org.jetbrains.kotlinx.dataframe.api.NameValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
@@ -78,7 +78,7 @@ public annotation class JsonOptions(
      * */
     public val typeClashTactic: String = TypeClashTactics.ARRAY_AND_VALUE_COLUMNS,
     /**
-     * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+     * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
      *     will be created.
      *
      * Example:

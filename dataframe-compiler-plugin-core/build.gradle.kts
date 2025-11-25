@@ -60,11 +60,24 @@ tasks.withType<ShadowJar> {
     exclude("org/jetbrains/kotlinx/dataframe/io/**")
     exclude("org/jetbrains/kotlinx/dataframe/documentation/**")
     exclude("org/jetbrains/kotlinx/dataframe/impl/io/**")
+    exclude("org/jetbrains/kotlinx/dataframe/api/MaxKt*.class")
+    exclude("org/jetbrains/kotlinx/dataframe/api/MinKt*.class")
+    exclude("org/jetbrains/kotlinx/dataframe/api/PercentileKt*.class")
+    exclude("org/jetbrains/kotlinx/dataframe/api/MedianKt*.class")
+    exclude("org/jetbrains/kotlinx/dataframe/api/SumKt*.class")
+    exclude("org/jetbrains/kotlinx/dataframe/api/MeanKt*.class")
+    exclude("org/jetbrains/kotlinx/dataframe/api/StdKt*.class")
+    exclude("org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt*.class")
+    exclude("org/jetbrains/kotlinx/dataframe/impl/api/DescribeKt*.class")
+    exclude("org/jetbrains/kotlinx/dataframe/impl/api/Parsers*.class")
+    exclude($$"org/jetbrains/kotlinx/dataframe/impl/api/ConvertKt$createConverter*.class")
+
     exclude("io/github/oshai/kotlinlogging/**")
     exclude("apache/**")
     exclude("**.html")
     exclude("**.js")
     exclude("**.css")
+    exclude("META-INF/kotlin-jupyter-libraries/**")
 }
 
 kotlinPublications {

@@ -5,16 +5,20 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.generateCode
+import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
-import org.jetbrains.kotlinx.dataframe.schema.CompareResult.Equals
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsDerived
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsSuper
+import org.jetbrains.kotlinx.dataframe.schema.CompareResult.Matches
 import org.jetbrains.kotlinx.dataframe.schema.CompareResult.None
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.LENIENT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
@@ -126,20 +130,20 @@ class MatchSchemeTests {
             "c" to columnOf(1, 2, 3, 4),
         ).schema()
 
-        scheme1.compare(scheme1, LENIENT) shouldBe Equals
-        scheme2.compare(scheme2, LENIENT) shouldBe Equals
+        scheme1.compare(scheme1, LENIENT) shouldBe Matches
+        scheme2.compare(scheme2, LENIENT) shouldBe Matches
         scheme1.compare(scheme2, LENIENT) shouldBe IsSuper
         scheme2.compare(scheme1, LENIENT) shouldBe IsDerived
         scheme1.compare(scheme3, LENIENT) shouldBe None
 
-        scheme1.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe Equals
-        scheme2.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe Equals
+        scheme1.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe Matches
+        scheme2.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe Matches
         scheme1.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe IsSuper
         scheme2.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe IsDerived
         scheme1.compare(scheme3, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
 
-        scheme1.compare(scheme1, STRICT) shouldBe Equals
-        scheme2.compare(scheme2, STRICT) shouldBe Equals
+        scheme1.compare(scheme1, STRICT) shouldBe Matches
+        scheme2.compare(scheme2, STRICT) shouldBe Matches
         scheme1.compare(scheme2, STRICT) shouldBe None
         scheme2.compare(scheme1, STRICT) shouldBe None
     }
@@ -169,8 +173,8 @@ class MatchSchemeTests {
             "c" to columnOf(1, 2, 3, 4),
         ).schema()
 
-        scheme1.compare(scheme1, LENIENT) shouldBe Equals
-        scheme2.compare(scheme2, LENIENT) shouldBe Equals
+        scheme1.compare(scheme1, LENIENT) shouldBe Matches
+        scheme2.compare(scheme2, LENIENT) shouldBe Matches
         scheme1.compare(scheme2, LENIENT) shouldBe IsSuper
         scheme2.compare(scheme1, LENIENT) shouldBe IsDerived
         scheme1.compare(scheme3, LENIENT) shouldBe None
@@ -178,8 +182,8 @@ class MatchSchemeTests {
         scheme1.compare(scheme4, LENIENT) shouldBe IsSuper
         scheme4.compare(scheme1, LENIENT) shouldBe IsDerived
 
-        scheme1.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe Equals
-        scheme2.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe Equals
+        scheme1.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe Matches
+        scheme2.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe Matches
         scheme1.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
         scheme2.compare(scheme1, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
         scheme1.compare(scheme3, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
@@ -189,11 +193,55 @@ class MatchSchemeTests {
         scheme2.compare(scheme4, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
         scheme4.compare(scheme2, STRICT_FOR_NESTED_SCHEMAS) shouldBe None
 
-        scheme1.compare(scheme1, STRICT) shouldBe Equals
-        scheme2.compare(scheme2, STRICT) shouldBe Equals
+        scheme1.compare(scheme1, STRICT) shouldBe Matches
+        scheme2.compare(scheme2, STRICT) shouldBe Matches
         scheme1.compare(scheme2, STRICT) shouldBe None
         scheme2.compare(scheme1, STRICT) shouldBe None
         scheme1.compare(scheme3, STRICT) shouldBe None
         scheme3.compare(scheme1, STRICT) shouldBe None
+    }
+
+    @Test
+    fun `comparison with order`() {
+        val scheme1 = dataFrameOf(
+            "a" to columnOf(1, 2, 3, 4),
+            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
+        ).schema()
+
+        val scheme1a = dataFrameOf(
+            "a" to columnOf(1, 2, 3, 4),
+            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
+        ).schema()
+
+        val scheme2 = dataFrameOf(
+            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
+            "a" to columnOf(1, 2, 3, 4),
+        ).schema()
+
+        scheme1.compare(scheme1a).matches() shouldBe true
+        (scheme1 == scheme1a) shouldBe true
+
+        scheme1.compare(scheme2).matches() shouldBe true
+        (scheme1 == scheme2) shouldBe false
+    }
+
+    @Test
+    fun `nested comparison with order`() {
+        typed.schema().compare(typed.schema()).matches() shouldBe true
+        (typed.schema() == typed.schema()) shouldBe true
+
+        val movedInGroup = typed.move { pageInfo.resultsPerPage }.after { pageInfo.snippets }
+
+        typed.schema().compare(movedInGroup.schema()).matches() shouldBe true
+        (typed.schema() == movedInGroup.schema()) shouldBe false
+
+        val movedInFrameAndGroup = typed
+            .update { items }.with {
+                it.move { kind }.after { id }
+                    .move { snippet.position }.after { snippet.info }
+            }
+
+        typed.schema().compare(movedInFrameAndGroup.schema()).matches() shouldBe true
+        (typed.schema() == movedInFrameAndGroup.schema()) shouldBe false
     }
 }

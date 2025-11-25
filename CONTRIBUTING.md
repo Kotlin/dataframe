@@ -53,7 +53,7 @@ so do familiarize yourself with the following guidelines.
 ## PR workflow
 
 0. The contributor builds the library locally and runs all unit tests via the Gradle task 
-   `dataframe:test -Pkotlin.dataframe.debug=true` (see the ["Building"](#building) chapter).
+   `build -Pkotlin.dataframe.debug=true` (see the ["Building"](#building) chapter).
 1. The contributor submits the PR if the local build is successful and the tests are green.
 2. The reviewer puts their name in the "Reviewers" section of the proposed PR at the start of the review process.
 3. The reviewer leaves comments or marks the PR with the abbreviation "LGTM" (Looks good to me).
@@ -112,6 +112,9 @@ This library is built with Gradle.
   making local publishing faster: `./gradlew publishToMavenLocal -PskipKodex`.
   This, however, publishes the library with "broken" KDocs, 
   so it's only meant for faster iterations during development.
+* The parameter `-PincludeCoreLibrariesJson` makes the build include the `libraries.json` file in the `:core` module.
+  This file allows loading dataframe-jupyter when dataframe-core is present on its own in a Kotlin Notebook.
+  Usually only done when publishing.
 
 You can import this project into IDEA, but you have to delegate the build actions
 to Gradle (in Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle -> Runner)

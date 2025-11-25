@@ -39,9 +39,9 @@ jobs:
           Xvfb :99 &
           /opt/builder/bin/idea.sh helpbuilderinspect -source-dir . -product $PRODUCT --runner github -output-dir artifacts/ || true
           test -e artifacts/$ARTIFACT && echo $ARTIFACT exists
-#          cp docs/StardustDocs/sitemap.xml artifacts/sitemap.xml
-#          cd artifacts
-#          zip -r $ARTIFACT sitemap.xml
+          # cp docs/StardustDocs/sitemap.xml artifacts/sitemap.xml
+          # cd artifacts
+          # zip -r $ARTIFACT sitemap.xml
         working-directory: ${{ github.workspace }}
       - name: Upload modified documentation artifact
         uses: actions/upload-artifact@v4

@@ -157,7 +157,9 @@ class CreateDataFrameTests {
 
         val df2 = data.toDataFrame {
             preserve(B::row)
-            properties { preserve(DataFrame::class) }
+            properties {
+                preserve(DataFrame::class)
+            }
         }
         df2.frame.kind shouldBe ColumnKind.Value
         df2.frame.type shouldBe typeOf<DataFrame<A>>()
@@ -184,6 +186,24 @@ class CreateDataFrameTests {
         }
 
         res.schema() shouldBe data.toDataFrame(maxDepth = 0).schema()
+    }
+
+    class NestedExcludeClasses(val s: String, val list1: List<String>)
+
+    class ExcludeClasses(val i: Int, val list: List<Int>, val nested: NestedExcludeClasses)
+
+    @Test
+    fun `exclude classes`() {
+        val list = listOf(
+            ExcludeClasses(1, listOf(1, 2, 3), NestedExcludeClasses("str", listOf("foo", "bar"))),
+        )
+        val df = list.toDataFrame {
+            properties(maxDepth = 2) {
+                exclude(List::class)
+            }
+        }
+
+        df shouldBe list.toDataFrame(maxDepth = 2).remove { "list" and "nested"["list1"] }
     }
 
     enum class DummyEnum { A }
@@ -213,8 +233,7 @@ class CreateDataFrameTests {
         df.rowsCount() shouldBe 1
 
         val childCol = df[Entry::child]
-        childCol.kind() shouldBe ColumnKind.Group
-        childCol.asColumnGroup().columnsCount() shouldBe 0
+        childCol.kind() shouldBe ColumnKind.Value
     }
 
     @Test
@@ -425,6 +444,16 @@ class CreateDataFrameTests {
         df["value"].toList() shouldBe maps
     }
 
+    @Test
+    fun `should convert iterables of maps representing rows to DataFrame with value columns`() {
+        val maps: Iterable<Map<String, *>> = listOf(mapOf("a" to 1, "b" to true), mapOf("c" to 2, "d" to false))
+        val df = maps.toDataFrame()
+        df["a"][0] shouldBe 1
+        df["b"][0] shouldBe true
+        df["c"][1] shouldBe 2
+        df["d"][1] shouldBe false
+    }
+
     class NoPublicPropsClass(private val a: Int, private val b: String)
 
     @Test
@@ -631,5 +660,132 @@ class CreateDataFrameTests {
         val files = listOf(File("data.csv"))
         val df = files.toDataFrame(columnName = "files")
         df["files"][0] shouldBe File("data.csv")
+    }
+
+    class MyEmptyDeclaration
+
+    class TestItem(val name: String, val containingDeclaration: MyEmptyDeclaration, val test: Int)
+
+    @Test
+    fun `preserve empty interface consistency`() {
+        val df = listOf(MyEmptyDeclaration(), MyEmptyDeclaration()).toDataFrame()
+        df["value"].type() shouldBe typeOf<MyEmptyDeclaration>()
+    }
+
+    @Test
+    fun `preserve nested empty interface consistency`() {
+        val df = List(10) {
+            TestItem(
+                "Test1",
+                MyEmptyDeclaration(),
+                123,
+            )
+        }.toDataFrame(maxDepth = 2)
+
+        df["containingDeclaration"].type() shouldBe typeOf<MyEmptyDeclaration>()
+    }
+
+    @Test
+    fun `preserve value type consistency`() {
+        val list = listOf(mapOf("a" to 1))
+        val df = list.toDataFrame(maxDepth = 1)
+        df["value"].type() shouldBe typeOf<Map<String, Int>>()
+    }
+
+    class MapContainer(val map: Map<String, Int>)
+
+    @Test
+    fun `preserve nested value type consistency`() {
+        val list = listOf(MapContainer(mapOf("a" to 1)))
+        val df = list.toDataFrame(maxDepth = 2)
+        df["map"].type() shouldBe typeOf<Map<String, Int>>()
+    }
+
+    @Test
+    fun `parsing row-major lines into structured dataframe`() {
+        // I think finding data in such format will be rare, so we need an optional header parameter.
+        val lines = buildList {
+            addAll(listOf("stamp", "header", "data"))
+            repeat(33) { row ->
+                add("stamp $row")
+                add("header $row")
+                add("data $row")
+            }
+        }
+
+        val df = lines.chunked(3).toDataFrame(header = null)
+
+        df.columnNames() shouldBe listOf("stamp", "header", "data")
+        df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+        df.rowsCount() shouldBe 33
+        df[0].values() shouldBe listOf("stamp 0", "header 0", "data 0")
+    }
+
+    @Test
+    fun `parsing srt lines into structured dataframe`() {
+        // *.srt subtitle file format
+        val lines = buildList {
+            repeat(33) { row ->
+                add("stamp $row")
+                add("header $row")
+                add("data $row")
+                add("\n")
+            }
+        }
+
+        val df = lines.chunked(4).map { it.dropLast(1) }.toDataFrame(header = listOf("stamp", "header", "data"))
+
+        df.columnNames() shouldBe listOf("stamp", "header", "data")
+        df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+        df.rowsCount() shouldBe 33
+        df[0].values() shouldBe listOf("stamp 0", "header 0", "data 0")
+
+        // Different approach. I think the dropLast one is better
+        lines.chunked(4)
+            .toDataFrame(header = listOf("stamp", "header", "data", "whitespace"))
+            .remove("whitespace") shouldBe df
+    }
+
+    @Test
+    fun `parsing column-major lines into structured dataframe`() {
+        val lines = buildList {
+            repeat(4) { col ->
+                repeat(5) { row ->
+                    add("data$col $row")
+                }
+                add("\n")
+            }
+        }
+
+        val header = List(4) { "col $it" }
+        val df = lines
+            .chunked(6)
+            .map { it.dropLast(1) }
+            .toDataFrame(header = header, containsColumns = true)
+        df.columnNames() shouldBe header
+        df.columnTypes() shouldBe List(4) { typeOf<String>() }
+        df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")
+    }
+
+    @Test
+    fun `parsing column-major lines with header into structured dataframe`() {
+        val lines = buildList {
+            repeat(4) { col ->
+                add("col $col")
+                repeat(5) { row ->
+                    add("data$col $row")
+                }
+                add("\n")
+            }
+        }
+
+        val header = List(4) { "col $it" }
+        val df = lines
+            .chunked(7)
+            .map { it.dropLast(1) }
+            .toDataFrame(header = null, containsColumns = true)
+        df.columnNames() shouldBe header
+        df.columnTypes() shouldBe List(4) { typeOf<String>() }
+        df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")
     }
 }

@@ -48,7 +48,8 @@
             <toc-element topic="schemasImportOpenApiGradle.md"/>
         </toc-element>
     </toc-element>
-    <toc-element topic="Compiler-Plugin.md">
+    <toc-element toc-title="Compiler Plugin">
+        <toc-element topic="Compiler-Plugin.md"/>
         <toc-element topic="staticInterpretation.md"/>
         <toc-element topic="dataSchema.md"/>
         <toc-element topic="compilerPluginExamples.md"/>
@@ -209,6 +210,7 @@
         <toc-element topic="CSV-TSV.md"/>
         <toc-element topic="Excel.md"/>
         <toc-element topic="ApacheArrow.md"/>
+        <toc-element topic="Parquet.md"/>
         <toc-element topic="SQL.md">
             <toc-element topic="PostgreSQL.md"/>
             <toc-element topic="MySQL.md"/>

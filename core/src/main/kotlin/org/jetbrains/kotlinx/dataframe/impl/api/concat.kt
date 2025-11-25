@@ -24,7 +24,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>>): DataCol
 internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnSizes: List<Int>): DataColumn<T> {
     when (columns.size) {
         0 -> return DataColumn.empty(name).cast()
-        1 -> return columns[0] ?: DataColumn.empty(name).cast()
+        1 -> return columns.single() ?: DataColumn.empty(name).cast()
     }
 
     if (columns.all { it == null || it.isColumnGroup() }) {

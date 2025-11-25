@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
-import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
 import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY
@@ -312,6 +311,23 @@ public class ParserOptions(
  * @return a new column with parsed values */
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
+/**
+ * Tries to parse a column of chars into a column of a different type.
+ * Each parser in [Parsers] is run in order until a valid parser is found,
+ * a.k.a. that parser was able to parse all values in the column successfully. If a parser
+ * fails to parse any value, the next parser is tried. If all the others fail, the final parser
+ * returns strings.
+ *
+ * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
+ *
+ * @param options options for parsing, like providing a locale or a custom date-time formatter
+ * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)
+ * @return a new column with parsed values
+ */
+@JvmName("tryParseChar")
+public fun DataColumn<Char?>.tryParse(options: ParserOptions? = null): DataColumn<*> =
+    map { it?.toString() }.tryParseImpl(options)
+
 public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
     parse(options) {
         colsAtAnyDepth().filter { !it.isColumnGroup() }
@@ -333,7 +349,27 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> 
  * @return a new column with parsed values
  */
 public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn<*> =
-    tryParse(options).also { if (it.typeClass == String::class) error("Can't guess column type") }
+    tryParse(options).also { if (it.isSubtypeOf<String?>()) error("Can't guess column type") }
+
+/**
+ * Tries to parse a column of chars as strings into a column of a different type.
+ * Each parser in [Parsers] is run in order until a valid parser is found,
+ * a.k.a. that parser was able to parse all values in the column successfully. If a parser
+ * fails to parse any value, the next parser is tried.
+ *
+ * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
+ * use [tryParse] instead.
+ *
+ * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
+ *
+ * @param options options for parsing, like providing a locale or a custom date-time formatter
+ * @return a new column with parsed values
+ */
+@JvmName("parseChar")
+public fun DataColumn<Char?>.parse(options: ParserOptions? = null): DataColumn<*> =
+    map { it?.toString() }
+        .tryParse(options)
+        .also { if (it.isSubtypeOf<Char?>() || it.isSubtypeOf<String?>()) error("Can't guess column type") }
 
 @JvmName("parseAnyFrameNullable")
 public fun DataColumn<AnyFrame?>.parse(options: ParserOptions? = null): DataColumn<AnyFrame?> =

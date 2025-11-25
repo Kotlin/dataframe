@@ -25,6 +25,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.stream.Collectors
+import kotlin.io.path.exists
+import kotlin.io.path.isDirectory
+import kotlin.io.path.notExists
 import kotlin.jvm.java
 
 /**
@@ -299,7 +302,7 @@ fun main() {
  * Safe to use for Spark ML stage "data" subfolders that may be absent.
  */
 private fun listParquetFilesIfAny(dir: Path): Array<Path> {
-    if (!Files.exists(dir) || !Files.isDirectory(dir)) return emptyArray()
+    if (dir.notExists() || !dir.isDirectory()) return emptyArray()
     val files: List<Path> = Files.list(dir).use { stream ->
         stream
             .filter { Files.isRegularFile(it) && it.fileName.toString().endsWith(".parquet", ignoreCase = true) }

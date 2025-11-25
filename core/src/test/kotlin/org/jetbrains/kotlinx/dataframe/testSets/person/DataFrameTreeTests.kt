@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
+import org.jetbrains.kotlinx.dataframe.api.before
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
@@ -266,7 +267,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `move`() {
-        val actual = typed2.move { nameAndCity.name }.into("name")
+        val actual = typed2.move { nameAndCity.name }.into { pathOf("name") }
         actual.columnNames() shouldBe listOf("nameAndCity", "name", "age", "weight")
         actual.getColumnGroup("nameAndCity").columnNames() shouldBe listOf("city")
     }
@@ -368,6 +369,7 @@ class DataFrameTreeTests : BaseTest() {
         df2.pivot { it["nameAndCity"]["city"] }.groupBy { it["nameAndCity"]["name"] }.values("age").check()
     }
 
+    @Suppress("DEPRECATION_ERROR")
     @Test
     fun `pivot grouped column`() {
         val grouped = typed.group { age and weight }.into("info")
@@ -699,6 +701,22 @@ class DataFrameTreeTests : BaseTest() {
         }
 
         typed2.insert(colName) { nameAndCity.name.reversed() }.after { nameAndCity.name }.check()
+    }
+
+    @Test
+    fun `insert column before`() {
+        val colName = "reversed"
+
+        fun DataFrame<GroupedPerson>.check() {
+            nameAndCity.columnsCount() shouldBe 3
+            nameAndCity.columnNames() shouldBe listOf(
+                typed2.nameAndCity.name.name(),
+                colName,
+                typed2.nameAndCity.city.name(),
+            )
+        }
+
+        typed2.insert(colName) { nameAndCity.name.reversed() }.before { nameAndCity.city }.check()
     }
 
     @Test

@@ -30,8 +30,10 @@ import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 /* TODO KDocs
- * numbers -> Double or null
+ * primitive numbers -> Double or null
  * comparable -> itself or null
+ *
+ * Careful! non-primitive numbers will thus follow comparable rules
  *
  * TODO cases where the lambda dictates the return type require explicit type arguments for
  *  non-number, comparable overloads: https://youtrack.jetbrains.com/issue/KT-76683
@@ -351,7 +353,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
 ): DataFrame<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
 @Refine
-@Interpretable("GroupByMedian0")
+@Interpretable("GroupByMedian2")
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,

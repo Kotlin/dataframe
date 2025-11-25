@@ -24,7 +24,7 @@ internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int): DataFrame<T> =
         .cast()
 
 internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int): DataColumn<T> {
-    require(n > 0)
+    require(n > 0) { "Number of duplicates must be greater than 0, but was $n" }
     return when (this) {
         is ColumnGroup<*> ->
             DataColumn
