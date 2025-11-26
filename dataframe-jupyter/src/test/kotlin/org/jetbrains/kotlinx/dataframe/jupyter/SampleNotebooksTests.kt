@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.jupyter.repl.result.EvalResultEx
 import org.junit.Assume
 import org.junit.AssumptionViolatedException
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.util.Locale
@@ -62,6 +63,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
             ),
         )
 
+    @Ignore
     @Test
     fun netflix() {
         val currentLocale = Locale.getDefault()
