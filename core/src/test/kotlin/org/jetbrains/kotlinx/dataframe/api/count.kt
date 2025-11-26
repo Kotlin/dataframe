@@ -1,31 +1,73 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.junit.BeforeClass
 import org.junit.Test
 
+/**
+ * Tests the behavior of the `count` function across different DataFrame structures:
+ *
+ * - **[DataColumn]**: counting all elements or elements matching a predicate,
+ * including behavior on empty columns and columns with `null` values.
+ *
+ * - **[DataRow]**: counting elements or elements matching a predicate,
+ * including rows containing `null` values.
+ *
+ * - **[DataFrame]**: counting all rows or rows matching a predicate in this [DataFrame],
+ * including behavior on empty data frames and data frames with `null` values.
+ *
+ * - **[GroupBy]**: counting rows per group in the [GroupBy], with and without a predicate,
+ * including behavior on grouped empty DataFrame and groups with `null` values.
+ *
+ * - **[Pivot]**: counting rows in each group of the [Pivot],
+ * including handling of `null` values and predicates.
+ *
+ * - **[PivotGroupBy]**: counting rows in each combined [pivot] + [groupBy] group,
+ * with and without predicates, including handling of empty and `null` groups.
+ */
 class CountTests {
 
-    // Test data
+    // region Test data
 
-    val df = dataFrameOf(
-        "name" to columnOf("Alice", "Bob", "Charlie"),
-        "age" to columnOf(15, 20, 25),
-        "group" to columnOf(1, 1, 2),
-    )
-    val age = df["age"].cast<Int>()
-    val name = df["name"].cast<String>()
-    val grouped = df.groupBy("group")
-    val pivot = df.pivot("group")
+    companion object {
+        lateinit var df: DataFrame<*>
+        lateinit var age: DataColumn<Int>
+        lateinit var name: DataColumn<String>
+        lateinit var grouped: GroupBy<*, *>
+        lateinit var pivoted: Pivot<*>
+        lateinit var emptyDf: DataFrame<*>
+        lateinit var dfWithNulls: DataFrame<*>
+        lateinit var ageWithNulls: DataColumn<Int?>
+        lateinit var groupedWithNulls: GroupBy<*, *>
+        lateinit var pivotWithNulls: Pivot<*>
 
-    val emptyDf = df.drop(df.nrow)
+        @BeforeClass
+        @JvmStatic
+        fun setupTestData() {
+            df = dataFrameOf(
+                "name" to columnOf("Alice", "Bob", "Charlie"),
+                "age" to columnOf(15, 20, 25),
+                "group" to columnOf(1, 1, 2),
+            )
+            age = df["age"].cast()
+            name = df["name"].cast()
+            grouped = df.groupBy("group")
+            pivoted = df.pivot("group")
+            emptyDf = df.drop(df.nrow)
+            dfWithNulls = df.append("Martin", null, null)
+            ageWithNulls = dfWithNulls["age"].cast()
+            groupedWithNulls = dfWithNulls.groupBy("group")
+            pivotWithNulls = dfWithNulls.pivot("group")
+        }
+    }
 
-    val dfWithNulls = df.append("Martin", null, null)
-    val ageWithNulls = dfWithNulls["age"].cast<Int?>()
-    val groupedWithNulls = dfWithNulls.groupBy("group")
-    val pivotWithNulls = dfWithNulls.pivot("group")
+    // endregion
 
-    // DataColumn
+    // region DataColumn
 
     @Test
     fun `count on DataColumn`() {
@@ -46,13 +88,15 @@ class CountTests {
         ageWithNulls.count { it == null } shouldBe 1
     }
 
-    // DataRow
+    // endregion
+
+    // region DataRow
 
     @Test
     fun `count on DataRow`() {
         val row = df[0]
         row.count() shouldBe 3
-        (row.count { it is Number }) shouldBe 2
+        row.count { it is Number } shouldBe 2
     }
 
     @Test
@@ -62,7 +106,9 @@ class CountTests {
         row.count { it == null } shouldBe 2
     }
 
-    // DataFrame
+    // endregion
+
+    // region DataFrame
 
     @Test
     fun `count on DataFrame`() {
@@ -82,7 +128,9 @@ class CountTests {
         dfWithNulls.count { it["age"] != null } shouldBe 3
     }
 
-    // GroupBy
+    // endregion
+
+    // region GroupBy
 
     @Test
     fun `count on grouped DataFrame`() {
@@ -104,6 +152,8 @@ class CountTests {
         groupedCount shouldBe expected
     }
 
+    // `emptyDf.groupBy("group").count()` results in a dataframe without the column `count`
+    // Issue #1531
     @Test
     fun `count on empty grouped DataFrame`() {
         emptyDf.groupBy("group").count().count() shouldBe 0
@@ -129,11 +179,13 @@ class CountTests {
         groupedWithNullsCount shouldBe expected
     }
 
-    // Pivot
+    // endregion
+
+    // region Pivot
 
     @Test
     fun `count on Pivot`() {
-        val counted = pivot.count()
+        val counted = pivoted.count()
         val expected = dataFrameOf(
             "1" to columnOf(2),
             "2" to columnOf(1),
@@ -143,7 +195,7 @@ class CountTests {
 
     @Test
     fun `count on Pivot with predicate`() {
-        val counted = pivot.count { "group"<Int>() != 1 }
+        val counted = pivoted.count { "group"<Int>() != 1 }
         val expected = dataFrameOf(
             "1" to columnOf(0),
             "2" to columnOf(1),
@@ -173,11 +225,13 @@ class CountTests {
         counted shouldBe expected
     }
 
-    // PivotGroupBy
+    // endregion
+
+    // region PivotGroupBy
 
     @Test
     fun `count on PivotGroupBy`() {
-        val pivotGrouped = pivot.groupBy("age")
+        val pivotGrouped = pivoted.groupBy("age")
         val counted = pivotGrouped.count()
         val expected = dataFrameOf(
             "age" to columnOf(15, 20, 25),
@@ -191,7 +245,7 @@ class CountTests {
 
     @Test
     fun `count on PivotGroupBy with predicate`() {
-        val pivotGrouped = pivot.groupBy("age")
+        val pivotGrouped = pivoted.groupBy("age")
         val counted = pivotGrouped.count { "name"<String>() == "Alice" }
         val expected = dataFrameOf(
             "age" to columnOf(15, 20, 25),
@@ -232,4 +286,6 @@ class CountTests {
         )
         counted shouldBe expected
     }
+
+    // endregion
 }
