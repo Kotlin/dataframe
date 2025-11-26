@@ -63,7 +63,6 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
             ),
         )
 
-    @Ignore
     @Test
     fun netflix() {
         val currentLocale = Locale.getDefault()

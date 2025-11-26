@@ -65,7 +65,7 @@ tasks.processJupyterApiResources {
 }
 
 tasks.test {
-    maxHeapSize = "2048m"
+    maxHeapSize = "8192m"
 }
 
 kotlinPublications {
