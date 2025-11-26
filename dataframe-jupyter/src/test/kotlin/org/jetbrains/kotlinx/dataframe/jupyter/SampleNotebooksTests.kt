@@ -19,7 +19,6 @@ import java.util.Locale
  * debug mode is on:
  * `kotlin.dataframe.debug=true`
  */
-@Ignore
 class SampleNotebooksTests : DataFrameJupyterTest() {
 
     /**
