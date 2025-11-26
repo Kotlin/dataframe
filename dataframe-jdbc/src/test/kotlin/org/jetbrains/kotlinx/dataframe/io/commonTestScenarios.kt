@@ -13,11 +13,15 @@ import java.sql.Connection
 import java.sql.ResultSet
 import kotlin.reflect.typeOf
 
+private const val TEST_TABLE_NAME = "testtable123"
+
 internal fun inferNullability(connection: Connection) {
+    connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS $TEST_TABLE_NAME") }
+
     // prepare tables and data
     @Language("SQL")
     val createTestTable1Query = """
-                CREATE TABLE TestTable1 (
+                CREATE TABLE $TEST_TABLE_NAME (
                     id INT PRIMARY KEY,
                     name VARCHAR(50),
                     surname VARCHAR(50),
@@ -25,28 +29,27 @@ internal fun inferNullability(connection: Connection) {
                 )
             """
 
-    connection.createStatement().execute(createTestTable1Query)
+    connection.createStatement().use { st -> st.execute(createTestTable1Query) }
 
     connection.createStatement()
-        .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
+        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
     connection.createStatement()
-        .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
+        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
     connection.createStatement()
-        .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
+        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
     connection.createStatement()
-        .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
+        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
 
     // start testing `readSqlTable` method
 
-    // with default inferNullability: Boolean = true
-    val tableName = "TestTable1"
-    val df = DataFrame.readSqlTable(connection, tableName)
+    // with default inferNullability: Boolean = true "
+    val df = DataFrame.readSqlTable(connection, TEST_TABLE_NAME)
     df.schema().columns["id"]!!.type shouldBe typeOf<Int>()
     df.schema().columns["name"]!!.type shouldBe typeOf<String>()
     df.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
     df.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
-    val dataSchema = DataFrameSchema.readSqlTable(connection, tableName)
+    val dataSchema = DataFrameSchema.readSqlTable(connection, TEST_TABLE_NAME)
     dataSchema.columns.size shouldBe 4
     dataSchema.columns["id"]!!.type shouldBe typeOf<Int>()
     dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
@@ -54,7 +57,7 @@ internal fun inferNullability(connection: Connection) {
     dataSchema.columns["age"]!!.type shouldBe typeOf<Int>()
 
     // with inferNullability: Boolean = false
-    val df1 = DataFrame.readSqlTable(connection, tableName, inferNullability = false)
+    val df1 = DataFrame.readSqlTable(connection, TEST_TABLE_NAME, inferNullability = false)
     df1.schema().columns["id"]!!.type shouldBe typeOf<Int>()
 
     // this column changed a type because it doesn't contain nulls
@@ -70,7 +73,7 @@ internal fun inferNullability(connection: Connection) {
     @Language("SQL")
     val sqlQuery =
         """
-        SELECT name, surname, age FROM TestTable1
+        SELECT name, surname, age FROM $TEST_TABLE_NAME
         """.trimIndent()
 
     val df2 = DataFrame.readSqlQuery(connection, sqlQuery)
@@ -97,7 +100,7 @@ internal fun inferNullability(connection: Connection) {
 
     connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
         @Language("SQL")
-        val selectStatement = "SELECT * FROM TestTable1"
+        val selectStatement = "SELECT * FROM $TEST_TABLE_NAME"
 
         st.executeQuery(selectStatement).use { rs ->
             // ith default inferNullability: Boolean = true
@@ -130,7 +133,7 @@ internal fun inferNullability(connection: Connection) {
     }
     // end testing `readResultSet` method
 
-    connection.createStatement().execute("DROP TABLE TestTable1")
+    connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS $TEST_TABLE_NAME") }
 }
 
 /**

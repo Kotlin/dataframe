@@ -380,6 +380,10 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 tableColumnMetadata.jdbcType == Types.NUMERIC &&
                     tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
 
+                // Force BIGINT to always be Long, regardless of javaClassName
+                // Some JDBC drivers (e.g., MariaDB) may report Integer for small BIGINT values
+                tableColumnMetadata.jdbcType == Types.BIGINT -> Long::class
+
                 else -> jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
             }
 
@@ -402,14 +406,22 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     /**
      * Retrieves column metadata from a JDBC ResultSet.
      *
-     * By default, this method reads column metadata from [ResultSetMetaData],
-     * which is fast and supported by most JDBC drivers.
-     * If the driver does not provide sufficient information (e.g., `isNullable` unknown),
-     * it falls back to using [DatabaseMetaData.getColumns] for affected columns.
+     * This method reads column metadata from [ResultSetMetaData] with graceful fallbacks
+     * for JDBC drivers that throw [java.sql.SQLFeatureNotSupportedException] for certain methods
+     * (e.g., Apache Hive).
+     *
+     * Fallback behavior for unsupported methods:
+     * - `getColumnName()` → `getColumnLabel()` → `"column_N"`
+     * - `getTableName()` → extract from column name if contains '.' → `null`
+     * - `isNullable()` → [DatabaseMetaData.getColumns] → `true` (assume nullable)
+     * - `getColumnTypeName()` → `"OTHER"`
+     * - `getColumnType()` → [java.sql.Types.OTHER]
+     * - `getColumnDisplaySize()` → `0`
+     * - `getColumnClassName()` → `"java.lang.Object"`
      *
      * Override this method in subclasses to provide database-specific behavior
      * (for example, to disable fallback for databases like Teradata or Oracle
-     * where `DatabaseMetaData.getColumns` is known to be slow).
+     * where [DatabaseMetaData.getColumns] is known to be slow).
      *
      * @param resultSet The [ResultSet] containing query results.
      * @return A list of [TableColumnMetadata] objects.
@@ -418,16 +430,44 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         val rsMetaData = resultSet.metaData
         val connection = resultSet.statement.connection
         val dbMetaData = connection.metaData
-        val catalog = connection.catalog.takeUnless { it.isNullOrBlank() }
-        val schema = connection.schema.takeUnless { it.isNullOrBlank() }
+
+        // Some JDBC drivers (e.g., Hive) throw SQLFeatureNotSupportedException
+        val catalog = try {
+            connection.catalog.takeUnless { it.isNullOrBlank() }
+        } catch (_: Exception) {
+            null
+        }
+
+        val schema = try {
+            connection.schema.takeUnless { it.isNullOrBlank() }
+        } catch (_: Exception) {
+            null
+        }
 
         val columnCount = rsMetaData.columnCount
         val columns = mutableListOf<TableColumnMetadata>()
         val nameCounter = mutableMapOf<String, Int>()
 
         for (index in 1..columnCount) {
-            val columnName = rsMetaData.getColumnName(index)
-            val tableName = rsMetaData.getTableName(index)
+            // Try to getColumnName, fallback to getColumnLabel, then generate name
+            val columnName = try {
+                rsMetaData.getColumnName(index)
+            } catch (_: Exception) {
+                try {
+                    rsMetaData.getColumnLabel(index)
+                } catch (_: Exception) {
+                    "column_$index"
+                }
+            }
+
+            // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException
+            val tableName = try {
+                rsMetaData.getTableName(index).takeUnless { it.isBlank() }
+            } catch (_: Exception) {
+                // Fallback: try to extract table name from column name if it contains '.'
+                val dotIndex = columnName.lastIndexOf('.')
+                if (dotIndex > 0) columnName.take(dotIndex) else ""
+            }
 
             // Try to detect nullability from ResultSetMetaData
             val isNullable = try {
@@ -436,25 +476,48 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
                     ResultSetMetaData.columnNullable -> true
 
-                    ResultSetMetaData.columnNullableUnknown -> {
-                        // Unknown nullability: assume it nullable, may trigger fallback
-                        true
-                    }
+                    // Unknown nullability: assume it nullable, may trigger fallback
+                    ResultSetMetaData.columnNullableUnknown -> true
 
                     else -> true
                 }
             } catch (_: Exception) {
                 // Some drivers may throw for unsupported features
-                // In that case, fallback to DatabaseMetaData
-                dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols ->
-                    if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
+                // Try fallback to DatabaseMetaData, with additional safety
+                try {
+                    dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols ->
+                        if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
+                    }
+                } catch (_: Exception) {
+                    // Fallback failed, assume nullable as the safest default
+                    true
                 }
             }
 
-            val columnType = rsMetaData.getColumnTypeName(index)
-            val jdbcType = rsMetaData.getColumnType(index)
-            val displaySize = rsMetaData.getColumnDisplaySize(index)
-            val javaClassName = rsMetaData.getColumnClassName(index)
+            // adding fallbacks to avoid SQLException
+            val columnType = try {
+                rsMetaData.getColumnTypeName(index)
+            } catch (_: Exception) {
+                "OTHER"
+            }
+
+            val jdbcType = try {
+                rsMetaData.getColumnType(index)
+            } catch (_: Exception) {
+                Types.OTHER
+            }
+
+            val displaySize = try {
+                rsMetaData.getColumnDisplaySize(index)
+            } catch (_: Exception) {
+                0
+            }
+
+            val javaClassName = try {
+                rsMetaData.getColumnClassName(index)
+            } catch (_: Exception) {
+                "java.lang.Object"
+            }
 
             val uniqueName = manageColumnNameDuplication(nameCounter, columnName)
 
