@@ -36,7 +36,11 @@ dependencies {
 
     testImplementation(projects.dataframeJupyter)
     testImplementation(projects.dataframeGeoJupyter)
-    testImplementation(libs.kandy.notebook) {
+
+    testImplementation(libs.kandy) {
+        exclude("org.jetbrains.kotlinx", "dataframe")
+    }
+    testImplementation(libs.kandy.geo) {
         exclude("org.jetbrains.kotlinx", "dataframe")
     }
     testImplementation(libs.kandy.stats) {
