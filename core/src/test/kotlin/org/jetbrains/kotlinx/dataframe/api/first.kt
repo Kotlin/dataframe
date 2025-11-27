@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
@@ -12,26 +15,27 @@ import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 /**
- * Tests the behavior of the `first` (`firstCol`) and `firstOrNull` functions, including:
+ * Tests the behavior of the [first] ([FirstColumnsSelectionDsl.firstCol]) and [firstOrNull] functions, including:
  *
- * - **ColumnsSelectionDsl**: selecting the first column or first column matching a condition, with invocations
+ * - [ColumnsSelectionDsl]: selecting the first column or first column matching a condition, with invocations
  * on illegal types, and in case when no column matches the condition.
  *
- * - **DataColumn**: getting the first value or the first value matching a predicate,
+ * - [DataColumn]: getting the first value or the first value matching a predicate,
  * verifying behavior on empty columns, columns with `null` values, and columns without values matching the predicate.
  *
- * - **DataFrame**: getting the first row or first matching row,
+ * - [DataFrame]: getting the first [row][DataRow] or first matching [row][DataRow],
  * verifying behavior on empty DataFrames, DataFrames with `null` values, and
  * DataFrames without rows matching the predicate.
  *
- * - **GroupBy**: reducing each group to its first row or the first row matching a predicate,
+ * - [GroupBy]: reducing each group to its first [row][DataRow] or the first [row][DataRow] matching a predicate,
  * with handling groups that contain no matching rows.
  *
- * - **Pivot**: reducing each group in the pivot to its first row or the first row matching a predicate,
- * with handling groups that contain no matching rows.
+ * - [Pivot]: reducing each group in the [Pivot] to its first [row][DataRow]
+ * or the first [row][DataRow] matching a predicate, with handling groups that contain no matching rows.
  *
- * - **PivotGroupBy**: reducing each combined [pivot] + [groupBy] group to its first row
- * or the first row matching a predicate, with handling [pivot] + [groupBy] combinations that contain no matching rows.
+ * - [PivotGroupBy]: reducing each combined [pivot] + [groupBy] group to its first [row][DataRow]
+ * or the first [row][DataRow] matching a predicate,
+ * with handling [pivot] + [groupBy] combinations that contain no matching rows.
  */
 class FirstTests : ColumnsSelectionDslTests() {
 
