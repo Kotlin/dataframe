@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
@@ -13,20 +16,27 @@ import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 /**
- * This class tests the behavior of the `last` (`lastCol`) and `lastOrNull` functions, including:
- * - **ColumnsSelectionDsl**: selecting the last column or last column matching a condition, with invocations
+ * Tests the behavior of the `last` (`lastCol`) and `lastOrNull` functions, including:
+ *
+ * - [ColumnsSelectionDsl]: selecting the last column or last column matching a condition, with invocations
  * on illegal types, and in case when no column matches the condition.
- * - **DataColumn**: getting the last value or the last value matching a predicate,
+ *
+ * - [DataColumn]: getting the last value or the last value matching a predicate,
  * verifying behavior on empty columns, columns with `null` values, and columns without values matching the predicate.
- * - **DataFrame**: getting the last row or last matching row,
+ *
+ * - [DataFrame]: getting the last [row][DataRow] or last matching [row][DataRow],
  * verifying behavior on empty DataFrames, DataFrames with `null` values, and
  * DataFrames without rows matching the predicate.
- * - **GroupBy**: reducing each group to its last row or the last row matching a predicate,
+ *
+ * - [GroupBy]: reducing each group to its last [row][DataRow] or the last [row][DataRow] matching a predicate,
  * with handling groups that contain no matching rows.
- * - **Pivot**: reducing each group in the pivot to its last row or the last row matching a predicate,
- * with handling groups that contain no matching rows.
- * - **PivotGroupBy**: reducing each combined [pivot] + [groupBy] group to its last row
- * or the last row matching a predicate, with handling [pivot] + [groupBy] combinations that contain no matching rows.
+ *
+ * - [Pivot]: reducing each group in the [Pivot] to its last [row][DataRow]
+ * or the last [row][DataRow] matching a predicate, with handling groups that contain no matching rows.
+ *
+ * - [PivotGroupBy]: reducing each combined [pivot] + [groupBy] group to its last [row][DataRow]
+ * or the last [row][DataRow] matching a predicate,
+ * with handling [pivot] + [groupBy] combinations that contain no matching rows.
  */
 class LastTests : ColumnsSelectionDslTests() {
 
