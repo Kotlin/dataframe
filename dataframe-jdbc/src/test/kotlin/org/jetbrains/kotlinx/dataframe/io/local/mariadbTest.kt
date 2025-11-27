@@ -338,7 +338,7 @@ class MariadbTest {
         val result = df1.filter { it[Table1MariaDb::id] == 1 }
         result[0][26] shouldBe "textValue1"
         val byteArray = "tinyblobValue".toByteArray()
-        (result[0][22] as Blob).getBytes(1, byteArray.size) contentEquals byteArray
+        result[0][22] shouldBe byteArray
 
         val schema = DataFrameSchema.readSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
