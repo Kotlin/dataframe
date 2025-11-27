@@ -9,25 +9,25 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 /**
- * Tests the behavior of the `count` function across different DataFrame structures:
+ * Tests the behavior of the [count] function across different [DataFrame] structures:
  *
- * - **[DataColumn]**: counting all elements or elements matching a predicate,
+ * - [DataColumn]: counting all elements or elements matching a predicate,
  * including behavior on empty columns and columns with `null` values.
  *
- * - **[DataRow]**: counting elements or elements matching a predicate,
+ * - [DataRow]: counting elements or elements matching a predicate,
  * including rows containing `null` values.
  *
- * - **[DataFrame]**: counting all rows or rows matching a predicate in this [DataFrame],
- * including behavior on empty data frames and data frames with `null` values.
+ * - [DataFrame]: counting all rows or rows matching a predicate in this [DataFrame],
+ * including behavior on empty DataFrames and DataFrames with `null` values.
  *
- * - **[GroupBy]**: counting rows per group in the [GroupBy], with and without a predicate,
- * including behavior on grouped empty DataFrame and groups with `null` values.
+ * - [GroupBy]: counting rows per group in the [GroupBy], with and without a predicate,
+ * including behavior on grouped empty [DataFrame] and groups with `null` values.
  *
- * - **[Pivot]**: counting rows in each group of the [Pivot],
+ * - [Pivot]: counting rows in each group of the [Pivot],
  * including handling of `null` values and predicates.
  *
- * - **[PivotGroupBy]**: counting rows in each combined [pivot] + [groupBy] group,
- * with and without predicates, including handling of empty and `null` groups.
+ * - [PivotGroupBy]: counting rows in each combined [pivot] + [groupBy] group,
+ * with and without predicates, including handling of `null` values and predicates.
  */
 class CountTests {
 
