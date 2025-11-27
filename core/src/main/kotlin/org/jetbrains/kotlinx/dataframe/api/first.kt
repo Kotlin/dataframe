@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -32,7 +33,12 @@ import kotlin.reflect.KProperty
 /**
  * Returns the first value in this [DataColumn].
  *
- * @param T The type of the values in the [DataColumn].
+ * @see [firstOrNull]
+ * @see [last]
+ * @see [take]
+ * @see [takeLast]
+ *
+ * @return The first value in this [DataColumn].
  *
  * @throws [IndexOutOfBoundsException] if the [DataColumn] is empty.
  */
@@ -41,7 +47,12 @@ public fun <T> DataColumn<T>.first(): T = get(0)
 /**
  * Returns the first value in this [DataColumn]. If the [DataColumn] is empty, returns `null`.
  *
- * @param T The type of the values in the [DataColumn].
+ * @see [first]
+ * @see [last]
+ * @see [take]
+ * @see [takeLast]
+ *
+ * @return The first value in this [DataColumn], or `null` if the [DataColumn] is empty.
  */
 public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
 
@@ -50,38 +61,53 @@ public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
  *
  * ### Example
  * ```kotlin
- * // Select from the column "age" the first value where the age is greater than 17
- * df.age.first { it > 17 }
+ * // In a DataFrame of financial transactions sorted by time,
+ * // find the amount of the first transaction over 100 euros
+ * df.amount.first { it > 100 }
  * ```
  *
- * @param T The type of the values in the [DataColumn].
- * @param predicate A lambda expression used to select a value
+ * @see [firstOrNull]
+ * @see [last]
+ * @see [take]
+ * @see [takeLast]
+ *
+ * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
  * This predicate takes a value from the [DataColumn] as an input
  * and returns `true` if the value satisfies the condition or `false` otherwise.
  *
- * @throws [NoSuchElementException] if the [DataColumn] contains no element matching the [predicate]
+ * @return The first value in this [DataColumn] that matches the given [predicate].
+ *
+ * @throws [NoSuchElementException] if the [DataColumn] contains no elements matching the [predicate]
  * (including the case when the [DataColumn] is empty).
  */
 public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(predicate)
 
 /**
  * Returns the first value in this [DataColumn] that matches the given [predicate].
- * Returns `null` if the [DataColumn] contains no element matching the [predicate]
+ * Returns `null` if the [DataColumn] contains no elements matching the [predicate]
  * (including the case when the [DataColumn] is empty).
  *
  * ### Example
  * ```kotlin
- * // Select from the column "age" the first value where the age is greater than 17,
- * // or null if there is no such value
- * df.age.firstOrNull { it > 17 }
+ * // In a DataFrame of financial transactions sorted by time,
+ * // find the amount of the first transaction over 100 euros,
+ * // or 'null' if there is no such transaction
+ * df.amount.firstOrNull { it > 100 }
  * ```
  *
- * @param T The type of the values in the [DataColumn].
- * @param predicate A lambda expression used to select a value
+ * @see [first]
+ * @see [last]
+ * @see [take]
+ * @see [takeLast]
+ *
+ * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
  * This predicate takes a value from the [DataColumn] as an input
  * and returns `true` if the value satisfies the condition or `false` otherwise.
+ *
+ * @return The first value in this [DataColumn] that matches the given [predicate],
+ * or `null` if the [DataColumn] contains no elements matching the [predicate].
  */
 public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values.firstOrNull(predicate)
 
@@ -90,9 +116,15 @@ public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values
 // region DataFrame
 
 /**
- * Returns the first row in this [DataFrame].
+ * Returns the first [row][DataRow] in this [DataFrame].
  *
- * @param T The type of the [DataFrame].
+ * @see [firstOrNull]
+ * @see [last]
+ * @see [take]
+ * @see [takeWhile]
+ * @see [takeLast]
+ *
+ * @return A [DataRow] containing the first row in this [DataFrame].
  *
  * @throws NoSuchElementException if the [DataFrame] contains no rows.
  */
@@ -104,14 +136,20 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 }
 
 /**
- * Returns the first row in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
+ * Returns the first [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
  *
- * @param T The type of the [DataFrame].
+ * @see [first]
+ * @see [last]
+ * @see [take]
+ * @see [takeWhile]
+ * @see [takeLast]
+ *
+ * @return A [DataRow] containing the first row in this [DataFrame], or `null` if the [DataFrame] is empty.
  */
 public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
 
 /**
- * Returns the first row in this [DataFrame] that satisfies the given [predicate].
+ * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
  *
  * {@include [RowFilterDescription]}
  *
@@ -119,16 +157,19 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  *
  * ### Example
  * ```kotlin
- * // Select the first row where the value in the "age" column is greater than 17
- * // and the "name/firstName" column starts with 'A'
- * df.first { age > 17 && name.firstName.startsWith("A") }
+ * // In a DataFrame of financial transactions sorted by time,
+ * // find the first transaction with amount over 100 euros
+ * df.first { amount > 100 }
  * ```
  *
- * @param T The type of the [DataFrame].
- * @param predicate A lambda expression used to select a value
- * that satisfies a condition specified in this expression.
- * This predicate takes a value from the [DataFrame] as an input
- * and returns `true` if the value satisfies the condition or `false` otherwise.
+ * @see [firstOrNull]
+ * @see [last]
+ * @see [take]
+ * @see [takeWhile]
+ * @see [takeLast]
+ *
+ * @param predicate A [row filter][RowFilter] used to get the first value
+ * that satisfies a condition specified in this filter.
  *
  * @return A [DataRow] containing the first row that matches the given [predicate].
  *
@@ -140,7 +181,7 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
     }
 
 /**
- * Returns the first row in this [DataFrame] that satisfies the given [predicate].
+ * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
  * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
  * (including the case when the [DataFrame] is empty).
  *
@@ -150,19 +191,23 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  *
  * ### Example
  * ```kotlin
- * // Select the first row where the value in the "age" column is greater than 17
- * // and the "name/firstName" column starts with 'A'
- * df.firstOrNull { age > 17 && name.firstName.startsWith("A") }
+ * // In a DataFrame of financial transactions sorted by time,
+ * // find the first transaction with amount over 100 euros,
+ * // or 'null' if there is no such transaction
+ * df.firstOrNull { amount > 100 }
  * ```
  *
- * @param T The type of the [DataFrame].
- * @param predicate A lambda expression used to select a value
- * that satisfies a condition specified in this expression.
- * This predicate takes a value from the [DataFrame] as an input
- * and returns `true` if the value satisfies the condition or `false` otherwise.
+ * @see [first]
+ * @see [last]
+ * @see [take]
+ * @see [takeWhile]
+ * @see [takeLast]
+ *
+ * @param predicate A [row filter][RowFilter] used to get the first value
+ * that satisfies a condition specified in this filter.
  *
  * @return A [DataRow] containing the first row that matches the given [predicate],
- * or `null` if the [DataFrame] contains no rows matching the [predicate]
+ * or `null` if the [DataFrame] contains no rows matching the [predicate].
  */
 public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rows().firstOrNull {
@@ -174,31 +219,39 @@ public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow
 // region GroupBy
 
 /**
- * Selects the first row from each group of the given [GroupBy]
+ * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
+ * by taking the first [row][DataRow] from each group,
  * and returns a [ReducedGroupBy] containing these rows
- * (one row per group, each row is the first row in its group).
+ * (one [row][DataRow] per group, each [row][DataRow] is the first [row][DataRow] in its group).
+ *
+ * If a group in this [GroupBy] is empty,
+ * the corresponding [row][DataRow] in the resulting [ReducedGroupBy] will contain `null` values
+ * for all columns in the group, except the grouping key.
  *
  * ### Example
  * ```kotlin
- * // Select the first employee from each group formed by the job title
- * employees.groupBy { jobTitle }.first()
+ * // In a DataFrame of orders sorted by date and time,
+ * // find the first order placed by each customer
+ * df.groupBy { customerId }.first().concat()
  * ```
  *
- * @param T The type of the values in the [GroupBy].
- * @param G The type of the groups in the [GroupBy].
+ * @see [last]
  *
- * @return A [ReducedGroupBy] containing the first row from each group.
+ * @return A [ReducedGroupBy] containing the first [row][DataRow]
+ * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
  */
 @Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOrNull() }
 
 /**
- * Selects from each group of the given [GroupBy] the first row satisfying the given [predicate],
- * and returns a [ReducedGroupBy] containing these rows (one row per group,
- * each row is the first row in its group that satisfies the [predicate]).
+ * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
+ * by taking from each group the first [row][DataRow] satisfying the given [predicate],
+ * and returns a [ReducedGroupBy] containing these rows (one [row][DataRow] per group,
+ * each [row][DataRow] is the first [row][DataRow] in its group that satisfies the [predicate]).
  *
  * If the group in [GroupBy] contains no matching rows,
- * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group.
+ * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
+ * except the grouping key.
  *
  * {@include [RowFilterDescription]}
  *
@@ -206,19 +259,18 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  *
  * ### Example
  * ```kotlin
- * // Select the first employee older than 25 from each group formed by the job title
- * employees.groupBy { jobTitle }.first { age > 25 }
+ * // In a DataFrame of orders sorted by date and time,
+ * // find the first order over 100 euros placed by each customer
+ * df.groupBy { customerId }.first { total > 100 }.concat()
  * ```
  *
- * @param T The type of the values in the [GroupBy].
- * @param G The type of the groups in the [GroupBy].
- * @param predicate A lambda expression used to select a value
- * that satisfies a condition specified in this expression.
- * This predicate takes a value from the [GroupBy] as an input
- * and returns `true` if the value satisfies the condition or `false` otherwise.
+ * @see [last]
  *
- * @return A [ReducedGroupBy] containing the first row matching the [predicate]
- * (or a row with `null` values, except values in the column with the grouping key), from each group.
+ * @param predicate A [row filter][RowFilter] used to get the first value
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [ReducedGroupBy] containing the first [row][DataRow] matching the [predicate]
+ * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
  */
 @Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce { firstOrNull(predicate) }
@@ -228,58 +280,36 @@ public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T
 // region Pivot
 
 /**
- * Reduces this [Pivot] by selecting the first row from each group.
+ * [Reduces][PivotDocs.Reducing] this [Pivot] by taking the first [row][DataRow] from each group,
+ * and returns a [ReducedPivot] that contains the first [row][DataRow] from the corresponding group in each column.
  *
- * Returns a [ReducedPivot] where:
- * - each column corresponds to a [pivot] group — if multiple pivot keys were used,
- *   the result will contain column groups for each pivot key, with columns inside
- *   corresponding to the values of that key;
- * - each value contains the first row from that group.
+ * @see [pivot]
+ * @see [Pivot.reduce]
+ * @see [Pivot.last]
  *
- * The original [Pivot] column structure is preserved.
- * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
- * the structure remains unchanged — only the contents of each group
- * are replaced with the first row from that group.
- *
- * Equivalent to `reduce { firstOrNull() }`.
- *
- * See also:
- * - [pivot];
- * - common [reduce][Pivot.reduce].
+ * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
  *
  * ### Example
  * ```kotlin
- * // Select the first row for each city.
- * // Returns a ReducedPivot with one column per city and the first row from the group in each column.
- * df.pivot { city }.first()
+ * // In a DataFrame of real estate listings sorted by price,
+ * // find the cheapest listing for each type of property (house, apartment, etc.)
+ * df.pivot { type }.first().values()
  * ```
  *
- * @return A [ReducedPivot] containing in each column the first row from the corresponding group.
+ * @return A [ReducedPivot] containing in each column the first [row][DataRow] from the corresponding group.
  */
 public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
 
 /**
- * Reduces this [Pivot] by selecting from each group the first row satisfying the given [predicate].
+ * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
+ * satisfying the given [predicate], and returns a [ReducedPivot] that contains the first row, matching the [predicate],
+ * from the corresponding group in each column.
  *
- * Returns a [ReducedPivot] where:
- * - each column corresponds to a [pivot] group — if multiple pivot keys were used,
- *   the result will contain column groups for each pivot key, with columns inside
- *   corresponding to the values of that key;
- * - each value contains the first row from that group that satisfies the [predicate],
- * or a row with `null` values if no rows in this group match the [predicate].
+ * @see [pivot]
+ * @see [Pivot.reduce]
+ * @see [Pivot.last]
  *
- * The original [Pivot] column structure is preserved.
- * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
- * the structure remains unchanged — only the contents of each group
- * are replaced with the first row from that group that satisfies the [predicate].
- *
- * Equivalent to `reduce { firstOrNull(predicate) }`.
- *
- * See also:
- * - [pivot];
- * - common [reduce][Pivot.reduce].
+ * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
  *
  * {@include [RowFilterDescription]}
  *
@@ -287,15 +317,17 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  *
  * ### Example
  * ```kotlin
- * // Select the first row for each city where the population is greater than 100 000.
- * df.pivot { city }.first { population > 100000 }
+ * // In a DataFrame of real estate listings sorted by price,
+ * // find the cheapest listing for each type of property (house, apartment, etc.)
+ * // with is not yet sold out.
+ * df.pivot { type }.first { !soldOut }.values()
  * ```
  *
- * @param predicate A lambda expression used to select a value
- * that satisfies a condition specified in this expression.
+ * @param predicate A [row filter][RowFilter] used to get the first value
+ * that satisfies a condition specified in this filter.
  *
- * @return A [ReducedPivot] containing in each column the first row
- * that satisfies the [predicate], from the corresponding group (or a row with `null` values)
+ * @return A [ReducedPivot] containing in each column the first [row][DataRow]
+ * that satisfies the [predicate], from the corresponding group (or a [row][DataRow] with `null` values).
  */
 public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce { firstOrNull(predicate) }
 
@@ -304,60 +336,53 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
 // region PivotGroupBy
 
 /**
- * Reduces this [PivotGroupBy] by selecting the first row from each combined [pivot] + [groupBy] group.
+ * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking the first [row][DataRow]
+ * from each combined [pivot] + [groupBy] group, and returns a [ReducedPivotGroupBy]
+ * that contains the first row from each corresponding group.
+ * If any combined [pivot] + [groupBy] group in [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy]
+ * it will be represented by a [row][DataRow] with `null` values (except the grouping key).
  *
- * Returns a [ReducedPivotGroupBy] containing the following matrix:
- * - one row per [groupBy] key (or keys set);
- * - one column group per [pivot] key, where each inner column corresponds to a value of that key;
- * - each combination of a [groupBy] key and a [pivot] key contains either the first row of the corresponding
- * dataframe formed by this pivot–group pair, or a row with `null` values if this dataframe is empty.
+ * @see [pivot]
+ * @see [Pivot.groupBy]
+ * @see [GroupBy.pivot]
+ * @see [PivotGroupBy.reduce]
+ * @see [PivotGroupBy.last]
  *
- * The original [PivotGroupBy] column structure is preserved.
- * If the [PivotGroupBy] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
- * the result will contain nested column groups reflecting that key structure,
- * with each group containing columns for the values of the corresponding key.
- *
- * Equivalent to `reduce { firstOrNull() }`.
- *
- * See also:
- * - [pivot], [Pivot.groupBy] and [GroupBy.pivot];
- * - common [reduce][PivotGroupBy.reduce].
+ * For more information about [PivotGroupBy] with examples: {@include [DocumentationUrls.PivotGroupBy]}
  *
  * ### Example
  * ```kotlin
- * // Select the first student from each combination of faculty and enrollment year.
- * students.pivot { faculty }.groupBy { enrollmentYear }.first()
+ * // In a DataFrame of real estate listings sorted by price,
+ * // find the cheapest listing for each combination of type of property (house, apartment, etc.)
+ * // and the city it is located in
+ * df.pivot { type }.groupBy { city }.first().values()
  * ```
  *
  * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
- * the first row of the corresponding dataframe formed by this pivot–group pair,
- * or a row with `null` values if this dataframe is empty.
+ * the first [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
+ * or a [row][DataRow] with `null` values (except the grouping key) if this [DataFrame] is empty.
  */
 public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstOrNull() }
 
 /**
- * Reduces this [PivotGroupBy] by selecting from each combined [pivot] + [groupBy] group
- * the first row satisfying the given [predicate].
+ * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy]
+ * by taking from each combined [pivot] + [groupBy] group the first [row][DataRow] satisfying the given [predicate].
+ * Returns a [ReducedPivotGroupBy] that contains the first row, matching the [predicate], from each corresponding group.
+ * If any combined [pivot] + [groupBy] group in [PivotGroupBy] does not contain any rows matching the [predicate],
+ * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
+ * (except the grouping key).
  *
- * Returns a [ReducedPivotGroupBy] containing the following matrix:
- * - one row per [groupBy] key (or keys set);
- * - one column group per [pivot] key, where each inner column corresponds to a value of that key;
- * - each combination of a [groupBy] key and a [pivot] key contains either the first matching the [predicate] row
- * of the corresponding dataframe formed by this pivot–group pair,
- * or a row with `null` values if this dataframe does not contain any rows matching the [predicate].
+ * @see [pivot]
+ * @see [Pivot.groupBy]
+ * @see [GroupBy.pivot]
+ * @see [PivotGroupBy.reduce]
+ * @see [PivotGroupBy.last]
  *
- * The original [PivotGroupBy] column structure is preserved.
- * If the [PivotGroupBy] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
- * the result will contain nested column groups reflecting that key structure,
- * with each group containing columns for the values of the corresponding key.
+ * {@include [DocumentationUrls.PivotGroupBy]}
  *
- * Equivalent to `reduce { firstOrNull(predicate) }`.
+ * {@include [DocumentationUrls.Pivot]}
  *
- * See also:
- * - [pivot], [Pivot.groupBy] and [GroupBy.pivot];
- * - common [reduce][PivotGroupBy.reduce].
+ * {@include [DocumentationUrls.GroupBy]}
  *
  * {@include [RowFilterDescription]}
  *
@@ -365,16 +390,19 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  *
  * ### Example
  * ```kotlin
- * // From each combination of faculty and enrollment year select the first student older than 21.
- * students.pivot { faculty }.groupBy { enrollmentYear }.first { age > 21 }
+ * // In a DataFrame of real estate listings sorted by price,
+ * // for each combination of type of property (house, apartment, etc.)
+ * // and the city it is located in,
+ * // find the cheapest listing that is not yet sold out
+ * df.pivot { type }.groupBy { city }.first { !soldOut }.values()
  * ```
  *
- * @param predicate A lambda expression used to select a value
- * that satisfies a condition specified in this expression.
+ * @param predicate A [row filter][RowFilter] used to get the first value
+ * that satisfies a condition specified in this filter.
  *
  * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
- * the first matching the [predicate] row of the corresponding dataframe formed by this pivot–group pair,
- * or a row with `null` values if this dataframe does not contain any rows matching the [predicate].
+ * the first matching the [predicate] [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
+ * or a [row][DataRow] with `null` values if this [DataFrame] does not contain any rows matching the [predicate].
  */
 public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroupBy<T> =
     reduce { firstOrNull(predicate) }
