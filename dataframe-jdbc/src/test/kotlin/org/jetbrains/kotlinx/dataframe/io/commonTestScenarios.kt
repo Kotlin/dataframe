@@ -42,7 +42,7 @@ internal fun inferNullability(connection: Connection) {
 
     // start testing `readSqlTable` method
 
-    // with default inferNullability: Boolean = true "
+    // with default inferNullability: Boolean = true
     val df = DataFrame.readSqlTable(connection, TEST_TABLE_NAME)
     df.schema().columns["id"]!!.type shouldBe typeOf<Int>()
     df.schema().columns["name"]!!.type shouldBe typeOf<String>()

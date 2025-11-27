@@ -382,7 +382,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
                 // Force BIGINT to always be Long, regardless of javaClassName
                 // Some JDBC drivers (e.g., MariaDB) may report Integer for small BIGINT values
-                tableColumnMetadata.jdbcType == Types.BIGINT -> Long::class
+                // TODO: tableColumnMetadata.jdbcType == Types.BIGINT -> Long::class
 
                 else -> jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
             }
@@ -456,7 +456,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 try {
                     rsMetaData.getColumnLabel(index)
                 } catch (_: Exception) {
-                    "column_$index"
+                    "column$index"
                 }
             }
 
@@ -466,7 +466,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             } catch (_: Exception) {
                 // Fallback: try to extract table name from column name if it contains '.'
                 val dotIndex = columnName.lastIndexOf('.')
-                if (dotIndex > 0) columnName.take(dotIndex) else ""
+                if (dotIndex > 0) columnName.take(dotIndex) else null
             }
 
             // Try to detect nullability from ResultSetMetaData

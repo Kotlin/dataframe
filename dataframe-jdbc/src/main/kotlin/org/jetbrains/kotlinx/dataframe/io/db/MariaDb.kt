@@ -20,10 +20,11 @@ public object MariaDb : DbType("mariadb") {
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
         // Force BIGINT to always be Long, regardless of javaClassName
         // MariaDB JDBC driver may report Integer for small BIGINT values
-        if (tableColumnMetadata.jdbcType == java.sql.Types.BIGINT) {
+        // TODO: investigate the corner case
+        /*if (tableColumnMetadata.jdbcType == java.sql.Types.BIGINT) {
             val kType = Long::class.createType(nullable = tableColumnMetadata.isNullable)
             return ColumnSchema.Value(kType)
-        }
+        }*/
 
         if (tableColumnMetadata.sqlTypeName == "INTEGER UNSIGNED" ||
             tableColumnMetadata.sqlTypeName == "INT UNSIGNED"
@@ -51,9 +52,10 @@ public object MariaDb : DbType("mariadb") {
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         // Force BIGINT to always be Long, regardless of javaClassName
         // MariaDB JDBC driver may report Integer for small BIGINT values
-        if (tableColumnMetadata.jdbcType == java.sql.Types.BIGINT) {
+        // TODO: investigate the corner case
+        /*if (tableColumnMetadata.jdbcType == java.sql.Types.BIGINT) {
             return Long::class.createType(nullable = tableColumnMetadata.isNullable)
-        }
+        }*/
 
         if (tableColumnMetadata.sqlTypeName == "INTEGER UNSIGNED" ||
             tableColumnMetadata.sqlTypeName == "INT UNSIGNED"
