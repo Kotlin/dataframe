@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isList
 import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.size
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
@@ -31,11 +33,13 @@ internal fun encodeToToonImpl(df: AnyFrame): ToonArray {
     val isFlat = df.columns().all { it.isValueColumn() }
     if (isFlat) {
         val header = df.columnNames()
-        val types = df.columnTypes()
 
-        val objectArray = df.rows().map { row ->
-            header.indices.map { i ->
-                row[i].toToonPrimitive(types[i])
+        val (nCol, nRow) = df.size()
+
+        val objectArray = (0..<nRow).map { rowIndex ->
+            (0..<nCol).map { colIndex ->
+                val col = df.getColumn(colIndex)
+                col[rowIndex].toToonPrimitive(col.type())
             }
         }
 
