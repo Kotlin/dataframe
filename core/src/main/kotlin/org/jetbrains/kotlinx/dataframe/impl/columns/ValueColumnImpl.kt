@@ -8,6 +8,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
+public class CachedStatisticWrapped<T>(public var cachedStatistic: T?)
+
+internal interface ValueColumnInternal<T> : ValueColumn<T> {
+    val max: CachedStatisticWrapped<T>
+}
+
 internal open class ValueColumnImpl<T>(
     values: List<T>,
     name: String,
@@ -15,7 +21,8 @@ internal open class ValueColumnImpl<T>(
     val defaultValue: T? = null,
     distinct: Lazy<Set<T>>? = null,
 ) : DataColumnImpl<T>(values, name, type, distinct),
-    ValueColumn<T> {
+    ValueColumn<T>,
+    ValueColumnInternal<T> {
 
     override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, distinct)
 
@@ -48,6 +55,8 @@ internal open class ValueColumnImpl<T>(
     override fun defaultValue() = defaultValue
 
     override fun forceResolve() = ResolvingValueColumn(this)
+
+    override val max = CachedStatisticWrapped<T>(null)
 }
 
 internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :

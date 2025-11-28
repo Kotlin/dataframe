@@ -124,20 +124,15 @@ public object Aggregators {
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-
-    // idea: if the following function get the ValueColumnImpl. I know if there is any stored value
-    // -> I return it.
-    // else I do the procedure max.invoke... and then cache the value inside
     public fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
 
+    // following val is an aggregator-builder, invoke creates the aggregator.
+    // aggregator is something that gets values and makes a computation
     public val max: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
         by withOneOption { skipNaN: Boolean ->
+            // the following fun returns an AggregatorProvider
             twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
                 getReturnType = maxTypeConversion,
-                // idea, need to change the following line
-                // if(thereIsCachedValueInsideValueColumnImpl) that's what I want
-                // else ...
-                // maxOrNull is called on a sequence... -> previous idea can't be applied this way LOOK UP
                 stepOneSelector = { type -> maxOrNull(type, skipNaN) },
                 indexOfResult = { type -> indexOfMax(type, skipNaN) },
             )
