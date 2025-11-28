@@ -91,7 +91,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 // Configure the right ksp task to be aware of these new sources
                 val kspTaskName = "ksp${sourceSetName.replaceFirstChar { it.uppercase() }}Kotlin"
                 target.tasks.withType(KspTaskJvm::class.java).configureEach {
-                    if (sourceSetName == "main" && name == "kspKotlin" || name == kspTaskName) {
+                    if ((sourceSetName == "main" && name == "kspKotlin") || name == kspTaskName) {
                         source(src)
                     }
                 }

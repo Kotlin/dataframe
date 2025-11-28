@@ -1,3 +1,5 @@
+root = true
+
 [*]
 charset = utf-8
 end_of_line = lf
@@ -33,6 +35,7 @@ ktlint_standard_chain-method-continuation = disabled
 ktlint_ignore_back_ticked_identifier = true
 ktlint_standard_multiline-expression-wrapping = disabled
 ktlint_standard_when-entry-bracing = disabled
+ktlint_standard_expression-operand-wrapping = disabled
 
 [{*/build/**/*,**/*keywords*/**,**/*.Generated.kt,**/*$Extensions.kt}]
 ktlint = disabled
