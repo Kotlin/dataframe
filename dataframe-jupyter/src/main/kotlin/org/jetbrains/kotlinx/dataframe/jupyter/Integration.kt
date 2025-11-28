@@ -46,10 +46,14 @@ import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import org.jetbrains.kotlinx.jupyter.api.declare
+import org.jetbrains.kotlinx.jupyter.api.dependencies.DependencyDescription
+import org.jetbrains.kotlinx.jupyter.api.dependencies.ResolutionResult
 import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
 import org.jetbrains.kotlinx.jupyter.api.libraries.FieldHandlerFactory
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
+import org.jetbrains.kotlinx.jupyter.util.ModifiableParentsClassLoader
+import java.net.URLClassLoader
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -200,6 +204,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
             declare("dataFrameConfig" to config)
         }
 
+        // Needed to suppress ERROR Log4j API could not find a logging provider in 2025.2.4
+        loadLog4jIntoNotebookClasspath(notebook)
+
         resources {
             if (!config.display.isolatedOutputs) {
                 js("DataFrame") {
@@ -347,6 +354,28 @@ internal class Integration(private val notebook: Notebook, private val options: 
             config.display.useDarkColorScheme = (it == ColorScheme.DARK)
         }
     }
+}
+
+// https://github.com/Kotlin/kotlin-notebook-integrations/blob/master/integrations/database/database-api/src/main/kotlin/org/jetbrains/kotlinx/jupyter/database/internal/drivers/ExternalDependencyDriverLoader.kt
+internal fun loadLog4jIntoNotebookClasspath(notebook: Notebook) {
+    val customizableClassLoader = notebook.intermediateClassLoader as? ModifiableParentsClassLoader ?: return
+
+    val resolver = notebook.dependencyManager.resolver
+
+    val resolutionResult = resolver.resolve(
+        listOf(
+            DependencyDescription("org.apache.logging.log4j:log4j-core:2.24.3"),
+            DependencyDescription("org.apache.logging.log4j:log4j-api:2.24.3"),
+        ),
+    )
+
+    val resolvedJars = when (resolutionResult) {
+        is ResolutionResult.Success -> resolutionResult.binaryClasspath
+        is ResolutionResult.Failure -> return
+    }
+
+    val urlClassLoader = URLClassLoader(resolvedJars.map { it.toURI().toURL() }.toTypedArray())
+    customizableClassLoader.addParent(urlClassLoader)
 }
 
 public fun KotlinKernelHost.useSchemas(schemaClasses: Iterable<KClass<*>>) {
