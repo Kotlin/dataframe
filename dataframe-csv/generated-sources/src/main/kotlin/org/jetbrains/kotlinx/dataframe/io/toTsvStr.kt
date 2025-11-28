@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonWriteDelimDocs
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_FORMAT
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COMMENT_CHAR
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ESCAPE_CHAR
