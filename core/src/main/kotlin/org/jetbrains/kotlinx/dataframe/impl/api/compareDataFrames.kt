@@ -1,17 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.nrow
 
+@DataSchema
 internal class ComparisonDescription(
     val rowAtIndex: Int,
     val of: String,
     val wasRemoved: Boolean?,
-    val wasInserted: Boolean?,
+    val insertedAfterRow: Boolean?,
     val afterRow: Int?,
 ) : DataRowSchema
 
@@ -23,15 +25,11 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
     var comparisonDf = emptyDataFrame<ComparisonDescription>()
     // compare by exploiting Myers difference algorithm
     val shortestEditScript = myersDifferenceAlgorithmImpl(dfA, dfB)
-    var x: Int?
-    var y: Int?
-    var xPrev: Int?
-    var yPrev: Int?
     for (i in 1 until shortestEditScript.size) {
-        x = shortestEditScript[i].first
-        y = shortestEditScript[i].second
-        xPrev = shortestEditScript[i - 1].first
-        yPrev = shortestEditScript[i - 1].second
+        val x = shortestEditScript[i].first
+        val y = shortestEditScript[i].second
+        val xPrev = shortestEditScript[i - 1].first
+        val yPrev = shortestEditScript[i - 1].second
         when {
             // row at index 'x-1' of dfA was removed
             xPrev + 1 == x && yPrev + 1 != y -> {
@@ -43,10 +41,18 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
 
             // row at index 'y-1' of dfB was inserted after row in position 'x-1' of dfA
             yPrev + 1 == y && xPrev + 1 != x -> {
+                val indexOfInsertedRow = y - 1
+                val sourceDfOfInsertedRow = "dfB"
+                val indexOfReferenceRow = x - 1
                 comparisonDf = comparisonDf.concat(
                     dataFrameOf(
-                        ComparisonDescription
-                            (y - 1, "dfB", null, true, x - 1),
+                        ComparisonDescription(
+                            indexOfInsertedRow,
+                            sourceDfOfInsertedRow,
+                            null,
+                            true,
+                            indexOfReferenceRow,
+                        ),
                     ),
                 )
             }
@@ -74,24 +80,24 @@ internal fun <T> myersDifferenceAlgorithmImpl(dfA: DataFrame<T>, dfB: DataFrame<
     val path = mutableListOf<Pair<Int, Int>>()
     // 'ses' stands for shortest edit script, next var is never returned, it is in the code
     // to show the capabilities of the algorithm
-    var sesLength: Int?
+    var sesLength: Int
     val sumOfLength = dfA.nrow + dfB.nrow
     // matrix containing the endpoint of the furthest reaching D-path ending in diagonal k
     // for each d-k couple of interest
-    val v = arrayListOf<IntArray>()
-    for (d in 0..sumOfLength) {
+    val v = mutableListOf<IntArray>()
+    repeat(sumOfLength + 1) {
         v.add(IntArray(sumOfLength * 2 + 1))
     }
     var isOver = false
     // starting the algorithm
     // 0 position is -(M+N) position in the alg's paper -> need to normalize each access to v
     val normalizer = sumOfLength
-    v[0][1 + normalizer] = 0 // fitticious
+    v[0][1 + normalizer] = 0 // fictitious
     // d is the number of non-diagonal edges
     var d = 0
     while (d <= sumOfLength && !isOver) {
         for (k in -d..d step 2) {
-            var x: Int?
+            var x: Int
             // Each furthest reaching D-path ending in diagonal k
             // is built by exploiting the furthest reaching (D-1)-path ending in k-1 or (exclusive or) k+1
             if (k == -d || k != d && v[d][k - 1 + normalizer] < v[d][k + 1 + normalizer]) {
@@ -113,7 +119,7 @@ internal fun <T> myersDifferenceAlgorithmImpl(dfA: DataFrame<T>, dfB: DataFrame<
             if (x >= dfA.nrow && y >= dfB.nrow) {
                 isOver = true
                 sesLength = d
-                recoursivePathFill(path, v, d, k, normalizer, dfA, dfB)
+                tailrec(path, v, d, k, normalizer, dfA, dfB)
                 break
             }
         }
@@ -124,9 +130,9 @@ internal fun <T> myersDifferenceAlgorithmImpl(dfA: DataFrame<T>, dfB: DataFrame<
     return immutablePath
 }
 
-internal fun <T> recoursivePathFill(
+internal fun <T> tailrec(
     path: MutableList<Pair<Int, Int>>,
-    v: ArrayList<IntArray>,
+    v: MutableList<IntArray>,
     d: Int,
     k: Int,
     normalizer: Int,
@@ -141,8 +147,8 @@ internal fun <T> recoursivePathFill(
     // It will be an argument of the next recoursive step.
     // Moreover, I need to enlist the points composing the snake that precedes me (it may be empty).
     if (d > 0) {
-        var kPrev: Int? = null
-        var xSnake: Int? = null
+        var kPrev: Int
+        var xSnake: Int
         if (k == -d || k != d && v[d][k - 1 + normalizer] < v[d][k + 1 + normalizer]) {
             kPrev = k + 1
             xSnake = v[d - 1][kPrev + normalizer]
@@ -161,7 +167,7 @@ internal fun <T> recoursivePathFill(
                         path.add(e)
                     }
                 }
-                recoursivePathFill(path, v, d - 1, kPrev, normalizer, dfA, dfB)
+                tailrec(path, v, d - 1, kPrev, normalizer, dfA, dfB)
                 return
             }
             if (xSnake < dfA.nrow &&

@@ -1,13 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.impl.api.ComparisonDescription
 import org.jetbrains.kotlinx.dataframe.impl.api.compareDataFramesImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.myersDifferenceAlgorithmImpl
 import org.junit.Test
 import kotlin.Pair
 
-private class SchemaForThisTest(val integer: Int, val string: String) : DataRowSchema
+@DataSchema
+internal class SchemaForThisTest(val integer: Int, val string: String) : DataRowSchema
 
 class CompareDataFramesTest {
 
