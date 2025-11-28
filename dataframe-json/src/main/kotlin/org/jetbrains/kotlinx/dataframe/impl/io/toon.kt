@@ -67,8 +67,11 @@ internal value class ToonString(override val value: String) : ToonPrimitive<Stri
     private companion object {
         private val disallowedToonChars = setOf('\n', '\r', '\t', '"', '{', '}', '[', ']', ':', '\\')
 
+        // TODO test, regex seems to fail...
         private fun String.looksLikeNumber() =
-            matches("""/^-?\d+(?:.\d+)?(?:e[+-]?\d+)?$/i""".toRegex()) ||
+            toLongOrNull() != null ||
+                toDoubleOrNull() != null ||
+                matches("""/^-?\d+(?:.\d+)?(?:e[+-]?\d+)?$/i""".toRegex()) ||
                 matches("""/^0\d+$/""".toRegex())
 
         private fun String.needsQuotes(activeDelimiter: ToonDelimiter): Boolean =

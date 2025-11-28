@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.impl.io.ToonArray
+import org.jetbrains.kotlinx.dataframe.impl.io.ToonDelimiter
 import org.jetbrains.kotlinx.dataframe.impl.io.ToonObject
 import org.jetbrains.kotlinx.dataframe.impl.io.ToonPrimitive
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeToToonImpl
@@ -176,12 +177,12 @@ class ToonTests {
             "Charlie", "Daniels", 20, "Moscow", null, false,
             "Charlie", "Chaplin", 40, "Milan", null, true,
             "Bob", "Marley", 30, "Tokyo", 68, true,
-            "Alice", "Wolf", 20, null, 55, false,
-            "Charlie", "Byrd", 30, "Moscow", 90, true,
+            "123", "Wolf", 20, null, 55, false,
+            "Cha:rlie", "Byrd", 30, "Moscow", 90, true,
         )
 
         println(
-            encodeToToonImpl(df).render(),
+            encodeToToonImpl(df).render(delimiter = ToonDelimiter.PIPE),
         )
     }
 
