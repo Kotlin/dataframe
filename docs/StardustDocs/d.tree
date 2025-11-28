@@ -227,4 +227,5 @@
     <toc-element topic="Support.md"/>
     <toc-element topic="FAQ.md"/>
     <toc-element topic="Migration-From-Plugins.md"/>
+    <toc-element topic="MigrationTo_1_0.md"/>
 </instance-profile>
