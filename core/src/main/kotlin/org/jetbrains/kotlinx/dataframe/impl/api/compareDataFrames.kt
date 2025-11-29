@@ -11,11 +11,21 @@ import org.jetbrains.kotlinx.dataframe.nrow
 @DataSchema
 internal class ComparisonDescription(
     val rowAtIndex: Int,
-    val of: String,
-    val wasRemoved: Boolean?,
-    val insertedAfterRow: Boolean?,
+    val of: DataFrameOfComparison,
+    val wasRemoved: RowOfComparison?,
+    val insertedAfterRow: RowOfComparison?,
     val afterRow: Int?,
 ) : DataRowSchema
+
+internal enum class DataFrameOfComparison {
+    DFA,
+    DFB,
+}
+
+internal enum class RowOfComparison {
+    WAS_INSERTED_AFTER_ROW,
+    WAS_REMOVED,
+}
 
 /**
  * Returns a DataFrame whose rows explain the differences between dfA and dfB.
@@ -33,16 +43,25 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
         when {
             // row at index 'x-1' of dfA was removed
             xPrev + 1 == x && yPrev + 1 != y -> {
+                val indexOfRemovedRow = x - 1
+                val sourceDfOfRemovedRow = DataFrameOfComparison.DFA
                 comparisonDf = comparisonDf.concat(
-                    dataFrameOf
-                        (ComparisonDescription(x - 1, "dfA", true, null, null)),
+                    dataFrameOf(
+                        ComparisonDescription(
+                            indexOfRemovedRow,
+                            sourceDfOfRemovedRow,
+                            RowOfComparison.WAS_REMOVED,
+                            null,
+                            null,
+                        ),
+                    ),
                 )
             }
 
             // row at index 'y-1' of dfB was inserted after row in position 'x-1' of dfA
             yPrev + 1 == y && xPrev + 1 != x -> {
                 val indexOfInsertedRow = y - 1
-                val sourceDfOfInsertedRow = "dfB"
+                val sourceDfOfInsertedRow = DataFrameOfComparison.DFB
                 val indexOfReferenceRow = x - 1
                 comparisonDf = comparisonDf.concat(
                     dataFrameOf(
@@ -50,7 +69,7 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
                             indexOfInsertedRow,
                             sourceDfOfInsertedRow,
                             null,
-                            true,
+                            RowOfComparison.WAS_INSERTED_AFTER_ROW,
                             indexOfReferenceRow,
                         ),
                     ),
@@ -144,7 +163,7 @@ internal fun <T> tailrec(
     val yCurrent = xCurrent - k
     path.add(Pair(xCurrent, yCurrent))
     // I look for endpoint I was built from, it is represented by kPrev.
-    // It will be an argument of the next recoursive step.
+    // It will be an argument of the next recursive step.
     // Moreover, I need to enlist the points composing the snake that precedes me (it may be empty).
     if (d > 0) {
         var kPrev: Int
