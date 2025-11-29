@@ -151,10 +151,11 @@ class ToonTests {
     @Test
     fun `other TOON encoders fail not mine`() {
         // [
-        //  1,
-        //  [1],
-        //  {"a": 1},
-        //  [{"b": 2}]
+        //   1,
+        //   [1],
+        //   { "a": 1 },
+        //   [{ "b": 2 }],
+        //   { "c": [{ "d": 3 }, { "d": 4 }], "d": 7 }
         // ]
         ToonArray(
             listOf(
@@ -162,6 +163,17 @@ class ToonTests {
                 ToonArray(listOf(ToonPrimitive(1))),
                 ToonObject(mapOf("a" to ToonPrimitive(1))),
                 ToonArray(listOf(ToonObject(mapOf("b" to ToonPrimitive(2))))),
+                ToonObject(
+                    mapOf(
+                        "c" to ToonArray(
+                            listOf(
+                                ToonObject(mapOf("d" to ToonPrimitive(3), "e" to ToonPrimitive(5))),
+                                ToonObject(mapOf("d" to ToonPrimitive(4), "e" to ToonPrimitive(6))),
+                            ),
+                        ),
+                        "d" to ToonPrimitive(7),
+                    ),
+                ),
             ),
         ).let {
             println(it.render())
