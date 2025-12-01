@@ -38,11 +38,11 @@ class CompareDataFramesTest {
         )
         val comparison = compareDataFramesImpl(dfA, dfB)
         comparison shouldBe dataFrameOf(
-            ComparisonDescription(0, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null),
-            ComparisonDescription(1, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null),
-            ComparisonDescription(1, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 2),
-            ComparisonDescription(5, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null),
-            ComparisonDescription(5, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 6),
+            ComparisonDescription(0, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null, dfA[0]),
+            ComparisonDescription(1, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null, dfA[1]),
+            ComparisonDescription(1, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 2, dfB[1]),
+            ComparisonDescription(5, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null, dfA[5]),
+            ComparisonDescription(5, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 6, dfB[5]),
         )
     }
 
@@ -76,12 +76,12 @@ class CompareDataFramesTest {
         )
         val comparison = compareDataFramesImpl(dfA, dfB)
         comparison shouldBe dataFrameOf(
-            ComparisonDescription(0, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null),
-            ComparisonDescription(1, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null),
-            ComparisonDescription(2, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null),
-            ComparisonDescription(0, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 2),
-            ComparisonDescription(1, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 2),
-            ComparisonDescription(2, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 2),
+            ComparisonDescription(0, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null, dfA[0]),
+            ComparisonDescription(1, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null, dfA[1]),
+            ComparisonDescription(2, DataFrameOfComparison.DFA, RowOfComparison.REMOVED, null, dfA[2]),
+            ComparisonDescription(0, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 2, dfB[0]),
+            ComparisonDescription(1, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 2, dfB[1]),
+            ComparisonDescription(2, DataFrameOfComparison.DFB, RowOfComparison.INSERTED, 2, dfB[2]),
         )
     }
 

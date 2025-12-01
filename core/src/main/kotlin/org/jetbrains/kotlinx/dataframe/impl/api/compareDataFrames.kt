@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -9,11 +10,12 @@ import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.nrow
 
 @DataSchema
-internal class ComparisonDescription(
+internal class ComparisonDescription<T>(
     val rowAtIndex: Int,
     val of: DataFrameOfComparison,
     val modification: RowOfComparison,
     val insertedAfterRow: Int?,
+    val modifiedRowContent: DataRow<T>,
 ) : DataRowSchema
 
 internal enum class DataFrameOfComparison {
@@ -30,8 +32,8 @@ internal enum class RowOfComparison {
  * Returns a DataFrame whose rows explain the differences between dfA and dfB.
  * One must think of the set of commands in a script as being executed simultaneously
  */
-internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): DataFrame<ComparisonDescription> {
-    var comparisonDf = emptyDataFrame<ComparisonDescription>()
+internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): DataFrame<ComparisonDescription<T>> {
+    var comparisonDf = emptyDataFrame<ComparisonDescription<T>>()
     // compare by exploiting Myers difference algorithm
     val shortestEditScript = myersDifferenceAlgorithmImpl(dfA, dfB)
     for (i in 1 until shortestEditScript.size) {
@@ -44,6 +46,7 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
             xPrev + 1 == x && yPrev + 1 != y -> {
                 val indexOfRemovedRow = x - 1
                 val sourceDfOfRemovedRow = DataFrameOfComparison.DFA
+                val rowContent = dfA[indexOfRemovedRow]
                 comparisonDf = comparisonDf.concat(
                     dataFrameOf(
                         ComparisonDescription(
@@ -51,6 +54,7 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
                             sourceDfOfRemovedRow,
                             RowOfComparison.REMOVED,
                             null,
+                            rowContent,
                         ),
                     ),
                 )
@@ -61,6 +65,7 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
                 val indexOfInsertedRow = y - 1
                 val sourceDfOfInsertedRow = DataFrameOfComparison.DFB
                 val indexOfReferenceRow = x - 1
+                val rowContent = dfB[indexOfInsertedRow]
                 comparisonDf = comparisonDf.concat(
                     dataFrameOf(
                         ComparisonDescription(
@@ -68,6 +73,7 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
                             sourceDfOfInsertedRow,
                             RowOfComparison.INSERTED,
                             indexOfReferenceRow,
+                            rowContent,
                         ),
                     ),
                 )
