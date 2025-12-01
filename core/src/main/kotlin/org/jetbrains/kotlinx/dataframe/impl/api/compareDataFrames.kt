@@ -12,9 +12,8 @@ import org.jetbrains.kotlinx.dataframe.nrow
 internal class ComparisonDescription(
     val rowAtIndex: Int,
     val of: DataFrameOfComparison,
-    val wasRemoved: RowOfComparison?,
-    val insertedAfterRow: RowOfComparison?,
-    val afterRow: Int?,
+    val modification: RowOfComparison,
+    val insertedAfterRow: Int?,
 ) : DataRowSchema
 
 internal enum class DataFrameOfComparison {
@@ -23,8 +22,8 @@ internal enum class DataFrameOfComparison {
 }
 
 internal enum class RowOfComparison {
-    WAS_INSERTED_AFTER_ROW,
-    WAS_REMOVED,
+    INSERTED,
+    REMOVED,
 }
 
 /**
@@ -50,8 +49,7 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
                         ComparisonDescription(
                             indexOfRemovedRow,
                             sourceDfOfRemovedRow,
-                            RowOfComparison.WAS_REMOVED,
-                            null,
+                            RowOfComparison.REMOVED,
                             null,
                         ),
                     ),
@@ -68,8 +66,7 @@ internal fun <T> compareDataFramesImpl(dfA: DataFrame<T>, dfB: DataFrame<T>): Da
                         ComparisonDescription(
                             indexOfInsertedRow,
                             sourceDfOfInsertedRow,
-                            null,
-                            RowOfComparison.WAS_INSERTED_AFTER_ROW,
+                            RowOfComparison.INSERTED,
                             indexOfReferenceRow,
                         ),
                     ),
@@ -138,7 +135,7 @@ internal fun <T> myersDifferenceAlgorithmImpl(dfA: DataFrame<T>, dfB: DataFrame<
             if (x >= dfA.nrow && y >= dfB.nrow) {
                 isOver = true
                 sesLength = d
-                tailrec(path, v, d, k, normalizer, dfA, dfB)
+                recursivePathFill(path, v, d, k, normalizer, dfA, dfB)
                 break
             }
         }
@@ -149,7 +146,7 @@ internal fun <T> myersDifferenceAlgorithmImpl(dfA: DataFrame<T>, dfB: DataFrame<
     return immutablePath
 }
 
-internal fun <T> tailrec(
+internal tailrec fun <T> recursivePathFill(
     path: MutableList<Pair<Int, Int>>,
     v: MutableList<IntArray>,
     d: Int,
@@ -186,7 +183,7 @@ internal fun <T> tailrec(
                         path.add(e)
                     }
                 }
-                tailrec(path, v, d - 1, kPrev, normalizer, dfA, dfB)
+                recursivePathFill(path, v, d - 1, kPrev, normalizer, dfA, dfB)
                 return
             }
             if (xSnake < dfA.nrow &&
