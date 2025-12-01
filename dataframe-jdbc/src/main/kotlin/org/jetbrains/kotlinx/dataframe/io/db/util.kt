@@ -7,17 +7,8 @@ import java.util.Locale
 
 private val logger = KotlinLogging.logger {}
 
-private const val UNSUPPORTED_H2_MODE_MESSAGE =
-    "Unsupported H2 MODE: %s. Supported: MySQL, PostgreSQL, MSSQLServer, MariaDB, REGULAR/H2-Regular (or omit MODE)."
-
-private const val H2_MODE_QUERY = "SELECT SETTING_VALUE FROM INFORMATION_SCHEMA.SETTINGS WHERE SETTING_NAME = 'MODE'"
-
-private val H2_MODE_URL_PATTERN = "MODE=([^;:&]+)".toRegex(RegexOption.IGNORE_CASE)
-
 /**
  * Extracts the database type from the given connection.
- * For H2, fetches the actual MODE from the active connection settings.
- * For other databases, extracts type from URL.
  *
  * @param [connection] the database connection.
  * @return the corresponding [DbType].
@@ -30,56 +21,44 @@ public fun extractDBTypeFromConnection(connection: Connection): DbType {
         ?: throw IllegalStateException("URL information is missing in connection meta data!")
     logger.info { "Processing DB type extraction for connection url: $url" }
 
-    // First, determine the base database type from URL
-    val baseDbType = extractDBTypeFromUrl(url)
-
-    // For H2, refine the mode by querying the active connection settings
-    // This handles cases where MODE is not specified in URL, but H2 returns "Regular" from settings
-    return if (baseDbType is H2) {
-        val mode = fetchH2ModeFromConnection(connection)
-        parseH2ModeOrThrow(mode)
-    } else {
-        logger.info { "Identified DB type as $baseDbType from url: $url" }
-        baseDbType
-    }
-}
-
-/**
- * Fetches H2 database mode from an active connection.
- * Works only for H2 version 2.
- *
- * @param [connection] the database connection.
- * @return the mode string or null if not set.
- */
-private fun fetchH2ModeFromConnection(connection: Connection): String? {
-    var mode: String? = null
-    connection.prepareStatement(H2_MODE_QUERY).use { st ->
-        st.executeQuery().use { rs ->
-            if (rs.next()) {
-                mode = rs.getString("SETTING_VALUE")
-                logger.debug { "Fetched H2 DB mode: $mode" }
+    return if (url.contains(H2().dbTypeInJdbcUrl)) {
+        // works only for H2 version 2
+        val modeQuery = "SELECT SETTING_VALUE FROM INFORMATION_SCHEMA.SETTINGS WHERE SETTING_NAME = 'MODE'"
+        var mode = ""
+        connection.prepareStatement(modeQuery).use { st ->
+            st.executeQuery().use { rs ->
+                if (rs.next()) {
+                    mode = rs.getString("SETTING_VALUE")
+                    logger.debug { "Fetched H2 DB mode: $mode" }
+                } else {
+                    throw IllegalStateException("The information about H2 mode is not found in the H2 meta-data!")
+                }
             }
         }
-    }
 
-    return mode?.trim()?.takeIf { it.isNotEmpty() }
-}
+        // H2 doesn't support MariaDB and SQLite
+        when (mode.lowercase(Locale.getDefault())) {
+            H2.MODE_MYSQL.lowercase(Locale.getDefault()) -> H2(MySql)
 
-/**
- * Parses H2 mode string and returns the corresponding H2 DbType instance.
- *
- * @param [mode] the mode string (maybe null or empty for Regular mode).
- * @return H2 instance with the appropriate mode.
- * @throws [IllegalArgumentException] if the mode is not supported.
- */
-private fun parseH2ModeOrThrow(mode: String?): H2 {
-    if (mode.isNullOrEmpty()) {
-        return H2(H2.Mode.Regular)
-    }
-    return H2.Mode.fromValue(mode)?.let { H2(it) }
-        ?: throw IllegalArgumentException(UNSUPPORTED_H2_MODE_MESSAGE.format(mode)).also {
-            logger.error { it.message }
+            H2.MODE_MSSQLSERVER.lowercase(Locale.getDefault()) -> H2(MsSql)
+
+            H2.MODE_POSTGRESQL.lowercase(Locale.getDefault()) -> H2(PostgreSql)
+
+            H2.MODE_MARIADB.lowercase(Locale.getDefault()) -> H2(MariaDb)
+
+            else -> {
+                val message = "Unsupported database type in the url: $url. " +
+                    "Only MySQL, MariaDB, MSSQL and PostgreSQL are supported!"
+                logger.error { message }
+
+                throw IllegalArgumentException(message)
+            }
         }
+    } else {
+        val dbType = extractDBTypeFromUrl(url)
+        logger.info { "Identified DB type as $dbType from url: $url" }
+        dbType
+    }
 }
 
 /**
@@ -87,24 +66,33 @@ private fun parseH2ModeOrThrow(mode: String?): H2 {
  *
  * @param [url] the JDBC URL.
  * @return the corresponding [DbType].
- * @throws [SQLException] if the url is null.
- * @throws [IllegalArgumentException] if the URL specifies an unsupported database type.
+ * @throws [RuntimeException] if the url is null.
  */
 public fun extractDBTypeFromUrl(url: String?): DbType {
-    url ?: throw SQLException("Database URL could not be null.")
+    if (url != null) {
+        val helperH2Instance = H2()
+        return when {
+            helperH2Instance.dbTypeInJdbcUrl in url -> createH2Instance(url)
 
-    return when {
-        H2().dbTypeInJdbcUrl in url -> createH2Instance(url)
-        MariaDb.dbTypeInJdbcUrl in url -> MariaDb
-        MySql.dbTypeInJdbcUrl in url -> MySql
-        Sqlite.dbTypeInJdbcUrl in url -> Sqlite
-        PostgreSql.dbTypeInJdbcUrl in url -> PostgreSql
-        MsSql.dbTypeInJdbcUrl in url -> MsSql
-        DuckDb.dbTypeInJdbcUrl in url -> DuckDb
-        else -> throw IllegalArgumentException(
-            "Unsupported database type in the url: $url. " +
+            MariaDb.dbTypeInJdbcUrl in url -> MariaDb
+
+            MySql.dbTypeInJdbcUrl in url -> MySql
+
+            Sqlite.dbTypeInJdbcUrl in url -> Sqlite
+
+            PostgreSql.dbTypeInJdbcUrl in url -> PostgreSql
+
+            MsSql.dbTypeInJdbcUrl in url -> MsSql
+
+            DuckDb.dbTypeInJdbcUrl in url -> DuckDb
+
+            else -> throw IllegalArgumentException(
+                "Unsupported database type in the url: $url. " +
                     "Only H2, MariaDB, MySQL, MSSQL, SQLite, PostgreSQL, and DuckDB are supported!",
-        )
+            )
+        }
+    } else {
+        throw SQLException("Database URL could not be null. The existing value is $url")
     }
 }
 
@@ -116,8 +104,30 @@ public fun extractDBTypeFromUrl(url: String?): DbType {
  * @throws [IllegalArgumentException] if the provided URL does not contain a valid mode.
  */
 private fun createH2Instance(url: String): DbType {
-    val mode = H2_MODE_URL_PATTERN.find(url)?.groupValues?.getOrNull(1)
-    return parseH2ModeOrThrow(mode?.takeIf { it.isNotBlank() })
+    val modePattern = "MODE=(.*?);".toRegex()
+    val matchResult = modePattern.find(url)
+
+    val mode: String = if (matchResult != null && matchResult.groupValues.size == 2) {
+        matchResult.groupValues[1]
+    } else {
+        throw IllegalArgumentException("The provided URL `$url` does not contain a valid mode.")
+    }
+
+    // H2 doesn't support MariaDB and SQLite
+    return when (mode.lowercase(Locale.getDefault())) {
+        H2.MODE_MYSQL.lowercase(Locale.getDefault()) -> H2(MySql)
+
+        H2.MODE_MSSQLSERVER.lowercase(Locale.getDefault()) -> H2(MsSql)
+
+        H2.MODE_POSTGRESQL.lowercase(Locale.getDefault()) -> H2(PostgreSql)
+
+        H2.MODE_MARIADB.lowercase(Locale.getDefault()) -> H2(MariaDb)
+
+        else -> throw IllegalArgumentException(
+            "Unsupported database mode: $mode. " +
+                "Only MySQL, MariaDB, MSSQL, PostgreSQL modes are supported!",
+        )
+    }
 }
 
 /**

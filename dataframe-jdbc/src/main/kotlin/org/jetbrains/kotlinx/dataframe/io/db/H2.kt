@@ -1,10 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import org.jetbrains.kotlinx.dataframe.io.db.MariaDb as MariaDbType
-import org.jetbrains.kotlinx.dataframe.io.db.MsSql as MsSqlType
-import org.jetbrains.kotlinx.dataframe.io.db.MySql as MySqlType
-import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql as PostgreSqlType
 import java.sql.ResultSet
 import java.util.Locale
 import kotlin.reflect.KType
@@ -17,89 +13,12 @@ import kotlin.reflect.KType
  *
  * NOTE: All date and timestamp-related types are converted to String to avoid java.sql.* types.
  */
-
-public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
-    @Deprecated("Use H2(mode = Mode.XXX) instead", ReplaceWith("H2(H2.Mode.MySql)"))
-    public constructor(dialect: DbType) : this(
-        Mode.fromDbType(dialect)
-            ?: throw IllegalArgumentException("H2 database could not be specified with H2 dialect!"),
-    )
-
-    private val delegate: DbType? = mode.toDbType()
-
-    /**
-     * Represents the compatibility modes supported by an H2 database.
-     *
-     * @property value The string value used in H2 JDBC URL and settings.
-     */
-    public enum class Mode(public val value: String) {
-        /** Native H2 mode (no compatibility), our synthetic marker. */
-        Regular("H2-Regular"),
-        MySql("MySQL"),
-        PostgreSql("PostgreSQL"),
-        MsSqlServer("MSSQLServer"),
-        MariaDb("MariaDB");
-
-        /**
-         * Converts this Mode to the corresponding DbType delegate.
-         *
-         * @return The DbType for this mode, or null for Regular mode.
-         */
-        public fun toDbType(): DbType? = when (this) {
-            Regular -> null
-            MySql -> MySqlType
-            PostgreSql -> PostgreSqlType
-            MsSqlServer -> MsSqlType
-            MariaDb -> MariaDbType
-        }
-
-        public companion object {
-            /**
-             * Creates a Mode from the given DbType.
-             *
-             * @param dialect The DbType to convert.
-             * @return The corresponding Mode, or null if the dialect is H2.
-             */
-            public fun fromDbType(dialect: DbType): Mode? = when (dialect) {
-                is H2 -> null
-                MySqlType -> MySql
-                PostgreSqlType -> PostgreSql
-                MsSqlType -> MsSqlServer
-                MariaDbType -> MariaDb
-                else -> Regular
-            }
-
-            /**
-             * Finds a Mode by its string value (case-insensitive).
-             * Handles both URL values (MySQL, PostgreSQL, etc.) and
-             * INFORMATION_SCHEMA values (Regular).
-             *
-             * @param value The string value to search for.
-             * @return The matching Mode, or null if not found.
-             */
-            public fun fromValue(value: String): Mode? {
-                // "Regular" from INFORMATION_SCHEMA or "H2-Regular" from URL
-                if (value.equals("regular", ignoreCase = true) ||
-                    value.equals("h2-regular", ignoreCase = true)) {
-                    return Regular
-                }
-                return entries.find { it.value.equals(value, ignoreCase = true) }
-            }
-
-            /**
-             * Parses a string that may be an H2 MODE value into a Mode.
-             * Accepts case-insensitive `regular` and `h2-regular` as Regular.
-             *
-             * @param mode The mode string to parse, or null for Regular mode.
-             * @return The corresponding Mode for null/empty input or supported modes.
-             * @throws IllegalArgumentException if the mode is not null and not supported.
-             */
-            public fun fromString(mode: String?): Mode? {
-                if (mode == null) return null
-                return fromValue(mode)
-            }
-        }
+public open class H2(public val dialect: DbType = MySql) : DbType("h2") {
+    init {
+        require(dialect::class != H2::class) { "H2 database could not be specified with H2 dialect!" }
     }
+
+
     /**
      * It contains constants related to different database modes.
      *
@@ -111,6 +30,28 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
      * @see [createH2Instance]
      */
     public companion object {
+        /**
+         * Represents the compatibility modes supported by an H2 database.
+         *
+         * @property value The string value used in H2 JDBC URL and settings.
+         */
+        public enum class Mode(public val value: String) {
+            MySql("MySQL"),
+            PostgreSql("PostgreSQL"),
+            MsSqlServer("MSSQLServer"),
+            MariaDb("MariaDB");
+
+            public companion object {
+                /**
+                 * Finds a Mode by its string value (case-insensitive).
+                 *
+                 * @param value The string value to search for.
+                 * @return The matching Mode, or null if not found.
+                 */
+                public fun fromValue(value: String): Mode? =
+                    entries.find { it.value.equals(value, ignoreCase = true) }
+            }
+        }
 
         @Deprecated("Use Mode.MySql.value instead", ReplaceWith("Mode.MySql.value"))
         public const val MODE_MYSQL: String = "MySQL"
@@ -126,7 +67,7 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
         get() = "org.h2.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? =
-        delegate?.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
+        dialect.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
@@ -137,24 +78,14 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
         // could be extended for other symptoms of the system tables for H2
         val isH2SystemTable = schemaName.containsWithLowercase("information_schema")
 
-        return if (delegate == null) {
-            isH2SystemTable
-        } else {
-            isH2SystemTable || delegate.isSystemTable(tableMetadata)
-        }
+        return isH2SystemTable || dialect.isSystemTable(tableMetadata)
     }
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata =
-        delegate?.buildTableMetadata(tables)
-            ?: TableMetadata(
-                tables.getString("table_name"),
-                tables.getString("table_schem"),
-                tables.getString("table_cat"),
-            )
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata = dialect.buildTableMetadata(tables)
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
-        delegate?.convertSqlTypeToKType(tableColumnMetadata)
+        dialect.convertSqlTypeToKType(tableColumnMetadata)
 
     public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
-        delegate?.buildSqlQueryWithLimit(sqlQuery, limit) ?: super.buildSqlQueryWithLimit(sqlQuery, limit)
+        dialect.buildSqlQueryWithLimit(sqlQuery, limit)
 }
