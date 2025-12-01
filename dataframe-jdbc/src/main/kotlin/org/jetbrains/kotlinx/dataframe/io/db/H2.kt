@@ -1,13 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import java.sql.ResultSet
+import java.util.Locale
+import kotlin.reflect.KType
 import org.jetbrains.kotlinx.dataframe.io.db.MariaDb as MariaDbType
 import org.jetbrains.kotlinx.dataframe.io.db.MsSql as MsSqlType
 import org.jetbrains.kotlinx.dataframe.io.db.MySql as MySqlType
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql as PostgreSqlType
-import java.sql.ResultSet
-import java.util.Locale
-import kotlin.reflect.KType
 
 /**
  * Represents the H2 database type.
@@ -38,20 +38,21 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
         MySql("MySQL"),
         PostgreSql("PostgreSQL"),
         MsSqlServer("MSSQLServer"),
-        MariaDb("MariaDB");
+        MariaDb("MariaDB"), ;
 
         /**
          * Converts this Mode to the corresponding DbType delegate.
          *
          * @return The DbType for this mode, or null for Regular mode.
          */
-        public fun toDbType(): DbType? = when (this) {
-            Regular -> null
-            MySql -> MySqlType
-            PostgreSql -> PostgreSqlType
-            MsSqlServer -> MsSqlType
-            MariaDb -> MariaDbType
-        }
+        public fun toDbType(): DbType? =
+            when (this) {
+                Regular -> null
+                MySql -> MySqlType
+                PostgreSql -> PostgreSqlType
+                MsSqlServer -> MsSqlType
+                MariaDb -> MariaDbType
+            }
 
         public companion object {
             /**
@@ -60,14 +61,15 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
              * @param dialect The DbType to convert.
              * @return The corresponding Mode, or null if the dialect is H2.
              */
-            public fun fromDbType(dialect: DbType): Mode? = when (dialect) {
-                is H2 -> null
-                MySqlType -> MySql
-                PostgreSqlType -> PostgreSql
-                MsSqlType -> MsSqlServer
-                MariaDbType -> MariaDb
-                else -> Regular
-            }
+            public fun fromDbType(dialect: DbType): Mode? =
+                when (dialect) {
+                    is H2 -> null
+                    MySqlType -> MySql
+                    PostgreSqlType -> PostgreSql
+                    MsSqlType -> MsSqlServer
+                    MariaDbType -> MariaDb
+                    else -> Regular
+                }
 
             /**
              * Finds a Mode by its string value (case-insensitive).
@@ -80,7 +82,8 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
             public fun fromValue(value: String): Mode? {
                 // "Regular" from INFORMATION_SCHEMA or "H2-Regular" from URL
                 if (value.equals("regular", ignoreCase = true) ||
-                    value.equals("h2-regular", ignoreCase = true)) {
+                    value.equals("h2-regular", ignoreCase = true)
+                ) {
                     return Regular
                 }
                 return entries.find { it.value.equals(value, ignoreCase = true) }
@@ -100,6 +103,7 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
             }
         }
     }
+
     /**
      * It contains constants related to different database modes.
      *
@@ -114,10 +118,13 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
 
         @Deprecated("Use Mode.MySql.value instead", ReplaceWith("Mode.MySql.value"))
         public const val MODE_MYSQL: String = "MySQL"
+
         @Deprecated("Use Mode.PostgreSql.value instead", ReplaceWith("Mode.PostgreSql.value"))
         public const val MODE_POSTGRESQL: String = "PostgreSQL"
+
         @Deprecated("Use Mode.MsSqlServer.value instead", ReplaceWith("Mode.MsSqlServer.value"))
         public const val MODE_MSSQLSERVER: String = "MSSQLServer"
+
         @Deprecated("Use Mode.MariaDb.value instead", ReplaceWith("Mode.MariaDb.value"))
         public const val MODE_MARIADB: String = "MariaDB"
     }

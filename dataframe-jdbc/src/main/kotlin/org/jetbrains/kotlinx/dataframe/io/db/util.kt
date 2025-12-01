@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.sql.Connection
 import java.sql.SQLException
-import java.util.Locale
 
 private val logger = KotlinLogging.logger {}
 
@@ -95,15 +94,22 @@ public fun extractDBTypeFromUrl(url: String?): DbType {
 
     return when {
         H2().dbTypeInJdbcUrl in url -> createH2Instance(url)
+
         MariaDb.dbTypeInJdbcUrl in url -> MariaDb
+
         MySql.dbTypeInJdbcUrl in url -> MySql
+
         Sqlite.dbTypeInJdbcUrl in url -> Sqlite
+
         PostgreSql.dbTypeInJdbcUrl in url -> PostgreSql
+
         MsSql.dbTypeInJdbcUrl in url -> MsSql
+
         DuckDb.dbTypeInJdbcUrl in url -> DuckDb
+
         else -> throw IllegalArgumentException(
             "Unsupported database type in the url: $url. " +
-                    "Only H2, MariaDB, MySQL, MSSQL, SQLite, PostgreSQL, and DuckDB are supported!",
+                "Only H2, MariaDB, MySQL, MSSQL, SQLite, PostgreSQL, and DuckDB are supported!",
         )
     }
 }
