@@ -974,6 +974,31 @@ class JdbcTest {
         exception.message shouldBe "H2 database could not be specified with H2 dialect!"
     }
 
+
+    @Test
+    fun `regular mode for H2 with DbConnectionConfig`() {
+        val url = "jdbc:h2:mem:testDatabase"
+        val username = "sa"
+        val password = ""
+
+        val dbConfig = DbConnectionConfig(url, username, password)
+
+        val df = DataFrame.readSqlQuery(dbConfig, "SELECT 1")
+        df.rowsCount() shouldBe 1
+    }
+
+    @Test
+    fun `regular mode for H2 with Connection`() {
+        val url = "jdbc:h2:mem:testDatabase"
+        val username = "sa"
+        val password = ""
+
+        DriverManager.getConnection(url, username, password).use { connection ->
+            val df = DataFrame.readSqlQuery(connection, "SELECT 1")
+            df.rowsCount() shouldBe 1
+        }
+    }
+
     // helper object created for API testing purposes
     object CustomDB : H2(MySql)
 

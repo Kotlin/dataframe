@@ -18,6 +18,7 @@ public open class H2(public val dialect: DbType = MySql) : DbType("h2") {
         require(dialect::class != H2::class) { "H2 database could not be specified with H2 dialect!" }
     }
 
+
     /**
      * It contains constants related to different database modes.
      *
@@ -29,16 +30,36 @@ public open class H2(public val dialect: DbType = MySql) : DbType("h2") {
      * @see [createH2Instance]
      */
     public companion object {
-        /** It represents the mode value "MySQL" for the H2 database. */
+        /**
+         * Represents the compatibility modes supported by an H2 database.
+         *
+         * @property value The string value used in H2 JDBC URL and settings.
+         */
+        public enum class Mode(public val value: String) {
+            MySql("MySQL"),
+            PostgreSql("PostgreSQL"),
+            MsSqlServer("MSSQLServer"),
+            MariaDb("MariaDB");
+
+            public companion object {
+                /**
+                 * Finds a Mode by its string value (case-insensitive).
+                 *
+                 * @param value The string value to search for.
+                 * @return The matching Mode, or null if not found.
+                 */
+                public fun fromValue(value: String): Mode? =
+                    entries.find { it.value.equals(value, ignoreCase = true) }
+            }
+        }
+
+        @Deprecated("Use Mode.MySql.value instead", ReplaceWith("Mode.MySql.value"))
         public const val MODE_MYSQL: String = "MySQL"
-
-        /** It represents the mode value "PostgreSQL" for the H2 database. */
+        @Deprecated("Use Mode.PostgreSql.value instead", ReplaceWith("Mode.PostgreSql.value"))
         public const val MODE_POSTGRESQL: String = "PostgreSQL"
-
-        /** It represents the mode value "MSSQLServer" for the H2 database. */
+        @Deprecated("Use Mode.MsSqlServer.value instead", ReplaceWith("Mode.MsSqlServer.value"))
         public const val MODE_MSSQLSERVER: String = "MSSQLServer"
-
-        /** It represents the mode value "MariaDB" for the H2 database. */
+        @Deprecated("Use Mode.MariaDb.value instead", ReplaceWith("Mode.MariaDb.value"))
         public const val MODE_MARIADB: String = "MariaDB"
     }
 
