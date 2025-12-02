@@ -139,7 +139,7 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
 /**
  * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
  *
- * {@include [RowFilterDescription]}
+ * @include [RowFilterDescription]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -173,7 +173,7 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
  * (including the case when the [DataFrame] is empty).
  *
- * {@include [RowFilterDescription]}
+ * @include [RowFilterDescription]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -241,7 +241,7 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
  * except the grouping key.
  *
- * {@include [RowFilterDescription]}
+ * @include [RowFilterDescription]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -293,7 +293,7 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  *
  * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
  *
- * {@include [RowFilterDescription]}
+ * @include [RowFilterDescription]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
@@ -355,13 +355,13 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
  * (except the grouping key).
  *
- * {@include [DocumentationUrls.PivotGroupBy]}
+ * @include [DocumentationUrls.PivotGroupBy]
  *
- * {@include [DocumentationUrls.Pivot]}
+ * @include [DocumentationUrls.Pivot]
  *
- * {@include [DocumentationUrls.GroupBy]}
+ * @include [DocumentationUrls.GroupBy]
  *
- * {@include [RowFilterDescription]}
+ * @include [RowFilterDescription]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
