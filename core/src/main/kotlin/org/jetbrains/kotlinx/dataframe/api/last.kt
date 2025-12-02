@@ -33,10 +33,7 @@ import kotlin.reflect.KProperty
 /**
  * Returns the last value in this [DataColumn].
  *
- * @see [lastOrNull]
- * @see [first]
- * @see [take]
- * @see [takeLast]
+ * See also [lastOrNull], [first], [take], [takeLast].
  *
  * @return The last value in this [DataColumn].
  *
@@ -47,10 +44,7 @@ public fun <T> DataColumn<T>.last(): T = get(size - 1)
 /**
  * Returns the last value in this [DataColumn]. If the [DataColumn] is empty, returns `null`.
  *
- * @see [last]
- * @see [first]
- * @see [take]
- * @see [takeLast]
+ * See also [last], [first], [take], [takeLast].
  *
  * @return The last value in this [DataColumn], or `null` if the [DataColumn] is empty.
  */
@@ -66,10 +60,7 @@ public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
  * df.amount.last { it > 100 }
  * ```
  *
- * @see [lastOrNull]
- * @see [first]
- * @see [take]
- * @see [takeLast]
+ * See also [lastOrNull], [first], [take], [takeLast].
  *
  * @param [predicate] A lambda expression used to get the last value
  * that satisfies a condition specified in this expression.
@@ -96,10 +87,7 @@ public inline fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.
  * df.amount.lastOrNull { it > 100 }
  * ```
  *
- * @see [last]
- * @see [first]
- * @see [take]
- * @see [takeLast]
+ * See also [last], [first], [take], [takeLast].
  *
  * @param [predicate] A lambda expression used to get the last value
  * that satisfies a condition specified in this expression.
@@ -132,11 +120,11 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  * df.lastOrNull { amount > 100 }
  * ```
  *
- * @see [DataFrame.last]
- * @see [DataFrame.first]
- * @see [DataFrame.take]
- * @see [DataFrame.takeLast]
- * @see [DataFrame.takeWhile]
+ * See also [last][DataFrame.last],
+ * [first][DataFrame.first],
+ * [take][DataFrame.take],
+ * [takeLast][DataFrame.takeLast],
+ * [takeWhile][DataFrame.takeWhile].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -161,11 +149,11 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
  * df.last { amount > 100 }
  * ```
  *
- * @see [DataFrame.lastOrNull]
- * @see [DataFrame.first]
- * @see [DataFrame.take]
- * @see [DataFrame.takeLast]
- * @see [DataFrame.takeWhile]
+ * See also [lastOrNull][DataFrame.lastOrNull],
+ * [first][DataFrame.first],
+ * [take][DataFrame.take],
+ * [takeLast][DataFrame.takeLast],
+ * [takeWhile][DataFrame.takeWhile].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -182,10 +170,10 @@ public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> =
 /**
  * Returns the last [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
  *
- * @see [DataFrame.last]
- * @see [DataFrame.first]
- * @see [DataFrame.take]
- * @see [DataFrame.takeLast]
+ * See also [last][DataFrame.last],
+ * [first][DataFrame.first],
+ * [take][DataFrame.take],
+ * [takeLast][DataFrame.takeLast].
  *
  * @return A [DataRow] containing the last row in this [DataFrame], or `null` if the [DataFrame] is empty.
  */
@@ -194,10 +182,10 @@ public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow -
 /**
  * Returns the last [row][DataRow] in this [DataFrame].
  *
- * @see [DataFrame.lastOrNull]
- * @see [DataFrame.first]
- * @see [DataFrame.take]
- * @see [DataFrame.takeLast]
+ * See also [lastOrNull][DataFrame.lastOrNull],
+ * [first][DataFrame.first],
+ * [take][DataFrame.take],
+ * [takeLast][DataFrame.takeLast].
  *
  * @return A [DataRow] containing the last row in this [DataFrame].
  *
@@ -231,7 +219,7 @@ public fun <T> DataFrame<T>.last(): DataRow<T> {
  * df.groupBy { orderId }.last().concat()
  * ```
  *
- * @see [GroupBy.first]
+ * See also [first][GroupBy.first].
  *
  * @return A [ReducedGroupBy] containing the last [row][DataRow]
  * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
@@ -260,7 +248,7 @@ public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNu
  * df.groupBy { orderId }.last { !isInternal }.concat()
  * ```
  *
- * @see [GroupBy.first]
+ * See also [first][GroupBy.first].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -288,9 +276,7 @@ public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T,
  * df.pivot { type }.last().values()
  * ```
  *
- * @see [pivot]
- * @see [Pivot.reduce]
- * @see [Pivot.first]
+ * See also [pivot], [reduce][Pivot.reduce], [first][Pivot.first].
  *
  * @return A [ReducedPivot] containing in each column the last [row][DataRow] from the corresponding group.
  */
@@ -315,9 +301,7 @@ public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
  * df.pivot { type }.last { price < 500_000 }.values()
  * ```
  *
- * @see [pivot]
- * @see [Pivot.reduce]
- * @see [Pivot.first]
+ * See also [pivot], [reduce][Pivot.reduce], [first][Pivot.first].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -348,11 +332,10 @@ public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce 
  * df.pivot { type }.groupBy { city }.last().values()
  * ```
  *
- * @see [pivot]
- * @see [Pivot.groupBy]
- * @see [GroupBy.pivot]
- * @see [PivotGroupBy.reduce]
- * @see [PivotGroupBy.first]
+ * See also [groupBy][Pivot.groupBy],
+ * [pivot][GroupBy.pivot],
+ * [reduce][PivotGroupBy.reduce],
+ * [first][PivotGroupBy.first].
  *
  * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
  * the last [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
@@ -388,11 +371,10 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  * df.pivot { type }.groupBy { city }.last { price < 500_000 }.values()
  * ```
  *
- * @see [pivot]
- * @see [Pivot.groupBy]
- * @see [GroupBy.pivot]
- * @see [PivotGroupBy.reduce]
- * @see [PivotGroupBy.first]
+ * See also [groupBy][Pivot.groupBy],
+ * [pivot][GroupBy.pivot],
+ * [reduce][PivotGroupBy.reduce],
+ * [first][PivotGroupBy.first].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
