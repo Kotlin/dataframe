@@ -67,7 +67,7 @@ private fun fetchH2ModeFromConnection(connection: Connection): String? {
 /**
  * Parses H2 mode string and returns the corresponding H2 DbType instance.
  *
- * @param [mode] the mode string (maybe null or empty for Regular mode).
+ * @param [mode] the mode string (may be null or empty for Regular mode).
  * @return H2 instance with the appropriate mode.
  * @throws [IllegalArgumentException] if the mode is not supported.
  */

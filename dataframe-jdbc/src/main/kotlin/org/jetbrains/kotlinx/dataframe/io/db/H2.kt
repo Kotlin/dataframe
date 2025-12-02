@@ -88,19 +88,6 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
                 }
                 return entries.find { it.value.equals(value, ignoreCase = true) }
             }
-
-            /**
-             * Parses a string that may be an H2 MODE value into a Mode.
-             * Accepts case-insensitive `regular` and `h2-regular` as Regular.
-             *
-             * @param mode The mode string to parse, or null for Regular mode.
-             * @return The corresponding Mode for null/empty input or supported modes.
-             * @throws IllegalArgumentException if the mode is not null and not supported.
-             */
-            public fun fromString(mode: String?): Mode? {
-                if (mode == null) return null
-                return fromValue(mode)
-            }
         }
     }
 

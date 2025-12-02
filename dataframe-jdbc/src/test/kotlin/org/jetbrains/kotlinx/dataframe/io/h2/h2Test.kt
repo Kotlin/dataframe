@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -16,6 +17,13 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.io.db.H2.Mode
+import org.jetbrains.kotlinx.dataframe.io.db.MySql
+import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
+import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
+import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readDataFrame
@@ -1073,6 +1081,92 @@ class JdbcTest {
 
         shouldThrow<IllegalArgumentException> {
             DataFrame.readSqlQuery(dbConfig, QUERY_SELECT_ONE)
+        }
+    }
+
+    @Test
+    fun `H2 Regular mode extraction and fallbacks`() {
+        // 1. Create a connection without explicit MODE in URL.
+        // H2 defaults to Regular mode. extractDBTypeFromConnection should detect this by querying settings.
+        DriverManager.getConnection("jdbc:h2:mem:testRegularFallback").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe Mode.Regular
+
+            // 2. Verify fallback behaviors (when delegate is null)
+
+            // buildSqlQueryWithLimit: Check fallback to super implementation (standard LIMIT syntax)
+            val query = "SELECT * FROM table"
+            dbType.buildSqlQueryWithLimit(query, 10) shouldBe "SELECT * FROM table LIMIT 10"
+
+            // isSystemTable: Check fallback to H2-specific logic (INFORMATION_SCHEMA)
+            val systemTable = TableMetadata("SETTINGS", "INFORMATION_SCHEMA", "TEST_DB")
+            dbType.isSystemTable(systemTable) shouldBe true
+
+            val userTable = TableMetadata("USERS", "PUBLIC", "TEST_DB")
+            dbType.isSystemTable(userTable) shouldBe false
+
+            // buildTableMetadata: Check fallback to reading from ResultSet directly
+            conn.createStatement().use { st ->
+                st.execute("CREATE TABLE MY_FALLBACK_TABLE (ID INT)")
+            }
+            conn.metaData.getTables(null, null, "MY_FALLBACK_TABLE", null).use { rs ->
+                if (rs.next()) {
+                    val metadata = dbType.buildTableMetadata(rs)
+                    metadata.name shouldBe "MY_FALLBACK_TABLE"
+                    metadata.schemaName shouldBe "PUBLIC"
+                    metadata.catalogue shouldNotBe null
+                } else {
+                    throw IllegalStateException("Could not find created table metadata")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `database type extraction utils`() {
+        // 1. Test direct extraction from URL for various DBs
+        (extractDBTypeFromUrl("jdbc:mysql://localhost:3306/db") is MySql) shouldBe true
+        (extractDBTypeFromUrl("jdbc:postgresql://localhost:5432/db") is PostgreSql) shouldBe true
+        (extractDBTypeFromUrl("jdbc:sqlite:sample.db") is Sqlite) shouldBe true
+
+        // Test driverClassNameFromUrl
+        driverClassNameFromUrl("jdbc:mysql://localhost:3306/db") shouldBe "com.mysql.jdbc.Driver"
+        driverClassNameFromUrl("jdbc:postgresql://localhost:5432/db") shouldBe "org.postgresql.Driver"
+        driverClassNameFromUrl("jdbc:h2:mem:test") shouldBe "org.h2.Driver"
+
+        // 2. Test unsupported Database URL
+        shouldThrow<IllegalArgumentException> {
+            extractDBTypeFromUrl("jdbc:oracle:thin:@localhost:1521:xe")
+        }
+
+        // 3. Test null URL
+        shouldThrow<SQLException> {
+            extractDBTypeFromUrl(null)
+        }
+
+        // 4. Test H2 specific mode extraction from Connection (End-to-End)
+
+        // Case A: MySQL Mode via URL
+        DriverManager.getConnection("jdbc:h2:mem:testExtractMySql;MODE=MySQL").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe H2.Mode.MySql
+        }
+
+        // Case B: PostgreSQL Mode via URL
+        DriverManager.getConnection("jdbc:h2:mem:testExtractPostgres;MODE=PostgreSQL").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe H2.Mode.PostgreSql
+        }
+
+        // Case C: MSSQLServer Mode via URL
+        DriverManager.getConnection("jdbc:h2:mem:testExtractMsSql;MODE=MSSQLServer").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe H2.Mode.MsSqlServer
         }
     }
 
