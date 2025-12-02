@@ -34,6 +34,24 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     }
 
     @Test
+    fun `opt in experimental Instant`() {
+        @Language("kts")
+        val res1 = execRaw(
+            """
+            @file:OptIn(ExperimentalTime::class)
+
+            import kotlin.time.ExperimentalTime
+            
+            val values: kotlin.time.Instant = kotlin.time.Clock.System.now()
+            val df = dataFrameOf("a" to columnOf(values))
+            df
+            """.trimIndent(),
+        )
+
+        res1.shouldBeInstanceOf<AnyFrame>()
+    }
+
+    @Test
     fun `Don't inherit from data class`() {
         @Language("kts")
         val res1 = execRendered(
