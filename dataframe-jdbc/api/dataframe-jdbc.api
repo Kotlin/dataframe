@@ -135,17 +135,37 @@ public class org/jetbrains/kotlinx/dataframe/io/db/H2 : org/jetbrains/kotlinx/da
 	public static final field MODE_POSTGRESQL Ljava/lang/String;
 	public fun <init> ()V
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)V
-	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun buildSqlQueryWithLimit (Ljava/lang/String;I)Ljava/lang/String;
 	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
 	public fun convertSqlTypeToColumnSchemaValue (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
 	public fun convertSqlTypeToKType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
-	public final fun getDialect ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;
 	public fun getDriverClassName ()Ljava/lang/String;
+	public final fun getMode ()Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
 	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/db/H2$Companion {
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/H2$Mode : java/lang/Enum {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode$Companion;
+	public static final field MariaDb Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static final field MsSqlServer Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static final field MySql Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static final field PostgreSql Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static final field Regular Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()Ljava/lang/String;
+	public final fun toDbType ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/db/H2$Mode$Companion {
+	public final fun fromDbType (Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
+	public final fun fromValue (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/db/MariaDb : org/jetbrains/kotlinx/dataframe/io/db/DbType {
