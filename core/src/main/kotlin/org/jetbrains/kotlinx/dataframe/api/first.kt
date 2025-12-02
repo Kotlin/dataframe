@@ -33,10 +33,7 @@ import kotlin.reflect.KProperty
 /**
  * Returns the first value in this [DataColumn].
  *
- * @see [firstOrNull]
- * @see [last]
- * @see [take]
- * @see [takeLast]
+ * See also [firstOrNull], [last], [take], [takeLast].
  *
  * @return The first value in this [DataColumn].
  *
@@ -47,10 +44,7 @@ public fun <T> DataColumn<T>.first(): T = get(0)
 /**
  * Returns the first value in this [DataColumn]. If the [DataColumn] is empty, returns `null`.
  *
- * @see [first]
- * @see [last]
- * @see [take]
- * @see [takeLast]
+ * See also [first], [last], [take], [takeLast].
  *
  * @return The first value in this [DataColumn], or `null` if the [DataColumn] is empty.
  */
@@ -66,10 +60,7 @@ public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
  * df.amount.first { it > 100 }
  * ```
  *
- * @see [firstOrNull]
- * @see [last]
- * @see [take]
- * @see [takeLast]
+ * See also [firstOrNull], [last], [take], [takeLast].
  *
  * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
@@ -96,10 +87,7 @@ public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(
  * df.amount.firstOrNull { it > 100 }
  * ```
  *
- * @see [first]
- * @see [last]
- * @see [take]
- * @see [takeLast]
+ * See also [first], [last], [take], [takeLast].
  *
  * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
@@ -118,11 +106,11 @@ public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values
 /**
  * Returns the first [row][DataRow] in this [DataFrame].
  *
- * @see [DataFrame.firstOrNull]
- * @see [DataFrame.last]
- * @see [DataFrame.take]
- * @see [DataFrame.takeWhile]
- * @see [DataFrame.takeLast]
+ * See also [firstOrNull][DataFrame.firstOrNull],
+ * [last][DataFrame.last],
+ * [take][DataFrame.take],
+ * [takeWhile][DataFrame.takeWhile],
+ * [takeLast][DataFrame.takeLast].
  *
  * @return A [DataRow] containing the first row in this [DataFrame].
  *
@@ -138,11 +126,11 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 /**
  * Returns the first [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
  *
- * @see [DataFrame.first]
- * @see [DataFrame.last]
- * @see [DataFrame.take]
- * @see [DataFrame.takeWhile]
- * @see [DataFrame.takeLast]
+ * See also [first][DataFrame.first],
+ * [last][DataFrame.last],
+ * [take][DataFrame.take],
+ * [takeWhile][DataFrame.takeWhile],
+ * [takeLast][DataFrame.takeLast].
  *
  * @return A [DataRow] containing the first row in this [DataFrame], or `null` if the [DataFrame] is empty.
  */
@@ -162,11 +150,11 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  * df.first { amount > 100 }
  * ```
  *
- * @see [DataFrame.firstOrNull]
- * @see [DataFrame.last]
- * @see [DataFrame.take]
- * @see [DataFrame.takeWhile]
- * @see [DataFrame.takeLast]
+ * See also [firstOrNull][DataFrame.firstOrNull],
+ * [last][DataFrame.last],
+ * [take][DataFrame.take],
+ * [takeWhile][DataFrame.takeWhile],
+ * [takeLast][DataFrame.takeLast].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -197,11 +185,11 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * df.firstOrNull { amount > 100 }
  * ```
  *
- * @see [DataFrame.first]
- * @see [DataFrame.last]
- * @see [DataFrame.take]
- * @see [DataFrame.takeWhile]
- * @see [DataFrame.takeLast]
+ * See also [first][DataFrame.first],
+ * [last][DataFrame.last],
+ * [take][DataFrame.take],
+ * [takeWhile][DataFrame.takeWhile],
+ * [takeLast][DataFrame.takeLast].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -235,7 +223,7 @@ public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow
  * df.groupBy { customerId }.first().concat()
  * ```
  *
- * @see [GroupBy.last]
+ * See also [last][GroupBy.last].
  *
  * @return A [ReducedGroupBy] containing the first [row][DataRow]
  * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
@@ -264,7 +252,7 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * df.groupBy { customerId }.first { total > 100 }.concat()
  * ```
  *
- * @see [GroupBy.last]
+ * See also [last][GroupBy.last].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -292,9 +280,7 @@ public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T
  * df.pivot { type }.first().values()
  * ```
  *
- * @see [pivot]
- * @see [Pivot.reduce]
- * @see [Pivot.last]
+ * See also [pivot], [reduce][Pivot.reduce], [last][Pivot.last].
  *
  * @return A [ReducedPivot] containing in each column the first [row][DataRow] from the corresponding group.
  */
@@ -319,9 +305,7 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  * df.pivot { type }.first { !soldOut }.values()
  * ```
  *
- * @see [pivot]
- * @see [Pivot.reduce]
- * @see [Pivot.last]
+ * See also [pivot], [reduce][Pivot.reduce], [last][Pivot.last].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -352,11 +336,10 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
  * df.pivot { type }.groupBy { city }.first().values()
  * ```
  *
- * @see [pivot]
- * @see [Pivot.groupBy]
- * @see [GroupBy.pivot]
- * @see [PivotGroupBy.reduce]
- * @see [PivotGroupBy.last]
+ * See also [groupBy][Pivot.groupBy],
+ * [pivot][GroupBy.pivot],
+ * [reduce][PivotGroupBy.reduce],
+ * [last][PivotGroupBy.last].
  *
  * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
  * the first [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
@@ -391,11 +374,10 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * df.pivot { type }.groupBy { city }.first { !soldOut }.values()
  * ```
  *
- * @see [pivot]
- * @see [Pivot.groupBy]
- * @see [GroupBy.pivot]
- * @see [PivotGroupBy.reduce]
- * @see [PivotGroupBy.last]
+ * See also [groupBy][Pivot.groupBy],
+ * [pivot][GroupBy.pivot],
+ * [reduce][PivotGroupBy.reduce],
+ * [last][PivotGroupBy.last].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
