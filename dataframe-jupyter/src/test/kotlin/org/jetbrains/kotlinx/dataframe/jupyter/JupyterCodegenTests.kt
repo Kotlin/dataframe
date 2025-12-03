@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.type
@@ -38,17 +39,24 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         @Language("kts")
         val res1 = execRaw(
             """
-            @file:OptIn(ExperimentalTime::class)
-
-            import kotlin.time.ExperimentalTime
+            @file:OptIn(kotlin.time.ExperimentalTime::class)
             
             val values: kotlin.time.Instant = kotlin.time.Clock.System.now()
             val df = dataFrameOf("a" to columnOf(values))
-            df
             """.trimIndent(),
         )
 
-        res1.shouldBeInstanceOf<AnyFrame>()
+        @Language("kts")
+        val res2 = execRaw(
+            """
+            @file:OptIn(kotlin.time.ExperimentalTime::class)
+            
+            df.a
+            """.trimIndent(),
+        )
+
+        res2.shouldBeInstanceOf<DataColumn<*>>()
+        res2.type() shouldBe typeOf<kotlin.time.Instant>()
     }
 
     @Test
