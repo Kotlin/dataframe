@@ -110,6 +110,7 @@ korro {
         include("docs/StardustDocs/topics/write.md")
         include("docs/StardustDocs/topics/rename.md")
         include("docs/StardustDocs/topics/format.md")
+        include("docs/StardustDocs/topics/toHTML.md")
         include("docs/StardustDocs/topics/guides/*.md")
         include("docs/StardustDocs/topics/operations/utils/*.md")
         include("docs/StardustDocs/topics/operations/multiple/*.md")
