@@ -60,6 +60,32 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     }
 
     @Test
+    fun `opt in experimental Uuid`() {
+        @Language("kts")
+        val res1 = execRaw(
+            """
+            @file:OptIn(kotlin.uuid.ExperimentalUuidApi::class)
+            
+            val uuid: kotlin.uuid.Uuid = kotlin.uuid.Uuid.NIL
+            val df = dataFrameOf("a" to columnOf(uuid))
+            df
+            """.trimIndent(),
+        )
+
+        @Language("kts")
+        val res2 = execRaw(
+            """
+            @file:OptIn(kotlin.uuid.ExperimentalUuidApi::class)
+            
+            df.a
+            """.trimIndent(),
+        )
+
+        res2.shouldBeInstanceOf<DataColumn<*>>()
+        res2.type() shouldBe typeOf<kotlin.uuid.Uuid>()
+    }
+
+    @Test
     fun `Don't inherit from data class`() {
         @Language("kts")
         val res1 = execRendered(
