@@ -4,6 +4,9 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.group
+import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.commonParent
@@ -17,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
+import org.jetbrains.kotlinx.dataframe.toCode
 import org.junit.Test
 import java.io.Serializable
 import java.math.BigDecimal
@@ -25,6 +29,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class UtilTests {
 
     @OptIn(ExperimentalUnsignedTypes::class)
@@ -479,5 +484,32 @@ class UtilTests {
 
         // Edge case with null
         getUnifiedNumberClassOrNull(null, Int::class) shouldBe Int::class
+    }
+
+    @Test
+    fun `get dataFrameOf constructor`() {
+        val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+            "Alice", "Cooper", 15, "London", 54, true,
+            "Bob", "Dylan", 45, "Dubai", 87, true,
+            "Charlie", "Daniels", 20, "Moscow", null, false,
+            "Charlie", "Chaplin", 40, "Milan", null, true,
+            "Bob", "Marley", 30, "Tokyo", 68, true,
+            "Alice", "Wolf", 20, null, 55, false,
+            "Charlie", "Byrd", 30, "Moscow", 90, true,
+        ).group("firstName", "lastName").into("name")
+
+        df.toCode() shouldBe
+            """
+            val df = dataFrameOf(
+                "name" to columnOf(
+                    "firstName" to columnOf("Alice", "Bob", "Charlie", "Charlie", "Bob", "Alice", "Charlie"),
+                    "lastName" to columnOf("Cooper", "Dylan", "Daniels", "Chaplin", "Marley", "Wolf", "Byrd"),
+                ),
+                "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
+                "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
+                "weight" to columnOf(54, 87, null, null, 68, 55, 90),
+                "isHappy" to columnOf(true, true, false, true, true, false, true),
+            )
+            """.trimIndent()
     }
 }
