@@ -82,5 +82,9 @@ like copying text from a document, but with the structure and format of your dat
 To get started, ensure you have the latest version of the Kotlin Notebook Plugin installed in IntelliJ IDEA,
 and begin exploring your data using Kotlin DataFrame in your notebook cells.
 
-For more information on using the Kotlin Notebook Plugin,
-refer to the [official documentation](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
+## Related documentation
+
+- [Kotlin for Data Analysis in notebooks](https://kotlinlang.org/docs/kotlin-notebook-overview.html):
+  Learn more about Kotlin Notebook capabilities for data analysis.
+- [Kotlin Notebooks in IntelliJ IDEA](https://www.jetbrains.com/help/idea/kotlin-notebook.html):
+  Detailed documentation on working with Kotlin Notebooks in the IDE.
