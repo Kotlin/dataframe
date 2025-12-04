@@ -65,14 +65,14 @@ You can explicitly define the version you want:
 
 
 ```
-%use dataframe(1.0.0)
+%use dataframe(1.0.0-Beta4n)
 ```
 
 Or use the latest stable version of Kotlin DataFrame
 (specified in [Kotlin Jupyter descriptors](https://github.com/Kotlin/kotlin-jupyter-libraries)):
 
 <warning>
-For version `1.0.0-Beta3`, in notebooks use version `1.0.0-Beta3n` instead.
+For version `1.0.0-Beta4`, in notebooks use version `1.0.0-Beta4n` instead.
 This uses the patch of [#1435](https://github.com/Kotlin/dataframe/pull/1435) for issue 
 [#1116](https://github.com/Kotlin/dataframe/issues/1116), avoiding `DefinitelyNotNullable` errors.
 
