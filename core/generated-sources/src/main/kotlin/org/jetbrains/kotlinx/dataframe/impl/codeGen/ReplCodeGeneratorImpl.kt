@@ -27,6 +27,7 @@ import kotlin.reflect.full.superclasses
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
@@ -120,23 +121,33 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         result.newMarkers.forEach {
             generatedMarkers[it.name] = it
         }
-        return if (schema.hasExperimentalInstant()) {
+
+        val optIns = buildString {
+            if (schema.hasExperimentalInstant()) appendLine("@file:OptIn(kotlin.time.ExperimentalTime::class)")
+            if (schema.hasExperimentalUuid()) appendLine("@file:OptIn(kotlin.uuid.ExperimentalUuidApi::class)")
+        }
+
+        return if (optIns.isNotEmpty()) {
             result.code.copy(
-                declarations = "@file:OptIn(kotlin.time.ExperimentalTime::class)\n" + result.code.declarations,
+                declarations = optIns + "\n" + result.code.declarations,
             )
         } else {
             result.code
         }
     }
 
-    private fun DataFrameSchema.hasExperimentalInstant(): Boolean =
+    private fun DataFrameSchema.hasColumnOfType(type: KType): Boolean =
         columns.values.any { column ->
             when (column) {
-                is ColumnSchema.Frame -> column.schema.hasExperimentalInstant()
-                is ColumnSchema.Group -> column.schema.hasExperimentalInstant()
-                is ColumnSchema.Value -> column.type.isSubtypeOf(typeOf<Instant?>())
+                is ColumnSchema.Frame -> column.schema.hasColumnOfType(type)
+                is ColumnSchema.Group -> column.schema.hasColumnOfType(type)
+                is ColumnSchema.Value -> column.type.isSubtypeOf(type)
             }
         }
+
+    private fun DataFrameSchema.hasExperimentalInstant(): Boolean = hasColumnOfType(typeOf<Instant?>())
+
+    private fun DataFrameSchema.hasExperimentalUuid(): Boolean = hasColumnOfType(typeOf<Uuid?>())
 
     override fun process(markerClass: KClass<*>): Code {
         val newMarkers = mutableListOf<Marker>()

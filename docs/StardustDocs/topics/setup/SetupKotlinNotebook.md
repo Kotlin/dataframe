@@ -65,7 +65,7 @@ You can explicitly define the version you want:
 
 
 ```
-%use dataframe(1.0.0)
+%use dataframe(1.0.0-Beta4n)
 ```
 
 Or use the latest stable version of Kotlin DataFrame
