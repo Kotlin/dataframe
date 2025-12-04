@@ -15,14 +15,19 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.codeGen.TypeCastGenerator
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
@@ -116,8 +121,33 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         result.newMarkers.forEach {
             generatedMarkers[it.name] = it
         }
-        return result.code
+
+        val optIns = buildString {
+            if (schema.hasExperimentalInstant()) appendLine("@file:OptIn(kotlin.time.ExperimentalTime::class)")
+            if (schema.hasExperimentalUuid()) appendLine("@file:OptIn(kotlin.uuid.ExperimentalUuidApi::class)")
+        }
+
+        return if (optIns.isNotEmpty()) {
+            result.code.copy(
+                declarations = optIns + "\n" + result.code.declarations,
+            )
+        } else {
+            result.code
+        }
     }
+
+    private fun DataFrameSchema.hasColumnOfType(type: KType): Boolean =
+        columns.values.any { column ->
+            when (column) {
+                is ColumnSchema.Frame -> column.schema.hasColumnOfType(type)
+                is ColumnSchema.Group -> column.schema.hasColumnOfType(type)
+                is ColumnSchema.Value -> column.type.isSubtypeOf(type)
+            }
+        }
+
+    private fun DataFrameSchema.hasExperimentalInstant(): Boolean = hasColumnOfType(typeOf<Instant?>())
+
+    private fun DataFrameSchema.hasExperimentalUuid(): Boolean = hasColumnOfType(typeOf<Uuid?>())
 
     override fun process(markerClass: KClass<*>): Code {
         val newMarkers = mutableListOf<Marker>()
