@@ -175,7 +175,7 @@ internal fun AnyFrame.toHtmlData(
         configuration: DisplayConfiguration,
     ): ColumnDataForJs {
         val values = if (rowsLimit != null) rows().take(rowsLimit) else rows()
-        val scale = if (col.isNumber()) col.asNumbers().scale() else 1
+        val scale = if (col.isNumber()) col.scale() else 1
         val format = if (scale > 0) {
             RendererDecimalFormat.fromPrecision(scale)
         } else {

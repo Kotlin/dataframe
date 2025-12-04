@@ -736,7 +736,7 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
 
             // Base case, parse the column if it's a `String?` column
             col.isSubtypeOf<String?>() ->
-                col.cast<String?>().tryParseImpl(options)
+                col.tryParseImpl(options)
 
             else -> col
         }
