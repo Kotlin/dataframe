@@ -3,21 +3,26 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
 
-    val kotlinVersion = "2.2.20"
+    val kotlinVersion = "2.3.0-RC2"
     kotlin("jvm") version kotlinVersion
+    // Add the Kotlin DataFrame Compiler plugin of the same version as the Kotlin plugin.
     kotlin("plugin.dataframe") version kotlinVersion
+
+    application
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    maven("https://packages.jetbrains.team/maven/p/kt/dev/")
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta3")
+    // Add general `dataframe` dependency
+    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta4")
+    // Add `kandy` dependency
+    implementation("org.jetbrains.kotlinx:kandy-lets-plot:0.8.3")
     testImplementation(kotlin("test"))
 }
 
