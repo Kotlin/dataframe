@@ -63,7 +63,7 @@ You could find the following articles there:
 
 ### What's new
 
-1.0.0-Beta3: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-Beta3)
+1.0.0-Beta4: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-Beta4)
 
 Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
@@ -85,6 +85,7 @@ You can include all the necessary dependencies and imports in the notebook using
 %use dataframe
 ```
 
+This will add the `dataframe` of the version bundled in the selected Kotlin Jupyter kernel.
 You can use `%useLatestDescriptors`
 to get the latest stable version without updating the Kotlin kernel:
 
@@ -96,8 +97,21 @@ to get the latest stable version without updating the Kotlin kernel:
 Or manually specify the version:
 
 ```
-%use dataframe($dataframe_version)
+%use dataframe(1.0.0-Beta4n)
 ```
+
+> [!WARNING]  
+> Please, use `0.16.0-736` Kotlin Jupyter kernel version or higher for descriptor compatibility
+> 
+> Use specified `1.0.0-Beta4n` version in Kotlin Notebook. 
+> Due to [an known issue](https://github.com/Kotlin/dataframe/issues/1116), 
+> common `dataframe:1.0.0-Beta4` version works incorrectly in Notebook.
+>
+> If you use [`kandy`](https://github.com/Kotlin/kandy) in your notebook, add it after the `dataframe`:
+> ```kotlin
+> %useLatestDescriptors
+> %use dataframe, kandy
+> ```
 
 Refer to the
 [Get started with Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/gettingstartedkotlinnotebook.html)
@@ -109,7 +123,7 @@ Add dependencies in the build.gradle.kts script:
 
 ```kotlin
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta3")
+    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta4")
 }
 ```
 
@@ -200,6 +214,8 @@ other recommended versions.
 | 1.0.0-Beta2              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               | 2.2.20-dev-3524         | 0.8.1-dev-66             |
 | 1.0.0-Beta3n (notebooks) | 8 / 11               | 2.2.20         | 0.15.0-587 (K1 only)   | 18.3.0               | -                       | 0.8.1n                   |
 | 1.0.0-Beta3              | 8 / 11               | 2.2.20         | 0.15.0-587             | 18.3.0               | 2.2.20 / IDEA 2025.2+   | 0.8.1                    |
+| 1.0.0-Beta4n (notebooks) | 8 / 11               | 2.2.21         | 0.16.0-736 (K1 only)   | 18.3.0               | -                       | 0.8.3                    |
+| 1.0.0-Beta4              | 8 / 11               | 2.2.21         | 0.16.0-736             | 18.3.0               | 2.2.21 / IDEA 2025.2+   | 0.8.3                    |
 
 ## Code of Conduct
 
