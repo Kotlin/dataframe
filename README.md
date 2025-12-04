@@ -85,6 +85,7 @@ You can include all the necessary dependencies and imports in the notebook using
 %use dataframe
 ```
 
+This will add the `dataframe` of the version bundled in the selected Kotlin Jupyter kernel.
 You can use `%useLatestDescriptors`
 to get the latest stable version without updating the Kotlin kernel:
 
@@ -100,7 +101,7 @@ Or manually specify the version:
 ```
 
 > [!WARNING]  
-> Please, use `0.16.0-736` Kotlin Jupyter Kernel version or higher for descriptor compatibility
+> Please, use `0.16.0-736` Kotlin Jupyter kernel version or higher for descriptor compatibility
 > 
 > Use specified `1.0.0-Beta4n` version in Kotlin Notebook. 
 > Due to [an known issue](https://github.com/Kotlin/dataframe/issues/1116), 
