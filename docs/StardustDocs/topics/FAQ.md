@@ -112,7 +112,7 @@ They are generated automatically when working with Kotlin DataFrame in:
 - [Kotlin Notebook](SetupKotlinNotebook.md), where extension properties are generated 
 after each cell execution.
 - A Kotlin project in [IntelliJ IDEA](https://www.jetbrains.com/idea/) with the
-  [](Compiler-Plugin.md) enabled, where the properties are generated at compile time.
+  [compiler plugin](Compiler-Plugin.md) enabled, where the properties are generated at compile time.
 
 ## I used the KProperties API in older versions, what should I use now that it's deprecated?
 
