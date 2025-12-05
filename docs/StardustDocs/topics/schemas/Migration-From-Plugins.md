@@ -5,7 +5,7 @@ However, they are now being phased out. This section provides an overview of the
 
 ## Gradle Plugin
 
-> Do not confuse this with the [](Compiler-Plugin.md), which is a Kotlin compiler plugin
+> Do not confuse this with the [compiler plugin](Compiler-Plugin.md), which is a Kotlin compiler plugin
 > and has a different plugin ID.  
 > {style="note"}
 
@@ -16,7 +16,7 @@ However, they are now being phased out. This section provides an overview of the
       the [`generate..()` methods](DataSchemaGenerationMethods.md).
 
 2. **Generation of [extension properties](extensionPropertiesApi.md)** from data schemas  
-   This is now handled by the [](Compiler-Plugin.md), which:
+   This is now handled by the [compiler plugin](Compiler-Plugin.md), which:
     - Generates extension properties for declared data schemas.
     - Automatically updates the schema and regenerates properties after structural DataFrame operations.
 
