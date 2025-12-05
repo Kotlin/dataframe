@@ -38,6 +38,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.junit.Assert
 import org.junit.Test
@@ -723,5 +724,90 @@ internal class ArrowKtTest {
         val dataFrame = DataFrame.readParquet(resourcePath, resourcePath, resourcePath)
 
         dataFrame.rowsCount() shouldBe 900
+    }
+
+    @Test
+    fun testColumnGroupRoundtrip() {
+        val original = dataFrameOf(
+            "outer" to columnOf("x", "y", "z"),
+            "inner" to columnOf(
+                "nested1" to columnOf("a", "b", "c"),
+                "nested2" to columnOf(1, 2, 3),
+            ),
+        )
+
+        val featherBytes = original.saveArrowFeatherToByteArray()
+        val fromFeather = DataFrame.readArrowFeather(featherBytes)
+        fromFeather shouldBe original
+
+        val ipcBytes = original.saveArrowIPCToByteArray()
+        val fromIpc = DataFrame.readArrowIPC(ipcBytes)
+        fromIpc shouldBe original
+    }
+
+    @Test
+    fun testNestedColumnGroupRoundtrip() {
+        val deeplyNested by columnOf(
+            "level2" to columnOf(
+                "level3" to columnOf(1, 2, 3),
+            ),
+        )
+        val original = dataFrameOf(deeplyNested)
+
+        val bytes = original.saveArrowFeatherToByteArray()
+        val restored = DataFrame.readArrowFeather(bytes)
+
+        restored shouldBe original
+    }
+
+    @Test
+    fun testColumnGroupWithNulls() {
+        val group by columnOf(
+            "a" to columnOf("x", null, "z"),
+            "b" to columnOf(1, 2, null),
+        )
+        val original = dataFrameOf(group)
+
+        val bytes = original.saveArrowFeatherToByteArray()
+        val restored = DataFrame.readArrowFeather(bytes)
+
+        restored shouldBe original
+    }
+
+    @Test
+    fun testReadParquetWithNestedStruct() {
+        val resourceUrl = testResource("books.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
+        val df = DataFrame.readParquet(resourcePath)
+
+        df.columnNames() shouldBe listOf("id", "title", "author", "genre", "publisher")
+
+        val authorGroup = df["author"] as ColumnGroup<*>
+        authorGroup.columnNames() shouldBe listOf("id", "firstName", "lastName")
+
+        df["id"].type() shouldBe typeOf<Int>()
+        df["title"].type() shouldBe typeOf<String>()
+        df["genre"].type() shouldBe typeOf<String>()
+        df["publisher"].type() shouldBe typeOf<String>()
+        authorGroup["id"].type() shouldBe typeOf<Int>()
+        authorGroup["firstName"].type() shouldBe typeOf<String>()
+        authorGroup["lastName"].type() shouldBe typeOf<String>()
+    }
+
+    @Test
+    fun testParquetNestedStructRoundtrip() {
+        val resourceUrl = testResource("books.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
+        val original = DataFrame.readParquet(resourcePath)
+
+        val featherBytes = original.saveArrowFeatherToByteArray()
+        val fromFeather = DataFrame.readArrowFeather(featherBytes)
+        fromFeather shouldBe original
+
+        val ipcBytes = original.saveArrowIPCToByteArray()
+        val fromIpc = DataFrame.readArrowIPC(ipcBytes)
+        fromIpc shouldBe original
     }
 }
