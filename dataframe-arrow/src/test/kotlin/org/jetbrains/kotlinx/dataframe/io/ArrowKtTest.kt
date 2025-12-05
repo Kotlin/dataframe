@@ -25,7 +25,6 @@ import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.ByteArrayReadableSeekableByteChannel
-import org.apache.arrow.vector.util.Text
 import org.duckdb.DuckDBConnection
 import org.duckdb.DuckDBResultSet
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -39,7 +38,6 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.junit.Assert
 import org.junit.Test
@@ -68,13 +66,11 @@ internal class ArrowKtTest {
         val df = DataFrame.readArrowFeather(feather)
         val a by columnOf("one")
         val b by columnOf(2.0)
-        val c by listOf(
-            mapOf(
-                "c1" to Text("inner"),
-                "c2" to 4.0,
-                "c3" to 50.0,
-            ) as Map<String, Any?>,
-        ).toColumn()
+        val c by columnOf(
+            "c1" to columnOf("inner"),
+            "c2" to columnOf(4.0),
+            "c3" to columnOf(50.0),
+        )
         val d by columnOf("four")
         val expected = dataFrameOf(a, b, c, d)
         df shouldBe expected
