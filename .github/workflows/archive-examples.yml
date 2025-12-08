@@ -44,7 +44,9 @@
           run: |
             git rm -f *.zip 2>/dev/null || true
             
-            cat > README.md << 'EOF'
+            CURRENT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+            
+            cat > README.md << EOF
             # Kotlin DataFrame - Example Projects Archives
             
             Automatically generated archives of example projects.
@@ -63,7 +65,7 @@
             
             ---
             
-            Last updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+            Last updated: $CURRENT_DATE
             
             Source commit: ${{ github.sha }}
             EOF
