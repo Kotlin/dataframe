@@ -3,9 +3,11 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.DISTINCT_RETURN
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
@@ -23,24 +25,26 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 /**
- * ## The Distinct Operation
+ * ## The {@get NAME Distinct} Operation
  *
- * It removes duplicated rows based on {@get PHRASE_ENDING}.
+ * {@get DESCRIPTION It removes duplicated rows based on {@get PHRASE_ENDING}}.
  *
- * __NOTE:__ The rows in the resulting [DataFrame] are in the same order as they were in the original [DataFrame].
+ * __NOTE:__ The [rows][DataRow] in the resulting [DataFrame] are in the same order
+ * as they were in the original [DataFrame].
  *
- * {@get [DISTINCT_PARAM] @param [columns]
- * The names of the columns to consider for evaluating distinct rows.}
+ * {@get [DISTINCT_PARAM]}
  *
- * @return A new DataFrame containing only distinct rows.
+ * {@get [DISTINCT_RETURN] @return A new [DataFrame] containing only distinct rows.}
  *
  * @see [Selecting Columns][SelectSelectingOptions].
  * @see {@include [DocumentationUrls.Distinct]}
+ * @see {@include [DocumentationUrls.DistinctBy]}
  */
 @ExcludeFromSources
 @Suppress("ClassName")
 private interface DistinctDocs {
     interface DISTINCT_PARAM
+    interface DISTINCT_RETURN
 }
 
 /**
@@ -52,7 +56,10 @@ public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
 
 /**
  * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
+ * {@set DESCRIPTION It selects the specified columns and keeps only distinct rows based on these selected columns}
+ * {@set [DistinctDocs.DISTINCT_PARAM] @param [columns] The names of the columns to select
+ * and to consider for evaluating distinct rows.}
+ * {@set [DISTINCT_RETURN] @return A new [DataFrame] containing only selected columns and distinct rows.}
  */
 @Refine
 @Interpretable("Distinct0")
@@ -60,7 +67,10 @@ public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFra
 
 /**
  * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
+ * {@set DESCRIPTION It selects the specified columns and keeps only distinct rows based on these selected columns}
+ * {@set [DistinctDocs.DISTINCT_PARAM] @param [columns] The names of the columns to select
+ * and to consider for evaluating distinct rows.}
+ * {@set [DISTINCT_RETURN] @return A new [DataFrame] containing only selected columns and distinct rows.}
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -72,13 +82,19 @@ public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T>
 
 /**
  * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
+ * {@set DESCRIPTION It selects the specified columns and keeps only distinct rows based on these selected columns}
+ * {@set [DistinctDocs.DISTINCT_PARAM] @param [columns] The names of the columns to select
+ * and to consider for evaluating distinct rows.}
+ * {@set [DISTINCT_RETURN] @return A new [DataFrame] containing only selected columns and distinct rows.}
  */
 public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = distinct { columns.toColumnSet() }
 
 /**
  * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
+ * {@set DESCRIPTION It selects the specified columns and keeps only distinct rows based on these selected columns}
+ * {@set [DistinctDocs.DISTINCT_PARAM] @param [columns] The names of the columns to select
+ * and to consider for evaluating distinct rows.}
+ * {@set [DISTINCT_RETURN] @return A new [DataFrame] containing only selected columns and distinct rows.}
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -87,7 +103,10 @@ public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFr
 
 /**
  * {@include [DistinctDocs]}
+ * {@set NAME DistinctBy}
  * {@set PHRASE_ENDING the specified columns}.
+ * {@set [DistinctDocs.DISTINCT_PARAM] @param [columns]
+ * The names of the columns to consider for evaluating distinct rows.}
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -96,13 +115,19 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<
 
 /**
  * {@include [DistinctDocs]}
+ * {@set NAME DistinctBy}
  * {@set PHRASE_ENDING the specified columns}.
+ * {@set [DistinctDocs.DISTINCT_PARAM] @param [columns]
+ * The names of the columns to consider for evaluating distinct rows.}
  */
 public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = distinctBy { columns.toColumnSet() }
 
 /**
  * {@include [DistinctDocs]}
+ * {@set NAME DistinctBy}
  * {@set PHRASE_ENDING the specified columns}.
+ * {@set [DistinctDocs.DISTINCT_PARAM] @param [columns]
+ * The names of the columns to consider for evaluating distinct rows.}
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -111,7 +136,10 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): Data
 
 /**
  * {@include [DistinctDocs]}
+ * {@set NAME DistinctBy}
  * {@set PHRASE_ENDING the specified columns}.
+ * {@set [DistinctDocs.DISTINCT_PARAM] @param [columns]
+ * The names of the columns to consider for evaluating distinct rows.}
  */
 public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataFrame<T> {
     val cols = get(columns)
