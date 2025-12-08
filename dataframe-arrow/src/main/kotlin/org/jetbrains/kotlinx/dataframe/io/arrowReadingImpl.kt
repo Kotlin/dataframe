@@ -19,6 +19,7 @@ import org.apache.arrow.vector.DateMilliVector
 import org.apache.arrow.vector.Decimal256Vector
 import org.apache.arrow.vector.DecimalVector
 import org.apache.arrow.vector.DurationVector
+import org.apache.arrow.vector.FieldVector
 import org.apache.arrow.vector.Float4Vector
 import org.apache.arrow.vector.Float8Vector
 import org.apache.arrow.vector.IntVector
@@ -293,10 +294,16 @@ private fun List<Nothing?>.withTypeNullable(
     return this to nothingType(nullable)
 }
 
-private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
+private fun readField(vector: FieldVector, field: Field, nullability: NullabilityOptions): AnyBaseCol {
     try {
-        val range = 0 until root.rowCount
-        val (list, type) = when (val vector = root.getVector(field)) {
+        val range = 0 until vector.valueCount
+        if (vector is StructVector) {
+            val columns = field.children.map { childField ->
+                readField(vector.getChild(childField.name), childField, nullability)
+            }
+            return DataColumn.createColumnGroup(field.name, columns.toDataFrame())
+        }
+        val (list, type) = when (vector) {
             is VarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is LargeVarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
@@ -357,8 +364,6 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
 
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
-
             is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             else -> {
@@ -370,6 +375,9 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
         throw IllegalArgumentException("Column `${field.name}` should be not nullable but has nulls")
     }
 }
+
+private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol =
+    readField(root.getVector(field), field, nullability)
 
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]

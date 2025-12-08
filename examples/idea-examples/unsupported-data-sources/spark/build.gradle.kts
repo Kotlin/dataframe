@@ -2,6 +2,7 @@ plugins {
     application
     kotlin("jvm")
 
+    // uses the 'old' Gradle plugin instead of the compiler plugin for now
     id("org.jetbrains.kotlinx.dataframe")
 
     // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
@@ -17,31 +18,11 @@ dependencies {
     // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
     implementation(project(":"))
 
-    // exposed + sqlite database support
-    implementation(libs.sqlite)
-    implementation(libs.exposed.core)
-    implementation(libs.exposed.kotlin.datetime)
-    implementation(libs.exposed.jdbc)
-    implementation(libs.exposed.json)
-    implementation(libs.exposed.money)
-
-    // Hibernate + H2 + HikariCP (for Hibernate example)
-    implementation(libs.hibernate.core)
-    implementation(libs.hibernate.hikaricp)
-    implementation(libs.hikaricp)
-
-    implementation(libs.h2db)
-    implementation(libs.sl4jsimple)
-
     // (kotlin) spark support
     implementation(libs.kotlin.spark)
     compileOnly(libs.spark)
     implementation(libs.log4j.core)
     implementation(libs.log4j.api)
-
-    // multik support
-    implementation(libs.multik.core)
-    implementation(libs.multik.default)
 }
 
 /**
