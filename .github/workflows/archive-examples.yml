@@ -44,9 +44,6 @@
           run: |
             git rm -f *.zip 2>/dev/null || true
             
-            mv android-example.zip .
-            mv kotlin-dataframe-plugin-example.zip .
-            
             cat > README.md << 'EOF'
             # Kotlin DataFrame - Example Projects Archives
             
