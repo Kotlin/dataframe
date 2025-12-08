@@ -7,4 +7,6 @@ An IntelliJ IDEA project demonstrating the use of the
 > See [build.gradle.kts](build.gradle.kts) for details.
 
 We recommend using an up-to-date IntelliJ IDEA for the best experience.
-For proper functionality in IntelliJ IDEA requires version 2025.2 or higher.
+For proper functionality in IntelliJ IDEA requires version 2025.2 or newer.
+
+[Download Kotlin DataFrame Compiler Plugin Example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-example.zip)
