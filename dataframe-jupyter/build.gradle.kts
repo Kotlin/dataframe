@@ -20,6 +20,8 @@ repositories {
     mavenCentral()
 }
 
+fun ExternalModuleDependency.excludeDataFrame() = exclude("org.jetbrains.kotlinx", "dataframe")
+
 dependencies {
     api(projects.dataframe)
 
@@ -36,12 +38,10 @@ dependencies {
 
     testImplementation(projects.dataframeJupyter)
     testImplementation(projects.dataframeGeoJupyter)
-    testImplementation(libs.kandy.notebook) {
-        exclude("org.jetbrains.kotlinx", "dataframe")
-    }
-    testImplementation(libs.kandy.stats) {
-        exclude("org.jetbrains.kotlinx", "dataframe")
-    }
+
+    testImplementation(libs.kandy) { excludeDataFrame() }
+    testImplementation(libs.kandy.geo) { excludeDataFrame() }
+    testImplementation(libs.kandy.stats) { excludeDataFrame() }
 
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
