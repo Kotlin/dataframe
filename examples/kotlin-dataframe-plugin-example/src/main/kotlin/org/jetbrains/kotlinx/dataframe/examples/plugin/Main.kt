@@ -3,15 +3,22 @@ package org.jetbrains.kotlinx.dataframe.examples.plugin
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.renameToCamelCase
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.writeCsv
+import org.jetbrains.kotlinx.kandy.dsl.plot
+import org.jetbrains.kotlinx.kandy.letsplot.export.save
+import org.jetbrains.kotlinx.kandy.letsplot.feature.layout
+import org.jetbrains.kotlinx.kandy.letsplot.layers.bars
 import java.net.URL
 
 // Declare data schema for the DataFrame from jetbrains_repositories.csv.
@@ -83,11 +90,21 @@ fun main() {
     // Write the updated DataFrame to a CSV file.
     reposUpdated.writeCsv("jetbrains_repositories_new.csv")
 
-    // TODO: Add Kandy Plot
-    //  reposUpdated.groupBy { kind }.max { stargazersCount  }.plot {
-    //      bars {
-    //          x(kind)
-    //          y(stargazersCount)
-    //      }
-    //  }
+    reposUpdated
+        // Group repositories by kind
+        .groupBy { kind }
+        // And then compute the maximum stars in each group.
+        .aggregate {
+            max { stars } into "maxStars"
+        }
+        // Build a bar plot showing the maximum number of stars per repository kind.
+        .plot {
+            bars {
+                x(kind)
+                y(maxStars)
+            }
+            layout.title = "Max stars per repo kind"
+        }
+        // Save the plot to an SVG file.
+        .save("kindToStars.svg")
 }

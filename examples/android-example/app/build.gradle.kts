@@ -64,13 +64,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // TODO update version
     // Core Kotlin DataFrame API, JSON and CSV IO.
     // See custom Gradle setup:
     // https://kotlin.github.io/dataframe/setupcustomgradle.html
-    implementation("org.jetbrains.kotlinx:dataframe-core:1.0.0-Beta3")
-    implementation("org.jetbrains.kotlinx:dataframe-json:1.0.0-Beta3")
-    implementation("org.jetbrains.kotlinx:dataframe-csv:1.0.0-Beta3")
+    implementation("org.jetbrains.kotlinx:dataframe-core:1.0.0-Beta4")
+    implementation("org.jetbrains.kotlinx:dataframe-json:1.0.0-Beta4")
+    implementation("org.jetbrains.kotlinx:dataframe-csv:1.0.0-Beta4")
     // You can add any additional IO modules you like, except for 'dataframe-arrow'.
     // Apache Arrow is not supported well on Android.
 }

@@ -65,24 +65,32 @@ You can explicitly define the version you want:
 
 
 ```
-%use dataframe(1.0.0)
+%use dataframe(1.0.0-Beta4n)
 ```
 
 Or use the latest stable version of Kotlin DataFrame
 (specified in [Kotlin Jupyter descriptors](https://github.com/Kotlin/kotlin-jupyter-libraries)):
 
-<warning>
-For version `1.0.0-Beta3`, in notebooks use version `1.0.0-Beta3n` instead.
-This uses the patch of [#1435](https://github.com/Kotlin/dataframe/pull/1435) for issue 
-[#1116](https://github.com/Kotlin/dataframe/issues/1116), avoiding `DefinitelyNotNullable` errors.
-
-When using `%use dataframe` this version is applied automatically.
-</warning>
-
 ```
 %useLatestDescriptors
 %use dataframe
 ```
+
+> For version `1.0.0-Beta4`, in notebooks use version `1.0.0-Beta4n` instead.
+> The regular version [does not work with statistical functions](https://github.com/Kotlin/dataframe/issues/1116). 
+> The `n` version includes a [patch](https://github.com/Kotlin/dataframe/pull/1435) that resolves this issue.
+> 
+> When using `%use dataframe` in the latest kernel version 
+> or with the `%useLatestDescriptors` this version is applied **automatically**.
+>
+> If you want to include `kandy`, list it **after** `dataframe`:
+> ```kotlin
+> %useLatestDescriptors
+> %use dataframe, kandy
+> // or
+> %use dataframe(1.0.0-Beta4n), kandy(0.8.3)
+> ```
+> {style="warning"}
 
 ## Hello World
 

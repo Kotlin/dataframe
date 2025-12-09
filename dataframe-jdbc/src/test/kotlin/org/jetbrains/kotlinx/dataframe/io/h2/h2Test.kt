@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -15,7 +16,14 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.db.H2
+import org.jetbrains.kotlinx.dataframe.io.db.H2.Mode
 import org.jetbrains.kotlinx.dataframe.io.db.MySql
+import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
+import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
+import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readDataFrame
@@ -38,6 +46,8 @@ import kotlin.reflect.typeOf
 private const val URL = "jdbc:h2:mem:test5;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
 
 private const val MAXIMUM_POOL_SIZE = 5
+
+private const val QUERY_SELECT_ONE = "SELECT 1"
 
 @DataSchema
 interface Customer {
@@ -478,22 +488,24 @@ class JdbcTest {
 
     @Test
     fun `read from ResultSet`() {
+        val dbType = H2(Mode.MySql)
+
         connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
             @Language("SQL")
             val selectStatement = "SELECT * FROM Customer"
 
             st.executeQuery(selectStatement).use { rs ->
-                val df = DataFrame.readResultSet(rs, H2(MySql))
+                val df = DataFrame.readResultSet(rs, dbType)
                 assertCustomerData(df)
 
                 rs.beforeFirst()
 
-                val df1 = DataFrame.readResultSet(rs, H2(MySql), 1)
+                val df1 = DataFrame.readResultSet(rs, dbType, 1)
                 assertCustomerData(df1, 1)
 
                 rs.beforeFirst()
 
-                val dataSchema = DataFrameSchema.readResultSet(rs, H2(MySql))
+                val dataSchema = DataFrameSchema.readResultSet(rs, dbType)
                 assertCustomerSchema(dataSchema)
 
                 rs.beforeFirst()
@@ -508,7 +520,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val dataSchema1 = DataFrameSchema.readResultSet(rs, H2(MySql))
+                val dataSchema1 = DataFrameSchema.readResultSet(rs, dbType)
                 assertCustomerSchema(dataSchema1)
             }
         }
@@ -516,22 +528,24 @@ class JdbcTest {
 
     @Test
     fun `read from extension function on ResultSet`() {
+        val dbType = H2(Mode.MySql)
+
         connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
             @Language("SQL")
             val selectStatement = "SELECT * FROM Customer"
 
             st.executeQuery(selectStatement).use { rs ->
-                val df = rs.readDataFrame(H2(MySql))
+                val df = rs.readDataFrame(dbType)
                 assertCustomerData(df)
 
                 rs.beforeFirst()
 
-                val df1 = rs.readDataFrame(H2(MySql), 1)
+                val df1 = rs.readDataFrame(dbType, 1)
                 assertCustomerData(df1, 1)
 
                 rs.beforeFirst()
 
-                val dataSchema = rs.readDataFrameSchema(H2(MySql))
+                val dataSchema = rs.readDataFrameSchema(dbType)
                 assertCustomerSchema(dataSchema)
 
                 rs.beforeFirst()
@@ -546,7 +560,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val dataSchema1 = rs.readDataFrameSchema(H2(MySql))
+                val dataSchema1 = rs.readDataFrameSchema(dbType)
                 assertCustomerSchema(dataSchema1)
             }
         }
@@ -563,7 +577,7 @@ class JdbcTest {
                 repeat(10) {
                     rs.beforeFirst()
 
-                    val df1 = DataFrame.readResultSet(rs, H2(MySql), 2)
+                    val df1 = DataFrame.readResultSet(rs, H2(Mode.MySql), 2)
                     assertCustomerData(df1, 2)
 
                     rs.beforeFirst()
@@ -974,8 +988,190 @@ class JdbcTest {
         exception.message shouldBe "H2 database could not be specified with H2 dialect!"
     }
 
+    @Test
+    fun `regular mode for H2 with DbConnectionConfig`() {
+        val url = "jdbc:h2:mem:testDatabase"
+
+        val dbConfig = DbConnectionConfig(url)
+
+        val df = DataFrame.readSqlQuery(dbConfig, QUERY_SELECT_ONE)
+        df.rowsCount() shouldBe 1
+    }
+
+    @Test
+    fun `regular mode for H2 with Connection`() {
+        val url = "jdbc:h2:mem:testDatabase"
+
+        DriverManager.getConnection(url).use { connection ->
+            val df = DataFrame.readSqlQuery(connection, QUERY_SELECT_ONE)
+            df.rowsCount() shouldBe 1
+        }
+    }
+
+    // ========== H2 Mode Tests ==========
+
+    private fun testH2ModeWithDbConnectionConfig(modeUrl: String) {
+        val dbConfig = DbConnectionConfig(modeUrl)
+        val df = DataFrame.readSqlQuery(dbConfig, QUERY_SELECT_ONE)
+        df.rowsCount() shouldBe 1
+    }
+
+    private fun testH2ModeWithConnection(modeUrl: String) {
+        DriverManager.getConnection(modeUrl).use { connection ->
+            val df = DataFrame.readSqlQuery(connection, QUERY_SELECT_ONE)
+            df.rowsCount() shouldBe 1
+        }
+    }
+
+    @Test
+    fun `MySQL mode for H2 with DbConnectionConfig`() {
+        testH2ModeWithDbConnectionConfig("jdbc:h2:mem:testMySql;MODE=MySQL")
+    }
+
+    @Test
+    fun `MySQL mode for H2 with Connection`() {
+        testH2ModeWithConnection("jdbc:h2:mem:testMySql;MODE=MySQL")
+    }
+
+    @Test
+    fun `PostgreSQL mode for H2 with DbConnectionConfig`() {
+        testH2ModeWithDbConnectionConfig("jdbc:h2:mem:testPostgres;MODE=PostgreSQL")
+    }
+
+    @Test
+    fun `PostgreSQL mode for H2 with Connection`() {
+        testH2ModeWithConnection("jdbc:h2:mem:testPostgres;MODE=PostgreSQL")
+    }
+
+    @Test
+    fun `MSSQLServer mode for H2 with DbConnectionConfig`() {
+        testH2ModeWithDbConnectionConfig("jdbc:h2:mem:testMsSql;MODE=MSSQLServer")
+    }
+
+    @Test
+    fun `MSSQLServer mode for H2 with Connection`() {
+        testH2ModeWithConnection("jdbc:h2:mem:testMsSql;MODE=MSSQLServer")
+    }
+
+    @Test
+    fun `MariaDB mode for H2 with DbConnectionConfig`() {
+        testH2ModeWithDbConnectionConfig("jdbc:h2:mem:testMariaDb;MODE=MariaDB")
+    }
+
+    @Test
+    fun `MariaDB mode for H2 with Connection`() {
+        testH2ModeWithConnection("jdbc:h2:mem:testMariaDb;MODE=MariaDB")
+    }
+
+    @Test
+    fun `H2 with unsupported mode throws exception`() {
+        val url = "jdbc:h2:mem:testUnsupported;MODE=DB2"
+
+        DriverManager.getConnection(url).use { connection ->
+            shouldThrow<IllegalArgumentException> {
+                DataFrame.readSqlQuery(connection, QUERY_SELECT_ONE)
+            }
+        }
+    }
+
+    @Test
+    fun `H2 with unsupported mode throws exception using DbConnectionConfig`() {
+        val url = "jdbc:h2:mem:testUnsupported;MODE=Oracle"
+        val dbConfig = DbConnectionConfig(url)
+
+        shouldThrow<IllegalArgumentException> {
+            DataFrame.readSqlQuery(dbConfig, QUERY_SELECT_ONE)
+        }
+    }
+
+    @Test
+    fun `H2 Regular mode extraction and fallbacks`() {
+        // 1. Create a connection without explicit MODE in URL.
+        // H2 defaults to Regular mode. extractDBTypeFromConnection should detect this by querying settings.
+        DriverManager.getConnection("jdbc:h2:mem:testRegularFallback").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe Mode.Regular
+
+            // 2. Verify fallback behaviors (when delegate is null)
+
+            // buildSqlQueryWithLimit: Check fallback to super implementation (standard LIMIT syntax)
+            val query = "SELECT * FROM table"
+            dbType.buildSqlQueryWithLimit(query, 10) shouldBe "SELECT * FROM table LIMIT 10"
+
+            // isSystemTable: Check fallback to H2-specific logic (INFORMATION_SCHEMA)
+            val systemTable = TableMetadata("SETTINGS", "INFORMATION_SCHEMA", "TEST_DB")
+            dbType.isSystemTable(systemTable) shouldBe true
+
+            val userTable = TableMetadata("USERS", "PUBLIC", "TEST_DB")
+            dbType.isSystemTable(userTable) shouldBe false
+
+            // buildTableMetadata: Check fallback to reading from ResultSet directly
+            conn.createStatement().use { st ->
+                st.execute("CREATE TABLE MY_FALLBACK_TABLE (ID INT)")
+            }
+            conn.metaData.getTables(null, null, "MY_FALLBACK_TABLE", null).use { rs ->
+                if (rs.next()) {
+                    val metadata = dbType.buildTableMetadata(rs)
+                    metadata.name shouldBe "MY_FALLBACK_TABLE"
+                    metadata.schemaName shouldBe "PUBLIC"
+                    metadata.catalogue shouldNotBe null
+                } else {
+                    throw IllegalStateException("Could not find created table metadata")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `database type extraction utils`() {
+        // 1. Test direct extraction from URL for various DBs
+        (extractDBTypeFromUrl("jdbc:mysql://localhost:3306/db") is MySql) shouldBe true
+        (extractDBTypeFromUrl("jdbc:postgresql://localhost:5432/db") is PostgreSql) shouldBe true
+        (extractDBTypeFromUrl("jdbc:sqlite:sample.db") is Sqlite) shouldBe true
+
+        // Test driverClassNameFromUrl
+        driverClassNameFromUrl("jdbc:mysql://localhost:3306/db") shouldBe "com.mysql.jdbc.Driver"
+        driverClassNameFromUrl("jdbc:postgresql://localhost:5432/db") shouldBe "org.postgresql.Driver"
+        driverClassNameFromUrl("jdbc:h2:mem:test") shouldBe "org.h2.Driver"
+
+        // 2. Test unsupported Database URL
+        shouldThrow<IllegalArgumentException> {
+            extractDBTypeFromUrl("jdbc:oracle:thin:@localhost:1521:xe")
+        }
+
+        // 3. Test null URL
+        shouldThrow<SQLException> {
+            extractDBTypeFromUrl(null)
+        }
+
+        // 4. Test H2 specific mode extraction from Connection (End-to-End)
+
+        // Case A: MySQL Mode via URL
+        DriverManager.getConnection("jdbc:h2:mem:testExtractMySql;MODE=MySQL").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe H2.Mode.MySql
+        }
+
+        // Case B: PostgreSQL Mode via URL
+        DriverManager.getConnection("jdbc:h2:mem:testExtractPostgres;MODE=PostgreSQL").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe H2.Mode.PostgreSql
+        }
+
+        // Case C: MSSQLServer Mode via URL
+        DriverManager.getConnection("jdbc:h2:mem:testExtractMsSql;MODE=MSSQLServer").use { conn ->
+            val dbType = extractDBTypeFromConnection(conn)
+            (dbType is H2) shouldBe true
+            (dbType as H2).mode shouldBe H2.Mode.MsSqlServer
+        }
+    }
+
     // helper object created for API testing purposes
-    object CustomDB : H2(MySql)
+    object CustomDB : H2(Mode.MySql)
 
     @Test
     fun `read from table from custom database`() {

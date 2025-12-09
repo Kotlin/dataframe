@@ -20,7 +20,7 @@ jobs:
           java-version: '21'
 
       - name: Run Gradle task
-        run: ./gradlew :core:processKDocsMain korro
+        run: ./gradlew processKDocsMain korro
 
       - name: Commit changes
         run: |

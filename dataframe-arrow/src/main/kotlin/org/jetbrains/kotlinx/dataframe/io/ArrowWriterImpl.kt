@@ -26,6 +26,7 @@ import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VariableWidthVector
 import org.apache.arrow.vector.VectorSchemaRoot
+import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.types.DateUnit
 import org.apache.arrow.vector.types.FloatingPointPrecision
 import org.apache.arrow.vector.types.pojo.ArrowType
@@ -49,8 +50,10 @@ import org.jetbrains.kotlinx.dataframe.api.convertToShort
 import org.jetbrains.kotlinx.dataframe.api.convertToString
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
+import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.values
 import kotlin.reflect.full.isSubtypeOf
@@ -72,7 +75,15 @@ internal class ArrowWriterImpl(
     private fun allocateVector(vector: FieldVector, size: Int, totalBytes: Long? = null) {
         when (vector) {
             is FixedWidthVector -> vector.allocateNew(size)
+
             is VariableWidthVector -> totalBytes?.let { vector.allocateNew(it, size) } ?: vector.allocateNew(size)
+
+            is StructVector -> {
+                vector.childrenFromFields.forEach { child ->
+                    allocateVector(child, size)
+                }
+            }
+
             else -> throw IllegalArgumentException("Can not allocate ${vector.javaClass.canonicalName}")
         }
     }
@@ -137,6 +148,8 @@ internal class ArrowWriterImpl(
             ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTime()
 
             is ArrowType.Time -> column.convertToLocalTime()
+
+            is ArrowType.Struct -> column
 
             else ->
                 throw NotImplementedError(
@@ -276,6 +289,18 @@ internal class ArrowWriterImpl(
                             vector.set(i, (value.toNanosecondOfDay() / 1000 / 1000 / 1000).toInt())
                         } ?: vector.setNull(i)
                     }
+
+            is StructVector -> {
+                require(column is ColumnGroup<*>) {
+                    "StructVector expects ColumnGroup, but got ${column::class.simpleName}"
+                }
+
+                column.columns().forEach { childColumn ->
+                    infillVector(vector.getChild(childColumn.name()), childColumn)
+                }
+
+                column.indices.forEach { i -> vector.setIndexDefined(i) }
+            }
 
             else -> {
                 // TODO implement other vector types from [readField] (VarBinaryVector, UIntVector, DurationVector, StructVector) and may be others (ListVector, FixedSizeListVector etc)
