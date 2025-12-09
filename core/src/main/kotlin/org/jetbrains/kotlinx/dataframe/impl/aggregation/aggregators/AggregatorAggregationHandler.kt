@@ -2,7 +2,9 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asSequence
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import kotlin.reflect.KType
 
 /**
@@ -23,7 +25,28 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
      * When the exact [valueType] is unknown, use [calculateValueType] or [aggregateCalculatingValueType].
      */
     public fun aggregateSequence(values: Sequence<Value?>, valueType: ValueType): Return
-
+//
+//    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return {
+//        // It is possible to exploit cached statistic which is proper of ValueColumnImpl
+//        if (column is ValueColumnImpl<Value?>) {
+//            if (column.max.wasComputed) {
+//                return column.max.cachedStatistic as Return
+//            } else {
+//                val max = aggregateSequence(
+//                    values = column.asSequence(),
+//                    valueType = column.type().toValueType(),
+//                )
+//                column.max.cachedStatistic = max
+//                column.max.wasComputed = true
+//                aggregateSingleColumn(column)
+//            }
+//        }
+//        // Otherwise
+//        return aggregateSequence(
+//            values = column.asSequence(),
+//            valueType = column.type().toValueType(),
+//        )
+//    }
     /**
      * Aggregates the data in the given column and computes a single resulting value.
      * Calls [aggregateSequence].

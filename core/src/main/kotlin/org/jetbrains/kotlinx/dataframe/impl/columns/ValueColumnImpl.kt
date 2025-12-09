@@ -8,10 +8,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-public class CachedStatisticWrapped<T>(public var cachedStatistic: T?)
+public class CachedStatisticWrapped(public var cachedStatistic: Any?, public var wasComputed: Boolean = false)
 
 internal interface ValueColumnInternal<T> : ValueColumn<T> {
-    val max: CachedStatisticWrapped<T>
+    val max: CachedStatisticWrapped
 }
 
 internal open class ValueColumnImpl<T>(
@@ -56,7 +56,7 @@ internal open class ValueColumnImpl<T>(
 
     override fun forceResolve() = ResolvingValueColumn(this)
 
-    override val max = CachedStatisticWrapped<T>(null)
+    override val max = CachedStatisticWrapped(null)
 }
 
 internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
