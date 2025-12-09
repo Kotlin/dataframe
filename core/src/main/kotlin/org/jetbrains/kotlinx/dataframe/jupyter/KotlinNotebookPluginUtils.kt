@@ -105,85 +105,53 @@ public object KotlinNotebookPluginUtils {
             ColumnPath(path)
         }
 
-        val comparator = createComparator(sortKeys, isDesc)
+        val comparator = createComparator(df, sortKeys, isDesc)
 
         return df.sortWith(comparator)
     }
 
-    private fun createComparator(sortKeys: List<ColumnPath>, isDesc: List<Boolean>): Comparator<DataRow<*>> {
-        return Comparator { row1, row2 ->
-            for ((key, desc) in sortKeys.zip(isDesc)) {
-                val column = row1.df().getColumn(key)
-                val comparisonResult = if (column.valuesAreComparable()) {
-                    compareComparableValues(row1, row2, key, desc)
-                } else if (column.isFrameColumn()) {
-                    val firstValue = column[row1].rowsCount()
-                    val secondValue = column[row2].rowsCount()
-                    firstValue.compare(secondValue, desc)
-                } else if (column.isList()) {
-                    compareListSizes(row1, row2, key, desc)
-                } else {
-                    compareStringValues(row1, row2, key, desc)
+    private fun createComparator(
+        df: AnyFrame,
+        sortKeys: List<ColumnPath>,
+        isDesc: List<Boolean>,
+    ): Comparator<DataRow<*>> {
+        val columnComparators = sortKeys.zip(isDesc).map { (key, desc) ->
+            val column = df.getColumn(key)
+            createColumnComparator(column, desc)
+        }
+
+        return when (columnComparators.size) {
+            1 -> columnComparators.single()
+
+            else -> Comparator { row1, row2 ->
+                for (comparator in columnComparators) {
+                    val result = comparator.compare(row1, row2)
+                    // If a comparison result is non-zero, we have resolved the ordering
+                    if (result != 0) return@Comparator result
                 }
-                // If a comparison result is non-zero, we have resolved the ordering
-                if (comparisonResult != 0) return@Comparator comparisonResult
+                // All comparisons are equal
+                0
             }
-            // All comparisons are equal
-            0
         }
     }
 
-    private fun compareListSizes(
-        row1: DataRow<*>,
-        row2: DataRow<*>,
-        key: ColumnPath,
-        desc: Boolean,
-    ): Int {
-        val firstValue = (row1.getValueOrNull(key) as? List<*>)?.size ?: 0
-        val secondValue = (row2.getValueOrNull(key) as? List<*>)?.size ?: 0
-        return if (desc) {
-            secondValue.compareTo(firstValue)
-        } else {
-            firstValue.compareTo(secondValue)
+    private fun createColumnComparator(column: AnyCol, desc: Boolean): Comparator<DataRow<*>> {
+        val comparator: Comparator<DataRow<*>> = when {
+            column.valuesAreComparable() -> compareBy(nullsLast()) {
+                column[it] as Comparable<Any?>?
+            }
+
+            // Comparator shows a slight improvement in performance for this case
+            column.isFrameColumn() -> Comparator { r1, r2 ->
+                column[r1].rowsCount().compareTo(column[r2].rowsCount())
+            }
+
+            column.isList() -> compareBy { (column[it] as? List<*>)?.size ?: 0 }
+
+            else -> compareBy { column[it]?.toString() ?: "" }
         }
+        return if (desc) comparator.reversed() else comparator
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun compareComparableValues(
-        row1: DataRow<*>,
-        row2: DataRow<*>,
-        key: ColumnPath,
-        desc: Boolean,
-    ): Int {
-        val firstValue = row1.getValueOrNull(key) as Comparable<Any?>?
-        val secondValue = row2.getValueOrNull(key) as Comparable<Any?>?
-
-        return when {
-            firstValue == null && secondValue == null -> 0
-            firstValue == null -> if (desc) 1 else -1
-            secondValue == null -> if (desc) -1 else 1
-            desc -> secondValue.compareTo(firstValue)
-            else -> firstValue.compareTo(secondValue)
-        }
-    }
-
-    private fun compareStringValues(
-        row1: DataRow<*>,
-        row2: DataRow<*>,
-        key: ColumnPath,
-        desc: Boolean,
-    ): Int {
-        val firstValue = (row1.getValueOrNull(key)?.toString() ?: "")
-        val secondValue = (row2.getValueOrNull(key)?.toString() ?: "")
-
-        return if (desc) {
-            secondValue.compareTo(firstValue)
-        } else {
-            firstValue.compareTo(secondValue)
-        }
-    }
-
-    private fun <T : Comparable<T>> T.compare(other: T, desc: Boolean) = if (desc) other.compareTo(this) else this.compareTo(other)
 
     internal fun isDataframeConvertable(dataframeLike: Any?): Boolean =
         when (dataframeLike) {
