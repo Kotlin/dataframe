@@ -29,18 +29,12 @@ public object MariaDb : DbType("mariadb") {
             tableColumnMetadata.sqlTypeName == "INT UNSIGNED"
         ) {
             val kType = typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
-            return dbColumnTypeInformation<Long?>(
-                columnMetadata = tableColumnMetadata,
-                targetSchema = ColumnSchema.Value(kType),
-            )
+            return dbColumnTypeInformation<Long?>(targetSchema = ColumnSchema.Value(kType))
         }
 
         if (tableColumnMetadata.sqlTypeName == "SMALLINT" && tableColumnMetadata.javaClassName == "java.lang.Short") {
             val kType = typeOf<Short>().withNullability(tableColumnMetadata.isNullable)
-            return dbColumnTypeInformation<Short?>(
-                columnMetadata = tableColumnMetadata,
-                targetSchema = ColumnSchema.Value(kType),
-            )
+            return dbColumnTypeInformation<Short?>(targetSchema = ColumnSchema.Value(kType))
         }
         return super.generateTypeInformation(tableColumnMetadata)
     }

@@ -20,10 +20,7 @@ public object PostgreSql : DbType("postgresql") {
         // because of https://github.com/pgjdbc/pgjdbc/issues/425
         if (tableColumnMetadata.sqlTypeName == "money") {
             val kType = typeOf<String>().withNullability(tableColumnMetadata.isNullable)
-            return dbColumnTypeInformation<String?>(
-                columnMetadata = tableColumnMetadata,
-                targetSchema = ColumnSchema.Value(kType),
-            )
+            return dbColumnTypeInformation<String?>(targetSchema = ColumnSchema.Value(kType))
         }
         return super.generateTypeInformation(tableColumnMetadata)
     }

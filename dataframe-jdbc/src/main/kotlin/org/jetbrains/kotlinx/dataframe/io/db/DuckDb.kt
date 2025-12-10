@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalTime
 import org.duckdb.DuckDBColumnType.ARRAY
 import org.duckdb.DuckDBColumnType.BIGINT
 import org.duckdb.DuckDBColumnType.BIT
@@ -52,7 +54,7 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.io.db.DuckDb.convertSqlTypeToKType
+import org.jetbrains.kotlinx.dataframe.io.db.dbColumnTypeInformation
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.math.BigDecimal
@@ -64,6 +66,7 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.Struct
 import java.util.Properties
+import kotlin.collections.toList
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
@@ -72,6 +75,7 @@ import kotlin.reflect.typeOf
 import kotlin.time.Instant
 import kotlin.time.toKotlinInstant
 import kotlin.uuid.Uuid
+import kotlin.uuid.toKotlinUuid
 import java.sql.Array as SqlArray
 import java.sql.Timestamp as SqlTimestamp
 import java.time.LocalDate as JavaLocalDate
@@ -93,57 +97,215 @@ public object DuckDb : DbType("duckdb") {
     /** the name of the class of the DuckDB JDBC driver */
     override val driverClassName: String = "org.duckdb.DuckDBDriver"
 
-    /**
-     * TODO: Unclear what this returned [KType] is useful for. Let's remove this function and just have
-     *   [convertSqlTypeToColumnSchemaValue]
-     */
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType =
-        convertSqlTypeToColumnSchemaValue(tableColumnMetadata).type
+    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation =
+        parseDuckDbType(tableColumnMetadata.sqlTypeName, tableColumnMetadata.isNullable)
 
     /**
-     * How a column from JDBC should be represented as DataFrame (value) column
-     * See [convertSqlTypeToKType].
+     * How a column type from JDBC, [sqlTypeName], is read in Java/Kotlin.
+     * The returned type must exactly follow [ResultSet.getObject] of your specific database's JDBC driver.
+     * Returning `null` defer the implementation to the default one (which may not always be correct).
+     *
+     * Following [org.duckdb.DuckDBVector.getObject] and converting the result to
+     *
      */
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema =
-        parseDuckDbType(tableColumnMetadata.sqlTypeName, tableColumnMetadata.isNullable).targetSchema
+    internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyDbColumnTypeInformation =
+        when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
+            BOOLEAN -> dbColumnTypeInformation<Boolean>(
+                ColumnSchema.Value(typeOf<Boolean>().withNullability(isNullable)),
+            )
 
-    /**
-     * TODO: This function achieves the same goal as [convertSqlTypeToKType].
-     */
-    override fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): Nothing =
-        error("This function should not be called. Or exist, for that matter...")
+            TINYINT -> dbColumnTypeInformation<Byte>(
+                ColumnSchema.Value(typeOf<Byte>().withNullability(isNullable)),
+            )
 
-    /**
-     * TODO: I wanted to do the conversion here, but as I have no source type ánd target type
-     *   it's impossible.
-     *   It would be easier to do conversion on the entire column because we can borrow [DataColumn.convertTo].
-     */
-    override fun buildDataColumn(
-        name: String,
-        values: MutableList<Any?>,
-        kType: KType,
-        inferNullability: Boolean,
-    ): DataColumn<*> {
-        val sourceType = kType
-        return super.buildDataColumn(name, values, kType, inferNullability)
+            SMALLINT -> dbColumnTypeInformation<Short>(
+                ColumnSchema.Value(typeOf<Short>().withNullability(isNullable)),
+            )
+
+            INTEGER -> dbColumnTypeInformation<Int>(
+                ColumnSchema.Value(typeOf<Int>().withNullability(isNullable)),
+            )
+
+            BIGINT -> dbColumnTypeInformation<Long>(
+                ColumnSchema.Value(typeOf<Long>().withNullability(isNullable)),
+            )
+
+            HUGEINT -> dbColumnTypeInformation<BigInteger>(
+                ColumnSchema.Value(typeOf<BigInteger>().withNullability(isNullable)),
+            )
+
+            UHUGEINT -> dbColumnTypeInformation<BigInteger>(
+                ColumnSchema.Value(typeOf<BigInteger>().withNullability(isNullable)),
+            )
+
+            UTINYINT -> dbColumnTypeInformation<Short>(
+                ColumnSchema.Value(typeOf<Short>().withNullability(isNullable)),
+            )
+
+            USMALLINT -> dbColumnTypeInformation<Int>(
+                ColumnSchema.Value(typeOf<Int>().withNullability(isNullable)),
+            )
+
+            UINTEGER -> dbColumnTypeInformation<Long>(
+                ColumnSchema.Value(typeOf<Long>().withNullability(isNullable)),
+            )
+
+            UBIGINT -> dbColumnTypeInformation<BigInteger>(
+                ColumnSchema.Value(typeOf<BigInteger>().withNullability(isNullable)),
+            )
+
+            FLOAT -> dbColumnTypeInformation<Float>(
+                ColumnSchema.Value(typeOf<Float>().withNullability(isNullable)),
+            )
+
+            DOUBLE -> dbColumnTypeInformation<Double>(
+                ColumnSchema.Value(typeOf<Double>().withNullability(isNullable)),
+            )
+
+            DECIMAL -> dbColumnTypeInformation<BigDecimal>(
+                ColumnSchema.Value(typeOf<BigDecimal>().withNullability(isNullable)),
+            )
+
+            // DataFrame can do this conversion
+            TIME -> dbColumnTypeInformationWithPreprocessing<JavaLocalTime, LocalTime>(
+                ColumnSchema.Value(typeOf<LocalTime>().withNullability(isNullable)),
+            ) { it, _ -> it?.toKotlinLocalTime() }
+
+            // todo?
+            TIME_WITH_TIME_ZONE -> dbColumnTypeInformation<JavaOffsetTime>(
+                ColumnSchema.Value(typeOf<JavaOffsetTime>().withNullability(isNullable)),
+            )
+
+            DATE -> dbColumnTypeInformationWithPreprocessing<JavaLocalDate, LocalDate>(
+                ColumnSchema.Value(typeOf<LocalDate>().withNullability(isNullable)),
+            ) { it, _ ->
+                it?.toKotlinLocalDate()
+            }
+
+            TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S ->
+                dbColumnTypeInformationWithPreprocessing<SqlTimestamp, Instant>(
+                    ColumnSchema.Value(typeOf<Instant>().withNullability(isNullable)),
+                ) { it, _ ->
+                    it?.toInstant()?.toKotlinInstant()
+                }
+
+            // todo?
+            TIMESTAMP_WITH_TIME_ZONE -> dbColumnTypeInformation<JavaOffsetDateTime>(
+                ColumnSchema.Value(typeOf<JavaOffsetDateTime>().withNullability(isNullable)),
+            )
+
+            // TODO!
+            JSON -> dbColumnTypeInformation<JsonNode>(
+                ColumnSchema.Value(typeOf<JsonNode>().withNullability(isNullable)),
+            )
+
+            BLOB -> dbColumnTypeInformation<Blob>(
+                ColumnSchema.Value(typeOf<Blob>().withNullability(isNullable)),
+            )
+
+            UUID -> dbColumnTypeInformationWithPreprocessing<JavaUUID, Uuid>(
+                ColumnSchema.Value(typeOf<Uuid>().withNullability(isNullable)),
+            ) { it, _ -> it?.toKotlinUuid() }
+
+            MAP -> {
+                val (key, value) = parseMapTypes(sqlTypeName)
+
+                val targetMapType = Map::class.createType(
+                    listOf(
+                        KTypeProjection.invariant(parseDuckDbType(key, false).targetSchema.type),
+                        KTypeProjection.invariant(parseDuckDbType(value, true).targetSchema.type),
+                    ),
+                )
+
+                dbColumnTypeInformation<Map<String, Any?>>(ColumnSchema.Value(targetMapType))
+            }
+
+            LIST, ARRAY -> {
+                // TODO requires #1266 and #1273 for specific types
+                val listType = parseListType(sqlTypeName)
+                val parsedListType = parseDuckDbType(listType, true)
+                val targetListType = List::class.createType(
+                    listOf(KTypeProjection.invariant(parsedListType.targetSchema.type)),
+                )
+                // todo maybe List<DataRow> should become FrameColumn
+                dbColumnTypeInformationWithPreprocessing<SqlArray, List<Any?>>(
+                    ColumnSchema.Value(targetListType),
+                ) { it, typeInfo ->
+                    it?.toList()
+                }
+            }
+
+            // TODO requires #1266 for specific types
+            STRUCT -> dbColumnTypeInformation<Struct>(
+                ColumnSchema.Value(typeOf<Struct>().withNullability(isNullable)),
+            )
+
+            // Cannot handle this in Kotlin
+            UNION -> dbColumnTypeInformation<Any>(
+                ColumnSchema.Value(typeOf<Any>().withNullability(isNullable)),
+            )
+
+            VARCHAR -> dbColumnTypeInformation<String>(
+                ColumnSchema.Value(typeOf<String>().withNullability(isNullable)),
+            )
+
+            UNKNOWN, BIT, INTERVAL, ENUM -> dbColumnTypeInformation<String>(
+                ColumnSchema.Value(typeOf<String>().withNullability(isNullable)),
+            )
+        }
+
+    private fun SqlArray.toList(): List<Any?> =
+        when (val array = this.array) {
+            is IntArray -> array.toList()
+            is LongArray -> array.toList()
+            is ShortArray -> array.toList()
+            is ByteArray -> array.toList()
+            is FloatArray -> array.toList()
+            is DoubleArray -> array.toList()
+            is BooleanArray -> array.toList()
+            is CharArray -> array.toList()
+            is Array<*> -> array.toList()
+            is SqlArray -> array.toList()
+            else -> error("unknown array type $array")
+        }
+
+    /** Parses "MAP(X, Y)" into "X" and "Y", taking parentheses into account */
+    internal fun parseMapTypes(typeString: String): Pair<String, String> {
+        if (!typeString.startsWith("MAP(") || !typeString.endsWith(")")) {
+            error("invalid MAP type: $typeString")
+        }
+
+        val content = typeString.removeSurrounding("MAP(", ")")
+
+        // Find the comma that separates key and value types
+        var parenCount = 0
+        var commaIndex = -1
+        for (i in content.indices) {
+            when (content[i]) {
+                '(' -> parenCount++
+
+                ')' -> parenCount--
+
+                ',' -> if (parenCount == 0) {
+                    commaIndex = i
+                    break
+                }
+            }
+        }
+
+        if (commaIndex == -1) error("invalid MAP type: $typeString")
+        val keyType = content.take(commaIndex).trim()
+        val valueType = content.substring(commaIndex + 1).trim()
+        return Pair(keyType, valueType)
     }
 
-    override fun extractValueFromResultSet(
-        rs: ResultSet,
-        columnIndex: Int,
-        columnMetadata: TableColumnMetadata,
-        kType: KType,
-    ): Any? {
-        // TODO This '+ 1' is easily forgotten if I need to override this function to do any conversion
-        val result = rs.getObject(columnIndex + 1)
+    /** Parses "X[]" and "X[123]" into "X", and "X[][]" into "X[]" */
+    internal fun parseListType(typeString: String): String {
+        if (!typeString.endsWith("]")) {
+            error("invalid LIST/ARRAY type: $typeString")
+        }
 
-        // TODO: where is the [ColumnSchema] when I need it?
-        //   Now I need to call my [parseDuckDbType] function again...
-        val parsedType = parseDuckDbType(columnMetadata.sqlTypeName, columnMetadata.isNullable)
-
-        // TODO doing it as a column
-        val convertedResult = parsedType.converter(columnOf(result)).single()
-        return convertedResult
+        return typeString.take(typeString.indexOfLast { it == '[' })
     }
 
     /**
@@ -205,186 +367,4 @@ public object DuckDb : DbType("duckdb") {
      */
     private fun String.isInMemoryDuckDb(): Boolean =
         this.trim() == "jdbc:duckdb:" || matches("jdbc:duckdb:\\s*$".toRegex())
-}
-
-/**
- * How a column type from JDBC, [sqlTypeName], is read in Java/Kotlin.
- * The returned type must exactly follow [ResultSet.getObject] of your specific database's JDBC driver.
- * Returning `null` defer the implementation to the default one (which may not always be correct).
- *
- * Following [org.duckdb.DuckDBVector.getObject] and converting the result to
- *
- */
-internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): ParsedType =
-    when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
-        BOOLEAN -> parsedTypeForValueColumnOf<Boolean>(isNullable)
-
-        TINYINT -> parsedTypeForValueColumnOf<Byte>(isNullable)
-
-        SMALLINT -> parsedTypeForValueColumnOf<Short>(isNullable)
-
-        INTEGER -> parsedTypeForValueColumnOf<Int>(isNullable)
-
-        BIGINT -> parsedTypeForValueColumnOf<Long>(isNullable)
-
-        HUGEINT -> parsedTypeForValueColumnOf<BigInteger>(isNullable)
-
-        UHUGEINT -> parsedTypeForValueColumnOf<BigInteger>(isNullable)
-
-        UTINYINT -> parsedTypeForValueColumnOf<Short>(isNullable)
-
-        USMALLINT -> parsedTypeForValueColumnOf<Int>(isNullable)
-
-        UINTEGER -> parsedTypeForValueColumnOf<Long>(isNullable)
-
-        UBIGINT -> parsedTypeForValueColumnOf<BigInteger>(isNullable)
-
-        FLOAT -> parsedTypeForValueColumnOf<Float>(isNullable)
-
-        DOUBLE -> parsedTypeForValueColumnOf<Double>(isNullable)
-
-        DECIMAL -> parsedTypeForValueColumnOf<BigDecimal>(isNullable)
-
-        // DataFrame can do this conversion
-        TIME -> parsedTypeForValueColumnOf<JavaLocalTime, LocalTime>(isNullable) { it.convertTo() }
-
-        // todo?
-        TIME_WITH_TIME_ZONE -> parsedTypeForValueColumnOf<JavaOffsetTime>(isNullable)
-
-        // DataFrame can do this conversion
-        DATE -> parsedTypeForValueColumnOf<JavaLocalDate, LocalDate>(isNullable) { it.convertTo() }
-
-        TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S ->
-            parsedTypeForValueColumnOf<SqlTimestamp, Instant>(isNullable) {
-                it.map {
-                    it?.toInstant()?.toKotlinInstant()
-                }.asValueColumn().cast()
-            }
-
-        // todo?
-        TIMESTAMP_WITH_TIME_ZONE -> parsedTypeForValueColumnOf<JavaOffsetDateTime>(isNullable)
-
-        // TODO!
-        JSON -> parsedTypeForValueColumnOf<JsonNode>(isNullable)
-
-        BLOB -> parsedTypeForValueColumnOf<Blob>(isNullable)
-
-        UUID -> parsedTypeForValueColumnOf<JavaUUID, Uuid>(isNullable) { it.convertTo() }
-
-        MAP -> {
-            val (key, value) = parseMapTypes(sqlTypeName)
-            val sourceMapType = Map::class.createType(
-                listOf(
-                    KTypeProjection.invariant(parseDuckDbType(key, false).sourceType),
-                    KTypeProjection.invariant(parseDuckDbType(value, true).sourceType),
-                ),
-            )
-            val targetMapType = Map::class.createType(
-                listOf(
-                    KTypeProjection.invariant(parseDuckDbType(key, false).targetSchema.type),
-                    KTypeProjection.invariant(parseDuckDbType(value, true).targetSchema.type),
-                ),
-            )
-
-            ParsedType(
-                sourceType = sourceMapType,
-                targetSchema = ColumnSchema.Value(targetMapType),
-                converter = { it },
-            )
-        }
-
-        LIST, ARRAY -> {
-            // TODO requires #1266 and #1273 for specific types
-            val listType = parseListType(sqlTypeName)
-            val parsedListType = parseDuckDbType(listType, true)
-            val targetListType = List::class.createType(
-                listOf(KTypeProjection.invariant(parsedListType.targetSchema.type)),
-            )
-            // todo maybe List<DataRow> should become FrameColumn
-            ParsedType(
-                sourceType = typeOf<SqlArray>(),
-                targetSchema = ColumnSchema.Value(targetListType),
-                converter = { it },
-            )
-        }
-
-        // TODO requires #1266 for specific types
-        STRUCT -> parsedTypeForValueColumnOf<Struct>(isNullable)
-
-        // Cannot handle this in Kotlin
-        UNION -> parsedTypeForValueColumnOf<Any>(isNullable)
-
-        VARCHAR -> parsedTypeForValueColumnOf<String>(isNullable)
-
-        UNKNOWN, BIT, INTERVAL, ENUM -> parsedTypeForValueColumnOf<String>(isNullable)
-    }
-
-/**
- * @property sourceType the source type of the column as read by [ResultSet.getObject] of our specific database's JDBC driver.
- * @property targetSchema the target schema of the column. This can have a different [kType][ColumnSchema.type] than [sourceType]!
- *   If so, the values need to be converted in [DbType.buildDataColumn].
- * @property converter a function that converts the source column to the target column type
- */
-internal data class ParsedType(
-    val sourceType: KType,
-    val targetSchema: ColumnSchema,
-    val converter: (DataColumn<*>) -> DataColumn<*>,
-)
-
-internal inline fun <reified SourceType> parsedTypeForValueColumnOf(isNullable: Boolean): ParsedType {
-    val type = typeOf<SourceType>().withNullability(isNullable)
-    return ParsedType(
-        sourceType = type,
-        targetSchema = ColumnSchema.Value(type),
-        converter = { it },
-    )
-}
-
-internal inline fun <reified SourceType, reified TargetType> parsedTypeForValueColumnOf(
-    isNullable: Boolean,
-    noinline converter: (DataColumn<SourceType?>) -> DataColumn<TargetType?>,
-): ParsedType =
-    ParsedType(
-        sourceType = typeOf<SourceType>().withNullability(isNullable),
-        targetSchema = ColumnSchema.Value(typeOf<TargetType>().withNullability(isNullable)),
-        converter = converter as (DataColumn<*>) -> DataColumn<*>,
-    )
-
-/** Parses "MAP(X, Y)" into "X" and "Y", taking parentheses into account */
-internal fun parseMapTypes(typeString: String): Pair<String, String> {
-    if (!typeString.startsWith("MAP(") || !typeString.endsWith(")")) {
-        error("invalid MAP type: $typeString")
-    }
-
-    val content = typeString.removeSurrounding("MAP(", ")")
-
-    // Find the comma that separates key and value types
-    var parenCount = 0
-    var commaIndex = -1
-    for (i in content.indices) {
-        when (content[i]) {
-            '(' -> parenCount++
-
-            ')' -> parenCount--
-
-            ',' -> if (parenCount == 0) {
-                commaIndex = i
-                break
-            }
-        }
-    }
-
-    if (commaIndex == -1) error("invalid MAP type: $typeString")
-    val keyType = content.take(commaIndex).trim()
-    val valueType = content.substring(commaIndex + 1).trim()
-    return Pair(keyType, valueType)
-}
-
-/** Parses "X[]" and "X[123]" into "X", and "X[][]" into "X[]" */
-internal fun parseListType(typeString: String): String {
-    if (!typeString.endsWith("]")) {
-        error("invalid LIST/ARRAY type: $typeString")
-    }
-
-    return typeString.take(typeString.indexOfLast { it == '[' })
 }

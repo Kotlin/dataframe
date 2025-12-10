@@ -183,7 +183,6 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             }
 
         return dbColumnTypeInformationWithPostprocessing<Any?, Any?>(
-            columnMetadata = tableColumnMetadata,
             targetSchema = ColumnSchema.Value(kType.withNullability(tableColumnMetadata.isNullable)),
             columnPostprocessor = postprocessor?.cast(),
         )
@@ -211,9 +210,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         } as J
 
     public fun <J, D> preprocessValuesFromResultSet(
-        value: J,
+        value: J?,
         dbColumnTypeInformation: DbColumnTypeInformation<J, D, *>,
-    ): D = dbColumnTypeInformation.preprocess(value)
+    ): D? = dbColumnTypeInformation.preprocess(value)
 
     public open fun <D> buildDataColumn(
         name: String,

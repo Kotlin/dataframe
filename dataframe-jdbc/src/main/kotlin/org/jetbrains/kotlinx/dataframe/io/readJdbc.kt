@@ -937,7 +937,7 @@ private fun readAllRowsFromResultSet(
                 columnIndex = columnIndex,
                 typeInformation = typeInformation,
             )
-            val preprocessedValue = typeInformation.preprocess(value)
+            val preprocessedValue = dbType.preprocessValuesFromResultSet(value, typeInformation)
             columnData[columnIndex].add(preprocessedValue)
         }
         rowsRead++
@@ -967,7 +967,7 @@ private fun buildDataFrameFromColumnData(
             typeInformation = typeInformation,
             inferNullability = inferNullability,
         )
-        val postProcessedColumn = typeInformation.postprocess(column)
+        val postProcessedColumn = dbType.postProcessDataColumn(column, typeInformation)
 
         if (checkSchema) {
             postProcessedColumn.checkSchema(typeInformation.targetSchema)

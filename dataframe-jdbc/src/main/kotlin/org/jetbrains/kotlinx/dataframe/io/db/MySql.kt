@@ -19,10 +19,7 @@ public object MySql : DbType("mysql") {
     override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation {
         if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
             val kType = typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
-            return dbColumnTypeInformation<Long?>(
-                columnMetadata = tableColumnMetadata,
-                targetSchema = ColumnSchema.Value(kType),
-            )
+            return dbColumnTypeInformation<Long?>(targetSchema = ColumnSchema.Value(kType))
         }
         return super.generateTypeInformation(tableColumnMetadata)
     }

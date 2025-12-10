@@ -18,16 +18,15 @@ public typealias AnyDbColumnTypeInformation = DbColumnTypeInformation<*, *, *>
  *   to a [org.jetbrains.kotlinx.dataframe.DataColumn] of with values of type [P].
  */
 public open class DbColumnTypeInformation<J, D, P>(
-    public open val columnMetadata: TableColumnMetadata,
     public open val targetSchema: ColumnSchema,
     public open val valuePreprocessor: DbValuePreprocessor<J, D>?,
     public open val columnPostprocessor: DbColumnPostprocessor<D, P>?,
 ) {
-    public open fun preprocess(value: J): D {
+    public open fun preprocess(value: J?): D? {
         valuePreprocessor?.let { valuePreprocessor ->
             return valuePreprocessor.preprocess(value, this)
         }
-        return value as D
+        return value as D?
     }
 
     public open fun postprocess(column: DataColumn<D>): DataColumn<P> {
@@ -41,49 +40,39 @@ public open class DbColumnTypeInformation<J, D, P>(
 public fun <J, D, P> DbColumnTypeInformation<*, *, *>.cast(): DbColumnTypeInformation<J, D, P> =
     this as DbColumnTypeInformation<J, D, P>
 
-public fun <T> dbColumnTypeInformation(
-    columnMetadata: TableColumnMetadata,
-    targetSchema: ColumnSchema,
-): DbColumnTypeInformation<T, T, T> =
+public fun <T> dbColumnTypeInformation(targetSchema: ColumnSchema): DbColumnTypeInformation<T, T, T> =
     DbColumnTypeInformation(
-        columnMetadata = columnMetadata,
         targetSchema = targetSchema,
         valuePreprocessor = null,
         columnPostprocessor = null,
     )
 
 public fun <J, D> dbColumnTypeInformationWithPreprocessing(
-    columnMetadata: TableColumnMetadata,
     targetSchema: ColumnSchema,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
 ): DbColumnTypeInformation<J, D, D> =
     DbColumnTypeInformation(
-        columnMetadata = columnMetadata,
         targetSchema = targetSchema,
         valuePreprocessor = valuePreprocessor,
         columnPostprocessor = null,
     )
 
 public fun <J, P> dbColumnTypeInformationWithPostprocessing(
-    columnMetadata: TableColumnMetadata,
     targetSchema: ColumnSchema,
     columnPostprocessor: DbColumnPostprocessor<J, P>?,
 ): DbColumnTypeInformation<J, J, P> =
     DbColumnTypeInformation(
-        columnMetadata = columnMetadata,
         targetSchema = targetSchema,
         valuePreprocessor = null,
         columnPostprocessor = columnPostprocessor,
     )
 
 public fun <J, D, P> dbColumnTypeInformation(
-    columnMetadata: TableColumnMetadata,
     targetSchema: ColumnSchema,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
     columnPostprocessor: DbColumnPostprocessor<D, P>?,
 ): DbColumnTypeInformation<J, D, P> =
     DbColumnTypeInformation(
-        columnMetadata = columnMetadata,
         targetSchema = targetSchema,
         valuePreprocessor = valuePreprocessor,
         columnPostprocessor = columnPostprocessor,
@@ -108,9 +97,9 @@ public fun interface DbValuePreprocessor<in J, out D> {
      * return a [org.jetbrains.kotlinx.dataframe.DataFrame] here.
      */
     public fun preprocess(
-        jdbcValue: J,
+        jdbcValue: J?,
         dbColumnTypeInformation: DbColumnTypeInformation<@UnsafeVariance J, @UnsafeVariance D, *>,
-    ): D
+    ): D?
 }
 
 public fun <J, D> DbValuePreprocessor<*, *>.cast(): DbValuePreprocessor<J, D> = this as DbValuePreprocessor<J, D>
