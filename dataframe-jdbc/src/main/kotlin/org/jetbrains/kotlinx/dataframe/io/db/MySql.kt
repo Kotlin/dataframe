@@ -1,12 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
-import kotlin.reflect.KType
-import kotlin.reflect.full.createType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 /**
  * Represents the MySql database type.
@@ -18,12 +16,15 @@ public object MySql : DbType("mysql") {
     override val driverClassName: String
         get() = "com.mysql.jdbc.Driver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
+    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation {
         if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
-            val kType = Long::class.createType(nullable = tableColumnMetadata.isNullable)
-            return ColumnSchema.Value(kType)
+            val kType = typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
+            return dbColumnTypeInformation<Long?>(
+                columnMetadata = tableColumnMetadata,
+                targetSchema = ColumnSchema.Value(kType),
+            )
         }
-        return null
+        return super.generateTypeInformation(tableColumnMetadata)
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
@@ -48,13 +49,6 @@ public object MySql : DbType("mysql") {
             tables.getString("table_schem"),
             tables.getString("table_cat"),
         )
-
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
-            return Long::class.createType(nullable = tableColumnMetadata.isNullable)
-        }
-        return null
-    }
 
     override fun quoteIdentifier(name: String): String {
         // schema.table -> `schema`.`table`

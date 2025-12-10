@@ -20,8 +20,6 @@ public object Sqlite : DbType("sqlite") {
     override val driverClassName: String
         get() = "org.sqlite.JDBC"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? = null
-
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean = tableMetadata.name.startsWith("sqlite_")
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata =
@@ -30,8 +28,6 @@ public object Sqlite : DbType("sqlite") {
             tables.getString("TABLE_SCHEM"),
             tables.getString("TABLE_CAT"),
         )
-
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 
     override fun createConnection(dbConfig: DbConnectionConfig): Connection =
         if (dbConfig.readOnly) {

@@ -451,14 +451,7 @@ internal fun buildSchemaByTableColumns(
     dbType: DbType,
 ): DataFrameSchema {
     val schemaColumns = tableColumns.associate {
-        Pair(it.name, generateColumnSchemaValue(dbType, it))
+        it.name to dbType.generateTypeInformation(it).targetSchema
     }
-
-    return DataFrameSchemaImpl(
-        columns = schemaColumns,
-    )
+    return DataFrameSchemaImpl(columns = schemaColumns)
 }
-
-internal fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
-    dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
-        ?: ColumnSchema.Value(dbType.makeCommonSqlToKTypeMapping(tableColumnMetadata))

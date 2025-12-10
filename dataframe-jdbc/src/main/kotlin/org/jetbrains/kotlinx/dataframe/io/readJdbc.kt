@@ -1,19 +1,28 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.isValueColumn
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.io.db.AnyDbColumnTypeInformation
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.cast
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import javax.sql.DataSource
-import kotlin.reflect.KType
+import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubclassOf
 
 private val logger = KotlinLogging.logger {}
 
@@ -872,9 +881,21 @@ internal fun fetchAndConvertDataFromResultSet(
     limit: Int?,
     inferNullability: Boolean,
 ): AnyFrame {
-    val columnKTypes = buildColumnKTypes(tableColumns, dbType)
-    val columnData = readAllRowsFromResultSet(rs, tableColumns, columnKTypes, dbType, limit)
-    val dataFrame = buildDataFrameFromColumnData(columnData, tableColumns, columnKTypes, dbType, inferNullability)
+    val columnTypeInformation = buildColumnTypeInformation(tableColumns = tableColumns, dbType = dbType)
+    val columnData = readAllRowsFromResultSet(
+        rs = rs,
+        tableColumns = tableColumns,
+        columnTypeInformation = columnTypeInformation,
+        dbType = dbType,
+        limit = limit,
+    )
+    val dataFrame = buildDataFrameFromColumnData(
+        columnData = columnData,
+        tableColumns = tableColumns,
+        columnTypeInformation = columnTypeInformation,
+        dbType = dbType,
+        inferNullability = inferNullability,
+    )
 
     logger.debug {
         "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query."
@@ -886,35 +907,38 @@ internal fun fetchAndConvertDataFromResultSet(
 /**
  * Builds a map of column indices to their Kotlin types.
  */
-private fun buildColumnKTypes(tableColumns: List<TableColumnMetadata>, dbType: DbType): Map<Int, KType> =
-    tableColumns.indices.associateWith { index ->
-        generateKType(dbType, tableColumns[index])
+private fun buildColumnTypeInformation(
+    tableColumns: List<TableColumnMetadata>,
+    dbType: DbType,
+): List<AnyDbColumnTypeInformation> =
+    tableColumns.indices.map { index ->
+        dbType.generateTypeInformation(tableColumns[index])
     }
 
 /**
  * Reads all rows from ResultSet and returns a column-oriented data structure.
- * Returns mutable lists to allow efficient post-processing without copying.
  */
 private fun readAllRowsFromResultSet(
     rs: ResultSet,
     tableColumns: List<TableColumnMetadata>,
-    columnKTypes: Map<Int, KType>,
+    columnTypeInformation: List<AnyDbColumnTypeInformation>,
     dbType: DbType,
     limit: Int?,
-): List<MutableList<Any?>> {
+): List<List<Any?>> {
     val columnsCount = tableColumns.size
     val columnData = List(columnsCount) { mutableListOf<Any?>() }
     var rowsRead = 0
 
     while (rs.next() && (limit == null || rowsRead < limit)) {
         repeat(columnsCount) { columnIndex ->
-            val value = dbType.extractValueFromResultSet(
+            val typeInformation = columnTypeInformation[columnIndex].cast<Any?, Any?, Any?>()
+            val value = dbType.getValueFromResultSet(
                 rs = rs,
                 columnIndex = columnIndex,
-                columnMetadata = tableColumns[columnIndex],
-                kType = columnKTypes.getValue(columnIndex),
+                typeInformation = typeInformation,
             )
-            columnData[columnIndex].add(value)
+            val preprocessedValue = typeInformation.preprocess(value)
+            columnData[columnIndex].add(preprocessedValue)
         }
         rowsRead++
         // if (rowsRead % 1000 == 0) logger.debug { "Loaded $rowsRead rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
@@ -928,29 +952,88 @@ private fun readAllRowsFromResultSet(
  * Accepts mutable lists to enable efficient in-place transformations.
  */
 private fun buildDataFrameFromColumnData(
-    columnData: List<MutableList<Any?>>,
+    columnData: List<List<Any?>>,
     tableColumns: List<TableColumnMetadata>,
-    columnKTypes: Map<Int, KType>,
+    columnTypeInformation: List<AnyDbColumnTypeInformation>,
     dbType: DbType,
     inferNullability: Boolean,
+    checkSchema: Boolean = true, // TODO add as configurable parameter
 ): AnyFrame =
     columnData.mapIndexed { index, values ->
-        dbType.buildDataColumn(
+        val typeInformation = columnTypeInformation[index].cast<Any?, Any?, Any?>()
+        val column = dbType.buildDataColumn(
             name = tableColumns[index].name,
             values = values,
-            kType = columnKTypes.getValue(index),
+            typeInformation = typeInformation,
             inferNullability = inferNullability,
         )
+        val postProcessedColumn = typeInformation.postprocess(column)
+
+        if (checkSchema) {
+            postProcessedColumn.checkSchema(typeInformation.targetSchema)
+        }
+
+        postProcessedColumn
     }.toDataFrame()
 
-/**
- * Generates a KType based on the given database type and table column metadata.
- *
- * @param dbType The database type.
- * @param tableColumnMetadata The table column metadata.
- *
- * @return The generated KType.
- */
-internal fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType =
-    dbType.convertSqlTypeToKType(tableColumnMetadata)
-        ?: dbType.makeCommonSqlToKTypeMapping(tableColumnMetadata)
+private fun AnyCol.checkSchema(expected: ColumnSchema) {
+    when (expected) {
+        is ColumnSchema.Value -> {
+            require(this.isValueColumn()) {
+                """
+                Found mismatching schema for column '${this.name()}'.
+                Column ${this.name()} is expected to be a value column of type ${expected.type} but it is ${this.type()}.
+                """.trimIndent()
+            }
+            require(values().all { it == null || it::class.isSubclassOf(expected.type.classifier as KClass<*>) }) {
+                """
+                Found mismatching type for value column '${this.name()}'.
+                Expected type: ${expected.type}
+                Actual types: ${values().map { it?.javaClass?.name ?: "null" }.distinct()}
+                """.trimIndent()
+            }
+        }
+
+        is ColumnSchema.Group -> {
+            require(this.isColumnGroup()) {
+                """
+                Found mismatching schema for column '${name()}'.
+                Column ${this.name()} is expected to be a column group but it is ${this.type()}.
+                """.trimIndent()
+            }
+            require(expected.schema.compare(this.schema()).isSuperOrMatches()) {
+                """
+                Found mismatching schema for column group '${name()}'.
+                Expected schema:
+                ${expected.schema}
+                
+                Actual schema:
+                ${this.schema()}
+                """.trimIndent()
+            }
+        }
+
+        is ColumnSchema.Frame -> {
+            require(this.isFrameColumn()) {
+                """
+                Found mismatching schema for column '${this.name()}'.
+                Column ${this.name()} is expected to be a frame column but it is ${this.type()}.
+                """.trimIndent()
+            }
+            require(values().all { expected.schema.compare(it.schema()).isSuperOrMatches() }) {
+                """
+                Found mismatching schema for frame column '${this.name()}'.
+                Expected schema:
+                ${expected.schema}
+                
+                Actual (deviating) schemas:
+                ${
+                    values().map { it.schema() }
+                        .distinct()
+                        .filterNot { expected.schema.compare(it).isSuperOrMatches() }
+                }
+                """.trimIndent()
+            }
+        }
+    }
+}

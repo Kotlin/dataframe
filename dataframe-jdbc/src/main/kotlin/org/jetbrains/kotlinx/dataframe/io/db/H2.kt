@@ -1,9 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
-import kotlin.reflect.KType
 import org.jetbrains.kotlinx.dataframe.io.db.MariaDb as MariaDbType
 import org.jetbrains.kotlinx.dataframe.io.db.MsSql as MsSqlType
 import org.jetbrains.kotlinx.dataframe.io.db.MySql as MySqlType
@@ -119,8 +117,9 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     override val driverClassName: String
         get() = "org.h2.Driver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? =
-        delegate?.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
+    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation =
+        delegate?.generateTypeInformation(tableColumnMetadata)
+            ?: super.generateTypeInformation(tableColumnMetadata)
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
@@ -145,9 +144,6 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
                 tables.getString("table_schem"),
                 tables.getString("table_cat"),
             )
-
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
-        delegate?.convertSqlTypeToKType(tableColumnMetadata)
 
     public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
         delegate?.buildSqlQueryWithLimit(sqlQuery, limit) ?: super.buildSqlQueryWithLimit(sqlQuery, limit)
