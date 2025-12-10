@@ -225,6 +225,7 @@
     <toc-element topic="_shadow_resources.md" hidden="true"/>
     <toc-element topic="Support.md"/>
     <toc-element topic="FAQ.md"/>
-    <toc-element topic="Migration-From-Plugins.md"/>
-    <toc-element topic="MigrationTo_1_0.md"/>
+    <toc-element topic="MigrationTo_1_0.md">
+        <toc-element topic="Migration-From-Plugins.md"/>
+    </toc-element>
 </instance-profile>
