@@ -210,28 +210,44 @@ public object DuckDb : DbType("duckdb") {
             MAP -> {
                 val (key, value) = parseMapTypes(sqlTypeName)
 
+                val parsedKeyType = parseDuckDbType(key, false)
+                val parsedValueType =
+                    parseDuckDbType(value, true).cast<Any?, Any?, Any?>()
+
                 val targetMapType = Map::class.createType(
                     listOf(
-                        KTypeProjection.invariant(parseDuckDbType(key, false).targetSchema.type),
-                        KTypeProjection.invariant(parseDuckDbType(value, true).targetSchema.type),
+                        KTypeProjection.invariant(parsedKeyType.targetSchema.type),
+                        KTypeProjection.invariant(parsedValueType.targetSchema.type),
                     ),
                 )
 
-                dbColumnTypeInformation<Map<String, Any?>>(ColumnSchema.Value(targetMapType))
+                dbColumnTypeInformationWithPreprocessing<Map<String, Any?>, Map<String, Any?>>(
+                    ColumnSchema.Value(targetMapType),
+                ) { map, _ ->
+                    // only need to preprocess the values, as the keys are just Strings
+                    map?.mapValues { (_, value) ->
+                        parsedValueType.preprocess(value)
+                    }
+                }
             }
 
             LIST, ARRAY -> {
                 // TODO requires #1266 and #1273 for specific types
                 val listType = parseListType(sqlTypeName)
-                val parsedListType = parseDuckDbType(listType, true)
+                val parsedListType =
+                    parseDuckDbType(listType, true).cast<Any?, Any?, Any?>()
+
                 val targetListType = List::class.createType(
                     listOf(KTypeProjection.invariant(parsedListType.targetSchema.type)),
                 )
+
                 // todo maybe List<DataRow> should become FrameColumn
                 dbColumnTypeInformationWithPreprocessing<SqlArray, List<Any?>>(
                     ColumnSchema.Value(targetListType),
-                ) { it, typeInfo ->
-                    it?.toList()
+                ) { array, _ ->
+                    array
+                        ?.toList()
+                        ?.map(parsedListType::preprocess) // recursively preprocess
                 }
             }
 
