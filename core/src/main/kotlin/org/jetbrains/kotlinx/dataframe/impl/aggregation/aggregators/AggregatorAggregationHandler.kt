@@ -2,9 +2,8 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asSequence
-import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
-import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.WrappedStatistic
 import kotlin.reflect.KType
 
 /**
@@ -25,28 +24,7 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
      * When the exact [valueType] is unknown, use [calculateValueType] or [aggregateCalculatingValueType].
      */
     public fun aggregateSequence(values: Sequence<Value?>, valueType: ValueType): Return
-//
-//    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return {
-//        // It is possible to exploit cached statistic which is proper of ValueColumnImpl
-//        if (column is ValueColumnImpl<Value?>) {
-//            if (column.max.wasComputed) {
-//                return column.max.cachedStatistic as Return
-//            } else {
-//                val max = aggregateSequence(
-//                    values = column.asSequence(),
-//                    valueType = column.type().toValueType(),
-//                )
-//                column.max.cachedStatistic = max
-//                column.max.wasComputed = true
-//                aggregateSingleColumn(column)
-//            }
-//        }
-//        // Otherwise
-//        return aggregateSequence(
-//            values = column.asSequence(),
-//            valueType = column.type().toValueType(),
-//        )
-//    }
+
     /**
      * Aggregates the data in the given column and computes a single resulting value.
      * Calls [aggregateSequence].
@@ -56,6 +34,24 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
             values = column.asSequence(),
             valueType = column.type().toValueType(),
         )
+
+    /**
+     * optimized override for [aggregateSingleColumn],
+     * preferred when column's dynamic type is ValueColumnImpl
+     */
+    public fun aggregateSingleColumn(column: DataColumn<Value?>, wrappedStatistic: WrappedStatistic): Return {
+        // It is possible to exploit cached statistic which is proper of ValueColumnImpl
+        if (wrappedStatistic.wasComputed) {
+            return wrappedStatistic.cachedStatistic as Return
+        }
+        val statistic = aggregateSequence(
+            values = column.asSequence(),
+            valueType = column.type().toValueType(),
+        )
+        wrappedStatistic.cachedStatistic = statistic
+        wrappedStatistic.wasComputed = true
+        return aggregateSingleColumn(column, wrappedStatistic)
+    }
 
     /**
      * Function that can give the return type of [aggregateSequence] as [KType], given the type of the input.
