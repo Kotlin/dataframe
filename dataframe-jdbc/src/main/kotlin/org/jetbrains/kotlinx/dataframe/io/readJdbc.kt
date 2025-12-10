@@ -912,7 +912,7 @@ private fun buildColumnTypeInformation(
     dbType: DbType,
 ): List<AnyDbColumnTypeInformation> =
     tableColumns.indices.map { index ->
-        dbType.generateTypeInformation(tableColumns[index])
+        dbType.getOrGenerateTypeInformation(tableColumns[index])
     }
 
 /**

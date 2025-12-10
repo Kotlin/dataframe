@@ -134,8 +134,19 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         Types.TIMESTAMP_WITH_TIMEZONE to typeOf<OffsetDateTime>(),
     )
 
+    private val typeInformationCache = mutableMapOf<TableColumnMetadata, AnyDbColumnTypeInformation>()
+
     /**
      * Returns a [DbColumnTypeInformation] produced from [tableColumnMetadata].
+     */
+    public fun getOrGenerateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation =
+        typeInformationCache.getOrPut(tableColumnMetadata) { generateTypeInformation(tableColumnMetadata) }
+
+    /**
+     * Returns a [DbColumnTypeInformation] produced from [tableColumnMetadata].
+     *
+     * This function can be overridden by returning your own [DbColumnTypeInformation] or a subtype of that.
+     * Do note that this class needs to be stateless, so this function can be memoized.
      */
     public open fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation {
         val kType = when {

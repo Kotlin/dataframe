@@ -100,6 +100,8 @@ public object DuckDb : DbType("duckdb") {
     override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation =
         parseDuckDbType(tableColumnMetadata.sqlTypeName, tableColumnMetadata.isNullable)
 
+    private val duckDbTypeCache = mutableMapOf<Pair<String, Boolean>, AnyDbColumnTypeInformation>()
+
     /**
      * How a column type from JDBC, [sqlTypeName], is read in Java/Kotlin.
      * The returned type must exactly follow [ResultSet.getObject] of your specific database's JDBC driver.
@@ -109,165 +111,167 @@ public object DuckDb : DbType("duckdb") {
      *
      */
     internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyDbColumnTypeInformation =
-        when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
-            BOOLEAN -> dbColumnTypeInformation<Boolean>(
-                ColumnSchema.Value(typeOf<Boolean>().withNullability(isNullable)),
-            )
-
-            TINYINT -> dbColumnTypeInformation<Byte>(
-                ColumnSchema.Value(typeOf<Byte>().withNullability(isNullable)),
-            )
-
-            SMALLINT -> dbColumnTypeInformation<Short>(
-                ColumnSchema.Value(typeOf<Short>().withNullability(isNullable)),
-            )
-
-            INTEGER -> dbColumnTypeInformation<Int>(
-                ColumnSchema.Value(typeOf<Int>().withNullability(isNullable)),
-            )
-
-            BIGINT -> dbColumnTypeInformation<Long>(
-                ColumnSchema.Value(typeOf<Long>().withNullability(isNullable)),
-            )
-
-            HUGEINT -> dbColumnTypeInformation<BigInteger>(
-                ColumnSchema.Value(typeOf<BigInteger>().withNullability(isNullable)),
-            )
-
-            UHUGEINT -> dbColumnTypeInformation<BigInteger>(
-                ColumnSchema.Value(typeOf<BigInteger>().withNullability(isNullable)),
-            )
-
-            UTINYINT -> dbColumnTypeInformation<Short>(
-                ColumnSchema.Value(typeOf<Short>().withNullability(isNullable)),
-            )
-
-            USMALLINT -> dbColumnTypeInformation<Int>(
-                ColumnSchema.Value(typeOf<Int>().withNullability(isNullable)),
-            )
-
-            UINTEGER -> dbColumnTypeInformation<Long>(
-                ColumnSchema.Value(typeOf<Long>().withNullability(isNullable)),
-            )
-
-            UBIGINT -> dbColumnTypeInformation<BigInteger>(
-                ColumnSchema.Value(typeOf<BigInteger>().withNullability(isNullable)),
-            )
-
-            FLOAT -> dbColumnTypeInformation<Float>(
-                ColumnSchema.Value(typeOf<Float>().withNullability(isNullable)),
-            )
-
-            DOUBLE -> dbColumnTypeInformation<Double>(
-                ColumnSchema.Value(typeOf<Double>().withNullability(isNullable)),
-            )
-
-            DECIMAL -> dbColumnTypeInformation<BigDecimal>(
-                ColumnSchema.Value(typeOf<BigDecimal>().withNullability(isNullable)),
-            )
-
-            // DataFrame can do this conversion
-            TIME -> dbColumnTypeInformationWithPreprocessing<JavaLocalTime, LocalTime>(
-                ColumnSchema.Value(typeOf<LocalTime>().withNullability(isNullable)),
-            ) { it, _ -> it?.toKotlinLocalTime() }
-
-            // todo?
-            TIME_WITH_TIME_ZONE -> dbColumnTypeInformation<JavaOffsetTime>(
-                ColumnSchema.Value(typeOf<JavaOffsetTime>().withNullability(isNullable)),
-            )
-
-            DATE -> dbColumnTypeInformationWithPreprocessing<JavaLocalDate, LocalDate>(
-                ColumnSchema.Value(typeOf<LocalDate>().withNullability(isNullable)),
-            ) { it, _ ->
-                it?.toKotlinLocalDate()
-            }
-
-            TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S ->
-                dbColumnTypeInformationWithPreprocessing<SqlTimestamp, Instant>(
-                    ColumnSchema.Value(typeOf<Instant>().withNullability(isNullable)),
-                ) { it, _ ->
-                    it?.toInstant()?.toKotlinInstant()
-                }
-
-            // todo?
-            TIMESTAMP_WITH_TIME_ZONE -> dbColumnTypeInformation<JavaOffsetDateTime>(
-                ColumnSchema.Value(typeOf<JavaOffsetDateTime>().withNullability(isNullable)),
-            )
-
-            // TODO!
-            JSON -> dbColumnTypeInformation<JsonNode>(
-                ColumnSchema.Value(typeOf<JsonNode>().withNullability(isNullable)),
-            )
-
-            BLOB -> dbColumnTypeInformation<Blob>(
-                ColumnSchema.Value(typeOf<Blob>().withNullability(isNullable)),
-            )
-
-            UUID -> dbColumnTypeInformationWithPreprocessing<JavaUUID, Uuid>(
-                ColumnSchema.Value(typeOf<Uuid>().withNullability(isNullable)),
-            ) { it, _ -> it?.toKotlinUuid() }
-
-            MAP -> {
-                val (key, value) = parseMapTypes(sqlTypeName)
-
-                val parsedKeyType = parseDuckDbType(key, false)
-                val parsedValueType =
-                    parseDuckDbType(value, true).cast<Any?, Any?, Any?>()
-
-                val targetMapType = Map::class.createType(
-                    listOf(
-                        KTypeProjection.invariant(parsedKeyType.targetSchema.type),
-                        KTypeProjection.invariant(parsedValueType.targetSchema.type),
-                    ),
+        duckDbTypeCache.getOrPut(Pair(sqlTypeName, isNullable)) {
+            when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
+                BOOLEAN -> dbColumnTypeInformation<Boolean>(
+                    ColumnSchema.Value(typeOf<Boolean>().withNullability(isNullable)),
                 )
 
-                dbColumnTypeInformationWithPreprocessing<Map<String, Any?>, Map<String, Any?>>(
-                    ColumnSchema.Value(targetMapType),
-                ) { map, _ ->
-                    // only need to preprocess the values, as the keys are just Strings
-                    map?.mapValues { (_, value) ->
-                        parsedValueType.preprocess(value)
+                TINYINT -> dbColumnTypeInformation<Byte>(
+                    ColumnSchema.Value(typeOf<Byte>().withNullability(isNullable)),
+                )
+
+                SMALLINT -> dbColumnTypeInformation<Short>(
+                    ColumnSchema.Value(typeOf<Short>().withNullability(isNullable)),
+                )
+
+                INTEGER -> dbColumnTypeInformation<Int>(
+                    ColumnSchema.Value(typeOf<Int>().withNullability(isNullable)),
+                )
+
+                BIGINT -> dbColumnTypeInformation<Long>(
+                    ColumnSchema.Value(typeOf<Long>().withNullability(isNullable)),
+                )
+
+                HUGEINT -> dbColumnTypeInformation<BigInteger>(
+                    ColumnSchema.Value(typeOf<BigInteger>().withNullability(isNullable)),
+                )
+
+                UHUGEINT -> dbColumnTypeInformation<BigInteger>(
+                    ColumnSchema.Value(typeOf<BigInteger>().withNullability(isNullable)),
+                )
+
+                UTINYINT -> dbColumnTypeInformation<Short>(
+                    ColumnSchema.Value(typeOf<Short>().withNullability(isNullable)),
+                )
+
+                USMALLINT -> dbColumnTypeInformation<Int>(
+                    ColumnSchema.Value(typeOf<Int>().withNullability(isNullable)),
+                )
+
+                UINTEGER -> dbColumnTypeInformation<Long>(
+                    ColumnSchema.Value(typeOf<Long>().withNullability(isNullable)),
+                )
+
+                UBIGINT -> dbColumnTypeInformation<BigInteger>(
+                    ColumnSchema.Value(typeOf<BigInteger>().withNullability(isNullable)),
+                )
+
+                FLOAT -> dbColumnTypeInformation<Float>(
+                    ColumnSchema.Value(typeOf<Float>().withNullability(isNullable)),
+                )
+
+                DOUBLE -> dbColumnTypeInformation<Double>(
+                    ColumnSchema.Value(typeOf<Double>().withNullability(isNullable)),
+                )
+
+                DECIMAL -> dbColumnTypeInformation<BigDecimal>(
+                    ColumnSchema.Value(typeOf<BigDecimal>().withNullability(isNullable)),
+                )
+
+                // DataFrame can do this conversion
+                TIME -> dbColumnTypeInformationWithPreprocessing<JavaLocalTime, LocalTime>(
+                    ColumnSchema.Value(typeOf<LocalTime>().withNullability(isNullable)),
+                ) { it, _ -> it?.toKotlinLocalTime() }
+
+                // todo?
+                TIME_WITH_TIME_ZONE -> dbColumnTypeInformation<JavaOffsetTime>(
+                    ColumnSchema.Value(typeOf<JavaOffsetTime>().withNullability(isNullable)),
+                )
+
+                DATE -> dbColumnTypeInformationWithPreprocessing<JavaLocalDate, LocalDate>(
+                    ColumnSchema.Value(typeOf<LocalDate>().withNullability(isNullable)),
+                ) { it, _ ->
+                    it?.toKotlinLocalDate()
+                }
+
+                TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S ->
+                    dbColumnTypeInformationWithPreprocessing<SqlTimestamp, Instant>(
+                        ColumnSchema.Value(typeOf<Instant>().withNullability(isNullable)),
+                    ) { it, _ ->
+                        it?.toInstant()?.toKotlinInstant()
+                    }
+
+                // todo?
+                TIMESTAMP_WITH_TIME_ZONE -> dbColumnTypeInformation<JavaOffsetDateTime>(
+                    ColumnSchema.Value(typeOf<JavaOffsetDateTime>().withNullability(isNullable)),
+                )
+
+                // TODO!
+                JSON -> dbColumnTypeInformation<JsonNode>(
+                    ColumnSchema.Value(typeOf<JsonNode>().withNullability(isNullable)),
+                )
+
+                BLOB -> dbColumnTypeInformation<Blob>(
+                    ColumnSchema.Value(typeOf<Blob>().withNullability(isNullable)),
+                )
+
+                UUID -> dbColumnTypeInformationWithPreprocessing<JavaUUID, Uuid>(
+                    ColumnSchema.Value(typeOf<Uuid>().withNullability(isNullable)),
+                ) { it, _ -> it?.toKotlinUuid() }
+
+                MAP -> {
+                    val (key, value) = parseMapTypes(sqlTypeName)
+
+                    val parsedKeyType = parseDuckDbType(key, false)
+                    val parsedValueType =
+                        parseDuckDbType(value, true).cast<Any?, Any?, Any?>()
+
+                    val targetMapType = Map::class.createType(
+                        listOf(
+                            KTypeProjection.invariant(parsedKeyType.targetSchema.type),
+                            KTypeProjection.invariant(parsedValueType.targetSchema.type),
+                        ),
+                    )
+
+                    dbColumnTypeInformationWithPreprocessing<Map<String, Any?>, Map<String, Any?>>(
+                        ColumnSchema.Value(targetMapType),
+                    ) { map, _ ->
+                        // only need to preprocess the values, as the keys are just Strings
+                        map?.mapValues { (_, value) ->
+                            parsedValueType.preprocess(value)
+                        }
                     }
                 }
-            }
 
-            LIST, ARRAY -> {
-                // TODO requires #1266 and #1273 for specific types
-                val listType = parseListType(sqlTypeName)
-                val parsedListType =
-                    parseDuckDbType(listType, true).cast<Any?, Any?, Any?>()
+                LIST, ARRAY -> {
+                    // TODO requires #1266 and #1273 for specific types
+                    val listType = parseListType(sqlTypeName)
+                    val parsedListType =
+                        parseDuckDbType(listType, true).cast<Any?, Any?, Any?>()
 
-                val targetListType = List::class.createType(
-                    listOf(KTypeProjection.invariant(parsedListType.targetSchema.type)),
+                    val targetListType = List::class.createType(
+                        listOf(KTypeProjection.invariant(parsedListType.targetSchema.type)),
+                    )
+
+                    // todo maybe List<DataRow> should become FrameColumn
+                    dbColumnTypeInformationWithPreprocessing<SqlArray, List<Any?>>(
+                        ColumnSchema.Value(targetListType),
+                    ) { array, _ ->
+                        array
+                            ?.toList()
+                            ?.map(parsedListType::preprocess) // recursively preprocess
+                    }
+                }
+
+                // TODO requires #1266 for specific types
+                STRUCT -> dbColumnTypeInformation<Struct>(
+                    ColumnSchema.Value(typeOf<Struct>().withNullability(isNullable)),
                 )
 
-                // todo maybe List<DataRow> should become FrameColumn
-                dbColumnTypeInformationWithPreprocessing<SqlArray, List<Any?>>(
-                    ColumnSchema.Value(targetListType),
-                ) { array, _ ->
-                    array
-                        ?.toList()
-                        ?.map(parsedListType::preprocess) // recursively preprocess
-                }
+                // Cannot handle this in Kotlin
+                UNION -> dbColumnTypeInformation<Any>(
+                    ColumnSchema.Value(typeOf<Any>().withNullability(isNullable)),
+                )
+
+                VARCHAR -> dbColumnTypeInformation<String>(
+                    ColumnSchema.Value(typeOf<String>().withNullability(isNullable)),
+                )
+
+                UNKNOWN, BIT, INTERVAL, ENUM -> dbColumnTypeInformation<String>(
+                    ColumnSchema.Value(typeOf<String>().withNullability(isNullable)),
+                )
             }
-
-            // TODO requires #1266 for specific types
-            STRUCT -> dbColumnTypeInformation<Struct>(
-                ColumnSchema.Value(typeOf<Struct>().withNullability(isNullable)),
-            )
-
-            // Cannot handle this in Kotlin
-            UNION -> dbColumnTypeInformation<Any>(
-                ColumnSchema.Value(typeOf<Any>().withNullability(isNullable)),
-            )
-
-            VARCHAR -> dbColumnTypeInformation<String>(
-                ColumnSchema.Value(typeOf<String>().withNullability(isNullable)),
-            )
-
-            UNKNOWN, BIT, INTERVAL, ENUM -> dbColumnTypeInformation<String>(
-                ColumnSchema.Value(typeOf<String>().withNullability(isNullable)),
-            )
         }
 
     private fun SqlArray.toList(): List<Any?> =

@@ -451,7 +451,7 @@ internal fun buildSchemaByTableColumns(
     dbType: DbType,
 ): DataFrameSchema {
     val schemaColumns = tableColumns.associate {
-        it.name to dbType.generateTypeInformation(it).targetSchema
+        it.name to dbType.getOrGenerateTypeInformation(it).targetSchema
     }
     return DataFrameSchemaImpl(columns = schemaColumns)
 }

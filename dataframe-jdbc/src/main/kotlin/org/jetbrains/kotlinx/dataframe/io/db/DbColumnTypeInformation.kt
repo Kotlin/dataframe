@@ -8,7 +8,9 @@ public typealias AnyDbColumnTypeInformation = DbColumnTypeInformation<*, *, *>
 
 /**
  * Represents all type information that can be retrieved from an SQL column.
- * This can be extended for your specific [DbType2] if you need extra information.
+ * This can be extended for your specific [DbType] if you need extra information.
+ *
+ * This class needs to be stateless, so it can be memoized in [DbType.getOrGenerateTypeInformation].
  *
  * @property targetSchema the target schema of the column after running the optional
  *   [valuePreprocessor] and [columnPostprocessor].
