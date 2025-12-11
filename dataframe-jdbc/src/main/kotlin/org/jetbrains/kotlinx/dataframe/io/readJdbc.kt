@@ -9,10 +9,11 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.io.db.AnyDbColumnTypeInformation
+import org.jetbrains.kotlinx.dataframe.io.db.AnyTypeInformation
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.cast
+import org.jetbrains.kotlinx.dataframe.io.db.castToAny
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.Connection
@@ -910,7 +911,7 @@ internal fun fetchAndConvertDataFromResultSet(
 private fun buildColumnTypeInformation(
     tableColumns: List<TableColumnMetadata>,
     dbType: DbType,
-): List<AnyDbColumnTypeInformation> =
+): List<AnyTypeInformation> =
     tableColumns.indices.map { index ->
         dbType.getOrGenerateTypeInformation(tableColumns[index])
     }
@@ -921,7 +922,7 @@ private fun buildColumnTypeInformation(
 private fun readAllRowsFromResultSet(
     rs: ResultSet,
     tableColumns: List<TableColumnMetadata>,
-    columnTypeInformation: List<AnyDbColumnTypeInformation>,
+    columnTypeInformation: List<AnyTypeInformation>,
     dbType: DbType,
     limit: Int?,
 ): List<List<Any?>> {
@@ -931,7 +932,7 @@ private fun readAllRowsFromResultSet(
 
     while (rs.next() && (limit == null || rowsRead < limit)) {
         repeat(columnsCount) { columnIndex ->
-            val typeInformation = columnTypeInformation[columnIndex].cast<Any?, Any?, Any?>()
+            val typeInformation = columnTypeInformation[columnIndex].castToAny()
             val value = dbType.getValueFromResultSet(
                 rs = rs,
                 columnIndex = columnIndex,
@@ -954,13 +955,13 @@ private fun readAllRowsFromResultSet(
 private fun buildDataFrameFromColumnData(
     columnData: List<List<Any?>>,
     tableColumns: List<TableColumnMetadata>,
-    columnTypeInformation: List<AnyDbColumnTypeInformation>,
+    columnTypeInformation: List<AnyTypeInformation>,
     dbType: DbType,
     inferNullability: Boolean,
     checkSchema: Boolean = true, // TODO add as configurable parameter
 ): AnyFrame =
     columnData.mapIndexed { index, values ->
-        val typeInformation = columnTypeInformation[index].cast<Any?, Any?, Any?>()
+        val typeInformation = columnTypeInformation[index].castToAny()
         val column = dbType.buildDataColumn(
             name = tableColumns[index].name,
             values = values,

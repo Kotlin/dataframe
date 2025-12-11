@@ -15,7 +15,7 @@ public object MariaDb : DbType("mariadb") {
     override val driverClassName: String
         get() = "org.mariadb.jdbc.Driver"
 
-    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation {
+    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation {
         // Force BIGINT to always be Long, regardless of javaClassName
         // MariaDB JDBC driver may report Integer for small BIGINT values
         // TODO: investigate the corner case
@@ -28,13 +28,11 @@ public object MariaDb : DbType("mariadb") {
         if (tableColumnMetadata.sqlTypeName == "INTEGER UNSIGNED" ||
             tableColumnMetadata.sqlTypeName == "INT UNSIGNED"
         ) {
-            val kType = typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
-            return dbColumnTypeInformation<Long?>(targetSchema = ColumnSchema.Value(kType))
+            return typeInformationForValueColumnOf<Long>(tableColumnMetadata.isNullable)
         }
 
         if (tableColumnMetadata.sqlTypeName == "SMALLINT" && tableColumnMetadata.javaClassName == "java.lang.Short") {
-            val kType = typeOf<Short>().withNullability(tableColumnMetadata.isNullable)
-            return dbColumnTypeInformation<Short?>(targetSchema = ColumnSchema.Value(kType))
+            return typeInformationForValueColumnOf<Short>(tableColumnMetadata.isNullable)
         }
         return super.generateTypeInformation(tableColumnMetadata)
     }

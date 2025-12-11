@@ -16,10 +16,9 @@ public object MySql : DbType("mysql") {
     override val driverClassName: String
         get() = "com.mysql.jdbc.Driver"
 
-    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation {
+    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation {
         if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
-            val kType = typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
-            return dbColumnTypeInformation<Long?>(targetSchema = ColumnSchema.Value(kType))
+            return typeInformationForValueColumnOf<Long>(tableColumnMetadata.isNullable)
         }
         return super.generateTypeInformation(tableColumnMetadata)
     }

@@ -16,11 +16,10 @@ public object PostgreSql : DbType("postgresql") {
     override val driverClassName: String
         get() = "org.postgresql.Driver"
 
-    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation {
+    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation {
         // because of https://github.com/pgjdbc/pgjdbc/issues/425
         if (tableColumnMetadata.sqlTypeName == "money") {
-            val kType = typeOf<String>().withNullability(tableColumnMetadata.isNullable)
-            return dbColumnTypeInformation<String?>(targetSchema = ColumnSchema.Value(kType))
+            return typeInformationForValueColumnOf<String>(tableColumnMetadata.isNullable)
         }
         return super.generateTypeInformation(tableColumnMetadata)
     }

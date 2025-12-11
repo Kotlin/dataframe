@@ -134,21 +134,21 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         Types.TIMESTAMP_WITH_TIMEZONE to typeOf<OffsetDateTime>(),
     )
 
-    private val typeInformationCache = mutableMapOf<TableColumnMetadata, AnyDbColumnTypeInformation>()
+    private val typeInformationCache = mutableMapOf<TableColumnMetadata, AnyTypeInformation>()
 
     /**
-     * Returns a [DbColumnTypeInformation] produced from [tableColumnMetadata].
+     * Returns a [TypeInformation] produced from [tableColumnMetadata].
      */
-    public fun getOrGenerateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation =
+    public fun getOrGenerateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation =
         typeInformationCache.getOrPut(tableColumnMetadata) { generateTypeInformation(tableColumnMetadata) }
 
     /**
-     * Returns a [DbColumnTypeInformation] produced from [tableColumnMetadata].
+     * Returns a [TypeInformation] produced from [tableColumnMetadata].
      *
-     * This function can be overridden by returning your own [DbColumnTypeInformation] or a subtype of that.
+     * This function can be overridden by returning your own [TypeInformation] or a subtype of that.
      * Do note that this class needs to be stateless, so this function can be memoized.
      */
-    public open fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation {
+    public open fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation {
         val kType = when {
             tableColumnMetadata.jdbcType == Types.OTHER ->
                 when (tableColumnMetadata.javaClassName) {
@@ -186,16 +186,16 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         val postprocessor =
             when (tableColumnMetadata.jdbcType) {
                 Types.ARRAY ->
-                    DbColumnPostprocessor<Array<*>, Any?> { column, _ ->
+                    DbColumnPostprocessor<Array<*>, Any> { column, _ ->
                         handleArrayValues(column.asValueColumn())
                     }
 
                 else -> null
             }
 
-        return dbColumnTypeInformationWithPostprocessing<Any?, Any?>(
+        return typeInformationWithPostprocessingFor(
             targetSchema = ColumnSchema.Value(kType.withNullability(tableColumnMetadata.isNullable)),
-            columnPostprocessor = postprocessor?.cast(),
+            columnPostprocessor = postprocessor?.castToAny(),
         )
     }
 
@@ -208,29 +208,29 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param [typeInformation]
      * @return the extracted value, or null
      */
-    public open fun <J> getValueFromResultSet(
+    public open fun <J : Any> getValueFromResultSet(
         rs: ResultSet,
         columnIndex: Int,
-        typeInformation: DbColumnTypeInformation<J, *, *>,
-    ): J =
+        typeInformation: TypeInformation<J, *, *>,
+    ): J? =
         try {
             rs.getObject(columnIndex + 1)
         } catch (_: Throwable) {
             // TODO?
             rs.getString(columnIndex + 1)
-        } as J
+        } as J?
 
-    public fun <J, D> preprocessValuesFromResultSet(
+    public fun <J : Any, D : Any> preprocessValuesFromResultSet(
         value: J?,
-        dbColumnTypeInformation: DbColumnTypeInformation<J, D, *>,
-    ): D? = dbColumnTypeInformation.preprocess(value)
+        typeInformation: TypeInformation<J, D, *>,
+    ): D? = typeInformation.preprocess(value)
 
-    public open fun <D> buildDataColumn(
+    public open fun <D : Any> buildDataColumn(
         name: String,
-        values: List<D>,
-        typeInformation: DbColumnTypeInformation<*, D, *>,
+        values: List<D?>,
+        typeInformation: TypeInformation<*, D, *>,
         inferNullability: Boolean,
-    ): DataColumn<D> =
+    ): DataColumn<D?> =
         when (val schema = typeInformation.targetSchema) {
             is ColumnSchema.Value ->
                 DataColumn.createValueColumn(
@@ -254,10 +254,10 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 ).cast()
         }
 
-    public fun <D, P> postProcessDataColumn(
-        column: DataColumn<D>,
-        dbColumnTypeInformation: DbColumnTypeInformation<*, D, P>,
-    ): DataColumn<P> = dbColumnTypeInformation.postprocess(column)
+    public fun <D : Any, P : Any> postProcessDataColumn(
+        column: DataColumn<D?>,
+        typeInformation: TypeInformation<*, D, P>,
+    ): DataColumn<P?> = typeInformation.postprocess(column)
 
     /**
      * Checks if the given table name is a system table for the specified database type.

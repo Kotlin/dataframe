@@ -117,7 +117,7 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     override val driverClassName: String
         get() = "org.h2.Driver"
 
-    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyDbColumnTypeInformation =
+    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation =
         delegate?.generateTypeInformation(tableColumnMetadata)
             ?: super.generateTypeInformation(tableColumnMetadata)
 
