@@ -61,6 +61,7 @@ internal open class ValueColumnImpl<T>(
 
 internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
     ValueColumn<T> by source,
+    ValueColumnInternal<T>,
     ForceResolvedColumn<T> {
 
     override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
@@ -79,4 +80,6 @@ internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
     override fun equals(other: Any?) = source.checkEquals(other)
 
     override fun hashCode(): Int = source.hashCode()
+
+    override val max = WrappedStatistic(null)
 }

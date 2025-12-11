@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
-import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -34,7 +34,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
     maxOrNull(skipNaN).suggestIfNull("max")
 
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipNaNDefault): T? =
-    if(this is ValueColumnImpl<*>) {
+    if(this is ValueColumnInternal<*>) {
         Aggregators.max<T>(skipNaN).aggregateSingleColumn(this, this.max)
     } else {
         Aggregators.max<T>(skipNaN).aggregateSingleColumn(this)

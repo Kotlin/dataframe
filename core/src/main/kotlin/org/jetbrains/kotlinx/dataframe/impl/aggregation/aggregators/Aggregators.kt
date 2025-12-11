@@ -126,11 +126,8 @@ public object Aggregators {
     // T : Comparable<T & Any>? -> T?
     public fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
 
-    // following val is an aggregator-builder, invoke creates the aggregator.
-    // aggregator is something that gets values and makes a computation
     public val max: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
         by withOneOption { skipNaN: Boolean ->
-            // the following fun returns an AggregatorProvider
             twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
                 getReturnType = maxTypeConversion,
                 stepOneSelector = { type -> maxOrNull(type, skipNaN) },

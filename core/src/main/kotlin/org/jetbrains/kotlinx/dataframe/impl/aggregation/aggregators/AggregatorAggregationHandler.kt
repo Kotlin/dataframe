@@ -29,19 +29,22 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
      * Aggregates the data in the given column and computes a single resulting value.
      * Calls [aggregateSequence].
      */
-    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
-        aggregateSequence(
+    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return {
+        println("NOT ValueColumnImpl")
+        return aggregateSequence(
             values = column.asSequence(),
             valueType = column.type().toValueType(),
         )
+    }
 
     /**
      * optimized override for [aggregateSingleColumn],
-     * preferred when column's dynamic type is ValueColumnImpl
+     * preferred when column's runtime type is ValueColumnImpl
      */
     public fun aggregateSingleColumn(column: DataColumn<Value?>, wrappedStatistic: WrappedStatistic): Return {
         // It is possible to exploit cached statistic which is proper of ValueColumnImpl
         if (wrappedStatistic.wasComputed) {
+            println("ValueColumnImpl, stat was computed")
             return wrappedStatistic.cachedStatistic as Return
         }
         val statistic = aggregateSequence(
@@ -50,6 +53,7 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
         )
         wrappedStatistic.cachedStatistic = statistic
         wrappedStatistic.wasComputed = true
+        println("ValueColumnImpl, stat was not computed")
         return aggregateSingleColumn(column, wrappedStatistic)
     }
 
