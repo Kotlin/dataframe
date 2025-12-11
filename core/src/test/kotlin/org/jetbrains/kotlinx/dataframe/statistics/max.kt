@@ -28,6 +28,7 @@ class MaxTests {
         val col = columnOf(5, 2, 8, 1, 9)
         println(col::class.simpleName)
         col.max() shouldBe 9
+        col.max() shouldBe 9
     }
 
     @Test

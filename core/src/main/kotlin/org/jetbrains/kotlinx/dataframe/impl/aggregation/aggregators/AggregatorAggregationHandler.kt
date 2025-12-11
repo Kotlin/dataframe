@@ -38,23 +38,42 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
     }
 
     /**
-     * optimized override for [aggregateSingleColumn],
-     * preferred when column's runtime type is ValueColumnImpl
+     * optimized override of [aggregateSingleColumn],
+     * preferred when column's runtime type is ValueColumnInternal so that
+     * it is possible to exploit cached statistics which are proper of ValueColumnInternal
      */
-    public fun aggregateSingleColumn(column: DataColumn<Value?>, wrappedStatistic: WrappedStatistic): Return {
-        // It is possible to exploit cached statistic which is proper of ValueColumnImpl
-        if (wrappedStatistic.wasComputed) {
-            println("ValueColumnImpl, stat was computed")
-            return wrappedStatistic.cachedStatistic as Return
+    public fun aggregateSingleColumn(
+        column: DataColumn<Value?>,
+        wrappedStatistic: WrappedStatistic,
+        skipNaN: Boolean,
+    ): Return {
+        when {
+            skipNaN && wrappedStatistic.wasComputedSkippingNaN -> {
+                println("valuecol, NOT COMPUTED")
+                return wrappedStatistic.statisticComputedSkippingNaN as Return
+            }
+
+            (!skipNaN) && wrappedStatistic.wasComputedNotSkippingNaN -> {
+                println("valuecol, NOT COMPUTED")
+                return wrappedStatistic.statisticComputedNotSkippingNaN as Return
+            }
+
+            else -> {
+                val statistic = aggregateSequence(
+                    values = column.asSequence(),
+                    valueType = column.type().toValueType(),
+                )
+                if (skipNaN) {
+                    wrappedStatistic.wasComputedSkippingNaN = true
+                    wrappedStatistic.statisticComputedSkippingNaN = statistic
+                } else {
+                    wrappedStatistic.wasComputedNotSkippingNaN = true
+                    wrappedStatistic.statisticComputedNotSkippingNaN = statistic
+                }
+                println("valuecol, COMPUTED")
+                return aggregateSingleColumn(column, wrappedStatistic, skipNaN)
+            }
         }
-        val statistic = aggregateSequence(
-            values = column.asSequence(),
-            valueType = column.type().toValueType(),
-        )
-        wrappedStatistic.cachedStatistic = statistic
-        wrappedStatistic.wasComputed = true
-        println("ValueColumnImpl, stat was not computed")
-        return aggregateSingleColumn(column, wrappedStatistic)
     }
 
     /**
