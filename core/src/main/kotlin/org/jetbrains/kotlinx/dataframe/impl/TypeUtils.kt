@@ -696,7 +696,7 @@ internal fun Iterable<Any?>.types(): Set<KType> =
     }
 
 /**
- * Checks whether this KType adheres to `T : Comparable<T & Any>?`, aka, it is comparable with itself.
+ * Checks whether this KType adheres to `T : Comparable<T & Any>?`, aka, it is mutually comparable with itself.
  */
 internal fun KType.isIntraComparable(): Boolean =
     this.isSubtypeOf(
