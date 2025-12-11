@@ -5672,10 +5672,6 @@ public final class org/jetbrains/kotlinx/dataframe/impl/CacheKt {
 	public static final fun getListType (Lkotlin/reflect/KType;)Lkotlin/reflect/KType;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/impl/ColumnAccessTrackerKt {
-	public static final fun trackColumnAccess (Lkotlin/jvm/functions/Function0;)Ljava/util/List;
-}
-
 public final class org/jetbrains/kotlinx/dataframe/impl/ColumnNameGenerator {
 	public fun <init> ()V
 	public fun <init> (Ljava/util/List;)V

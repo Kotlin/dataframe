@@ -174,7 +174,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
@@ -276,13 +275,6 @@ class DataFrameTests : BaseTest() {
         val sliced = typed[1..2]
         sliced.nrow shouldBe 2
         sliced[0].name shouldBe typed[1].name
-    }
-
-    @Test
-    fun `access tracking`() {
-        trackColumnAccess {
-            typed[2].age
-        } shouldBe listOf("age")
     }
 
     @Test
