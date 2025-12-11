@@ -58,6 +58,7 @@ import java.util.Properties
 import kotlin.collections.toList
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.withNullability
 import kotlin.time.Instant
 import kotlin.time.toKotlinInstant
 import kotlin.uuid.Uuid
@@ -159,15 +160,14 @@ public object DuckDb : DbType("duckdb") {
                     val (key, value) = parseMapTypes(sqlTypeName)
 
                     val parsedKeyType = parseDuckDbType(key, false)
-                    val parsedValueType =
-                        parseDuckDbType(value, true).cast<Any, Any, Any>()
+                    val parsedValueType = parseDuckDbType(value, true).castToAny()
 
                     val targetMapType = Map::class.createType(
                         listOf(
                             KTypeProjection.invariant(parsedKeyType.targetSchema.type),
                             KTypeProjection.invariant(parsedValueType.targetSchema.type),
                         ),
-                    )
+                    ).withNullability(isNullable)
 
                     typeInformationWithPreprocessingForValueColumnOf<Map<String, Any?>, Map<String, Any?>>(
                         targetColumnType = targetMapType,
@@ -186,8 +186,12 @@ public object DuckDb : DbType("duckdb") {
                         parseDuckDbType(listType, true).castToAny()
 
                     val targetListType = List::class.createType(
-                        listOf(KTypeProjection.invariant(parsedListType.targetSchema.type)),
-                    )
+                        listOf(
+                            KTypeProjection.invariant(
+                                parsedListType.targetSchema.type,
+                            ),
+                        ),
+                    ).withNullability(isNullable)
 
                     // todo maybe List<DataRow> should become FrameColumn
                     typeInformationWithPreprocessingFor<SqlArray, List<Any?>>(

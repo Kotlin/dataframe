@@ -183,6 +183,8 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 ?: typeOf<String>()
         }
 
+        // TODO add preprocessors for common types, like sql Arrays, Java datetimes, etc.
+
         val postprocessor =
             when (tableColumnMetadata.jdbcType) {
                 Types.ARRAY ->
