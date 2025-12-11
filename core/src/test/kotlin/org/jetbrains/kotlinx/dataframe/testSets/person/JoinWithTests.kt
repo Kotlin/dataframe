@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rightJoinWith
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class JoinWithTests : BaseJoinTest() {
@@ -34,9 +35,12 @@ class JoinWithTests : BaseJoinTest() {
         res.columnsCount() shouldBe 8
         res.rowsCount() shouldBe 7
         res["age1"].hasNulls() shouldBe false
+        res["age1"].type() shouldBe typeOf<String>()
+        res["age1"].values().all { it != null } shouldBe true
         res.count { name == "Charlie" && city == "Moscow" } shouldBe 4
         res.select { city and name }.distinct().rowsCount() shouldBe 3
         res[Person2::grade].hasNulls() shouldBe false
+        res.age.type() shouldBe typeOf<Int>()
     }
 
     @Test
@@ -49,6 +53,8 @@ class JoinWithTests : BaseJoinTest() {
         res.select { city and name }.distinct().rowsCount() shouldBe 6
         res.count { it["grade"] == null } shouldBe 3
         res.age.hasNulls() shouldBe false
+        res.age.type() shouldBe typeOf<Int>()
+        res["age1"].type() shouldBe typeOf<String?>()
     }
 
     @Test
@@ -62,6 +68,8 @@ class JoinWithTests : BaseJoinTest() {
         res.select { city and name }.distinct().rowsCount() shouldBe 4
         res[Person2::grade].hasNulls() shouldBe false
         res.age.hasNulls() shouldBe true
+        res.age.type() shouldBe typeOf<Int?>()
+        res["age1"].type() shouldBe typeOf<String>()
         val newEntries = res.filter { it["age"] == null }
         newEntries.rowsCount() shouldBe 2
         newEntries.all { it["name1"] == "Bob" && it["origin"] == "Paris" && weight == null } shouldBe true
@@ -78,6 +86,8 @@ class JoinWithTests : BaseJoinTest() {
         val distinct = res.select { name and age and city and weight }.distinct()
         val expected = typed.append(null, null, null, null)
         distinct shouldBe expected
+        res.age.type() shouldBe typeOf<Int?>()
+        res["age1"].type() shouldBe typeOf<String?>()
     }
 
     @Test
@@ -103,7 +113,7 @@ class JoinWithTests : BaseJoinTest() {
     }
 
     @Test
-    fun rightJoin() {
+    fun `exclude join`() {
         val df = dataFrameOf("a", "b")(
             1, "a",
             2, "b",
@@ -116,7 +126,17 @@ class JoinWithTests : BaseJoinTest() {
             2, "II",
             3, "III",
         )
+
         df.append(4, "e").excludeJoin(df1).print()
+
+        val res = df.append(4, "e").excludeJoin(df1)
+
+        res.rowsCount() shouldBe 1
+        res["a"].values() shouldBe listOf(4)
+        res["b"].values() shouldBe listOf("e")
+        res.columnsCount() shouldBe 2
+        res["a"].type() shouldBe typeOf<Int>()
+        res["b"].type() shouldBe typeOf<String>()
     }
 
     @Test
