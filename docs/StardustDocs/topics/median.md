@@ -17,7 +17,7 @@ In these cases, the return type is always `Double?`.
 When the number of values is even, the median is the average of the two middle values.
 
 The operation is also available for self-comparable columns
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, etc.)
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 In this case, the return type remains `T?`.
 When the number of values is even, the median is the low of the two middle values.
 NOTE: This logic also applies to other self-comparable `Number` types, like `BigDecimal`.

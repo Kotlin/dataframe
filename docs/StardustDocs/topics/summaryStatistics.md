@@ -36,8 +36,8 @@ df.pivot { city }.groupBy { name.lastName }.std()
 [sum](sum.md), [mean](mean.md), [std](std.md) are available for (primitive) number columns of types 
 `Int`, `Double`, `Float`, `Long`, `Byte`, `Short`, and any mix of those.
 
-[min/max](minmax.md), [median](median.md), and [percentile](percentile.md) are available for self-comparable columns 
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, `Int`, etc.)
+[min/max](minmax.md), [median](median.md), and [percentile](percentile.md) are available for self-comparable columns
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 which includes all primitive number columns, but no mix of different number types.
 
 In all cases, `null` values are ignored.
