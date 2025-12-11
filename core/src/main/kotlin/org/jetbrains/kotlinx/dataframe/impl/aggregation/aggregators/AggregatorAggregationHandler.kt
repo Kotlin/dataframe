@@ -29,13 +29,11 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
      * Aggregates the data in the given column and computes a single resulting value.
      * Calls [aggregateSequence].
      */
-    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return {
-        println("NOT ValueColumnImpl")
-        return aggregateSequence(
+    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
+        aggregateSequence(
             values = column.asSequence(),
             valueType = column.type().toValueType(),
         )
-    }
 
     /**
      * optimized override of [aggregateSingleColumn],
@@ -49,12 +47,10 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
     ): Return {
         when {
             skipNaN && wrappedStatistic.wasComputedSkippingNaN -> {
-                println("valuecol, NOT COMPUTED")
                 return wrappedStatistic.statisticComputedSkippingNaN as Return
             }
 
             (!skipNaN) && wrappedStatistic.wasComputedNotSkippingNaN -> {
-                println("valuecol, NOT COMPUTED")
                 return wrappedStatistic.statisticComputedNotSkippingNaN as Return
             }
 
@@ -70,7 +66,6 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
                     wrappedStatistic.wasComputedNotSkippingNaN = true
                     wrappedStatistic.statisticComputedNotSkippingNaN = statistic
                 }
-                println("valuecol, COMPUTED")
                 return aggregateSingleColumn(column, wrappedStatistic, skipNaN)
             }
         }
