@@ -19,7 +19,7 @@ When it's set to `true`, `NaN` values are ignored.
 <!---FUN minmaxModes-->
 
 ```kotlin
-df.min() // min of values per every comparable column
+df.min() // min of values for every comparable column with mutually comparable values
 df.min { age and weight } // min of all values in `age` and `weight`
 df.minFor(skipNaN = true) { age and name.firstName } // min of values per `age` and `firstName` separately
 df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
