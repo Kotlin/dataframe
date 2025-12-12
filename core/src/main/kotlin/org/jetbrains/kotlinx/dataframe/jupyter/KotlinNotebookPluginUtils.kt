@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.Convert
@@ -29,15 +30,17 @@ import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isList
-import org.jetbrains.kotlinx.dataframe.api.sortWith
+import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.valuesAreComparable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import java.util.Arrays
 
 /**
  * A class with utility methods for Kotlin Notebook Plugin integration.
@@ -105,9 +108,34 @@ public object KotlinNotebookPluginUtils {
             ColumnPath(path)
         }
 
+        if (sortKeys.size == 1) {
+            val column = df.getColumn(sortKeys[0])
+
+            // Not sure how to have generic logic that would produce Comparator<Int> and Comparator<DataRow> without overhead
+            // For now Comparator<DataRow> is needed for fallback case of sorting multiple columns. Although it's now impossible in UI
+            // Please make sure to change both this and createColumnComparator
+            val comparator: Comparator<Int> = when {
+                column.valuesAreComparable() -> compareBy(nullsLast()) {
+                    column[it] as Comparable<Any>?
+                }
+
+                column.isFrameColumn() -> compareBy { column[it].rowsCount() }
+
+                column.isList() -> compareBy { (column[it] as? List<*>)?.size ?: 0 }
+
+                else -> compareBy { column[it]?.toString() ?: "" }
+            }
+
+            val finalComparator = if (isDesc[0]) comparator.reversed() else comparator
+
+            val permutation = Array(column.size()) { it }
+            Arrays.parallelSort(permutation, finalComparator)
+            return SortedDataFrameView(df, permutation.asList())
+        }
+
         val comparator = createComparator(df, sortKeys, isDesc)
 
-        return df.sortWith(comparator)
+        return df.sortWithLazy(comparator)
     }
 
     private fun createComparator(
@@ -151,6 +179,31 @@ public object KotlinNotebookPluginUtils {
             else -> compareBy { column[it]?.toString() ?: "" }
         }
         return if (desc) comparator.reversed() else comparator
+    }
+
+    private fun <T> DataFrame<T>.sortWithLazy(comparator: Comparator<DataRow<T>>): DataFrame<T> {
+        val permutation = rows().sortedWith(comparator).map { it.index() }
+        return SortedDataFrameView(this, permutation)
+    }
+
+    private class SortedDataFrameView<T>(private val source: DataFrame<T>, private val permutation: List<Int>) :
+        DataFrame<T> by source {
+
+        override operator fun get(index: Int): DataRow<T> = source[permutation[index]]
+
+        override operator fun get(range: IntRange): DataFrame<T> {
+            val indices = range.map { permutation[it] }
+            return source.getRows(indices)
+        }
+
+        override operator fun get(indices: Iterable<Int>): DataFrame<T> {
+            val mappedIndices = indices.map { permutation[it] }
+            return source.getRows(mappedIndices)
+        }
+
+        override fun get(columnName: String): AnyCol {
+            return super.get(columnName)[permutation]
+        }
     }
 
     internal fun isDataframeConvertable(dataframeLike: Any?): Boolean =
