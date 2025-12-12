@@ -28,6 +28,7 @@ public typealias AnyTypeInformation = TypeInformation<*, *, *>
  *   to a [DataColumn] of with values of type [P].
  */
 public open class TypeInformation<J : Any, D : Any, P : Any>(
+    public open val jdbcSourceType: KType,
     public open val targetSchema: ColumnSchema,
     public open val valuePreprocessor: DbValuePreprocessor<J, D>?,
     public open val columnPostprocessor: DbColumnPostprocessor<D, P>?,
@@ -55,38 +56,45 @@ public fun TypeInformation<*, *, *>.castToAny(): TypeInformation<Any, Any, Any> 
 // region generic constructors
 
 public fun <J : Any, D : Any, P : Any> typeInformationWithProcessingFor(
+    jdbcSourceType: KType,
     targetSchema: ColumnSchema,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
     columnPostprocessor: DbColumnPostprocessor<D, P>?,
 ): TypeInformation<J, D, P> =
     TypeInformation(
+        jdbcSourceType = jdbcSourceType,
         targetSchema = targetSchema,
         valuePreprocessor = valuePreprocessor,
         columnPostprocessor = columnPostprocessor,
     )
 
-public fun <J : Any> typeInformationFor(targetSchema: ColumnSchema): TypeInformation<J, J, J> =
+public fun <J : Any> typeInformationFor(jdbcSourceType: KType, targetSchema: ColumnSchema): TypeInformation<J, J, J> =
     typeInformationWithProcessingFor(
+        jdbcSourceType = jdbcSourceType,
         targetSchema = targetSchema,
         valuePreprocessor = null,
         columnPostprocessor = null,
     )
 
 public fun <J : Any, D : Any> typeInformationWithPreprocessingFor(
+    jdbcSourceType: KType,
     targetSchema: ColumnSchema,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
 ): TypeInformation<J, D, D> =
     typeInformationWithProcessingFor(
+        jdbcSourceType = jdbcSourceType,
         targetSchema = targetSchema,
         valuePreprocessor = valuePreprocessor,
         columnPostprocessor = null,
     )
 
 public fun <J : Any, P : Any> typeInformationWithPostprocessingFor(
+    jdbcSourceType: KType,
     targetSchema: ColumnSchema,
     columnPostprocessor: DbColumnPostprocessor<J, P>?,
 ): TypeInformation<J, J, P> =
     typeInformationWithProcessingFor(
+        jdbcSourceType = jdbcSourceType,
         targetSchema = targetSchema,
         valuePreprocessor = null,
         columnPostprocessor = columnPostprocessor,
@@ -97,43 +105,49 @@ public fun <J : Any, P : Any> typeInformationWithPostprocessingFor(
 // region ValueColumn constructors
 
 public fun <J : Any> typeInformationForValueColumnOf(kType: KType): TypeInformation<J, J, J> =
-    typeInformationFor(targetSchema = ColumnSchema.Value(kType))
+    typeInformationFor(jdbcSourceType = kType, targetSchema = ColumnSchema.Value(kType))
 
 public inline fun <reified J : Any> typeInformationForValueColumnOf(isNullable: Boolean): TypeInformation<J, J, J> =
     typeInformationForValueColumnOf(typeOf<J>().withNullability(isNullable))
 
 public fun <J : Any, D : Any> typeInformationWithPreprocessingForValueColumnOf(
+    jdbcSourceType: KType,
     targetColumnType: KType,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
 ): TypeInformation<J, D, D> =
     typeInformationWithPreprocessingFor(
+        jdbcSourceType = jdbcSourceType,
         targetSchema = ColumnSchema.Value(targetColumnType),
         valuePreprocessor = valuePreprocessor,
     )
 
-public inline fun <J : Any, reified D : Any> typeInformationWithPreprocessingForValueColumnOf(
+public inline fun <reified J : Any, reified D : Any> typeInformationWithPreprocessingForValueColumnOf(
     isNullable: Boolean,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
 ): TypeInformation<J, D, D> =
     typeInformationWithPreprocessingForValueColumnOf(
+        jdbcSourceType = typeOf<J>().withNullability(isNullable),
         targetColumnType = typeOf<D>().withNullability(isNullable),
         valuePreprocessor = valuePreprocessor,
     )
 
 public fun <J : Any, P : Any> typeInformationWithPostprocessingForValueColumnOf(
+    jdbcSourceType: KType,
     targetColumnType: KType,
     columnPostprocessor: DbColumnPostprocessor<J, P>?,
 ): TypeInformation<J, J, P> =
     typeInformationWithPostprocessingFor(
+        jdbcSourceType = jdbcSourceType,
         targetSchema = ColumnSchema.Value(targetColumnType),
         columnPostprocessor = columnPostprocessor,
     )
 
-public inline fun <J : Any, reified P : Any> typeInformationWithPostprocessingForValueColumnOf(
+public inline fun <reified J : Any, reified P : Any> typeInformationWithPostprocessingForValueColumnOf(
     isNullable: Boolean,
     columnPostprocessor: DbColumnPostprocessor<J, P>?,
 ): TypeInformation<J, J, P> =
     typeInformationWithPostprocessingForValueColumnOf(
+        jdbcSourceType = typeOf<J>().withNullability(isNullable),
         targetColumnType = typeOf<P>().withNullability(isNullable),
         columnPostprocessor = columnPostprocessor,
     )

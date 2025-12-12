@@ -196,6 +196,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             }
 
         return typeInformationWithPostprocessingFor(
+            jdbcSourceType = kType.withNullability(tableColumnMetadata.isNullable),
             targetSchema = ColumnSchema.Value(kType.withNullability(tableColumnMetadata.isNullable)),
             columnPostprocessor = postprocessor?.castToAny(),
         )
@@ -242,6 +243,8 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                     type = schema.type,
                 )
 
+            // TODO, this should be postponed to post-processing.
+            //  List<AnyRow>.toDataFrame() is heavy!
             is ColumnSchema.Group ->
                 DataColumn.createColumnGroup(
                     name = name,

@@ -59,6 +59,7 @@ import kotlin.collections.toList
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import kotlin.time.Instant
 import kotlin.time.toKotlinInstant
 import kotlin.uuid.Uuid
@@ -170,6 +171,7 @@ public object DuckDb : DbType("duckdb") {
                     ).withNullability(isNullable)
 
                     typeInformationWithPreprocessingForValueColumnOf<Map<String, Any?>, Map<String, Any?>>(
+                        jdbcSourceType = typeOf<Map<String, Any?>>().withNullability(isNullable), // unused
                         targetColumnType = targetMapType,
                     ) { map, _ ->
                         // only need to preprocess the values, as the keys are just Strings
@@ -195,6 +197,7 @@ public object DuckDb : DbType("duckdb") {
 
                     // todo maybe List<DataRow> should become FrameColumn
                     typeInformationWithPreprocessingFor<SqlArray, List<Any?>>(
+                        jdbcSourceType = typeOf<SqlArray>().withNullability(isNullable),
                         targetSchema = ColumnSchema.Value(targetListType),
                     ) { sqlArray, _ ->
                         sqlArray
@@ -204,7 +207,11 @@ public object DuckDb : DbType("duckdb") {
                 }
 
                 // TODO requires #1266 for specific types
-                STRUCT -> typeInformationForValueColumnOf<Struct>(isNullable)
+                STRUCT -> {
+                    val structTypes = parseStructType(sqlTypeName)
+
+                    typeInformationForValueColumnOf<Struct>(isNullable)
+                }
 
                 // Cannot handle this in Kotlin
                 UNION -> typeInformationForValueColumnOf<Any>(isNullable)
@@ -267,6 +274,17 @@ public object DuckDb : DbType("duckdb") {
         }
 
         return typeString.take(typeString.indexOfLast { it == '[' })
+    }
+
+    /** Parses "STRUCT(v VARCHAR, i INTEGER)" into [("v", "VARCHAR"), ("i", "INTEGER")] */
+    internal fun parseStructType(typeString: String): Map<String, String> {
+        if (!typeString.startsWith("STRUCT(")) {
+            error("invalid STRUCT type: $typeString")
+        }
+        return typeString.removeSurrounding("STRUCT(", ")")
+            .split(",")
+            .map { it.trim().split(" ") }
+            .associate { (name, type) -> name to type }
     }
 
     /**
