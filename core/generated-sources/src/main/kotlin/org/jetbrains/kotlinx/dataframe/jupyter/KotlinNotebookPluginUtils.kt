@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.Convert
@@ -29,13 +30,17 @@ import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.sortWith
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.isList
+import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.valuesAreComparable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import java.util.Arrays
 
 /**
  * A class with utility methods for Kotlin Notebook Plugin integration.
@@ -103,59 +108,97 @@ public object KotlinNotebookPluginUtils {
             ColumnPath(path)
         }
 
-        val comparator = createComparator(sortKeys, isDesc)
+        if (sortKeys.size == 1) {
+            val column = df.getColumn(sortKeys[0])
 
-        return df.sortWith(comparator)
-    }
-
-    private fun createComparator(sortKeys: List<ColumnPath>, isDesc: List<Boolean>): Comparator<DataRow<*>> {
-        return Comparator { row1, row2 ->
-            for ((key, desc) in sortKeys.zip(isDesc)) {
-                val comparisonResult = if (row1.df().getColumn(key).valuesAreComparable()) {
-                    compareComparableValues(row1, row2, key, desc)
-                } else {
-                    compareStringValues(row1, row2, key, desc)
+            // Not sure how to have generic logic that would produce Comparator<Int> and Comparator<DataRow> without overhead
+            // For now Comparator<DataRow> is needed for fallback case of sorting multiple columns. Although it's now impossible in UI
+            // Please make sure to change both this and createColumnComparator
+            val comparator: Comparator<Int> = when {
+                column.valuesAreComparable() -> compareBy(nullsLast()) {
+                    column[it] as Comparable<Any>?
                 }
-                // If a comparison result is non-zero, we have resolved the ordering
-                if (comparisonResult != 0) return@Comparator comparisonResult
+
+                column.isFrameColumn() -> compareBy { column[it].rowsCount() }
+
+                column.isList() -> compareBy { (column[it] as? List<*>)?.size ?: 0 }
+
+                else -> compareBy { column[it]?.toString() ?: "" }
             }
-            // All comparisons are equal
-            0
+
+            val finalComparator = if (isDesc[0]) comparator.reversed() else comparator
+
+            val permutation = Array(column.size()) { it }
+            Arrays.parallelSort(permutation, finalComparator)
+            return SortedDataFrameView(df, permutation.asList())
+        }
+
+        val comparator = createComparator(df, sortKeys, isDesc)
+
+        return df.sortWithLazy(comparator)
+    }
+
+    private fun createComparator(
+        df: AnyFrame,
+        sortKeys: List<ColumnPath>,
+        isDesc: List<Boolean>,
+    ): Comparator<DataRow<*>> {
+        val columnComparators = sortKeys.zip(isDesc).map { (key, desc) ->
+            val column = df.getColumn(key)
+            createColumnComparator(column, desc)
+        }
+
+        return when (columnComparators.size) {
+            1 -> columnComparators.single()
+
+            else -> Comparator { row1, row2 ->
+                for (comparator in columnComparators) {
+                    val result = comparator.compare(row1, row2)
+                    // If a comparison result is non-zero, we have resolved the ordering
+                    if (result != 0) return@Comparator result
+                }
+                // All comparisons are equal
+                0
+            }
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun compareComparableValues(
-        row1: DataRow<*>,
-        row2: DataRow<*>,
-        key: ColumnPath,
-        desc: Boolean,
-    ): Int {
-        val firstValue = row1.getValueOrNull(key) as Comparable<Any?>?
-        val secondValue = row2.getValueOrNull(key) as Comparable<Any?>?
+    private fun createColumnComparator(column: AnyCol, desc: Boolean): Comparator<DataRow<*>> {
+        val comparator: Comparator<DataRow<*>> = when {
+            column.valuesAreComparable() -> compareBy(nullsLast()) {
+                column[it] as Comparable<Any?>?
+            }
 
-        return when {
-            firstValue == null && secondValue == null -> 0
-            firstValue == null -> if (desc) 1 else -1
-            secondValue == null -> if (desc) -1 else 1
-            desc -> secondValue.compareTo(firstValue)
-            else -> firstValue.compareTo(secondValue)
+            // Comparator shows a slight improvement in performance for this case
+            column.isFrameColumn() -> Comparator { r1, r2 ->
+                column[r1].rowsCount().compareTo(column[r2].rowsCount())
+            }
+
+            column.isList() -> compareBy { (column[it] as? List<*>)?.size ?: 0 }
+
+            else -> compareBy { column[it]?.toString() ?: "" }
         }
+        return if (desc) comparator.reversed() else comparator
     }
 
-    private fun compareStringValues(
-        row1: DataRow<*>,
-        row2: DataRow<*>,
-        key: ColumnPath,
-        desc: Boolean,
-    ): Int {
-        val firstValue = (row1.getValueOrNull(key)?.toString() ?: "")
-        val secondValue = (row2.getValueOrNull(key)?.toString() ?: "")
+    private fun <T> DataFrame<T>.sortWithLazy(comparator: Comparator<DataRow<T>>): DataFrame<T> {
+        val permutation = rows().sortedWith(comparator).map { it.index() }
+        return SortedDataFrameView(this, permutation)
+    }
 
-        return if (desc) {
-            secondValue.compareTo(firstValue)
-        } else {
-            firstValue.compareTo(secondValue)
+    private class SortedDataFrameView<T>(private val source: DataFrame<T>, private val permutation: List<Int>) :
+        DataFrame<T> by source {
+
+        override operator fun get(index: Int): DataRow<T> = source[permutation[index]]
+
+        override operator fun get(range: IntRange): DataFrame<T> {
+            val indices = range.map { permutation[it] }
+            return source.getRows(indices)
+        }
+
+        override operator fun get(indices: Iterable<Int>): DataFrame<T> {
+            val mappedIndices = indices.map { permutation[it] }
+            return source.getRows(mappedIndices)
         }
     }
 
@@ -236,6 +279,7 @@ public object KotlinNotebookPluginUtils {
 
             is FormattedFrame<*> -> dataframeLike.df
 
+            // мб повыше перенести
             is AnyFrame -> dataframeLike
 
             is AnyRow -> dataframeLike.toDataFrame()
