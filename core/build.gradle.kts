@@ -17,6 +17,7 @@ plugins {
         alias(kodex)
         alias(buildconfig)
         alias(binary.compatibility.validator)
+        alias(kotlinx.benchmark)
 
         // generates keywords using the :generator module
         alias(keywordGenerator)
@@ -75,6 +76,7 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
+    testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
@@ -87,6 +89,17 @@ dependencies {
 
     // for samples.api
     testImplementation(projects.dataframeCsv)
+}
+
+benchmark {
+    targets {
+        register("test")
+    }
+    configurations {
+        register("sort") {
+            include("SortingBenchmark")
+        }
+    }
 }
 
 val samplesImplementation by configurations.getting {
