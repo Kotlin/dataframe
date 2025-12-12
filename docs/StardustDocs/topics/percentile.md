@@ -21,7 +21,7 @@ The results of the operation on these types are interpolated using
 [Quantile Estimation Method](#quantile-estimation-methods) R8.
 
 The operation is also available for self-comparable columns
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, etc.)
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 In this case, the return type remains `T?`.
 The index of the result of the operation on these types is rounded using
 [Quantile Estimation Method](#quantile-estimation-methods) R3.

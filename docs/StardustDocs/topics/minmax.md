@@ -9,7 +9,7 @@ The operations either throw an exception when the input is empty (after filterin
 or they return `null` when using the `-orNull` overloads.
 
 They are available for self-comparable columns
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, `Int`, etc.)
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 which includes all primitive number columns, but no mix of different number types.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
