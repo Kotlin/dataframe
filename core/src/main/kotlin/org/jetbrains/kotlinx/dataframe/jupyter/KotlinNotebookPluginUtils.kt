@@ -63,7 +63,7 @@ public object KotlinNotebookPluginUtils {
      * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
      */
     public fun getRowsSubsetForRendering(df: AnyFrame, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
-        DisableRowsLimitWrapper(df[startIdx..<endIdx])
+        DisableRowsLimitWrapper(df[startIdx..<endIdx], addHtml = false)
 
     /**
      * Sorts a dataframe-like object by multiple columns.
