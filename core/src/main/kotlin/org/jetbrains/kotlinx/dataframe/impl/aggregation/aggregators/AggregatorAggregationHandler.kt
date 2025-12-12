@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.columns.WrappedStatistic
 import kotlin.reflect.KType
 
 /**
@@ -33,6 +34,42 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
             values = column.asSequence(),
             valueType = column.type().toValueType(),
         )
+
+    /**
+     * optimized override of [aggregateSingleColumn],
+     * preferred when column's runtime type is ValueColumnInternal so that
+     * it is possible to exploit cached statistics which are proper of ValueColumnInternal
+     */
+    public fun aggregateSingleColumn(
+        column: DataColumn<Value?>,
+        wrappedStatistic: WrappedStatistic,
+        skipNaN: Boolean,
+    ): Return {
+        when {
+            skipNaN && wrappedStatistic.wasComputedSkippingNaN -> {
+                return wrappedStatistic.statisticComputedSkippingNaN as Return
+            }
+
+            (!skipNaN) && wrappedStatistic.wasComputedNotSkippingNaN -> {
+                return wrappedStatistic.statisticComputedNotSkippingNaN as Return
+            }
+
+            else -> {
+                val statistic = aggregateSequence(
+                    values = column.asSequence(),
+                    valueType = column.type().toValueType(),
+                )
+                if (skipNaN) {
+                    wrappedStatistic.wasComputedSkippingNaN = true
+                    wrappedStatistic.statisticComputedSkippingNaN = statistic
+                } else {
+                    wrappedStatistic.wasComputedNotSkippingNaN = true
+                    wrappedStatistic.statisticComputedNotSkippingNaN = statistic
+                }
+                return aggregateSingleColumn(column, wrappedStatistic, skipNaN)
+            }
+        }
+    }
 
     /**
      * Function that can give the return type of [aggregateSequence] as [KType], given the type of the input.
