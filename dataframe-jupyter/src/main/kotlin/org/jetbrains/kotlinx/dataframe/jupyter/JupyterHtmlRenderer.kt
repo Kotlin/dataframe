@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -32,7 +31,6 @@ private const val MIN_IDE_VERSION_SUPPORT_DATAFRAME_CONVERTABLE = 243
 
 internal class JupyterHtmlRenderer(val display: DisplayConfiguration, val builder: JupyterIntegration.Builder)
 
-@OptIn(ExperimentalSerializationApi::class)
 internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     noinline getFooter: (T) -> String,
     crossinline modifyConfig: T.(DisplayConfiguration) -> DisplayConfiguration = { it },
