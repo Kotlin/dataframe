@@ -84,10 +84,10 @@ internal interface DocumentationUrls {
     /** [See `remove` on the documentation website.]({@include [Url]}/remove.html) */
     interface Remove
 
-    /** <a href="{@include [Url]}/distinct.html">See `distinct` on the documentation website.</a> */
+    /** [See `distinct` on the documentation website.]({@include [Url]}/distinct.html) */
     interface Distinct
 
-    /** <a href="{@include [Url]}/distinct.html#distinctby">See `distinctBy` on the documentation website.</a> */
+    /** [See `distinctBy` on the documentation website.]({@include [Url]}/distinct.html#distinctby) */
     interface DistinctBy
 
     /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
