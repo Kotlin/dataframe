@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.geotools.toGeoDataFrame
 import org.jetbrains.kotlinx.dataframe.io.asUrl
+import java.io.File
 import java.net.URL
 
 fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = readGeoJson(asUrl(path))
@@ -21,9 +22,30 @@ fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoDataFram
 
 fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataFrame.readGeoJson(url)
 
-fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = readShapefile(asUrl(path))
+/**
+ * Examples:
+ * ```
+ * GeoDataFrame.readShapefile("simple_points")
+ * GeoDataFrame.readShapefile("simple_points/simple_points.shp")
+ * ```
+ *
+ * @param path path to *.shp or *.shp.gz file, or to a directory containing such a file
+ */
+fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {
+    val url = resolveShapefileUrl(path)
+    return readShapeFileImpl(url)
+}
 
 fun GeoDataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> {
+    val resolvedUrl = if (url.protocol == "file") {
+        resolveShapefileUrl(url.path)
+    } else {
+        url
+    }
+    return readShapeFileImpl(resolvedUrl)
+}
+
+private fun readShapeFileImpl(url: URL): GeoDataFrame<*> {
     val dataStore = ShapefileDataStoreFactory().createDataStore(url)
     try {
         return dataStore.featureSource.features.toGeoDataFrame()
@@ -31,6 +53,20 @@ fun GeoDataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> {
         dataStore.dispose()
     }
 }
+
+private fun resolveShapefileUrl(path: String): URL {
+    val file = File(path)
+    val shpFile = when {
+        file.isDirectory -> findShapefileInDirectory(file)
+        else -> file
+    }
+    return shpFile.toURI().toURL()
+}
+
+private fun findShapefileInDirectory(dir: File): File =
+    File(dir, "${dir.name}.shp").takeIf { it.exists() }
+        ?: File(dir, "${dir.name}.shp.gz").takeIf { it.exists() }
+        ?: throw IllegalArgumentException("No shapefile found in directory: ${dir.absolutePath}")
 
 fun DataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = GeoDataFrame.readShapefile(path)
 
