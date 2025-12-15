@@ -256,9 +256,12 @@ class DuckDbTest {
     }
 
     @DataSchema
+    data class NestedEntry(val i: Int, val j: String)
+
+    @DataSchema
     data class NestedTypes(
         @ColumnName("ijstruct_col")
-        val ijstructCol: java.sql.Struct, // TODO
+        val ijstructCol: NestedEntry, // TODO
         @ColumnName("intarray_col")
         val intarrayCol: List<Int?>,
         @ColumnName("intlist_col")
@@ -646,7 +649,8 @@ class DuckDbTest {
                 1 to mapOf("value1" to "a", "value2" to "b"),
                 200 to mapOf("value1" to "c", "value2" to "d"),
             )
-            it[{ "ijstruct_col"<java.sql.Struct>() }].attributes shouldBe arrayOf<Any>(42, "answer")
+            it[{ "ijstruct_col"["i"]<Int>() }] shouldBe 42
+            it[{ "ijstruct_col"["j"]<String>() }] shouldBe "answer"
             it["union_col"] shouldBe 2
         }
     }

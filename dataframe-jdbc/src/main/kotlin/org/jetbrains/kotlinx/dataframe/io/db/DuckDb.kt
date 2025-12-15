@@ -42,7 +42,21 @@ import org.duckdb.DuckDBColumnType.UUID
 import org.duckdb.DuckDBColumnType.VARCHAR
 import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.JsonNode
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asDataColumn
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castToNotNullable
+import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.DataCollector
+import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -56,6 +70,7 @@ import java.sql.ResultSet
 import java.sql.Struct
 import java.util.Properties
 import kotlin.collections.toList
+import kotlin.reflect.KClass
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.withNullability
@@ -100,7 +115,7 @@ public object DuckDb : DbType("duckdb") {
      */
     internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyTypeInformation =
         duckDbTypeCache.getOrPut(Pair(sqlTypeName, isNullable)) {
-            when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
+            return@getOrPut when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
                 BOOLEAN -> typeInformationForValueColumnOf<Boolean>(isNullable)
 
                 TINYINT -> typeInformationForValueColumnOf<Byte>(isNullable)
@@ -182,7 +197,6 @@ public object DuckDb : DbType("duckdb") {
                 }
 
                 LIST, ARRAY -> {
-                    // TODO requires #1266 and #1273 for specific types
                     val listType = parseListType(sqlTypeName)
                     val parsedListType =
                         parseDuckDbType(listType, true).castToAny()
@@ -206,11 +220,46 @@ public object DuckDb : DbType("duckdb") {
                     }
                 }
 
-                // TODO requires #1266 for specific types
                 STRUCT -> {
-                    val structTypes = parseStructType(sqlTypeName)
+                    val structEntries = parseStructType(sqlTypeName)
+                    val parsedStructEntries = structEntries.mapValues { (_, type) ->
+                        parseDuckDbType(sqlTypeName = type, isNullable = true)
+                    }
 
-                    typeInformationForValueColumnOf<Struct>(isNullable)
+                    val targetSchema = ColumnSchema.Group(
+                        schema = DataFrameSchemaImpl(parsedStructEntries.mapValues { it.value.targetSchema }),
+                        contentType = typeOf<Any?>(),
+                    )
+
+                    typeInformationWithProcessingFor<Struct, Map<String, Any?>, DataRow<*>>(
+                        jdbcSourceType = typeOf<Struct>().withNullability(isNullable),
+                        targetSchema = targetSchema,
+                        valuePreprocessor = { struct, _ ->
+                            // NOTE DataRows cannot be `null` in DataFrame, instead, all its fields become `null`
+                            if (struct == null) {
+                                parsedStructEntries.mapValues { null }
+                            } else {
+                                // read data from the struct
+                                val attrs = struct.getAttributes(
+                                    parsedStructEntries.mapValues {
+                                        (it.value.jdbcSourceType.classifier!! as KClass<*>).java
+                                    },
+                                )
+
+                                // and potentially, preprocess each value individually
+                                parsedStructEntries.entries.withIndex().associate { (i, entry) ->
+                                    entry.key to entry.value.castToAny().preprocess(attrs[i])
+                                }
+                            }
+                        },
+                        columnPostprocessor = { col, _ ->
+                            col.castToNotNullable()
+                                .values()
+                                .toDataFrame()
+                                .asColumnGroup(col.name())
+                                .asDataColumn()
+                        },
+                    )
                 }
 
                 // Cannot handle this in Kotlin
@@ -220,6 +269,25 @@ public object DuckDb : DbType("duckdb") {
 
                 UNKNOWN, BIT, INTERVAL, ENUM -> typeInformationForValueColumnOf<String>(isNullable)
             }
+        }
+
+    // Overriding buildDataColumn behavior so we can create the column group in post-processing for efficiency
+    override fun <D : Any> buildDataColumn(
+        name: String,
+        values: List<D?>,
+        typeInformation: TypeInformation<*, D, *>,
+        inferNullability: Boolean,
+    ): DataColumn<D?> =
+        when (val schema = typeInformation.targetSchema) {
+            is ColumnSchema.Group ->
+                DataColumn.createValueColumn(
+                    name = name,
+                    values = values,
+                    infer = if (inferNullability) Infer.Nulls else Infer.None,
+                    type = schema.type,
+                )
+
+            else -> super.buildDataColumn(name, values, typeInformation, inferNullability)
         }
 
     private fun SqlArray.toList(): List<Any?> =
