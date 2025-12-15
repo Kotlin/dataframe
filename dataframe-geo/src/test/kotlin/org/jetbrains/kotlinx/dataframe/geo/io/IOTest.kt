@@ -65,4 +65,21 @@ class IOTest {
         assertEquals(simplePointsGeoDf, GeoDataFrame.readShapefile(shapefile.toURI().toURL()))
         tempDir.deleteOnExit()
     }
+
+    @Test
+    fun readShapefileDirectory() {
+        val shapefileURL = classLoader.getResource("./simple_points")!!
+        val geodf = GeoDataFrame.readShapefile(shapefileURL)
+
+        assertEquals(simplePointsDf, geodf.df)
+        assert(geodf.crs == null)
+    }
+
+    @Test
+    fun readShapefileDirectoryFile() {
+        val geodf = GeoDataFrame.readShapefile("src/test/resources/simple_points")
+
+        assertEquals(simplePointsDf, geodf.df)
+        assert(geodf.crs == null)
+    }
 }
