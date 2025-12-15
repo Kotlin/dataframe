@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.geo.io
 
+import org.geotools.referencing.CRS
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.toGeo
@@ -35,17 +36,18 @@ class IOTest {
         assert(geodf.crs == null)
     }
 
-    /*
-    TODO: doesn't work for now - writers adds ids that breaks order when read features
     @Test
     fun writeGeoJson() {
         val tempFile = Files.createTempFile("simple_points", ".json").toFile()
         simplePointsGeoDf.writeGeoJson(tempFile)
 
-        assertEquals(simplePointsGeoDf, GeoDataFrame.readGeoJson(tempFile.toURI().toURL()))
+        val loadedGeoDataFrame = GeoDataFrame.readGeoJson(tempFile.toURI().toURL())
+        assertEquals(simplePointsGeoDf.df, loadedGeoDataFrame.df)
+        // TODO: Doesn't work because of how equality between CRS is checked by geotools
+        // assertEquals(simplePointsGeoDf, loadedGeoDataFrame)
 
         tempFile.deleteOnExit()
-    }*/
+    }
 
     @Test
     fun readShapefile() {
