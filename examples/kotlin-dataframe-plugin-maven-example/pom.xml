@@ -28,7 +28,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>2.3.0-RC</version>
+                <version>2.3.0-RC3</version>
                 <configuration>
                     <compilerPlugins>
                         <plugin>kotlin-dataframe</plugin>
@@ -39,7 +39,7 @@
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-dataframe</artifactId>
-                        <version>2.3.0-RC</version>
+                        <version>2.3.0-RC3</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit5</artifactId>
-            <version>2.3.0-RC</version>
+            <version>2.3.0-RC3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
