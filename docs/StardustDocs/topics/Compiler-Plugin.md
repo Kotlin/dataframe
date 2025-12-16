@@ -55,15 +55,14 @@ Setup library dependency:
 implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
 ```
 
-Add this line to `gradle.properties`:
+Due to the [known issue](https://youtrack.jetbrains.com/issue/KT-66735), incremental compilation must be disabled for now.
+Add the following line to your `gradle.properties` file:
+
 ```properties
 kotlin.incremental=false
 ```
 
 Sync the project.
-
-Disabling incremental compilation will no longer be necessary
-when https://youtrack.jetbrains.com/issue/KT-66735 is resolved.
 
 </tab>
 

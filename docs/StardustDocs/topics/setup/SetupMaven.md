@@ -1,19 +1,18 @@
-# Setup Kotlin DataFrame in Gradle
+# Setup Kotlin DataFrame in Maven
 
 <web-summary>
-Set up Kotlin DataFrame in your Gradle project, configure dependencies, and start using the API with full IDE support.
+Set up Kotlin DataFrame in your Maven project, configure dependencies, and start using the API with full IDE support.
 </web-summary>
 
 <card-summary>
-Learn how to add Kotlin DataFrame to your Gradle project.
+Learn how to add Kotlin DataFrame to your Maven project.
 </card-summary>
 
 <link-summary>
-Guide for integrating Kotlin DataFrame in a Gradle-based project, with setup instructions and example code.
+Guide for integrating Kotlin DataFrame in a Maven project, with setup instructions and example code.
 </link-summary>
 
-Kotlin DataFrame can be added as a usual Gradle dependency 
-to your Kotlin project (for now only Kotlin/JVM is supported).
+Kotlin DataFrame can be added as a usual Maven dependency to your Kotlin project.
 
 ## Create a Kotlin project
 
@@ -26,48 +25,35 @@ to your Kotlin project (for now only Kotlin/JVM is supported).
    > {type="tip"}
 
 4. From the **Language** list, select **Kotlin**.
-5. Select the **Gradle** build system.
+5. Select the **Maven** build system.
 6. From the **JDK list**, select the [JDK](https://www.oracle.com/java/technologies/downloads/) 
 that you want to use in your project. The minimum supported version is JDK 8.
     * If the JDK is installed on your computer, but not defined in the IDE, select **Add JDK** 
       and specify the path to the JDK home directory.
     * If you don't have the necessary JDK on your computer, select **Download JDK**.
-7. From the **Gradle DSL** list, select **Kotlin** or **Groovy**.
-8. Select the **Add sample code** checkbox to create a file with a sample `"Hello World!"` application.
-9. Click **Create**.
+7. Select the **Add sample code** checkbox to create a file with a sample `"Hello World!"` application.
+8. Click **Create**.
 
-You have successfully created a project with Gradle.
+You have successfully created a project with Maven.
 
-## Add Kotlin DataFrame Gradle dependency
+## Add Kotlin DataFrame Maven dependency
 
-In your Gradle build file (`build.gradle` or `build.gradle.kts`), add the Kotlin DataFrame library as a dependency:
+In your Maven build file (`pom.xml`), add the Kotlin DataFrame library as a dependency:
 
-<tabs>
-<tab title="Kotlin DSL">
-
-```kotlin
-dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
-}
+```xml
+<dependency>
+    <groupId>org.jetbrains.kotlinx</groupId>
+    <artifactId>dataframe</artifactId>
+    <version>%dataFrameVersion%</version>
+</dependency>
 ```
-
-</tab>
-
-<tab title="Groovy DSL">
-
-```groovy
-dependencies {
-    implementation 'org.jetbrains.kotlinx:dataframe:%dataFrameVersion%'
-}
-```
-
-</tab>
-</tabs>
 
 This will add [general Kotlin DataFrame dependency](Modules.md#dataframe-general), 
 i.e., [core API and implementation](Modules.md#dataframe-core) as well as all 
 [IO modules](Modules.md#io-modules) (excluding [experimental ones](Modules.md#experimental-modules)).  
-For flexible dependencies configuration see [Custom configuration](SetupCustomGradle.md).
+You can add only the [core API module](Modules.md#dataframe-core) 
+and the specific [modules](Modules.md) you need.
+
 
 ## Hello World
 
@@ -91,51 +77,44 @@ fun main() {
 
 [Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enables automatic generation of
 [extension properties](extensionPropertiesApi.md) and updates [data schemas](schemas.md)
-on-the-fly in Gradle projects, making development with Kotlin DataFrame faster,
+on-the-fly in Maven projects, making development with Kotlin DataFrame faster,
 more convenient, and fully type- and name-safe.
 
 > Requires Kotlin 2.2.20-Beta1 or higher.  
 > { style = "note" }
 
-To enable the plugin in your Gradle project, add it to the `plugins` section:
+To enable the plugin in your Maven project, add it to the `plugins` section:
 
-<tabs>
-<tab title="Kotlin DSL">
+```xml
+<plugin>
+    <artifactId>kotlin-maven-plugin</artifactId>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <version>%compilerPluginKotlinVersion%</version>
 
-```kotlin
-plugins {
-    kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
-}
-```
+    <configuration>
+        <compilerPlugins>
+            <plugin>kotlin-dataframe</plugin>
+        </compilerPlugins>
+    </configuration>
 
-</tab>
-
-<tab title="Groovy DSL">
-
-```groovy
-plugins {
-    id 'org.jetbrains.kotlin.plugin.dataframe' version '%compilerPluginKotlinVersion%'
-}
-```
-
-</tab>
-</tabs>
-
-Due to the [known issue](https://youtrack.jetbrains.com/issue/KT-66735), incremental compilation must be disabled for now.
-Add the following line to your `gradle.properties` file:
-
-```properties
-kotlin.incremental=false
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-dataframe</artifactId>
+            <version>%compilerPluginKotlinVersion%</version>
+        </dependency>
+    </dependencies>
+</plugin>
 ```
 
 ## Project Example
 
-See [the Gradle example project with the Kotlin DataFrame Compiler Plugin enabled on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-gradle-example).
+See [the Maven example project with the Kotlin DataFrame Compiler Plugin enabled on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-maven-example).
 
 
 ## Next Steps
 
-* Once you’ve set up Kotlin DataFrame in your Gradle project, continue with the [](quickstart.md)
+* Once you’ve set up Kotlin DataFrame in your Maven project, continue with the [](quickstart.md)
   to learn the basics of working with Kotlin DataFrame.
 * Explore [detailed guides and real-world examples](Guides-And-Examples.md)
   to see how Kotlin DataFrame helps with different data tasks.
