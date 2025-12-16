@@ -15,7 +15,7 @@ All related methods are now located in the separate [`dataframe-csv`](Modules.md
 (which is included by default in the general [`dataframe`](Modules.md#dataframe-general) artifact
 and in `%use dataframe` in [Kotlin Notebook](SetupKotlinNotebook.md)).
 
-Functions were also renamed to the correct CamelCase spelling.
+Functions were also renamed to the correct [CamelCase](https://en.wikipedia.org/wiki/Camel_case) spelling.
 
 All new functions keep the same arguments as before and additionally introduce new ones.
 Also, [there are new arguments that expose Deephaven CSV features](read.md#unlocking-deephaven-csv-features).
@@ -48,6 +48,21 @@ For now, each `Instant`-related operation has been split into two new ones —
 one for the new stdlib `kotlin.time.Instant` and one for the old deprecated `kotlinx.datetime.Instant`.
 The behavior of old operations remains unchanged: they work with `kotlinx.datetime.Instant` and raise `ERROR` in 1.0.
 In version 1.1, they will be returned and will operate on the new stdlib `kotlin.time.Instant`.
+
+In version 1.0, all parsing operations still convert `Instant` 
+values into the deprecated `kotlinx.datetime.Instant`.
+To enable parsing into the new standard library `kotlin.time.Instant`,
+set the corresponding parsing option **`ParserOptions.parseExperimentalInstant`**
+(that will be default in 1.1). 
+For example:
+
+```kotlin
+DataFrame.readCsv(
+    ...,
+    parserOptions = ParserOptions(parseExperimentalInstant = true)
+)
+```
+
 
 <table>
 <tr>
@@ -113,11 +128,11 @@ The next functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
 
 | 0.15                                                           | 1.0                                                                          | Reason                                 |
 |----------------------------------------------------------------|------------------------------------------------------------------------------|----------------------------------------|
-| `DataColumn.createFrameColumn(name, df, startIndices)`         | `df.chunked(name, startIndices)`                                             | Replaced with an other function.       |
-| `DataColumn.createWithTypeInference(name, values, nullable)`   | `DataColumn.createByInference(name, values, TypeSuggestion.Infer, nullable)` | Replaced with an other function.       |
-| `DataColumn.create(name, values, infer)`                       | `DataColumn.createByType(name, values, infer)`                               | Replaced with an other function.       |
+| `DataColumn.createFrameColumn(name, df, startIndices)`         | `df.chunked(name, startIndices)`                                             | Replaced with another function.        |
+| `DataColumn.createWithTypeInference(name, values, nullable)`   | `DataColumn.createByInference(name, values, TypeSuggestion.Infer, nullable)` | Replaced with another function.        |
+| `DataColumn.create(name, values, infer)`                       | `DataColumn.createByType(name, values, infer)`                               | Replaced with another function.        |
 | `col.isComparable()`                                           | `col.valuesAreComparable()`                                                  | Renamed to better reflect its purpose. |
-| `df.minus { columns }`                                         | `df.remove { columns }`                                                      | Replaced with an other function.       |
+| `df.minus { columns }`                                         | `df.remove { columns }`                                                      | Replaced with another function.        |
 | `df.move { columns }.toLeft()`/`df.moveToLeft{ columns }`      | `df.move { columns }.toStart()`/`df.moveToStart { columns }`                 | Renamed to better reflect its purpose. |
 | `df.move { columns }.toRight()`/`df.moveToRight{ columns }`    | `df.move { columns }.toEnd()`/`df.moveToEnd{ columns }`                      | Renamed to better reflect its purpose. |
 | `row.rowMin()`/`row.rowMinOrNull()`                            | `row.rowMinOf()`/`row.rowMinOfOrNull()`                                      | Renamed to better reflect its purpose. |
@@ -129,10 +144,10 @@ The next functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
 | `df.writeHTML()`                                               | `df.writeHtml()`                                                             | Renamed to the correct CamelCase.      |
 | `asURL(fileOrUrl)`/`isURL(path)`                               | `asUrl(fileOrUrl)`/`isUrl(path)`                                             | Renamed to the correct CamelCase.      |
 | `df.convert { columns }.toURL()`/`df.convertToURL { columns }` | `df.convert { columns }.toUrl()`/`df.convertToUrl { columns }`               | Renamed to the correct CamelCase.      |
-| `df.filterBy(column)`                                          | `df.filter { column }`                                                       | Replaced with an other function.       |
+| `df.filterBy(column)`                                          | `df.filter { column }`                                                       | Replaced with another function.        |
 | `FormattingDSL`                                                | `FormattingDsl`                                                              | Renamed to the correct CamelCase.      |
 | `RGBColor`                                                     | `RgbColor`                                                                   | Renamed to the correct CamelCase.      |
-| `df.insert(column).after(columnPath)`                          | `df.insert(column).after { columnPath }`                                     | Replaced with an other function.       |
+| `df.insert(column).after(columnPath)`                          | `df.insert(column).after { columnPath }`                                     | Replaced with another function.        |
 | `CompareResult.Equals` / `CompareResult.isEqual()`             | `CompareResult.Matches` / `CompareResult.matches()`                          | Renamed to better reflect its purpose. |
 | `CompareResult.isSuperOrEqual()`                               | `CompareResult.isSuperOrMatches()`                                           | Renamed to better reflect its purpose. |
 
@@ -141,8 +156,8 @@ The next functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | 0.15                                                                                                     | 1.0                                                                                                                           | Reason                                                                  |
 |----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 | `df.split { columns }.default(..)` / `df.split { columns }.into(..)` / `df.split { columns }.inward(..)` | `df.split { columns }.by(..).default(..)` / `df.split { columns }.by(..).into(..)` / `df.split { columns }.by(..).inward(..)` | Removed a shortcut to clarify the behaviour; Only for `String` columns. |
-| `dataFrameOf(header, values)`                                                                            | `dataFrameOf(header).withValues(values)`                                                                                      | Replaced with an other function.                                        |
-| `df.generateCode(..)`                                                                                    | `df.generateInterfaces(..)`                                                                                                   | Replaced with an other function.                                        |
+| `dataFrameOf(header, values)`                                                                            | `dataFrameOf(header).withValues(values)`                                                                                      | Replaced with another function.                                         |
+| `df.generateCode(..)`                                                                                    | `df.generateInterfaces(..)`                                                                                                   | Replaced with another function.                                         |
 | `df.select { mapToColumn(name, infer) { body } }`                                                        | `df.select { expr(name, infer) { body } }`                                                                                    | Removed duplicated functionality.                                       |
 | `stringCol.length()`                                                                                     | `stringCol.map { it?.length ?: 0 }`                                                                                           | Removed a shortcut to clarify the behaviour; Only for `String` columns. |
 | `stringCol.lowercase()` / `stringCol.uppercase()`                                                        | `stringCol.map { it?.lowercase() }` / `stringCol.map { it?.uppercase() }`                                                     | Removed a shortcut to clarify the behaviour; Only for `String` columns. |
