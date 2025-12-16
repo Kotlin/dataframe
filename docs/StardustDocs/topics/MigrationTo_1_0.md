@@ -99,7 +99,7 @@ DataFrame.readCsv(
 )
 ```
 
-### Deprecation of `cols()` in Columns Selection DSL
+### Deprecation of `cols()` and other methods in Columns Selection DSL
 
 `cols()` overloads without arguments, which select all columns of a DataFrame or
 all subcolumns inside a column group in the [Columns Selection DSL](ColumnSelectors.md),
