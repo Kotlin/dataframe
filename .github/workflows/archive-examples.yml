@@ -26,12 +26,12 @@
         - name: Create kotlin-dataframe-plugin-gradle-example archive
           run: |
             cd examples/kotlin-dataframe-plugin-gradle-example
-            zip -r ../../kotlin-dataframe-plugin-gradle-example.zip . -x "*.git*" "build/*" ".gradle/*" "*/build/*"
+            zip -r ../../kotlin-dataframe-plugin-gradle-example.zip . -x "*.git*" "build/*" ".gradle/*" "*/build/*" ".idea/*"
 
         - name: Create kotlin-dataframe-plugin-maven-example archive
           run: |
             cd examples/kotlin-dataframe-plugin-maven-example
-            zip -r ../../kotlin-dataframe-plugin-maven-example.zip . -x "*.git*" "build/*" ".gradle/*" "*/build/*"
+            zip -r ../../kotlin-dataframe-plugin-maven-example.zip . -x "*.git*" "target/*" ".idea/*"
 
 
         - name: Checkout example-projects-archives branch
