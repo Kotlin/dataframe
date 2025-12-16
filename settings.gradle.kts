@@ -35,7 +35,7 @@ include("examples:idea-examples:unsupported-data-sources:hibernate")
 include("examples:idea-examples:unsupported-data-sources:spark")
 include("examples:idea-examples:unsupported-data-sources:multik")
 include("examples:idea-examples:spark-parquet-dataframe")
-includeBuild("examples/kotlin-dataframe-plugin-example")
+includeBuild("examples/kotlin-dataframe-plugin-gradle-example")
 includeBuild("examples/android-example")
 
 val jupyterApiTCRepo: String by settings
