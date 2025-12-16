@@ -968,13 +968,12 @@ private fun buildDataFrameFromColumnData(
             typeInformation = typeInformation,
             inferNullability = inferNullability,
         )
-        val postProcessedColumn = dbType.postProcessDataColumn(column, typeInformation)
 
         if (checkSchema) {
-            postProcessedColumn.checkSchema(typeInformation.targetSchema)
+            column.checkSchema(typeInformation.targetSchema)
         }
 
-        postProcessedColumn
+        column
     }.toDataFrame()
 
 private fun AnyCol.checkSchema(expected: ColumnSchema) {

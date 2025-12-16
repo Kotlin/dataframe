@@ -1,7 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -18,20 +23,20 @@ public typealias AnyTypeInformation = TypeInformation<*, *, *>
  *
  * @param J the type of the value coming from the JDBC driver.
  * @param D the type of the column values after preprocessing. Will be equal to [J] if [valuePreprocessor] is `null`.
- * @param P the type of the column values after postprocessing. Will be equal to [D] if [columnPostprocessor] is `null`.
+ * @param P the type of the column values after postprocessing. Will be equal to [D] if [columnBuilder] is `null`.
  *
  * @property targetSchema the target schema of the column after running the optional
- *   [valuePreprocessor] and [columnPostprocessor].
+ *   [valuePreprocessor] and [columnBuilder].
  * @property valuePreprocessor an optional function that converts values from [java.sql.ResultSet.getObject]
  *   to a cell/row suitable to be put into a [DataColumn].
- * @property columnPostprocessor an optional function that converts a [DataColumn] with values of type [D]
+ * @property columnBuilder an optional function that converts a [List] with values of type [D]
  *   to a [DataColumn] of with values of type [P].
  */
 public open class TypeInformation<J : Any, D : Any, P : Any>(
     public open val jdbcSourceType: KType,
     public open val targetSchema: ColumnSchema,
     public open val valuePreprocessor: DbValuePreprocessor<J, D>?,
-    public open val columnPostprocessor: DbColumnPostprocessor<D, P>?,
+    public open val columnBuilder: DbColumnBuilder<D, P>?,
 ) {
     public open fun preprocess(value: J?): D? {
         valuePreprocessor?.let { valuePreprocessor ->
@@ -40,11 +45,34 @@ public open class TypeInformation<J : Any, D : Any, P : Any>(
         return value as D?
     }
 
-    public open fun postprocess(column: DataColumn<D?>): DataColumn<P?> {
-        columnPostprocessor?.let { columnPostprocessor ->
-            return columnPostprocessor.postprocess(column, this)
+    public open fun buildDataColumn(name: String, values: List<D?>, inferNullability: Boolean): DataColumn<P?> {
+        columnBuilder?.let { columnPostprocessor ->
+            return columnPostprocessor.buildDataColumn(name, values, this, inferNullability)
         }
-        return column.cast()
+        return when (val schema = targetSchema) {
+            is ColumnSchema.Value ->
+                DataColumn.createValueColumn(
+                    name = name,
+                    values = values,
+                    infer = if (inferNullability) Infer.Nulls else Infer.None,
+                    type = schema.type,
+                ).cast()
+
+            // TODO, this case should be avoided.
+            //  Creating `n` DataRows is heavy!
+            is ColumnSchema.Group ->
+                DataColumn.createColumnGroup(
+                    name = name,
+                    df = (values as List<AnyRow>).toDataFrame(),
+                ).asDataColumn().cast()
+
+            is ColumnSchema.Frame ->
+                DataColumn.createFrameColumn(
+                    name = name,
+                    groups = values as List<AnyFrame>,
+                    schema = lazy { schema.schema },
+                ).cast()
+        }
     }
 }
 
@@ -59,13 +87,13 @@ public fun <J : Any, D : Any, P : Any> typeInformationWithProcessingFor(
     jdbcSourceType: KType,
     targetSchema: ColumnSchema,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
-    columnPostprocessor: DbColumnPostprocessor<D, P>?,
+    columnBuilder: DbColumnBuilder<D, P>?,
 ): TypeInformation<J, D, P> =
     TypeInformation(
         jdbcSourceType = jdbcSourceType,
         targetSchema = targetSchema,
         valuePreprocessor = valuePreprocessor,
-        columnPostprocessor = columnPostprocessor,
+        columnBuilder = columnBuilder,
     )
 
 public fun <J : Any> typeInformationFor(jdbcSourceType: KType, targetSchema: ColumnSchema): TypeInformation<J, J, J> =
@@ -73,7 +101,7 @@ public fun <J : Any> typeInformationFor(jdbcSourceType: KType, targetSchema: Col
         jdbcSourceType = jdbcSourceType,
         targetSchema = targetSchema,
         valuePreprocessor = null,
-        columnPostprocessor = null,
+        columnBuilder = null,
     )
 
 public fun <J : Any, D : Any> typeInformationWithPreprocessingFor(
@@ -85,19 +113,19 @@ public fun <J : Any, D : Any> typeInformationWithPreprocessingFor(
         jdbcSourceType = jdbcSourceType,
         targetSchema = targetSchema,
         valuePreprocessor = valuePreprocessor,
-        columnPostprocessor = null,
+        columnBuilder = null,
     )
 
 public fun <J : Any, P : Any> typeInformationWithPostprocessingFor(
     jdbcSourceType: KType,
     targetSchema: ColumnSchema,
-    columnPostprocessor: DbColumnPostprocessor<J, P>?,
+    columnBuilder: DbColumnBuilder<J, P>?,
 ): TypeInformation<J, J, P> =
     typeInformationWithProcessingFor(
         jdbcSourceType = jdbcSourceType,
         targetSchema = targetSchema,
         valuePreprocessor = null,
-        columnPostprocessor = columnPostprocessor,
+        columnBuilder = columnBuilder,
     )
 
 // endregion
@@ -134,17 +162,17 @@ public inline fun <reified J : Any, reified D : Any> typeInformationWithPreproce
 public fun <J : Any, P : Any> typeInformationWithPostprocessingForValueColumnOf(
     jdbcSourceType: KType,
     targetColumnType: KType,
-    columnPostprocessor: DbColumnPostprocessor<J, P>?,
+    columnPostprocessor: DbColumnBuilder<J, P>?,
 ): TypeInformation<J, J, P> =
     typeInformationWithPostprocessingFor(
         jdbcSourceType = jdbcSourceType,
         targetSchema = ColumnSchema.Value(targetColumnType),
-        columnPostprocessor = columnPostprocessor,
+        columnBuilder = columnPostprocessor,
     )
 
 public inline fun <reified J : Any, reified P : Any> typeInformationWithPostprocessingForValueColumnOf(
     isNullable: Boolean,
-    columnPostprocessor: DbColumnPostprocessor<J, P>?,
+    columnPostprocessor: DbColumnBuilder<J, P>?,
 ): TypeInformation<J, J, P> =
     typeInformationWithPostprocessingForValueColumnOf(
         jdbcSourceType = typeOf<J>().withNullability(isNullable),
@@ -184,18 +212,19 @@ public fun DbValuePreprocessor<*, *>.castToAny(): DbValuePreprocessor<Any, Any> 
  * @param D the type of the column values before postprocessing.
  * @param P the type of the column values after postprocessing.
  */
-public fun interface DbColumnPostprocessor<in D : Any, out P : Any> {
+public fun interface DbColumnBuilder<in D : Any, out P : Any> {
 
     /**
-     * Converts the given [column]: [DataColumn] with values of type [D] to a [DataColumn] of with values of type [P].
+     * Converts the given [values]: [DataColumn] with values of type [D] to a [DataColumn] of with values of type [P].
      */
-    public fun postprocess(
-        column: DataColumn<D?>,
+    public fun buildDataColumn(
+        name: String,
+        values: List<D?>,
         typeInformation: TypeInformation<*, @UnsafeVariance D, @UnsafeVariance P>,
+        inferNullability: Boolean,
     ): DataColumn<P?>
 }
 
-public fun <D : Any, P : Any> DbColumnPostprocessor<*, *>.cast(): DbColumnPostprocessor<D, P> =
-    this as DbColumnPostprocessor<D, P>
+public fun <D : Any, P : Any> DbColumnBuilder<*, *>.cast(): DbColumnBuilder<D, P> = this as DbColumnBuilder<D, P>
 
-public fun DbColumnPostprocessor<*, *>.castToAny(): DbColumnPostprocessor<Any, Any> = cast()
+public fun DbColumnBuilder<*, *>.castToAny(): DbColumnBuilder<Any, Any> = cast()

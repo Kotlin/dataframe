@@ -1,16 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.Infer
-import org.jetbrains.kotlinx.dataframe.api.asDataColumn
-import org.jetbrains.kotlinx.dataframe.api.asValueColumn
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -188,8 +180,13 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         val postprocessor =
             when (tableColumnMetadata.jdbcType) {
                 Types.ARRAY ->
-                    DbColumnPostprocessor<Array<*>, Any> { column, _ ->
-                        handleArrayValues(column.asValueColumn())
+                    DbColumnBuilder<Array<*>, Any> { name, values, typeInformation, inferNullability ->
+                        DataColumn.createValueColumn(
+                            name = name,
+                            values = handleArrayValues(values),
+                            infer = if (inferNullability) Infer.Nulls else Infer.None,
+                            type = typeInformation.targetSchema.type,
+                        )
                     }
 
                 else -> null
@@ -198,7 +195,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         return typeInformationWithPostprocessingFor(
             jdbcSourceType = kType.withNullability(tableColumnMetadata.isNullable),
             targetSchema = ColumnSchema.Value(kType.withNullability(tableColumnMetadata.isNullable)),
-            columnPostprocessor = postprocessor?.castToAny(),
+            columnBuilder = postprocessor?.castToAny(),
         )
     }
 
@@ -228,41 +225,12 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         typeInformation: TypeInformation<J, D, *>,
     ): D? = typeInformation.preprocess(value)
 
-    public open fun <D : Any> buildDataColumn(
+    public open fun <D : Any, P : Any> buildDataColumn(
         name: String,
         values: List<D?>,
-        typeInformation: TypeInformation<*, D, *>,
-        inferNullability: Boolean,
-    ): DataColumn<D?> =
-        when (val schema = typeInformation.targetSchema) {
-            is ColumnSchema.Value ->
-                DataColumn.createValueColumn(
-                    name = name,
-                    values = values,
-                    infer = if (inferNullability) Infer.Nulls else Infer.None,
-                    type = schema.type,
-                )
-
-            // TODO, this should be postponed to post-processing.
-            //  List<AnyRow>.toDataFrame() is heavy!
-            is ColumnSchema.Group ->
-                DataColumn.createColumnGroup(
-                    name = name,
-                    df = (values as List<AnyRow>).toDataFrame(),
-                ).asDataColumn().cast()
-
-            is ColumnSchema.Frame ->
-                DataColumn.createFrameColumn(
-                    name = name,
-                    groups = values as List<AnyFrame>,
-                    schema = lazy { schema.schema },
-                ).cast()
-        }
-
-    public fun <D : Any, P : Any> postProcessDataColumn(
-        column: DataColumn<D?>,
         typeInformation: TypeInformation<*, D, P>,
-    ): DataColumn<P?> = typeInformation.postprocess(column)
+        inferNullability: Boolean,
+    ): DataColumn<P?> = typeInformation.buildDataColumn(name, values, inferNullability)
 
     /**
      * Checks if the given table name is a system table for the specified database type.
@@ -531,9 +499,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param values raw values containing SQL Array objects
      * @return list of consistently typed arrays, or original arrays if no common type exists
      */
-    private fun handleArrayValues(values: ValueColumn<Any?>): DataColumn<Any> {
+    private fun handleArrayValues(values: List<Any?>): List<Any> {
         // Intermediate variable for the first mapping
-        val sqlArrays = values.values().mapNotNull {
+        val sqlArrays = values.mapNotNull {
             (it as? java.sql.Array)?.array?.let { array -> array as? Array<*> }
         }
 
@@ -553,7 +521,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             sqlArrays.map { castArray(it, commonElementType).toTypedArray() }
         } else {
             sqlArrays
-        }.toColumn(values.name())
+        }
     }
 
     /** Utility function to cast arrays based on the type of elements */

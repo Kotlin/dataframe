@@ -42,20 +42,11 @@ import org.duckdb.DuckDBColumnType.UUID
 import org.duckdb.DuckDBColumnType.VARCHAR
 import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.JsonNode
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.castToNotNullable
-import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.DataCollector
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
@@ -69,7 +60,6 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.Struct
 import java.util.Properties
-import kotlin.collections.toList
 import kotlin.reflect.KClass
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
@@ -115,7 +105,7 @@ public object DuckDb : DbType("duckdb") {
      */
     internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyTypeInformation =
         duckDbTypeCache.getOrPut(Pair(sqlTypeName, isNullable)) {
-            return@getOrPut when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
+            when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
                 BOOLEAN -> typeInformationForValueColumnOf<Boolean>(isNullable)
 
                 TINYINT -> typeInformationForValueColumnOf<Byte>(isNullable)
@@ -252,11 +242,10 @@ public object DuckDb : DbType("duckdb") {
                                 }
                             }
                         },
-                        columnPostprocessor = { col, _ ->
-                            col.castToNotNullable()
-                                .values()
+                        columnBuilder = { name, values, _, _ ->
+                            (values as List<Map<String, Any?>>)
                                 .toDataFrame()
-                                .asColumnGroup(col.name())
+                                .asColumnGroup(name)
                                 .asDataColumn()
                         },
                     )
@@ -269,25 +258,6 @@ public object DuckDb : DbType("duckdb") {
 
                 UNKNOWN, BIT, INTERVAL, ENUM -> typeInformationForValueColumnOf<String>(isNullable)
             }
-        }
-
-    // Overriding buildDataColumn behavior so we can create the column group in post-processing for efficiency
-    override fun <D : Any> buildDataColumn(
-        name: String,
-        values: List<D?>,
-        typeInformation: TypeInformation<*, D, *>,
-        inferNullability: Boolean,
-    ): DataColumn<D?> =
-        when (val schema = typeInformation.targetSchema) {
-            is ColumnSchema.Group ->
-                DataColumn.createValueColumn(
-                    name = name,
-                    values = values,
-                    infer = if (inferNullability) Infer.Nulls else Infer.None,
-                    type = schema.type,
-                )
-
-            else -> super.buildDataColumn(name, values, typeInformation, inferNullability)
         }
 
     private fun SqlArray.toList(): List<Any?> =
