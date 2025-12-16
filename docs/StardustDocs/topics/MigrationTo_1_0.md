@@ -49,21 +49,6 @@ one for the new stdlib `kotlin.time.Instant` and one for the old deprecated `kot
 The behavior of old operations remains unchanged: they work with `kotlinx.datetime.Instant` and raise `ERROR` in 1.0.
 In version 1.1, they will be returned and will operate on the new stdlib `kotlin.time.Instant`.
 
-In version 1.0, all parsing operations still convert `Instant` 
-values into the deprecated `kotlinx.datetime.Instant`.
-To enable parsing into the new standard library `kotlin.time.Instant`,
-set the corresponding parsing option **`ParserOptions.parseExperimentalInstant`**
-(that will be default in 1.1). 
-For example:
-
-```kotlin
-DataFrame.readCsv(
-    ...,
-    parserOptions = ParserOptions(parseExperimentalInstant = true)
-)
-```
-
-
 <table>
 <tr>
 <th>0.15</th>
@@ -98,6 +83,21 @@ DataFrame.readCsv(
 <td>Will be renamed back into <code>Instant</code> in 1.1</td>
 </tr>
 </table>
+
+
+In version 1.0, all parsing operations still convert `Instant`
+values into the deprecated `kotlinx.datetime.Instant`.
+To enable parsing into the new standard library `kotlin.time.Instant`,
+set the corresponding parsing option **`ParserOptions.parseExperimentalInstant`**
+(that will be default in 1.1).
+For example:
+
+```kotlin
+DataFrame.readCsv(
+    ...,
+    parserOptions = ParserOptions(parseExperimentalInstant = true)
+)
+```
 
 #### Deprecation of `cols()` in Columns Selection DSL
 
