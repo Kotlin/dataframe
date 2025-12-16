@@ -70,8 +70,13 @@ and make working with your data both convenient and type-safe.
 
 Explore our extensive collection of practical examples and real-world analytics workflows.
 
-* [Kotlin DataFrame Compiler Plugin Example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-example)  
-  — a simple project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
+* [Kotlin DataFrame Compiler Plugin Gradle Example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-gradle-example)  
+  — a simple Gradle project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
+  showcasing DataFrame expressions with [extension properties](extensionPropertiesApi.md)  
+  that are generated on-the-fly in the IDEA project.
+
+* [Kotlin DataFrame Compiler Plugin Maven Example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-gradle-example)  
+  — a simple Maven project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
   showcasing DataFrame expressions with [extension properties](extensionPropertiesApi.md)  
   that are generated on-the-fly in the IDEA project.
 

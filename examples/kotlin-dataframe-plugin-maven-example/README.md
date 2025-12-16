@@ -8,3 +8,8 @@ as well as the latest Kotlin plugin version.
 
 > [!WARNING]
 > For proper functionality in IntelliJ IDEA requires version 2025.3 or newer.
+
+> [Download Kotlin DataFrame Compiler Plugin Maven Example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip)
+
+
+See also [Kotlin DataFrame Compiler Gradle Plugin Example](../kotlin-dataframe-plugin-gradle-example)

@@ -324,7 +324,7 @@ tasks.assemble {
     // subprojects use the Gradle version from the root project, so let's sync them to ensure standalone version will build as well.
     doLast {
         val source = file("gradle/wrapper/gradle-wrapper.properties")
-        listOf("examples/android-example", "examples/kotlin-dataframe-plugin-example").forEach { sub ->
+        listOf("examples/android-example", "examples/kotlin-dataframe-plugin-gradle-example").forEach { sub ->
             val target = file("$sub/gradle/wrapper/gradle-wrapper.properties")
             if (source.readText() != target.readText()) {
                 source.copyTo(target, overwrite = true)

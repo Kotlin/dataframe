@@ -164,6 +164,8 @@ fun main() {
 
 ## Examples
 
-* [Kotlin DataFrame in the IntelliJ IDEA project example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-example)  
-  — an IntelliJ IDEA project showcasing simple DataFrame expressions using the Compiler Plugin.
+* [Kotlin DataFrame in the IntelliJ IDEA Gradle project example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-gradle-example)  
+  — an IntelliJ IDEA Gradle project showcasing simple DataFrame expressions using the Compiler Plugin.
+* [Kotlin DataFrame in the IntelliJ IDEA Maven project example](https://github.com/Kotlin/dataframe/blob/master/examples/kotlin-dataframe-plugin-maven-example)   
+  — an IntelliJ IDEA Maven project showcasing simple DataFrame expressions using the Compiler Plugin.
 * [](compilerPluginExamples.md) — few examples of Compiler Plugin usages.
