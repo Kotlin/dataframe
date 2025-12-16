@@ -85,15 +85,15 @@ private val logger = KotlinLogging.logger {}
  * This class provides methods to convert data from a [ResultSet] to the appropriate type for DuckDB,
  * and to generate the corresponding [column schema][ColumnSchema].
  */
-public object DuckDb : DbType("duckdb") {
+public object DuckDb : AdvancedDbType("duckdb") {
 
     /** the name of the class of the DuckDB JDBC driver */
     override val driverClassName: String = "org.duckdb.DuckDBDriver"
 
-    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation =
+    override fun generateTypeMapping(tableColumnMetadata: TableColumnMetadata): AnyJdbcTypeMapping =
         parseDuckDbType(tableColumnMetadata.sqlTypeName, tableColumnMetadata.isNullable)
 
-    private val duckDbTypeCache = mutableMapOf<Pair<String, Boolean>, AnyTypeInformation>()
+    private val duckDbTypeCache = mutableMapOf<Pair<String, Boolean>, AnyJdbcTypeMapping>()
 
     /**
      * How a column type from JDBC, [sqlTypeName], is read in Java/Kotlin.
@@ -103,7 +103,7 @@ public object DuckDb : DbType("duckdb") {
      * Following [org.duckdb.DuckDBVector.getObject] and converting the result to
      *
      */
-    internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyTypeInformation =
+    internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyJdbcTypeMapping =
         duckDbTypeCache.getOrPut(Pair(sqlTypeName, isNullable)) {
             when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
                 BOOLEAN -> typeInformationForValueColumnOf<Boolean>(isNullable)
@@ -134,21 +134,22 @@ public object DuckDb : DbType("duckdb") {
 
                 DECIMAL -> typeInformationForValueColumnOf<BigDecimal>(isNullable)
 
-                TIME -> typeInformationWithPreprocessingForValueColumnOf<JavaLocalTime, LocalTime>(
-                    isNullable = isNullable,
-                ) { it, _ -> it?.toKotlinLocalTime() }
+                TIME ->
+                    typeInformationWithPreprocessingForValueColumnOf<JavaLocalTime, LocalTime>(isNullable) {
+                        it?.toKotlinLocalTime()
+                    }
 
                 // todo?
                 TIME_WITH_TIME_ZONE -> typeInformationForValueColumnOf<JavaOffsetTime>(isNullable)
 
-                DATE -> typeInformationWithPreprocessingForValueColumnOf<JavaLocalDate, LocalDate>(
-                    isNullable = isNullable,
-                ) { it, _ -> it?.toKotlinLocalDate() }
+                DATE -> typeInformationWithPreprocessingForValueColumnOf<JavaLocalDate, LocalDate>(isNullable) {
+                    it?.toKotlinLocalDate()
+                }
 
                 TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S ->
-                    typeInformationWithPreprocessingForValueColumnOf<SqlTimestamp, Instant>(
-                        isNullable = isNullable,
-                    ) { it, _ -> it?.toInstant()?.toKotlinInstant() }
+                    typeInformationWithPreprocessingForValueColumnOf<SqlTimestamp, Instant>(isNullable) {
+                        it?.toInstant()?.toKotlinInstant()
+                    }
 
                 // todo?
                 TIMESTAMP_WITH_TIME_ZONE -> typeInformationForValueColumnOf<JavaOffsetDateTime>(isNullable)
@@ -158,9 +159,9 @@ public object DuckDb : DbType("duckdb") {
 
                 BLOB -> typeInformationForValueColumnOf<Blob>(isNullable)
 
-                UUID -> typeInformationWithPreprocessingForValueColumnOf<JavaUUID, Uuid>(
-                    isNullable = isNullable,
-                ) { it, _ -> it?.toKotlinUuid() }
+                UUID -> typeInformationWithPreprocessingForValueColumnOf<JavaUUID, Uuid>(isNullable) {
+                    it?.toKotlinUuid()
+                }
 
                 MAP -> {
                     val (key, value) = parseMapTypes(sqlTypeName)
@@ -176,12 +177,12 @@ public object DuckDb : DbType("duckdb") {
                     ).withNullability(isNullable)
 
                     typeInformationWithPreprocessingForValueColumnOf<Map<String, Any?>, Map<String, Any?>>(
-                        jdbcSourceType = typeOf<Map<String, Any?>>().withNullability(isNullable), // unused
-                        targetColumnType = targetMapType,
-                    ) { map, _ ->
+                        isNullable = isNullable,
+                        preprocessedValueType = targetMapType,
+                    ) { map ->
                         // only need to preprocess the values, as the keys are just Strings
                         map?.mapValues { (_, value) ->
-                            parsedValueType.preprocess(value)
+                            parsedValueType.preprocessOrCast(value)
                         }
                     }
                 }
@@ -200,13 +201,13 @@ public object DuckDb : DbType("duckdb") {
                     ).withNullability(isNullable)
 
                     // todo maybe List<DataRow> should become FrameColumn
-                    typeInformationWithPreprocessingFor<SqlArray, List<Any?>>(
-                        jdbcSourceType = typeOf<SqlArray>().withNullability(isNullable),
-                        targetSchema = ColumnSchema.Value(targetListType),
-                    ) { sqlArray, _ ->
+                    typeInformationWithPreprocessingForValueColumnOf<SqlArray, List<Any?>>(
+                        isNullable = isNullable,
+                        preprocessedValueType = targetListType,
+                    ) { sqlArray ->
                         sqlArray
                             ?.toList()
-                            ?.map(parsedListType::preprocess) // recursively preprocess
+                            ?.map { parsedListType.preprocessOrCast(it) } // recursively preprocess
                     }
                 }
 
@@ -222,9 +223,9 @@ public object DuckDb : DbType("duckdb") {
                     )
 
                     typeInformationWithProcessingFor<Struct, Map<String, Any?>, DataRow<*>>(
-                        jdbcSourceType = typeOf<Struct>().withNullability(isNullable),
+                        isNullable = isNullable,
                         targetSchema = targetSchema,
-                        valuePreprocessor = { struct, _ ->
+                        valuePreprocessor = { struct ->
                             // NOTE DataRows cannot be `null` in DataFrame, instead, all its fields become `null`
                             if (struct == null) {
                                 parsedStructEntries.mapValues { null }
@@ -232,17 +233,17 @@ public object DuckDb : DbType("duckdb") {
                                 // read data from the struct
                                 val attrs = struct.getAttributes(
                                     parsedStructEntries.mapValues {
-                                        (it.value.jdbcSourceType.classifier!! as KClass<*>).java
+                                        (it.value.expectedJdbcType.classifier!! as KClass<*>).java
                                     },
                                 )
 
                                 // and potentially, preprocess each value individually
                                 parsedStructEntries.entries.withIndex().associate { (i, entry) ->
-                                    entry.key to entry.value.castToAny().preprocess(attrs[i])
+                                    entry.key to entry.value.castToAny().preprocessOrCast(attrs[i])
                                 }
                             }
                         },
-                        columnBuilder = { name, values, _, _ ->
+                        columnBuilder = { name, values, _ ->
                             (values as List<Map<String, Any?>>)
                                 .toDataFrame()
                                 .asColumnGroup(name)

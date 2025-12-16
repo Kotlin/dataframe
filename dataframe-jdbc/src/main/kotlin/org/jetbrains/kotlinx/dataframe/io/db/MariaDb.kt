@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
+import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
@@ -15,7 +15,7 @@ public object MariaDb : DbType("mariadb") {
     override val driverClassName: String
         get() = "org.mariadb.jdbc.Driver"
 
-    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation {
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         // Force BIGINT to always be Long, regardless of javaClassName
         // MariaDB JDBC driver may report Integer for small BIGINT values
         // TODO: investigate the corner case
@@ -28,13 +28,13 @@ public object MariaDb : DbType("mariadb") {
         if (tableColumnMetadata.sqlTypeName == "INTEGER UNSIGNED" ||
             tableColumnMetadata.sqlTypeName == "INT UNSIGNED"
         ) {
-            return typeInformationForValueColumnOf<Long>(tableColumnMetadata.isNullable)
+            return typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
         }
 
         if (tableColumnMetadata.sqlTypeName == "SMALLINT" && tableColumnMetadata.javaClassName == "java.lang.Short") {
-            return typeInformationForValueColumnOf<Short>(tableColumnMetadata.isNullable)
+            return typeOf<Short>().withNullability(tableColumnMetadata.isNullable)
         }
-        return super.generateTypeInformation(tableColumnMetadata)
+        return super.getExpectedJdbcType(tableColumnMetadata)
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean = MySql.isSystemTable(tableMetadata)

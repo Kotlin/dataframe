@@ -4,15 +4,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
-import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import javax.sql.DataSource
-import kotlin.use
 
 /**
  * Retrieves the schema for an SQL table using the provided database configuration.
@@ -97,6 +94,8 @@ public fun DataFrameSchema.Companion.readSqlTable(
     dbType: DbType? = null,
 ): DataFrameSchema {
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
+
+    // TODO don't need to read 1 row, take it just from TableColumnMetadatas
 
     // Read just 1 row to get the schema
     val singleRowDataFrame = DataFrame.readSqlTable(
@@ -322,7 +321,10 @@ public fun Connection.readDataFrameSchema(sqlQueryOrTableName: String, dbType: D
  */
 public fun DataFrameSchema.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
     val tableColumns = getTableColumnsMetadata(resultSet, dbType)
-    return buildSchemaByTableColumns(tableColumns, dbType)
+    val expectedJdbcTypes = getExpectedJdbcTypes(dbType, tableColumns)
+    val preprocessedValueTypes = getPreprocessedValueTypes(dbType, tableColumns, expectedJdbcTypes)
+    val targetColumnSchemas = getTargetColumnSchemas(dbType, tableColumns, preprocessedValueTypes)
+    return DataFrameSchemaImpl(targetColumnSchemas)
 }
 
 /**
@@ -436,22 +438,4 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
     }
 
     return dataFrameSchemas
-}
-
-/**
- * Builds a DataFrame schema based on the given table columns.
- *
- * @param [tableColumns] a mutable map containing the table columns, where the key represents the column name
- * and the value represents the metadata of the column
- * @param [dbType] the type of database.
- * @return a [DataFrameSchema] object representing the schema built from the table columns.
- */
-internal fun buildSchemaByTableColumns(
-    tableColumns: MutableList<TableColumnMetadata>,
-    dbType: DbType,
-): DataFrameSchema {
-    val schemaColumns = tableColumns.associate {
-        it.name to dbType.getOrGenerateTypeInformation(it).targetSchema
-    }
-    return DataFrameSchemaImpl(columns = schemaColumns)
 }

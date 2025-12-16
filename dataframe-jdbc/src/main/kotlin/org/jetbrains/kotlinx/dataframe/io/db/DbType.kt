@@ -1,8 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.asDataColumn
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -126,21 +131,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         Types.TIMESTAMP_WITH_TIMEZONE to typeOf<OffsetDateTime>(),
     )
 
-    private val typeInformationCache = mutableMapOf<TableColumnMetadata, AnyTypeInformation>()
-
-    /**
-     * Returns a [TypeInformation] produced from [tableColumnMetadata].
-     */
-    public fun getOrGenerateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation =
-        typeInformationCache.getOrPut(tableColumnMetadata) { generateTypeInformation(tableColumnMetadata) }
-
-    /**
-     * Returns a [TypeInformation] produced from [tableColumnMetadata].
-     *
-     * This function can be overridden by returning your own [TypeInformation] or a subtype of that.
-     * Do note that this class needs to be stateless, so this function can be memoized.
-     */
-    public open fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation {
+    public open fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         val kType = when {
             tableColumnMetadata.jdbcType == Types.OTHER ->
                 when (tableColumnMetadata.javaClassName) {
@@ -175,28 +166,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 ?: typeOf<String>()
         }
 
-        // TODO add preprocessors for common types, like sql Arrays, Java datetimes, etc.
-
-        val postprocessor =
-            when (tableColumnMetadata.jdbcType) {
-                Types.ARRAY ->
-                    DbColumnBuilder<Array<*>, Any> { name, values, typeInformation, inferNullability ->
-                        DataColumn.createValueColumn(
-                            name = name,
-                            values = handleArrayValues(values),
-                            infer = if (inferNullability) Infer.Nulls else Infer.None,
-                            type = typeInformation.targetSchema.type,
-                        )
-                    }
-
-                else -> null
-            }
-
-        return typeInformationWithPostprocessingFor(
-            jdbcSourceType = kType.withNullability(tableColumnMetadata.isNullable),
-            targetSchema = ColumnSchema.Value(kType.withNullability(tableColumnMetadata.isNullable)),
-            columnBuilder = postprocessor?.castToAny(),
-        )
+        return kType.withNullability(tableColumnMetadata.isNullable)
     }
 
     /**
@@ -205,13 +175,13 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      *
      * @param [rs] the ResultSet to read from
      * @param [columnIndex] zero-based column index
-     * @param [typeInformation]
      * @return the extracted value, or null
      */
     public open fun <J : Any> getValueFromResultSet(
         rs: ResultSet,
         columnIndex: Int,
-        typeInformation: TypeInformation<J, *, *>,
+        tableColumnMetadata: TableColumnMetadata,
+        expectedJdbcType: KType,
     ): J? =
         try {
             rs.getObject(columnIndex + 1)
@@ -220,17 +190,80 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             rs.getString(columnIndex + 1)
         } as J?
 
-    public fun <J : Any, D : Any> preprocessValuesFromResultSet(
+    // TODO add preprocessors for common types, like sql Arrays, Java datetimes, etc.
+    public open fun getPreprocessedValueType(
+        tableColumnMetadata: TableColumnMetadata,
+        expectedJdbcType: KType,
+    ): KType = expectedJdbcType
+
+    // TODO add preprocessors for common types, like sql Arrays, Java datetimes, etc.
+    public open fun <J : Any, D : Any> preprocessValue(
         value: J?,
-        typeInformation: TypeInformation<J, D, *>,
-    ): D? = typeInformation.preprocess(value)
+        tableColumnMetadata: TableColumnMetadata,
+        expectedJdbcType: KType,
+        expectedPreprocessedValueType: KType,
+    ): D? = value as D?
+
+    public open fun getTargetColumnSchema(
+        tableColumnMetadata: TableColumnMetadata,
+        expectedValueType: KType,
+    ): ColumnSchema =
+        when (tableColumnMetadata.jdbcType) {
+            // buildDataColumn post-processes java.sql.Array -> Kotlin arrays, making the result type `Array<*>`
+            Types.ARRAY -> ColumnSchema.Value(typeOf<Array<*>>().withNullability(expectedValueType.isMarkedNullable))
+
+            else -> ColumnSchema.Value(expectedValueType)
+        }
 
     public open fun <D : Any, P : Any> buildDataColumn(
         name: String,
         values: List<D?>,
-        typeInformation: TypeInformation<*, D, P>,
+        tableColumnMetadata: TableColumnMetadata,
+        targetColumnSchema: ColumnSchema,
         inferNullability: Boolean,
-    ): DataColumn<P?> = typeInformation.buildDataColumn(name, values, inferNullability)
+    ): DataColumn<P?> {
+        val postProcessedValues = when (tableColumnMetadata.jdbcType) {
+            // Special case which post-processes java.sql.Array -> Kotlin arrays
+            Types.ARRAY -> handleArrayValues(values)
+
+            else -> values
+        }
+        return postProcessedValues.toDataColumn(
+            name = name,
+            targetColumnSchema = targetColumnSchema,
+            inferNullability = inferNullability,
+        )
+    }
+
+    protected fun <D : Any, P : Any> List<D?>.toDataColumn(
+        name: String,
+        targetColumnSchema: ColumnSchema,
+        inferNullability: Boolean,
+    ): DataColumn<P?> =
+        when (targetColumnSchema) {
+            is ColumnSchema.Value ->
+                DataColumn.createValueColumn(
+                    name = name,
+                    values = this,
+                    infer = if (inferNullability) Infer.Nulls else Infer.None,
+                    type = targetColumnSchema.type,
+                ).cast()
+
+            // NOTE: this case should be avoided.
+            //  Creating `n` DataRows is heavy!
+            is ColumnSchema.Group ->
+                DataColumn.createColumnGroup(
+                    name = name,
+                    df = (this as List<AnyRow>).toDataFrame(),
+                ).asDataColumn().cast()
+
+            is ColumnSchema.Frame ->
+                DataColumn.createFrameColumn(
+                    name = name,
+                    groups = this as List<AnyFrame>,
+                    schema = lazy { targetColumnSchema.schema },
+                ).cast()
+        }
 
     /**
      * Checks if the given table name is a system table for the specified database type.
@@ -499,7 +532,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param values raw values containing SQL Array objects
      * @return list of consistently typed arrays, or original arrays if no common type exists
      */
-    private fun handleArrayValues(values: List<Any?>): List<Any> {
+    private fun handleArrayValues(values: List<Any?>): List<Array<*>?> {
         // Intermediate variable for the first mapping
         val sqlArrays = values.mapNotNull {
             (it as? java.sql.Array)?.array?.let { array -> array as? Array<*> }

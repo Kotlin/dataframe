@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io.db
 
 import java.sql.ResultSet
 import java.util.Locale
+import kotlin.reflect.KType
 import org.jetbrains.kotlinx.dataframe.io.db.MariaDb as MariaDbType
 import org.jetbrains.kotlinx.dataframe.io.db.MsSql as MsSqlType
 import org.jetbrains.kotlinx.dataframe.io.db.MySql as MySqlType
@@ -117,9 +118,9 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     override val driverClassName: String
         get() = "org.h2.Driver"
 
-    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation =
-        delegate?.generateTypeInformation(tableColumnMetadata)
-            ?: super.generateTypeInformation(tableColumnMetadata)
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
+        delegate?.getExpectedJdbcType(tableColumnMetadata)
+            ?: super.getExpectedJdbcType(tableColumnMetadata)
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()

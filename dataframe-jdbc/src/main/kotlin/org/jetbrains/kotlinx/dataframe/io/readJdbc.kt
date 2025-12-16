@@ -9,11 +9,8 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.io.db.AnyTypeInformation
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.db.cast
-import org.jetbrains.kotlinx.dataframe.io.db.castToAny
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.Connection
@@ -23,6 +20,7 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import javax.sql.DataSource
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 
 private val logger = KotlinLogging.logger {}
@@ -191,7 +189,7 @@ private fun executeQueryAndBuildDataFrame(
             logger.debug { "Executing query: $sqlQuery" }
             statement.executeQuery().use { rs ->
                 val tableColumns = getTableColumnsMetadata(rs, determinedDbType)
-                fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
+                fetchAndConvertDataFromResultSet(determinedDbType, tableColumns, rs, limit, inferNullability)
             }
         }
     } catch (e: java.sql.SQLException) {
@@ -572,7 +570,7 @@ public fun DataFrame.Companion.readResultSet(
 ): AnyFrame {
     validateLimit(limit)
     val tableColumns = getTableColumnsMetadata(resultSet, dbType)
-    return fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit, inferNullability)
+    return fetchAndConvertDataFromResultSet(dbType, tableColumns, resultSet, limit, inferNullability)
 }
 
 /**
@@ -861,8 +859,8 @@ private fun readTableAsDataFrame(
     return dataFrame
 }
 
-internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): MutableList<TableColumnMetadata> =
-    dbType.getTableColumnsMetadata(resultSet).toMutableList()
+internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): List<TableColumnMetadata> =
+    dbType.getTableColumnsMetadata(resultSet)
 
 /**
  * Fetches and converts data from a ResultSet into a mutable map.
@@ -876,25 +874,41 @@ internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): Muta
  * @return A mutable map containing the fetched and converted data.
  */
 internal fun fetchAndConvertDataFromResultSet(
-    tableColumns: MutableList<TableColumnMetadata>,
-    rs: ResultSet,
     dbType: DbType,
+    tableColumns: List<TableColumnMetadata>,
+    rs: ResultSet,
     limit: Int?,
     inferNullability: Boolean,
 ): AnyFrame {
-    val columnTypeInformation = buildColumnTypeInformation(tableColumns = tableColumns, dbType = dbType)
-    val columnData = readAllRowsFromResultSet(
+    val expectedJdbcTypes = getExpectedJdbcTypes(
+        dbType = dbType,
+        tableColumns = tableColumns,
+    )
+    val preprocessedValueTypes = getPreprocessedValueTypes(
+        dbType = dbType,
+        tableColumns = tableColumns,
+        expectedJdbcTypes = expectedJdbcTypes,
+    )
+    val targetColumnSchemas = getTargetColumnSchemas(
+        dbType = dbType,
+        tableColumns = tableColumns,
+        preprocessedValueTypes = preprocessedValueTypes,
+    )
+
+    val columnData = readAndPreprocessRowsFromResultSet(
         rs = rs,
         tableColumns = tableColumns,
-        columnTypeInformation = columnTypeInformation,
+        expectedJdbcTypes = expectedJdbcTypes,
+        preprocessedValueTypes = preprocessedValueTypes,
         dbType = dbType,
         limit = limit,
     )
+
     val dataFrame = buildDataFrameFromColumnData(
+        dbType = dbType,
         columnData = columnData,
         tableColumns = tableColumns,
-        columnTypeInformation = columnTypeInformation,
-        dbType = dbType,
+        targetColumnSchemas = targetColumnSchemas,
         inferNullability = inferNullability,
     )
 
@@ -905,41 +919,69 @@ internal fun fetchAndConvertDataFromResultSet(
     return dataFrame
 }
 
-/**
- * Builds a map of column indices to their Kotlin types.
- */
-private fun buildColumnTypeInformation(
-    tableColumns: List<TableColumnMetadata>,
+internal fun getExpectedJdbcTypes(dbType: DbType, tableColumns: List<TableColumnMetadata>): Map<String, KType> =
+    tableColumns.associate {
+        it.name to dbType.getExpectedJdbcType(tableColumnMetadata = it)
+    }
+
+internal fun getPreprocessedValueTypes(
     dbType: DbType,
-): List<AnyTypeInformation> =
-    tableColumns.indices.map { index ->
-        dbType.getOrGenerateTypeInformation(tableColumns[index])
+    tableColumns: List<TableColumnMetadata>,
+    expectedJdbcTypes: Map<String, KType>,
+): Map<String, KType> =
+    tableColumns.associate {
+        it.name to dbType.getPreprocessedValueType(
+            tableColumnMetadata = it,
+            expectedJdbcType = expectedJdbcTypes[it.name]!!,
+        )
+    }
+
+internal fun getTargetColumnSchemas(
+    dbType: DbType,
+    tableColumns: List<TableColumnMetadata>,
+    preprocessedValueTypes: Map<String, KType>,
+): Map<String, ColumnSchema> =
+    tableColumns.associate {
+        it.name to dbType.getTargetColumnSchema(
+            tableColumnMetadata = it,
+            expectedValueType = preprocessedValueTypes[it.name]!!,
+        )
     }
 
 /**
  * Reads all rows from ResultSet and returns a column-oriented data structure.
  */
-private fun readAllRowsFromResultSet(
+private fun readAndPreprocessRowsFromResultSet(
+    dbType: DbType,
     rs: ResultSet,
     tableColumns: List<TableColumnMetadata>,
-    columnTypeInformation: List<AnyTypeInformation>,
-    dbType: DbType,
+    expectedJdbcTypes: Map<String, KType>,
+    preprocessedValueTypes: Map<String, KType>,
     limit: Int?,
-): List<List<Any?>> {
-    val columnsCount = tableColumns.size
-    val columnData = List(columnsCount) { mutableListOf<Any?>() }
+): Map<String, List<Any?>> {
+    val columnNames = tableColumns.map { it.name }
+    val columnData = columnNames.associateWith { mutableListOf<Any?>() }
     var rowsRead = 0
 
     while (rs.next() && (limit == null || rowsRead < limit)) {
-        repeat(columnsCount) { columnIndex ->
-            val typeInformation = columnTypeInformation[columnIndex].castToAny()
-            val value = dbType.getValueFromResultSet(
+        columnNames.forEachIndexed { i, name ->
+            val tableColumnMetadata = tableColumns[i]
+            val expectedJdbcType = expectedJdbcTypes[name]!!
+            val preprocessedValueType = preprocessedValueTypes[name]!!
+
+            val value = dbType.getValueFromResultSet<Any>(
                 rs = rs,
-                columnIndex = columnIndex,
-                typeInformation = typeInformation,
+                columnIndex = i,
+                tableColumnMetadata = tableColumnMetadata,
+                expectedJdbcType = expectedJdbcType,
             )
-            val preprocessedValue = dbType.preprocessValuesFromResultSet(value, typeInformation)
-            columnData[columnIndex].add(preprocessedValue)
+            val preprocessedValue = dbType.preprocessValue<Any, Any>(
+                value = value,
+                tableColumnMetadata = tableColumnMetadata,
+                expectedJdbcType = expectedJdbcType,
+                expectedPreprocessedValueType = preprocessedValueType,
+            )
+            columnData[name]!!.add(preprocessedValue)
         }
         rowsRead++
         // if (rowsRead % 1000 == 0) logger.debug { "Loaded $rowsRead rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
@@ -953,24 +995,25 @@ private fun readAllRowsFromResultSet(
  * Accepts mutable lists to enable efficient in-place transformations.
  */
 private fun buildDataFrameFromColumnData(
-    columnData: List<List<Any?>>,
-    tableColumns: List<TableColumnMetadata>,
-    columnTypeInformation: List<AnyTypeInformation>,
     dbType: DbType,
+    columnData: Map<String, List<Any?>>,
+    tableColumns: List<TableColumnMetadata>,
+    targetColumnSchemas: Map<String, ColumnSchema>,
     inferNullability: Boolean,
     checkSchema: Boolean = true, // TODO add as configurable parameter
 ): AnyFrame =
-    columnData.mapIndexed { index, values ->
-        val typeInformation = columnTypeInformation[index].castToAny()
-        val column = dbType.buildDataColumn(
-            name = tableColumns[index].name,
-            values = values,
-            typeInformation = typeInformation,
+    tableColumns.map {
+        val name = it.name
+        val column = dbType.buildDataColumn<Any, Any>(
+            name = name,
+            values = columnData[name]!!,
+            tableColumnMetadata = it,
+            targetColumnSchema = targetColumnSchemas[name]!!,
             inferNullability = inferNullability,
         )
 
         if (checkSchema) {
-            column.checkSchema(typeInformation.targetSchema)
+            column.checkSchema(targetColumnSchemas[name]!!)
         }
 
         column

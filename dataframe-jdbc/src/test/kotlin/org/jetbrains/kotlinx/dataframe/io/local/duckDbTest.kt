@@ -260,8 +260,10 @@ class DuckDbTest {
 
     @DataSchema
     data class NestedTypes(
+        @ColumnName("test_col")
+        val testCol: Int,
         @ColumnName("ijstruct_col")
-        val ijstructCol: NestedEntry, // TODO
+        val ijstructCol: NestedEntry,
         @ColumnName("intarray_col")
         val intarrayCol: List<Int?>,
         @ColumnName("intlist_col")
@@ -600,6 +602,7 @@ class DuckDbTest {
             connection.prepareStatement(
                 """
                 CREATE TABLE IF NOT EXISTS table2 (
+                    test_col INTEGER,
                     intarray_col INTEGER[3],
                     stringarray_col VARCHAR[3],
                     intlist_col INTEGER[],
@@ -616,6 +619,7 @@ class DuckDbTest {
             connection.prepareStatement(
                 """
                 INSERT INTO table2 VALUES (
+                    1,                                      -- int
                     array_value(1, 2, NULL),                    -- int array
                     array_value('a', 'ab', 'abc'),           -- string array
                     list_value(1, 2, 3),                     -- int list

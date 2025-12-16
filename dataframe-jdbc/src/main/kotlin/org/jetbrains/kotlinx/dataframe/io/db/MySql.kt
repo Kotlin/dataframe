@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
+import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
@@ -16,11 +16,11 @@ public object MySql : DbType("mysql") {
     override val driverClassName: String
         get() = "com.mysql.jdbc.Driver"
 
-    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation {
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
-            return typeInformationForValueColumnOf<Long>(tableColumnMetadata.isNullable)
+            return typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
         }
-        return super.generateTypeInformation(tableColumnMetadata)
+        return super.getExpectedJdbcType(tableColumnMetadata)
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {

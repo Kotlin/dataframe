@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
+import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
@@ -16,12 +16,12 @@ public object PostgreSql : DbType("postgresql") {
     override val driverClassName: String
         get() = "org.postgresql.Driver"
 
-    override fun generateTypeInformation(tableColumnMetadata: TableColumnMetadata): AnyTypeInformation {
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         // because of https://github.com/pgjdbc/pgjdbc/issues/425
         if (tableColumnMetadata.sqlTypeName == "money") {
-            return typeInformationForValueColumnOf<String>(tableColumnMetadata.isNullable)
+            return typeOf<String>().withNullability(tableColumnMetadata.isNullable)
         }
-        return super.generateTypeInformation(tableColumnMetadata)
+        return super.getExpectedJdbcType(tableColumnMetadata)
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean =
