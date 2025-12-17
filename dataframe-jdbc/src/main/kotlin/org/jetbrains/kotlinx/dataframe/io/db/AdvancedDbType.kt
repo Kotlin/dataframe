@@ -2,45 +2,62 @@ package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import java.sql.ResultSet
 import kotlin.reflect.KType
 
 /**
  * Alternative version of [DbType] that allows to customize type mapping
- * by initializing a [JdbcTypeMapping] instance for each JDBC type.
+ * by initializing a [JdbcToDataFrameConverter] instance for each JDBC type.
  *
  * This can be helpful for JDBC databases that support structured data, like [DuckDb]
  * or that need to a lot of type mapping.
  */
 public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJdbcUrl) {
 
-    protected abstract fun generateTypeMapping(tableColumnMetadata: TableColumnMetadata): AnyJdbcTypeMapping
+    protected abstract fun generateConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter
 
-    private val typeMappingCache = mutableMapOf<TableColumnMetadata, AnyJdbcTypeMapping>()
+    private val converterCache = mutableMapOf<TableColumnMetadata, AnyJdbcToDataFrameConverter>()
 
-    protected fun getTypeMapping(tableColumnMetadata: TableColumnMetadata): AnyJdbcTypeMapping =
-        typeMappingCache.getOrPut(tableColumnMetadata) {
-            generateTypeMapping(tableColumnMetadata)
+    protected fun getConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter =
+        converterCache.getOrPut(tableColumnMetadata) {
+            generateConverter(tableColumnMetadata)
         }
 
     final override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
-        getTypeMapping(tableColumnMetadata).expectedJdbcType
+        getConverter(tableColumnMetadata).expectedJdbcType
 
     final override fun getPreprocessedValueType(
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
-    ): KType = getTypeMapping(tableColumnMetadata).preprocessedValueType
+    ): KType = getConverter(tableColumnMetadata).preprocessedValueType
 
     final override fun getTargetColumnSchema(
         tableColumnMetadata: TableColumnMetadata,
         expectedValueType: KType,
-    ): ColumnSchema = getTypeMapping(tableColumnMetadata).targetSchema
+    ): ColumnSchema = getConverter(tableColumnMetadata).targetSchema
+
+    final override fun <J : Any> getValueFromResultSet(
+        rs: ResultSet,
+        columnIndex: Int,
+        tableColumnMetadata: TableColumnMetadata,
+        expectedJdbcType: KType,
+    ): J? =
+        getConverter(tableColumnMetadata).cast<J, Any, Any>()
+            .getValueFromResultSetOrElse(rs, columnIndex) {
+                try {
+                    rs.getObject(columnIndex + 1)
+                } catch (_: Throwable) {
+                    // TODO?
+                    rs.getString(columnIndex + 1)
+                } as J?
+            }
 
     final override fun <J : Any, D : Any> preprocessValue(
         value: J?,
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
         expectedPreprocessedValueType: KType,
-    ): D? = getTypeMapping(tableColumnMetadata).cast<J, D, Any>().preprocessOrCast(value)
+    ): D? = getConverter(tableColumnMetadata).cast<J, D, Any>().preprocessOrCast(value)
 
     final override fun <D : Any, P : Any> buildDataColumn(
         name: String,
@@ -49,7 +66,7 @@ public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJ
         targetColumnSchema: ColumnSchema,
         inferNullability: Boolean,
     ): DataColumn<P?> =
-        getTypeMapping(tableColumnMetadata).cast<Any, D, P>()
+        getConverter(tableColumnMetadata).cast<Any, D, P>()
             .buildDataColumnOrNull(name, values, inferNullability)
             ?: values.toDataColumn(
                 name = name,

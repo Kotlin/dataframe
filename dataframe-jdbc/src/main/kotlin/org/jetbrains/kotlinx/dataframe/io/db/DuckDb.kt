@@ -90,10 +90,10 @@ public object DuckDb : AdvancedDbType("duckdb") {
     /** the name of the class of the DuckDB JDBC driver */
     override val driverClassName: String = "org.duckdb.DuckDBDriver"
 
-    override fun generateTypeMapping(tableColumnMetadata: TableColumnMetadata): AnyJdbcTypeMapping =
+    override fun generateConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter =
         parseDuckDbType(tableColumnMetadata.sqlTypeName, tableColumnMetadata.isNullable)
 
-    private val duckDbTypeCache = mutableMapOf<Pair<String, Boolean>, AnyJdbcTypeMapping>()
+    private val duckDbTypeCache = mutableMapOf<Pair<String, Boolean>, AnyJdbcToDataFrameConverter>()
 
     /**
      * How a column type from JDBC, [sqlTypeName], is read in Java/Kotlin.
@@ -103,63 +103,63 @@ public object DuckDb : AdvancedDbType("duckdb") {
      * Following [org.duckdb.DuckDBVector.getObject] and converting the result to
      *
      */
-    internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyJdbcTypeMapping =
+    internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyJdbcToDataFrameConverter =
         duckDbTypeCache.getOrPut(Pair(sqlTypeName, isNullable)) {
             when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
-                BOOLEAN -> typeInformationForValueColumnOf<Boolean>(isNullable)
+                BOOLEAN -> jdbcToDfConverterForValueColumnOf<Boolean>(isNullable)
 
-                TINYINT -> typeInformationForValueColumnOf<Byte>(isNullable)
+                TINYINT -> jdbcToDfConverterForValueColumnOf<Byte>(isNullable)
 
-                SMALLINT -> typeInformationForValueColumnOf<Short>(isNullable)
+                SMALLINT -> jdbcToDfConverterForValueColumnOf<Short>(isNullable)
 
-                INTEGER -> typeInformationForValueColumnOf<Int>(isNullable)
+                INTEGER -> jdbcToDfConverterForValueColumnOf<Int>(isNullable)
 
-                BIGINT -> typeInformationForValueColumnOf<Long>(isNullable)
+                BIGINT -> jdbcToDfConverterForValueColumnOf<Long>(isNullable)
 
-                HUGEINT -> typeInformationForValueColumnOf<BigInteger>(isNullable)
+                HUGEINT -> jdbcToDfConverterForValueColumnOf<BigInteger>(isNullable)
 
-                UHUGEINT -> typeInformationForValueColumnOf<BigInteger>(isNullable)
+                UHUGEINT -> jdbcToDfConverterForValueColumnOf<BigInteger>(isNullable)
 
-                UTINYINT -> typeInformationForValueColumnOf<Short>(isNullable)
+                UTINYINT -> jdbcToDfConverterForValueColumnOf<Short>(isNullable)
 
-                USMALLINT -> typeInformationForValueColumnOf<Int>(isNullable)
+                USMALLINT -> jdbcToDfConverterForValueColumnOf<Int>(isNullable)
 
-                UINTEGER -> typeInformationForValueColumnOf<Long>(isNullable)
+                UINTEGER -> jdbcToDfConverterForValueColumnOf<Long>(isNullable)
 
-                UBIGINT -> typeInformationForValueColumnOf<BigInteger>(isNullable)
+                UBIGINT -> jdbcToDfConverterForValueColumnOf<BigInteger>(isNullable)
 
-                FLOAT -> typeInformationForValueColumnOf<Float>(isNullable)
+                FLOAT -> jdbcToDfConverterForValueColumnOf<Float>(isNullable)
 
-                DOUBLE -> typeInformationForValueColumnOf<Double>(isNullable)
+                DOUBLE -> jdbcToDfConverterForValueColumnOf<Double>(isNullable)
 
-                DECIMAL -> typeInformationForValueColumnOf<BigDecimal>(isNullable)
+                DECIMAL -> jdbcToDfConverterForValueColumnOf<BigDecimal>(isNullable)
 
                 TIME ->
-                    typeInformationWithPreprocessingForValueColumnOf<JavaLocalTime, LocalTime>(isNullable) {
+                    jdbcToDfConverterWithPreprocessingForValueColumnOf<JavaLocalTime, LocalTime>(isNullable) {
                         it?.toKotlinLocalTime()
                     }
 
                 // todo?
-                TIME_WITH_TIME_ZONE -> typeInformationForValueColumnOf<JavaOffsetTime>(isNullable)
+                TIME_WITH_TIME_ZONE -> jdbcToDfConverterForValueColumnOf<JavaOffsetTime>(isNullable)
 
-                DATE -> typeInformationWithPreprocessingForValueColumnOf<JavaLocalDate, LocalDate>(isNullable) {
+                DATE -> jdbcToDfConverterWithPreprocessingForValueColumnOf<JavaLocalDate, LocalDate>(isNullable) {
                     it?.toKotlinLocalDate()
                 }
 
                 TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S ->
-                    typeInformationWithPreprocessingForValueColumnOf<SqlTimestamp, Instant>(isNullable) {
+                    jdbcToDfConverterWithPreprocessingForValueColumnOf<SqlTimestamp, Instant>(isNullable) {
                         it?.toInstant()?.toKotlinInstant()
                     }
 
                 // todo?
-                TIMESTAMP_WITH_TIME_ZONE -> typeInformationForValueColumnOf<JavaOffsetDateTime>(isNullable)
+                TIMESTAMP_WITH_TIME_ZONE -> jdbcToDfConverterForValueColumnOf<JavaOffsetDateTime>(isNullable)
 
                 // TODO!
-                JSON -> typeInformationForValueColumnOf<JsonNode>(isNullable)
+                JSON -> jdbcToDfConverterForValueColumnOf<JsonNode>(isNullable)
 
-                BLOB -> typeInformationForValueColumnOf<Blob>(isNullable)
+                BLOB -> jdbcToDfConverterForValueColumnOf<Blob>(isNullable)
 
-                UUID -> typeInformationWithPreprocessingForValueColumnOf<JavaUUID, Uuid>(isNullable) {
+                UUID -> jdbcToDfConverterWithPreprocessingForValueColumnOf<JavaUUID, Uuid>(isNullable) {
                     it?.toKotlinUuid()
                 }
 
@@ -176,7 +176,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                         ),
                     ).withNullability(isNullable)
 
-                    typeInformationWithPreprocessingForValueColumnOf<Map<String, Any?>, Map<String, Any?>>(
+                    jdbcToDfConverterWithPreprocessingForValueColumnOf<Map<String, Any?>, Map<String, Any?>>(
                         isNullable = isNullable,
                         preprocessedValueType = targetMapType,
                     ) { map ->
@@ -201,7 +201,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                     ).withNullability(isNullable)
 
                     // todo maybe List<DataRow> should become FrameColumn
-                    typeInformationWithPreprocessingForValueColumnOf<SqlArray, List<Any?>>(
+                    jdbcToDfConverterWithPreprocessingForValueColumnOf<SqlArray, List<Any?>>(
                         isNullable = isNullable,
                         preprocessedValueType = targetListType,
                     ) { sqlArray ->
@@ -222,7 +222,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                         contentType = typeOf<Any?>(),
                     )
 
-                    typeInformationWithProcessingFor<Struct, Map<String, Any?>, DataRow<*>>(
+                    jdbcToDfConverterWithProcessingFor<Struct, Map<String, Any?>, DataRow<*>>(
                         isNullable = isNullable,
                         targetSchema = targetSchema,
                         valuePreprocessor = { struct ->
@@ -253,11 +253,11 @@ public object DuckDb : AdvancedDbType("duckdb") {
                 }
 
                 // Cannot handle this in Kotlin
-                UNION -> typeInformationForValueColumnOf<Any>(isNullable)
+                UNION -> jdbcToDfConverterForValueColumnOf<Any>(isNullable)
 
-                VARCHAR -> typeInformationForValueColumnOf<String>(isNullable)
+                VARCHAR -> jdbcToDfConverterForValueColumnOf<String>(isNullable)
 
-                UNKNOWN, BIT, INTERVAL, ENUM -> typeInformationForValueColumnOf<String>(isNullable)
+                UNKNOWN, BIT, INTERVAL, ENUM -> jdbcToDfConverterForValueColumnOf<String>(isNullable)
             }
         }
 

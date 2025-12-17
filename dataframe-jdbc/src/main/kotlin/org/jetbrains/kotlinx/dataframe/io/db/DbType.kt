@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -27,10 +29,8 @@ import java.sql.SQLXML
 import java.sql.Time
 import java.sql.Timestamp
 import java.sql.Types
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
-import java.util.Date
 import java.util.UUID
 import kotlin.collections.toTypedArray
 import kotlin.reflect.KClass
@@ -38,6 +38,12 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.safeCast
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.time.toKotlinInstant
+import kotlin.uuid.Uuid
+import kotlin.uuid.toKotlinUuid
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.util.Date as JavaDate
 
 /**
  * The `DbType` class represents a database type used for reading dataframe from the database.
@@ -104,7 +110,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         Types.CHAR to typeOf<String>(),
         Types.VARCHAR to typeOf<String>(),
         Types.LONGVARCHAR to typeOf<String>(),
-        Types.DATE to typeOf<Date>(),
+        Types.DATE to typeOf<JavaDate>(),
         Types.TIME to typeOf<Time>(),
         Types.TIMESTAMP to typeOf<Timestamp>(),
         Types.BINARY to typeOf<ByteArray>(),
@@ -132,38 +138,41 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     )
 
     public open fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
-        val kType = when {
-            tableColumnMetadata.jdbcType == Types.OTHER ->
+        val kType = when (tableColumnMetadata.jdbcType) {
+            Types.OTHER ->
                 when (tableColumnMetadata.javaClassName) {
                     "[B" -> typeOf<ByteArray>()
                     else -> typeOf<Any>()
                 }
 
-            tableColumnMetadata.javaClassName == "[B" -> typeOf<ByteArray>()
+            Types.TIMESTAMP if tableColumnMetadata.javaClassName == "java.time.LocalDateTime" ->
+                typeOf<JavaLocalDateTime>()
 
-            tableColumnMetadata.javaClassName == "java.sql.Blob" -> typeOf<Blob>()
+            Types.BINARY if tableColumnMetadata.javaClassName == "java.util.UUID" ->
+                typeOf<UUID>()
 
-            tableColumnMetadata.jdbcType == Types.TIMESTAMP &&
-                tableColumnMetadata.javaClassName == "java.time.LocalDateTime" -> typeOf<LocalDateTime>()
+            Types.REAL if tableColumnMetadata.javaClassName == "java.lang.Double" ->
+                typeOf<Double>()
 
-            tableColumnMetadata.jdbcType == Types.BINARY &&
-                tableColumnMetadata.javaClassName == "java.util.UUID" -> typeOf<UUID>()
+            Types.FLOAT if tableColumnMetadata.javaClassName == "java.lang.Double" ->
+                typeOf<Double>()
 
-            tableColumnMetadata.jdbcType == Types.REAL &&
-                tableColumnMetadata.javaClassName == "java.lang.Double" -> typeOf<Double>()
-
-            tableColumnMetadata.jdbcType == Types.FLOAT &&
-                tableColumnMetadata.javaClassName == "java.lang.Double" -> typeOf<Double>()
-
-            tableColumnMetadata.jdbcType == Types.NUMERIC &&
-                tableColumnMetadata.javaClassName == "java.lang.Double" -> typeOf<Double>()
+            Types.NUMERIC if tableColumnMetadata.javaClassName == "java.lang.Double" ->
+                typeOf<Double>()
 
             // Force BIGINT to always be Long, regardless of javaClassName
             // Some JDBC drivers (e.g., MariaDB) may report Integer for small BIGINT values
             // TODO: tableColumnMetadata.jdbcType == Types.BIGINT -> typeOf<Long>()
 
-            else -> defaultJdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType]
-                ?: typeOf<String>()
+            else if tableColumnMetadata.javaClassName == "[B" ->
+                typeOf<ByteArray>()
+
+            else if tableColumnMetadata.javaClassName == "java.sql.Blob" ->
+                typeOf<Blob>()
+
+            else ->
+                defaultJdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType]
+                    ?: typeOf<String>()
         }
 
         return kType.withNullability(tableColumnMetadata.isNullable)
@@ -194,7 +203,20 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     public open fun getPreprocessedValueType(
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
-    ): KType = expectedJdbcType
+    ): KType =
+        when (tableColumnMetadata.jdbcType) {
+            Types.TIMESTAMP if tableColumnMetadata.javaClassName == "java.time.LocalDateTime" ->
+                typeOf<LocalDateTime>()
+
+            Types.TIMESTAMP ->
+                typeOf<Instant>()
+
+            Types.BINARY if tableColumnMetadata.javaClassName == "java.util.UUID" ->
+                typeOf<Uuid>()
+
+            else ->
+                expectedJdbcType
+        }.withNullability(tableColumnMetadata.isNullable)
 
     // TODO add preprocessors for common types, like sql Arrays, Java datetimes, etc.
     public open fun <J : Any, D : Any> preprocessValue(
@@ -202,7 +224,20 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
         expectedPreprocessedValueType: KType,
-    ): D? = value as D?
+    ): D? =
+        when (tableColumnMetadata.jdbcType) {
+            Types.TIMESTAMP if tableColumnMetadata.javaClassName == "java.time.LocalDateTime" ->
+                (value as JavaLocalDateTime?)?.toKotlinLocalDateTime()
+
+            Types.TIMESTAMP ->
+                (value as Timestamp?)?.toInstant()?.toKotlinInstant()
+
+            Types.BINARY if tableColumnMetadata.javaClassName == "java.util.UUID" ->
+                (value as UUID?)?.toKotlinUuid()
+
+            else ->
+                value
+        } as D?
 
     public open fun getTargetColumnSchema(
         tableColumnMetadata: TableColumnMetadata,
@@ -485,12 +520,12 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             val uniqueName = manageColumnNameDuplication(nameCounter, columnName)
 
             columns += TableColumnMetadata(
-                uniqueName,
-                columnType,
-                jdbcType,
-                displaySize,
-                javaClassName,
-                isNullable,
+                name = uniqueName,
+                sqlTypeName = columnType,
+                jdbcType = jdbcType,
+                size = displaySize,
+                javaClassName = javaClassName,
+                isNullable = isNullable,
             )
         }
 
