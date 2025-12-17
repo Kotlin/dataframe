@@ -133,6 +133,10 @@ public object KotlinNotebookPluginUtils {
             val finalComparator = if (isDesc[0]) comparator.reversed() else comparator
 
             val permutation = Array(column.size()) { it }
+            // parallelSort is thread-safe here: the comparator only performs concurrent reads from the column,
+            // and column.get() is a simple, side-effect-free access to an underlying List.
+            // Standard List implementations (ArrayList, etc.) are safe for concurrent reads
+            // as long as there are no concurrent modifications to the dataframe.
             Arrays.parallelSort(permutation, finalComparator)
             return SortedDataFrameView(df, permutation.asList())
         }
