@@ -5,6 +5,14 @@
 As we move toward version 1.0, many functions have been changed, deprecated, or removed.
 This section provides a complete overview of all API changes to help you migrate to 1.0.
 
+### Renamed functions and classes to the correct CamelCase spelling { id="camelCase" }
+
+All functions and classes in Kotlin DataFrame 
+have been renamed to 
+[the correct CamelCase spelling](https://developer.android.com/kotlin/style-guide#camel_case).
+
+See below for a complete list of the renamed functions and classes.
+
 ### Migration to Deephaven CSV
 
 All CSV (as well as TSV) IO was migrated to a new, fast, and efficient
@@ -15,7 +23,7 @@ All related methods are now located in the separate [`dataframe-csv`](Modules.md
 (which is included by default in the general [`dataframe`](Modules.md#dataframe-general) artifact
 and in `%use dataframe` in [Kotlin Notebook](SetupKotlinNotebook.md)).
 
-Functions were also renamed to the correct [CamelCase](https://en.wikipedia.org/wiki/Camel_case) spelling.
+Functions were also renamed to [the correct CamelCase spelling](#camelCase).
 
 All new functions keep the same arguments as before and additionally introduce new ones.
 Also, [there are new arguments that expose Deephaven CSV features](read.md#unlocking-deephaven-csv-features).
