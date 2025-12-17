@@ -132,6 +132,9 @@ kotlin.incremental=false
 
 See [the Gradle example project with the Kotlin DataFrame Compiler Plugin enabled on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-gradle-example).
 
+You can also
+[download this project](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip).
+
 
 ## Next Steps
 

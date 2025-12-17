@@ -114,12 +114,12 @@ Or manually specify the version:
 > ```
 
 Refer to the
-[Get started with Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/gettingstartedkotlinnotebook.html)
+[Setup Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/setupkotlinnotebook.html)
 for details.
 
 ### Gradle
 
-Add dependencies in the build.gradle.kts script:
+Add dependencies in the `build.gradle.kts` script:
 
 ```kotlin
 dependencies {
@@ -135,12 +135,47 @@ repositories {
 }
 ```
 
+Refer to
+[Get started with Kotlin DataFrame on Gradle](https://kotlin.github.io/dataframe/setupgradle.html)
+for detailed setup instructions (including Groovy DSL).
+
+* You can also check the [Custom Gradle Configuration](https://kotlin.github.io/dataframe/setupcustomgradle.html) if you don't need certain formats as dependencies.
+* For Android projects, see [Setup Kotlin DataFrame on Android](https://kotlin.github.io/dataframe/setupandroid.html).
+* See [IDEA Gradle example projects](examples/idea-examples) 
+and [the Gradle project with the Kotlin DataFrame Compiler plugin](examples/kotlin-dataframe-plugin-gradle-example).
+
 Refer to the
-[Get started with Kotlin DataFrame on Gradle](https://kotlin.github.io/dataframe/gettingstartedgradle.html)
+[Setup Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/setupkotlinnotebook.html)
 for details.
-Also, check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html)
-if you don't need some formats as dependencies,
-for Groovy, and for configurations specific to Android projects.
+
+### Maven
+
+Add dependencies in the `pom.xml` configuration file:
+
+```xml
+<dependency>
+    <groupId>org.jetbrains.kotlinx</groupId>
+    <artifactId>dataframe</artifactId>
+    <version>1.0.0-Beta4</version>
+</dependency>
+```
+
+Make sure that you have `mavenCentral` in the list of repositories:
+
+```xml
+<repositories>
+    <repository>
+        <id>mavenCentral</id>
+        <url>https://repo1.maven.org/maven2/</url>
+    </repository>
+</repositories>
+```
+
+Refer to
+[Get started with Kotlin DataFrame on Maven](https://kotlin.github.io/dataframe/setupmaven.html).
+
+* See [the Maven project with the Kotlin DataFrame Compiler plugin](examples/kotlin-dataframe-plugin-gradle-example).
+
 
 ## Code example
 

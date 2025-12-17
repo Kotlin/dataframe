@@ -80,7 +80,7 @@ fun main() {
 on-the-fly in Maven projects, making development with Kotlin DataFrame faster,
 more convenient, and fully type- and name-safe.
 
-> Requires Kotlin 2.2.20-Beta1 or higher.  
+> Requires Kotlin 2.2.20-Beta1 or higher and IntelliJ IDEA 2025.3 or higher.  
 > { style = "note" }
 
 To enable the plugin in your Maven project, add it to the `plugins` section:
@@ -110,6 +110,9 @@ To enable the plugin in your Maven project, add it to the `plugins` section:
 ## Project Example
 
 See [the Maven example project with the Kotlin DataFrame Compiler Plugin enabled on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-maven-example).
+
+You can also 
+[download this project](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip).
 
 
 ## Next Steps
