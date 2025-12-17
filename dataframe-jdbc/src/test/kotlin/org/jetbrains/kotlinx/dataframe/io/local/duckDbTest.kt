@@ -13,9 +13,11 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.single
@@ -256,7 +258,10 @@ class DuckDbTest {
     }
 
     @DataSchema
-    data class NestedEntry(val i: Int, val j: String)
+    data class NestedEntry(val i: Int, val j: String) : DataRowSchema
+
+    @DataSchema
+    data class NullableNestedEntry(val i: Int?, val j: String?) : DataRowSchema
 
     @DataSchema
     data class NestedTypes(
@@ -264,6 +269,8 @@ class DuckDbTest {
         val testCol: Int,
         @ColumnName("ijstruct_col")
         val ijstructCol: NestedEntry,
+        @ColumnName("ijstructlist_col")
+        val ijstructlistCol: DataFrame<NullableNestedEntry>,
         @ColumnName("intarray_col")
         val intarrayCol: List<Int?>,
         @ColumnName("intlist_col")
@@ -611,6 +618,7 @@ class DuckDbTest {
                     intstringmap_col MAP(INTEGER, VARCHAR),
                     intstrinstinggmap_col MAP(INTEGER, MAP(VARCHAR, VARCHAR)),
                     ijstruct_col STRUCT(i INTEGER, j VARCHAR),
+                    ijstructlist_col STRUCT(i INTEGER, j VARCHAR)[],
                     union_col UNION(num INTEGER, text VARCHAR),
                 )
                 """.trimIndent(),
@@ -628,6 +636,7 @@ class DuckDbTest {
                     MAP { 1: 'value1', 200: 'value2' },      -- int string map
                     MAP { 1: MAP { 'value1': 'a', 'value2': 'b' }, 200: MAP { 'value1': 'c', 'value2': 'd' } }, -- int string string map
                     { 'i': 42, 'j': 'answer' },               -- struct
+                    list_value({ 'i': 42, 'j': 'answer' }, { 'i': 44, 'j': 'answer' }), -- struct list
                     union_value(num := 2),                    -- union
                 )
                 """.trimIndent(),
@@ -655,6 +664,11 @@ class DuckDbTest {
             )
             it[{ "ijstruct_col"["i"]<Int>() }] shouldBe 42
             it[{ "ijstruct_col"["j"]<String>() }] shouldBe "answer"
+            it[{ "ijstructlist_col"<DataFrame<NestedEntry>>() }] shouldBe
+                dataFrameOf(
+                    NestedEntry(42, "answer"),
+                    NestedEntry(44, "answer"),
+                )
             it["union_col"] shouldBe 2
         }
     }

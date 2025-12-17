@@ -68,7 +68,7 @@ public fun <J : Any, D : Any, P : Any> jdbcToDfConverterWithProcessingFor(
     jdbcSourceType: KType,
     preprocessedValueType: KType, // = jdbcSourceType
     targetSchema: ColumnSchema, // = ColumnSchema.Value(preprocessedValueType)
-    resultSetReader: DbResultSetReader<J>?,
+    resultSetReader: DbResultSetReader<J>? = null,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
     columnBuilder: DbColumnBuilder<D, P>?,
 ): JdbcToDataFrameConverter<J, D, P> =
@@ -117,6 +117,23 @@ public fun <J : Any> jdbcToDfConverterFor(
 public fun <J : Any, D : Any> jdbcToDfConverterWithPreprocessingFor(
     jdbcSourceType: KType,
     preprocessedValueType: KType,
+    targetSchema: ColumnSchema,
+    resultSetReader: DbResultSetReader<J>? = null,
+    valuePreprocessor: DbValuePreprocessor<J, D>?,
+): JdbcToDataFrameConverter<J, D, D> =
+    jdbcToDfConverterWithProcessingFor(
+        jdbcSourceType = jdbcSourceType,
+        preprocessedValueType = preprocessedValueType,
+        targetSchema = targetSchema,
+        resultSetReader = resultSetReader,
+        valuePreprocessor = valuePreprocessor,
+        columnBuilder = null,
+    )
+
+public inline fun <reified J : Any, reified D : Any> jdbcToDfConverterWithPreprocessingFor(
+    isNullable: Boolean,
+    jdbcSourceType: KType = typeOf<J>().withNullability(isNullable),
+    preprocessedValueType: KType = typeOf<D>().withNullability(isNullable),
     targetSchema: ColumnSchema,
     resultSetReader: DbResultSetReader<J>? = null,
     valuePreprocessor: DbValuePreprocessor<J, D>?,

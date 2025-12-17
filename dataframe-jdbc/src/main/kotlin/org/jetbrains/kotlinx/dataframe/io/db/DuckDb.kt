@@ -42,6 +42,8 @@ import org.duckdb.DuckDBColumnType.UUID
 import org.duckdb.DuckDBColumnType.VARCHAR
 import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.JsonNode
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -63,6 +65,7 @@ import java.util.Properties
 import kotlin.reflect.KClass
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
@@ -192,22 +195,37 @@ public object DuckDb : AdvancedDbType("duckdb") {
                     val parsedListType =
                         parseDuckDbType(listType, true).castToAny()
 
-                    val targetListType = List::class.createType(
-                        listOf(
-                            KTypeProjection.invariant(
-                                parsedListType.targetSchema.type,
-                            ),
-                        ),
-                    ).withNullability(isNullable)
+                    val targetListType = List::class
+                        .createType(listOf(KTypeProjection.invariant(parsedListType.targetSchema.type)))
+                        .withNullability(isNullable)
 
-                    // todo maybe List<DataRow> should become FrameColumn
-                    jdbcToDfConverterWithPreprocessingForValueColumnOf<SqlArray, List<Any?>>(
-                        isNullable = isNullable,
-                        preprocessedValueType = targetListType,
-                    ) { sqlArray ->
-                        sqlArray
-                            ?.toList()
-                            ?.map { parsedListType.preprocessOrCast(it) } // recursively preprocess
+                    when (val listTargetSchema = parsedListType.targetSchema) {
+                        // convert STRUCT[] -> DataFrame<*> to create a FrameColumn
+                        is ColumnSchema.Group if parsedListType.expectedJdbcType.isSubtypeOf(typeOf<Struct?>()) ->
+                            jdbcToDfConverterWithPreprocessingFor<SqlArray, AnyFrame>(
+                                isNullable = isNullable,
+                                targetSchema = with(listTargetSchema) {
+                                    ColumnSchema.Frame(schema, nullable, contentType)
+                                },
+                            ) { sqlArray ->
+                                sqlArray
+                                    ?.toList()
+                                    ?.let { it as List<Struct?> }
+                                    ?.mapNotNull {
+                                        parsedListType.cast<Struct, Map<String, Any?>, AnyRow>()
+                                            .preprocessOrCast(it)
+                                    }?.toDataFrame()
+                            }
+
+                        else ->
+                            jdbcToDfConverterWithPreprocessingForValueColumnOf<SqlArray, List<Any?>>(
+                                isNullable = isNullable,
+                                preprocessedValueType = targetListType,
+                            ) { sqlArray ->
+                                sqlArray
+                                    ?.toList()
+                                    ?.map { parsedListType.preprocessOrCast(it) } // recursively preprocess
+                            }
                     }
                 }
 
@@ -222,7 +240,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                         contentType = typeOf<Any?>(),
                     )
 
-                    jdbcToDfConverterWithProcessingFor<Struct, Map<String, Any?>, DataRow<*>>(
+                    jdbcToDfConverterWithProcessingFor<Struct, Map<String, Any?>, AnyRow>(
                         isNullable = isNullable,
                         targetSchema = targetSchema,
                         valuePreprocessor = { struct ->
