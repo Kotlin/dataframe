@@ -21,6 +21,8 @@ public object PostgreSql : DbType("postgresql") {
         if (tableColumnMetadata.sqlTypeName == "money") {
             return typeOf<String>().withNullability(tableColumnMetadata.isNullable)
         }
+        // TODO: Composite types like tableColumnMetadata.sqlTypeName = ROW("a" INTEGER, "b" CHARACTER VARYING(10))
+
         return super.getExpectedJdbcType(tableColumnMetadata)
     }
 
