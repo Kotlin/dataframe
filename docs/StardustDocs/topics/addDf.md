@@ -7,7 +7,7 @@ Returns [`DataFrame`](DataFrame.md) with union of columns from several given [`D
 <!---FUN addDataFrames-->
 
 ```kotlin
-df.add(df1, df2)
+df.addAll(df1, df2)
 ```
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html" width="100%"/>
