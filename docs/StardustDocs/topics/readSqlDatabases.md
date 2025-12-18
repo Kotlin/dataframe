@@ -23,15 +23,21 @@ There are two main blocks of available functionality:
   *  ```readResultSet``` reads from created earlier ResultSet
   *  ```readAllSqlTables``` reads all tables (all non-system tables)
 * Methods for reading table schemas
-  * ```getSchemaForSqlTable``` for specific tables
-  * ```getSchemaForSqlQuery``` for result of executing SQL queries
-  * ```getSchemaForResultSet``` for created earlier `ResultSet`
-  * ```getSchemaForAllSqlTables``` for all non-system tables
+  * ```readSqlTable``` on `DataFrameSchema` for specific tables
+  * ```readSqlQuery``` on `DataFrameSchema` for a specific SQL query
+  * ```readResultSet``` on `DataFrameSchema` for a `ResultSet` created earlier
+  * ```readAllSqlTables``` on `DataFrameSchema` for all non-system tables
 
-All methods above can be accessed like `DataFrame.getSchemaFor...()` via a companion for `DataFrame`.
+>**NOTE (Beta-4 changes):** 
+> 
+> Starting from a version **```Beta-4```**, methods for reading table schemas have been moved from the `DataFrame` companion object to the `DataFrameSchema` companion object.
+> 
+> Use `DataFrameSchema.readSqlTable()` instead of `DataFrame.getSchemaForSqlTable()`, 
+> 
+> `DataFrameSchema.readSqlQuery()` instead of `DataFrame.getSchemaForSqlQuery()`, etc.
 
 Also, there are a few **extension functions** available on `Connection`,
-`ResultSet`, and `DbConnectionConfig` objects.
+`ResultSet`, `DbConnectionConfig`, and `DataSource` objects.
 
 * Methods for reading data from a database
     *  ```readDataFrame``` on `Connection` or `DbConnectionConfig` 
@@ -43,13 +49,14 @@ Also, there are a few **extension functions** available on `Connection`,
     * ```getDataFrameSchema``` on `ResultSet` for created earlier `ResultSet`
 
 
-**NOTE:** This is an experimental module, and for now, 
-we only support these databases: MS SQL, MariaDB, MySQL, PostgreSQL, SQLite, and DuckDB. 
-
-Moreover, since release 0.15 we support the possibility to register custom SQL database, read more in our [guide](readSqlFromCustomDatabase.md).
-
-Additionally, support for JSON and date-time types is limited. 
-Please take this into consideration when using these functions.
+> **NOTE:** This is an experimental module, and for now, 
+> we only support these databases: MS SQL, MariaDB, MySQL, PostgreSQL, SQLite, and DuckDB. 
+> 
+> Moreover, since release 0.15 we support the possibility to register custom SQL database, read more in our [guide](readSqlFromCustomDatabase.md).
+>
+> Additionally, support for JSON and date-time types is limited. 
+> 
+> Please take this into consideration when using these functions.
 
 ## Getting started with reading from SQL database in a Gradle Project
 
@@ -221,6 +228,26 @@ val users = DataFrame.readSqlTable(connection, "Users")
 connection.close()
 ```
 
+**readSqlTable(dataSource: DataSource, tableName: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
+
+Another variant, where instead of `connection: Connection` we use a `DataSource` object (useful for connection pooling with HikariCP).
+
+```kotlin
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
+
+val config = HikariConfig().apply {
+    jdbcUrl = "URL_TO_CONNECT_DATABASE"
+    username = "USERNAME"
+    password = "PASSWORD"
+    maximumPoolSize = 10
+    minimumIdle = 2
+}
+val dataSource = HikariDataSource(config)
+
+val users = DataFrame.readSqlTable(dataSource, "Users")
+```
+
 ### Extension functions for reading SQL table
 
 The same example, rewritten with the extension function:
@@ -288,6 +315,26 @@ val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
 val df = DataFrame.readSqlQuery(connection, "SELECT * FROM Users WHERE age > 35")
 
 connection.close()
+```
+
+**readSqlQuery(dataSource: DataSource, sqlQuery: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
+
+Another variant, where instead of `connection: Connection` we use a `DataSource` object (useful for connection pooling with HikariCP).
+
+```kotlin
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
+
+val config = HikariConfig().apply {
+    jdbcUrl = "URL_TO_CONNECT_DATABASE"
+    username = "USERNAME"
+    password = "PASSWORD"
+    maximumPoolSize = 10
+    minimumIdle = 2
+}
+val dataSource = HikariDataSource(config)
+
+val df = DataFrame.readSqlQuery(dataSource, "SELECT * FROM Users WHERE age > 35")
 ```
 
 ### Extension functions for reading a result of an SQL query
@@ -380,7 +427,7 @@ that the `ResultSet` belongs to.
 These functions read all data from all tables in the connected database. 
 Variants with a limit parameter restrict how many rows will be read from each table.
 
-**readAllSqlTables(dbConfig: DbConnectionConfig, limit: Int, inferNullability: Boolean, dbType: DbType?): Map\<String, AnyFrame>**
+**readAllSqlTables(dbConfig: DbConnectionConfig, limit: Int, inferNullability: Boolean, dbType: DbType?): Map<String, AnyFrame>**
 
 Retrieves data from all the non-system tables in the SQL database and returns them as a map of table names to `AnyFrame` objects.
 
@@ -396,7 +443,7 @@ val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWO
 val dataframes = DataFrame.readAllSqlTables(dbConfig)
 ```
 
-**readAllSqlTables(connection: Connection, limit: Int, inferNullability: Boolean, dbType: DbType?): Map\<String, AnyFrame>**
+**readAllSqlTables(connection: Connection, limit: Int, inferNullability: Boolean, dbType: DbType?): Map<String, AnyFrame>**
 
 Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
@@ -411,13 +458,33 @@ val dataframes = DataFrame.readAllSqlTables(connection)
 connection.close()
 ```
 
+**readAllSqlTables(dataSource: DataSource, limit: Int, inferNullability: Boolean, dbType: DbType?): Map<String, AnyFrame>**
+
+Another variant, where instead of `connection: Connection` we use a `DataSource` object (useful for connection pooling with HikariCP).
+
+```kotlin
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
+
+val config = HikariConfig().apply {
+    jdbcUrl = "URL_TO_CONNECT_DATABASE"
+    username = "USERNAME"
+    password = "PASSWORD"
+    maximumPoolSize = 10
+    minimumIdle = 2
+}
+val dataSource = HikariDataSource(config)
+
+val dataframes = DataFrame.readAllSqlTables(dataSource)
+```
+
 ## Schema reading for a specific SQL table
 
 The purpose of these functions is to facilitate the retrieval of table schema. 
 By providing a table name and either a database configuration or connection, 
 these functions return the [DataFrameSchema](schema.md) of the specified table.
 
-**getSchemaForSqlTable(dbConfig: DbConnectionConfig, tableName: String, dbType: DbType?): DataFrameSchema**
+**DataFrameSchema.readSqlTable(dbConfig: DbConnectionConfig, tableName: String, dbType: DbType?): DataFrameSchema**
 
 This function captures the schema of a specific table from an SQL database.
 
@@ -427,25 +494,48 @@ Typically, it requires a URL, username, and password.
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
-val schema = DataFrame.getSchemaForSqlTable(dbConfig, "Users")
+val schema = DataFrameSchema.readSqlTable(dbConfig, "Users")
 ```
 
-**getSchemaForSqlTable(connection: Connection, tableName: String, dbType: DbType?): DataFrameSchema**
+**DataFrameSchema.readSqlTable(connection: Connection, tableName: String, dbType: DbType?): DataFrameSchema**
 
 Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
 ```kotlin
 import java.sql.Connection
 import java.sql.DriverManager
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
 
-val schema = DataFrame.getSchemaForSqlTable(connection, "Users")
+val schema = DataFrameSchema.readSqlTable(connection, "Users")
 
 connection.close()
+```
+
+**DataFrameSchema.readSqlTable(dataSource: DataSource, tableName: String, dbType: DbType?): DataFrameSchema**
+
+Another variant, where instead of `connection: Connection` we use a `DataSource` object (useful for connection pooling with HikariCP).
+
+```kotlin
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+
+val config = HikariConfig().apply {
+    jdbcUrl = "URL_TO_CONNECT_DATABASE"
+    username = "USERNAME"
+    password = "PASSWORD"
+    maximumPoolSize = 10
+    minimumIdle = 2
+}
+val dataSource = HikariDataSource(config)
+
+val schema = DataFrameSchema.readSqlTable(dataSource, "Users")
 ```
 
 ## Schema reading from an SQL query
@@ -455,7 +545,7 @@ These functions return the schema of an SQL query result.
 Once you provide a database configuration or connection and an SQL query, 
 they return the [DataFrameSchema](schema.md) of the query result.
 
-**getSchemaForSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, dbType: DbType?): DataFrameSchema**
+**DataFrameSchema.readSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, dbType: DbType?): DataFrameSchema**
 
 This function executes an SQL query on the database and then retrieves the resulting schema.
 
@@ -465,25 +555,48 @@ Typically, it requires a URL, username, and password.
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
-val schema = DataFrame.getSchemaForSqlQuery(dbConfig, "SELECT * FROM Users WHERE age > 35")
+val schema = DataFrameSchema.readSqlQuery(dbConfig, "SELECT * FROM Users WHERE age > 35")
 ```
 
-**getSchemaForSqlQuery(connection: Connection, sqlQuery: String, dbType: DbType?): DataFrameSchema**
+**DataFrameSchema.readSqlQuery(connection: Connection, sqlQuery: String, dbType: DbType?): DataFrameSchema**
 
 Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
 ```kotlin
 import java.sql.Connection
 import java.sql.DriverManager
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
 
-val schema = DataFrame.getSchemaForSqlQuery(connection, "SELECT * FROM Users WHERE age > 35")
+val schema = DataFrameSchema.readSqlQuery(connection, "SELECT * FROM Users WHERE age > 35")
 
 connection.close()
+```
+
+**DataFrameSchema.readSqlQuery(dataSource: DataSource, sqlQuery: String, dbType: DbType?): DataFrameSchema**
+
+Another variant, where instead of `connection: Connection` we use a `DataSource` object (useful for connection pooling with HikariCP).
+
+```kotlin
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+
+val config = HikariConfig().apply {
+    jdbcUrl = "URL_TO_CONNECT_DATABASE"
+    username = "USERNAME"
+    password = "PASSWORD"
+    maximumPoolSize = 10
+    minimumIdle = 2
+}
+val dataSource = HikariDataSource(config)
+
+val schema = DataFrameSchema.readSqlQuery(dataSource, "SELECT * FROM Users WHERE age > 35")
 ```
 
 ### Extension functions for schema reading from an SQL query or an SQL table
@@ -496,15 +609,15 @@ import java.sql.DriverManager
 
 val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
 
-val schema = connection.getDataFrameSchema("SELECT * FROM Users WHERE age > 35")
+val schema = connection.readDataFrameSchema("SELECT * FROM Users WHERE age > 35")
 
 connection.close()
 ```
-**Connection.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType?): DataFrameSchema**
+**Connection.readDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType?): DataFrameSchema**
 
-Retrieves the schema of an SQL query result or an SQL table using the provided database configuration.
+Retrieves the schema of an SQL query result or an SQL table using the provided database connection.
 
-**DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType?): DataFrameSchema**
+**DbConnectionConfig.readDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType?): DataFrameSchema**
 
 Retrieves the schema of an SQL query result or an SQL table using the provided database configuration.
 
@@ -517,7 +630,27 @@ import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
 val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
-val schema = dbConfig.getDataFrameSchema("SELECT * FROM Users WHERE age > 35")
+val schema = dbConfig.readDataFrameSchema("SELECT * FROM Users WHERE age > 35")
+```
+
+**DataSource.readDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType?): DataFrameSchema**
+
+Retrieves the schema of an SQL query result or an SQL table using the provided `DataSource`.
+
+```kotlin
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
+
+val config = HikariConfig().apply {
+    jdbcUrl = "URL_TO_CONNECT_DATABASE"
+    username = "USERNAME"
+    password = "PASSWORD"
+    maximumPoolSize = 10
+    minimumIdle = 2
+}
+val dataSource = HikariDataSource(config)
+
+val schema = dataSource.readDataFrameSchema("SELECT * FROM Users WHERE age > 35")
 ```
 
 ## Schema reading from ResultSet
@@ -527,7 +660,7 @@ These functions return the schema from a `ResultSet` provided by the user.
 This can help developers infer the structure of the result set, 
 which is quite essential for data transformation and mapping purposes.
 
-**getSchemaForResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema**
+**DataFrameSchema.readResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema**
 
 This function reads the schema from a `ResultSet` object provided by the user.
 
@@ -539,9 +672,10 @@ Also, users have an ability to pass objects, describing their custom databases, 
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.sql.ResultSet
 
-val schema = DataFrame.getSchemaForResultSet(resultSet, PostgreSql)
+val schema = DataFrameSchema.readResultSet(resultSet, PostgreSql)
 ```
 
 ### Extension functions for schema reading from the ResultSet
@@ -552,21 +686,21 @@ The same example, rewritten with the extension function:
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
 import java.sql.ResultSet
 
-val schema = resultSet.getDataFrameSchema(PostgreSql)
+val schema = resultSet.readDataFrameSchema(PostgreSql)
 ```
 
 based on
 
-**ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema**
+**ResultSet.readDataFrameSchema(dbType: DbType): DataFrameSchema**
 
 ## Schema reading for all non-system tables
 
 These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
 
-**getSchemaForAllSqlTables(dbConfig: DbConnectionConfig, dbType: DbType?): Map\<String, DataFrameSchema>**
+**DataFrameSchema.readAllSqlTables(dbConfig: DbConnectionConfig, dbType: DbType?): Map<String, DataFrameSchema>**
 
-This function retrieves the schema of all tables from an SQL database 
+This function retrieves the schema of all tables from an SQL database
 and returns them as a map of table names to [`DataFrameSchema`](schema.md) objects.
 
 The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection,
@@ -575,24 +709,47 @@ Typically, it requires a URL, username, and password.
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
-val schemas = DataFrame.getSchemaForAllSqlTables(dbConfig)
+val schemas = DataFrameSchema.readAllSqlTables(dbConfig)
 ```
 
-**getSchemaForAllSqlTables(connection: Connection, dbType: DbType?): Map\<String, DataFrameSchema>**
+**DataFrameSchema.readAllSqlTables(connection: Connection, dbType: DbType?): Map<String, DataFrameSchema>**
 
-This function retrieves the schema of all tables using a JDBC connection: `Connection` object 
-and returns them as a list of [`DataFrameSchema`](schema.md).
+This function retrieves the schema of all tables using a JDBC connection: `Connection` object
+and returns them as a map of table names to [`DataFrameSchema`](schema.md).
 
 ```kotlin
 import java.sql.Connection
 import java.sql.DriverManager
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
 
-val schemas = DataFrame.getSchemaForAllSqlTables(connection)
+val schemas = DataFrameSchema.readAllSqlTables(connection)
 
 connection.close()
+```
+
+**DataFrameSchema.readAllSqlTables(dataSource: DataSource, dbType: DbType?): Map<String, DataFrameSchema>**
+
+Another variant, where instead of `connection: Connection` we use a `DataSource` object (useful for connection pooling with HikariCP).
+
+```kotlin
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+
+val config = HikariConfig().apply {
+    jdbcUrl = "URL_TO_CONNECT_DATABASE"
+    username = "USERNAME"
+    password = "PASSWORD"
+    maximumPoolSize = 10
+    minimumIdle = 2
+}
+val dataSource = HikariDataSource(config)
+
+val schemas = DataFrameSchema.readAllSqlTables(dataSource)
 ```
