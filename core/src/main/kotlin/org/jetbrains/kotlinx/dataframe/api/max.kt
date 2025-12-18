@@ -34,11 +34,8 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
     maxOrNull(skipNaN).suggestIfNull("max")
 
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipNaNDefault): T? =
-    if (this is ValueColumnInternal<*>) {
-        Aggregators.max<T>(skipNaN).aggregateSingleColumn(this, this.max, skipNaN)
-    } else {
-        Aggregators.max<T>(skipNaN).aggregateSingleColumn(this)
-    }
+    Aggregators.max<T>(skipNaN).aggregateSingleColumn(this)
+
 
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,

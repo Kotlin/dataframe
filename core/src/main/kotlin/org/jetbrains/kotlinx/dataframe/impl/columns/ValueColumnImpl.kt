@@ -8,15 +8,41 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-public class WrappedStatistic(
-    public var wasComputedSkippingNaN: Boolean = false,
-    public var wasComputedNotSkippingNaN: Boolean = false,
-    public var statisticComputedSkippingNaN: Any? = null,
-    public var statisticComputedNotSkippingNaN: Any? = null,
-)
+@JvmInline
+public value class StatisticResult(public val value: Any?)
+
+public class ParameterValue(public val parameter: Any?) {
+
+    override fun equals(other: Any?): Boolean {
+        if (parameter is Boolean && other is Boolean) {
+            return this.parameter == other
+        }
+        if (parameter is Int && other is Int) {
+            return this.parameter == other
+        }
+        if (parameter is Double && other is Double) {
+            return this.parameter == other
+        }
+        return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        if (parameter is Boolean) {
+            return this.parameter.hashCode()
+        }
+        if (parameter is Int) {
+            return this.parameter.hashCode()
+        }
+        if (parameter is Double) {
+            return this.parameter.hashCode()
+        }
+        return super.hashCode()
+    }
+}
 
 internal interface ValueColumnInternal<T> : ValueColumn<T> {
-    val max: WrappedStatistic
+    //    val statistics: MutableMap<String, MutableMap<Map<String, Any?>, WrappedStatistic>>
+    val statistics: MutableMap<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>
 }
 
 internal open class ValueColumnImpl<T>(
@@ -61,7 +87,7 @@ internal open class ValueColumnImpl<T>(
 
     override fun forceResolve() = ResolvingValueColumn(this)
 
-    override val max = WrappedStatistic()
+    override val statistics = mutableMapOf<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>()
 }
 
 internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
@@ -86,5 +112,5 @@ internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
 
     override fun hashCode(): Int = source.hashCode()
 
-    override val max = WrappedStatistic()
+    override val statistics = mutableMapOf<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>()
 }
