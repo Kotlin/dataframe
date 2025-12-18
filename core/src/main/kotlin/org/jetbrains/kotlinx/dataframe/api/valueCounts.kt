@@ -86,8 +86,7 @@ public fun <T> DataFrame<T>.valueCounts(
     resultColumn: String = defaultCountColumnName,
 ): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: AnyColumnReference,
     sort: Boolean = true,
@@ -96,8 +95,7 @@ public fun <T> DataFrame<T>.valueCounts(
     resultColumn: String = defaultCountColumnName,
 ): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: KProperty<*>,
     sort: Boolean = true,

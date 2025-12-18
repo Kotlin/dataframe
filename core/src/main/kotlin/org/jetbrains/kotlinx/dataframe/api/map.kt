@@ -24,8 +24,7 @@ import kotlin.reflect.typeOf
 
 // region ColumnReference
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 internal inline fun <C, reified R> ColumnReference<C>.map(
     infer: Infer = Infer.Nulls,
     noinline transform: (C) -> R,
@@ -95,16 +94,14 @@ public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, body)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: ColumnReference<R>,
     infer: Infer = Infer.Nulls,
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,
     infer: Infer = Infer.Nulls,
@@ -119,8 +116,7 @@ internal fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = newColumn(type, name, infer, body)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: ColumnReference<R>,
     type: KType,
@@ -128,8 +124,7 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column.name(), type, infer, body)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,
     type: KType,

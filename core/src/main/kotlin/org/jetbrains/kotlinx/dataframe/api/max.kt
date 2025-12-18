@@ -89,15 +89,13 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
 public fun <T> DataFrame<T>.maxFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     maxFor(skipNaN) { columns.toComparableColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = maxFor(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -111,15 +109,13 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
 public fun <T> DataFrame<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Comparable<Any> =
     maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): C & Any = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -133,15 +129,13 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
 public fun <T> DataFrame<T>.maxOrNull(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Comparable<Any>? =
     maxOrNull(skipNaN) { columns.toComparableColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): C? = maxOrNull(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -165,15 +159,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
 public fun <T> DataFrame<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -187,15 +179,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
 public fun <T> DataFrame<T>.maxByOrNull(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T>? =
     maxByOrNull(column.toColumnOf<Comparable<Any>?>(), skipNaN)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T>? = Aggregators.max<C>(skipNaN).aggregateByOrNull(this, column)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -220,15 +210,13 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
 public fun <T> Grouped<T>.maxFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     maxFor(skipNaN) { columns.toComparableColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = maxFor(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -248,16 +236,14 @@ public fun <T> Grouped<T>.max(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = max(name, skipNaN) { columns.toComparableColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
     vararg columns: ColumnReference<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = max(name, skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
     vararg columns: KProperty<C>,
     name: String? = null,
@@ -278,8 +264,7 @@ public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.maxBy(
     crossinline rowExpression: RowExpression<G, R>,
 ): ReducedGroupBy<T, G> = reduce { maxByOrNull(skipNaN, rowExpression) }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -288,8 +273,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
 public fun <T, G> GroupBy<T, G>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedGroupBy<T, G> =
     maxBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -314,16 +298,14 @@ public fun <T> Pivot<T>.maxFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = maxFor(separate, skipNaN) { columns.toComparableColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
     vararg columns: ColumnReference<R>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = maxFor(separate, skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
     vararg columns: KProperty<R>,
     separate: Boolean = false,
@@ -338,15 +320,13 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
 public fun <T> Pivot<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     max(skipNaN) { columns.toComparableColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
     vararg columns: ColumnReference<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = max(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
     vararg columns: KProperty<R>,
     skipNaN: Boolean = skipNaNDefault,
@@ -362,8 +342,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxBy(
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivot<T> = reduce { maxByOrNull(skipNaN, rowExpression) }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -372,8 +351,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
 public fun <T> Pivot<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivot<T> =
     maxBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -398,16 +376,14 @@ public fun <T> PivotGroupBy<T>.maxFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = maxFor(separate, skipNaN) { columns.toComparableColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
     vararg columns: ColumnReference<R>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = maxFor(separate, skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
     vararg columns: KProperty<R>,
     separate: Boolean = false,
@@ -427,8 +403,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = max(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
     vararg columns: KProperty<R>,
     skipNaN: Boolean = skipNaNDefault,
@@ -444,8 +419,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxBy(
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivotGroupBy<T> = reduce { maxByOrNull(skipNaN, rowExpression) }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -454,8 +428,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
 public fun <T> PivotGroupBy<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivotGroupBy<T> =
     maxBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,

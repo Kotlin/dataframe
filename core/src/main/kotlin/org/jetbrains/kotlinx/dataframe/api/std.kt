@@ -90,8 +90,7 @@ public fun <T, C : Number?> DataFrame<T>.stdFor(
     ddof: Int = ddofDefault,
 ): DataRow<T> = stdFor(skipNaN, ddof) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> DataFrame<T>.stdFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -104,14 +103,12 @@ public fun <T> DataFrame<T>.std(
     columns: ColumnsSelector<T, Number?>,
 ): Double = Aggregators.std(skipNaN, ddof).aggregateAll(this, columns)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> DataFrame<T>.std(vararg columns: ColumnReference<C>): Double = std { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.toColumnsSetOf() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> DataFrame<T>.std(vararg columns: KProperty<C>): Double = std { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number?> DataFrame<T>.stdOf(
@@ -142,16 +139,14 @@ public fun <T> Grouped<T>.stdFor(
     ddof: Int = ddofDefault,
 ): DataFrame<T> = stdFor(skipNaN, ddof) { columns.toColumnsSetOf() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Grouped<T>.stdFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
 ): DataFrame<T> = stdFor(skipNaN, ddof) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Grouped<T>.stdFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -167,8 +162,7 @@ public fun <T, C : Number?> Grouped<T>.std(
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = Aggregators.std(skipNaN, ddof).aggregateAll(this, name, columns)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Grouped<T>.std(
     vararg columns: ColumnReference<C>,
     name: String? = null,
@@ -183,8 +177,7 @@ public fun <T> Grouped<T>.std(
     ddof: Int = ddofDefault,
 ): DataFrame<T> = std(name, skipNaN, ddof) { columns.toColumnsSetOf() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Grouped<T>.std(
     vararg columns: KProperty<C>,
     name: String? = null,
@@ -232,8 +225,7 @@ public fun <T, C : Number?> Pivot<T>.stdFor(
     ddof: Int = ddofDefault,
 ): DataRow<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Pivot<T>.stdFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
@@ -259,8 +251,7 @@ public fun <T> Pivot<T>.std(
     ddof: Int = ddofDefault,
 ): DataRow<T> = std(skipNaN, ddof) { columns.toColumnsSetOf() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Pivot<T>.std(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -297,8 +288,7 @@ public fun <T> PivotGroupBy<T>.stdFor(
     ddof: Int = ddofDefault,
 ): DataFrame<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnsSetOf() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> PivotGroupBy<T>.stdFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
@@ -306,8 +296,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.stdFor(
     ddof: Int = ddofDefault,
 ): DataFrame<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> PivotGroupBy<T>.stdFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
@@ -321,8 +310,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.std(
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = Aggregators.std(skipNaN, ddof).aggregateAll(this, columns)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> PivotGroupBy<T>.std(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -335,8 +323,7 @@ public fun <T> PivotGroupBy<T>.std(
     ddof: Int = ddofDefault,
 ): DataFrame<T> = std(skipNaN, ddof) { columns.toColumnsSetOf() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> PivotGroupBy<T>.std(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,

@@ -67,8 +67,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remov
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [Column Accessors][ColumnReference] used to remove the columns of this [DataFrame].
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFrame<T> = remove { columns.toColumnSet() }
 
 /**
@@ -76,8 +75,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFram
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [KProperties][KProperty] used to remove the columns of this [DataFrame].
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>): DataFrame<T> = remove { columns.toColumnSet() }
 
 // endregion

@@ -495,18 +495,15 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
     public infix fun String.match(other: String): ColumnMatch<Any?> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun <C> KProperty<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun <C> ColumnReference<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(this, other.toColumnAccessor())
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun <C> KProperty<C>.match(other: ColumnReference<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other)
 

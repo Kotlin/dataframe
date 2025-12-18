@@ -88,8 +88,7 @@ public fun <T> DataFrame<T>.flatten(
  * {@include [FlattenDocs]}
  * {@set [FlattenDocs.GROUPS] selected}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: ColumnReference<C>,
     keepParentNameForColumns: Boolean = false,
@@ -100,8 +99,7 @@ public fun <T, C> DataFrame<T>.flatten(
  * {@include [FlattenDocs]}
  * {@set [FlattenDocs.GROUPS] selected}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: KProperty<C>,
     keepParentNameForColumns: Boolean = false,

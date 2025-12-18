@@ -141,15 +141,13 @@ public fun <T, C : Number?> DataFrame<T>.sumFor(
 public fun <T> DataFrame<T>.sumFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     sumFor(skipNaN) { columns.toColumnsSetOf() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> DataFrame<T>.sumFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = sumFor(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> DataFrame<T>.sumFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -174,18 +172,15 @@ public fun <T, C : Number?> DataFrame<T>.sum(
 ): C & Any = Aggregators.sum(skipNaN).aggregateAll(this, columns) as (C & Any)
 
 @JvmName("sumShort")
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Short?> DataFrame<T>.sum(vararg columns: ColumnReference<C>): Int = sum { columns.toColumnSet() }
 
 @JvmName("sumByte")
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Byte?> DataFrame<T>.sum(vararg columns: ColumnReference<C>): Int = sum { columns.toColumnSet() }
 
 @JvmName("sumNumber")
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> DataFrame<T>.sum(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -195,18 +190,15 @@ public fun <T> DataFrame<T>.sum(vararg columns: String, skipNaN: Boolean = skipN
     sum(skipNaN) { columns.toColumnsSetOf<Number?>() }
 
 @JvmName("sumShort")
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.sum(vararg columns: KProperty<Short?>): Int = sum { columns.toColumnSet() }
 
 @JvmName("sumByte")
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.sum(vararg columns: KProperty<Byte?>): Int = sum { columns.toColumnSet() }
 
 @JvmName("sumNumber")
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> DataFrame<T>.sum(
     skipNaN: Boolean = skipNaNDefault,
     vararg columns: KProperty<C>,
@@ -248,15 +240,13 @@ public fun <T, C : Number?> Grouped<T>.sumFor(
 public fun <T> Grouped<T>.sumFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     sumFor(skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Grouped<T>.sumFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = sumFor(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Grouped<T>.sumFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -276,16 +266,14 @@ public fun <T> Grouped<T>.sum(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = sum(name, skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Grouped<T>.sum(
     vararg columns: ColumnReference<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = sum(name, skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Grouped<T>.sum(
     vararg columns: KProperty<C>,
     name: String? = null,
@@ -319,16 +307,14 @@ public fun <T> Pivot<T>.sumFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = sumFor(separate, skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Pivot<T>.sumFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = sumFor(separate, skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Pivot<T>.sumFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
@@ -343,15 +329,13 @@ public fun <T, C : Number?> Pivot<T>.sum(
 public fun <T> Pivot<T>.sum(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     sum(skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Pivot<T>.sum(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = sum(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     sum(skipNaN) { columns.toColumnSet() }
 
@@ -379,16 +363,14 @@ public fun <T> PivotGroupBy<T>.sumFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = sumFor(separate, skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = sumFor(separate, skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
@@ -403,15 +385,13 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
 public fun <T> PivotGroupBy<T>.sum(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     sum(skipNaN) { columns.toNumberColumns() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> PivotGroupBy<T>.sum(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = sum(skipNaN) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> PivotGroupBy<T>.sum(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,

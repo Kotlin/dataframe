@@ -141,8 +141,7 @@ public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = def
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: ColumnReference<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -152,8 +151,7 @@ public fun <T> DataFrame<T>.cumSum(
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: KProperty<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -197,8 +195,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean =
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: ColumnReference<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -208,8 +205,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: KProperty<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
