@@ -53,32 +53,6 @@ class Create : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun columnAccessorsUsage() {
-        // SampleStart
-        val age by column<Int>()
-
-        // Access fourth cell in the "age" column of dataframe `df`.
-        // This expression returns `Int` because variable `age` has `ColumnAccessor<Int>` type.
-        // If dataframe `df` has no column "age" or column "age" has type which is incompatible with `Int`,
-        // runtime exception will be thrown.
-        df[age][3] + 5
-
-        // Access first cell in the "age" column of dataframe `df`.
-        df[0][age] * 2
-
-        // Returns new dataframe sorted by age column (ascending)
-        df.sortBy(age)
-
-        // Returns new dataframe with the column "year of birth" added
-        df.add("year of birth") { 2021 - age }
-
-        // Returns new dataframe containing only rows with age > 30
-        df.filter { age > 30 }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun columnAccessorMap() {
         // SampleStart
         val age by column<Int>()

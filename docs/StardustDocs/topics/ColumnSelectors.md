@@ -544,11 +544,6 @@ df.select {
     colGroup("name").lastCol { it.name().endsWith("Name") }
 }
 
-// find the single column inside a column group satisfying the condition
-df.select {
-    Person::name.singleCol { it.name().startsWith("first") }
-}
-
 // traversal of columns at any depth from here excluding ColumnGroups
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 
@@ -556,7 +551,7 @@ df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 df.select { colsAtAnyDepth() }
 
 // traversal of columns at any depth with condition
-df.select { colsAtAnyDepth().filter() { it.name().contains(":") } }
+df.select { colsAtAnyDepth().filter { it.name().contains(":") } }
 
 // traversal of columns at any depth to find columns of given type
 df.select { colsAtAnyDepth().colsOf<String>() }
