@@ -45,11 +45,9 @@ public fun <T> DataFrame<T>.getColumns(vararg columns: String): List<AnyCol> = g
 
 public fun <T> DataFrame<T>.getColumnIndex(col: AnyCol): Int = getColumnIndex(col.name())
 
-public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> =
-    if (range == indices()) this else columns().map { col -> col[range] }.toDataFrame().cast()
+public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = get(range)
 
-public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> =
-    columns().map { col -> col[indices] }.toDataFrame().cast()
+public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = get(indices)
 
 public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow) null else get(index)
 
