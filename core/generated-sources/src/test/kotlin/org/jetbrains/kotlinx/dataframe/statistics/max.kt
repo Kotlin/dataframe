@@ -27,6 +27,7 @@ class MaxTests {
     fun `max with regular values`() {
         val col = columnOf(5, 2, 8, 1, 9)
         col.max() shouldBe 9
+        col.max() shouldBe 9
     }
 
     @Test

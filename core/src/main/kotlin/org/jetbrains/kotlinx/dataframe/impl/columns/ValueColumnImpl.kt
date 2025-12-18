@@ -9,31 +9,23 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 @JvmInline
-public value class StatisticResult(public val value: Any?)
+internal value class StatisticResult(val value: Any?)
 
 public class ParameterValue(public val parameter: Any?) {
 
     override fun equals(other: Any?): Boolean {
-        if (parameter is Boolean && other is Boolean) {
-            return this.parameter == other
+        val otherAsParameterValue = other as ParameterValue?
+        val that = otherAsParameterValue?.parameter
+        if (parameter is Boolean && that is Boolean) {
+            println("my_equals")
+            return this.parameter == that
         }
-        if (parameter is Int && other is Int) {
-            return this.parameter == other
-        }
-        if (parameter is Double && other is Double) {
-            return this.parameter == other
-        }
+        println("default_equals")
         return super.equals(other)
     }
 
     override fun hashCode(): Int {
-        if (parameter is Boolean) {
-            return this.parameter.hashCode()
-        }
-        if (parameter is Int) {
-            return this.parameter.hashCode()
-        }
-        if (parameter is Double) {
+        if (parameter is Boolean?) {
             return this.parameter.hashCode()
         }
         return super.hashCode()
@@ -41,7 +33,6 @@ public class ParameterValue(public val parameter: Any?) {
 }
 
 internal interface ValueColumnInternal<T> : ValueColumn<T> {
-    //    val statistics: MutableMap<String, MutableMap<Map<String, Any?>, WrappedStatistic>>
     val statistics: MutableMap<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>
 }
 

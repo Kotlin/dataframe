@@ -132,8 +132,6 @@ public object Aggregators {
 
     public val max: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
         by withOneOption { skipNaN: Boolean ->
-            // the following function is 'getAggregator' of AggregatorOptionSwitch
-            // this is the fun that works with the parameter!
             twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
                 getReturnType = maxTypeConversion,
                 stepOneSelector = { type -> maxOrNull(type, skipNaN) },

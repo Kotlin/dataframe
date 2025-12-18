@@ -89,7 +89,6 @@ public class Aggregator<in Value : Any, out Return : Any?>(
                 )
             }
 
-        // fictitious, I want the program to compile
         internal operator fun <Value : Any, Return : Any?> invoke(
             aggregationHandler: AggregatorAggregationHandler<Value, Return>,
             inputHandler: AggregatorInputHandler<Value, Return>,

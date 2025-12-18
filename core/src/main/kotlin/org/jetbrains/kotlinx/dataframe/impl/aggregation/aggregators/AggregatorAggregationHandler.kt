@@ -34,7 +34,6 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
      */
     public fun aggregateSingleColumn(column: DataColumn<Value?>): Return {
         if (column is ValueColumnInternal<*>) {
-            println("ValueColumnInternal")
             // cache check, cache is dynamically created
             val aggregator = this.aggregator ?: throw IllegalStateException("Aggregator is required")
             val desiredStatisticNotConsideringParameters = column.statistics.getOrPut(aggregator.name) {
@@ -44,15 +43,13 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
             val desiredStatistic = desiredStatisticNotConsideringParameters[aggregator.statisticsParameters]
             // if desiredStatistic is null, statistic was never calculated
             if (desiredStatistic != null) {
-                println("cache hit")
                 return desiredStatistic.value as Return
             }
-            println("cache miss")
             val statistic = aggregateSequence(
                 values = column.asSequence(),
                 valueType = column.type().toValueType(),
             )
-            desiredStatisticNotConsideringParameters.put(aggregator.statisticsParameters, StatisticResult(statistic))
+            desiredStatisticNotConsideringParameters[aggregator.statisticsParameters] = StatisticResult(statistic)
             return aggregateSingleColumn(column)
         }
         return aggregateSequence(

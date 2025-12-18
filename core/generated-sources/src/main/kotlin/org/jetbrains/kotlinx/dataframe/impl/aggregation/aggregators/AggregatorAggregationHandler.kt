@@ -3,6 +3,9 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.columns.ParameterValue
+import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import kotlin.reflect.KType
 
 /**
@@ -26,13 +29,37 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
-     * Calls [aggregateSequence].
+     * Calls [aggregateSequence]. It tries to exploit a cache for statistics which is proper of
+     * [ValueColumnInternal]
      */
-    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
-        aggregateSequence(
+    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return {
+        if (column is ValueColumnInternal<*>) {
+            println("ValueColumnInternal")
+            // cache check, cache is dynamically created
+            val aggregator = this.aggregator ?: throw IllegalStateException("Aggregator is required")
+            val desiredStatisticNotConsideringParameters = column.statistics.getOrPut(aggregator.name) {
+                mutableMapOf<Map<String, ParameterValue?>, StatisticResult>()
+            }
+            // can't compare maps whose Values are Any? -> ParameterValue instead
+            val desiredStatistic = desiredStatisticNotConsideringParameters[aggregator.statisticsParameters]
+            // if desiredStatistic is null, statistic was never calculated
+            if (desiredStatistic != null) {
+                println("cache hit")
+                return desiredStatistic.value as Return
+            }
+            println("cache miss")
+            val statistic = aggregateSequence(
+                values = column.asSequence(),
+                valueType = column.type().toValueType(),
+            )
+            desiredStatisticNotConsideringParameters.put(aggregator.statisticsParameters, StatisticResult(statistic))
+            return aggregateSingleColumn(column)
+        }
+        return aggregateSequence(
             values = column.asSequence(),
             valueType = column.type().toValueType(),
         )
+    }
 
     /**
      * Function that can give the return type of [aggregateSequence] as [KType], given the type of the input.
