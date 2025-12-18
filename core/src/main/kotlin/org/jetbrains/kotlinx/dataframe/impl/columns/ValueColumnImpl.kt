@@ -17,10 +17,8 @@ public class ParameterValue(public val parameter: Any?) {
         val otherAsParameterValue = other as ParameterValue?
         val that = otherAsParameterValue?.parameter
         if (parameter is Boolean && that is Boolean) {
-            println("my_equals")
             return this.parameter == that
         }
-        println("default_equals")
         return super.equals(other)
     }
 
