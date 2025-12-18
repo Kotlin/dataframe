@@ -79,8 +79,8 @@ columnMapping = column into columnName
 
 ```kotlin
 df.add {
-    "year of birth" from 2021 - age
-    age gt 18 into "is adult"
+    "year of birth" from { 2021 - age }
+    expr { age > 18 } into "is adult"
     "details" {
         name.lastName.map { it.length } into "last name length"
         "full name" from { name.firstName + " " + name.lastName }
@@ -93,8 +93,8 @@ df.add {
 
 ```kotlin
 df.add {
-    "year of birth" from 2021 - "age"<Int>()
-    "age"<Int>() gt 18 into "is adult"
+    "year of birth" from { 2021 - "age"<Int>() }
+    expr { "age"<Int>() > 18 } into "is adult"
     "details" {
         "name"["lastName"]<String>().map { it.length } into "last name length"
         "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
@@ -130,7 +130,7 @@ Use the following approach to add multiple columns by calling the given API only
 val personWithCityInfo = df.add {
     val cityInfo = city.map { queryCityInfo(it) }
     "cityInfo" {
-        cityInfo.map { it.location } into CityInfo::location
+        cityInfo.map { it.location } into "location"
         cityInfo.map { it.population } into "population"
     }
 }
@@ -143,7 +143,7 @@ val personWithCityInfo = df.add {
 val personWithCityInfo = df.add {
     val cityInfo = "city"<String?>().map { queryCityInfo(it) }
     "cityInfo" {
-        cityInfo.map { it.location } into CityInfo::location
+        cityInfo.map { it.location } into "location"
         cityInfo.map { it.population } into "population"
     }
 }
@@ -159,7 +159,7 @@ val personWithCityInfo = df.add {
 ```kotlin
 val score by columnOf(4, 3, 5, 2, 1, 3, 5)
 
-df.add(score)
+df.addAll(score)
 df + score
 ```
 
@@ -171,7 +171,7 @@ df + score
 <!---FUN addDataFrames-->
 
 ```kotlin
-df.add(df1, df2)
+df.addAll(df1, df2)
 ```
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html" width="100%"/>
