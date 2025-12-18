@@ -1053,16 +1053,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun flatten_KProperties() {
-        // SampleStart
-        // name.firstName -> firstName
-        // name.lastName -> lastName
-        df.flatten(df::name)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun flattenAll() {
         // SampleStart
         df.flatten()
