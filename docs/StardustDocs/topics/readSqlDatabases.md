@@ -24,13 +24,13 @@ There are two main blocks of available functionality:
   *  ```readAllSqlTables``` reads all tables (all non-system tables)
 * Methods for reading table schemas
   * ```readSqlTable``` on `DataFrameSchema` for specific tables
-  * ```readSqlQuery``` on `DataFrameSchema` for a result of executing SQL queries
-  * ```readResultSet``` on `DataFrameSchema` for created earlier `ResultSet`
+  * ```readSqlQuery``` on `DataFrameSchema` for a specific SQL query
+  * ```readResultSet``` on `DataFrameSchema` for a `ResultSet` created earlier
   * ```readAllSqlTables``` on `DataFrameSchema` for all non-system tables
 
 >**NOTE (Beta-4 changes):** 
 > 
-> Starting from version **```Beta-4```**, methods for reading table schemas have been moved from `DataFrame` companion object to `DataFrameSchema` companion object.
+> Starting from a version **```Beta-4```**, methods for reading table schemas have been moved from the `DataFrame` companion object to the `DataFrameSchema` companion object.
 > 
 > Use `DataFrameSchema.readSqlTable()` instead of `DataFrame.getSchemaForSqlTable()`, 
 > 
