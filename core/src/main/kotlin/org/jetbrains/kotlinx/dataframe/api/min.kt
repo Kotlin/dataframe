@@ -74,13 +74,11 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMinOf(skipNaN: Boolean =
 // endregion
 
 // region DataFrame
-@Refine
-@Interpretable("Min0")
+@[Refine Interpretable("Min0")]
 public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     minFor(skipNaN, intraComparableColumns())
 
-@Refine
-@Interpretable("Min1")
+@[Refine Interpretable("Min1")]
 public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -195,13 +193,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
 
 // region GroupBy
 
-@Refine
-@Interpretable("GroupByMin1")
+@[Refine Interpretable("GroupByMin1")]
 public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     minFor(skipNaN, intraComparableColumns())
 
-@Refine
-@Interpretable("GroupByMin0")
+@[Refine Interpretable("GroupByMin0")]
 public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -222,8 +218,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = minFor(skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByMin2")
+@[Refine Interpretable("GroupByMin2")]
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -250,8 +245,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = min(name, skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByMinOf")
+@[Refine Interpretable("GroupByMinOf")]
 public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,

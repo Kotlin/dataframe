@@ -489,8 +489,7 @@ public class Gather<T, C, K, R>(
  * @param valueColumn The name of the column to store gathered values.
  * @return A new [DataFrame] with reshaped columns.
  */
-@Refine
-@Interpretable("GatherInto")
+@[Refine Interpretable("GatherInto")]
 public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: String, valueColumn: String): DataFrame<T> =
     gatherImpl(keyColumn, valueColumn)
 
@@ -534,8 +533,7 @@ public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: KProperty<K>, valueCo
  * @return A new [DataFrame] with reshaped columns.
  * @see [valuesInto]
  */
-@Refine
-@Interpretable("GatherKeysInto")
+@[Refine Interpretable("GatherKeysInto")]
 public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: String): DataFrame<T> = gatherImpl(keyColumn, null)
 
 @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
@@ -577,8 +575,7 @@ public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: KProperty<K>): Da
  * @return A new [DataFrame] with reshaped columns.
  * @see [keysInto]
  */
-@Refine
-@Interpretable("GatherValuesInto")
+@[Refine Interpretable("GatherValuesInto")]
 public fun <T, C, K, R> Gather<T, C, K, R>.valuesInto(valueColumn: String): DataFrame<T> = gatherImpl(null, valueColumn)
 
 @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]

@@ -50,8 +50,7 @@ private interface CommonRemoveDocs
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] used to remove the columns of this [DataFrame].
  */
-@Refine
-@Interpretable("Remove0")
+@[Refine Interpretable("Remove0")]
 public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T> =
     removeImpl(allowMissingColumns = true, columns = columns).df
 

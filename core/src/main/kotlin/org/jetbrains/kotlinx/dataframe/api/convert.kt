@@ -295,8 +295,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  * @return A new [DataFrame] with the converted values.
  */
-@Refine
-@Interpretable("Convert6")
+@[Refine Interpretable("Convert6")]
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
@@ -304,8 +303,7 @@ public inline fun <T, reified R> DataFrame<T>.convert(
     noinline expression: RowValueExpression<T, Any?, R>,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
-@Refine
-@Interpretable("ConvertNotNull")
+@[Refine Interpretable("ConvertNotNull")]
 public inline fun <T, C, reified R> Convert<T, C?>.notNull(
     crossinline expression: RowValueExpression<T, C, R>,
 ): DataFrame<T> =
@@ -378,8 +376,7 @@ public class Convert<T, out C>(
      * @param D The target type, provided as a reified type argument, to convert values to.
      * @return A new [DataFrame] with the values converted to type [D].
      */
-    @Refine
-    @Interpretable("To0")
+    @[Refine Interpretable("To0")]
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
 
     override fun toString(): String = "Convert(df=$df, columns=$columns)"
@@ -448,8 +445,7 @@ private interface SeeAlsoConvertAsColumn
  * @param [rowConverter] The [RowValueExpression] to provide a new value for every selected cell giving its row and previous value.
  * @return A new [DataFrame] with the converted values.
  */
-@Refine
-@Interpretable("With0")
+@[Refine Interpretable("With0")]
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
     noinline rowConverter: RowValueExpression<T, C, R>,
@@ -469,8 +465,7 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
  *
  * @param [expression] The {@include [ExpressionsGivenDataFrame.DataFrameExpressionLink]} to replace the selected column group with.
  */
-@Refine
-@Interpretable("ConvertAsFrame")
+@[Refine Interpretable("ConvertAsFrame")]
 public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
     expression: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
 ): DataFrame<T> = asColumn { expression(this, it.asColumnGroup()).asColumnGroup(it.name()) }
@@ -506,8 +501,7 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
  *
  * @return A new [DataFrame] with the values converted to [type].
  */
-@Refine
-@Interpretable("ConvertAsColumn")
+@[Refine Interpretable("ConvertAsColumn")]
 public inline fun <T, C, R> Convert<T, C>.asColumn(
     crossinline columnConverter: DataFrame<T>.(DataColumn<C>) -> BaseColumn<R>,
 ): DataFrame<T> = df.replace(columns).with { columnConverter(df, it).rename(it.name()) }
@@ -542,8 +536,7 @@ private interface SeeAlsoConvertWith
  * Defaults to [Infer.Nulls].
  * @param [expression] The [RowColumnExpression] to provide a new value for every selected cell giving its row and column.
  */
-@Refine
-@Interpretable("PerRowCol")
+@[Refine Interpretable("PerRowCol")]
 public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
     infer: Infer = Infer.Nulls,
     noinline expression: RowColumnExpression<T, C, R>,

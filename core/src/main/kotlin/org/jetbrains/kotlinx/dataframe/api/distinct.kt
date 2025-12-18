@@ -54,8 +54,7 @@ public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Refine
-@Interpretable("Distinct0")
+@[Refine Interpretable("Distinct0")]
 public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFrame<T> = select(columns).distinct()
 
 /**

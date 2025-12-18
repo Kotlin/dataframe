@@ -147,13 +147,11 @@ public inline fun <reified T> AnyRow.rowPercentileOf(
 // endregion
 
 // region DataFrame
-@Refine
-@Interpretable("Percentile0")
+@[Refine Interpretable("Percentile0")]
 public fun <T> DataFrame<T>.percentile(percentile: Double, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     percentileFor(percentile, skipNaN, intraComparableColumns())
 
-@Refine
-@Interpretable("Percentile1")
+@[Refine Interpretable("Percentile1")]
 public fun <T, C : Comparable<*>?> DataFrame<T>.percentileFor(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
@@ -374,13 +372,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileB
 // endregion
 
 // region GroupBy
-@Refine
-@Interpretable("GroupByPercentile1")
+@[Refine Interpretable("GroupByPercentile1")]
 public fun <T> Grouped<T>.percentile(percentile: Double, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     percentileFor(percentile, skipNaN, intraComparableColumns())
 
-@Refine
-@Interpretable("GroupByPercentile0")
+@[Refine Interpretable("GroupByPercentile0")]
 public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
@@ -404,8 +400,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentileFor(percentile, skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByPercentile2")
+@[Refine Interpretable("GroupByPercentile2")]
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
     percentile: Double,
     name: String? = null,
@@ -436,8 +431,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentile(percentile, name, skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByPercentileOf")
+@[Refine Interpretable("GroupByPercentileOf")]
 public inline fun <T, reified R : Comparable<R & Any>?> Grouped<T>.percentileOf(
     percentile: Double,
     name: String? = null,

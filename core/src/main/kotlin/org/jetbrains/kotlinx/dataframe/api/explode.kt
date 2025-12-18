@@ -73,8 +73,7 @@ internal interface ExplodeDocs
  *                If not specified, all applicable columns will be exploded.
  * @return A new [DataFrame] with exploded columns.
  */
-@Refine
-@Interpretable("Explode0")
+@[Refine Interpretable("Explode0")]
 public fun <T> DataFrame<T>.explode(
     dropEmpty: Boolean = true,
     selector: ColumnsSelector<T, *> = defaultExplodeColumns,

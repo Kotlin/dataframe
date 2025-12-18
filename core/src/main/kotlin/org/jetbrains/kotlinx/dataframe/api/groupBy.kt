@@ -356,8 +356,7 @@ private interface CommonGroupByDocs
  * @return A new [GroupBy] containing the unique combinations of values from the provided [key columns][cols],
  * together with their corresponding groups of rows.
  */
-@Refine
-@Interpretable("DataFrameGroupBy")
+@[Refine Interpretable("DataFrameGroupBy")]
 public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> =
     groupByImpl(moveToTop, cols)
 
@@ -566,8 +565,7 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * @return A new [DataFrame] that includes the grouping key columns together
      * with a [FrameColumn] containing the corresponding groups.
      */
-    @Refine
-    @Interpretable("GroupByToDataFrame")
+    @[Refine Interpretable("GroupByToDataFrame")]
     public fun toDataFrame(groupedColumnName: String? = null): DataFrame<T>
 
     /**

@@ -65,13 +65,11 @@ public inline fun <reified T : Number?> AnyRow.rowStdOf(
 // endregion
 
 // region DataFrame
-@Refine
-@Interpretable("Std0")
+@[Refine Interpretable("Std0")]
 public fun <T> DataFrame<T>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): DataRow<T> =
     stdFor(skipNaN, ddof, primitiveOrMixedNumberColumns())
 
-@Refine
-@Interpretable("Std1")
+@[Refine Interpretable("Std1")]
 public fun <T, C : Number?> DataFrame<T>.stdFor(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
@@ -120,13 +118,11 @@ public inline fun <T, reified R : Number?> DataFrame<T>.stdOf(
 // endregion
 
 // region GroupBy
-@Refine
-@Interpretable("GroupByStd1")
+@[Refine Interpretable("GroupByStd1")]
 public fun <T> Grouped<T>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): DataFrame<T> =
     stdFor(skipNaN, ddof, primitiveOrMixedNumberColumns())
 
-@Refine
-@Interpretable("GroupByStd0")
+@[Refine Interpretable("GroupByStd0")]
 public fun <T, C : Number?> Grouped<T>.stdFor(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
@@ -153,8 +149,7 @@ public fun <T, C : Number?> Grouped<T>.stdFor(
     ddof: Int = ddofDefault,
 ): DataFrame<T> = stdFor(skipNaN, ddof) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByStd2")
+@[Refine Interpretable("GroupByStd2")]
 public fun <T, C : Number?> Grouped<T>.std(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -185,8 +180,7 @@ public fun <T, C : Number?> Grouped<T>.std(
     ddof: Int = ddofDefault,
 ): DataFrame<T> = std(name, skipNaN, ddof) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByStdOf")
+@[Refine Interpretable("GroupByStdOf")]
 public inline fun <T, reified R : Number?> Grouped<T>.stdOf(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,

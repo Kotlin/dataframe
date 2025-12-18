@@ -121,8 +121,7 @@ public inline fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().
  * @param resultName The name of the result column that will store the group sizes. Defaults to `"count"`.
  * @return A new [DataFrame] with group keys and corresponding group sizes.
  */
-@Refine
-@Interpretable("GroupByCount0")
+@[Refine Interpretable("GroupByCount0")]
 public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
     aggregateValue(resultName) { count() default 0 }
 
@@ -154,8 +153,7 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
  * @param resultName The name of the result column containing the group sizes. Defaults to `"count"`.
  * @return A new [DataFrame] with group keys and filtered row counts per group.
  */
-@Refine
-@Interpretable("GroupByCount0")
+@[Refine Interpretable("GroupByCount0")]
 public inline fun <T> Grouped<T>.count(
     resultName: String = "count",
     crossinline predicate: RowFilter<T>,

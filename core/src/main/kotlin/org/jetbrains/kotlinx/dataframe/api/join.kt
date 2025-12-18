@@ -111,8 +111,7 @@ private interface SelectingColumnsJoinDsl
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("Join0")
+@[Refine Interpretable("Join0")]
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     type: JoinType = JoinType.Inner,
@@ -175,8 +174,7 @@ private interface InnerJoinDocs
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("InnerJoin")
+@[Refine Interpretable("InnerJoin")]
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -224,8 +222,7 @@ private interface LeftJoinDocs
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("LeftJoin")
+@[Refine Interpretable("LeftJoin")]
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -273,8 +270,7 @@ private interface RightJoinDocs
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("RightJoin")
+@[Refine Interpretable("RightJoin")]
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -322,8 +318,7 @@ private interface FullJoinDocs
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("FullJoin")
+@[Refine Interpretable("FullJoin")]
 public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -371,8 +366,7 @@ private interface FilterJoinDocs
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("FilterJoin")
+@[Refine Interpretable("FilterJoin")]
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -420,8 +414,7 @@ private interface ExcludeJoinDocs
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("ExcludeJoin")
+@[Refine Interpretable("ExcludeJoin")]
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,

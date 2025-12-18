@@ -39,8 +39,7 @@ public fun <T> DataFrame<T>.reorder(vararg columns: String): Reorder<T, *> = reo
 public fun <T, C, V : Comparable<V>> Reorder<T, C>.by(expression: ColumnExpression<C, V>): DataFrame<T> =
     reorderImpl(false, expression)
 
-@Refine
-@Interpretable("ByName")
+@[Refine Interpretable("ByName")]
 public fun <T, C> Reorder<T, C>.byName(desc: Boolean = false): DataFrame<T> =
     if (desc) byDesc { it.name } else by { it.name }
 
@@ -58,8 +57,7 @@ public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
         inFrameColumns = atAnyDepth,
     ).reorderImpl(desc, expression)
 
-@Refine
-@Interpretable("ReorderColumnsByName")
+@[Refine Interpretable("ReorderColumnsByName")]
 public fun <T> DataFrame<T>.reorderColumnsByName(atAnyDepth: Boolean = true, desc: Boolean = false): DataFrame<T> =
     reorderColumnsBy(atAnyDepth, desc) { name() }
 

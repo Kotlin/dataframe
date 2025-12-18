@@ -258,8 +258,7 @@ public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(va
  * )
  * ```
  */
-@Refine
-@Interpretable("ColumnOfPairs")
+@[Refine Interpretable("ColumnOfPairs")]
 public fun columnOf(vararg columns: Pair<String, AnyBaseCol>): ColumnGroup<*> =
     dataFrameOf(
         columns.map { (name, col) ->
@@ -343,8 +342,7 @@ public inline fun <reified C> dataFrameOf(
 
 public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
 
-@Refine
-@Interpretable("DataFrameOf3")
+@[Refine Interpretable("DataFrameOf3")]
 public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): DataFrame<*> =
     columns.map { it.second.toColumn(it.first, Infer.Type) }.toDataFrame()
 
@@ -375,8 +373,7 @@ public class DataFrameBuilder(private val header: List<String>) {
         }.toDataFrame()
     }
 
-    @Refine
-    @Interpretable("DataFrameBuilderInvoke0")
+    @[Refine Interpretable("DataFrameBuilderInvoke0")]
     public operator fun invoke(vararg values: Any?): DataFrame<*> = withValues(values.asIterable())
 
     @JvmName("invoke1")

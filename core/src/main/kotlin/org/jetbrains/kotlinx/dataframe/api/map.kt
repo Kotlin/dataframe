@@ -132,8 +132,7 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column.columnName, type, infer, body)
 
-@Refine
-@Interpretable("MapToFrame")
+@[Refine Interpretable("MapToFrame")]
 public inline fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
     val dsl = AddDsl(this)
     body(dsl)

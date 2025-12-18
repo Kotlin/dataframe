@@ -74,13 +74,11 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOf(skipNaN: Boolean =
 // endregion
 
 // region DataFrame
-@Refine
-@Interpretable("Max0")
+@[Refine Interpretable("Max0")]
 public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     maxFor(skipNaN, intraComparableColumns())
 
-@Refine
-@Interpretable("Max1")
+@[Refine Interpretable("Max1")]
 public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -195,13 +193,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
 
 // region GroupBy
 
-@Refine
-@Interpretable("GroupByMax1")
+@[Refine Interpretable("GroupByMax1")]
 public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     maxFor(skipNaN, intraComparableColumns())
 
-@Refine
-@Interpretable("GroupByMax0")
+@[Refine Interpretable("GroupByMax0")]
 public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -222,8 +218,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = maxFor(skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByMax2")
+@[Refine Interpretable("GroupByMax2")]
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -250,8 +245,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = max(name, skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByMaxOf")
+@[Refine Interpretable("GroupByMaxOf")]
 public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,

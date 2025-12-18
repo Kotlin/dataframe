@@ -57,8 +57,7 @@ private interface CommonUngroupDocs
  * ```
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the column groups of this [DataFrame] to ungroup.
  */
-@Refine
-@Interpretable("Ungroup0")
+@[Refine Interpretable("Ungroup0")]
 public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> =
     move { columns.toColumnSet().colsInGroups() }
         .into { it.path.removeAt(it.path.size - 2).toPath() }

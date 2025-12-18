@@ -126,13 +126,11 @@ public fun AnyRow.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): Numb
 // endregion
 
 // region DataFrame
-@Refine
-@Interpretable("Sum0")
+@[Refine Interpretable("Sum0")]
 public fun <T> DataFrame<T>.sum(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     sumFor(skipNaN, primitiveOrMixedNumberColumns())
 
-@Refine
-@Interpretable("Sum1")
+@[Refine Interpretable("Sum1")]
 public fun <T, C : Number?> DataFrame<T>.sumFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -225,13 +223,11 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(
 // endregion
 
 // region GroupBy
-@Refine
-@Interpretable("GroupBySum1")
+@[Refine Interpretable("GroupBySum1")]
 public fun <T> Grouped<T>.sum(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     sumFor(skipNaN, primitiveOrMixedNumberColumns())
 
-@Refine
-@Interpretable("GroupBySum0")
+@[Refine Interpretable("GroupBySum0")]
 public fun <T, C : Number?> Grouped<T>.sumFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -252,8 +248,7 @@ public fun <T, C : Number?> Grouped<T>.sumFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = sumFor(skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupBySum2")
+@[Refine Interpretable("GroupBySum2")]
 public fun <T, C : Number?> Grouped<T>.sum(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -280,8 +275,7 @@ public fun <T, C : Number?> Grouped<T>.sum(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = sum(name, skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupBySumOf")
+@[Refine Interpretable("GroupBySumOf")]
 public inline fun <T, reified R : Number?> Grouped<T>.sumOf(
     resultName: String? = null,
     skipNaN: Boolean = skipNaNDefault,

@@ -189,8 +189,7 @@ private interface CommonMoveToDocs
  * where the selected columns will be moved.
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
-@Refine
-@Interpretable("MoveTo1")
+@[Refine Interpretable("MoveTo1")]
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector<T, *>): DataFrame<T> =
     move(columns).to(newColumnIndex)
 
@@ -236,8 +235,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KPropert
  * else they will be moved to the top level.
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
-@Refine
-@Interpretable("MoveTo1")
+@[Refine Interpretable("MoveTo1")]
 public fun <T> DataFrame<T>.moveTo(
     newColumnIndex: Int,
     insideGroup: Boolean,
@@ -307,8 +305,7 @@ public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFram
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToStartOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
-@Refine
-@Interpretable("MoveToStart1")
+@[Refine Interpretable("MoveToStart1")]
 public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
 
 /**
@@ -318,8 +315,7 @@ public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFra
  * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
  * else they will be moved to the start of the top level.
  */
-@Refine
-@Interpretable("MoveToStart1")
+@[Refine Interpretable("MoveToStart1")]
 public fun <T> DataFrame<T>.moveToStart(insideGroup: Boolean, columns: ColumnsSelector<T, *>): DataFrame<T> =
     move(columns).toStart(insideGroup)
 
@@ -402,8 +398,7 @@ public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFra
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToEndOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
-@Refine
-@Interpretable("MoveToEnd1")
+@[Refine Interpretable("MoveToEnd1")]
 public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
 
 /**
@@ -413,8 +408,7 @@ public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame
  * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
  * else they will be moved to the end of the top level.
  */
-@Refine
-@Interpretable("MoveToEnd1")
+@[Refine Interpretable("MoveToEnd1")]
 public fun <T> DataFrame<T>.moveToEnd(insideGroup: Boolean, columns: ColumnsSelector<T, *>): DataFrame<T> =
     move(columns).toEnd(insideGroup)
 
@@ -508,8 +502,7 @@ public fun <T, C> MoveClause<T, C>.into(
  * @param column The new [String] name of the column after the move.
  * @return A new [DataFrame] with the column moved and renamed.
  */
-@Refine
-@Interpretable("MoveInto0")
+@[Refine Interpretable("MoveInto0")]
 public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
 
 /**
@@ -567,8 +560,7 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
  * @param [column] A [ColumnsSelector] that defines the path to a [ColumnGroup]
  * in the [DataFrame], where the selected columns will be moved.
  */
-@Refine
-@Interpretable("MoveUnder0")
+@[Refine Interpretable("MoveUnder0")]
 public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = pathOf(column).let { path -> under { path } }
 
 @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
@@ -599,8 +591,7 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
  * @param [column] The [ColumnsSelector] that defines the path to a [ColumnGroup]
  * in the [DataFrame], where the selected columns will be moved.
  */
-@Refine
-@Interpretable("MoveUnder1")
+@[Refine Interpretable("MoveUnder1")]
 public fun <T, C> MoveClause<T, C>.under(
     column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
 ): DataFrame<T> =
@@ -630,8 +621,7 @@ public fun <T, C> MoveClause<T, C>.under(
  * @param [columnIndex] The index specifying the position in the [DataFrame] columns
  *  * where the selected columns will be moved.
  */
-@Refine
-@Interpretable("MoveTo")
+@[Refine Interpretable("MoveTo")]
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(columnIndex)
 
 /**
@@ -655,8 +645,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
  * else they will be moved to the top level.
  */
-@Refine
-@Interpretable("MoveTo")
+@[Refine Interpretable("MoveTo")]
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): DataFrame<T> =
     moveToImpl(columnIndex, insideGroup)
 
@@ -679,8 +668,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): D
  * @param [newColumnName] The special [ColumnsSelector] for define name of moved column.
  * Optional, the original name is used by default
  */
-@Refine
-@Interpretable("ToTop")
+@[Refine Interpretable("ToTop")]
 public fun <T, C> MoveClause<T, C>.toTop(
     newColumnName: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String = { it.name() },
 ): DataFrame<T> = into { newColumnName(it).toColumnAccessor() }
@@ -717,8 +705,7 @@ internal interface MoveAfter
  * @param [column] A [ColumnSelector] specifying the column
  * after which the selected columns will be placed.
  */
-@Refine
-@Interpretable("MoveAfter0")
+@[Refine Interpretable("MoveAfter0")]
 public fun <T, C> MoveClause<T, C>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, true)
 
 /**
@@ -772,8 +759,7 @@ internal interface MoveBefore
  * @param [column] A [ColumnSelector] specifying the column
  * before which the selected columns will be placed.
  */
-@Refine
-@Interpretable("MoveBefore0")
+@[Refine Interpretable("MoveBefore0")]
 public fun <T, C> MoveClause<T, C>.before(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, false)
 
 /**
@@ -808,8 +794,7 @@ public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
  * df.move("age", "weight").toStart()
  * ```
  */
-@Refine
-@Interpretable("MoveToStart0")
+@[Refine Interpretable("MoveToStart0")]
 public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
 
 /**
@@ -830,8 +815,7 @@ public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
  * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
  * else they will be moved to the start on top level.
  */
-@Refine
-@Interpretable("MoveToStart0")
+@[Refine Interpretable("MoveToStart0")]
 public fun <T, C> MoveClause<T, C>.toStart(insideGroup: Boolean): DataFrame<T> = to(0, insideGroup)
 
 @Deprecated(TO_RIGHT, ReplaceWith(TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
@@ -851,8 +835,7 @@ public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
  * df.move("age", "weight").toEnd()
  * ```
  */
-@Refine
-@Interpretable("MoveToEnd0")
+@[Refine Interpretable("MoveToEnd0")]
 public fun <T, C> MoveClause<T, C>.toEnd(): DataFrame<T> = to(df.ncol)
 
 /**
@@ -873,8 +856,7 @@ public fun <T, C> MoveClause<T, C>.toEnd(): DataFrame<T> = to(df.ncol)
  * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
  * else they will be moved to the end on top level.
  */
-@Refine
-@Interpretable("MoveToEnd0")
+@[Refine Interpretable("MoveToEnd0")]
 public fun <T, C> MoveClause<T, C>.toEnd(insideGroup: Boolean): DataFrame<T> = to(df.ncol, insideGroup)
 
 /**

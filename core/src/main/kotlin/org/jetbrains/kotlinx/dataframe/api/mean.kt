@@ -61,13 +61,11 @@ public inline fun <reified T : Number> AnyRow.rowMeanOf(skipNaN: Boolean = skipN
 // endregion
 
 // region DataFrame
-@Refine
-@Interpretable("Mean0")
+@[Refine Interpretable("Mean0")]
 public fun <T> DataFrame<T>.mean(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     meanFor(skipNaN, primitiveOrMixedNumberColumns())
 
-@Refine
-@Interpretable("Mean1")
+@[Refine Interpretable("Mean1")]
 public fun <T, C : Number?> DataFrame<T>.meanFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -116,13 +114,11 @@ public inline fun <T, reified D : Number?> DataFrame<T>.meanOf(
 // endregion
 
 // region GroupBy
-@Refine
-@Interpretable("GroupByMean1")
+@[Refine Interpretable("GroupByMean1")]
 public fun <T> Grouped<T>.mean(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     meanFor(skipNaN, primitiveOrMixedNumberColumns())
 
-@Refine
-@Interpretable("GroupByMean0")
+@[Refine Interpretable("GroupByMean0")]
 public fun <T, C : Number?> Grouped<T>.meanFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -143,8 +139,7 @@ public fun <T, C : Number?> Grouped<T>.meanFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = meanFor(skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByMean2")
+@[Refine Interpretable("GroupByMean2")]
 public fun <T, C : Number?> Grouped<T>.mean(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -171,8 +166,7 @@ public fun <T, C : Number?> Grouped<T>.mean(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = mean(name, skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByMeanOf")
+@[Refine Interpretable("GroupByMeanOf")]
 public inline fun <T, reified R : Number?> Grouped<T>.meanOf(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,

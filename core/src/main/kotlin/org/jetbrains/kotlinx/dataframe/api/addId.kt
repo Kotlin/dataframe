@@ -20,8 +20,7 @@ public fun AnyCol.addId(columnName: String = "id"): AnyFrame = toDataFrame().add
 @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.addId(column: ColumnAccessor<Int>): DataFrame<T> = insert(column) { index() }.at(0)
 
-@Refine
-@Interpretable("AddId")
+@[Refine Interpretable("AddId")]
 public fun <T> DataFrame<T>.addId(columnName: String = "id"): DataFrame<T> = insert(columnName) { index() }.at(0)
 
 // endregion

@@ -57,8 +57,7 @@ private interface FlattenDocs {
  * {@set [FlattenDocs.GROUPS] all}
  * {@set [FlattenDocs.FLATTEN_PARAM]}
  */
-@Refine
-@Interpretable("FlattenDefault")
+@[Refine Interpretable("FlattenDefault")]
 public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, separator: String = "_"): DataFrame<T> =
     flatten(keepParentNameForColumns, separator) { all() }
 
@@ -66,8 +65,7 @@ public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, s
  * {@include [FlattenDocs]}
  * {@set [FlattenDocs.GROUPS] specified}
  */
-@Refine
-@Interpretable("Flatten0")
+@[Refine Interpretable("Flatten0")]
 public fun <T, C> DataFrame<T>.flatten(
     keepParentNameForColumns: Boolean = false,
     separator: String = "_",

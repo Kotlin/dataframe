@@ -56,8 +56,7 @@ public fun <T> DataColumn<T>.valueCounts(
 
 // region DataFrame
 
-@Refine
-@Interpretable("ValueCounts")
+@[Refine Interpretable("ValueCounts")]
 public fun <T> DataFrame<T>.valueCounts(
     sort: Boolean = true,
     ascending: Boolean = false,

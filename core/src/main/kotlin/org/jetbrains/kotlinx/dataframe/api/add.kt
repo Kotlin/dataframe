@@ -116,8 +116,7 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
-@Refine
-@Interpretable("DataFrameAddAll")
+@[Refine Interpretable("DataFrameAddAll")]
 public fun <T> DataFrame<T>.addAll(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
@@ -216,8 +215,7 @@ internal interface AddExpressionDocs
  *
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
-@Refine
-@Interpretable("Add")
+@[Refine Interpretable("Add")]
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
     infer: Infer = Infer.Nulls,
@@ -405,8 +403,7 @@ public class AddDsl<T>(
  * @param body An [AddDsl] expression used to define new columns and column groups.
  * @return A new [DataFrame] with the added columns.
  */
-@Refine
-@Interpretable("AddWithDsl")
+@[Refine Interpretable("AddWithDsl")]
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)
@@ -450,8 +447,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  *
  * @throws DuplicateColumnNamesException if group [DataFrame]s already contains a column with given [name].
  */
-@Refine
-@Interpretable("GroupByAdd")
+@[Refine Interpretable("GroupByAdd")]
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     name: String,
     infer: Infer = Infer.Nulls,

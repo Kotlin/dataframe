@@ -366,8 +366,7 @@ private interface CommonDropNullsFunctionDoc
  * @include [DropNulls.WhereAllNullParam]
  * @include [DropDslParam]
  */
-@Refine
-@Interpretable("DropNulls0")
+@[Refine Interpretable("DropNulls0")]
 public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
     return if (whereAllNull) {
@@ -377,8 +376,7 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: Co
     }
 }
 
-@Refine
-@Interpretable("DropNulls0")
+@[Refine Interpretable("DropNulls0")]
 @Deprecated(
     "DataFrame conventional name for filterNot* functions is drop*",
     ReplaceWith("dropNulls(columns = columns)"),
@@ -391,8 +389,7 @@ public fun <T> DataFrame<T>.filterNotNull(columns: ColumnsSelector<T, *>): DataF
  * This overload operates on all columns in the [DataFrame].
  * @include [DropNulls.WhereAllNullParam]
  */
-@Refine
-@Interpretable("DropNulls1")
+@[Refine Interpretable("DropNulls1")]
 public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { all() }
 
 /**
@@ -485,8 +482,7 @@ private interface CommonDropNAFunctionDoc
  * @include [DropNA.WhereAllNAParam]
  * @include [DropDslParam]
  */
-@Refine
-@Interpretable("DropNa0")
+@[Refine Interpretable("DropNa0")]
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
     return if (whereAllNA) {
@@ -533,8 +529,7 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllN
  * This overload operates on all columns in the [DataFrame].
  * @include [DropNA.WhereAllNAParam]
  */
-@Refine
-@Interpretable("DropNa1")
+@[Refine Interpretable("DropNa1")]
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { all() }
 
 /**

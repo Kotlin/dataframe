@@ -377,15 +377,13 @@ public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFram
     return asGroupBy { groups }
 }
 
-@Refine
-@Interpretable("AsGroupByDefault")
+@[Refine Interpretable("AsGroupByDefault")]
 public fun <T> DataFrame<T>.asGroupBy(): GroupBy<T, T> {
     val groupCol = columns().single { it.isFrameColumn() }.asAnyFrameColumn().castFrameColumn<T>()
     return asGroupBy { groupCol }
 }
 
-@Refine
-@Interpretable("AsGroupBy")
+@[Refine Interpretable("AsGroupBy")]
 public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G>>): GroupBy<T, G> {
     val column = getColumn(selector).asFrameColumn()
     return GroupByImpl(this.move { column }.toEnd(), column) { none() }

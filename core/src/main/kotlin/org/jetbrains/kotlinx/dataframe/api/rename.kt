@@ -109,8 +109,7 @@ private interface CommonRenameDocs
  * and the new column name (`second`).
  * @return A new [DataFrame] with the renamed columns.
  */
-@Refine
-@Interpretable("RenameMapping")
+@[Refine Interpretable("RenameMapping")]
 public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataFrame<T> =
     rename { mappings.map { it.first.toColumnAccessor() }.toColumnSet() }
         .into(*mappings.map { it.second }.toTypedArray())
@@ -205,8 +204,7 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
  * @see [rename]
  * @return a [DataFrame] with column names converted to "camelCase" format.
  */
-@Refine
-@Interpretable("RenameToCamelCase")
+@[Refine Interpretable("RenameToCamelCase")]
 public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> =
     // recursively rename all columns written with delimiters or starting with a capital to camel case
     rename {
@@ -247,8 +245,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>)
  * @param newNames The new names for the selected columns, applied in order of selecting.
  * @return A new [DataFrame] with the columns renamed.
  */
-@Refine
-@Interpretable("RenameInto")
+@[Refine Interpretable("RenameInto")]
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
 
 @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
@@ -278,8 +275,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFr
  * and returns the new column name.
  * @return A new [DataFrame] with the columns renamed.
  */
-@Refine
-@Interpretable("RenameIntoLambda")
+@[Refine Interpretable("RenameIntoLambda")]
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> =
     renameImpl(transform)
 
@@ -313,8 +309,7 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  *
  * @return a [DataFrame] with column names converted to "camelCase" format.
  */
-@Refine
-@Interpretable("RenameToCamelCaseClause")
+@[Refine Interpretable("RenameToCamelCaseClause")]
 public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into { it.renameToCamelCase().name() }
 
 // endregion

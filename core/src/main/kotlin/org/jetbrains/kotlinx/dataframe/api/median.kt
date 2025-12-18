@@ -133,13 +133,11 @@ public inline fun <reified T> AnyRow.rowMedianOf(
 // endregion
 
 // region DataFrame
-@Refine
-@Interpretable("Median0")
+@[Refine Interpretable("Median0")]
 public fun <T> DataFrame<T>.median(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(skipNaN, intraComparableColumns())
 
-@Refine
-@Interpretable("Median1")
+@[Refine Interpretable("Median1")]
 public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -310,13 +308,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrN
 // endregion
 
 // region GroupBy
-@Refine
-@Interpretable("GroupByMedian1")
+@[Refine Interpretable("GroupByMedian1")]
 public fun <T> Grouped<T>.median(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     medianFor(skipNaN, intraComparableColumns())
 
-@Refine
-@Interpretable("GroupByMedian0")
+@[Refine Interpretable("GroupByMedian0")]
 public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -336,8 +332,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByMedian2")
+@[Refine Interpretable("GroupByMedian2")]
 public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -364,8 +359,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = median(name, skipNaN) { columns.toColumnSet() }
 
-@Refine
-@Interpretable("GroupByMedianOf")
+@[Refine Interpretable("GroupByMedianOf")]
 public inline fun <T, reified R : Comparable<R & Any>?> Grouped<T>.medianOf(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,

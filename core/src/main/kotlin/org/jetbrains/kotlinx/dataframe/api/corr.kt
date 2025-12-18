@@ -129,8 +129,7 @@ public data class Corr<T, C>(internal val df: DataFrame<T>, internal val columns
  *
  * @return A square correlation matrix as a [DataFrame], where both rows and columns correspond to the original columns.
  */
-@Refine
-@Interpretable("DataFrameCorr")
+@[Refine Interpretable("DataFrameCorr")]
 public fun <T> DataFrame<T>.corr(): DataFrame<T> =
     corr {
         colsAtAnyDepth().filter { it.isSuitableForCorr() }

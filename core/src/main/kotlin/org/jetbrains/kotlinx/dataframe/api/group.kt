@@ -232,8 +232,7 @@ public fun <T, C> GroupClause<T, C>.into(
  * @param [column] A [ColumnsSelector] that defines the path to a [ColumnGroup]
  * in the [DataFrame], where the selected columns will be moved.
  */
-@Refine
-@Interpretable("Into0")
+@[Refine Interpretable("Into0")]
 public fun <T, C> GroupClause<T, C>.into(column: String): DataFrame<T> = into(columnGroup().named(column))
 
 @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]

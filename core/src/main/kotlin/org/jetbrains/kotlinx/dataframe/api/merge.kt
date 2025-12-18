@@ -65,12 +65,10 @@ public fun <T, C, R> Merge<T, C, R>.notNull(): Merge<T, C & Any, R> = copy(notNu
 public fun <T, C, R> Merge<T, C, List<R>>.notNull(): Merge<T, C & Any, List<R & Any>> =
     copy(notNull = true) as Merge<T, C & Any, List<R & Any>>
 
-@Refine
-@Interpretable("MergeInto0")
+@[Refine Interpretable("MergeInto0")]
 public fun <T, C, R> MergeWithTransform<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 
-@Refine
-@Interpretable("MergeInto0")
+@[Refine Interpretable("MergeInto0")]
 public fun <T, C, R> Merge<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 
 @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]

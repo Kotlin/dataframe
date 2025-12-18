@@ -63,8 +63,7 @@ private interface CommonSelectDocs
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
-@Refine
-@Interpretable("Select0")
+@[Refine Interpretable("Select0")]
 public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
 
 /**
@@ -80,8 +79,7 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
  */
-@Refine
-@Interpretable("SelectString")
+@[Refine Interpretable("SelectString")]
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
 
 /**

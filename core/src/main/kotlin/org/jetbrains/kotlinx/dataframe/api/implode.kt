@@ -14,12 +14,10 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-@Refine
-@Interpretable("ImplodeDefault")
+@[Refine Interpretable("ImplodeDefault")]
 public fun <T> DataFrame<T>.implode(dropNA: Boolean = false): DataRow<T> = implode(dropNA) { all() }[0]
 
-@Refine
-@Interpretable("Implode")
+@[Refine Interpretable("Implode")]
 public fun <T, C> DataFrame<T>.implode(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
     implodeImpl(dropNA, columns)
 

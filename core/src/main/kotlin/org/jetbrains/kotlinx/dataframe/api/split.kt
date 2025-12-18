@@ -202,8 +202,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     vararg otherNames: KProperty<*>,
 ): DataFrame<T> = into(listOf(firstName.columnName) + otherNames.map { it.columnName })
 
-@Refine
-@Interpretable("SplitWithTransformInto0")
+@[Refine Interpretable("SplitWithTransformInto0")]
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     vararg names: String,
     extraNamesGenerator: (ColumnWithPath<C>.(extraColumnIndex: Int) -> String)? = null,
@@ -221,8 +220,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
         }
     }
 
-@Refine
-@Interpretable("SplitIterableInto")
+@[Refine Interpretable("SplitIterableInto")]
 public fun <T, C : Iterable<*>> Split<T, C>.into(
     vararg names: String,
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
@@ -234,8 +232,7 @@ public fun <T, C> Split<T, DataFrame<C>>.into(
     extraNamesGenerator: ColumnNamesGenerator<DataFrame<C>>? = null,
 ): DataFrame<T> = by { it.rows() }.into(names.toList(), extraNamesGenerator)
 
-@Refine
-@Interpretable("SplitPair")
+@[Refine Interpretable("SplitPair")]
 public fun <T, A, B> Split<T, Pair<A, B>>.into(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.into(firstCol, secondCol)
 
@@ -261,8 +258,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
 ): DataFrame<T> = copy(inward = true).into(names.toList(), extraNamesGenerator)
 
-@Refine
-@Interpretable("SplitWithTransformInward0")
+@[Refine Interpretable("SplitWithTransformInward0")]
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     vararg names: String,
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
@@ -280,8 +276,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     vararg otherNames: KProperty<*>,
 ): DataFrame<T> = inward(listOf(firstName.columnName) + otherNames.map { it.columnName })
 
-@Refine
-@Interpretable("SplitIterableInward")
+@[Refine Interpretable("SplitIterableInward")]
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inward(
     vararg names: String,
     noinline extraNamesGenerator: ColumnNamesGenerator<C>? = null,
@@ -293,8 +288,7 @@ public fun <T, C : DataFrame<R>, R> Split<T, C>.inward(
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
 ): DataFrame<T> = by { it.rows() }.inward(names.toList(), extraNamesGenerator)
 
-@Refine
-@Interpretable("SplitPairInward")
+@[Refine Interpretable("SplitPairInward")]
 public fun <T, A, B> Split<T, Pair<A, B>>.inward(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
 
@@ -315,8 +309,7 @@ public fun <T> Split<T, String>.inward(
 
 // region intoColumns
 
-@Refine
-@Interpretable("SplitAnyFrameIntoColumns")
+@[Refine Interpretable("SplitAnyFrameIntoColumns")]
 public fun <T, C : AnyFrame> Split<T, C>.intoColumns(): DataFrame<T> =
     df.convert(columns).with {
         when {
@@ -331,15 +324,13 @@ public fun <T, C : AnyFrame> Split<T, C>.intoColumns(): DataFrame<T> =
 // region intoRows
 
 @JvmName("intoRowsTC")
-@Refine
-@Interpretable("SplitIntoRows")
+@[Refine Interpretable("SplitIntoRows")]
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
     by { it }
         .intoRows(dropEmpty)
 
 @JvmName("intoRowsFrame")
-@Refine
-@Interpretable("SplitAnyFrameRows")
+@[Refine Interpretable("SplitAnyFrameRows")]
 public fun <T, C : AnyFrame> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
     by { it.rows() }.intoRows(dropEmpty)
 
@@ -348,8 +339,7 @@ internal inline fun <T, C, R> Convert<T, C?>.splitInplace(
     crossinline transform: DataRow<T>.(C) -> Iterable<R>,
 ) = withRowCellImpl(getListType(type), Infer.None) { if (it == null) emptyList() else transform(it).asList() }
 
-@Refine
-@Interpretable("SplitWithTransformIntoRows")
+@[Refine Interpretable("SplitWithTransformIntoRows")]
 public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = true): DataFrame<T> {
     val paths = df.getColumnPaths(columns).toColumnSet()
     return df.convert { paths as ColumnSet<C?> }.splitInplace(tartypeOf, transform).explode(dropEmpty) { paths }
@@ -360,12 +350,10 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = t
 // region inplace
 
 @JvmName("inplaceTC")
-@Refine
-@Interpretable("SplitInplace")
+@[Refine Interpretable("SplitInplace")]
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inplace(): DataFrame<T> = by { it }.inplace()
 
-@Refine
-@Interpretable("SplitWithTransformInplace")
+@[Refine Interpretable("SplitWithTransformInplace")]
 public fun <T, C, R> SplitWithTransform<T, C, R>.inplace(): DataFrame<T> =
     df.convert(columns).splitInplace(tartypeOf, transform)
 
