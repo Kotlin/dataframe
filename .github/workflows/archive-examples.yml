@@ -18,21 +18,18 @@
         - name: Checkout code
           uses: actions/checkout@v4
 
-        - name: Create android-example archive
+        - name: Create archives in temp directory
           run: |
+            mkdir -p /tmp/archives
+
             cd examples/android-example
-            zip -r ../../android-example.zip . -x "*.git*" "build/*" ".gradle/*" "*/build/*"
+            zip -r /tmp/archives/android-example.zip . -x "*.git*" "build/*" ".gradle/*" "*/build/*"
 
-        - name: Create kotlin-dataframe-plugin-gradle-example archive
-          run: |
-            cd examples/kotlin-dataframe-plugin-gradle-example
-            zip -r ../../kotlin-dataframe-plugin-gradle-example.zip . -x "*.git*" "build/*" ".gradle/*" "*/build/*" ".idea/*"
+            cd ../kotlin-dataframe-plugin-gradle-example
+            zip -r /tmp/archives/kotlin-dataframe-plugin-gradle-example.zip . -x "*.git*" "build/*" ".gradle/*" "*/build/*" ".idea/*"
 
-        - name: Create kotlin-dataframe-plugin-maven-example archive
-          run: |
-            cd examples/kotlin-dataframe-plugin-maven-example
-            zip -r ../../kotlin-dataframe-plugin-maven-example.zip . -x "*.git*" "target/*" ".idea/*"
-
+            cd ../kotlin-dataframe-plugin-maven-example
+            zip -r /tmp/archives/kotlin-dataframe-plugin-maven-example.zip . -x "*.git*" "target/*" ".idea/*"
 
         - name: Checkout example-projects-archives branch
           run: |
@@ -50,6 +47,8 @@
         - name: Update archives
           run: |
             git rm -f *.zip 2>/dev/null || true
+            
+            cp /tmp/archives/*.zip .
             
             CURRENT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
             
