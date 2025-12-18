@@ -116,8 +116,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public operator fun String.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
@@ -172,8 +171,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public operator fun KProperty<*>.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
@@ -201,8 +199,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public operator fun KProperty<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
@@ -230,8 +227,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 

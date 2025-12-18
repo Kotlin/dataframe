@@ -352,8 +352,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,

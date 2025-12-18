@@ -75,105 +75,109 @@ import kotlin.reflect.KProperty
 internal interface GroupByDocs {
     /**
      * ## [groupBy][groupBy] Operation Grammar
-     * {@include [LineBreak]}
-     * {@include [DslGrammarLink]}
-     * {@include [LineBreak]}
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      *
      * ### Create and transform [GroupBy]
      *
      * [**`groupBy`**][groupBy]**`(`**`moveToTop: `[`Boolean`][Boolean]**`  = true)  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByGroup`**][GroupBy.sortByGroup]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByGroup`**][GroupBy.sortByGroup]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByDesc`**][GroupBy.sortByDesc]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByDesc`**][GroupBy.sortByDesc]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`updateGroups`**][GroupBy.updateGroups]**`  {  `**`frameExpression`**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`updateGroups`**][GroupBy.updateGroups]**`  {  `**`frameExpression`**`  }  `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`filter`**][GroupBy.filter]**`  {  `**`predicate: `[`GroupedRowFilter`][GroupedRowFilter]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`filter`**][GroupBy.filter]**`  {  `**`predicate: `[`GroupedRowFilter`][GroupedRowFilter]**`  }  `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`add`**][GroupBy.add]**`(`**`column: `[`DataColumn`][DataColumn]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`add`**][GroupBy.add]**`(`**`column: `[`DataColumn`][DataColumn]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**`  }  `**`]`
      *
      * ### Reduce [GroupBy] into [DataFrame]
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * [GroupBy][GroupBy]`.`[**`minBy`**][GroupBy.minBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`maxBy`**][GroupBy.maxBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`first`**][GroupBy.first]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`first`**][GroupBy.first]`  [ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`last`**][GroupBy.last]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`last`**][GroupBy.last]`  [ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[**`concat`**][ReducedGroupBy.concat]**`() `**
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`into`**][ReducedGroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  \[ `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`into`**][ReducedGroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  [ `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`values`**][ReducedGroupBy.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * ### Aggregate [GroupBy] into [DataFrame]
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * [GroupBy][GroupBy]`.`[**`concat`**][GroupBy.concat]**`() `**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`concatWithKeys`**][GroupBy.concatWithKeys]**`() `**
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`into`**][GroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  \[  `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`into`**][GroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  [  `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`values`**][Grouped.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`count`**][Grouped.count]**`() `**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`aggregate`**][Grouped.aggregate]**`  {  `**`aggregations: `[`AggregateDsl`][AggregateDsl]**` }`**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[<aggregation_statistic>][AggregationStatistics]
      *
      * ### Pivot [GroupBy] into [PivotGroupBy] and reduce / aggregate it
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * [GroupBy][GroupBy]`.`[**`pivot`**][GroupBy.pivot]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
-     * {@include [Indent]}
-     * `    \[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `    [ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[<pivot_groupBy_groupBy>][PivotGroupByDocs.Aggregation]
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
@@ -489,13 +493,11 @@ internal interface GroupByDocs {
  * @return A new [GroupBy] containing the unique combinations of values from the provided [key columns][cols],
  * together with their corresponding groups of rows.
  */
-@Refine
-@Interpretable("DataFrameGroupBy")
+@[Refine Interpretable("DataFrameGroupBy")]
 public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> =
     groupByImpl(moveToTop, cols)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = groupBy { cols.toColumnSet() }
 
 /**
@@ -550,8 +552,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  */
 public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupBy { cols.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: Boolean = true): GroupBy<T, T> =
     groupBy(moveToTop) { cols.toColumnSet() }
 
@@ -635,8 +636,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
 public fun <T> Pivot<T>.groupBy(moveToTop: Boolean = true, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
     (this as PivotImpl<T>).toGroupedPivot(moveToTop, columns)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
 /**
@@ -685,8 +685,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupB
  */
 public fun <T> Pivot<T>.groupBy(vararg columns: String): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> Pivot<T>.groupBy(vararg columns: KProperty<*>): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
 /**
@@ -831,8 +830,7 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * @return A new [DataFrame] that includes the grouping key columns together
      * with a [FrameColumn] containing the corresponding groups.
      */
-    @Refine
-    @Interpretable("GroupByToDataFrame")
+    @[Refine Interpretable("GroupByToDataFrame")]
     public fun toDataFrame(groupedColumnName: String? = null): DataFrame<T>
 
     /**

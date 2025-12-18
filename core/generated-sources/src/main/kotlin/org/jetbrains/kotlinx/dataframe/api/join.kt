@@ -103,8 +103,7 @@ import kotlin.reflect.KProperty
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("Join0")
+@[Refine Interpretable("Join0")]
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     type: JoinType = JoinType.Inner,
@@ -233,8 +232,7 @@ public fun <A, B> DataFrame<A>.join(
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("InnerJoin")
+@[Refine Interpretable("InnerJoin")]
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -335,8 +333,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("LeftJoin")
+@[Refine Interpretable("LeftJoin")]
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -437,8 +434,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("RightJoin")
+@[Refine Interpretable("RightJoin")]
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -539,8 +535,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("FullJoin")
+@[Refine Interpretable("FullJoin")]
 public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -641,8 +636,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("FilterJoin")
+@[Refine Interpretable("FilterJoin")]
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -743,8 +737,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  * if `null`, same-name columns are used.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("ExcludeJoin")
+@[Refine Interpretable("ExcludeJoin")]
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -883,18 +876,15 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
     public infix fun String.match(other: String): ColumnMatch<Any?> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun <C> KProperty<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun <C> ColumnReference<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(this, other.toColumnAccessor())
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun <C> KProperty<C>.match(other: ColumnReference<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other)
 

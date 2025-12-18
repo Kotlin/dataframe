@@ -24,20 +24,17 @@ import kotlin.reflect.typeOf
 
 // region read DataFrame from objects
 
-@Refine
-@Interpretable("toDataFrameDefault")
+@[Refine Interpretable("toDataFrameDefault")]
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
     toDataFrame {
         properties()
     }
 
-@Refine
-@Interpretable("toDataFrameDsl")
+@[Refine Interpretable("toDataFrameDsl")]
 public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
     createDataFrameImpl(typeOf<T>(), body)
 
-@Refine
-@Interpretable("toDataFrame")
+@[Refine Interpretable("toDataFrame")]
 public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, maxDepth: Int = 0): DataFrame<T> =
     toDataFrame {
         properties(roots = props, maxDepth = maxDepth)
@@ -217,8 +214,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     @Interpretable("ToDataFrameFrom0")
     public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit = add(this, expression)
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
 
@@ -226,8 +222,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(this, source.map { inferType.expression(it) }))
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(columnName, source.map { inferType.expression(it) }))
 
@@ -239,8 +234,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public abstract operator fun String.invoke(builder: CreateDataFrameDsl<T>.() -> Unit)
 }
 
-@Refine
-@Interpretable("ToDataFrameColumn")
+@[Refine Interpretable("ToDataFrameColumn")]
 public inline fun <reified T> Iterable<T>.toDataFrame(columnName: String): DataFrame<*> =
     toDataFrame {
         columnName from { it }
@@ -291,8 +285,7 @@ public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
  * @return A [DataFrame] containing the data from the nested list structure.
  *         Returns an empty [DataFrame] if the input is empty or invalid.
  */
-@Refine
-@Interpretable("ValuesListsToDataFrame")
+@[Refine Interpretable("ValuesListsToDataFrame")]
 public fun <T> List<List<T>>.toDataFrame(header: List<String>?, containsColumns: Boolean = false): AnyFrame =
     when {
         containsColumns -> {

@@ -621,8 +621,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 

@@ -116,8 +116,7 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
-@Refine
-@Interpretable("DataFrameAddAll")
+@[Refine Interpretable("DataFrameAddAll")]
 public fun <T> DataFrame<T>.addAll(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
@@ -210,24 +209,21 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
  *
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
-@Refine
-@Interpretable("Add")
+@[Refine Interpretable("Add")]
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>,
 ): DataFrame<T> = (this + mapToColumn(name, infer, expression))
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <reified R, T> DataFrame<T>.add(
     property: KProperty<R>,
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>,
 ): DataFrame<T> = (this + mapToColumn(property, infer, expression))
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <reified R, T> DataFrame<T>.add(
     column: ColumnAccessor<R>,
     infer: Infer = Infer.Nulls,
@@ -319,46 +315,38 @@ public class AddDsl<T>(
         add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: AddExpression<T, R>): Boolean =
         name().from(expression)
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: AddExpression<T, R>): Boolean =
         add(name, Infer.Nulls, expression)
 
     public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
     @Interpretable("Into")
     public infix fun AnyColumnReference.into(name: String): Boolean = add(rename(name))
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
 
     @Interpretable("AddDslStringInvoke")
     public operator fun String.invoke(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
 
     @Interpretable("AddDslNamedGroup")
@@ -374,8 +362,7 @@ public class AddDsl<T>(
     @Interpretable("AddDslAddGroupInto")
     public infix fun AddGroup<T>.into(groupName: String): Unit = group(groupName, body)
 
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 
@@ -416,8 +403,7 @@ public class AddDsl<T>(
  * @param body An [AddDsl] expression used to define new columns and column groups.
  * @return A new [DataFrame] with the added columns.
  */
-@Refine
-@Interpretable("AddWithDsl")
+@[Refine Interpretable("AddWithDsl")]
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)
@@ -466,16 +452,14 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  *
  * @throws DuplicateColumnNamesException if group [DataFrame]s already contains a column with given [name].
  */
-@Refine
-@Interpretable("GroupByAdd")
+@[Refine Interpretable("GroupByAdd")]
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     name: String,
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<G, R>,
 ): GroupBy<T, G> = updateGroups { add(name, infer, expression) }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     column: ColumnAccessor<G>,
     infer: Infer = Infer.Nulls,

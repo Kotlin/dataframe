@@ -684,8 +684,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @see [DataFrame.flatten]
      * @see [ColumnsSelectionDsl.simplify]
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 

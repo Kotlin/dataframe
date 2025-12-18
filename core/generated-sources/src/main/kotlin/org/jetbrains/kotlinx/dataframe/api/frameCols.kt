@@ -328,8 +328,7 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)
 

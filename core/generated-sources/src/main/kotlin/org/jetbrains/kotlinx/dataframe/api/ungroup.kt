@@ -143,8 +143,7 @@ internal interface UngroupDocs {
  * ```
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the column groups of this [DataFrame] to ungroup.
  */
-@Refine
-@Interpretable("Ungroup0")
+@[Refine Interpretable("Ungroup0")]
 public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> =
     move { columns.toColumnSet().colsInGroups() }
         .into { it.path.removeAt(it.path.size - 2).toPath() }
@@ -170,13 +169,11 @@ public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFram
  */
 public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungroup { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.ungroup(vararg columns: AnyColumnReference): DataFrame<T> =
     ungroup { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.ungroup(vararg columns: KProperty<*>): DataFrame<T> = ungroup { columns.toColumnSet() }
 
 // endregion

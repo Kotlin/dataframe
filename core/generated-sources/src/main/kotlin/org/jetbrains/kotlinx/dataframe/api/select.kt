@@ -161,8 +161,7 @@ internal interface Select {
  *
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
-@Refine
-@Interpretable("Select0")
+@[Refine Interpretable("Select0")]
 public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
 
 /**
@@ -187,8 +186,7 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
  *
  * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }
 
 /**
@@ -211,8 +209,7 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
  *
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
  */
-@Refine
-@Interpretable("SelectString")
+@[Refine Interpretable("SelectString")]
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
 
 /**
@@ -239,8 +236,7 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
  *
  * @param [columns] The [Column Accessors][ColumnReference] used to select the columns of this [DataFrame].
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> = select { columns.toColumnSet() }
 
 // endregion
@@ -442,8 +438,7 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun <C, R> KProperty<C>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)
 

@@ -459,8 +459,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 

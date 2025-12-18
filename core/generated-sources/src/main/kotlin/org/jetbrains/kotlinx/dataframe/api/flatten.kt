@@ -40,8 +40,7 @@ import kotlin.reflect.KProperty
  *
  *
  */
-@Refine
-@Interpretable("FlattenDefault")
+@[Refine Interpretable("FlattenDefault")]
 public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, separator: String = "_"): DataFrame<T> =
     flatten(keepParentNameForColumns, separator) { all() }
 
@@ -69,8 +68,7 @@ public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, s
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *
  */
-@Refine
-@Interpretable("Flatten0")
+@[Refine Interpretable("Flatten0")]
 public fun <T, C> DataFrame<T>.flatten(
     keepParentNameForColumns: Boolean = false,
     separator: String = "_",
@@ -131,8 +129,7 @@ public fun <T> DataFrame<T>.flatten(
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: ColumnReference<C>,
     keepParentNameForColumns: Boolean = false,
@@ -163,8 +160,7 @@ public fun <T, C> DataFrame<T>.flatten(
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: KProperty<C>,
     keepParentNameForColumns: Boolean = false,

@@ -249,8 +249,7 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
-@Refine
-@Interpretable("DataFrameCumSum")
+@[Refine Interpretable("DataFrameCumSum")]
 public fun <T, C : Number?> DataFrame<T>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<T, C>,
@@ -311,8 +310,7 @@ public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = def
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: ColumnReference<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -344,8 +342,7 @@ public fun <T> DataFrame<T>.cumSum(
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: KProperty<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -376,8 +373,7 @@ public fun <T> DataFrame<T>.cumSum(
  *
  *
  */
-@Refine
-@Interpretable("DataFrameCumSum0")
+@[Refine Interpretable("DataFrameCumSum0")]
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) {
         colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
@@ -413,8 +409,7 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
-@Refine
-@Interpretable("GroupByCumSum")
+@[Refine Interpretable("GroupByCumSum")]
 public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<G, C>,
@@ -475,8 +470,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean =
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: ColumnReference<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -508,8 +502,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: KProperty<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -540,8 +533,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  *
  *
  */
-@Refine
-@Interpretable("GroupByCumSum0")
+@[Refine Interpretable("GroupByCumSum0")]
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) {
         colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()

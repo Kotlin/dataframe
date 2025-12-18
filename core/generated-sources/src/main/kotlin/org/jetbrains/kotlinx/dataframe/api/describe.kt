@@ -293,8 +293,7 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
  * @param [columns] The [Column Accessors][ColumnReference] that specifies which
  * columns of this [DataFrame] should be described.
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReference<C>): DataFrame<ColumnDescription> =
     describe { columns.toColumnSet() }
 
@@ -347,8 +346,7 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
  * @param [columns] The [KProperties][KProperty] that specifies which
  * columns of this [DataFrame] should be described.
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: KProperty<C>): DataFrame<ColumnDescription> =
     describe { columns.toColumnSet() }
 

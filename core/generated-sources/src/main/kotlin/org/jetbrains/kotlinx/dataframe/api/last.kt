@@ -688,8 +688,7 @@ public interface LastColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 
