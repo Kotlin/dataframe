@@ -21,13 +21,11 @@ public fun <T, C> DataFrame<T>.replace(columns: ColumnsSelector<T, C>): ReplaceC
 
 public fun <T> DataFrame<T>.replace(vararg columns: String): ReplaceClause<T, Any?> = replace { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.replace(vararg columns: ColumnReference<C>): ReplaceClause<T, C> =
     replace { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceClause<T, C> =
     replace { columns.toColumnSet() }
 

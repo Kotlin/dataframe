@@ -90,8 +90,7 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
  *
  * @return A new [DataFrame] where all groups are combined and additional key columns are included in each row.
  */
-@Refine
-@Interpretable("ConcatWithKeys")
+@[Refine Interpretable("ConcatWithKeys")]
 public fun <T, G> GroupBy<T, G>.concatWithKeys(): DataFrame<G> =
     mapToFrames {
         val rowsCount = group.rowsCount()

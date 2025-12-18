@@ -57,8 +57,7 @@ private interface FlattenDocs {
  * {@set [FlattenDocs.GROUPS] all}
  * {@set [FlattenDocs.FLATTEN_PARAM]}
  */
-@Refine
-@Interpretable("FlattenDefault")
+@[Refine Interpretable("FlattenDefault")]
 public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, separator: String = "_"): DataFrame<T> =
     flatten(keepParentNameForColumns, separator) { all() }
 
@@ -66,8 +65,7 @@ public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, s
  * {@include [FlattenDocs]}
  * {@set [FlattenDocs.GROUPS] specified}
  */
-@Refine
-@Interpretable("Flatten0")
+@[Refine Interpretable("Flatten0")]
 public fun <T, C> DataFrame<T>.flatten(
     keepParentNameForColumns: Boolean = false,
     separator: String = "_",
@@ -88,8 +86,7 @@ public fun <T> DataFrame<T>.flatten(
  * {@include [FlattenDocs]}
  * {@set [FlattenDocs.GROUPS] selected}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: ColumnReference<C>,
     keepParentNameForColumns: Boolean = false,
@@ -100,8 +97,7 @@ public fun <T, C> DataFrame<T>.flatten(
  * {@include [FlattenDocs]}
  * {@set [FlattenDocs.GROUPS] selected}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: KProperty<C>,
     keepParentNameForColumns: Boolean = false,

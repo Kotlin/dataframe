@@ -174,8 +174,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOfKind][KProperty.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,

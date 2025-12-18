@@ -73,8 +73,7 @@ internal interface ExplodeDocs
  *                If not specified, all applicable columns will be exploded.
  * @return A new [DataFrame] with exploded columns.
  */
-@Refine
-@Interpretable("Explode0")
+@[Refine Interpretable("Explode0")]
 public fun <T> DataFrame<T>.explode(
     dropEmpty: Boolean = true,
     selector: ColumnsSelector<T, *> = defaultExplodeColumns,
@@ -101,13 +100,11 @@ public fun <T> DataFrame<T>.explode(
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
@@ -185,13 +182,11 @@ public fun <T> DataRow<T>.explode(
 public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataRow<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataRow<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 

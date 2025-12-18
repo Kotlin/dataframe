@@ -100,8 +100,7 @@ public typealias JoinExpression<A, B> = Selector<JoinedDataRow<A, B>, Boolean>
  * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("JoinWith")
+@[Refine Interpretable("JoinWith")]
 public fun <A, B> DataFrame<A>.joinWith(
     right: DataFrame<B>,
     type: JoinType = JoinType.Inner,
@@ -130,8 +129,7 @@ public fun <A, B> DataFrame<A>.joinWith(
  * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("InnerJoinWith")
+@[Refine Interpretable("InnerJoinWith")]
 public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression: JoinExpression<A, B>): DataFrame<A> =
     joinWith(right, JoinType.Inner, joinExpression)
 
@@ -157,8 +155,7 @@ public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression
  * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("LeftJoinWith")
+@[Refine Interpretable("LeftJoinWith")]
 public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression: JoinExpression<A, B>): DataFrame<A> =
     joinWith(right, JoinType.Left, joinExpression)
 
@@ -184,8 +181,7 @@ public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression:
  * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("RightJoinWith")
+@[Refine Interpretable("RightJoinWith")]
 public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression: JoinExpression<A, B>): DataFrame<A> =
     joinWith(right, JoinType.Right, joinExpression)
 
@@ -211,8 +207,7 @@ public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression
  * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("FullJoinWith")
+@[Refine Interpretable("FullJoinWith")]
 public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression: JoinExpression<A, B>): DataFrame<A> =
     joinWith(right, JoinType.Full, joinExpression)
 
@@ -238,8 +233,7 @@ public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression:
  * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("FilterJoinWith")
+@[Refine Interpretable("FilterJoinWith")]
 public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpression: JoinExpression<A, B>): DataFrame<A> =
     joinWithImpl(right, JoinType.Filter, addNewColumns = false, joinExpression)
 
@@ -265,8 +259,7 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
  * @param [joinExpression] [JoinExpression] specifying the rows join condition.
  * @return joined [DataFrame].
  */
-@Refine
-@Interpretable("ExcludeJoinWith")
+@[Refine Interpretable("ExcludeJoinWith")]
 public fun <A, B> DataFrame<A>.excludeJoinWith(
     right: DataFrame<B>,
     joinExpression: JoinExpression<A, B>,

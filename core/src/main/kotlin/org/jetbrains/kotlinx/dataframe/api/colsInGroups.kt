@@ -211,8 +211,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 

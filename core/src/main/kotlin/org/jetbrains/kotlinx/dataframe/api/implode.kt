@@ -14,25 +14,21 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-@Refine
-@Interpretable("ImplodeDefault")
+@[Refine Interpretable("ImplodeDefault")]
 public fun <T> DataFrame<T>.implode(dropNA: Boolean = false): DataRow<T> = implode(dropNA) { all() }[0]
 
-@Refine
-@Interpretable("Implode")
+@[Refine Interpretable("Implode")]
 public fun <T, C> DataFrame<T>.implode(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
     implodeImpl(dropNA, columns)
 
 public fun <T> DataFrame<T>.implode(vararg columns: String, dropNA: Boolean = false): DataFrame<T> =
     implode(dropNA) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.implode(vararg columns: ColumnReference<C>, dropNA: Boolean = false): DataFrame<T> =
     implode(dropNA) { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.implode(vararg columns: KProperty<C>, dropNA: Boolean = false): DataFrame<T> =
     implode(dropNA) { columns.toColumnSet() }
 

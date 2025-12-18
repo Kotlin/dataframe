@@ -145,16 +145,14 @@ public inline fun <T, reified R> DataFrame<T>.insert(
     noinline expression: AddExpression<T, R>,
 ): InsertClause<T> = insert(mapToColumn(name, infer, expression))
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: ColumnAccessor<R>,
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>,
 ): InsertClause<T> = insert(column.name(), infer, expression)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: KProperty<R>,
     infer: Infer = Infer.Nulls,
@@ -212,8 +210,7 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  * under which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed under the selected group.
  */
-@Refine
-@Interpretable("Under0")
+@[Refine Interpretable("Under0")]
 public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
 
 /**
@@ -236,17 +233,14 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
  * under which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed under the specified column group.
  */
-@Refine
-@Interpretable("Under1")
+@[Refine Interpretable("Under1")]
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> =
     df.insertImpl(columnPath + column.name, column)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
 
 /**
@@ -269,8 +263,7 @@ public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under
  * If the group does not exist, it will be created.
  * @return A new [DataFrame] with the inserted column placed under the specified column group.
  */
-@Refine
-@Interpretable("Under4")
+@[Refine Interpretable("Under4")]
 public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathOf(column))
 
 // endregion
@@ -300,8 +293,7 @@ public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathO
  * after which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed after the selected column.
  */
-@Refine
-@Interpretable("InsertAfter0")
+@[Refine Interpretable("InsertAfter0")]
 public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterImpl(df.getColumnPath(column))
 
 /**
@@ -326,12 +318,10 @@ public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T>
  */
 public fun <T> InsertClause<T>.after(column: String): DataFrame<T> = df.add(this.column).move(this.column).after(column)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> InsertClause<T>.after(column: ColumnAccessor<*>): DataFrame<T> = afterImpl(column.path())
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> InsertClause<T>.after(column: KProperty<*>): DataFrame<T> = after(column.columnName)
 
 @Deprecated(INSERT_AFTER_COL_PATH, ReplaceWith(INSERT_AFTER_COL_PATH_REPLACE), DeprecationLevel.ERROR)
@@ -367,8 +357,7 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
  * before which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed before the selected column.
  */
-@Refine
-@Interpretable("InsertBefore0")
+@[Refine Interpretable("InsertBefore0")]
 public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T> = beforeImpl(df.getColumnPath(column))
 
 /**
@@ -418,8 +407,7 @@ public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
  *                 Columns currently at this index and after will be shifted right.
  * @return A new [DataFrame] with the inserted column placed at the specified position.
  */
-@Refine
-@Interpretable("InsertAt")
+@[Refine Interpretable("InsertAt")]
 public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> = df.add(column).move(column).to(position)
 
 // endregion

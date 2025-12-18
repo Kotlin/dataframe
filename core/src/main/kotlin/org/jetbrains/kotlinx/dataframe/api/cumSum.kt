@@ -123,8 +123,7 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
-@Refine
-@Interpretable("DataFrameCumSum")
+@[Refine Interpretable("DataFrameCumSum")]
 public fun <T, C : Number?> DataFrame<T>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<T, C>,
@@ -141,8 +140,7 @@ public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = def
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: ColumnReference<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -152,8 +150,7 @@ public fun <T> DataFrame<T>.cumSum(
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: KProperty<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -164,8 +161,7 @@ public fun <T> DataFrame<T>.cumSum(
  * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
  * {@set [CumSumDocs.CUMSUM_PARAM]}
  */
-@Refine
-@Interpretable("DataFrameCumSum0")
+@[Refine Interpretable("DataFrameCumSum0")]
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) {
         colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
@@ -179,8 +175,7 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
-@Refine
-@Interpretable("GroupByCumSum")
+@[Refine Interpretable("GroupByCumSum")]
 public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<G, C>,
@@ -197,8 +192,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean =
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: ColumnReference<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -208,8 +202,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  * {@include [CumSumDocs]}
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: KProperty<Number?>,
     skipNA: Boolean = defaultCumSumSkipNA,
@@ -220,8 +213,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
  * {@set [CumSumDocs.CUMSUM_PARAM]}
  */
-@Refine
-@Interpretable("GroupByCumSum0")
+@[Refine Interpretable("GroupByCumSum0")]
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) {
         colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()

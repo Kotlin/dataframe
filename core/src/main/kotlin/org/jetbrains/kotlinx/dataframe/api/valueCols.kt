@@ -160,8 +160,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         columnGroup(this).valueCols(filter)
 

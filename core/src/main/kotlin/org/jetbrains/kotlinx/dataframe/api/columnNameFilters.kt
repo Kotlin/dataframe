@@ -189,8 +189,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameContains][KProperty.colsNameContains]`("my") }`
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameContains(text, ignoreCase)
 
@@ -252,8 +251,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameContains][KProperty.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.colsNameContains(regex: Regex): ColumnSet<*> = columnGroup(this).colsNameContains(regex)
 
     /**
@@ -387,8 +385,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameStartsWith][KProperty.colsNameStartsWith]`("order-") }`
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.colsNameStartsWith(prefix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
@@ -468,8 +465,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameEndsWith][KProperty.colsNameEndsWith]`("-order") }`
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
+    @[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
     public fun KProperty<*>.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
