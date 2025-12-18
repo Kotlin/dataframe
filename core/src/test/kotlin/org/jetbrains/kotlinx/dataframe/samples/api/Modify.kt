@@ -919,8 +919,8 @@ class Modify : TestBase() {
     fun addMany_properties() {
         // SampleStart
         df.add {
-            "year of birth" from 2021 - age
-            age gt 18 into "is adult"
+            "year of birth" from { 2021 - age }
+            expr { age > 18 } into "is adult"
             "details" {
                 name.lastName.map { it.length } into "last name length"
                 "full name" from { name.firstName + " " + name.lastName }
@@ -934,8 +934,8 @@ class Modify : TestBase() {
     fun addMany_strings() {
         // SampleStart
         df.add {
-            "year of birth" from 2021 - "age"<Int>()
-            "age"<Int>() gt 18 into "is adult"
+            "year of birth" from { 2021 - "age"<Int>() }
+            expr { "age"<Int>() > 18 } into "is adult"
             "details" {
                 "name"["lastName"]<String>().map { it.length } into "last name length"
                 "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
@@ -989,8 +989,8 @@ class Modify : TestBase() {
     fun mapMany_properties() {
         // SampleStart
         df.mapToFrame {
-            "year of birth" from 2021 - age
-            age gt 18 into "is adult"
+            "year of birth" from { 2021 - age }
+            expr { age > 18 } into "is adult"
             name.lastName.map { it.length } into "last name length"
             "full name" from { name.firstName + " " + name.lastName }
             +city
@@ -1003,8 +1003,8 @@ class Modify : TestBase() {
     fun mapMany_strings() {
         // SampleStart
         df.mapToFrame {
-            "year of birth" from 2021 - "age"<Int>()
-            "age"<Int>() gt 18 into "is adult"
+            "year of birth" from { 2021 - "age"<Int>() }
+            expr { "age"<Int>() > 18 } into "is adult"
             "name"["lastName"]<String>().map { it.length } into "last name length"
             "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
             +"city"
