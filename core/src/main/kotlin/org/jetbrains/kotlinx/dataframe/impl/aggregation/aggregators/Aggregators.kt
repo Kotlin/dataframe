@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers.NumberInputHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.FlatteningMultipleColumnsHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.TwoStepMultipleColumnsHandler
+import org.jetbrains.kotlinx.dataframe.impl.columns.ParameterValue
 import org.jetbrains.kotlinx.dataframe.math.indexOfMax
 import org.jetbrains.kotlinx.dataframe.math.indexOfMedian
 import org.jetbrains.kotlinx.dataframe.math.indexOfMin
@@ -35,10 +36,12 @@ public object Aggregators {
         getReturnType: CalculateReturnType,
         indexOfResult: IndexOfResult<Value>,
         stepOneSelector: Selector<Value, Return>,
+        statisticsParameters: Map<String, ParameterValue?>,
     ) = Aggregator(
         aggregationHandler = SelectingAggregationHandler(stepOneSelector, indexOfResult, getReturnType),
         inputHandler = AnyInputHandler(),
         multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
+        statisticsParameters = statisticsParameters,
     )
 
     private fun <Value : Any, Return : Any?> flattenHybridForAny(
@@ -117,8 +120,9 @@ public object Aggregators {
         by withOneOption { skipNaN: Boolean ->
             twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
                 getReturnType = minTypeConversion,
-                stepOneSelector = { type -> minOrNull(type, skipNaN) },
                 indexOfResult = { type -> indexOfMin(type, skipNaN) },
+                stepOneSelector = { type -> minOrNull(type, skipNaN) },
+                statisticsParameters = mapOf<String, ParameterValue?>(Pair("skipNaN", ParameterValue(skipNaN))),
             )
         }
 
@@ -132,6 +136,7 @@ public object Aggregators {
                 getReturnType = maxTypeConversion,
                 stepOneSelector = { type -> maxOrNull(type, skipNaN) },
                 indexOfResult = { type -> indexOfMax(type, skipNaN) },
+                statisticsParameters = mapOf<String, ParameterValue?>(Pair("skipNaN", ParameterValue(skipNaN))),
             )
         }
 
