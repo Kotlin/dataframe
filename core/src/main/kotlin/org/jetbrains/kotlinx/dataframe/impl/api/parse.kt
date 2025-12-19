@@ -186,7 +186,7 @@ internal object Parsers : GlobalParserOptions {
 
         useFastDoubleParser = true
         parseExperimentalUuid = false
-        parseExperimentalInstant = false
+        parseExperimentalInstant = true
         _locale = null
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }

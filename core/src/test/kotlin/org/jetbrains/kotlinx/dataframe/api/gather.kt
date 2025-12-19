@@ -143,8 +143,8 @@ class GatherTests {
 
     @Test
     fun `gather mix of columns`() {
-        val a by columnOf(1, 1.1)
-        val b by columnOf(2, 2.2)
+        val a by columnOf<Number>(1, 1.1)
+        val b by columnOf<Number>(2, 2.2)
 
         val df = dataFrameOf(a, b)[0..0]
 
