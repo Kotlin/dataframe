@@ -39,8 +39,8 @@ df.parse { age and weight }
 `parse` tries to parse every `String`/`Char` column into one of the supported types in the following order:
 * `Int`
 * `Long`
-* `Instant` (`kotlin.time`) (requires `parseExperimentalInstant = true`, available from Kotlin 2.1+.)
-* `Instant` (`kotlinx.datetime` and `java.time`)
+* `Instant` (`kotlin.time`) (requires `parseExperimentalInstant = true`, enabled by default in DataFrame 1.0.0-Beta5)
+* `Instant` (`kotlinx.datetime` and `java.time`) (requires `parseExperimentalInstant = false`)
 * `LocalDateTime` (`kotlinx.datetime` and `java.time`)
 * `LocalDate` (`kotlinx.datetime` and `java.time`)
 * `Duration` (`kotlin.time` and `java.time`)
@@ -84,9 +84,9 @@ Available parser options:
   * Enabled by global default
 * `parseExperimentalUuid: Boolean` is used to enable or disable parsing to the experimental [`kotlin.uuid.Uuid` class](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/).
   * Disabled by global default
-* `parseExperimentalInstant: Boolean` is used to enable or disable parsing to the experimental 
+* `parseExperimentalInstant: Boolean` is used to enable or disable parsing to the 
   [`kotlin.time.Instant` class](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.time/-instant/), available from Kotlin 2.1+. Will parse to `kotlinx.datetime.Instant` if `false`.
-  * Disabled by global default 
+  * Disabled by global default, enabled in DataFrame 1.0.0-Beta5.
 
 <!---FUN parseWithOptions-->
 
