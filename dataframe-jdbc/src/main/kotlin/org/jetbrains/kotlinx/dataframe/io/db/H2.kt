@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
 import kotlin.reflect.KType
@@ -119,8 +118,9 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     override val driverClassName: String
         get() = "org.h2.Driver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? =
-        delegate?.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
+        delegate?.getExpectedJdbcType(tableColumnMetadata)
+            ?: super.getExpectedJdbcType(tableColumnMetadata)
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
@@ -145,9 +145,6 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
                 tables.getString("table_schem"),
                 tables.getString("table_cat"),
             )
-
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
-        delegate?.convertSqlTypeToKType(tableColumnMetadata)
 
     public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
         delegate?.buildSqlQueryWithLimit(sqlQuery, limit) ?: super.buildSqlQueryWithLimit(sqlQuery, limit)
