@@ -18,6 +18,7 @@
         <browser-edits-url>https://github.com/Kotlin/dataframe/edit/master/docs/StardustDocs/</browser-edits-url>
         <include-in-head>include-head.html</include-in-head>
     </variables>
+    <llms-txt single-file="true"/>
     <sitemap change-frequency="monthly"/>
     <build-profile instance="d">
         <variables>
