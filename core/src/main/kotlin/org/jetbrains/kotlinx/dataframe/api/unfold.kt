@@ -18,8 +18,7 @@ import kotlin.reflect.typeOf
 public inline fun <reified T> DataColumn<T>.unfold(vararg roots: KCallable<*>, maxDepth: Int = 0): AnyCol =
     unfoldImpl(typeOf<T>()) { properties(roots = roots, maxDepth) }
 
-@Refine
-@Interpretable("DataFrameUnfold")
+@[Refine Interpretable("DataFrameUnfold")]
 public fun <T> DataFrame<T>.unfold(
     vararg roots: KCallable<*>,
     maxDepth: Int = 0,
@@ -28,10 +27,8 @@ public fun <T> DataFrame<T>.unfold(
 
 public fun <T> DataFrame<T>.unfold(vararg columns: String): DataFrame<T> = unfold { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.unfold(vararg columns: AnyColumnReference): DataFrame<T> = unfold { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.unfold(vararg columns: KProperty<*>): DataFrame<T> = unfold { columns.toColumnSet() }

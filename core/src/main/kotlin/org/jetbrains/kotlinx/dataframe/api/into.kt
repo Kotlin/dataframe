@@ -19,16 +19,13 @@ import kotlin.reflect.typeOf
 
 // region GroupBy
 
-@Refine
-@Interpretable("GroupByInto")
+@[Refine Interpretable("GroupByInto")]
 public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame(column)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T> = toDataFrame(column.name())
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = toDataFrame(column.columnName)
 
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
@@ -37,8 +34,7 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
 ): DataFrame<G> = into(pathOf(columnName ?: groups.name()), expression, typeOf<V>())
 
 // @Hide
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     column: ColumnAccessor<V>,
     noinline expression: RowExpression<G, V>,
@@ -60,8 +56,7 @@ internal fun <T, G, V> GroupBy<T, G>.into(
         internal().withExpr(type, path, expression)
     }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     column: KProperty<V>,
     noinline expression: RowExpression<G, V>,
@@ -85,30 +80,25 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     }
 }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     column: ColumnAccessor<V>,
     noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(column.name(), expression)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     column: KProperty<V>,
     noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(column.columnName, expression)
 
-@Refine
-@Interpretable("GroupByReduceInto")
+@[Refine Interpretable("GroupByReduceInto")]
 public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = into(columnName) { this }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<AnyRow>): DataFrame<G> = into(column) { this }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<AnyRow>): DataFrame<G> = into(column) { this }
 
 // endregion

@@ -54,16 +54,14 @@ public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Refine
-@Interpretable("Distinct0")
+@[Refine Interpretable("Distinct0")]
 public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFrame<T> = select(columns).distinct()
 
 /**
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> =
     distinct {
         val set = columns.toColumnSet()
@@ -80,8 +78,7 @@ public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = dis
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFrame<T> =
     distinct { columns.toColumnSet() }
 
@@ -89,8 +86,7 @@ public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFr
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
 
@@ -104,8 +100,7 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = d
  * {@include [DistinctDocs]}
  * {@set PHRASE_ENDING the specified columns}.
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
 

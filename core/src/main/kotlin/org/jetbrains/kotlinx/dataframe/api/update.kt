@@ -184,8 +184,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * @include [UpdateWithNote]
  * @include [Update.KPropertiesParam]
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumnSet() }
 
 /**
@@ -194,8 +193,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * @include [UpdateWithNote]
  * @include [Update.ColumnAccessorsParam]
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
     update { columns.toColumnSet() }
 
@@ -271,8 +269,7 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  *  - {@include [SeeAlsoUpdatePerCol]}
  * @param [expression] The {@include [ExpressionsGivenRowAndColumn.RowColumnExpressionLink]} to provide a new value for every selected cell giving its row and column.
  */
-@Refine
-@Interpretable("UpdatePerRowCol")
+@[Refine Interpretable("UpdatePerRowCol")]
 public inline fun <T, C> Update<T, C>.perRowCol(crossinline expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
@@ -298,8 +295,7 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  * - {@include [SeeAlsoUpdatePerRowCol]}
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
-@Refine
-@Interpretable("UpdateWith0")
+@[Refine Interpretable("UpdateWith0")]
 public inline fun <T, C, R : C?> Update<T, C>.with(crossinline expression: UpdateExpression<T, C, R>): DataFrame<T> =
     updateImpl { row, _, value ->
         expression(row, value)
@@ -362,8 +358,7 @@ private interface CommonUpdatePerColMapDoc
  * @param [values] The [Map]<[String], Value> to provide a new value for every selected cell.
  *   For each selected column, there must be a value in the map with the same name.
  */
-@Refine
-@Interpretable("UpdatePerColMap")
+@[Refine Interpretable("UpdatePerColMap")]
 public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
     updateWithValuePerColumnImpl {
         values[it.name()] ?: throw IllegalArgumentException("Update value for column ${it.name()} is not defined")
@@ -381,8 +376,7 @@ public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
  *
  * @param [values] The [DataRow] to provide a new value for every selected cell.
  */
-@Refine
-@Interpretable("UpdatePerColRow")
+@[Refine Interpretable("UpdatePerColRow")]
 public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
 
 /**
@@ -392,8 +386,7 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
  *
  * @param [valueSelector] The {@include [ExpressionsGivenColumn.ColumnExpressionLink]} to provide a new value for every selected cell giving its column.
  */
-@Refine
-@Interpretable("UpdatePerCol")
+@[Refine Interpretable("UpdatePerCol")]
 public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
 
@@ -447,8 +440,7 @@ public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } a
  * {@comment No brackets around `expression` because this doc is copied to [Update.notNull]}
  * @param expression Optional {@include [ExpressionsGivenRow.RowExpressionLink]} to update the rows with.
  */
-@Refine
-@Interpretable("UpdateNotNull")
+@[Refine Interpretable("UpdateNotNull")]
 public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): DataFrame<T> =
     notNull().with(expression)
 
@@ -464,8 +456,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * @include [Update.ColumnAccessorsParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
@@ -484,8 +475,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [Update.KPropertiesParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
@@ -533,8 +523,7 @@ private interface CommonSpecificWithDoc {
  * {@set [CommonSpecificWithDoc.FIRST] `null`}
  * {@set [CommonSpecificWithDoc.SECOND] [withNull][withNull]`()}
  */
-@Refine
-@Interpretable("UpdateWithNull")
+@[Refine Interpretable("UpdateWithNull")]
 public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
 
 /**
@@ -543,6 +532,5 @@ public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
  * {@set [CommonSpecificWithDoc.FIRST] `0`}
  * {@set [CommonSpecificWithDoc.SECOND] [withZero][withZero]`()}
  */
-@Refine
-@Interpretable("UpdateWithZero")
+@[Refine Interpretable("UpdateWithZero")]
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }

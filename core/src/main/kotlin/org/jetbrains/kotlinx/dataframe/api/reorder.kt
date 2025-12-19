@@ -27,13 +27,11 @@ public data class Reorder<T, C>(
 @Interpretable("Reorder")
 public fun <T, C> DataFrame<T>.reorder(selector: ColumnsSelector<T, C>): Reorder<T, C> = Reorder(this, selector, false)
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.reorder(vararg columns: ColumnReference<C>): Reorder<T, C> =
     reorder { columns.toColumnSet() }
 
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
+@[Deprecated(DEPRECATED_ACCESS_API) AccessApiOverload]
 public fun <T, C> DataFrame<T>.reorder(vararg columns: KProperty<C>): Reorder<T, C> = reorder { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.reorder(vararg columns: String): Reorder<T, *> = reorder { columns.toColumnSet() }
@@ -41,8 +39,7 @@ public fun <T> DataFrame<T>.reorder(vararg columns: String): Reorder<T, *> = reo
 public fun <T, C, V : Comparable<V>> Reorder<T, C>.by(expression: ColumnExpression<C, V>): DataFrame<T> =
     reorderImpl(false, expression)
 
-@Refine
-@Interpretable("ByName")
+@[Refine Interpretable("ByName")]
 public fun <T, C> Reorder<T, C>.byName(desc: Boolean = false): DataFrame<T> =
     if (desc) byDesc { it.name } else by { it.name }
 
@@ -60,8 +57,7 @@ public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
         inFrameColumns = atAnyDepth,
     ).reorderImpl(desc, expression)
 
-@Refine
-@Interpretable("ReorderColumnsByName")
+@[Refine Interpretable("ReorderColumnsByName")]
 public fun <T> DataFrame<T>.reorderColumnsByName(atAnyDepth: Boolean = true, desc: Boolean = false): DataFrame<T> =
     reorderColumnsBy(atAnyDepth, desc) { name() }
 
