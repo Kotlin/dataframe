@@ -3,17 +3,23 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.DESCRIPTION
+import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.DISTINCT_PARAM
+import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.DISTINCT_RETURN
+import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.PHRASE_ENDING
+import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.SEE_ALSO
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.indices
@@ -23,45 +29,64 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 /**
- * ## The Distinct Operation
+ * {@get [DESCRIPTION] Removes duplicated rows based on $[PHRASE_ENDING]=all columns.}
  *
- * It removes duplicated rows based on {@get PHRASE_ENDING}.
+ * The [rows][DataRow] in the resulting [DataFrame] are in the same order
+ * as they were in the original [DataFrame].
  *
- * __NOTE:__ The rows in the resulting [DataFrame] are in the same order as they were in the original [DataFrame].
+ * See also {@get [SEE_ALSO] [distinctBy] that removes duplicated rows based on the specified columns
+ * and keeps all the columns in the resulting [DataFrame].}
  *
- * {@get [DISTINCT_PARAM] @param [columns]
- * The names of the columns to consider for evaluating distinct rows.}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
  *
- * @return A new DataFrame containing only distinct rows.
+ * See [Selecting Columns][SelectSelectingOptions].
  *
- * @see [Selecting Columns][SelectSelectingOptions].
- * @see {@include [DocumentationUrls.Distinct]}
+ * For more information:
+ *
+ * @include [DocumentationUrls.Distinct]
+ *
+ * @include [DocumentationUrls.DistinctBy]
+ *
+ * @get [DISTINCT_PARAM]
+ *
+ * @return {@get [DISTINCT_RETURN] A new [DataFrame] containing only distinct rows.}
  */
 @ExcludeFromSources
 @Suppress("ClassName")
 private interface DistinctDocs {
+    // Parameter of the function (the `@param` part of the KDoc)
     interface DISTINCT_PARAM
+
+    // Value returned by the function (the `@return` part of the KDoc)
+    interface DISTINCT_RETURN
+
+    // Description of what the function does
+    interface DESCRIPTION
+
+    // Part of the description that can be customized for a specific function
+    interface PHRASE_ENDING
+
+    // Reference to a related function (see also)
+    interface SEE_ALSO
 }
 
 /**
- * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING all columns}.
- * {@set [DistinctDocs.DISTINCT_PARAM]}
+ * @include [DistinctDocs]
+ * @set [DISTINCT_PARAM]
  */
 public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
 
 /**
- * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
+ * @include [DistinctDocs]
+ * @set [DESCRIPTION] Selects the specified columns and keeps only distinct rows based on these selected columns.
+ * @set [DISTINCT_PARAM] @param [columns\] The [ColumnsSelector] used to select columns
+ * that will be included in the resulting [DataFrame] and considered for evaluating distinct rows.
+ * @set [DISTINCT_RETURN] A new [DataFrame] containing only selected columns and distinct rows.
  */
 @Refine
 @Interpretable("Distinct0")
 public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFrame<T> = select(columns).distinct()
 
-/**
- * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> =
@@ -71,47 +96,48 @@ public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T>
     }
 
 /**
- * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
+ * @include [DistinctDocs]
+ * @set [DESCRIPTION] Selects the specified columns and keeps only distinct rows based on these selected columns.
+ * @set [DISTINCT_PARAM] @param [columns\] The names of the columns to select
+ * and to consider for evaluating distinct rows.
+ * @set [DISTINCT_RETURN] A new [DataFrame] containing only selected columns and distinct rows.
  */
 public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = distinct { columns.toColumnSet() }
 
-/**
- * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFrame<T> =
     distinct { columns.toColumnSet() }
 
-/**
- * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
 
 /**
- * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
+ * @include [DistinctDocs]
+ * {@set [PHRASE_ENDING] the specified}
+ * @set [SEE_ALSO] [distinct] that selects the specified columns
+ * (if the columns are not specified, selects all columns)
+ * and keeps only distinct rows based on these selected columns.
+ * @set [DISTINCT_PARAM] @param [columns\]
+ * The names of the columns to consider for evaluating distinct rows.
  */
 public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = distinctBy { columns.toColumnSet() }
 
-/**
- * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
- */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
 
 /**
- * {@include [DistinctDocs]}
- * {@set PHRASE_ENDING the specified columns}.
+ * @include [DistinctDocs]
+ * {@set [PHRASE_ENDING] the specified}
+ * @set [SEE_ALSO] [distinct] that selects the specified columns
+ * (if the columns are not specified, selects all columns)
+ * and keeps only distinct rows based on these selected columns.
+ * @set [DISTINCT_PARAM] @param [columns\] The [ColumnsSelector] used to select columns
+ * that will be considered for evaluating distinct rows.
  */
 public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataFrame<T> {
     val cols = get(columns)
@@ -124,15 +150,13 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 // region ColumnsSelectionDsl
 
 /**
- * ##### Distinct {@include [ColumnsSelectionDslLink]}
+ * Distinct {@include [ColumnsSelectionDslLink]}.
  *
  * See [Grammar] for all functions in this interface.
  */
 public interface DistinctColumnsSelectionDsl {
 
     /**
-     * ## Distinct Grammar
-     *
      * @include [DslGrammarTemplate]
      * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
@@ -152,23 +176,21 @@ public interface DistinctColumnsSelectionDsl {
     }
 
     /**
-     * ## Distinct
      * Returns a new [ColumnSet] from [this] [ColumnSet] containing only distinct columns (by path).
      * This is useful when you've selected the same column multiple times but only want it once.
      *
-     * NOTE: This doesn't solve [DuplicateColumnNamesException] if you've selected two columns with the same name.
+     * This doesn't solve [DuplicateColumnNamesException] if you've selected two columns with the same name.
      * For this, you'll need to [rename][ColumnsSelectionDsl.named] one of the columns.
      *
-     * ### Check out: [Grammar]
+     * See also [Grammar], [named][ColumnsSelectionDsl.named], [simplify][ColumnsSelectionDsl.simplify].
      *
-     * #### For Example:
-     * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnsSelectionDsl.and]` age).`[distinct][ColumnSet.distinct]`() }`
-     *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[distinct][ColumnSet.distinct]`() }`
+     * ### Examples
+     * ```kotlin
+     * df.select { (colsOf<Int>() and age).distinct() }
+     * df.select { colsAtAnyDepth().nameStartsWith("order").distinct() }
+     * ```
      *
      * @return A new [ColumnSet] containing only distinct columns (by path).
-     * @see ColumnsSelectionDsl.named
-     * @see ColumnsSelectionDsl.simplify
      */
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
 }
