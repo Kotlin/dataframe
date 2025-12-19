@@ -122,7 +122,8 @@ class CleaningDataTests {
         )
 
         df.convert { recentDelays }.with { it.map { d -> d.toDouble() } }
-            .split { recentDelays }.default(Double.NaN).into { "delay_$it" }[delay1, delay2, delay3] shouldBe expected
+            .split { recentDelays }.default<_, _, Number>(Double.NaN)
+            .into { "delay_$it" }[delay1, delay2, delay3] shouldBe expected
 
         df.convert { "RecentDelays"<List<Int>>() }.with { it.map { d -> d.toDouble() } }
             .split { "RecentDelays"<List<Double>>() }.default(Double.NaN).into {
