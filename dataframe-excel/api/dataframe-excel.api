@@ -9,6 +9,13 @@ public final class org/jetbrains/kotlinx/dataframe/io/Excel : org/jetbrains/kotl
 	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/io/ExcelSchemaReader : org/jetbrains/kotlinx/dataframe/io/SchemaReader {
+	public fun <init> ()V
+	public fun accepts (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun default (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun read (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/FormattingOptions {
 	public fun <init> (Ljava/lang/String;Lorg/apache/poi/ss/usermodel/DataFormatter;)V
 	public synthetic fun <init> (Ljava/lang/String;Lorg/apache/poi/ss/usermodel/DataFormatter;ILkotlin/jvm/internal/DefaultConstructorMarker;)V

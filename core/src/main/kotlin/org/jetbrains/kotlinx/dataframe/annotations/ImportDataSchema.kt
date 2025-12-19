@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.NameValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
+import org.jetbrains.kotlinx.dataframe.io.SchemaReader
 
 /**
  * Annotation preprocessing will generate a DataSchema interface from the data at `path`.
@@ -42,6 +43,9 @@ public annotation class ImportDataSchema(
     val jdbcOptions: JdbcOptions = JdbcOptions(),
     val enableExperimentalOpenApi: Boolean = false,
 )
+
+@Target(AnnotationTarget.CLASS)
+public annotation class DataSchemaSource(val source: String, val qualifier: String = SchemaReader.DEFAULT_QUALIFIER)
 
 public enum class DataSchemaVisibility {
     INTERNAL,
