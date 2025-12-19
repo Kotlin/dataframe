@@ -8,6 +8,32 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
+@JvmInline
+internal value class StatisticResult(val value: Any?)
+
+public class ParameterValue(public val parameter: Any?) {
+
+    override fun equals(other: Any?): Boolean {
+        val otherAsParameterValue = other as ParameterValue?
+        val that = otherAsParameterValue?.parameter
+        if (parameter is Boolean && that is Boolean) {
+            return this.parameter == that
+        }
+        return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        if (parameter is Boolean?) {
+            return this.parameter.hashCode()
+        }
+        return super.hashCode()
+    }
+}
+
+internal interface ValueColumnInternal<T> : ValueColumn<T> {
+    val statistics: MutableMap<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>
+}
+
 internal open class ValueColumnImpl<T>(
     values: List<T>,
     name: String,
@@ -15,7 +41,8 @@ internal open class ValueColumnImpl<T>(
     val defaultValue: T? = null,
     distinct: Lazy<Set<T>>? = null,
 ) : DataColumnImpl<T>(values, name, type, distinct),
-    ValueColumn<T> {
+    ValueColumn<T>,
+    ValueColumnInternal<T> {
 
     override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, distinct)
 
@@ -48,10 +75,13 @@ internal open class ValueColumnImpl<T>(
     override fun defaultValue() = defaultValue
 
     override fun forceResolve() = ResolvingValueColumn(this)
+
+    override val statistics = mutableMapOf<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>()
 }
 
 internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
     ValueColumn<T> by source,
+    ValueColumnInternal<T>,
     ForceResolvedColumn<T> {
 
     override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
@@ -70,4 +100,6 @@ internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
     override fun equals(other: Any?) = source.checkEquals(other)
 
     override fun hashCode(): Int = source.hashCode()
+
+    override val statistics = mutableMapOf<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>()
 }
