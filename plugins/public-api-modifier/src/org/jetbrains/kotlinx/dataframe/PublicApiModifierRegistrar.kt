@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.name.FqName
 
 @OptIn(ExperimentalCompilerApi::class)
-class PublicApiModifierRegistrar : CompilerPluginRegistrar() {
+class PublicApiModifierRegistrar(override val pluginId: String) : CompilerPluginRegistrar() {
     override val supportsK2: Boolean = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {

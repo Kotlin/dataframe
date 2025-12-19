@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
 @OptIn(ExperimentalCompilerApi::class)
-class ExplainerComponentRegistrar : CompilerPluginRegistrar() {
+class ExplainerComponentRegistrar(override val pluginId: String) : CompilerPluginRegistrar() {
     override val supportsK2: Boolean
         get() = true
 
