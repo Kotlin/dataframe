@@ -19,11 +19,23 @@ public class ParameterValue(public val parameter: Any?) {
         if (parameter is Boolean && that is Boolean) {
             return this.parameter == that
         }
+        if (parameter is Double && that is Double) {
+            return this.parameter == that
+        }
+        if (parameter is Int && that is Int) {
+            return this.parameter == that
+        }
         return super.equals(other)
     }
 
     override fun hashCode(): Int {
-        if (parameter is Boolean?) {
+        if (parameter is Boolean) {
+            return this.parameter.hashCode()
+        }
+        if (parameter is Double) {
+            return this.parameter.hashCode()
+        }
+        if (parameter is Int) {
             return this.parameter.hashCode()
         }
         return super.hashCode()

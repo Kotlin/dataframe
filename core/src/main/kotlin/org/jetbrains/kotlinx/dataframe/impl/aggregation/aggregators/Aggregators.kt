@@ -48,10 +48,12 @@ public object Aggregators {
         getReturnType: CalculateReturnType,
         indexOfResult: IndexOfResult<Value>,
         reducer: Reducer<Value, Return>,
+        statisticsParameters: Map<String, ParameterValue?>,
     ) = Aggregator(
         aggregationHandler = HybridAggregationHandler(reducer, indexOfResult, getReturnType),
         inputHandler = AnyInputHandler(),
         multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
+        statisticsParameters = statisticsParameters,
     )
 
     private fun <Value : Any, Return : Any?> twoStepReducingForAny(
@@ -86,20 +88,24 @@ public object Aggregators {
 
     private fun <Return : Number?> flattenReducingForNumbers(
         getReturnType: CalculateReturnType,
+        statisticsParameters: Map<String, ParameterValue?>,
         reducer: Reducer<Number, Return>,
     ) = Aggregator(
         aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
         inputHandler = NumberInputHandler(),
         multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
+        statisticsParameters = statisticsParameters,
     )
 
     private fun <Return : Number?> twoStepReducingForNumbers(
         getReturnType: CalculateReturnType,
+        statisticsParameters: Map<String, ParameterValue?>,
         reducer: Reducer<Number, Return>,
     ) = Aggregator(
         aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
         inputHandler = NumberInputHandler(),
         multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
+        statisticsParameters = statisticsParameters,
     )
 
     /** @include [AggregatorOptionSwitch1] */
@@ -145,17 +151,30 @@ public object Aggregators {
         skipNaN: Boolean,
         ddof: Int,
         ->
-        flattenReducingForNumbers(stdTypeConversion) { type ->
-            std(type, skipNaN, ddof)
-        }
+        flattenReducingForNumbers(
+            getReturnType = stdTypeConversion,
+            statisticsParameters = mapOf<String, ParameterValue?>(
+                Pair("skipNaN", ParameterValue(skipNaN)),
+                Pair("ddof", ParameterValue(ddof)),
+            ),
+            reducer = { type ->
+                std(type, skipNaN, ddof)
+            },
+        )
     }
 
     // step one: T: Number? -> Double
     // step two: Double -> Double
     public val mean: AggregatorOptionSwitch1<Boolean, Number, Double> by withOneOption { skipNaN: Boolean ->
-        twoStepReducingForNumbers(meanTypeConversion) { type ->
-            mean(type, skipNaN)
-        }
+        twoStepReducingForNumbers(
+            getReturnType = meanTypeConversion,
+            statisticsParameters = mapOf<String, ParameterValue?>(
+                Pair("skipNaN", ParameterValue(skipNaN)),
+            ),
+            reducer = { type ->
+                mean(type, skipNaN)
+            },
+        )
     }
 
     // T: primitive Number? -> Double?
@@ -192,6 +211,10 @@ public object Aggregators {
                 getReturnType = percentileConversion,
                 reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
                 indexOfResult = { type -> indexOfPercentile(percentile, type, skipNaN) },
+                statisticsParameters = mapOf<String, ParameterValue?>(
+                    Pair("skipNaN", ParameterValue(skipNaN)),
+                    Pair("percentile", ParameterValue(percentile)),
+                ),
             )
         }
 
@@ -220,6 +243,7 @@ public object Aggregators {
                 getReturnType = medianConversion,
                 reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
                 indexOfResult = { type -> indexOfMedian(type, skipNaN) },
+                statisticsParameters = mapOf<String, ParameterValue?>(Pair("skipNaN", ParameterValue(skipNaN))),
             )
         }
 
@@ -228,8 +252,12 @@ public object Aggregators {
     // Short -> Int
     // Nothing -> Double
     public val sum: AggregatorOptionSwitch1<Boolean, Number, Number> by withOneOption { skipNaN: Boolean ->
-        twoStepReducingForNumbers(sumTypeConversion) { type ->
-            sum(type, skipNaN)
-        }
+        twoStepReducingForNumbers(
+            getReturnType = sumTypeConversion,
+            statisticsParameters = mapOf<String, ParameterValue?>(Pair("skipNaN", ParameterValue(skipNaN))),
+            reducer = { type ->
+                sum(type, skipNaN)
+            },
+        )
     }
 }
