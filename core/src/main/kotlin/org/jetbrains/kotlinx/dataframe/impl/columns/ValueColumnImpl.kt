@@ -11,39 +11,8 @@ import kotlin.reflect.full.withNullability
 @JvmInline
 internal value class StatisticResult(val value: Any?)
 
-public class ParameterValue(public val parameter: Any?) {
-
-    override fun equals(other: Any?): Boolean {
-        val otherAsParameterValue = other as ParameterValue?
-        val that = otherAsParameterValue?.parameter
-        if (parameter is Boolean && that is Boolean) {
-            return this.parameter == that
-        }
-        if (parameter is Double && that is Double) {
-            return this.parameter == that
-        }
-        if (parameter is Int && that is Int) {
-            return this.parameter == that
-        }
-        return super.equals(other)
-    }
-
-    override fun hashCode(): Int {
-        if (parameter is Boolean) {
-            return this.parameter.hashCode()
-        }
-        if (parameter is Double) {
-            return this.parameter.hashCode()
-        }
-        if (parameter is Int) {
-            return this.parameter.hashCode()
-        }
-        return super.hashCode()
-    }
-}
-
 internal interface ValueColumnInternal<T> : ValueColumn<T> {
-    val statistics: MutableMap<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>
+    val statistics: MutableMap<String, MutableMap<Map<String, Any>, StatisticResult>>
 }
 
 internal open class ValueColumnImpl<T>(
@@ -88,7 +57,7 @@ internal open class ValueColumnImpl<T>(
 
     override fun forceResolve() = ResolvingValueColumn(this)
 
-    override val statistics = mutableMapOf<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>()
+    override val statistics = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
 }
 
 internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
@@ -113,5 +82,5 @@ internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
 
     override fun hashCode(): Int = source.hashCode()
 
-    override val statistics = mutableMapOf<String, MutableMap<Map<String, ParameterValue?>, StatisticResult>>()
+    override val statistics = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
 }

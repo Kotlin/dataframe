@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
-import org.jetbrains.kotlinx.dataframe.impl.columns.ParameterValue
 import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import kotlin.reflect.KType
@@ -37,7 +36,7 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
             // cache check, cache is dynamically created
             val aggregator = this.aggregator ?: throw IllegalStateException("Aggregator is required")
             val desiredStatisticNotConsideringParameters = column.statistics.getOrPut(aggregator.name) {
-                mutableMapOf<Map<String, ParameterValue?>, StatisticResult>()
+                mutableMapOf<Map<String, Any>, StatisticResult>()
             }
             // can't compare maps whose Values are Any? -> ParameterValue instead
             val desiredStatistic = desiredStatisticNotConsideringParameters[aggregator.statisticsParameters]

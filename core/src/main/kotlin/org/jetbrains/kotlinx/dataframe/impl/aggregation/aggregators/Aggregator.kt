@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.FlatteningMultipleColumnsHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.NoMultipleColumnsHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.TwoStepMultipleColumnsHandler
-import org.jetbrains.kotlinx.dataframe.impl.columns.ParameterValue
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -43,7 +42,7 @@ public class Aggregator<in Value : Any, out Return : Any?>(
     public val inputHandler: AggregatorInputHandler<Value, Return>,
     public val multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
     public val name: String,
-    public val statisticsParameters: Map<String, ParameterValue?>,
+    public val statisticsParameters: Map<String, Any>,
 ) : AggregatorInputHandler<Value, Return> by inputHandler,
     AggregatorMultipleColumnsHandler<Value, Return> by multipleColumnsHandler,
     AggregatorAggregationHandler<Value, Return> by aggregationHandler {
@@ -77,7 +76,7 @@ public class Aggregator<in Value : Any, out Return : Any?>(
             aggregationHandler: AggregatorAggregationHandler<Value, Return>,
             inputHandler: AggregatorInputHandler<Value, Return>,
             multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
-            statisticsParameters: Map<String, ParameterValue?>,
+            statisticsParameters: Map<String, Any>,
         ): AggregatorProvider<Value, Return> =
             AggregatorProvider { name ->
                 Aggregator(
