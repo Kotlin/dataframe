@@ -87,21 +87,6 @@ public class Aggregator<in Value : Any, out Return : Any?>(
                     statisticsParameters = statisticsParameters,
                 )
             }
-
-        internal operator fun <Value : Any, Return : Any?> invoke(
-            aggregationHandler: AggregatorAggregationHandler<Value, Return>,
-            inputHandler: AggregatorInputHandler<Value, Return>,
-            multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
-        ): AggregatorProvider<Value, Return> =
-            AggregatorProvider { name ->
-                Aggregator(
-                    aggregationHandler = aggregationHandler,
-                    inputHandler = inputHandler,
-                    multipleColumnsHandler = multipleColumnsHandler,
-                    name = name,
-                    emptyMap(),
-                )
-            }
     }
 }
 

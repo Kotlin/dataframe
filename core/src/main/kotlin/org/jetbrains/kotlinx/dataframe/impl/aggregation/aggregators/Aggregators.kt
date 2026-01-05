@@ -67,6 +67,7 @@ public object Aggregators {
                 ReducingAggregationHandler<Return & Any, Return>(stepTwoReducer, getReturnType)
             },
         ),
+        statisticsParameters = emptyMap(),
     )
 
     private fun <Type : Any> flattenReducingForAny(reducer: Reducer<Type, Type?>) =
@@ -74,6 +75,7 @@ public object Aggregators {
             aggregationHandler = ReducingAggregationHandler(reducer, preserveReturnTypeNullIfEmpty),
             inputHandler = AnyInputHandler(),
             multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
+            statisticsParameters = emptyMap(),
         )
 
     private fun <Value : Any, Return : Any?> flattenReducingForAny(
@@ -83,6 +85,7 @@ public object Aggregators {
         aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
         inputHandler = AnyInputHandler(),
         multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
+        statisticsParameters = emptyMap(),
     )
 
     private fun <Return : Number?> flattenReducingForNumbers(
@@ -127,7 +130,7 @@ public object Aggregators {
                 getReturnType = minTypeConversion,
                 indexOfResult = { type -> indexOfMin(type, skipNaN) },
                 stepOneSelector = { type -> minOrNull(type, skipNaN) },
-                statisticsParameters = mapOf<String, Any>(Pair("skipNaN", skipNaN)),
+                statisticsParameters = mapOf<String, Any>("skipNaN" to skipNaN),
             )
         }
 
@@ -141,7 +144,7 @@ public object Aggregators {
                 getReturnType = maxTypeConversion,
                 stepOneSelector = { type -> maxOrNull(type, skipNaN) },
                 indexOfResult = { type -> indexOfMax(type, skipNaN) },
-                statisticsParameters = mapOf<String, Any>(Pair("skipNaN", skipNaN)),
+                statisticsParameters = mapOf<String, Any>("skipNaN" to skipNaN),
             )
         }
 
@@ -153,8 +156,8 @@ public object Aggregators {
         flattenReducingForNumbers(
             getReturnType = stdTypeConversion,
             statisticsParameters = mapOf<String, Any>(
-                Pair("skipNaN", skipNaN),
-                Pair("ddof", ddof),
+                ("skipNaN" to skipNaN),
+                ("ddof" to ddof),
             ),
             reducer = { type ->
                 std(type, skipNaN, ddof)
@@ -168,7 +171,7 @@ public object Aggregators {
         twoStepReducingForNumbers(
             getReturnType = meanTypeConversion,
             statisticsParameters = mapOf<String, Any>(
-                Pair("skipNaN", skipNaN),
+                ("skipNaN" to skipNaN),
             ),
             reducer = { type ->
                 mean(type, skipNaN)
@@ -211,8 +214,8 @@ public object Aggregators {
                 reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
                 indexOfResult = { type -> indexOfPercentile(percentile, type, skipNaN) },
                 statisticsParameters = mapOf<String, Any>(
-                    Pair("skipNaN", skipNaN),
-                    Pair("percentile", percentile),
+                    ("skipNaN" to skipNaN),
+                    ("percentile" to percentile),
                 ),
             )
         }
@@ -242,7 +245,7 @@ public object Aggregators {
                 getReturnType = medianConversion,
                 reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
                 indexOfResult = { type -> indexOfMedian(type, skipNaN) },
-                statisticsParameters = mapOf<String, Any>(Pair("skipNaN", skipNaN)),
+                statisticsParameters = mapOf<String, Any>("skipNaN" to skipNaN),
             )
         }
 
@@ -253,7 +256,7 @@ public object Aggregators {
     public val sum: AggregatorOptionSwitch1<Boolean, Number, Number> by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(
             getReturnType = sumTypeConversion,
-            statisticsParameters = mapOf<String, Any>(Pair("skipNaN", skipNaN)),
+            statisticsParameters = mapOf<String, Any>("skipNaN" to skipNaN),
             reducer = { type ->
                 sum(type, skipNaN)
             },
