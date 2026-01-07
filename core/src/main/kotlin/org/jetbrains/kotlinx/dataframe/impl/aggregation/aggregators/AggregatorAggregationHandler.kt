@@ -35,20 +35,18 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
         if (column is ValueColumnInternal<*>) {
             // cache check, cache is dynamically created
             val aggregator = this.aggregator ?: throw IllegalStateException("Aggregator is required")
-            val desiredStatisticNotConsideringParameters = column.statistics.getOrPut(aggregator.name) {
-                mutableMapOf<Map<String, Any>, StatisticResult>()
-            }
-            // can't compare maps whose Values are Any? -> ParameterValue instead
-            val desiredStatistic = desiredStatisticNotConsideringParameters[aggregator.statisticsParameters]
-            // if desiredStatistic is null, statistic was never calculated
+            val statisticName = aggregator.name
+            val parameters = aggregator.statisticsParameters
+            val desiredStatistic = column.getStatisticCacheOrNull(statisticName, parameters)
+            // if desiredStatistic is null, statistic was never calculated.
             if (desiredStatistic != null) {
                 return desiredStatistic.value as Return
             }
-            val statistic = aggregateSequence(
+            val statisticValue = aggregateSequence(
                 values = column.asSequence(),
                 valueType = column.type().toValueType(),
             )
-            desiredStatisticNotConsideringParameters[aggregator.statisticsParameters] = StatisticResult(statistic)
+            column.putStatisticCache(statisticName, parameters, StatisticResult(statisticValue))
             return aggregateSingleColumn(column)
         }
         return aggregateSequence(

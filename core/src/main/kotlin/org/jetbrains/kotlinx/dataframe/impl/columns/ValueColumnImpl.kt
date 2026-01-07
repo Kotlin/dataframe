@@ -12,8 +12,12 @@ import kotlin.reflect.full.withNullability
 internal value class StatisticResult(val value: Any?)
 
 internal interface ValueColumnInternal<T> : ValueColumn<T> {
-    val statistics: MutableMap<String, MutableMap<Map<String, Any>, StatisticResult>>
+    fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult)
+
+    fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult?
 }
+
+internal fun <T> ValueColumn<T>.internal() = this as ValueColumnInternal<T>
 
 internal open class ValueColumnImpl<T>(
     values: List<T>,
@@ -57,7 +61,16 @@ internal open class ValueColumnImpl<T>(
 
     override fun forceResolve() = ResolvingValueColumn(this)
 
-    override val statistics = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
+    private val statisticsCache = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
+
+    override fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult) {
+        statisticsCache.getOrPut(statName) {
+            mutableMapOf<Map<String, Any>, StatisticResult>()
+        }[arguments] = value
+    }
+
+    override fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult? =
+        statisticsCache[statName]?.get(arguments)
 }
 
 internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
@@ -82,5 +95,14 @@ internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
 
     override fun hashCode(): Int = source.hashCode()
 
-    override val statistics = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
+    private val statisticsCache = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
+
+    override fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult) {
+        statisticsCache.getOrPut(statName) {
+            mutableMapOf<Map<String, Any>, StatisticResult>()
+        }[arguments] = value
+    }
+
+    override fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult? =
+        statisticsCache[statName]?.get(arguments)
 }
