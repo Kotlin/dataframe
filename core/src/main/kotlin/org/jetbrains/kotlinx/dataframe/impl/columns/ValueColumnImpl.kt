@@ -17,6 +17,8 @@ internal interface ValueColumnInternal<T> : ValueColumn<T> {
     fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult?
 }
 
+internal fun <T> ValueColumn<T>.internalValueColumn() = this as ValueColumnInternal<T>
+
 internal open class ValueColumnImpl<T>(
     values: List<T>,
     name: String,

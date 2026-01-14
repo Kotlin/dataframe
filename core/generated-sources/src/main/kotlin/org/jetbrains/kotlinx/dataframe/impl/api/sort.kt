@@ -16,6 +16,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
@@ -114,7 +116,20 @@ internal class SortColumnDescriptor<C>(
     val column: ValueColumn<C>,
     val direction: SortDirection = SortDirection.Asc,
     val nullsLast: Boolean = false,
-) : ValueColumn<C> by column
+) : ValueColumn<C> by column,
+    ValueColumnInternal<C> {
+
+    private val statisticsCache = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
+
+    override fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult) {
+        statisticsCache.getOrPut(statName) {
+            mutableMapOf<Map<String, Any>, StatisticResult>()
+        }[arguments] = value
+    }
+
+    override fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult? =
+        statisticsCache[statName]?.get(arguments)
+}
 
 internal enum class SortDirection { Asc, Desc }
 

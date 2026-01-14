@@ -8,6 +8,7 @@ import kotlin.reflect.KType
 internal class ValueColumnWithParent<T>(override val parent: ColumnGroup<*>, override val source: ValueColumn<T>) :
     ColumnWithParent<T>,
     ValueColumn<T> by source,
+    ValueColumnInternal<T>,
     DataColumnInternal<T> {
 
     override fun equals(other: Any?) = source.checkEquals(other)
@@ -29,4 +30,15 @@ internal class ValueColumnWithParent<T>(override val parent: ColumnGroup<*>, ove
         ValueColumnWithParent(parent, source.internal().changeType(type).asValueColumn())
 
     override fun addParent(parent: ColumnGroup<*>) = source.addParent(parent)
+
+    private val statisticsCache = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
+
+    override fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult) {
+        statisticsCache.getOrPut(statName) {
+            mutableMapOf<Map<String, Any>, StatisticResult>()
+        }[arguments] = value
+    }
+
+    override fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult? =
+        statisticsCache[statName]?.get(arguments)
 }
