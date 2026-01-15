@@ -71,6 +71,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] this [ColumnPath] points to.
      */
+    @Interpretable("ColumnPathInvokeTyped")
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
 
     /**
@@ -286,6 +287,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * "myColumn"["myNestedColumn"]["myDoublyNestedColumn"]<NestedColumnType>()
      * ```
      */
+    @Interpretable("StringGetColumn")
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
 
     /**
@@ -293,5 +295,6 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * `"myColumn"["myNestedColumn"]["myDoublyNestedColumn"]` as alternative to
      * [pathOf]`("myColumn", "myNestedColumn", "myDoublyNestedColumn")`
      */
+    @Interpretable("ColumnPathGetColumn")
     public operator fun ColumnPath.get(column: String): ColumnPath = this + column
 }
