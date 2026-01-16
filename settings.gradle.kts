@@ -4,6 +4,15 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "dataframe"
 
+pluginManagement {
+    includeBuild("build-logic")
+    includeBuild("build-settings-logic")
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
+
 // treated as a separate project with its own Kotlin version, etc.
 includeBuild("plugins/keywords-generator")
 
@@ -35,7 +44,13 @@ include("examples:idea-examples:unsupported-data-sources:hibernate")
 include("examples:idea-examples:unsupported-data-sources:spark")
 include("examples:idea-examples:unsupported-data-sources:multik")
 include("examples:idea-examples:spark-parquet-dataframe")
-includeBuild("examples/kotlin-dataframe-plugin-gradle-example")
+
+//includeBuild("examples/projects/kotlin-dataframe-plugin-gradle-example")
+//
+//includeBuild("./examples/projects/dev/kotlin-dataframe-plugin-gradle-example") {
+//    name = "kotlin-dataframe-plugin-gradle-example-dev"
+//}
+
 includeBuild("examples/android-example")
 
 val jupyterApiTCRepo: String by settings
@@ -47,12 +62,7 @@ dependencyResolutionManagement {
     }
 }
 
-pluginManagement {
-    repositories {
-        mavenLocal()
-        gradlePluginPortal()
-    }
-}
 plugins {
+    id("dfsettings.base")
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }

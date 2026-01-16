@@ -1,21 +1,4 @@
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.exclude
-import org.gradle.kotlin.dsl.implementation
-import org.gradle.kotlin.dsl.invoke
-import org.gradle.kotlin.dsl.java
-import org.gradle.kotlin.dsl.korro
-import org.gradle.kotlin.dsl.kotlin
-import org.gradle.kotlin.dsl.libs
-import org.gradle.kotlin.dsl.main
-import org.gradle.kotlin.dsl.projects
-import org.gradle.kotlin.dsl.repositories
-import org.gradle.kotlin.dsl.runKtlintCheckOverMainSourceSet
-import org.gradle.kotlin.dsl.runKtlintCheckOverTestSourceSet
-import org.gradle.kotlin.dsl.runKtlintFormatOverMainSourceSet
-import org.gradle.kotlin.dsl.runKtlintFormatOverTestSourceSet
-import org.gradle.kotlin.dsl.sourceSets
-import org.gradle.kotlin.dsl.test
-import org.gradle.kotlin.dsl.testImplementation
+import dfbuild.localDataFrameModuleDependencies
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -28,6 +11,7 @@ plugins {
 //        alias(kover)
         alias(ksp)
     }
+    id("dfbuild.local-dataframe-compiler-plugin")
 }
 
 repositories {
@@ -35,50 +19,23 @@ repositories {
     mavenLocal() // for local development
 }
 
-val dependentProjects = with(projects) {
-    listOf(
-        core,
-        dataframeArrow,
-        dataframeExcel,
-        dataframeJdbc,
-        dataframeCsv,
-        dataframeJson,
-    )
-}.map { project(it.path) }
-
-tasks.withType<KotlinCompile> {
-    dependentProjects.forEach {
-        dependsOn("${it.path}:jar")
-    }
-}
-
 tasks.withType<KotlinCompile>().configureEach {
     friendPaths.from(project(projects.core.path).projectDir)
 }
 
-// get the output of the instrumentedJars configuration, aka the jar-files of the compiled modules
-// all modules with jar-task have this artifact in the DataFrame project
-val dependentProjectJarPaths = dependentProjects.map {
-    it.configurations
-        .getByName("instrumentedJars")
-        .artifacts.single()
-        .file.absolutePath
-        .replace(File.separatorChar, '/')
-}
+localDataFrameModuleDependencies(
+    with(projects) {
+        listOf(
+            dataframeArrow,
+            dataframeExcel,
+            dataframeJdbc,
+            dataframeCsv,
+            dataframeJson,
+        )
+    }.map { project(it.path) },
+)
 
 dependencies {
-    runtimeOnly(projects.dataframe) // Must depend on jars for the compiler plugin to work!
-    implementation(files(dependentProjectJarPaths))
-
-    // include api() dependencies from dependent projects, as they are not included in the jars
-    dependentProjects.forEach {
-        it.configurations.getByName("api").dependencies.forEach { dep ->
-            if (dep is ExternalModuleDependency) {
-                implementation("${dep.group}:${dep.name}:${dep.version ?: "+"}")
-            }
-        }
-    }
-
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
