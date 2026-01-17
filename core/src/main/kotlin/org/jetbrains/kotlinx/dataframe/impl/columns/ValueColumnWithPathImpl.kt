@@ -9,8 +9,7 @@ internal class ValueColumnWithPathImpl<T> internal constructor(
     override val data: ValueColumn<T>,
     override val path: ColumnPath,
 ) : ColumnWithPath<T>,
-    ValueColumn<T> by data,
-    ValueColumnInternal<T> {
+    ValueColumnInternal<T> by data.internalValueColumn() {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T> = this
 
@@ -22,15 +21,4 @@ internal class ValueColumnWithPathImpl<T> internal constructor(
         }
 
     override fun path() = path
-
-    private val statisticsCache = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
-
-    override fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult) {
-        statisticsCache.getOrPut(statName) {
-            mutableMapOf<Map<String, Any>, StatisticResult>()
-        }[arguments] = value
-    }
-
-    override fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult? =
-        statisticsCache[statName]?.get(arguments)
 }
