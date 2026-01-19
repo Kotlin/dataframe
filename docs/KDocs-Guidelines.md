@@ -117,7 +117,7 @@ For the non-trivial operations, write a detailed description of the operation,
 describe method behavior and resulting value.
 
 For complex operations, write that this is only the first step of the operation,
-and it should be continued with other methods. lso add a note about the [operation grammar](#grammar) in this case.
+and it should be continued with other methods. Also add a note about the [operation grammar](#grammar) in this case.
 For example (from the `insert` KDoc):
 
 ```
@@ -219,13 +219,67 @@ for simple operations, it's enough to write a short KDoc.
 
 However, if you want to reuse some common parts of KDocs 
 (for example, for different overloads of the same method or very similar methods),
-it's better to use some helper interfaces. Here's a standard structure for them:
+it's better to use some helper interfaces.
+
+Complex operations 
+
+Here's a standard structure for them:
 
 ```kotlin
+// Main KDoc helper interface
 
+/**
+ * (First line)
+ * 
+ * (Body)
+ * 
+ * (Documentation website link)
+ * 
+ * (See also section)
+ */
+internal interface ~OperationName~Docs {
+
+    // `SelectingColumns` helper KDoc with this operation in examples
+    // - for operations with columns selection
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [Set~OperationName~OperationArg]}
+     */
+    interface ~OperationName~Options
+
+    // Operation Grammar for complex operations
+    /**
+     * ## ~OperationName~ Operation Grammar
+     * ...
+     */
+    interface Grammar
+}
+
+// Set operation in [SelectingColumns] examples (in [SelectingColumns.Dsl] and so on)
+/** {@set [SelectingColumns.OPERATION] [~operationName~][~operation~]} */
+@ExcludeFromSources
+private interface Set~OperationName~OperationArg
+
+// Common KDoc part for different overloads of the same method
+/**
+ * {@include [~OperationName~Docs]}
+ * ### This ~OperationName~ Overload
+ */
+@ExcludeFromSources
+private interface Common~OperationName~Docs
+
+/**
+ * (Include common docs)
+ * @include [Common~OperationName~Docs]
+ * 
+ * (Columns selection information)
+ * @include [SelectingColumns.Dsl] {@include [Set~OperationName~OperationArg]}
+ * 
+ * (Examples section)
+ * 
+ * (Parameters and return section)
+ */
+public fun <T, C> DataFrame<T>.operation(columns: ColumnsSelector<T, C>)
 ```
 
-### Grammar
-
-
-### Selecting options
+For more information, see [KoDEx Conventions in DataFrame](../KDOC_PREPROCESSING.md#kodex-conventions-in-dataframe).
