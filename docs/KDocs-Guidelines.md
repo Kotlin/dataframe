@@ -2,6 +2,18 @@
 
 This document outlines the guidelines for writing KDocs in the Kotlin DataFrame project.
 
+<!-- TOC start -->
+
+* [The most important advice](#the-most-important-advice) 
+* [KoDEx](#kodex)
+    *[Reuse Common Parts](#reuse-common-parts)
+* [What should be documented?](#what-should-be-documented)
+* [Kotlin DataFrame Operations KDoc Structure](#kotlin-dataframe-operations-kdoc-structure)
+    + [General Template](#general-template)
+* [Helper KDoc Interfaces Structure](#helper-kdoc-interfaces-structure)
+
+<!-- TOC end -->
+
 ## The most important advice
 
 Please never write KDocs from scratch without a necessity!
