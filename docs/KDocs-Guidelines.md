@@ -116,7 +116,7 @@ Should start with a verb. Usually "returns" or "creates" for operations that ret
 For the non-trivial operations, write a detailed description of the operation, 
 describe method behavior and resulting value.
 
-For complex operations, write that this is only the first step of the operation,
+For complex operations, in the KDoc of the initial method write that this is only the first step of the operation,
 and it should be continued with other methods. Also add a note about the [operation grammar](#grammar) in this case.
 For example (from the `insert` KDoc):
 
@@ -133,6 +133,9 @@ For example (from the `insert` KDoc):
  * 
  * Check out [Grammar].
 ```
+
+The next methods in the chain may be finalizing or intermediate steps - write about it explicitly.
+Remember to add a link to the initial method and [operation grammar](#grammar) in all of them.
 
 If the method uses columns selection, add a note about nested columns and column groups:
 
@@ -214,6 +217,8 @@ Wrap parameter names into `[]` for better readability.
 
 ## Helper KDoc Interfaces Structure
 
+For more information, see [KoDEx Conventions in DataFrame](../KDOC_PREPROCESSING.md#kodex-conventions-in-dataframe).
+
 Sometimes, you do not need helper interfaces with KoDEx temples at all -
 for simple operations, it's enough to write a short KDoc.
 
@@ -247,7 +252,7 @@ internal interface ~OperationName~Docs {
      */
     interface ~OperationName~Options
 
-    // Operation Grammar for complex operations
+    // Operation Grammar - for the initial method of the complex operations
     /**
      * ## ~OperationName~ Operation Grammar
      * ...
@@ -281,5 +286,3 @@ private interface Common~OperationName~Docs
  */
 public fun <T, C> DataFrame<T>.operation(columns: ColumnsSelector<T, C>)
 ```
-
-For more information, see [KoDEx Conventions in DataFrame](../KDOC_PREPROCESSING.md#kodex-conventions-in-dataframe).
