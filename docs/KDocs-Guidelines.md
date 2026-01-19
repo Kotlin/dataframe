@@ -4,8 +4,8 @@ This document outlines the guidelines for writing KDocs in the Kotlin DataFrame 
 
 ## The most important advice
 
-Please never write this all from scratch!
-Find existing KDocs for the similar operation and reuse it.
+Please never write KDocs from scratch without a necessity!
+Find existing KDocs for the similar operation or other entity and reuse it.
 However, take its specific into account.
 
 And don't be afraid to deviate from the rules or add something new –
@@ -14,8 +14,10 @@ the most important thing is to help users to understand the library better!
 ## KoDEx
 
 We use [KoDEx](https://github.com/Jolanrensen/KoDEx) KDocs preprocessor.
-It adds several useful utilities for writing KDocs. Please read about 
-the [KoDEx notation](https://github.com/Jolanrensen/KoDEx/wiki/Notation) before working with Kotlin DataFrame KDocs.
+It adds several useful utilities for writing KDocs. 
+
+Please read about 
+the [KDocs preprocessing using KoDEx](../KDOC_PREPROCESSING.md) before working with Kotlin DataFrame KDocs.
 
 Install the [KoDEx plugin for IDEA](https://plugins.jetbrains.com/plugin/27473---kodex---kotlin-documentation-extensions)
 for correct KDocs display inside the IntelliJ IDEA.
@@ -24,8 +26,9 @@ for correct KDocs display inside the IntelliJ IDEA.
 
 One of the best utilities of KoDEx is the ability to reuse common parts of KDocs.
 This can be done by using the 
-[`@include` tag](https://github.com/Jolanrensen/KoDEx/wiki/Notation#include-including-content-from-other-kdocs), 
-which allows you to include a KDoc of another class. 
+[`@include` tag](https://github.com/Jolanrensen/KoDEx/wiki/Notation#include-including-content-from-other-kdocs),
+which allows you to include a KDoc for another documentable element.
+This could be a class, an interface, a typealias, and so on.
 
 There are a lot of interfaces in the project that are only used for including their KDocs
 to other KDocs. Such interfaces are marked with `@ExcludeFromSources` 
@@ -33,8 +36,7 @@ and not included in the sources after the compilation (make sure you are not ref
 i.e., only use it inside the `@include`). For example, 
 [`ColumnPathCreation` interface](https://github.com/Kotlin/dataframe/blob/master/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ColumnPathCreation.ktc)
 has a KDoc which describes column path creation behavior. The whole file is excluded from sources,
-but the KDoc is included in other KDocs. 
-z
+but the KDoc is included in other KDocs.
 Also, you can use 
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variables value in common parts. This is especially useful for 
@@ -42,7 +44,7 @@ writing examples of methods with similar usage but with different names.
 
 ## What should be documented?
 
-**All public API should be documented!** Our goal is 100% public functions, classes and variable KDocs coverage.
+**All public API should be documented!** Our goal is 100% public functions, classes, and variable KDocs coverage.
 Some part of public API is not intended for end users, but can be used in Compiler Plugin or potential
 KDF extension libraries. These methods should have a small KDocs as well.
 
@@ -247,10 +249,10 @@ internal interface ~OperationName~Docs {
     // `SelectingColumns` helper KDoc with this operation in examples
     // - for operations with columns selection
     /**
-     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @comment Version of [SelectingColumns] with correctly filled in examples
      * @include [SelectingColumns] {@include [Set~OperationName~OperationArg]}
      */
-    interface ~OperationName~Options
+    typealias ~OperationName~Options = Nothing
 
     // Operation Grammar - for the initial method of the complex operations
     /**
@@ -261,13 +263,13 @@ internal interface ~OperationName~Docs {
 }
 
 // Set operation in [SelectingColumns] examples (in [SelectingColumns.Dsl] and so on)
-/** {@set [SelectingColumns.OPERATION] [~operationName~][~operation~]} */
+/** @set [SelectingColumns.OPERATION] [~operationName~][~operation~] */
 @ExcludeFromSources
-private interface Set~OperationName~OperationArg
+private typealias Set~OperationName~OperationArg = Nothing
 
 // Common KDoc part for different overloads of the same method
 /**
- * {@include [~OperationName~Docs]}
+ * @include [~OperationName~Docs]
  * ### This ~OperationName~ Overload
  */
 @ExcludeFromSources
