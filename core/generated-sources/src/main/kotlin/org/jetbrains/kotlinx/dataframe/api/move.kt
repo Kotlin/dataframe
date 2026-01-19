@@ -47,6 +47,7 @@ import kotlin.reflect.KProperty
  * destination of the selected columns using methods such as [to][MoveClause.to], [toStart][MoveClause.toStart],
  * [toEnd][MoveClause.toEnd], [into][MoveClause.into], [intoIndexed][MoveClause.intoIndexed], [toTop][MoveClause.toTop],
  * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame] with updated columns structure.
+ *
  * Check out [Grammar].
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -179,6 +180,7 @@ internal interface Move {
  * destination of the selected columns using methods such as [to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
  * [toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
  * [after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -229,6 +231,7 @@ public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<
  * destination of the selected columns using methods such as [to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
  * [toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
  * [after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
