@@ -28,7 +28,7 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
-     * Calls [aggregateSequence]. It tries to exploit a cache for statistics which is proper of
+     * Calls [aggregateSequence]. It tries to exploit a cache for statistics which can be accessed by
      * [ValueColumnInternal]
      */
     public fun aggregateSingleColumn(column: DataColumn<Value?>): Return {

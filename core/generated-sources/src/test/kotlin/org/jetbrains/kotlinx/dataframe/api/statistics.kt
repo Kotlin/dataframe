@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import org.junit.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -954,5 +956,35 @@ class StatisticsTests {
         percentile34 shouldBe 5200.000000000003
         val percentile35 = res3["name"] as String
         percentile35 shouldBe "Charlie"
+    }
+
+    @Test
+    fun `statistics cache for ValueColumn`() {
+        // test idea: put in the cache nonsense values. If stats functions return them values, no computation was done
+        val valueColumn = columnOf(1, 4, 3, 8) as ValueColumnInternal
+        // max
+        valueColumn.putStatisticCache("max", mapOf("skipNaN" to false), StatisticResult(20))
+        valueColumn.max(false) shouldBe 20
+        // min
+        valueColumn.putStatisticCache("min", mapOf("skipNaN" to false), StatisticResult(20))
+        valueColumn.min(false) shouldBe 20
+        // mean
+        valueColumn.putStatisticCache("mean", mapOf("skipNaN" to false), StatisticResult(20))
+        valueColumn.mean(false) shouldBe 20
+        // sum
+        valueColumn.putStatisticCache("sum", mapOf("skipNaN" to false), StatisticResult(0))
+        valueColumn.sum() shouldBe 0
+        // std
+        valueColumn.putStatisticCache("std", mapOf("skipNaN" to false, "ddof" to 1), StatisticResult(100))
+        valueColumn.std(false, 1) shouldBe 100
+        // percentile
+        valueColumn.putStatisticCache(
+            "percentile", mapOf("skipNaN" to false, "percentile" to 30.0),
+            StatisticResult(100.0),
+        )
+        valueColumn.percentile(30.0, false) shouldBe 100.0
+        // median
+        valueColumn.putStatisticCache("median", mapOf("skipNaN" to false), StatisticResult(20.0))
+        valueColumn.median(false) shouldBe 20.0
     }
 }
