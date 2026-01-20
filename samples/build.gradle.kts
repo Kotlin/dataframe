@@ -30,11 +30,6 @@ plugins {
     }
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal() // for local development
-}
-
 val dependentProjects = with(projects) {
     listOf(
         core,
