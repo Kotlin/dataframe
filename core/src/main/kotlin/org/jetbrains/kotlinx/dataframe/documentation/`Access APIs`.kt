@@ -1,15 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.AnyApiLinks
-
-/**
+x/**
  * ## Access APIs
  *
- * By nature, dataframes are dynamic objects, column labels depend on the input source and also new columns could be added
- * or deleted while wrangling. Kotlin, in contrast, is a statically typed language and all types are defined and verified
- * ahead of execution. That's why creating a flexible, handy, and, at the same time, safe API to a dataframe is tricky.
+ * By nature, dataframes are dynamic objects, column labels depend on the input source,
+ * and also new columns could be added
+ * or deleted while wrangling.
+ * Kotlin, in contrast, is a statically typed language,
+ * and all types are defined and verified
+ * ahead of execution. That's why creating a flexible, handy, and,
+ * at the same time, safe API to a dataframe is tricky.
  *
- * In `Kotlin DataFrame` we provide four different ways to access columns, and, while they're essentially different, they
+ * In `Kotlin DataFrame` we provide four different ways to access columns,
+ * and, while they're essentially different, they
  * look pretty similar in the data wrangling DSL. These include:
  * @include [AnyApiLinks]
  *
@@ -17,7 +20,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.AnyApiLinks
  *
  * @comment We can link to here whenever we want to explain the different access APIs.
  */
-internal interface AccessApi {
+@Suppress("ClassName")
+internal interface `Access APIs` {
 
     /**
      * - {@include [ExtensionPropertiesApiLink]}
@@ -29,7 +33,7 @@ internal interface AccessApi {
 
     /**
      * String API.
-     * In this [AccessApi], columns are accessed by a [String] representing their name.
+     * In this [`Access APIs`], columns are accessed by a [String] representing their name.
      * Type-checking is done at runtime, name-checking too.
      *
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
@@ -44,7 +48,7 @@ internal interface AccessApi {
 
     /**
      * Column Accessors API.
-     * In this [AccessApi], every column has a descriptor;
+     * In this [`Access APIs`], every column has a descriptor;
      * a variable that represents its name and type.
      *
      * For more information: {@include [DocumentationUrls.AccessApis.ColumnAccessorsApi]}
@@ -54,12 +58,12 @@ internal interface AccessApi {
      */
     typealias ColumnAccessorsApi = Nothing
 
-    /** [Column Accessors API][AccessApi.ColumnAccessorsApi] */
+    /** [Column Accessors API][`Access APIs`.ColumnAccessorsApi] */
     typealias ColumnAccessorsApiLink = Nothing
 
     /**
      * KProperties API.
-     * In this [AccessApi], columns accessed by the
+     * In this [`Access APIs`], columns accessed by the
      * [`KProperty`](https://kotlinlang.org/docs/reflection.html#property-references)
      * of some class.
      * The name and type of column should match the name and type of property, respectively.
@@ -76,7 +80,7 @@ internal interface AccessApi {
 
     /**
      * Extension Properties API.
-     * In this [AccessApi], extension access properties are generated based on the dataframe schema.
+     * In this [`Access APIs`], extension access properties are generated based on the dataframe schema.
      * The name and type of properties are inferred from the name and type of the corresponding columns.
      *
      * For more information: {@include [DocumentationUrls.AccessApis.ExtensionPropertiesApi]}
@@ -90,5 +94,5 @@ internal interface AccessApi {
     typealias ExtensionPropertiesApiLink = Nothing
 }
 
-/** [Access API][AccessApi] */
+/** [Access API][`Access APIs`] */
 internal typealias AccessApiLink = Nothing

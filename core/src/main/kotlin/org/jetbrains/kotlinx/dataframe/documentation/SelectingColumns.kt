@@ -69,7 +69,7 @@ internal interface SelectingColumns {
      * in the DSL that is or can be resolved into one or more columns.
      *
      * #### NOTE:
-     * While you can use the {@include [AccessApi.StringApiLink]} and {@include [AccessApi.KPropertiesApiLink]}
+     * While you can use the {@include [`Access APIs`.StringApiLink]} and {@include [`Access APIs`.KPropertiesApiLink]}
      * in this DSL directly with any function, they are NOT valid return types for the
      * [Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
      * with a function like [`col("name")`][ColumnsSelectionDsl.col].
@@ -111,7 +111,7 @@ internal interface SelectingColumns {
      * in the DSL that is or can be resolved into a single column.
      *
      * #### NOTE:
-     * While you can use the {@include [AccessApi.StringApiLink]} and {@include [AccessApi.KPropertiesApiLink]}
+     * While you can use the {@include [`Access APIs`.StringApiLink]} and {@include [`Access APIs`.KPropertiesApiLink]}
      * in this DSL directly with any function, they are NOT valid return types for the
      * [Column Selector][ColumnSelector]/[Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
      * with a function like [`col("name")`][ColumnsSelectionDsl.col].
@@ -142,7 +142,7 @@ internal interface SelectingColumns {
 
     /**
      * Select columns using their [column names][String]
-     * ({@include [AccessApi.StringApiLink]}).
+     * ({@include [`Access APIs`.StringApiLink]}).
      */
     interface ColumnNames {
 
@@ -163,7 +163,7 @@ internal interface SelectingColumns {
 
     /**
      * Select columns using [column accessors][ColumnReference]
-     * ({@include [AccessApi.ColumnAccessorsApiLink]}).
+     * ({@include [`Access APIs`.ColumnAccessorsApiLink]}).
      */
     interface ColumnAccessors {
 
@@ -186,7 +186,7 @@ internal interface SelectingColumns {
     @ExcludeFromSources
     typealias ColumnAccessorsLink = Nothing
 
-    /** Select columns using [KProperties][KProperty] ({@include [AccessApi.KPropertiesApiLink]}). */
+    /** Select columns using [KProperties][KProperty] ({@include [`Access APIs`.KPropertiesApiLink]}). */
     interface KProperties {
 
         /**
