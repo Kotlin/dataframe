@@ -7,13 +7,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     `java-gradle-plugin`
     `kotlin-dsl`
-    id("com.github.gmazzo.buildconfig") version "5.5.1"
-}
-
-val kotlinPoetVersion: String by project
-
-repositories {
-    mavenCentral()
+    alias(libs.plugins.buildconfig)
 }
 
 buildConfig {
@@ -24,7 +18,7 @@ buildConfig {
 
 dependencies {
     compileOnly(kotlin("compiler-embeddable", kotlin.compilerVersion.get()))
-    implementation("com.squareup:kotlinpoet:$kotlinPoetVersion")
+    implementation(libs.kotlinpoet)
 }
 
 kotlin {

@@ -5,7 +5,6 @@ kotlinJupyter = "0.16.0-736"
 ktlint = "14.0.1"
 
 kotlin = "2.2.21"
-# make sure to sync manually with :plugins:keywords-generator module
 kotlinpoet = "2.2.0"
 
 dokka = "2.1.0"
