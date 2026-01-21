@@ -959,7 +959,7 @@ class StatisticsTests {
     }
 
     @Test
-    fun `statistics cache for ValueColumn`() {
+    fun `statistics cache for ValueColumn, stats functions read the cache`() {
         // test idea: put in the cache nonsense values. If stats functions return them values, no computation was done
         val valueColumn = columnOf(1, 4, 3, 8) as ValueColumnInternal
         // max
@@ -986,5 +986,33 @@ class StatisticsTests {
         // median
         valueColumn.putStatisticCache("median", mapOf("skipNaN" to false), StatisticResult(20.0))
         valueColumn.median(false) shouldBe 20.0
+    }
+
+    @Test
+    fun `statistics cache for ValueColumn, stats functions write to the cache`() {
+        val valueColumn = columnOf(3, 1, 2) as ValueColumnInternal
+        // max
+        valueColumn.max(false) shouldBe 3
+        valueColumn.getStatisticCacheOrNull("max", mapOf("skipNaN" to false))?.value shouldBe 3
+        // min
+        valueColumn.min(false) shouldBe 1
+        valueColumn.getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+        // mean
+        valueColumn.mean(false) shouldBe 2
+        valueColumn.getStatisticCacheOrNull("mean", mapOf("skipNaN" to false))?.value shouldBe 2
+        // sum
+        valueColumn.sum(false) shouldBe 6
+        valueColumn.getStatisticCacheOrNull("sum", mapOf("skipNaN" to false))?.value shouldBe 6
+        // std
+        valueColumn.std(false, 1) shouldBe 1.0
+        valueColumn.getStatisticCacheOrNull("std", mapOf("skipNaN" to false, "ddof" to 1))?.value shouldBe 1.0
+        // percentile
+        valueColumn.percentile(6.0, false) shouldBe 1.0
+        valueColumn.getStatisticCacheOrNull(
+            "percentile", mapOf("skipNaN" to false, "percentile" to 6.0),
+        )?.value shouldBe 1.0
+        // median
+        valueColumn.median(false) shouldBe 2
+        valueColumn.getStatisticCacheOrNull("median", mapOf("skipNaN" to false))?.value shouldBe 2
     }
 }
