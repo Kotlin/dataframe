@@ -144,7 +144,7 @@ in the code сompeltion!
 ![Code Completion](codeCompletion.png)
 
 However, note that after operations in which resulting columns cannot be inferred 
-by Compiler Plugin (for example, [`pivot`](pivot.md)),
+by the Compiler Plugin (for example, [`pivot`](pivot.md)),
 extension properties can't be inferred automatically either. For such operations, 
 you can use [`cast`](cast.md) to define a new data schema or use the String API. 
 
