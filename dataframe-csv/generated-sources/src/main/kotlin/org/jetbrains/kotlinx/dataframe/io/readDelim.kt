@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonReadDelimDocs
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COMPRESSION
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.DELIM_DELIMITER
@@ -28,10 +29,12 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
+import org.jetbrains.kotlinx.dataframe.util.READ_DELIM_BINARY_COMPATIBILITY
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
+import java.nio.charset.Charset
 import java.nio.file.Path
 import kotlin.io.path.inputStream
 
@@ -84,6 +87,11 @@ import kotlin.io.path.inputStream
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -153,6 +161,7 @@ import kotlin.io.path.inputStream
  */
 public fun DataFrame.Companion.readDelim(
     path: Path,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -173,6 +182,7 @@ public fun DataFrame.Companion.readDelim(
     path.inputStream().use {
         readDelimImpl(
             inputStream = it,
+            charset = charset,
             delimiter = delimiter,
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
@@ -236,6 +246,11 @@ public fun DataFrame.Companion.readDelim(
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -305,6 +320,7 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     file: File,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -325,6 +341,7 @@ public fun DataFrame.Companion.readDelim(
     FileInputStream(file).use {
         readDelimImpl(
             inputStream = it,
+            charset = charset,
             delimiter = delimiter,
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
@@ -388,6 +405,11 @@ public fun DataFrame.Companion.readDelim(
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -457,6 +479,7 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     url: URL,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -477,6 +500,7 @@ public fun DataFrame.Companion.readDelim(
     catchHttpResponse(url) {
         readDelimImpl(
             inputStream = it,
+            charset = charset,
             delimiter = delimiter,
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
@@ -540,6 +564,11 @@ public fun DataFrame.Companion.readDelim(
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -609,6 +638,7 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     fileOrUrl: String,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -629,6 +659,7 @@ public fun DataFrame.Companion.readDelim(
     catchHttpResponse(asUrl(fileOrUrl = fileOrUrl)) {
         readDelimImpl(
             inputStream = it,
+            charset = charset,
             delimiter = delimiter,
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
@@ -686,12 +717,17 @@ public fun DataFrame.Companion.readDelim(
  *
  * [DataFrame.readDelimStr][readDelimStr]`("a,b,c", delimiter = ",")`
  *
- * @param inputStream Represents the file to read.
+ * @param inputStream Represents the file to read. Can be encoded in UTF-8 or ASCII.
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -765,6 +801,7 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     inputStream: InputStream,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -785,6 +822,7 @@ public fun DataFrame.Companion.readDelim(
 ): DataFrame<*> =
     readDelimImpl(
         inputStream = inputStream,
+        charset = charset,
         delimiter = delimiter,
         header = header,
         hasFixedWidthColumns = hasFixedWidthColumns,
@@ -803,3 +841,214 @@ public fun DataFrame.Companion.readDelim(
         compression = compression,
         adjustCsvSpecs = adjustCsvSpecs,
     )
+
+// region deprecations
+
+@Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readDelim(
+    path: Path,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(path),
+): DataFrame<*> =
+    readDelim(
+        path,
+        CHARSET,
+        delimiter,
+        header,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readDelim(
+    file: File,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(file),
+): DataFrame<*> =
+    readDelim(
+        file,
+        CHARSET,
+        delimiter,
+        header,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readDelim(
+    url: URL,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(url),
+): DataFrame<*> =
+    readDelim(
+        url,
+        CHARSET,
+        delimiter,
+        header,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readDelim(
+    fileOrUrl: String,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(fileOrUrl),
+): DataFrame<*> =
+    readDelim(
+        fileOrUrl,
+        CHARSET,
+        delimiter,
+        header,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readDelim(
+    inputStream: InputStream,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = COMPRESSION,
+    adjustCsvSpecs: AdjustCsvSpecs = ADJUST_CSV_SPECS,
+): DataFrame<*> =
+    readDelim(
+        inputStream,
+        CHARSET,
+        delimiter,
+        header,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+        adjustCsvSpecs,
+    )
+
+// endregion
