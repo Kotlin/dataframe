@@ -96,9 +96,9 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  */
 internal fun readDelimImpl(
     inputStream: InputStream,
-    charset: Charset?,
     delimiter: Char,
     header: List<String>,
+    charset: Charset?,
     hasFixedWidthColumns: Boolean,
     fixedColumnWidths: List<Int>,
     colTypes: Map<String, ColType>,
