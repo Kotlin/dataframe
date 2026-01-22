@@ -34,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COMPRESSION
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.FIXED_COLUMN_WIDTHS
@@ -61,17 +62,19 @@ import java.io.InputStream
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
+import java.nio.charset.Charset
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
-import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.Instant as DeprecatedInstant
+import kotlin.time.Instant as StdlibInstant
 
 /**
  * Implementation to read delimiter-separated data from an [InputStream] based on the Deephaven CSV library.
  *
  * @include [INPUT_STREAM_READ]
+ * @include [CHARSET]
  * @param delimiter The field delimiter character. The default is ',' for CSV, '\t' for TSV.
  * @include [HEADER]
  * @include [COL_TYPES]
@@ -92,6 +95,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  */
 internal fun readDelimImpl(
     inputStream: InputStream,
+    charset: Charset,
     delimiter: Char,
     header: List<String>,
     hasFixedWidthColumns: Boolean,
@@ -143,6 +147,7 @@ internal fun readDelimImpl(
             CsvReader.read(
                 /* specs = */ csvSpecs,
                 /* stream = */ decompressedInputStream.skippingBomCharacters(),
+                /* streamCharset = */ charset,
                 /* sinkFactory = */ ListSink.SINK_FACTORY,
             )
         } catch (e: CsvReaderException) {

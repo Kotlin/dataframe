@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DefaultNullStringsContentLink
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
+import java.nio.charset.Charset
 
 /**
  * Contains both the default values of csv/tsv parameters and the parameter KDocs.
@@ -42,7 +43,7 @@ internal object DelimParams {
      */
     interface FILE_OR_URL_READ
 
-    /** @param inputStream Represents the file to read. */
+    /** @param inputStream Represents the file to read. Can be encoded in UTF-8 or ASCII. */
     interface INPUT_STREAM_READ
 
     /** @param text The raw data to read in the form of a [String]. */
@@ -56,6 +57,12 @@ internal object DelimParams {
 
     /** @param writer The [Appendable] to write to. */
     interface WRITER_WRITE
+
+    /**
+     * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+     *   Default: [UTF-8][Charsets.UTF_8].
+     */
+    val CHARSET: Charset = Charsets.UTF_8
 
     /**
      * @param delimiter The field delimiter character. Default: ','.
