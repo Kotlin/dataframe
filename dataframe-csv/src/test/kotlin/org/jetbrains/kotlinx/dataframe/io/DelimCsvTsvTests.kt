@@ -116,9 +116,9 @@ class DelimCsvTsvTests {
         val df = DataFrame.readCsv(simpleCsv)
 
         DataFrame.readCsv(simpleCsvUtf16le) shouldBe df
-        DataFrame.readCsv(simpleCsvUtf16le, Charsets.UTF_16LE) shouldBe df
-        DataFrame.readCsv(simpleCsvUtf16le, Charsets.UTF_16BE) shouldNotBe df
-        DataFrame.readCsv(simpleCsvUtf16le, Charsets.UTF_8) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16le, charset = Charsets.UTF_16LE) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16le, charset = Charsets.UTF_16BE) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16le, charset = Charsets.UTF_8) shouldNotBe df
     }
 
     @Test
@@ -126,9 +126,9 @@ class DelimCsvTsvTests {
         val df = DataFrame.readCsv(simpleCsv)
 
         DataFrame.readCsv(simpleCsvUtf16leGz) shouldBe df
-        DataFrame.readCsv(simpleCsvUtf16leGz, Charsets.UTF_16LE) shouldBe df
-        DataFrame.readCsv(simpleCsvUtf16leGz, Charsets.UTF_16BE) shouldNotBe df
-        DataFrame.readCsv(simpleCsvUtf16leGz, Charsets.UTF_8) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16leGz, charset = Charsets.UTF_16LE) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leGz, charset = Charsets.UTF_16BE) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16leGz, charset = Charsets.UTF_8) shouldNotBe df
     }
 
     @Test
@@ -136,9 +136,9 @@ class DelimCsvTsvTests {
         val df = DataFrame.readCsv(simpleCsv)
 
         DataFrame.readCsv(simpleCsvUtf16leZip) shouldBe df
-        DataFrame.readCsv(simpleCsvUtf16leZip, Charsets.UTF_16LE) shouldBe df
-        DataFrame.readCsv(simpleCsvUtf16leZip, Charsets.UTF_16BE) shouldNotBe df
-        DataFrame.readCsv(simpleCsvUtf16leZip, Charsets.UTF_8) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16leZip, charset = Charsets.UTF_16LE) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leZip, charset = Charsets.UTF_16BE) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16leZip, charset = Charsets.UTF_8) shouldNotBe df
     }
 
     @Test

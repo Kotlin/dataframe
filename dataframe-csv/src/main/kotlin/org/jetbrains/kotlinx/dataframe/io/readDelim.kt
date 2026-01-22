@@ -55,9 +55,9 @@ import kotlin.io.path.inputStream
  */
 public fun DataFrame.Companion.readDelim(
     path: Path,
-    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -76,9 +76,9 @@ public fun DataFrame.Companion.readDelim(
     path.inputStream().use {
         readDelimImpl(
             inputStream = it,
-            charset = charset,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -108,9 +108,9 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     file: File,
-    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -129,9 +129,9 @@ public fun DataFrame.Companion.readDelim(
     FileInputStream(file).use {
         readDelimImpl(
             inputStream = it,
-            charset = charset,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -161,9 +161,9 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     url: URL,
-    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -182,9 +182,9 @@ public fun DataFrame.Companion.readDelim(
     catchHttpResponse(url) {
         readDelimImpl(
             inputStream = it,
-            charset = charset,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -214,9 +214,9 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     fileOrUrl: String,
-    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -235,9 +235,9 @@ public fun DataFrame.Companion.readDelim(
     catchHttpResponse(asUrl(fileOrUrl = fileOrUrl)) {
         readDelimImpl(
             inputStream = it,
-            charset = charset,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -269,9 +269,9 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     inputStream: InputStream,
-    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -290,9 +290,9 @@ public fun DataFrame.Companion.readDelim(
 ): DataFrame<*> =
     readDelimImpl(
         inputStream = inputStream,
-        charset = charset,
         delimiter = delimiter,
         header = header,
+        charset = charset,
         hasFixedWidthColumns = hasFixedWidthColumns,
         fixedColumnWidths = fixedColumnWidths,
         colTypes = colTypes,
@@ -334,9 +334,9 @@ public fun DataFrame.Companion.readDelim(
 ): DataFrame<*> =
     readDelim(
         path,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,
@@ -375,9 +375,9 @@ public fun DataFrame.Companion.readDelim(
 ): DataFrame<*> =
     readDelim(
         file,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,
@@ -416,9 +416,9 @@ public fun DataFrame.Companion.readDelim(
 ): DataFrame<*> =
     readDelim(
         url,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,
@@ -457,9 +457,9 @@ public fun DataFrame.Companion.readDelim(
 ): DataFrame<*> =
     readDelim(
         fileOrUrl,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,
@@ -499,9 +499,9 @@ public fun DataFrame.Companion.readDelim(
 ): DataFrame<*> =
     readDelim(
         inputStream,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,
