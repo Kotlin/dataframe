@@ -49,9 +49,9 @@ import kotlin.io.path.inputStream
  */
 public fun DataFrame.Companion.readCsv(
     path: Path,
-    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -70,9 +70,9 @@ public fun DataFrame.Companion.readCsv(
     path.inputStream().use {
         readDelimImpl(
             inputStream = it,
-            charset = charset,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -102,9 +102,9 @@ public fun DataFrame.Companion.readCsv(
  */
 public fun DataFrame.Companion.readCsv(
     file: File,
-    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -123,9 +123,9 @@ public fun DataFrame.Companion.readCsv(
     FileInputStream(file).use {
         readDelimImpl(
             inputStream = it,
-            charset = charset,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -155,9 +155,9 @@ public fun DataFrame.Companion.readCsv(
  */
 public fun DataFrame.Companion.readCsv(
     url: URL,
-    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -176,9 +176,9 @@ public fun DataFrame.Companion.readCsv(
     catchHttpResponse(url) {
         readDelimImpl(
             inputStream = it,
-            charset = charset,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -208,9 +208,9 @@ public fun DataFrame.Companion.readCsv(
  */
 public fun DataFrame.Companion.readCsv(
     fileOrUrl: String,
-    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -229,9 +229,9 @@ public fun DataFrame.Companion.readCsv(
     catchHttpResponse(asUrl(fileOrUrl = fileOrUrl)) {
         readDelimImpl(
             inputStream = it,
-            charset = charset,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -263,9 +263,9 @@ public fun DataFrame.Companion.readCsv(
  */
 public fun DataFrame.Companion.readCsv(
     inputStream: InputStream,
-    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -284,9 +284,9 @@ public fun DataFrame.Companion.readCsv(
 ): DataFrame<*> =
     readDelimImpl(
         inputStream = inputStream,
-        charset = charset,
         delimiter = delimiter,
         header = header,
+        charset = charset,
         hasFixedWidthColumns = hasFixedWidthColumns,
         fixedColumnWidths = fixedColumnWidths,
         colTypes = colTypes,
@@ -328,9 +328,9 @@ public fun DataFrame.Companion.readCsv(
 ): DataFrame<*> =
     readCsv(
         path,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,
@@ -369,9 +369,9 @@ public fun DataFrame.Companion.readCsv(
 ): DataFrame<*> =
     readCsv(
         file,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,
@@ -410,9 +410,9 @@ public fun DataFrame.Companion.readCsv(
 ): DataFrame<*> =
     readCsv(
         url,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,
@@ -451,9 +451,9 @@ public fun DataFrame.Companion.readCsv(
 ): DataFrame<*> =
     readCsv(
         fileOrUrl,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,
@@ -493,9 +493,9 @@ public fun DataFrame.Companion.readCsv(
 ): DataFrame<*> =
     readCsv(
         inputStream,
-        CHARSET,
         delimiter,
         header,
+        CHARSET,
         hasFixedWidthColumns,
         fixedColumnWidths,
         colTypes,

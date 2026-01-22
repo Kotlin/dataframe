@@ -21,29 +21,36 @@ internal object DelimParams {
 
     /**
      * @param path The file path to read.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface PATH_READ
 
     /**
      * @param file The file to read.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface FILE_READ
 
     /**
      * @param url The URL from which to fetch the data.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface URL_READ
 
     /**
      * @param fileOrUrl The file path or URL to read the data from.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface FILE_OR_URL_READ
 
-    /** @param inputStream Represents the file to read. Can be encoded in UTF-8 or ASCII. */
+    /**
+     * @param inputStream Represents the file to read.
+     *   Use [charset\] to specify the encoding.
+     */
     interface INPUT_STREAM_READ
 
     /** @param text The raw data to read in the form of a [String]. */
