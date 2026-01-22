@@ -3,6 +3,7 @@
 package org.jetbrains.kotlinx.dataframe.documentationCsv
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import java.io.File
 import java.io.InputStream
@@ -83,6 +84,7 @@ internal interface CommonReadDelimDocs {
     interface DelimDocs
 
     /**
+     * @include [CHARSET]
      * @include [DelimParams.HEADER]
      * @include [DelimParams.HAS_FIXED_WIDTH_COLUMNS]
      * @include [DelimParams.FIXED_COLUMN_WIDTHS]
