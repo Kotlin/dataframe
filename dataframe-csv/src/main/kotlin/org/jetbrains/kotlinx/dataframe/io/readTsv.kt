@@ -49,7 +49,7 @@ import kotlin.io.path.inputStream
  */
 public fun DataFrame.Companion.readTsv(
     path: Path,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -102,7 +102,7 @@ public fun DataFrame.Companion.readTsv(
  */
 public fun DataFrame.Companion.readTsv(
     file: File,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -155,7 +155,7 @@ public fun DataFrame.Companion.readTsv(
  */
 public fun DataFrame.Companion.readTsv(
     url: URL,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -208,7 +208,7 @@ public fun DataFrame.Companion.readTsv(
  */
 public fun DataFrame.Companion.readTsv(
     fileOrUrl: String,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -263,7 +263,7 @@ public fun DataFrame.Companion.readTsv(
  */
 public fun DataFrame.Companion.readTsv(
     inputStream: InputStream,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,

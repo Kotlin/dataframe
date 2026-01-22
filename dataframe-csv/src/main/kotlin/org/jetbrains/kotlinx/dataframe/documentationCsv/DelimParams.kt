@@ -60,9 +60,12 @@ internal object DelimParams {
 
     /**
      * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
-     *   Default: [UTF-8][Charsets.UTF_8].
+     *   Default: `null`
+     *
+     *   If `null`, the Charset will be read from the BOM of the provided input,
+     *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
      */
-    val CHARSET: Charset = Charsets.UTF_8
+    val CHARSET: Charset? = null
 
     /**
      * @param delimiter The field delimiter character. Default: ','.

@@ -49,7 +49,7 @@ import kotlin.io.path.inputStream
  */
 public fun DataFrame.Companion.readCsv(
     path: Path,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -102,7 +102,7 @@ public fun DataFrame.Companion.readCsv(
  */
 public fun DataFrame.Companion.readCsv(
     file: File,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -155,7 +155,7 @@ public fun DataFrame.Companion.readCsv(
  */
 public fun DataFrame.Companion.readCsv(
     url: URL,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -208,7 +208,7 @@ public fun DataFrame.Companion.readCsv(
  */
 public fun DataFrame.Companion.readCsv(
     fileOrUrl: String,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -263,7 +263,7 @@ public fun DataFrame.Companion.readCsv(
  */
 public fun DataFrame.Companion.readCsv(
     inputStream: InputStream,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,

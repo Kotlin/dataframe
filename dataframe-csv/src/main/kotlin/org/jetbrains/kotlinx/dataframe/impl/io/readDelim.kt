@@ -22,6 +22,7 @@ import io.deephaven.csv.util.CsvReaderException
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -67,8 +68,8 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
-import kotlinx.datetime.Instant as DeprecatedInstant
 import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * Implementation to read delimiter-separated data from an [InputStream] based on the Deephaven CSV library.
@@ -95,7 +96,7 @@ import kotlin.time.Instant as StdlibInstant
  */
 internal fun readDelimImpl(
     inputStream: InputStream,
-    charset: Charset,
+    charset: Charset?,
     delimiter: Char,
     header: List<String>,
     hasFixedWidthColumns: Boolean,
@@ -143,11 +144,18 @@ internal fun readDelimImpl(
     val csvReaderResult = inputStream.useDecompressed(compression) { decompressedInputStream ->
         // read the csv
         try {
+            val deBommedInputString = decompressedInputStream.skippingBomCharacters()
+
+            // choose charset like: provided? -> from BOM? -> UTF-8
+            val streamCharset = charset
+                ?: (deBommedInputString as? BOMInputStream)?.bom?.let { Charset.forName(it.charsetName) }
+                ?: Charsets.UTF_8
+
             @Suppress("ktlint:standard:comment-wrapping")
             CsvReader.read(
                 /* specs = */ csvSpecs,
-                /* stream = */ decompressedInputStream.skippingBomCharacters(),
-                /* streamCharset = */ charset,
+                /* stream = */ deBommedInputString,
+                /* streamCharset = */ streamCharset,
                 /* sinkFactory = */ ListSink.SINK_FACTORY,
             )
         } catch (e: CsvReaderException) {

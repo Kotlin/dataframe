@@ -55,7 +55,7 @@ import kotlin.io.path.inputStream
  */
 public fun DataFrame.Companion.readDelim(
     path: Path,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -108,7 +108,7 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     file: File,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -161,7 +161,7 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     url: URL,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -214,7 +214,7 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     fileOrUrl: String,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
@@ -269,7 +269,7 @@ public fun DataFrame.Companion.readDelim(
  */
 public fun DataFrame.Companion.readDelim(
     inputStream: InputStream,
-    charset: Charset = CHARSET,
+    charset: Charset? = CHARSET,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
