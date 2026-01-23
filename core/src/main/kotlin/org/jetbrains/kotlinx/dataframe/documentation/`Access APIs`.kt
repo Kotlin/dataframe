@@ -1,20 +1,21 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
+
+/*
+ * Access APIs anchor.
+ * Link to here whenever you want to explain the different access APIs
+ * with [AccessApiLink].
+ */
+
 /**
  * ## Access APIs
  *
- * By nature, dataframes are dynamic objects, column labels depend on the input source,
- * and also new columns could be added
- * or deleted while wrangling.
- * Kotlin, in contrast, is a statically typed language,
- * and all types are defined and verified
- * ahead of execution. That's why creating a flexible, handy, and,
- * at the same time, safe API to a dataframe is tricky.
+ * Accessing column is the one of the most important parts of the API,
+ * used in the most of [DataFrame] operations.
  *
- * In `Kotlin DataFrame` we provide four different ways to access columns,
- * and, while they're essentially different, they
- * look pretty similar in the data wrangling DSL. These include:
- * @include [AnyApiLinks]
+ * In the Kotlin DataFrame library, we provide two different ways to access columns —
+ * the {@include [StringApiLink]} and the {@include [ExtensionPropertiesApiLink]}.
  *
  * For more information: {@include [DocumentationUrls.AccessApis]}
  *
@@ -23,16 +24,14 @@ package org.jetbrains.kotlinx.dataframe.documentation
 @Suppress("ClassName")
 internal interface `Access APIs` {
 
-    /**
-     * - {@include [ExtensionPropertiesApiLink]}
-     * - {@include [KPropertiesApiLink]}
-     * - {@include [ColumnAccessorsApiLink]}
-     * - {@include [StringApiLink]}
+    /*
+     * String API anchor.
+     * Link with [StringApiLink].
      */
-    typealias AnyApiLinks = Nothing
 
     /**
-     * String API.
+     * ## String API
+     *
      * In this [`Access APIs`], columns are accessed by a [String] representing their name.
      * Type-checking is done at runtime, name-checking too.
      *
@@ -41,58 +40,62 @@ internal interface `Access APIs` {
      * For example: {@comment This works if you include the test module when running KoDEx}
      * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.strings]
      */
-    typealias StringApi = Nothing
+    typealias `String API` = Nothing
 
-    /** [String API][StringApi] */
+    /** [String API][`String API`] */
     typealias StringApiLink = Nothing
 
-    /**
-     * Column Accessors API.
-     * In this [`Access APIs`], every column has a descriptor;
-     * a variable that represents its name and type.
-     *
-     * For more information: {@include [DocumentationUrls.AccessApis.ColumnAccessorsApi]}
-     *
-     * For example: {@comment This works if you include the test module when running KoDEx}
-     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.accessors3]
+    /*
+     * Extension Properties API anchor.
+     * Link with [ExtensionPropertiesApiLink].
      */
-    typealias ColumnAccessorsApi = Nothing
-
-    /** [Column Accessors API][`Access APIs`.ColumnAccessorsApi] */
-    typealias ColumnAccessorsApiLink = Nothing
 
     /**
-     * KProperties API.
-     * In this [`Access APIs`], columns accessed by the
-     * [`KProperty`](https://kotlinlang.org/docs/reflection.html#property-references)
-     * of some class.
-     * The name and type of column should match the name and type of property, respectively.
+     * ## Extension Properties API
      *
-     * For more information: {@include [DocumentationUrls.AccessApis.KPropertiesApi]}
+     * When working with a [DataFrame], the most convenient and reliable way to [access its columns][`Access APIs`] —
+     * including for operations and retrieving column values in row expressions —
+     * is through auto-generated extension properties.
      *
-     * For example: {@comment This works if you include the test module when running KoDEx}
-     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.kproperties1]
-     */
-    typealias KPropertiesApi = Nothing
-
-    /** [KProperties API][KPropertiesApi] */
-    typealias KPropertiesApiLink = Nothing
-
-    /**
-     * Extension Properties API.
-     * In this [`Access APIs`], extension access properties are generated based on the dataframe schema.
-     * The name and type of properties are inferred from the name and type of the corresponding columns.
+     * These properties are generated based on the
+     * [dataframe schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema],
+     * with their names and types inferred from the names and types of the corresponding columns.
+     * This also works for hierarchical [DataFrame] structures
+     * (i.e., [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * and [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]).
+     *
+     * ### Example
+     *
+     * Given the following [DataFrame]:
+     *
+     * | name | age | height |
+     * |-------|-----|--------|
+     * | Alice | 23  | 175.5  |
+     * | Bob   | 27  | 160.2  |
+     *
+     * You can access columns using extension properties in a type-safe way, avoiding typos and relying on autocompletion.
+     * These properties can be used in:
+     * - [Columns Selection DSL][SelectingColumns.Dsl.WithExample]
+     * - [DataRow Expressions][ExpressionsGivenRow]
+     *
+     * ```kotlin
+     * // Access the "name" column
+     * df.name
+     *
+     * // Select the "age" and "height" columns
+     * df.select { age and height }
+     *
+     * // Filter rows where "age" > 18 and "name" starts with 'A'
+     * df.filter { age > 18 && name.startsWith("A") }
+     * ```
      *
      * For more information: {@include [DocumentationUrls.AccessApis.ExtensionPropertiesApi]}
-     *
-     * For example: {@comment This works if you include the test module when running KoDEx}
-     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.extensionProperties1]
      */
-    typealias ExtensionPropertiesApi = Nothing
+    typealias `Extension Properties API` = Nothing
 
-    /** [Extension Properties API][ExtensionPropertiesApi] */
+    /** [Extension Properties API][`Extension Properties API`] */
     typealias ExtensionPropertiesApiLink = Nothing
 }
 
-/** [Access API][`Access APIs`] */
+/** [Access APIs][`Access APIs`] */
 internal typealias AccessApiLink = Nothing

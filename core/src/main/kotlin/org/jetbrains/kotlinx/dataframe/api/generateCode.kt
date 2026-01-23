@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.documentation.`Access APIs`.ExtensionPropertiesApi
+import org.jetbrains.kotlinx.dataframe.documentation.`Access APIs`.`Extension Properties API`
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
@@ -63,7 +63,7 @@ private interface Params {
     typealias MarkerNameOptional = Nothing
 
     /**
-     * @param extensionProperties Whether to generate [extension properties (column accessors)][ExtensionPropertiesApi]
+     * @param extensionProperties Whether to generate [extension properties (column accessors)][`Extension Properties API`]
      *   in addition to data schema declarations (markers).
      *   Useful if you don't use the compiler plugin, otherwise they are not needed;
      *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
