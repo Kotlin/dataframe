@@ -41,14 +41,14 @@ df.select { colGroup("name").select {
 df.filter { "info"["age"]<Int>() >= 18 }
 ```
 
-Though the String API is the simple and doesn't require any additional setup, 
-it lack name- and type-safety; if column names or casted type are incorrect,
-the runtime error will be thrown.
+Though the String API is the simplest of the two and doesn't require any additional setup, 
+it lacks name- and type-safety; if column names or cast type are incorrect,
+a runtime error will be thrown.
 
 ## Extension Properties API
 
 The [**Extension Properties API**](extensionPropertiesApi.md) solves the 
-main problem of the String API - name- and type-safety;
+main problems of the String API - name- and type-safety;
 
 This is achieved by generating extension properties for **`DataFrame<T>`** 
 (as well as for other related interfaces such as **`DataRow`** and others) 
@@ -56,7 +56,7 @@ based on its [data schema](schemas.md), which is represented by the type paramet
 This requires the [*Kotlin DataFrame Compiler Plugin*](Compiler-Plugin.md), 
 or alternatively, usage within the [*Kotlin Notebook*](SetupKotlinNotebook.md).
 
-> Extension Properties behavior differs in the Kotlin Notebook 
+> Extension Properties behavior differs in Kotlin Notebook 
 > and in the Kotlin DataFrame Compiler Plugin. [Read about it here](extensionPropertiesApi.md).
 
 The same operations as in the String API could be performed via extension properties briefly
