@@ -18,7 +18,7 @@ korro = "0.1.6"
 
 binaryCompatibilityValidator = "0.17.0"
 kover = "0.9.1"
-deephavenCsv = "0.18.0"
+deephavenCsv = "0.19.0"
 fastDoubleParser = "2.0.1"
 commonsCsv = "1.14.1"
 commonsCompress = "1.28.0"
