@@ -8,18 +8,19 @@ or deleted while wrangling.
 Kotlin, in contrast, is a statically typed language where all types are defined and verified
 ahead of execution.
 
-That's why creating a flexible, handy, and, at the same time, safe API to dataframe
-columns access is tricky.
+That's why creating a flexible, handy, and, at the same time, 
+safe API to access dataframe columns is tricky.
 
 In the Kotlin DataFrame library, we provide two different ways to access columns — 
 the [](StringApi.md) and the [](extensionPropertiesApi.md).
 
 ## String API
 
-In the [**String API**](StringApi.md), columns are accessed by `string` representing their name.
+In the [**String API**](StringApi.md), columns are accessed by a `String` representing their name.
 Type-checking is done at runtime, name-checking too.
 
-The most basic String API usage is quite intuitive and looks very similar to any other library working with dataframe:
+The most basic String API usage is quite intuitive and looks very similar 
+to any other library working with dataframes:
 
 ```kotlin
 // Get "name" column
@@ -77,11 +78,12 @@ df.filter { info.age >= 18 }
 ## Comparing APIs
 
 To better understand the distinction between the two Access APIs, 
-look at concise example of the DataFrame operations chain, 
+look at a concise example of the DataFrame operations chain, 
 presented using both APIs.
 
 <note>
-In the most of the code snippets in this documentation there's a tab selector that allows switching across Access APIs.
+For most of the code snippets in this documentation, 
+there's a tab selector that allows switching between Access APIs.
 </note>
 
 <tabs>
