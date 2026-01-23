@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
@@ -23,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
+import org.jetbrains.kotlinx.dataframe.impl.columns.renamedColumn
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -499,6 +501,12 @@ public interface RenameColumnsSelectionDsl {
         interface KPropertyReceiver
 
         /**
+         * @set [RECEIVER] col(0)
+         * @set [RECEIVER_TYPE] SingleColumn
+         */
+        interface SingleColumnReceiver
+
+        /**
          * @set [PARAM] columnB
          * @set [PARAM_NAME] nameOf
          * @set [PARAM_TYPE] ColumnReference
@@ -619,6 +627,15 @@ public interface RenameColumnsSelectionDsl {
     public infix fun <C> KProperty<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
         toColumnAccessor().named(nameOf.columnName)
 
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.SingleColumnReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
+    @Interpretable("Named1")
+    public infix fun <C> SingleColumn<C>.named(newName: String): SingleColumn<C> = renamedColumn(newName)
+
     // endregion
 
     // region into
@@ -709,6 +726,15 @@ public interface RenameColumnsSelectionDsl {
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> KProperty<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.SingleColumnReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
+    @Interpretable("Named1")
+    public infix fun <C> SingleColumn<C>.into(newName: String): SingleColumn<C> = named(newName)
 
     // endregion
 }
