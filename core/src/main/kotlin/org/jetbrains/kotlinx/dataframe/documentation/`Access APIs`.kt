@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-x/**
+/**
  * ## Access APIs
  *
  * By nature, dataframes are dynamic objects, column labels depend on the input source,
