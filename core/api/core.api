@@ -3900,6 +3900,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumn
 	public fun into (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun into (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun into (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
+	public fun into (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public fun named (Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun named (Ljava/lang/String;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun named (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
@@ -3909,6 +3910,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumn
 	public fun named (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun named (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun named (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
+	public fun named (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumnsSelectionDsl$Grammar {
