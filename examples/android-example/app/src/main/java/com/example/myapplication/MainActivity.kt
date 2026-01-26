@@ -114,21 +114,24 @@ fun DataFrameTable(df: DataFrame<*>) {
     val columnNames = remember(df) { df.columnNames() }
     val rows = remember(df) { df.rows().toList() }
 
-    // Header
-    Row {
-        for (name in columnNames) {
-            Text(
-                text = name,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(4.dp),
-                style = MaterialTheme.typography.labelLarge
-            )
-        }
-    }
+    LazyColumn {
+        item {
+            // Header
+            Row {
+                for (name in columnNames) {
+                    Text(
+                        text = name,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(4.dp),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            }
 
             Spacer(Modifier.height(4.dp))
         }
+        // Rows
         items(rows) { row ->
             Row {
                 for (cell in row.values()) {
