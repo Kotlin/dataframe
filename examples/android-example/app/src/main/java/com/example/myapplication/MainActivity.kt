@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,6 +67,7 @@ fun DefaultDataFrameScreenPreview() {
 
 @Composable
 fun DataFrameScreen(df: DataFrame<Person>) {
+    val filtered = remember(df) { df.filter { age >= 20 } }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,7 +95,7 @@ fun DataFrameScreen(df: DataFrame<Person>) {
                 .padding(2.dp)
         )
 
-        DataFrameTable(df.filter { age >= 20 })
+        DataFrameTable(filtered)
     }
 }
 
@@ -109,7 +111,8 @@ fun DefaultDataFrameTablePreview() {
 
 @Composable
 fun DataFrameTable(df: DataFrame<*>) {
-    val columnNames = df.columnNames()
+    val columnNames = remember(df) { df.columnNames() }
+    val rows = remember(df) { df.rows().toList() }
 
     // Header
     Row {
@@ -124,11 +127,9 @@ fun DataFrameTable(df: DataFrame<*>) {
         }
     }
 
-    Spacer(Modifier.height(4.dp))
-
-    // Rows
-    LazyColumn {
-        items(df.rows().toList()) { row ->
+            Spacer(Modifier.height(4.dp))
+        }
+        items(rows) { row ->
             Row {
                 for (cell in row.values()) {
                     Text(
