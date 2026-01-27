@@ -1,5 +1,3 @@
-import com.google.devtools.ksp.gradle.KspTask
-import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
 import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.gradle.jvm.tasks.Jar
@@ -21,12 +19,6 @@ plugins {
 
         // generates keywords using the :generator module
         alias(keywordGenerator)
-
-        // dependence on our own plugin
-        alias(dataframe)
-
-        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
-        alias(ksp)
     }
     idea
 }
@@ -35,10 +27,10 @@ group = "org.jetbrains.kotlinx"
 
 kotlin.sourceSets {
     main {
-        kotlin.srcDir("build/generated/ksp/main/kotlin/")
+        kotlin.srcDir("src/generated-dataschema-accessors/main/kotlin/")
     }
     test {
-        kotlin.srcDir("build/generated/ksp/test/kotlin/")
+        kotlin.srcDir("src/generated-dataschema-accessors/test/kotlin/")
     }
 }
 
@@ -107,14 +99,6 @@ val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
     }
     source(sourceSets["test"].kotlin)
     destinationDirectory = layout.buildDirectory.dir("classes/testWithOutputs/kotlin")
-}
-
-tasks.withType<KspTask> {
-    // "test" classpath is re-used, so repeated generation should be disabled
-    if (name == "kspSamplesKotlin") {
-        dependsOn("kspTestKotlin")
-        enabled = false
-    }
 }
 
 val clearTestResults by tasks.registering(Delete::class, fun Delete.() {
@@ -195,7 +179,6 @@ val generatedSources by kotlin.sourceSets.creating {
     kotlin {
         setSrcDirs(
             listOf(
-                "build/generated/ksp/main/kotlin/",
                 "core/build/generatedSrc",
                 "$generatedSourcesFolderName/src/main/kotlin",
                 "$generatedSourcesFolderName/src/main/java",
@@ -366,38 +349,28 @@ korro {
     }
 }
 
-tasks.withType<KspTaskJvm> {
-    dependsOn(tasks.generateKeywordsSrc)
-}
-
 tasks.runKtlintFormatOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspTestKotlin")
 }
 
 tasks.named("runKtlintFormatOverGeneratedSourcesSourceSet") {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.runKtlintCheckOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspTestKotlin")
 }
 
 tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.withType<KotlinCompile> {
@@ -418,15 +391,5 @@ kotlinPublications {
         artifactId = "dataframe-core"
         description = "Dataframe core API"
         packageName = artifactId
-    }
-}
-
-// Disable and enable if updating plugin breaks the build
-dataframes {
-    schema {
-        sourceSet = "test"
-        visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
-        name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
     }
 }

@@ -7,8 +7,6 @@ plugins {
     with(libs.plugins) {
         alias(publisher)
         alias(jupyter.api)
-        alias(dataframe)
-        alias(ksp)
     }
 }
 
