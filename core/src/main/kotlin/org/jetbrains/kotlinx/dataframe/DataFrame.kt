@@ -102,9 +102,11 @@ public interface DataFrame<out T> :
     @RequiredByIntellijPlugin
     public operator fun get(index: Int): DataRow<T>
 
-    public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
+    public operator fun get(indices: Iterable<Int>): DataFrame<T> =
+        columns().map { col -> col[indices] }.toDataFrame().cast()
 
-    public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
+    public operator fun get(range: IntRange): DataFrame<T> =
+        if (range == indices()) this else columns().map { col -> col[range] }.toDataFrame().cast()
 
     public operator fun get(first: IntRange, vararg ranges: IntRange): DataFrame<T> =
         getRows(headPlusArray(first, ranges).asSequence().flatMap { it.asSequence() }.asIterable())

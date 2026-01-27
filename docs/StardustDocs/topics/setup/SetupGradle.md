@@ -121,12 +121,20 @@ plugins {
 </tab>
 </tabs>
 
-Due to [this issue](https://youtrack.jetbrains.com/issue/KT-66735), incremental compilation must be disabled for now.
+Due to the [known issue](https://youtrack.jetbrains.com/issue/KT-66735), incremental compilation must be disabled for now.
 Add the following line to your `gradle.properties` file:
 
 ```properties
 kotlin.incremental=false
 ```
+
+## Project Example
+
+See [the Gradle example project with the Kotlin DataFrame Compiler Plugin enabled on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-gradle-example).
+
+You can also
+[download this project](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip).
+
 
 ## Next Steps
 

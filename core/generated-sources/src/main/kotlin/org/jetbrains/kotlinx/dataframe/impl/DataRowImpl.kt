@@ -14,20 +14,11 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
 
     override fun df() = df
 
-    override operator fun get(name: String): Any? {
-        ColumnAccessTracker.registerColumnAccess(name)
-        return df[name][index]
-    }
+    override operator fun get(name: String): Any? = df[name][index]
 
-    override operator fun <R> get(column: ColumnReference<R>): R {
-        ColumnAccessTracker.registerColumnAccess(column.name())
-        return column.getValue(this)
-    }
+    override operator fun <R> get(column: ColumnReference<R>): R = column.getValue(this)
 
-    override fun <R> getValueOrNull(column: ColumnReference<R>): R? {
-        ColumnAccessTracker.registerColumnAccess(column.name())
-        return column.getValueOrNull(this)
-    }
+    override fun <R> getValueOrNull(column: ColumnReference<R>): R? = column.getValueOrNull(this)
 
     override fun index() = index
 
@@ -37,7 +28,6 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
 
     override fun get(columnIndex: Int): Any? {
         val column = df.getColumn(columnIndex)
-        ColumnAccessTracker.registerColumnAccess(column.name())
         return column[index]
     }
 
@@ -50,10 +40,7 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
 
     override fun hashCode() = values.hashCode()
 
-    override fun getOrNull(name: String): Any? {
-        ColumnAccessTracker.registerColumnAccess(name)
-        return df.getColumnOrNull(name)?.get(index)
-    }
+    override fun getOrNull(name: String): Any? = df.getColumnOrNull(name)?.get(index)
 }
 
 internal val <T> DataRow<T>.owner: DataFrame<T> get() = df()

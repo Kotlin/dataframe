@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
 
     testImplementation(kotlin("test"))
+    testImplementation(projects.dataframeJson)
 }
 
 tasks.withType<KotlinCompile>().configureEach {

@@ -179,7 +179,7 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun minmaxModes() {
         // SampleStart
-        df.min() // min of values per every comparable column
+        df.min() // min of values for every comparable column with mutually comparable values
         df.min { age and weight } // min of all values in `age` and `weight`
         df.minFor(skipNaN = true) { age and name.firstName } // min of values per `age` and `firstName` separately
         df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
@@ -203,7 +203,7 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun medianModes() {
         // SampleStart
-        df.median() // median of values per every comparable column
+        df.median() // median of values for every column with mutually comparable values
         df.median { age and weight } // median of all values in `age` and `weight`
         df.medianFor(skipNaN = true) { age and name.firstName } // median of values per `age` and `firstName` separately
         df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
@@ -227,7 +227,7 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun percentileModes() {
         // SampleStart
-        df.percentile(25.0) // 25th percentile of values per every comparable column
+        df.percentile(25.0) // 25th percentile of values for every column with mutually comparable values
         df.percentile(75.0) { age and weight } // 75th percentile of all values in `age` and `weight`
         df.percentileFor(50.0, skipNaN = true) { age and name.firstName } // 50th percentile of values per `age` and `firstName` separately
         df.percentileOf(75.0) { (weight ?: 0) / age } // 75th percentile of expression evaluated for every row
@@ -638,7 +638,7 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun groupByDirectAggregations_properties() {
         // SampleStart
-        df.groupBy { city }.max() // max for every comparable column
+        df.groupBy { city }.max() // max for every column with mutually comparable values
         df.groupBy { city }.mean() // mean for every numeric column
         df.groupBy { city }.max { age } // max age into column "age"
         df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
@@ -657,7 +657,7 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun groupByDirectAggregations_strings() {
         // SampleStart
-        df.groupBy("city").max() // max for every comparable column
+        df.groupBy("city").max() // max for every column with mutually comparable values
         df.groupBy("city").mean() // mean for every numeric column
         df.groupBy("city").max("age") // max age into column "age"
         df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"

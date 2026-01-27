@@ -70,8 +70,8 @@ public object HSQLDB : DbType("hsqldb") {
         val schemaName = tableMetadata.schemaName
         val name = tableMetadata.name
         return schemaName.containsWithLowercase("information_schema") ||
-            schemaName.containsWithLowercase("system") ||
-            name.containsWithLowercase("system_")
+                schemaName.containsWithLowercase("system") ||
+                name.containsWithLowercase("system_")
     }
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata =
@@ -167,3 +167,115 @@ Running the `main` function above will output filtered rows from the `orders` ta
 It will also demonstrate how to define and use custom SQL database extensions in the DataFrame library.
 
 Find a full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/tree/master/src/main/kotlin/customdb).
+
+The core principles of working with `DbType` remain the same, and the example with HSQLDB demonstrates the basic implementation pattern. However, the `DbType` class now offers more methods for customization to give you greater control over database integration.
+
+## Advanced Customization Options
+
+For advanced users, the `DbType` class provides additional properties and methods that can be overridden to fine-tune database integration:
+
+### Performance and Configuration Properties
+
+You can customize default performance-related settings:
+
+```kotlin
+/**
+ * Specifies the default batch size for fetching rows from the database during query execution.
+ * Value is set to 1000 by default.
+ */
+public open val defaultFetchSize: Int = 1000
+
+/**
+ * Specifies the default timeout in seconds for database queries.
+ * If set to `null`, no timeout is applied, allowing queries to run indefinitely.
+ */
+public open val defaultQueryTimeout: Int? = null // null = no timeout
+```
+
+### Query Building and Statement Configuration
+
+Override these methods to customize SQL query generation and statement configuration:
+
+```kotlin
+/**
+ * Builds a SELECT query for reading from a table.
+ */
+public open fun buildSelectTableQueryWithLimit(tableName: String, limit: Int?): String
+
+/**
+ * Configures the provided `PreparedStatement` for optimized read operations.
+ * This method sets the fetch size for efficient streaming, applies a query timeout if specified,
+ * and configures the fetch direction to forward-only for better performance in read-only operations.
+ */
+public open fun configureReadStatement(statement: PreparedStatement)
+
+/**
+ * Quotes an identifier (table or column name) according to database-specific rules.
+ * Examples:
+ * - PostgreSQL: "tableName" or "schema"."table"
+ * - MySQL: `tableName` or `schema`.`table`
+ * - MS SQL: [tableName] or [schema].[table]
+ * - SQLite/H2: no quotes for simple names
+ */
+public open fun quoteIdentifier(name: String): String
+
+/**
+ * Constructs a SQL query with a limit clause.
+ */
+public open fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int = 1): String
+```
+
+### Connection and Data Handling
+
+For specialized connection handling and data extraction:
+
+```kotlin
+/**
+ * Creates a database connection using the provided configuration.
+ * Some databases (like Sqlite) require read-only mode to be set during connection creation
+ * rather than after the connection is established.
+ */
+public open fun createConnection(dbConfig: DbConnectionConfig): Connection
+
+/**
+ * Extracts a value from the ResultSet for the given column.
+ * This method can be overridden by custom database types to provide specialized parsing logic.
+ */
+public open fun extractValueFromResultSet(
+    rs: ResultSet,
+    columnIndex: Int,
+    columnMetadata: TableColumnMetadata,
+    kType: KType,
+): Any?
+
+/**
+ * Builds a single DataColumn with proper type handling.
+ */
+public open fun buildDataColumn(
+    name: String,
+    values: MutableList<Any?>,
+    kType: KType,
+    inferNullability: Boolean,
+): DataColumn<*>
+```
+
+### Type Mapping and Metadata
+
+For custom type mappings and metadata extraction:
+
+```kotlin
+/**
+ * Creates a mapping between common SQL types and their corresponding KTypes.
+ */
+public open fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType
+
+/**
+ * Retrieves column metadata from a JDBC ResultSet.
+ * This method reads column metadata from ResultSetMetaData with graceful fallbacks
+ * for JDBC drivers that throw SQLFeatureNotSupportedException for certain methods.
+ */
+public open fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata>
+```
+
+> **Note:** The set of overridable methods and properties may change in the next Beta release as we continue to improve the API based on user feedback.
+

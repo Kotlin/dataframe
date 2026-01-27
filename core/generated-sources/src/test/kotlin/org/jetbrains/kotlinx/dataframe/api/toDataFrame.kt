@@ -452,6 +452,8 @@ class CreateDataFrameTests {
         df["b"][0] shouldBe true
         df["c"][1] shouldBe 2
         df["d"][1] shouldBe false
+        df.columns().all { it.type().isMarkedNullable } shouldBe true
+        df["a"].type() shouldBe typeOf<Int?>()
     }
 
     class NoPublicPropsClass(private val a: Int, private val b: String)

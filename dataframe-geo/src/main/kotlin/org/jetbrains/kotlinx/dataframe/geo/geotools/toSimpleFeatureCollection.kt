@@ -40,14 +40,16 @@ fun GeoDataFrame<*>.toSimpleFeatureCollection(
     val featureCollection = ListFeatureCollection(featureType)
 
     val featureBuilder = SimpleFeatureBuilder(featureType)
-
+    // if ID is present, SortedMap in DefaultFeatureCollection sorts rows by ID lexicographically
+    // I couldn't disable writing it, so let's generate lexicographically sorted IDs
+    val format = "f%0${df.rowsCount().toString().length}d"
     df.forEach { row ->
         val geometry = row["geometry"]
         featureBuilder.add(geometry)
         df.columnNames().filter { it != "geometry" }.forEach { colName ->
             featureBuilder.add(row[colName])
         }
-        val feature: SimpleFeature = featureBuilder.buildFeature(null)
+        val feature: SimpleFeature = featureBuilder.buildFeature(String.format(format, index()))
         featureCollection.add(feature)
     }
 

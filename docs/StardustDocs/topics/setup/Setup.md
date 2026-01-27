@@ -25,6 +25,9 @@ for [data analysis](https://kotlinlang.org/docs/data-analysis-overview.html).
 - [**Setup in Gradle**](SetupGradle.md) — add Kotlin DataFrame to your Gradle project for convenient data handling 
 in your Kotlin applications.
 
+- [**Setup in Maven**](SetupMaven.md) — add Kotlin DataFrame to your Maven project for convenient data handling
+  in your Kotlin applications.
+
 - [**Setup on Android**](SetupAndroid.md) — use Kotlin DataFrame in your Android apps to simplify local data processing 
 and transformation.
 

@@ -65,7 +65,25 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
 }
 
 @JvmName("toDataFrameMapStringAnyNullable")
-public fun Iterable<Map<String, *>>.toDataFrame(): DataFrame<*> = map { it.toDataRow() }.toDataFrame()
+public fun Iterable<Map<String, Any?>>.toDataFrame(): AnyFrame {
+    val list = asList()
+    if (list.isEmpty()) return DataFrame.empty()
+
+    val allKeys = linkedSetOf<String>()
+    for (row in this) {
+        allKeys.addAll(row.keys)
+    }
+
+    val columns = allKeys.map { key ->
+        val values = ArrayList<Any?>(list.size)
+        for (row in this) {
+            values.add(row[key])
+        }
+        DataColumn.createByInference(key, values)
+    }
+
+    return columns.toDataFrame()
+}
 
 @JvmName("toDataFrameAnyColumn")
 public fun Iterable<AnyBaseCol>.toDataFrame(): AnyFrame = dataFrameOf(this)

@@ -26,6 +26,7 @@ dependencies {
     implementation(libs.kotlin.datetimeJvm)
 
     testImplementation(libs.junit)
+    testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }

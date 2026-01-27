@@ -3,7 +3,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
 
-    val kotlinVersion = "2.3.0-RC2"
+    val kotlinVersion = "2.3.0-RC3"
     kotlin("jvm") version kotlinVersion
     // Add the Kotlin DataFrame Compiler plugin of the same version as the Kotlin plugin.
     kotlin("plugin.dataframe") version kotlinVersion
