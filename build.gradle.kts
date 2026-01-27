@@ -159,7 +159,6 @@ val modulesUsingJava11 = with(projects) {
         examples.ideaExamples.titanic,
         examples.ideaExamples.unsupportedDataSources.hibernate,
         samples,
-        plugins.dataframeGradlePlugin,
     )
 }.map { it.path }
 
