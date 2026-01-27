@@ -33,7 +33,6 @@ plugins {
 
         // dependence on our own plugin
         alias(dataframe) apply false
-        alias(ksp) apply false
     }
 }
 
