@@ -3,7 +3,6 @@ pluginManagement {
 }
 
 plugins {
-    id("dfsettings.base")
     id("dfsettings.catalogs-inside-convention-plugins")
 }
 
