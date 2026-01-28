@@ -7,10 +7,7 @@ rootProject.name = "dataframe"
 // treated as a separate project with its own Kotlin version, etc.
 includeBuild("plugins/keywords-generator")
 
-include("plugins:dataframe-gradle-plugin")
-include("plugins:symbol-processor")
 include("plugins:expressions-converter")
-include("plugins:kotlin-dataframe")
 include("plugins:public-api-modifier")
 include("samples")
 include("dataframe-json")
@@ -53,6 +50,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
