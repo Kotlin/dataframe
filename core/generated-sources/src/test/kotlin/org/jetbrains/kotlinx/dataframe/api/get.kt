@@ -52,7 +52,7 @@ class GetTests {
         val throwable = shouldThrow<IllegalArgumentException> { df[column<Int>("c")] }
         throwable.message shouldContain "Column not found: '[c]'"
 
-        val added = df.add(A::c) { "3" }[0]
+        val added = df.add<Any, _>(A::c) { "3" }[0]
 
         shouldThrow<ClassCastException> { added.getValue(c) + 1 }
         shouldThrow<ClassCastException> { added.getValue<Int>("c") + 1 }
