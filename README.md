@@ -21,6 +21,6 @@ Example of using the compiler plugin for Kotlin DataFrame in Gradle project.
 
 ---
 
-Last updated: 2025-12-18 18:20 UTC
+Last updated: 2026-01-28 14:43 UTC
 
-Source commit: 8429d24b3e9191e6bf2924e24515be6ccbba813f
+Source commit: 631fca1e242ddd64e11bd8ebdb6fa763aa6b2c85
