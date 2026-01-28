@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DefaultNullStringsContentLink
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
+import java.nio.charset.Charset
 
 /**
  * Contains both the default values of csv/tsv parameters and the parameter KDocs.
@@ -20,29 +21,36 @@ internal object DelimParams {
 
     /**
      * @param path The file path to read.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface PATH_READ
 
     /**
      * @param file The file to read.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface FILE_READ
 
     /**
      * @param url The URL from which to fetch the data.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface URL_READ
 
     /**
      * @param fileOrUrl The file path or URL to read the data from.
+     *   Use [charset\] to specify the encoding.
      *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
      */
     interface FILE_OR_URL_READ
 
-    /** @param inputStream Represents the file to read. */
+    /**
+     * @param inputStream Represents the file to read.
+     *   Use [charset\] to specify the encoding.
+     */
     interface INPUT_STREAM_READ
 
     /** @param text The raw data to read in the form of a [String]. */
@@ -56,6 +64,15 @@ internal object DelimParams {
 
     /** @param writer The [Appendable] to write to. */
     interface WRITER_WRITE
+
+    /**
+     * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+     *   Default: `null`
+     *
+     *   If `null`, the Charset will be read from the BOM of the provided input,
+     *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
+     */
+    val CHARSET: Charset? = null
 
     /**
      * @param delimiter The field delimiter character. Default: ','.

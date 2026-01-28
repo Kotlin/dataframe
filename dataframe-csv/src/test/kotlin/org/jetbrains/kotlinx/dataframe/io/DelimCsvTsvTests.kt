@@ -6,6 +6,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
@@ -108,6 +109,36 @@ class DelimCsvTsvTests {
         df["time"].type() shouldBe typeOf<LocalDateTime>()
 
         df.print(columnTypes = true, borders = true, title = true)
+    }
+
+    @Test
+    fun `readCsv different charset`() {
+        val df = DataFrame.readCsv(simpleCsv)
+
+        DataFrame.readCsv(simpleCsvUtf16le) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16le, charset = Charsets.UTF_16LE) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16le, charset = Charsets.UTF_16BE) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16le, charset = Charsets.UTF_8) shouldNotBe df
+    }
+
+    @Test
+    fun `readCsv gz compressed different charset`() {
+        val df = DataFrame.readCsv(simpleCsv)
+
+        DataFrame.readCsv(simpleCsvUtf16leGz) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leGz, charset = Charsets.UTF_16LE) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leGz, charset = Charsets.UTF_16BE) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16leGz, charset = Charsets.UTF_8) shouldNotBe df
+    }
+
+    @Test
+    fun `readCsv zip compressed different charset`() {
+        val df = DataFrame.readCsv(simpleCsv)
+
+        DataFrame.readCsv(simpleCsvUtf16leZip) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leZip, charset = Charsets.UTF_16LE) shouldBe df
+        DataFrame.readCsv(simpleCsvUtf16leZip, charset = Charsets.UTF_16BE) shouldNotBe df
+        DataFrame.readCsv(simpleCsvUtf16leZip, charset = Charsets.UTF_8) shouldNotBe df
     }
 
     @Test
@@ -837,6 +868,9 @@ class DelimCsvTsvTests {
     companion object {
         private val irisDataset = testCsv("irisDataset")
         private val simpleCsv = testCsv("testCSV")
+        private val simpleCsvUtf16le = testCsv("testCSV-utf-16-le-bom")
+        private val simpleCsvUtf16leGz = testResource("testCSV-utf16le-bom.csv.gz")
+        private val simpleCsvUtf16leZip = testResource("testCSV-utf-16-le-bom.zip")
         private val simpleCsvZip = testResource("testCSV.zip")
         private val twoCsvsZip = testResource("two csvs.zip")
         private val simpleCsvGz = testResource("testCSV.csv.gz")
