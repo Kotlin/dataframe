@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.DataFrame
 
 /*
- * Access APIs anchor.
+ * Access APIs KDoc-topic.
  * Link to here whenever you want to explain the different access APIs
  * with [AccessApiLink].
  */
@@ -18,14 +18,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  * the {@include [StringApiLink]} and the {@include [ExtensionPropertiesApiLink]}.
  *
  * For more information: {@include [DocumentationUrls.AccessApis]}
- *
- * @comment We can link to here whenever we want to explain the different access APIs.
  */
 @Suppress("ClassName")
 internal interface `Access APIs` {
 
     /*
-     * String API anchor.
+     * String API KDoc-topic.
      * Link with [StringApiLink].
      */
 
@@ -46,7 +44,7 @@ internal interface `Access APIs` {
     typealias StringApiLink = Nothing
 
     /*
-     * Extension Properties API anchor.
+     * Extension Properties API KDoc topic.
      * Link with [ExtensionPropertiesApiLink].
      */
 
