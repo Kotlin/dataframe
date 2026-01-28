@@ -29,21 +29,22 @@ df["name"]
 df.rename("name").into("fullName")
 ```
 
-Also, String API methods could be used inside the [Columns Selection DSL](ColumnSelectors.md):
+Also, String API methods can be used inside the [Columns Selection DSL](ColumnSelectors.md):
 
 ```kotlin
 // Select "firstName" and "lastName" columns from "name" column group
 df.select { colGroup("name").select { 
     col<String>("firstName") and col<String>("lastName") } 
 }
-// Takes only rows where "age" column (the subcolumn of "info" column group) 
+// Takes only rows where the "age" column 
+// (the subcolumn of the "info" column group) 
 // is greater or equal to 18
 df.filter { "info"["age"]<Int>() >= 18 }
 ```
 
 Though the String API is the simplest of the two and doesn't require any additional setup, 
-it lacks name- and type-safety; if column names or cast type are incorrect,
-a runtime error will be thrown.
+it lacks name- and type-safety; if column names or cast types are incorrect,
+a runtime exception will be thrown.
 
 ## Extension Properties API
 
@@ -78,11 +79,11 @@ df.filter { info.age >= 18 }
 ## Comparing APIs
 
 To better understand the distinction between the two Access APIs, 
-look at a concise example of the DataFrame operations chain, 
+let's look at a concise example of the DataFrame operations chain, 
 presented using both APIs.
 
 <note>
-For most of the code snippets in this documentation, 
+For most of the code snippets in this documentation,
 there's a tab selector that allows switching between Access APIs.
 </note>
 
@@ -134,21 +135,21 @@ DataFrame.read("titanic.csv")
 > The `titanic.csv` file can be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
 
 The Extension Properties API provides column names and types at compile-time, 
-while the String API can be used with incorrect column names or types and breaks in runtime.
+while the String API could be used with incorrect column names or types and break in runtime.
 
-Also, when using in the [IntelliJ IDEA](https://www.jetbrains.com/idea/) in the 
-[Gradle](SetupGradle.md#kotlin-dataframe-compiler-plugin) 
-or [Maven](SetupMaven.md#kotlin-dataframe-compiler-plugin) projects 
-with the [Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enabled, or
-in the [Kotlin Notebook](SetupKotlinNotebook.md), extensions properties are completely supported
-in the code сompeltion!
+Additionally, when using [IntelliJ IDEA](https://www.jetbrains.com/idea/) with  
+[Gradle](SetupGradle.md#kotlin-dataframe-compiler-plugin) or  
+[Maven](SetupMaven.md#kotlin-dataframe-compiler-plugin) projects that have the  
+[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enabled, as well as in  
+[Kotlin Notebook](SetupKotlinNotebook.md), extension properties are fully supported  
+by code completion.
 
 ![Code Completion](codeCompletion.png)
 
-However, note that after operations in which resulting columns cannot be inferred 
-by the Compiler Plugin (for example, [`pivot`](pivot.md)),
-extension properties can't be inferred automatically either. For such operations, 
-you can use [`cast`](cast.md) to define a new data schema or use the String API. 
+However, note that after operations where the resulting columns cannot be inferred  
+by the Compiler Plugin (for example, [`pivot`](pivot.md)), extension properties  
+cannot be inferred automatically either. In such cases, you can use [`cast`](cast.md)  
+to define a new data schema or switch to the String API.
 
 <table>
     <tr>

@@ -1,7 +1,7 @@
 # String API
 
 The String API is the most basic and straightforward API
-for selecting columns in the Kotlin DataFrame [operations](operations.md).
+for selecting columns in Kotlin DataFrame [operations](operations.md).
 
 Column names as `String` values can be provided directly as function arguments:
 
