@@ -86,10 +86,13 @@ public interface GlobalParserOptions {
     public var parseExperimentalUuid: Boolean
 
     /**
-     * Whether to allow parsing to the experimental [kotlin.time.Instant] type.
-     * By default, this is false and instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
+     * Whether to allow parsing to the [kotlin.time.Instant] type.
+     * This is marked "stable" from Kotlin 2.3.0+, so, by default this is `true`.
      *
-     * NOTE: Interacting with an [Instant][kotlin.time.Instant] in your code might require
+     * If false, instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
+     *
+     * NOTE: If you are using an older Kotlin version,
+     * interacting with an [Instant][kotlin.time.Instant] in your code might require
      * `@`[OptIn][OptIn]`(`[ExperimentalTime][kotlin.time.ExperimentalTime]`::class)`.
      * In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
      */
@@ -127,9 +130,11 @@ public interface GlobalParserOptions {
  *   NOTE: Interacting with a [Uuid][Uuid] in your code might require
  *   `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
  *   In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
- * @param parseExperimentalInstant whether to allow parsing to the experimental [kotlin.time.Instant] type.
- *   By default, this is false and instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
- *   NOTE: Interacting with an [Instant][kotlin.time.Instant] in your code might require
+ * @param parseExperimentalInstant whether to allow parsing to the [kotlin.time.Instant] type.
+ *    This is marked "stable" from Kotlin 2.3.0+, so, by default this is `true`.
+ *    If false, instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
+ *   NOTE: If you are using an older Kotlin version,
+ *   interacting with an [Instant][kotlin.time.Instant] in your code might require
  *   `@`[OptIn][OptIn]`(`[ExperimentalTime][kotlin.time.ExperimentalTime]`::class)`.
  *   In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
  */
