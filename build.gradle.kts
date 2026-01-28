@@ -33,7 +33,6 @@ plugins {
 
         // dependence on our own plugin
         alias(dataframe) apply false
-        alias(ksp) apply false
     }
 }
 
@@ -159,7 +158,6 @@ val modulesUsingJava11 = with(projects) {
         examples.ideaExamples.titanic,
         examples.ideaExamples.unsupportedDataSources.hibernate,
         samples,
-        plugins.dataframeGradlePlugin,
     )
 }.map { it.path }
 
@@ -191,9 +189,6 @@ allprojects {
     }
     tasks.withType<KotlinCompile> {
         compilerOptions {
-            // enables support for kotlin.time.Instant as kotlinx.datetime.Instant was deprecated; Issue #1350
-            // Can be removed once kotlin.time.Instant is marked "stable".
-            optIn.add("kotlin.time.ExperimentalTime")
             // can be removed once kotlin.uuid.ExperimentalUuidApi is marked "stable".
             optIn.add("kotlin.uuid.ExperimentalUuidApi")
         }

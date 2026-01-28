@@ -10,6 +10,8 @@ class ExplainerComponentRegistrar : CompilerPluginRegistrar() {
     override val supportsK2: Boolean
         get() = true
 
+    override val pluginId: String = "org.jetbrains.kotlinx.dataframe.ExplainerComponentRegistrar"
+
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
         IrGenerationExtension.registerExtension(ExplainerIrGenerationExtension())
     }

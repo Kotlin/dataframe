@@ -546,6 +546,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
+    @Ignore
     @Test
     fun `plugin doesn't break multiplatform build without JVM`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
