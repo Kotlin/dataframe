@@ -6,6 +6,13 @@ plugins {
 
 /*
  * Creates a version catalog with build-logic convention plugins.
+ * Files like `build-logic/src/main/kotlin/dfbuild.myConventionPlugin.gradle.kts`
+ * can be applied as plugin like:
+ * ```
+ * plugins {
+ *     alias(convention.plugins.myConventionPlugin)
+ * }
+ * ```
  */
 dependencyResolutionManagement {
     versionCatalogs {
@@ -23,6 +30,9 @@ dependencyResolutionManagement {
                 val aliasName = conventionName.removePrefix("dfbuild.")
                 plugin(aliasName, conventionName).version("")
             }
+
+            // Additional plugins can be added here:
+            // plugin("aliasName", "id")
         }
     }
 }

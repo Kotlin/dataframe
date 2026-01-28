@@ -21,7 +21,7 @@ dependencyResolutionManagement {
             } catch (e: Exception) {
                 logger.warn(
                     "Could not load version catalog (${findRootDir().absolutePath}/gradle/libs.versions.toml) from $settingsDir",
-                    e
+                    e,
                 )
             }
         }

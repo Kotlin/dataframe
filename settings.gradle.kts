@@ -1,18 +1,19 @@
 rootProject.name = "dataframe"
 
+// Enables our build-settings logic convention plugins for the root project,
+// setting up all common logic and version- and convention catalogs.
 pluginManagement {
     includeBuild("./build-settings-logic")
 }
-
 plugins {
     id("dfsettings.catalogs")
 }
 
+// Enables our build logic convention plugins for the root project,
+// so they can be applied in child projects in their build.gradle.kts files.
 includeBuild("./build-logic")
 
-// treated as a separate project with its own Kotlin version, etc.
 includeBuild("plugins/keywords-generator")
-
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
 include("plugins:expressions-converter")
