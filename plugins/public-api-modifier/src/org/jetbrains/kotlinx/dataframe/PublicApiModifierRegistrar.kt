@@ -17,8 +17,10 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.name.FqName
 
 @OptIn(ExperimentalCompilerApi::class)
-class PublicApiModifierRegistrar(override val pluginId: String) : CompilerPluginRegistrar() {
+class PublicApiModifierRegistrar : CompilerPluginRegistrar() {
     override val supportsK2: Boolean = true
+
+    override val pluginId: String = "org.jetbrains.kotlinx.dataframe.PublicApiModifier"
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
         FirExtensionRegistrarAdapter.registerExtension(Extensions())
