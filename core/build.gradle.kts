@@ -33,12 +33,6 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-}
-
 kotlin.sourceSets {
     main {
         kotlin.srcDir("build/generated/ksp/main/kotlin/")

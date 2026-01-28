@@ -15,9 +15,10 @@ group = "org.jetbrains.kotlinx"
 
 repositories {
     // geo repository should come before Maven Central
-    maven("https://repo.osgeo.org/repository/release")
-    maven("https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
+    maven(url = "https://repo.osgeo.org/repository/release")
+    maven(url = "https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
     mavenCentral()
+    mavenLocal()
 }
 
 fun ExternalModuleDependency.excludeDataFrame() = exclude("org.jetbrains.kotlinx", "dataframe")

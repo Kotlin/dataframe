@@ -10,10 +10,6 @@ plugins {
 
 group = "org.jetbrains.kotlinx.dataframe"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compileOnly(libs.kotlin.compiler)
 

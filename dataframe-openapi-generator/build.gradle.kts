@@ -13,14 +13,6 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-val jupyterApiTCRepo: String by project
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
-}
-
 dependencies {
     api(projects.core)
     api(projects.dataframeOpenapi)

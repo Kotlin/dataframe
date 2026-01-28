@@ -10,10 +10,6 @@ plugins {
 
 group = "org.jetbrains.kotlinx.dataframe"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation(project(":core")) {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-reflect")
