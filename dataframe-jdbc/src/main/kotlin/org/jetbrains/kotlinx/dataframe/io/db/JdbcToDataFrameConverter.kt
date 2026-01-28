@@ -21,7 +21,8 @@ public typealias AnyJdbcToDataFrameConverter = JdbcToDataFrameConverter<*, *, *>
  * @param P the type of the column values after postprocessing. Will be equal to [D] if [columnBuilder] is `null`.
  *
  * @property targetSchema the target schema of the column after running the optional
- *   [valuePreprocessor] and [columnBuilder].
+ *   [valuePreprocessor] and [columnBuilder]. Can be `null` if the target schema is dependent on the runtime input
+ *   and thus cannot be determined from input types alone.
  * @property valuePreprocessor an optional function that converts values from [java.sql.ResultSet.getObject]
  *   to a cell/row suitable to be put into a [DataColumn].
  * @property columnBuilder an optional function that converts a [List] with values of type [D]
@@ -30,7 +31,7 @@ public typealias AnyJdbcToDataFrameConverter = JdbcToDataFrameConverter<*, *, *>
 public open class JdbcToDataFrameConverter<J : Any, D : Any, P : Any>(
     public open val expectedJdbcType: KType,
     public open val preprocessedValueType: KType,
-    public open val targetSchema: ColumnSchema,
+    public open val targetSchema: ColumnSchema?,
     public open val resultSetReader: DbResultSetReader<J>?,
     public open val valuePreprocessor: DbValuePreprocessor<J, D>?,
     public open val columnBuilder: DbColumnBuilder<D, P>?,
@@ -67,7 +68,7 @@ public fun JdbcToDataFrameConverter<*, *, *>.castToAny(): JdbcToDataFrameConvert
 public fun <J : Any, D : Any, P : Any> jdbcToDfConverterWithProcessingFor(
     jdbcSourceType: KType,
     preprocessedValueType: KType, // = jdbcSourceType
-    targetSchema: ColumnSchema, // = ColumnSchema.Value(preprocessedValueType)
+    targetSchema: ColumnSchema?, // = ColumnSchema.Value(preprocessedValueType)
     resultSetReader: DbResultSetReader<J>? = null,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
     columnBuilder: DbColumnBuilder<D, P>?,
@@ -85,7 +86,7 @@ public inline fun <reified J : Any, reified D : Any, P : Any> jdbcToDfConverterW
     isNullable: Boolean,
     jdbcSourceType: KType = typeOf<J>().withNullability(isNullable),
     preprocessedValueType: KType = typeOf<D>().withNullability(isNullable),
-    targetSchema: ColumnSchema,
+    targetSchema: ColumnSchema?,
     resultSetReader: DbResultSetReader<J>? = null,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
     columnBuilder: DbColumnBuilder<D, P>?,
@@ -102,7 +103,7 @@ public inline fun <reified J : Any, reified D : Any, P : Any> jdbcToDfConverterW
 public fun <J : Any> jdbcToDfConverterFor(
     jdbcSourceType: KType,
     preprocessedValueType: KType,
-    targetSchema: ColumnSchema,
+    targetSchema: ColumnSchema?,
     resultSetReader: DbResultSetReader<J>? = null,
 ): JdbcToDataFrameConverter<J, J, J> =
     jdbcToDfConverterWithProcessingFor(
@@ -117,7 +118,7 @@ public fun <J : Any> jdbcToDfConverterFor(
 public fun <J : Any, D : Any> jdbcToDfConverterWithPreprocessingFor(
     jdbcSourceType: KType,
     preprocessedValueType: KType,
-    targetSchema: ColumnSchema,
+    targetSchema: ColumnSchema?,
     resultSetReader: DbResultSetReader<J>? = null,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
 ): JdbcToDataFrameConverter<J, D, D> =
@@ -134,7 +135,7 @@ public inline fun <reified J : Any, reified D : Any> jdbcToDfConverterWithPrepro
     isNullable: Boolean,
     jdbcSourceType: KType = typeOf<J>().withNullability(isNullable),
     preprocessedValueType: KType = typeOf<D>().withNullability(isNullable),
-    targetSchema: ColumnSchema,
+    targetSchema: ColumnSchema?,
     resultSetReader: DbResultSetReader<J>? = null,
     valuePreprocessor: DbValuePreprocessor<J, D>?,
 ): JdbcToDataFrameConverter<J, D, D> =
@@ -149,7 +150,7 @@ public inline fun <reified J : Any, reified D : Any> jdbcToDfConverterWithPrepro
 
 public fun <J : Any, P : Any> jdbcToDfConverterWithPostprocessingFor(
     jdbcSourceType: KType,
-    targetSchema: ColumnSchema,
+    targetSchema: ColumnSchema?,
     resultSetReader: DbResultSetReader<J>? = null,
     columnBuilder: DbColumnBuilder<J, P>?,
 ): JdbcToDataFrameConverter<J, J, P> =

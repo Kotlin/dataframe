@@ -45,10 +45,13 @@ import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
+import org.jetbrains.kotlinx.dataframe.api.inferType
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
@@ -158,7 +161,17 @@ public object DuckDb : AdvancedDbType("duckdb") {
                 TIMESTAMP_WITH_TIME_ZONE -> jdbcToDfConverterForValueColumnOf<JavaOffsetDateTime>(isNullable)
 
                 // TODO!
-                JSON -> jdbcToDfConverterForValueColumnOf<JsonNode>(isNullable)
+                JSON -> jdbcToDfConverterWithProcessingFor<JsonNode, String, Any>(
+                    isNullable = isNullable,
+                    targetSchema = null,
+                    valuePreprocessor = { jdbcValue -> jdbcValue?.toString() },
+                    columnBuilder = { name, values, inferNullability ->
+                        values
+                            .toColumn(name, if (inferNullability) Infer.Nulls else Infer.None)
+                            .tryParse()
+                            .inferType()
+                    },
+                )
 
                 BLOB -> jdbcToDfConverterForValueColumnOf<Blob>(isNullable)
 
@@ -174,8 +187,8 @@ public object DuckDb : AdvancedDbType("duckdb") {
 
                     val targetMapType = Map::class.createType(
                         listOf(
-                            KTypeProjection.invariant(parsedKeyType.targetSchema.type),
-                            KTypeProjection.invariant(parsedValueType.targetSchema.type),
+                            KTypeProjection.invariant(parsedKeyType.targetSchema?.type ?: typeOf<Any?>()),
+                            KTypeProjection.invariant(parsedValueType.targetSchema?.type ?: typeOf<Any?>()),
                         ),
                     ).withNullability(isNullable)
 
@@ -196,7 +209,13 @@ public object DuckDb : AdvancedDbType("duckdb") {
                         parseDuckDbType(listType, true).castToAny()
 
                     val targetListType = List::class
-                        .createType(listOf(KTypeProjection.invariant(parsedListType.targetSchema.type)))
+                        .createType(
+                            listOf(
+                                KTypeProjection.invariant(
+                                    parsedListType.targetSchema?.type ?: typeOf<Any?>(),
+                                ),
+                            ),
+                        )
                         .withNullability(isNullable)
 
                     when (val listTargetSchema = parsedListType.targetSchema) {
@@ -236,7 +255,11 @@ public object DuckDb : AdvancedDbType("duckdb") {
                     }
 
                     val targetSchema = ColumnSchema.Group(
-                        schema = DataFrameSchemaImpl(parsedStructEntries.mapValues { it.value.targetSchema }),
+                        schema = DataFrameSchemaImpl(
+                            parsedStructEntries.mapValues {
+                                it.value.targetSchema ?: ColumnSchema.Value(typeOf<Any?>())
+                            },
+                        ),
                         contentType = typeOf<Any?>(),
                     )
 

@@ -8,7 +8,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import org.duckdb.DuckDBConnection
 import org.duckdb.DuckDBResultSet
-import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
@@ -26,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.assertInferredTypesMatchSchema
+import org.jetbrains.kotlinx.dataframe.io.assertMatches
 import org.jetbrains.kotlinx.dataframe.io.db.DuckDb
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readDataFrame
@@ -41,7 +41,6 @@ import java.nio.file.Files
 import java.sql.Blob
 import java.sql.DriverManager
 import java.sql.Timestamp
-import java.util.UUID
 import kotlin.io.path.createTempDirectory
 import kotlin.time.Instant
 import kotlin.time.toKotlinInstant
@@ -71,6 +70,9 @@ class DuckDbTest {
             ).toDataFrame()
         }
     }
+
+    @DataSchema
+    data class SomeJson(val key: String)
 
     @DataSchema
     data class GeneralPurposeTypes(
@@ -135,7 +137,7 @@ class DuckDbTest {
         @ColumnName("interval_col")
         val intervalCol: String,
         @ColumnName("json_col")
-        val jsonCol: JsonNode,
+        val jsonCol: SomeJson,
         @ColumnName("logical_col")
         val logicalCol: Boolean,
         @ColumnName("long_col")
@@ -224,7 +226,7 @@ class DuckDbTest {
                     intCol = 2147483647,
                     integerCol = 2147483647,
                     intervalCol = "1 year",
-                    jsonCol = JsonNode("{\"key\": \"value\"}"),
+                    jsonCol = SomeJson("value"),
                     logicalCol = true,
                     longCol = 9223372036854775807L,
                     numericCol = BigDecimal("123.45"),
@@ -573,21 +575,9 @@ class DuckDbTest {
             df = DataFrame.readSqlTable(connection, "table1").reorderColumnsByName()
         }
 
-//        schema.toString().lines().sorted().joinToString("\n") shouldBe
-//            GeneralPurposeTypes.expected.schema().toString().lines().sorted().joinToString("\n")
-        withClue({
-            """
-            |Read schema must be <: expected schema
-            |
-            |Read Schema: 
-            |${schema.toString().lines().joinToString("\n|")}
-            |
-            |expected Schema:
-            |${GeneralPurposeTypes.expected.schema().toString().lines().joinToString("\n|")}
-            """.trimMargin()
-        }) {
-            schema.compare(GeneralPurposeTypes.expected.schema()).isSuperOrMatches() shouldBe true
-        }
+        GeneralPurposeTypes.expected.schema().toString().lines().sorted().joinToString("\n")
+
+        schema.assertMatches(GeneralPurposeTypes.expected.schema())
 
         // on some systems OffsetDateTime's get converted to UTC sometimes, let's compare them as Instant instead
         fun AnyFrame.fixOffsetDateTime() = convert { colsOf<JavaOffsetDateTime>() }.with { it.toInstant() }

@@ -242,7 +242,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     public open fun getTargetColumnSchema(
         tableColumnMetadata: TableColumnMetadata,
         expectedValueType: KType,
-    ): ColumnSchema =
+    ): ColumnSchema? =
         when (tableColumnMetadata.jdbcType) {
             // buildDataColumn post-processes java.sql.Array -> Kotlin arrays, making the result type `Array<*>`
             Types.ARRAY -> ColumnSchema.Value(typeOf<Array<*>>().withNullability(expectedValueType.isMarkedNullable))
@@ -254,7 +254,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         name: String,
         values: List<D?>,
         tableColumnMetadata: TableColumnMetadata,
-        targetColumnSchema: ColumnSchema,
+        targetColumnSchema: ColumnSchema?,
         inferNullability: Boolean,
     ): DataColumn<P?> {
         val postProcessedValues = when (tableColumnMetadata.jdbcType) {
@@ -272,7 +272,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
     protected fun <D : Any, P : Any> List<D?>.toDataColumn(
         name: String,
-        targetColumnSchema: ColumnSchema,
+        targetColumnSchema: ColumnSchema?,
         inferNullability: Boolean,
     ): DataColumn<P?> =
         when (targetColumnSchema) {
@@ -297,6 +297,12 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                     name = name,
                     groups = this as List<AnyFrame>,
                     schema = lazy { targetColumnSchema.schema },
+                ).cast()
+
+            null ->
+                DataColumn.createByInference(
+                    name = name,
+                    values = this,
                 ).cast()
         }
 

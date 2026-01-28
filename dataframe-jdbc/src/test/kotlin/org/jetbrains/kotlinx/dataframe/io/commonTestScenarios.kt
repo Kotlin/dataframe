@@ -158,3 +158,13 @@ fun AnyFrame.assertInferredTypesMatchSchema() {
         )
     }
 }
+
+fun DataFrameSchema.assertMatches(other: DataFrameSchema) {
+    if (!this.compare(other).isSuperOrMatches()) {
+        throw failure(
+            expected = Expected(other.toString().lines().sorted().joinToString("\n").printed()),
+            actual = Actual(this.toString().lines().sorted().joinToString("\n").printed()),
+            prependMessage = "Schemas must be <:",
+        )
+    }
+}

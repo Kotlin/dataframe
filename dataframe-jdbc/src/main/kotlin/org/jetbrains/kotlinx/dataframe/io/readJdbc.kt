@@ -940,7 +940,7 @@ internal fun getTargetColumnSchemas(
     dbType: DbType,
     tableColumns: List<TableColumnMetadata>,
     preprocessedValueTypes: Map<String, KType>,
-): Map<String, ColumnSchema> =
+): Map<String, ColumnSchema?> =
     tableColumns.associate {
         it.name to dbType.getTargetColumnSchema(
             tableColumnMetadata = it,
@@ -998,7 +998,7 @@ private fun buildDataFrameFromColumnData(
     dbType: DbType,
     columnData: Map<String, List<Any?>>,
     tableColumns: List<TableColumnMetadata>,
-    targetColumnSchemas: Map<String, ColumnSchema>,
+    targetColumnSchemas: Map<String, ColumnSchema?>,
     inferNullability: Boolean,
     checkSchema: Boolean = true, // TODO add as configurable parameter
 ): AnyFrame =
@@ -1008,19 +1008,23 @@ private fun buildDataFrameFromColumnData(
             name = name,
             values = columnData[name]!!,
             tableColumnMetadata = it,
-            targetColumnSchema = targetColumnSchemas[name]!!,
+            targetColumnSchema = targetColumnSchemas[name],
             inferNullability = inferNullability,
         )
 
         if (checkSchema) {
-            column.checkSchema(targetColumnSchemas[name]!!)
+            column.checkSchema(targetColumnSchemas[name])
         }
 
         column
     }.toDataFrame()
 
-private fun AnyCol.checkSchema(expected: ColumnSchema) {
+private fun AnyCol.checkSchema(expected: ColumnSchema?) {
     when (expected) {
+        null -> {
+            // nothing to check
+        }
+
         is ColumnSchema.Value -> {
             require(this.isValueColumn()) {
                 """

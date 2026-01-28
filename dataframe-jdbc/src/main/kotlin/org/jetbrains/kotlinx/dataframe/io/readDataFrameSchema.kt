@@ -5,11 +5,13 @@ import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import javax.sql.DataSource
+import kotlin.reflect.typeOf
 
 /**
  * Retrieves the schema for an SQL table using the provided database configuration.
@@ -324,6 +326,7 @@ public fun DataFrameSchema.Companion.readResultSet(resultSet: ResultSet, dbType:
     val expectedJdbcTypes = getExpectedJdbcTypes(dbType, tableColumns)
     val preprocessedValueTypes = getPreprocessedValueTypes(dbType, tableColumns, expectedJdbcTypes)
     val targetColumnSchemas = getTargetColumnSchemas(dbType, tableColumns, preprocessedValueTypes)
+        .mapValues { (_, schema) -> schema ?: ColumnSchema.Value(typeOf<Any?>()) }
     return DataFrameSchemaImpl(targetColumnSchemas)
 }
 

@@ -34,7 +34,7 @@ public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJ
     final override fun getTargetColumnSchema(
         tableColumnMetadata: TableColumnMetadata,
         expectedValueType: KType,
-    ): ColumnSchema = getConverter(tableColumnMetadata).targetSchema
+    ): ColumnSchema? = getConverter(tableColumnMetadata).targetSchema
 
     final override fun <J : Any> getValueFromResultSet(
         rs: ResultSet,
@@ -63,7 +63,7 @@ public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJ
         name: String,
         values: List<D?>,
         tableColumnMetadata: TableColumnMetadata,
-        targetColumnSchema: ColumnSchema,
+        targetColumnSchema: ColumnSchema?,
         inferNullability: Boolean,
     ): DataColumn<P?> =
         getConverter(tableColumnMetadata).cast<Any, D, P>()
