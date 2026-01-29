@@ -7,7 +7,6 @@ plugins {
     with(libs.plugins) {
         alias(publisher)
 //        alias(kover)
-        alias(ktlint)
         alias(jupyter.api)
         alias(binary.compatibility.validator)
     }

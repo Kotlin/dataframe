@@ -1,6 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gmazzo.buildconfig.BuildConfigExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -10,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
     with(convention.plugins) {
@@ -22,7 +20,6 @@ plugins {
         alias(serialization) apply false
         alias(dokka)
 //        alias(kover)
-        alias(ktlint)
 
         // TODO cannot define korro and kodex here due to leaking them kotlin-compiler-embeddable into the build classpath
         // alias(korro) apply false
@@ -138,18 +135,6 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
 allprojects {
     // Attempts to configure ktlint for each sub-project that uses the plugin
     afterEvaluate {
-        try {
-            configure<KtlintExtension> {
-                version = "1.8.0"
-                // rules are set up through .editorconfig
-            }
-        } catch (_: UnknownDomainObjectException) {
-            logger.warn("Could not set ktlint config on :${this.name}")
-        }
-
-        // set the java toolchain version to 21 for all subprojects for CI stability
-        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(21)
-
         // Attempts to configure buildConfig for each sub-project that uses it
         try {
             configure<BuildConfigExtension> {

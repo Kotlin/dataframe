@@ -3,7 +3,6 @@ plugins {
         alias(kotlinJvm8)
     }
     with(libs.plugins) {
-        alias(ktlint)
         alias(publisher)
         alias(binary.compatibility.validator)
     }

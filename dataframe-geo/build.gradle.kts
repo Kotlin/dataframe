@@ -7,7 +7,6 @@ plugins {
     }
     with(libs.plugins) {
         alias(publisher)
-        alias(ktlint)
         alias(dataframe)
         alias(ksp)
     }

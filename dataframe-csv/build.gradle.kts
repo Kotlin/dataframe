@@ -9,7 +9,6 @@ plugins {
         alias(publisher)
         alias(serialization)
 //        alias(kover)
-        alias(ktlint)
         alias(kodex)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)

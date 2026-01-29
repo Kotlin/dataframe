@@ -8,7 +8,6 @@ plugins {
     with(libs.plugins) {
         alias(shadow)
         alias(publisher)
-        alias(ktlint)
     }
 }
 

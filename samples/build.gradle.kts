@@ -21,10 +21,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     with(convention.plugins) {
         alias(kotlinJvm11)
+        alias(ktlint)
     }
     with(libs.plugins) {
         alias(korro)
-        alias(ktlint)
         alias(dataframe.compiler.plugin)
 //        alias(kover)
         alias(ksp)

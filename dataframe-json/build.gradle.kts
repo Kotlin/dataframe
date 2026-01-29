@@ -8,7 +8,6 @@ plugins {
         alias(publisher)
         alias(serialization)
 //        alias(kover)
-        alias(ktlint)
         alias(binary.compatibility.validator)
     }
 }

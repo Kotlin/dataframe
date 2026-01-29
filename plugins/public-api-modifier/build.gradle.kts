@@ -2,9 +2,6 @@ plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
     }
-    with(libs.plugins) {
-        alias(ktlint)
-    }
 }
 
 group = "org.jetbrains.kotlinx.dataframe"

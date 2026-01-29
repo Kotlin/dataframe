@@ -1,5 +1,8 @@
 plugins {
     alias(convention.plugins.base)
+    // enables the linter for every Kotlin module in the project
+    alias(convention.plugins.ktlint)
+
     alias(libs.plugins.kotlin.jvm)
 }
 

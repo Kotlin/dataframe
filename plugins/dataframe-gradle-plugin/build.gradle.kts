@@ -7,7 +7,6 @@ plugins {
     with(libs.plugins) {
         alias(buildconfig)
         alias(plugin.publish)
-        alias(ktlint)
     }
 }
 
