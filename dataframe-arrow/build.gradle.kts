@@ -1,6 +1,8 @@
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
 //        alias(kover)
         alias(ktlint)
@@ -37,10 +39,6 @@ kotlinPublications {
         description = "Apache Arrow support for Kotlin DataFrame"
         packageName = artifactId
     }
-}
-
-kotlin {
-    explicitApi()
 }
 
 tasks.test {

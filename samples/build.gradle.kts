@@ -19,9 +19,10 @@ import org.gradle.kotlin.dsl.testImplementation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    java
+    with(convention.plugins) {
+        alias(kotlinJvm11)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(korro)
         alias(ktlint)
         alias(dataframe.compiler.plugin)

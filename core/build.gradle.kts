@@ -7,8 +7,10 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
         alias(korro)
@@ -398,10 +400,6 @@ tasks.runKtlintCheckOverTestSourceSet {
 tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
-}
-
-kotlin {
-    explicitApi()
 }
 
 tasks.withType<KotlinCompile> {

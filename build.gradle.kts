@@ -1,8 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gmazzo.buildconfig.BuildConfigExtension
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -15,8 +13,11 @@ import org.jetbrains.kotlinx.publisher.githubRepo
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
+
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(serialization) apply false
         alias(dokka)
@@ -134,63 +135,7 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
-kotlin {
-    jvmToolchain(21)
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_1_8
-    }
-}
-
-// DataFrame targets Java 8 for maximum compatibility.
-// This is, however, not always possible thanks to external dependencies.
-// In those cases, we default to Java 11.
-val modulesUsingJava11 = with(projects) {
-    setOf(
-        dataframeJupyter,
-        dataframeGeoJupyter,
-        examples.ideaExamples.titanic,
-        examples.ideaExamples.unsupportedDataSources.hibernate,
-        samples,
-        plugins.dataframeGradlePlugin,
-    )
-}.map { it.path }
-
 allprojects {
-    if (path in modulesUsingJava11) {
-        tasks.withType<KotlinCompile> {
-            compilerOptions {
-                jvmTarget = JvmTarget.JVM_11
-                freeCompilerArgs.add("-Xjdk-release=11")
-            }
-        }
-        tasks.withType<JavaCompile> {
-            sourceCompatibility = JavaVersion.VERSION_11.toString()
-            targetCompatibility = JavaVersion.VERSION_11.toString()
-            options.release.set(11)
-        }
-    } else {
-        tasks.withType<KotlinCompile> {
-            compilerOptions {
-                jvmTarget = JvmTarget.JVM_1_8
-                freeCompilerArgs.add("-Xjdk-release=8")
-            }
-        }
-        tasks.withType<JavaCompile> {
-            sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-            targetCompatibility = JavaVersion.VERSION_1_8.toString()
-            options.release.set(8)
-        }
-    }
-    tasks.withType<KotlinCompile> {
-        compilerOptions {
-            // enables support for kotlin.time.Instant as kotlinx.datetime.Instant was deprecated; Issue #1350
-            // Can be removed once kotlin.time.Instant is marked "stable".
-            optIn.add("kotlin.time.ExperimentalTime")
-            // can be removed once kotlin.uuid.ExperimentalUuidApi is marked "stable".
-            optIn.add("kotlin.uuid.ExperimentalUuidApi")
-        }
-    }
-
     // Attempts to configure ktlint for each sub-project that uses the plugin
     afterEvaluate {
         try {

@@ -5,3 +5,5 @@ pluginManagement {
 plugins {
     id("dfsettings.catalogs")
 }
+
+includeBuild("../../build-logic")
