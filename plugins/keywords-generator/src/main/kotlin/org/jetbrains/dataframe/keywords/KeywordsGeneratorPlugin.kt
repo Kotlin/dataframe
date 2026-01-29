@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.BuildConfig
 import java.io.File
 
 @Suppress("UnstableApiUsage")
-abstract class KeywordsGeneratorPlugin : Plugin<Project> {
+public abstract class KeywordsGeneratorPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
         // from https://kotlinlang.org/docs/whatsnew21.html#compiler-symbols-hidden-from-the-kotlin-gradle-plugin-api
@@ -41,8 +41,8 @@ abstract class KeywordsGeneratorPlugin : Plugin<Project> {
         java.setSrcDirs(java.srcDirs + dir)
     }
 
-    companion object {
-        const val KOTLIN_COMPILER_EMBEDDABLE = "org.jetbrains.kotlin:kotlin-compiler-embeddable"
-        const val KOTLIN_COMPILER_VERSION: String = BuildConfig.kotlinCompilerVersion
+    public companion object {
+        public const val KOTLIN_COMPILER_EMBEDDABLE: String = "org.jetbrains.kotlin:kotlin-compiler-embeddable"
+        public const val KOTLIN_COMPILER_VERSION: String = BuildConfig.kotlinCompilerVersion
     }
 }

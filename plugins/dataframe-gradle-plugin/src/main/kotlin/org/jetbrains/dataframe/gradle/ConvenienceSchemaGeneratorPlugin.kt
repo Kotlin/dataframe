@@ -7,18 +7,18 @@ import org.gradle.kotlin.dsl.getByType
 import java.util.Properties
 
 @Suppress("unused")
-class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
-    companion object {
+public class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
+    public companion object {
         /**
          * (boolean, default `true`) whether to add KSP plugin
          */
-        const val PROP_ADD_KSP = "kotlin.dataframe.add.ksp"
+        public const val PROP_ADD_KSP: String = "kotlin.dataframe.add.ksp"
 
         /**
          * (string, default `null`) comma-delimited list of configurations to add KSP processing to.
          * Defaults to guessing configurations based on which kotlin plugin is applied (jvm or multiplatform)
          */
-        const val PROP_KSP_CONFIGS = "kotlin.dataframe.ksp.configs"
+        public const val PROP_KSP_CONFIGS: String = "kotlin.dataframe.ksp.configs"
     }
 
     override fun apply(target: Project) {
@@ -110,7 +110,7 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
 }
 
 @Suppress("unused")
-class DeprecatingSchemaGeneratorPlugin : Plugin<Project> {
+public class DeprecatingSchemaGeneratorPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.logger.warn(
             "DEPRECATION: Replace plugin id(\"org.jetbrains.kotlin.plugin.dataframe\") and kotlin(\"plugin.dataframe\") with id(\"org.jetbrains.kotlinx.dataframe\").",

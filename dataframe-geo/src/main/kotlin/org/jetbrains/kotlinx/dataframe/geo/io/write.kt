@@ -13,22 +13,22 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.notExists
 import kotlin.io.path.outputStream
 
-fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(path))
+public fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(path))
 
-fun GeoDataFrame<*>.writeGeoJson(path: Path) {
+public fun GeoDataFrame<*>.writeGeoJson(path: Path) {
     val featureJSON = FeatureJSON()
     path.outputStream().use { outputStream ->
         featureJSON.writeFeatureCollection(toSimpleFeatureCollection(), outputStream)
     }
 }
 
-fun GeoDataFrame<*>.writeGeoJson(file: File) {
+public fun GeoDataFrame<*>.writeGeoJson(file: File) {
     writeGeoJson(file.toPath())
 }
 
-fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath))
+public fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath))
 
-fun GeoDataFrame<*>.writeShapefile(directory: Path) {
+public fun GeoDataFrame<*>.writeShapefile(directory: Path) {
     if (directory.notExists()) {
         directory.createDirectories()
     }
@@ -63,6 +63,6 @@ fun GeoDataFrame<*>.writeShapefile(directory: Path) {
     }
 }
 
-fun GeoDataFrame<*>.writeShapefile(directory: File) {
+public fun GeoDataFrame<*>.writeShapefile(directory: File) {
     writeShapefile(directory.toPath())
 }

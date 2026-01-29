@@ -1,10 +1,10 @@
 package org.jetbrains.dataframe.ksp
 
-object DataFrameNames {
-    const val DATAFRAME_PACKAGE = "org.jetbrains.kotlinx.dataframe"
-    const val DATA_SCHEMA = "org.jetbrains.kotlinx.dataframe.annotations.DataSchema"
-    const val SHORT_COLUMN_NAME = "ColumnName"
-    const val COLUMN_NAME = "org.jetbrains.kotlinx.dataframe.annotations.$SHORT_COLUMN_NAME"
-    const val DATA_FRAME = "$DATAFRAME_PACKAGE.DataFrame"
-    const val DATA_ROW = "$DATAFRAME_PACKAGE.DataRow"
+public object DataFrameNames {
+    public const val DATAFRAME_PACKAGE: String = "org.jetbrains.kotlinx.dataframe"
+    public const val DATA_SCHEMA: String = "org.jetbrains.kotlinx.dataframe.annotations.DataSchema"
+    public const val SHORT_COLUMN_NAME: String = "ColumnName"
+    public const val COLUMN_NAME: String = "org.jetbrains.kotlinx.dataframe.annotations.$SHORT_COLUMN_NAME"
+    public const val DATA_FRAME: String = "$DATAFRAME_PACKAGE.DataFrame"
+    public const val DATA_ROW: String = "$DATAFRAME_PACKAGE.DataRow"
 }

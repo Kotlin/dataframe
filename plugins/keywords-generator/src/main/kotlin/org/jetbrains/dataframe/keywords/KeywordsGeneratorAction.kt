@@ -13,10 +13,10 @@ import org.jetbrains.kotlin.lexer.KtKeywordToken
 import org.jetbrains.kotlin.lexer.KtTokens
 import java.io.File
 
-abstract class KeywordsGeneratorAction : WorkAction<KeywordsGeneratorAction.Parameters> {
+public abstract class KeywordsGeneratorAction : WorkAction<KeywordsGeneratorAction.Parameters> {
 
-    interface Parameters : WorkParameters {
-        var srcDir: File
+    public interface Parameters : WorkParameters {
+        public var srcDir: File
     }
 
     private val taskPackageName = "org.jetbrains.kotlinx.dataframe.keywords"
