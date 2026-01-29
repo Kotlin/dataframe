@@ -25,15 +25,17 @@ internal open class ValueColumnImpl<T>(
     type: KType,
     val defaultValue: T? = null,
     distinct: Lazy<Set<T>>? = null,
+    private val statisticsCache: MutableMap<String, MutableMap<Map<String, Any>, StatisticResult>> = mutableMapOf(),
 ) : DataColumnImpl<T>(values, name, type, distinct),
     ValueColumn<T>,
     ValueColumnInternal<T> {
 
     override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, distinct)
 
-    override fun rename(newName: String) = ValueColumnImpl(values, newName, type, defaultValue, distinct)
+    override fun rename(newName: String) =
+        ValueColumnImpl(values, newName, type, defaultValue, distinct, statisticsCache)
 
-    override fun changeType(type: KType) = ValueColumnImpl(values, name, type, defaultValue, distinct)
+    override fun changeType(type: KType) = ValueColumnImpl(values, name, type, defaultValue, distinct, statisticsCache)
 
     override fun addParent(parent: ColumnGroup<*>): DataColumn<T> = ValueColumnWithParent(parent, this)
 
@@ -60,8 +62,6 @@ internal open class ValueColumnImpl<T>(
     override fun defaultValue() = defaultValue
 
     override fun forceResolve() = ResolvingValueColumn(this)
-
-    private val statisticsCache = mutableMapOf<String, MutableMap<Map<String, Any>, StatisticResult>>()
 
     override fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult) {
         statisticsCache.getOrPut(statName) { mutableMapOf() }[arguments] = value

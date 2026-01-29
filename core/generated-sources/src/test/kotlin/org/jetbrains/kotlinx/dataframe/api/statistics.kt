@@ -1,9 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.impl.columns.ResolvingValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
+import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.internalValueColumn
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class StatisticsTests {
@@ -1014,5 +1019,33 @@ class StatisticsTests {
         // median
         valueColumn.median(false) shouldBe 2
         valueColumn.getStatisticCacheOrNull("median", mapOf("skipNaN" to false))?.value shouldBe 2
+    }
+
+    @Test
+    fun `statistics cache for ValueColumn, cache is correctly exploited in a DataFrame context`() {
+        // generic situation where statistic function is called one time for each row
+        val filteredDf = personsDf.filter { it["age"] == personsDf["age"].cast<Int>().max() }
+        filteredDf.rowsCount() shouldBe 1
+        personsDf["age"].asValueColumn().internalValueColumn()
+            .getStatisticCacheOrNull("max", mapOf("skipNaN" to false))?.value shouldBe 100
+        // dataframe-wide statistic function
+        personsDf.min { "age"<Int>() } shouldBe 1
+        personsDf["age"].asValueColumn().internalValueColumn()
+            .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+    }
+
+    @Test
+    fun `statistics cache for ValueColumn, preserve statistics cache when changing type or renaming`() {
+        val valueColumn = columnOf(3, 1, 2)
+        valueColumn.min(false) shouldBe 1
+        // derived columns
+        val renamedColumn = valueColumn.rename("newName").asValueColumn().internalValueColumn()
+        val colWithDifferentType = ((valueColumn as ResolvingValueColumn).source as ValueColumnImpl)
+            .changeType(typeOf<Double>())
+        // tests
+        valueColumn.asValueColumn().internalValueColumn()
+            .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+        renamedColumn.getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+        colWithDifferentType.getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
     }
 }
