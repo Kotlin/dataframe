@@ -1,3 +1,11 @@
+public abstract class org/jetbrains/kotlinx/dataframe/io/AbstractJdbcSchemaReader : org/jetbrains/kotlinx/dataframe/io/SchemaReader {
+	public fun <init> ()V
+	public fun accepts (Ljava/lang/String;Ljava/lang/String;)Z
+	public abstract fun config ()Lorg/jetbrains/kotlinx/dataframe/io/DbConnectionConfig;
+	public fun default (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun read (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/DbConnectionConfig {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
