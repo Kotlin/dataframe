@@ -43,6 +43,6 @@ public abstract class KeywordsGeneratorPlugin : Plugin<Project> {
 
     public companion object {
         public const val KOTLIN_COMPILER_EMBEDDABLE: String = "org.jetbrains.kotlin:kotlin-compiler-embeddable"
-        public const val KOTLIN_COMPILER_VERSION: String = BuildConfig.kotlinCompilerVersion
+        public const val KOTLIN_COMPILER_VERSION: String = BuildConfig.KOTLIN_COMPILER_VERSION
     }
 }

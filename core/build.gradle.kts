@@ -9,13 +9,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
+        alias(buildConfig)
     }
     with(libs.plugins) {
         alias(publisher)
         alias(serialization)
         alias(korro)
         alias(kodex)
-        alias(buildconfig)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
 

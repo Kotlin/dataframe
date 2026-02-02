@@ -1,5 +1,4 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import com.github.gmazzo.buildconfig.BuildConfigExtension
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -26,7 +25,6 @@ plugins {
 
         alias(simpleGit) apply false
         alias(dependencyVersions)
-        alias(buildconfig) apply false
 
         // dependence on our own plugin
         alias(dataframe) apply false
@@ -124,19 +122,6 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
 allprojects {
     // Attempts to configure ktlint for each sub-project that uses the plugin
     afterEvaluate {
-        // Attempts to configure buildConfig for each sub-project that uses it
-        try {
-            configure<BuildConfigExtension> {
-                packageName = "org.jetbrains.kotlinx.dataframe"
-                className = "BuildConfig"
-                buildConfigField("KOTLIN_VERSION", libs.versions.kotlin.asProvider().get())
-                buildConfigField("VERSION", "${project.version}")
-                buildConfigField("DEBUG", findProperty("kotlin.dataframe.debug")?.toString()?.toBoolean() ?: false)
-            }
-        } catch (_: UnknownDomainObjectException) {
-            logger.warn("Could not set buildConfig on :${this.name}")
-        }
-
         // Adds the instrumentedJars configuration/artifact to all sub-projects with a `jar` task
         // This allows other modules to depend on the output of this task, aka the compiled jar of that module
         // Used in :plugins:dataframe-gradle-plugin integration tests and in :samples for compiler plugin support

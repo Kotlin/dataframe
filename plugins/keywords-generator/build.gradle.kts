@@ -8,16 +8,8 @@ plugins {
     `kotlin-dsl`
     with(convention.plugins) {
         alias(kotlinJvm8)
+        alias(buildConfig)
     }
-    with(libs.plugins) {
-        alias(buildconfig)
-    }
-}
-
-buildConfig {
-    packageName = "org.jetbrains.kotlinx.dataframe"
-    className = "BuildConfig"
-    buildConfigField("kotlinCompilerVersion", kotlin.compilerVersion.get())
 }
 
 dependencies {
