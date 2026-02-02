@@ -14,7 +14,6 @@ plugins {
         alias(publisher)
         alias(serialization)
         alias(korro)
-//        alias(kover)
         alias(kodex)
         alias(buildconfig)
         alias(binary.compatibility.validator)
@@ -411,21 +410,6 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "2048m"
-//    kover {
-//        currentProject {
-//            instrumentation { disabledForTestTasks.addAll("samplesTest") }
-//        }
-//        reports {
-//            total {
-//                filters {
-//                    excludes {
-//                        classes("org.jetbrains.kotlinx.dataframe.jupyter.*")
-//                        classes("org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests")
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
 
 kotlinPublications {

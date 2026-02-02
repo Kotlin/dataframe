@@ -8,7 +8,6 @@ plugins {
     with(libs.plugins) {
         alias(publisher)
         alias(serialization)
-//        alias(kover)
         alias(kodex)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)

@@ -26,7 +26,6 @@ plugins {
     with(libs.plugins) {
         alias(korro)
         alias(dataframe.compiler.plugin)
-//        alias(kover)
         alias(ksp)
     }
 }

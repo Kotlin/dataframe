@@ -19,7 +19,6 @@ plugins {
         alias(publisher)
         alias(serialization) apply false
         alias(dokka)
-//        alias(kover)
 
         // TODO cannot define korro and kodex here due to leaking them kotlin-compiler-embeddable into the build classpath
         // alias(korro) apply false
@@ -53,16 +52,6 @@ dependencies {
 
     // experimental, so not included by default:
     // api(projects.dataframeOpenapi)
-
-//    kover(projects.core)
-//    kover(projects.dataframeArrow)
-//    kover(projects.dataframeExcel)
-//    kover(projects.dataframeOpenapi)
-//    kover(projects.dataframeJdbc)
-//    kover(projects.dataframeCsv)
-//    kover(projects.dataframeJson)
-//    kover(projects.plugins.kotlinDataframe)
-//    kover(projects.dataframeJupyter)
 }
 
 enum class Version : Comparable<Version> {

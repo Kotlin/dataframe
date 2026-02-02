@@ -7,7 +7,6 @@ plugins {
     with(libs.plugins) {
         alias(publisher)
         alias(serialization)
-//        alias(kover)
         alias(binary.compatibility.validator)
     }
 }

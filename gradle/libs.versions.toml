@@ -19,7 +19,6 @@ korro = "0.1.6"
 gradlePlugin-gradle-foojayToolchains = "1.0.0"
 typesafe-conventions = "0.10.0"
 binaryCompatibilityValidator = "0.17.0"
-kover = "0.9.1"
 deephavenCsv = "0.19.0"
 fastDoubleParser = "2.0.1"
 commonsCsv = "1.14.1"
@@ -209,7 +208,6 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kodex = { id = "nl.jolanrensen.kodex", version.ref = "kodex" }
 simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
