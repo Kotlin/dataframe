@@ -1,3 +1,4 @@
+import dev.panuszewski.gradle.pluginMarker
 import org.gradle.kotlin.dsl.support.expectedKotlinDslPluginsVersion
 
 plugins {
@@ -15,4 +16,8 @@ dependencies {
     // Add a dependency on the Kotlin Gradle plugin so that convention plugins can apply it.
     implementation(libs.kotlin.gradle.plugin)
     implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:$expectedKotlinDslPluginsVersion")
+
+    // We need to declare a dependency for each plugin used in convention plugins below
+    implementation(pluginMarker(libs.plugins.ktlint.gradle))
+    implementation(pluginMarker(libs.plugins.buildconfig))
 }

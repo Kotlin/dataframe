@@ -1,10 +1,12 @@
+import org.jetbrains.dataframe.gradle.DataSchemaVisibility
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-        alias(ktlint)
         alias(dataframe)
         alias(ksp)
     }

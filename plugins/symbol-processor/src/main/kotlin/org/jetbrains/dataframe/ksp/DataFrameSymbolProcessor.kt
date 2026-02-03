@@ -5,7 +5,7 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 
-class DataFrameSymbolProcessor(
+public class DataFrameSymbolProcessor(
     private val codeGenerator: com.google.devtools.ksp.processing.CodeGenerator,
     private val logger: KSPLogger,
     private val resolutionDir: String?,

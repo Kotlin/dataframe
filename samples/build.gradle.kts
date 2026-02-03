@@ -19,13 +19,13 @@ import org.gradle.kotlin.dsl.testImplementation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    java
-    with(libs.plugins) {
-        alias(kotlin.jvm)
-        alias(korro)
+    with(convention.plugins) {
+        alias(kotlinJvm11)
         alias(ktlint)
+    }
+    with(libs.plugins) {
+        alias(korro)
         alias(dataframe.compiler.plugin)
-//        alias(kover)
         alias(ksp)
     }
 }

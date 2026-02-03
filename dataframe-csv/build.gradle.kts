@@ -2,12 +2,12 @@ import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.gradle.jvm.tasks.Jar
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-//        alias(kover)
-        alias(ktlint)
         alias(kodex)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
@@ -150,8 +150,4 @@ kotlinPublications {
         description = "CSV support for Kotlin DataFrame"
         packageName = artifactId
     }
-}
-
-kotlin {
-    explicitApi()
 }

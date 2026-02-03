@@ -1,7 +1,8 @@
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
-        alias(ktlint)
         alias(publisher)
         alias(binary.compatibility.validator)
     }
@@ -20,8 +21,4 @@ kotlinPublications {
         description = "OpenAPI support for Kotlin DataFrame"
         packageName = artifactId
     }
-}
-
-kotlin {
-    explicitApi()
 }

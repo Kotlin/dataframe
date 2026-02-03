@@ -2,10 +2,13 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.kotlin.dsl.withType
 
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.shadow)
-    alias(libs.plugins.publisher)
-    alias(libs.plugins.ktlint)
+    with(convention.plugins) {
+        alias(kotlinJvm11)
+    }
+    with(libs.plugins) {
+        alias(shadow)
+        alias(publisher)
+    }
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
