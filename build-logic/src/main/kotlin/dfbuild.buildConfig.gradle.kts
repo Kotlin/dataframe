@@ -26,7 +26,7 @@ tasks.generateBuildConfig {
         "runKtlintFormatOver${buildConfigSources.name.uppercaseFirstChar()}SourceSet",
     )
 }
-tasks.named("runKtlintCheckOver${buildConfigSources.name.uppercaseFirstChar()}SourceSet") {
+tasks.named { "Ktlint" in it && "Check" in it }.configureEach {
     dependsOn(
         tasks.generateBuildConfig,
         "runKtlintFormatOver${buildConfigSources.name.uppercaseFirstChar()}SourceSet",
