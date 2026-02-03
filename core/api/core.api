@@ -5976,6 +5976,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/CodeGenerationRe
 public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/CodeGeneratorImplKt {
 	public static final fun isQuoted (Ljava/lang/String;)Z
 	public static final fun quoteIfNeeded (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun quotedQualifiedNameOrNull (Lkotlin/reflect/KClass;)Ljava/lang/String;
 	public static final fun toStandaloneSnippet (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
 	public static final fun toStandaloneSnippet (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
 	public static final fun toStandaloneSnippet (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithTypeCastGenerator;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
