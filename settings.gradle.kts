@@ -14,10 +14,8 @@ plugins {
 includeBuild("./build-logic")
 
 includeBuild("plugins/keywords-generator")
-include("plugins:dataframe-gradle-plugin")
-include("plugins:symbol-processor")
+
 include("plugins:expressions-converter")
-include("plugins:kotlin-dataframe")
 include("plugins:public-api-modifier")
 include("samples")
 include("dataframe-json")

@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-//        alias(kover)
-        alias(ktlint)
         alias(binary.compatibility.validator)
     }
 }
@@ -30,10 +30,6 @@ dependencies {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
     testImplementation(libs.sl4jsimple)
-}
-
-kotlin {
-    explicitApi()
 }
 
 tasks.withType<KotlinCompile> {

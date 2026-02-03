@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.name.FqName
 
 @OptIn(ExperimentalCompilerApi::class)
-class PublicApiModifierRegistrar : CompilerPluginRegistrar() {
+public class PublicApiModifierRegistrar : CompilerPluginRegistrar() {
     override val supportsK2: Boolean = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
@@ -25,15 +25,15 @@ class PublicApiModifierRegistrar : CompilerPluginRegistrar() {
     }
 }
 
-class Extensions : FirExtensionRegistrar() {
+public class Extensions : FirExtensionRegistrar() {
     override fun ExtensionRegistrarContext.configurePlugin() {
         +::StatusTransformer
     }
 }
 
-class StatusTransformer(session: FirSession) : FirStatusTransformerExtension(session) {
-    companion object {
-        val apiOverload = FqName("org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload")
+public class StatusTransformer(session: FirSession) : FirStatusTransformerExtension(session) {
+    public companion object {
+        public val apiOverload: FqName = FqName("org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload")
     }
 
     override fun needTransformStatus(declaration: FirDeclaration): Boolean =
