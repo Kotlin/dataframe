@@ -27,6 +27,14 @@ pluginManagement {
 plugins {
     // Use the Foojay Toolchains plugin to automatically download JDKs required by subprojects.
     id("org.gradle.toolchains.foojay-resolver-convention")
+    id("com.gradle.develocity")
 }
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+develocity {
+    buildScan {
+        termsOfUseUrl.set("https://gradle.com/help/legal-terms-of-use")
+        termsOfUseAgree.set("yes")
+    }
+}

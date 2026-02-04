@@ -17,6 +17,7 @@ dataframe = "1.0.0-Beta4"
 korro = "0.1.6"
 
 gradlePlugin-gradle-foojayToolchains = "1.0.0"
+gradlePlugin-gradle-develocity = "3.19"
 typesafe-conventions = "0.10.0"
 binaryCompatibilityValidator = "0.17.0"
 deephavenCsv = "0.19.0"
@@ -149,6 +150,7 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
 
+gradlePlugin-gradle-develocity = { module = "com.gradle:develocity-gradle-plugin", version.ref = "gradlePlugin-gradle-develocity" }
 gradlePlugin-gradle-foojayToolchains = { module = "org.gradle.toolchains:foojay-resolver", version.ref = "gradlePlugin-gradle-foojayToolchains" }
 typesafe-conventions = { module = "dev.panuszewski:typesafe-conventions-gradle-plugin", version.ref = "typesafe-conventions" }
 kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging", version.ref = "kotlinLogging" }
