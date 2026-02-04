@@ -39,16 +39,8 @@ dependencies {
 // for Java 17+, and Arrow/Parquet support
 application {
     applicationDefaultJvmArgs = listOf(
-        "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+        "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED",
     )
-}
-
-kotlin {
-    jvmToolchain(11)
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_11
-        freeCompilerArgs.add("-Xjdk-release=11")
-    }
 }
 
 java {
@@ -59,7 +51,7 @@ java {
 
 tasks.withType<JavaExec> {
     jvmArgs(
-        "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+        "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED",
     )
 }
 
@@ -70,12 +62,9 @@ tasks.withType<JavaCompile> {
 }
 
 // Configure KSP tasks to use the same JVM target
-tasks.withType<KotlinCompile> {
+kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_11)
         freeCompilerArgs.add("-Xjdk-release=11")
     }
 }
-
-
-

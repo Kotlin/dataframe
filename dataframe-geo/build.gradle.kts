@@ -1,12 +1,12 @@
+import org.jetbrains.dataframe.gradle.DataSchemaVisibility
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-        alias(ktlint)
-        alias(dataframe)
-        alias(ksp)
     }
 }
 
@@ -17,6 +17,12 @@ repositories {
     maven(url = "https://repo.osgeo.org/repository/release")
     mavenCentral()
     mavenLocal()
+}
+
+kotlin.sourceSets {
+    main {
+        kotlin.srcDir("src/generated-dataschema-accessors/main/kotlin/")
+    }
 }
 
 // https://stackoverflow.com/questions/26993105/i-get-an-error-downloading-javax-media-jai-core1-1-3-from-maven-central

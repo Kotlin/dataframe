@@ -1,10 +1,12 @@
 plugins {
-    `kotlin-dsl`
+    id("org.gradle.kotlin.kotlin-dsl")
     `maven-publish`
+    with(convention.plugins) {
+        alias(kotlinJvm11)
+        alias(buildConfig)
+    }
     with(libs.plugins) {
-        alias(buildconfig)
         alias(plugin.publish)
-        alias(ktlint)
     }
 }
 
@@ -133,14 +135,3 @@ val integrationTestTask = tasks.register<Test>("integrationTest") {
 }
 
 tasks.check { dependsOn(integrationTestTask) }
-
-// fixing linter + buildConfig
-kotlin.sourceSets.create("buildConfigSources") {
-    kotlin.srcDir("build/generated/sources/buildConfig/main")
-}
-tasks.generateBuildConfig {
-    finalizedBy("runKtlintFormatOverBuildConfigSourcesSourceSet")
-}
-tasks.named("runKtlintCheckOverBuildConfigSourcesSourceSet") {
-    dependsOn(tasks.generateBuildConfig, "runKtlintFormatOverBuildConfigSourcesSourceSet")
-}
