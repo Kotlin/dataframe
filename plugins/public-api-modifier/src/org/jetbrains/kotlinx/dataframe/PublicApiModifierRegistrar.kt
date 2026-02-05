@@ -20,6 +20,8 @@ import org.jetbrains.kotlin.name.FqName
 public class PublicApiModifierRegistrar : CompilerPluginRegistrar() {
     override val supportsK2: Boolean = true
 
+    override val pluginId: String = "org.jetbrains.kotlinx.dataframe.PublicApiModifier"
+
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
         FirExtensionRegistrarAdapter.registerExtension(Extensions())
     }
