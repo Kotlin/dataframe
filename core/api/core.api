@@ -6675,7 +6675,6 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords : j
 	public static final field ANNOTATION Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field COMPANION Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field CONST Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
-	public static final field CONTRACT Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field CROSSINLINE Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords$Companion;
 	public static final field DATA Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
