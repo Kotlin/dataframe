@@ -59,7 +59,7 @@ internal interface CorrDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetCorrOperationArg]}
      */
-    interface SelectingOptions
+    typealias SelectingOptions = Nothing
 
     /**
      * ## Corr Operation Grammar
@@ -75,19 +75,19 @@ internal interface CorrDocs {
      * {@include [Indent]}
      *`| `__`.`__[**`withItself`**][Corr.withItself]`()`
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [corr][corr]} */
 @ExcludeFromSources
-private interface SetCorrOperationArg
+private typealias SetCorrOperationArg = Nothing
 
 /**
  * {@include [CorrDocs]}
  * ### This Corr Overload
  */
 @ExcludeFromSources
-private interface CommonCorrDocs
+private typealias CommonCorrDocs = Nothing
 
 internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typeOf<Boolean>()
 
@@ -208,14 +208,14 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * For more information, see: {@include [DocumentationUrls.Corr]}
  */
-internal interface CorrWithDocs
+internal typealias CorrWithDocs = Nothing
 
 /**
  * {@include [CorrWithDocs]}
  * ### This Corr With Overload
  */
 @ExcludeFromSources
-private interface CommonCorrWithDocs
+private typealias CommonCorrWithDocs = Nothing
 
 /**
  * {@include [CommonCorrWithDocs]}

@@ -79,13 +79,13 @@ public interface ColsOfColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**colsOf**][ColumnsSelectionDsl.colsOf] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -130,10 +130,10 @@ public interface ColsOfColumnsSelectionDsl {
     private interface CommonColsOfDocs {
 
         /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
-        interface Return
+        typealias Return = Nothing
 
         /** @param [filter\] an optional filter function that takes a column of type [C\] and returns `true` if the column should be included. */
-        interface FilterParam
+        typealias FilterParam = Nothing
     }
 
     /**

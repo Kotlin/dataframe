@@ -43,17 +43,17 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 internal interface CommonTakeAndDropDocs {
 
     /** Title, like "Take Last" */
-    interface TITLE
+    typealias TITLE = Nothing
 
     /** Operation, like "takeLast" */
-    interface OPERATION
+    typealias OPERATION = Nothing
 
     /** Operation, like "take" */
-    interface NOUN
+    typealias NOUN = Nothing
 
     /** like "first" */
-    interface FIRST_OR_LAST
+    typealias FIRST_OR_LAST = Nothing
 
     /** Example argument to use */
-    interface EXAMPLE
+    typealias EXAMPLE = Nothing
 }
