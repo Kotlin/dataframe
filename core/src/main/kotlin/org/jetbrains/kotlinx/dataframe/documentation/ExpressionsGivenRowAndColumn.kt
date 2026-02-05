@@ -15,12 +15,11 @@ internal interface ExpressionsGivenRowAndColumn {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface OPERATION
-
+    typealias OPERATION = Nothing
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
-    interface SetDefaultOperationArg
+    typealias SetDefaultOperationArg = Nothing
 
     /** Provide a new value for every selected cell given both its row and column using a [row-column expression][DfRowColumnExpression]. */
     interface RowColumnExpression {
@@ -38,9 +37,9 @@ internal interface ExpressionsGivenRowAndColumn {
          *
          * @include [SetDefaultOperationArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Row Column Expression][RowColumnExpression] */
-    interface RowColumnExpressionLink
+    typealias RowColumnExpressionLink = Nothing
 }

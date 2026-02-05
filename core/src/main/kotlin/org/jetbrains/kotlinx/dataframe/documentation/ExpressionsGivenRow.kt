@@ -38,12 +38,11 @@ internal interface ExpressionsGivenRow {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface OPERATION
-
+    typealias OPERATION = Nothing
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
-    interface SetDefaultOperationArg
+    typealias SetDefaultOperationArg = Nothing
 
     /**
      * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
@@ -53,7 +52,7 @@ internal interface ExpressionsGivenRow {
      * [RowExpression][DfRowExpression] that provides access to
      * the modified/generated value of the preceding row ([AddDataRow.newValue]).
      */
-    interface AddDataRowNote
+    typealias AddDataRowNote = Nothing
 
     /** Provide a new value for every selected cell given its row using a [row expression][DfRowExpression]. */
     interface RowExpression {
@@ -68,11 +67,11 @@ internal interface ExpressionsGivenRow {
          * `df.`{@get [OPERATION]}` { 2021 - age }`
          * @include [SetDefaultOperationArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Row Expression][RowExpression.WithExample] */
-    interface RowExpressionLink
+    typealias RowExpressionLink = Nothing
 
     /** Provide a new value for every selected cell given its row and its previous value using a
      * [row value expression][DfRowValueExpression].
@@ -89,12 +88,12 @@ internal interface ExpressionsGivenRow {
          * `df.`{@get [OPERATION]}` { it.uppercase() }`
          * {@include [SetDefaultOperationArg]}
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Row Value Expression][RowValueExpression.WithExample] */
-    interface RowValueExpressionLink
+    typealias RowValueExpressionLink = Nothing
 }
 
 /** [Row Expression][ExpressionsGivenRow] */
-internal interface RowExpressionsLink
+internal typealias RowExpressionsLink = Nothing

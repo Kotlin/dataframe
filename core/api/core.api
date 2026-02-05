@@ -501,27 +501,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSe
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSelectionDsl$Grammar$After {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSelectionDsl$Grammar$Before {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSelectionDsl$Grammar$From {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSelectionDsl$Grammar$UpTo {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl {
 	public fun KPropertyDataRowExceptNew (Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public fun KPropertyDataRowExceptNew (Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
@@ -592,18 +571,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptCol
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl$Grammar$ColumnGroupExceptName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/AllKt {
 	public static final fun all (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Z
 	public static final fun all (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Z
@@ -633,12 +600,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/AndColumnsSe
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/AndColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AndColumnsSelectionDsl$Grammar$InfixName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/AndColumnsSelectionDsl$Grammar$Name {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/AnyKt {
@@ -769,15 +730,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColColumnsSe
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupColumnsSelectionDsl {
 	public fun ColumnSetDataRowColGroupIndex (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public fun colGroup (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;
@@ -838,15 +790,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupColu
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/ColGroupKt {
 	public static final fun ensureIsColumnGroup (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 }
@@ -867,15 +810,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupsCol
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupsColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupsColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupsColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColGroupsColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsAtAnyDepthColumnsSelectionDsl {
@@ -899,15 +833,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsAtAnyDep
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsAtAnyDepthColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsAtAnyDepthColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsAtAnyDepthColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsAtAnyDepthColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl {
@@ -1014,15 +939,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsS
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsInGroupsColumnsSelectionDsl {
 	public fun colsInGroups (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun colsInGroups (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -1046,15 +962,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsInGroups
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsInGroupsColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsInGroupsColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsInGroupsColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsInGroupsColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/ColsKt {
 	public static final fun colsInternal (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
 }
@@ -1069,15 +976,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfColumn
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfKindColumnsSelectionDsl {
@@ -1096,15 +994,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfKindCo
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfKindColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfKindColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfKindColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfKindColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ColsOfKt {
@@ -1258,24 +1147,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnNameFi
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnNameFiltersColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnNameFiltersColumnsSelectionDsl$Grammar$ColumnGroupNameContains {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnNameFiltersColumnsSelectionDsl$Grammar$ColumnGroupNameStartsWith {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnNameFiltersColumnsSelectionDsl$Grammar$ColumnSetNameContains {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnNameFiltersColumnsSelectionDsl$Grammar$ColumnSetNameStartsEndsWith {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnNameFiltersColumnsSelectionDsl$Grammar$PlainDslNameContains {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnNameFiltersColumnsSelectionDsl$Grammar$PlainDslNameStartsEndsWith {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnRangeColumnsSelectionDsl {
 	public fun rangeTo (Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun rangeTo (Ljava/lang/String;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -1289,9 +1160,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnRangeC
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnRangeColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnRangeColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ColumnReferenceApiKt {
@@ -1338,19 +1206,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelec
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DslGrammar$ColumnGroupPartOfGrammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DslGrammar$ColumnGroupPartOfGrammar$ForHtml {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DslGrammar$ColumnSetPartOfGrammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DslGrammar$ColumnSetPartOfGrammar$ForHtml {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DslGrammar$DefinitionsPartOfGrammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DslGrammar$PlainDslPartOfGrammar {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDslKt {
@@ -2016,9 +1872,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/DistinctColu
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/DistinctColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/DistinctColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/DistinctKt {
 	public static final fun distinct (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun distinct (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -2061,24 +1914,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/DropColumnsS
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/DropColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/DropColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/DropColumnsSelectionDsl$Grammar$ColumnGroupWhileName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/DropColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/DropColumnsSelectionDsl$Grammar$ColumnSetWhileName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/DropColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/DropColumnsSelectionDsl$Grammar$PlainDslWhileName {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DropKt {
@@ -2145,17 +1980,11 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ExprColumnsS
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ExprColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ExprColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/FilterColumnsSelectionDsl {
 	public fun filter (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/FilterColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FilterColumnsSelectionDsl$Grammar$ColumnSetName {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/FilterKt {
@@ -2183,15 +2012,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/FirstColumns
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/FirstColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FirstColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FirstColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FirstColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/FirstKt {
@@ -2361,15 +2181,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColColu
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColsColumnsSelectionDsl {
 	public fun frameCols (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun frameCols (Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -2386,15 +2197,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColsCol
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColsColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColsColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColsColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/FrameColsColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/FramesKt {
@@ -2753,15 +2555,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/LastColumnsS
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/LastColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/LastColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/LastColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/LastColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/LastKt {
@@ -3515,9 +3308,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/NoneColumnsS
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/NoneColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/NoneColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/NoneKt {
 	public static final fun none (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Z
 	public static final fun none (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Z
@@ -3916,18 +3706,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumn
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumnsSelectionDsl$Grammar$InfixIntoName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumnsSelectionDsl$Grammar$InfixNamedName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumnsSelectionDsl$Grammar$IntoName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumnsSelectionDsl$Grammar$NamedName {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/RenameKt {
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/RenameClause;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/RenameClause;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -4029,9 +3807,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/SelectColumn
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/SelectColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/SelectColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/SelectKt {
 	public static final fun select (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun select (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -4051,9 +3826,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/SimplifyColu
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/SimplifyColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/SimplifyColumnsSelectionDsl$Grammar$ColumnSetName {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/SingleColumnsSelectionDsl {
@@ -4076,15 +3848,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/SingleColumn
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/SingleColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/SingleColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/SingleColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/SingleColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/SingleKt {
@@ -4464,24 +4227,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/TakeColumnsS
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/TakeColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/TakeColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/TakeColumnsSelectionDsl$Grammar$ColumnGroupWhileName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/TakeColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/TakeColumnsSelectionDsl$Grammar$ColumnSetWhileName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/TakeColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/TakeColumnsSelectionDsl$Grammar$PlainDslWhileName {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/TakeKt {
 	public static final fun take (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun take (Lorg/jetbrains/kotlinx/dataframe/DataFrame;I)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -4605,15 +4350,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/Update {
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Columns {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Columns$SELECTING_COLUMNS {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$UpdateSelectingOptions {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/UpdateKt {
 	public static final fun asFrame (Lorg/jetbrains/kotlinx/dataframe/api/Update;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun at (Lorg/jetbrains/kotlinx/dataframe/api/Update;Ljava/util/Collection;)Lorg/jetbrains/kotlinx/dataframe/api/Update;
@@ -4695,15 +4431,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColColu
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColColumnsSelectionDsl$Grammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColColumnsSelectionDsl$Grammar$PlainDslName {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColsColumnsSelectionDsl {
 	public fun valueCols (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public fun valueCols (Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -4720,15 +4447,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColsCol
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColsColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColsColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColsColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueColsColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueCount {
@@ -4840,15 +4558,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/WithoutNulls
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/WithoutNullsColumnsSelectionDsl$Grammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/WithoutNullsColumnsSelectionDsl$Grammar$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/WithoutNullsColumnsSelectionDsl$Grammar$ColumnSetName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/WithoutNullsColumnsSelectionDsl$Grammar$PlainDslName {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/XsKt {
@@ -5423,184 +5132,13 @@ public final class org/jetbrains/kotlinx/dataframe/dataTypes/IMG {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammar {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_GROUP_FUNCTIONS {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_GROUP_PART {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_SET_FUNCTIONS {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_SET_PART {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnExpressionDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnExpressionRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupNoSingleColumnDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupNoSingleColumnRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnKindDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnKindRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnNoAccessorDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnNoAccessorRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnOrColumnSetDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnOrColumnSetRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSelectorDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSelectorRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnTypeDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnTypeRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnsResolverDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnsResolverRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnsSelectorDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnsSelectorRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ConditionDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ConditionRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DEFINITIONS {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DEFINITIONS_PART {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$IgnoreCaseDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$IgnoreCaseRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$IndexDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$IndexRangeDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$IndexRangeRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$IndexRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$InferDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$InferRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$KTypeDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$KTypeRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$NameDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$NameRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$NumberDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$NumberRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PLAIN_DSL_FUNCTIONS {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PLAIN_DSL_PART {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$RegexDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$RegexRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$SingleColumnDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$SingleColumnRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$TextDef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$TextRef {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$UsageTemplateExample {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$UsageTemplateExample$ColumnGroupName {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$UsageTemplateExample$ColumnSetName {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/UnifyingNumbers {
