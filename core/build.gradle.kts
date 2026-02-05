@@ -5,15 +5,15 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+        alias(buildConfig)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
         alias(korro)
-//        alias(kover)
-        alias(ktlint)
         alias(kodex)
-        alias(buildconfig)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
 
@@ -24,12 +24,6 @@ plugins {
 }
 
 group = "org.jetbrains.kotlinx"
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-}
 
 kotlin.sourceSets {
     main {
@@ -379,10 +373,6 @@ tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-kotlin {
-    explicitApi()
-}
-
 tasks.withType<KotlinCompile> {
     compilerOptions {
         optIn.addAll("kotlin.RequiresOptIn")
@@ -393,21 +383,6 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "2048m"
-//    kover {
-//        currentProject {
-//            instrumentation { disabledForTestTasks.addAll("samplesTest") }
-//        }
-//        reports {
-//            total {
-//                filters {
-//                    excludes {
-//                        classes("org.jetbrains.kotlinx.dataframe.jupyter.*")
-//                        classes("org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests")
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
 
 kotlinPublications {

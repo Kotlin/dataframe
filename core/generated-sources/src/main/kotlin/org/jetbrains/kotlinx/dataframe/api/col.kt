@@ -678,7 +678,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    @Interpretable("Col")
+    @Interpretable("ColByStringUntyped")
     public fun col(name: String): ColumnAccessor<*> = column<Any?>(name)
 
     /**
@@ -731,7 +731,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
-    @Interpretable("ColUntyped")
+    @Interpretable("ColByString")
     public fun <C> col(name: String): ColumnAccessor<C> = column(name)
 
     /**
@@ -2564,6 +2564,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
+    @Interpretable("ColByIndexUntyped")
     public fun ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
@@ -2617,6 +2618,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column.
      */
+    @Interpretable("ColByIndex")
     public fun <C> ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<C> = asSingleColumn().col<C>(index)
 
     /**

@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 
-val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiLineStringGeometry>.geometry: DataColumn<org.locationtech.jts.geom.MultiLineString> @JvmName("WithMultiLineStringGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiLineString>
-val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiLineStringGeometry>.geometry: org.locationtech.jts.geom.MultiLineString @JvmName("WithMultiLineStringGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiLineString
-val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiLineStringGeometry?>.geometry: DataColumn<org.locationtech.jts.geom.MultiLineString?> @JvmName("NullableWithMultiLineStringGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiLineString?>
-val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiLineStringGeometry?>.geometry: org.locationtech.jts.geom.MultiLineString? @JvmName("NullableWithMultiLineStringGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiLineString?
+public val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiLineStringGeometry>.geometry: DataColumn<org.locationtech.jts.geom.MultiLineString> @JvmName("WithMultiLineStringGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiLineString>
+public val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiLineStringGeometry>.geometry: org.locationtech.jts.geom.MultiLineString @JvmName("WithMultiLineStringGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiLineString
+public val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiLineStringGeometry?>.geometry: DataColumn<org.locationtech.jts.geom.MultiLineString?> @JvmName("NullableWithMultiLineStringGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiLineString?>
+public val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiLineStringGeometry?>.geometry: org.locationtech.jts.geom.MultiLineString? @JvmName("NullableWithMultiLineStringGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiLineString?

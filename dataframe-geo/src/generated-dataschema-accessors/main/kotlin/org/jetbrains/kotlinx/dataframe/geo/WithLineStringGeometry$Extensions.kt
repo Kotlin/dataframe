@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 
-val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry>.geometry: DataColumn<org.locationtech.jts.geom.LineString> @JvmName("WithLineStringGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.LineString>
-val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry>.geometry: org.locationtech.jts.geom.LineString @JvmName("WithLineStringGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.LineString
-val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry?>.geometry: DataColumn<org.locationtech.jts.geom.LineString?> @JvmName("NullableWithLineStringGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.LineString?>
-val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry?>.geometry: org.locationtech.jts.geom.LineString? @JvmName("NullableWithLineStringGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.LineString?
+public val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry>.geometry: DataColumn<org.locationtech.jts.geom.LineString> @JvmName("WithLineStringGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.LineString>
+public val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry>.geometry: org.locationtech.jts.geom.LineString @JvmName("WithLineStringGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.LineString
+public val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry?>.geometry: DataColumn<org.locationtech.jts.geom.LineString?> @JvmName("NullableWithLineStringGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.LineString?>
+public val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry?>.geometry: org.locationtech.jts.geom.LineString? @JvmName("NullableWithLineStringGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.LineString?

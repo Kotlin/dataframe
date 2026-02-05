@@ -18,7 +18,7 @@ import org.locationtech.jts.geom.Geometry
  * @param singleGeometryType Whether to enforce a single geometry type within the collection. Defaults to false.
  * @return A `SimpleFeatureCollection` representing the `GeoDataFrame`.
  */
-fun GeoDataFrame<*>.toSimpleFeatureCollection(
+public fun GeoDataFrame<*>.toSimpleFeatureCollection(
     name: String? = null,
     singleGeometryType: Boolean = false,
 ): SimpleFeatureCollection {

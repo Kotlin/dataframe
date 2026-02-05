@@ -32,50 +32,50 @@ import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.DriverManager
 
-abstract class GenerateDataSchemaTask : DefaultTask() {
+public abstract class GenerateDataSchemaTask : DefaultTask() {
 
     @get:Input
-    abstract val data: Property<Any>
+    public abstract val data: Property<Any>
 
     @get:Input
-    abstract val csvOptions: Property<CsvOptionsDsl>
+    public abstract val csvOptions: Property<CsvOptionsDsl>
 
     @get:Input
-    abstract val jsonOptions: Property<JsonOptionsDsl>
+    public abstract val jsonOptions: Property<JsonOptionsDsl>
 
     @get:Input
-    abstract val jdbcOptions: Property<JdbcOptionsDsl>
+    public abstract val jdbcOptions: Property<JdbcOptionsDsl>
 
     @get:Input
-    abstract val src: Property<File>
+    public abstract val src: Property<File>
 
     @get:Input
-    abstract val interfaceName: Property<String>
+    public abstract val interfaceName: Property<String>
 
     @get:Input
-    abstract val packageName: Property<String>
+    public abstract val packageName: Property<String>
 
     @get:Input
-    abstract val schemaVisibility: Property<DataSchemaVisibility>
+    public abstract val schemaVisibility: Property<DataSchemaVisibility>
 
     @get:Input
-    abstract val defaultPath: Property<Boolean>
+    public abstract val defaultPath: Property<Boolean>
 
     @get:Input
-    abstract val delimiters: SetProperty<Char>
+    public abstract val delimiters: SetProperty<Char>
 
     @get:Input
-    abstract val enableExperimentalOpenApi: Property<Boolean>
+    public abstract val enableExperimentalOpenApi: Property<Boolean>
 
     @Suppress("LeakingThis")
     @get:OutputFile
-    val dataSchema: Provider<File> = packageName.zip(interfaceName) { packageName, interfaceName ->
+    public val dataSchema: Provider<File> = packageName.zip(interfaceName) { packageName, interfaceName ->
         val packagePath = packageName.replace('.', File.separatorChar)
         Paths.get(src.get().absolutePath, packagePath, "$interfaceName.Generated.kt").toFile()
     }
 
     @TaskAction
-    fun generate() {
+    public fun generate() {
         val csvOptions = csvOptions.get()
         val jsonOptions = jsonOptions.get()
         val jdbcOptions = jdbcOptions.get()

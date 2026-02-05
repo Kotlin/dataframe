@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 
-val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiPointGeometry>.geometry: DataColumn<org.locationtech.jts.geom.MultiPoint> @JvmName("WithMultiPointGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiPoint>
-val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiPointGeometry>.geometry: org.locationtech.jts.geom.MultiPoint @JvmName("WithMultiPointGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiPoint
-val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiPointGeometry?>.geometry: DataColumn<org.locationtech.jts.geom.MultiPoint?> @JvmName("NullableWithMultiPointGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiPoint?>
-val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiPointGeometry?>.geometry: org.locationtech.jts.geom.MultiPoint? @JvmName("NullableWithMultiPointGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiPoint?
+public val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiPointGeometry>.geometry: DataColumn<org.locationtech.jts.geom.MultiPoint> @JvmName("WithMultiPointGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiPoint>
+public val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiPointGeometry>.geometry: org.locationtech.jts.geom.MultiPoint @JvmName("WithMultiPointGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiPoint
+public val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiPointGeometry?>.geometry: DataColumn<org.locationtech.jts.geom.MultiPoint?> @JvmName("NullableWithMultiPointGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiPoint?>
+public val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiPointGeometry?>.geometry: org.locationtech.jts.geom.MultiPoint? @JvmName("NullableWithMultiPointGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiPoint?

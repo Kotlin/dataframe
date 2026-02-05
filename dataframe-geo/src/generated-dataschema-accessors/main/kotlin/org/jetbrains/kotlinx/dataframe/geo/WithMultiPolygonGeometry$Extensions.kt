@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 
-val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygonGeometry>.geometry: DataColumn<org.locationtech.jts.geom.MultiPolygon> @JvmName("WithMultiPolygonGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiPolygon>
-val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygonGeometry>.geometry: org.locationtech.jts.geom.MultiPolygon @JvmName("WithMultiPolygonGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiPolygon
-val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygonGeometry?>.geometry: DataColumn<org.locationtech.jts.geom.MultiPolygon?> @JvmName("NullableWithMultiPolygonGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiPolygon?>
-val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygonGeometry?>.geometry: org.locationtech.jts.geom.MultiPolygon? @JvmName("NullableWithMultiPolygonGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiPolygon?
+public val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygonGeometry>.geometry: DataColumn<org.locationtech.jts.geom.MultiPolygon> @JvmName("WithMultiPolygonGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiPolygon>
+public val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygonGeometry>.geometry: org.locationtech.jts.geom.MultiPolygon @JvmName("WithMultiPolygonGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiPolygon
+public val ColumnsScope<org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygonGeometry?>.geometry: DataColumn<org.locationtech.jts.geom.MultiPolygon?> @JvmName("NullableWithMultiPolygonGeometry_geometry") get() = this["geometry"] as DataColumn<org.locationtech.jts.geom.MultiPolygon?>
+public val DataRow<org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygonGeometry?>.geometry: org.locationtech.jts.geom.MultiPolygon? @JvmName("NullableWithMultiPolygonGeometry_geometry") get() = this["geometry"] as org.locationtech.jts.geom.MultiPolygon?

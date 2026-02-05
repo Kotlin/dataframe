@@ -1,7 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.impl.columns.ResolvingValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
+import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.internalValueColumn
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class StatisticsTests {
@@ -954,5 +961,91 @@ class StatisticsTests {
         percentile34 shouldBe 5200.000000000003
         val percentile35 = res3["name"] as String
         percentile35 shouldBe "Charlie"
+    }
+
+    @Test
+    fun `statistics cache for ValueColumn, stats functions read the cache`() {
+        // test idea: put in the cache nonsense values. If stats functions return them values, no computation was done
+        val valueColumn = columnOf(1, 4, 3, 8) as ValueColumnInternal
+        // max
+        valueColumn.putStatisticCache("max", mapOf("skipNaN" to false), StatisticResult(20))
+        valueColumn.max(false) shouldBe 20
+        // min
+        valueColumn.putStatisticCache("min", mapOf("skipNaN" to false), StatisticResult(20))
+        valueColumn.min(false) shouldBe 20
+        // mean
+        valueColumn.putStatisticCache("mean", mapOf("skipNaN" to false), StatisticResult(20))
+        valueColumn.mean(false) shouldBe 20
+        // sum
+        valueColumn.putStatisticCache("sum", mapOf("skipNaN" to false), StatisticResult(0))
+        valueColumn.sum() shouldBe 0
+        // std
+        valueColumn.putStatisticCache("std", mapOf("skipNaN" to false, "ddof" to 1), StatisticResult(100))
+        valueColumn.std(false, 1) shouldBe 100
+        // percentile
+        valueColumn.putStatisticCache(
+            "percentile", mapOf("skipNaN" to false, "percentile" to 30.0),
+            StatisticResult(100.0),
+        )
+        valueColumn.percentile(30.0, false) shouldBe 100.0
+        // median
+        valueColumn.putStatisticCache("median", mapOf("skipNaN" to false), StatisticResult(20.0))
+        valueColumn.median(false) shouldBe 20.0
+    }
+
+    @Test
+    fun `statistics cache for ValueColumn, stats functions write to the cache`() {
+        val valueColumn = columnOf(3, 1, 2) as ValueColumnInternal
+        // max
+        valueColumn.max(false) shouldBe 3
+        valueColumn.getStatisticCacheOrNull("max", mapOf("skipNaN" to false))?.value shouldBe 3
+        // min
+        valueColumn.min(false) shouldBe 1
+        valueColumn.getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+        // mean
+        valueColumn.mean(false) shouldBe 2
+        valueColumn.getStatisticCacheOrNull("mean", mapOf("skipNaN" to false))?.value shouldBe 2
+        // sum
+        valueColumn.sum(false) shouldBe 6
+        valueColumn.getStatisticCacheOrNull("sum", mapOf("skipNaN" to false))?.value shouldBe 6
+        // std
+        valueColumn.std(false, 1) shouldBe 1.0
+        valueColumn.getStatisticCacheOrNull("std", mapOf("skipNaN" to false, "ddof" to 1))?.value shouldBe 1.0
+        // percentile
+        valueColumn.percentile(6.0, false) shouldBe 1.0
+        valueColumn.getStatisticCacheOrNull(
+            "percentile", mapOf("skipNaN" to false, "percentile" to 6.0),
+        )?.value shouldBe 1.0
+        // median
+        valueColumn.median(false) shouldBe 2
+        valueColumn.getStatisticCacheOrNull("median", mapOf("skipNaN" to false))?.value shouldBe 2
+    }
+
+    @Test
+    fun `statistics cache for ValueColumn, cache is correctly exploited in a DataFrame context`() {
+        // generic situation where statistic function is called one time for each row
+        val filteredDf = personsDf.filter { it["age"] == personsDf["age"].cast<Int>().max() }
+        filteredDf.rowsCount() shouldBe 1
+        personsDf["age"].asValueColumn().internalValueColumn()
+            .getStatisticCacheOrNull("max", mapOf("skipNaN" to false))?.value shouldBe 100
+        // dataframe-wide statistic function
+        personsDf.min { "age"<Int>() } shouldBe 1
+        personsDf["age"].asValueColumn().internalValueColumn()
+            .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+    }
+
+    @Test
+    fun `statistics cache for ValueColumn, preserve statistics cache when changing type or renaming`() {
+        val valueColumn = columnOf(3, 1, 2)
+        valueColumn.min(false) shouldBe 1
+        // derived columns
+        val renamedColumn = valueColumn.rename("newName").asValueColumn().internalValueColumn()
+        val colWithDifferentType = ((valueColumn as ResolvingValueColumn).source as ValueColumnImpl)
+            .changeType(typeOf<Double>())
+        // tests
+        valueColumn.asValueColumn().internalValueColumn()
+            .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+        renamedColumn.getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+        colWithDifferentType.getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
     }
 }

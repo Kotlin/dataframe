@@ -54,6 +54,7 @@
         <toc-element topic="staticInterpretation.md"/>
         <toc-element topic="dataSchema.md"/>
         <toc-element topic="compilerPluginExamples.md"/>
+        <toc-element topic="compilerPluginLimitationsAndWorkarounds.md"/>
     </toc-element>
     <toc-element topic="operations.md">
         <toc-element topic="create.md">

@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm11)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-//        alias(kover)
-        alias(ktlint)
         alias(jupyter.api)
         alias(binary.compatibility.validator)
     }
@@ -15,9 +15,10 @@ group = "org.jetbrains.kotlinx"
 
 repositories {
     // geo repository should come before Maven Central
-    maven("https://repo.osgeo.org/repository/release")
-    maven("https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
+    maven(url = "https://repo.osgeo.org/repository/release")
+    maven(url = "https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
     mavenCentral()
+    mavenLocal()
 }
 
 fun ExternalModuleDependency.excludeDataFrame() = exclude("org.jetbrains.kotlinx", "dataframe")
@@ -46,10 +47,6 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
-}
-
-kotlin {
-    explicitApi()
 }
 
 tasks.withType<KotlinCompile> {

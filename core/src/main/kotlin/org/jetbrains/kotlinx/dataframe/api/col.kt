@@ -226,14 +226,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    @Interpretable("Col")
+    @Interpretable("ColByStringUntyped")
     public fun col(name: String): ColumnAccessor<*> = column<Any?>(name)
 
     /**
      * @include [ColNameDocs] {@set [CommonColDocs.RECEIVER]}
      * @include [CommonColDocs.ColumnTypeParam]
      */
-    @Interpretable("ColUntyped")
+    @Interpretable("ColByString")
     public fun <C> col(name: String): ColumnAccessor<C> = column(name)
 
     /**
@@ -524,12 +524,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
+    @Interpretable("ColByIndexUntyped")
     public fun ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * @include [ColIndexDocs] {@set [CommonColDocs.RECEIVER]}
      * @include [CommonColDocs.ColumnTypeParam]
      */
+    @Interpretable("ColByIndex")
     public fun <C> ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<C> = asSingleColumn().col<C>(index)
 
     /**

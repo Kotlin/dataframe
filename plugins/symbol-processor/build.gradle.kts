@@ -4,14 +4,18 @@ import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
 
 plugins {
-    alias(libs.plugins.shadow)
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.publisher)
-    alias(libs.plugins.ktlint)
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
+    with(libs.plugins) {
+        alias(shadow)
+        alias(publisher)
+    }
 }
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven(url = "https://jitpack.io")
     maven(url = "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }

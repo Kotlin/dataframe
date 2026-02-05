@@ -88,7 +88,7 @@ class Schemas {
         // SampleEnd
     }
 
-    fun DataFrame<Person>.countAdults() = count { it[Person::age] > 18 }
+    fun DataFrame<Person>.countAdults() = count { it.age > 18 }
 
     @Test
     @TransformDataFrameExpressions
@@ -103,7 +103,7 @@ class Schemas {
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", "15", 60.0,
             "Marley, Bob", "20", 73.5,
-        ).split { "name"<String>() }.inward("firstName", "lastName")
+        ).split { "name"<String>() }.by(",").inward("firstName", "lastName")
 
         val persons = df.cast<Person>().toList()
         // SampleEnd

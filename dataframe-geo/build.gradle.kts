@@ -1,10 +1,12 @@
+import org.jetbrains.dataframe.gradle.DataSchemaVisibility
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-        alias(ktlint)
     }
 }
 
@@ -12,7 +14,7 @@ group = "org.jetbrains.kotlinx"
 
 repositories {
     // osgeo repository should come before Maven Central
-    maven("https://repo.osgeo.org/repository/release")
+    maven(url = "https://repo.osgeo.org/repository/release")
     mavenCentral()
     mavenLocal()
 }

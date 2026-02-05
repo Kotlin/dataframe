@@ -2,10 +2,10 @@
 ksp = "2.2.21-2.0.4"
 kotlinJupyter = "0.16.0-736"
 
-ktlint = "14.0.1"
+ktlint-gradle = "14.0.1"
+ktlint = "1.8.0"
 
-kotlin = "2.3.10-RC"
-# make sure to sync manually with :plugins:keywords-generator module
+kotlin = "2.3.10"
 kotlinpoet = "2.2.0"
 
 dokka = "2.1.0"
@@ -16,8 +16,9 @@ libsPublisher = "2.2.0-dev-61"
 dataframe = "1.0.0-Beta4"
 korro = "0.1.6"
 
+gradlePlugin-gradle-foojayToolchains = "1.0.0"
+typesafe-conventions = "0.10.0"
 binaryCompatibilityValidator = "0.17.0"
-kover = "0.9.1"
 deephavenCsv = "0.19.0"
 fastDoubleParser = "2.0.1"
 commonsCsv = "1.14.1"
@@ -148,12 +149,14 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
 
+gradlePlugin-gradle-foojayToolchains = { module = "org.gradle.toolchains:foojay-resolver", version.ref = "gradlePlugin-gradle-foojayToolchains" }
+typesafe-conventions = { module = "dev.panuszewski:typesafe-conventions-gradle-plugin", version.ref = "typesafe-conventions" }
 kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging", version.ref = "kotlinLogging" }
 sl4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "sl4j" }
 sl4jsimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
 android-gradle-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "android-gradle-api" }
 android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-api" }
-kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradle-plugin-api = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin-api" }
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 kotlin-compile-testing = { group = "dev.zacsweers.kctfork", name = "core", version.ref = "kotlin-compile-testing" }
@@ -199,16 +202,17 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }
 publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "libsPublisher" }
 korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
 dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kodex = { id = "nl.jolanrensen.kodex", version.ref = "kodex" }
 simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark" }
 dataframe-compiler-plugin = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
+gradlePlugin-gradle-foojayToolchains = { id = "org.gradle.toolchains:foojay-resolver-convention", version.ref = "gradlePlugin-gradle-foojayToolchains" }
+typesafe-conventions = { id = "dev.panuszewski:typesafe-conventions", version.ref = "typesafe-conventions" }

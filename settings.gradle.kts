@@ -1,10 +1,18 @@
-@file:Suppress("UnstableApiUsage")
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 rootProject.name = "dataframe"
 
-// treated as a separate project with its own Kotlin version, etc.
+// Enables our build-settings logic convention plugins for the root project,
+// setting up all common logic and version- and convention catalogs.
+pluginManagement {
+    includeBuild("./build-settings-logic")
+}
+plugins {
+    id("dfsettings.catalogs")
+}
+
+// Enables our build logic convention plugins for the root project,
+// so they can be applied in child projects in their build.gradle.kts files.
+includeBuild("./build-logic")
+
 includeBuild("plugins/keywords-generator")
 
 include("plugins:expressions-converter")
@@ -34,23 +42,3 @@ include("examples:idea-examples:unsupported-data-sources:multik")
 include("examples:idea-examples:spark-parquet-dataframe")
 includeBuild("examples/kotlin-dataframe-plugin-gradle-example")
 includeBuild("examples/android-example")
-
-val jupyterApiTCRepo: String by settings
-
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
-    }
-}
-
-pluginManagement {
-    repositories {
-        mavenLocal()
-        gradlePluginPortal()
-    }
-}
-
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
-}
