@@ -161,7 +161,7 @@ internal interface FormatDocs {
      * `df.`[format][org.jetbrains.kotlinx.dataframe.api.format]`(Person::length, Person::age)`
      *
      */
-    interface FormatSelectingColumns
+    typealias FormatSelectingColumns = Nothing
 
     /**
      * ## Format Operation Grammar
@@ -281,27 +281,27 @@ internal interface FormatDocs {
          *
          * `| `[**`linear`**][FormattingDsl.linear]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
          */
-        interface FormattingDslGrammarDef
+        typealias FormattingDslGrammarDef = Nothing
 
         /**
          * `cellFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(cell: C) -> `[CellAttributes][CellAttributes]`?`
          */
-        interface CellFormatterDef
+        typealias CellFormatterDef = Nothing
 
         /**
          * `rowColFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[DataRow][DataRow]`<T>, col: `[ColumnWithPath][ColumnWithPath]`<C>) -> `[CellAttributes][CellAttributes]`?`
          */
-        interface RowColFormatterDef
+        typealias RowColFormatterDef = Nothing
 
         /**
          * `cellAttributes: `[CellAttributes][CellAttributes]
          */
-        interface CellAttributesDef
+        typealias CellAttributesDef = Nothing
 
         /**
          * `color: `[RgbColor][RgbColor]
          */
-        interface RgbColorDef
+        typealias RgbColorDef = Nothing
     }
 }
 

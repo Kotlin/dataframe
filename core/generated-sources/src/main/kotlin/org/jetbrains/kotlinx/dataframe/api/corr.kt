@@ -127,7 +127,7 @@ internal interface CorrDocs {
      * `df.`[corr][org.jetbrains.kotlinx.dataframe.api.corr]`(Person::length, Person::age)`
      *
      */
-    interface SelectingOptions
+    typealias SelectingOptions = Nothing
 
     /**
      * ## Corr Operation Grammar
@@ -147,7 +147,7 @@ internal interface CorrDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`withItself`**][Corr.withItself]`()`
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typeOf<Boolean>()
@@ -349,7 +349,7 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  */
-internal interface CorrWithDocs
+internal typealias CorrWithDocs = Nothing
 
 /**
  * Calculates the correlation of specified [columns][otherColumns]

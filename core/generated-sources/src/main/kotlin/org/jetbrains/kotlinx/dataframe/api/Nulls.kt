@@ -83,7 +83,7 @@ internal interface FillNulls {
      * `| `__`.`__[**`asFrame`**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**`  {  `**[`dataFrameExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      *
@@ -157,10 +157,10 @@ internal interface FillNulls {
      * `df.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]`(Person::length, Person::age)`
      *
      */
-    interface FillNullsSelectingOptions
+    typealias FillNullsSelectingOptions = Nothing
 }
 
-private interface SetFillNullsOperationArg
+private typealias SetFillNullsOperationArg = Nothing
 
 /**
  * ## The Fill Nulls Operation
@@ -426,7 +426,7 @@ internal interface FillNaNs {
      * `| `__`.`__[**`asFrame`**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**`  {  `**[`dataFrameExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      *
@@ -500,7 +500,7 @@ internal interface FillNaNs {
      * `df.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`(Person::length, Person::age)`
      *
      */
-    interface FillNaNsSelectingOptions
+    typealias FillNaNsSelectingOptions = Nothing
 }
 
 /**
@@ -708,7 +708,7 @@ internal interface FillNA {
      * `| `__`.`__[**`asFrame`**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**`  {  `**[`dataFrameExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      *
@@ -782,7 +782,7 @@ internal interface FillNA {
      * `df.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]`(Person::length, Person::age)`
      *
      */
-    interface FillNASelectingOptions
+    typealias FillNASelectingOptions = Nothing
 }
 
 /**

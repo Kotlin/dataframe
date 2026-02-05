@@ -146,13 +146,13 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`cols`**][ColumnsSelectionDsl.cols] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`cols`**][ColumnsSelectionDsl.cols] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`cols`**][ColumnsSelectionDsl.cols] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -222,7 +222,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
          * @see [ColumnsSelectionDsl.frameCols]
          * @see [ColumnsSelectionDsl.colGroups]
          */
-        interface Predicate
+        typealias Predicate = Nothing
 
         /**
          * ## Cols
@@ -258,11 +258,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
          */
         interface Vararg {
 
-            interface AccessorType
+            typealias AccessorType = Nothing
         }
 
         /** Example argument */
-        interface Examples
+        typealias Examples = Nothing
     }
 
     /**
@@ -293,7 +293,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsIndicesDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**
@@ -324,7 +324,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsRangeDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     // region predicate
@@ -378,7 +378,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.all]
      * @see [ColumnsSelectionDsl.filter]
      */
-    private interface ColumnSetColsPredicateDocs
+    private typealias ColumnSetColsPredicateDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -533,7 +533,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.all]
      */
-    private interface ColumnsSelectionDslColsPredicateDocs
+    private typealias ColumnsSelectionDslColsPredicateDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -689,7 +689,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols]
      */
-    private interface SingleColumnAnyRowColsPredicateDocs
+    private typealias SingleColumnAnyRowColsPredicateDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -841,7 +841,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      */
-    private interface StringColsPredicateDocs
+    private typealias StringColsPredicateDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -984,7 +984,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols]
      */
-    private interface KPropertyColsPredicateDocs
+    private typealias KPropertyColsPredicateDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1126,7 +1126,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      */
-    private interface ColumnPathPredicateDocs
+    private typealias ColumnPathPredicateDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1257,7 +1257,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface ColumnsSelectionDslColsVarargColumnReferenceDocs
+    private typealias ColumnsSelectionDslColsVarargColumnReferenceDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1370,7 +1370,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface SingleColumnColsVarargColumnReferenceDocs
+    private typealias SingleColumnColsVarargColumnReferenceDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1483,7 +1483,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface StringColsVarargColumnReferenceDocs
+    private typealias StringColsVarargColumnReferenceDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1593,7 +1593,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface KPropertyColsVarargColumnReferenceDocs
+    private typealias KPropertyColsVarargColumnReferenceDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1707,7 +1707,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface ColumnPathColsVarargColumnReferenceDocs
+    private typealias ColumnPathColsVarargColumnReferenceDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1827,7 +1827,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface ColumnsSelectionDslVarargStringDocs
+    private typealias ColumnsSelectionDslVarargStringDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -1979,7 +1979,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface SingleColumnColsVarargStringDocs
+    private typealias SingleColumnColsVarargStringDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -2126,7 +2126,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface StringColsVarargStringDocs
+    private typealias StringColsVarargStringDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -2271,7 +2271,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface KPropertiesColsVarargStringDocs
+    private typealias KPropertiesColsVarargStringDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -2417,7 +2417,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface ColumnPathColsVarargStringDocs
+    private typealias ColumnPathColsVarargStringDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -2569,7 +2569,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface ColumnsSelectionDslVarargColumnPathDocs
+    private typealias ColumnsSelectionDslVarargColumnPathDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -2723,7 +2723,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface SingleColumnColsVarargColumnPathDocs
+    private typealias SingleColumnColsVarargColumnPathDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -2880,7 +2880,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface StringColsVarargColumnPathDocs
+    private typealias StringColsVarargColumnPathDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -3034,7 +3034,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface KPropertiesColsVarargColumnPathDocs
+    private typealias KPropertiesColsVarargColumnPathDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -3188,7 +3188,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface ColumnPathColsVarargColumnPathDocs
+    private typealias ColumnPathColsVarargColumnPathDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -3344,7 +3344,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface ColumnsSelectionDslColsVarargKPropertyDocs
+    private typealias ColumnsSelectionDslColsVarargKPropertyDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -3454,7 +3454,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface SingleColumnColsVarargKPropertyDocs
+    private typealias SingleColumnColsVarargKPropertyDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -3566,7 +3566,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface StringColsVarargKPropertyDocs
+    private typealias StringColsVarargKPropertyDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -3674,7 +3674,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface KPropertyColsVarargKPropertyDocs
+    private typealias KPropertyColsVarargKPropertyDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -3782,7 +3782,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
-    private interface ColumnPathColsVarargKPropertyDocs
+    private typealias ColumnPathColsVarargKPropertyDocs = Nothing
 
     /** ## Cols
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
@@ -3887,7 +3887,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface ColumnSetColsIndicesDocs
+    private typealias ColumnSetColsIndicesDocs = Nothing
 
     /** ## Cols: Columns by Indices
      *
@@ -3975,7 +3975,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface ColumnsSelectionDslColsIndicesDocs
+    private typealias ColumnsSelectionDslColsIndicesDocs = Nothing
 
     /** ## Cols: Columns by Indices
      *
@@ -4064,7 +4064,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface SingleColumnColsIndicesDocs
+    private typealias SingleColumnColsIndicesDocs = Nothing
 
     /** ## Cols: Columns by Indices
      *
@@ -4153,7 +4153,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface StringColsIndicesDocs
+    private typealias StringColsIndicesDocs = Nothing
 
     /** ## Cols: Columns by Indices
      *
@@ -4242,7 +4242,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface KPropertyColsIndicesDocs
+    private typealias KPropertyColsIndicesDocs = Nothing
 
     /** ## Cols: Columns by Indices
      *
@@ -4331,7 +4331,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface ColumnPathColsIndicesDocs
+    private typealias ColumnPathColsIndicesDocs = Nothing
 
     /** ## Cols: Columns by Indices
      *
@@ -4424,7 +4424,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface ColumnSetColsRangeDocs
+    private typealias ColumnSetColsRangeDocs = Nothing
 
     /** ## Cols: Columns by Index Range
      *
@@ -4510,7 +4510,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface ColumnsSelectionDslColsRangeDocs
+    private typealias ColumnsSelectionDslColsRangeDocs = Nothing
 
     /** ## Cols: Columns by Index Range
      *
@@ -4598,7 +4598,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface SingleColumnColsRangeDocs
+    private typealias SingleColumnColsRangeDocs = Nothing
 
     /** ## Cols: Columns by Index Range
      *
@@ -4686,7 +4686,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface StringColsRangeDocs
+    private typealias StringColsRangeDocs = Nothing
 
     /** ## Cols: Columns by Index Range
      *
@@ -4774,7 +4774,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface KPropertyColsRangeDocs
+    private typealias KPropertyColsRangeDocs = Nothing
 
     /** ## Cols: Columns by Index Range
      *
@@ -4861,7 +4861,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
-    private interface ColumnPathColsRangeDocs
+    private typealias ColumnPathColsRangeDocs = Nothing
 
     /** ## Cols: Columns by Index Range
      *

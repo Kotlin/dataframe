@@ -75,110 +75,114 @@ import kotlin.reflect.KProperty
 internal interface GroupByDocs {
     /**
      * ## [groupBy][groupBy] Operation Grammar
-     * {@include [LineBreak]}
-     * {@include [DslGrammarLink]}
-     * {@include [LineBreak]}
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
      *
      * ### Create and transform [GroupBy]
      *
      * [**`groupBy`**][groupBy]**`(`**`moveToTop: `[`Boolean`][Boolean]**`  = true)  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByGroup`**][GroupBy.sortByGroup]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByGroup`**][GroupBy.sortByGroup]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByDesc`**][GroupBy.sortByDesc]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`sortByDesc`**][GroupBy.sortByDesc]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`updateGroups`**][GroupBy.updateGroups]**`  {  `**`frameExpression`**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`updateGroups`**][GroupBy.updateGroups]**`  {  `**`frameExpression`**`  }  `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`filter`**][GroupBy.filter]**`  {  `**`predicate: `[`GroupedRowFilter`][GroupedRowFilter]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`filter`**][GroupBy.filter]**`  {  `**`predicate: `[`GroupedRowFilter`][GroupedRowFilter]**`  }  `**`]`
      *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`add`**][GroupBy.add]**`(`**`column: `[`DataColumn`][DataColumn]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `[ `__`.`__[**`add`**][GroupBy.add]**`(`**`column: `[`DataColumn`][DataColumn]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**`  }  `**`]`
      *
      * ### Reduce [GroupBy] into [DataFrame]
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * [GroupBy][GroupBy]`.`[**`minBy`**][GroupBy.minBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`maxBy`**][GroupBy.maxBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`first`**][GroupBy.first]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`first`**][GroupBy.first]`  [ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`last`**][GroupBy.last]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`last`**][GroupBy.last]`  [ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[**`concat`**][ReducedGroupBy.concat]**`() `**
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`into`**][ReducedGroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  \[ `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`into`**][ReducedGroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  [ `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`values`**][ReducedGroupBy.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * ### Aggregate [GroupBy] into [DataFrame]
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * [GroupBy][GroupBy]`.`[**`concat`**][GroupBy.concat]**`() `**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`concatWithKeys`**][GroupBy.concatWithKeys]**`() `**
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`into`**][GroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  \[  `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`into`**][GroupBy.into]**`(`**`column: `[`String`][String]**`) `**`  [  `**`{  `**`rowExpression: `[`RowExpression`][RowExpression]**` } `**`]`
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`values`**][Grouped.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`count`**][Grouped.count]**`() `**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`aggregate`**][Grouped.aggregate]**`  {  `**`aggregations: `[`AggregateDsl`][AggregateDsl]**` }`**
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[<aggregation_statistic>][AggregationStatistics]
      *
      * ### Pivot [GroupBy] into [PivotGroupBy] and reduce / aggregate it
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * [GroupBy][GroupBy]`.`[**`pivot`**][GroupBy.pivot]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
-     * {@include [Indent]}
-     * `    \[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `    [ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
      *
-     * {@include [Indent]}
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[<pivot_groupBy_groupBy>][PivotGroupByDocs.Aggregation]
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      *
@@ -252,7 +256,7 @@ internal interface GroupByDocs {
      * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy]`(Person::length, Person::age)`
      *
      */
-    interface GroupBySelectingOptions
+    typealias GroupBySelectingOptions = Nothing
 
     /**
      * ### [GroupBy] aggregation statistics
@@ -288,7 +292,7 @@ internal interface GroupByDocs {
      *
      * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics)
      */
-    interface AggregationStatistics
+    typealias AggregationStatistics = Nothing
 
     /**
      * ### [GroupBy] transformations
@@ -310,7 +314,7 @@ internal interface GroupByDocs {
      *
      * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
      */
-    interface Transformation
+    typealias Transformation = Nothing
 
     /**
      * ### [GroupBy] reducing
@@ -345,7 +349,7 @@ internal interface GroupByDocs {
      *
      * For more information: [See "`GroupBy` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#reducing)
      */
-    interface Reducing
+    typealias Reducing = Nothing
 
     /**
      * ### [GroupBy] aggregation
@@ -383,7 +387,7 @@ internal interface GroupByDocs {
      *
      * For more information: [See "`GroupBy` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation)
      */
-    interface Aggregation
+    typealias Aggregation = Nothing
 
     /**
      * ### [GroupBy] pivoting
@@ -407,7 +411,7 @@ internal interface GroupByDocs {
      *
      * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
      */
-    interface Pivoting
+    typealias Pivoting = Nothing
 }
 
 /**
