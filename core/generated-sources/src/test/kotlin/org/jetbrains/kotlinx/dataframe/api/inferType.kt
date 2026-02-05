@@ -8,7 +8,7 @@ class InferTypeTests {
 
     @Test
     fun `infer type 1`() {
-        val col by columnOf("Alice", 1, 3.5)
+        val col by columnOf<Comparable<*>>("Alice", 1, 3.5)
         col.type() shouldBe typeOf<Comparable<*>>()
         val filtered = col.filter { it is String }
         filtered.type() shouldBe typeOf<Comparable<*>>()
