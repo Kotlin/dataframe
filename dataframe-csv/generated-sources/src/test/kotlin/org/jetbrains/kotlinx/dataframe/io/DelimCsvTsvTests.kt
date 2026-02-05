@@ -803,8 +803,8 @@ class DelimCsvTsvTests {
         // use DFs parsers by default for datetime-like columns
         val df1 = DataFrame.readCsvStr(csvContent)
         df1["with_timezone_offset"].let {
-            it.type() shouldBe typeOf<DeprecatedInstant>()
-            it[0] shouldBe DeprecatedInstant.parse("2024-12-12T13:00:00+01:00")
+            it.type() shouldBe typeOf<StdlibInstant>()
+            it[0] shouldBe StdlibInstant.parse("2024-12-12T13:00:00+01:00")
         }
         df1["without_timezone_offset"].let {
             it.type() shouldBe typeOf<LocalDateTime>()

@@ -93,17 +93,18 @@ In version 1.1, they will be returned and will operate on the new stdlib `kotlin
 </table>
 
 
-In version 1.0, all parsing operations still convert `Instant`
-values into the deprecated `kotlinx.datetime.Instant`.
-To enable parsing into the new standard library `kotlin.time.Instant`,
-set the corresponding parsing option **`ParserOptions.parseExperimentalInstant`**
-(that will be default in 1.1).
+In version 1.0-Beta5 and later, all parsing operations convert `Instant`
+values into the new standard library `kotlin.time.Instant` type by default.
+To enable parsing into the deprecated `kotlinx.datetime.Instant`,
+set the corresponding parsing option **`ParserOptions.parseExperimentalInstant = false`**
+(before 1.0-Beta5, this option was `false`, from 1.0-Beta5 onwards it is `true` by default).
+
 For example:
 
 ```kotlin
 DataFrame.readCsv(
     ...,
-    parserOptions = ParserOptions(parseExperimentalInstant = true)
+    parserOptions = ParserOptions(parseExperimentalInstant = false)
 )
 ```
 
