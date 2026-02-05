@@ -2351,7 +2351,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitIntoThisAndNewColumn() {
-        val split = typed.split { name }.by { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
+        val split = typed.split { name }.by { listOf<Any>(it.dropLast(1), it.last()) }.into("name", "lastChar")
         split.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
     }
 
