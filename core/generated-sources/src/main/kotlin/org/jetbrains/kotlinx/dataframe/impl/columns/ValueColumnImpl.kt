@@ -15,9 +15,27 @@ internal interface ValueColumnInternal<T> : ValueColumn<T> {
     fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult)
 
     fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult?
+
+    /**
+     * Tiny wrapper for [ValueColumn]s that are not [ValueColumnImpl],
+     * which can occur in case a user implements the [ValueColumn] interface.
+     */
+    class Wrapper<T>(val source: ValueColumn<T>) :
+        ValueColumn<T> by source,
+        ValueColumnInternal<T> {
+        val statisticsCache: MutableMap<String, MutableMap<Map<String, Any>, StatisticResult>> = mutableMapOf()
+
+        override fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult) {
+            statisticsCache.getOrPut(statName) { mutableMapOf() }[arguments] = value
+        }
+
+        override fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult? =
+            statisticsCache[statName]?.get(arguments)
+    }
 }
 
-internal fun <T> ValueColumn<T>.internalValueColumn() = this as ValueColumnInternal<T>
+internal fun <T> ValueColumn<T>.internalValueColumn() =
+    this as? ValueColumnInternal<T> ?: ValueColumnInternal.Wrapper(this)
 
 internal open class ValueColumnImpl<T>(
     values: List<T>,

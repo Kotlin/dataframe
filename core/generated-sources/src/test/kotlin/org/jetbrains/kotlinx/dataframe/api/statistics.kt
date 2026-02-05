@@ -1041,7 +1041,7 @@ class StatisticsTests {
         // derived columns
         val renamedColumn = valueColumn.rename("newName").asValueColumn().internalValueColumn()
         val colWithDifferentType = ((valueColumn as ResolvingValueColumn).source as ValueColumnImpl)
-            .changeType(typeOf<Double>())
+            .changeType(typeOf<Number>())
         // tests
         valueColumn.asValueColumn().internalValueColumn()
             .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1

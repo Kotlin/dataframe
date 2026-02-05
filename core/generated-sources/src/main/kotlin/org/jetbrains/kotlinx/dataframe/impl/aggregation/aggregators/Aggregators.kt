@@ -136,7 +136,7 @@ public object Aggregators {
                 getReturnType = minTypeConversion,
                 indexOfResult = { type -> indexOfMin(type, skipNaN) },
                 stepOneSelector = { type -> minOrNull(type, skipNaN) },
-                statisticsParameters = mapOf<String, Any>("skipNaN" to skipNaN),
+                statisticsParameters = mapOf("skipNaN" to skipNaN),
             )
         }
 
@@ -150,7 +150,7 @@ public object Aggregators {
                 getReturnType = maxTypeConversion,
                 stepOneSelector = { type -> maxOrNull(type, skipNaN) },
                 indexOfResult = { type -> indexOfMax(type, skipNaN) },
-                statisticsParameters = mapOf<String, Any>("skipNaN" to skipNaN),
+                statisticsParameters = mapOf("skipNaN" to skipNaN),
             )
         }
 
@@ -161,9 +161,9 @@ public object Aggregators {
         ->
         flattenReducingForNumbers(
             getReturnType = stdTypeConversion,
-            statisticsParameters = mapOf<String, Any>(
-                ("skipNaN" to skipNaN),
-                ("ddof" to ddof),
+            statisticsParameters = mapOf(
+                "skipNaN" to skipNaN,
+                "ddof" to ddof,
             ),
             reducer = { type ->
                 std(type, skipNaN, ddof)
@@ -176,9 +176,7 @@ public object Aggregators {
     public val mean: AggregatorOptionSwitch1<Boolean, Number, Double> by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(
             getReturnType = meanTypeConversion,
-            statisticsParameters = mapOf<String, Any>(
-                ("skipNaN" to skipNaN),
-            ),
+            statisticsParameters = mapOf("skipNaN" to skipNaN),
             reducer = { type ->
                 mean(type, skipNaN)
             },
@@ -219,9 +217,9 @@ public object Aggregators {
                 getReturnType = percentileConversion,
                 reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
                 indexOfResult = { type -> indexOfPercentile(percentile, type, skipNaN) },
-                statisticsParameters = mapOf<String, Any>(
-                    ("skipNaN" to skipNaN),
-                    ("percentile" to percentile),
+                statisticsParameters = mapOf(
+                    "skipNaN" to skipNaN,
+                    "percentile" to percentile,
                 ),
             )
         }
@@ -251,7 +249,7 @@ public object Aggregators {
                 getReturnType = medianConversion,
                 reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
                 indexOfResult = { type -> indexOfMedian(type, skipNaN) },
-                statisticsParameters = mapOf<String, Any>("skipNaN" to skipNaN),
+                statisticsParameters = mapOf("skipNaN" to skipNaN),
             )
         }
 
@@ -262,7 +260,7 @@ public object Aggregators {
     public val sum: AggregatorOptionSwitch1<Boolean, Number, Number> by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(
             getReturnType = sumTypeConversion,
-            statisticsParameters = mapOf<String, Any>("skipNaN" to skipNaN),
+            statisticsParameters = mapOf("skipNaN" to skipNaN),
             reducer = { type ->
                 sum(type, skipNaN)
             },
