@@ -1,12 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
 import kotlin.reflect.KType
-import kotlin.reflect.full.createType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 /**
  * Represents the PostgreSql database type.
@@ -18,14 +16,14 @@ public object PostgreSql : DbType("postgresql") {
     override val driverClassName: String
         get() = "org.postgresql.Driver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        // TODO: could be a wrapper of convertSqlTypeToKType
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         // because of https://github.com/pgjdbc/pgjdbc/issues/425
         if (tableColumnMetadata.sqlTypeName == "money") {
-            val kType = String::class.createType(nullable = tableColumnMetadata.isNullable)
-            return ColumnSchema.Value(kType)
+            return typeOf<String>().withNullability(tableColumnMetadata.isNullable)
         }
-        return null
+        // TODO: Composite types like tableColumnMetadata.sqlTypeName = ROW("a" INTEGER, "b" CHARACTER VARYING(10))
+
+        return super.getExpectedJdbcType(tableColumnMetadata)
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean =
@@ -38,15 +36,6 @@ public object PostgreSql : DbType("postgresql") {
             tables.getString("table_schem"),
             tables.getString("table_cat"),
         )
-
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        // because of https://github.com/pgjdbc/pgjdbc/issues/425
-        if (tableColumnMetadata.sqlTypeName == "money") {
-            return String::class.createType(nullable = tableColumnMetadata.isNullable)
-        }
-
-        return null
-    }
 
     override fun quoteIdentifier(name: String): String {
         // schema.table -> "schema"."table"
