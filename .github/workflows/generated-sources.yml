@@ -39,18 +39,18 @@ jobs:
 
       - name: Run Gradle task
         timeout-minutes: 60
-        run: ./gradlew processKDocsMain korro
+        run: ./gradlew processKDocsMain korro syncExampleFolders
 
       - name: Check for changes in generated sources
         id: git-diff
-        run: echo "changed=$(if git diff --quiet './core/generated-sources' './dataframe-csv/generated-sources' './docs/StardustDocs/resources/snippets' './docs/StardustDocs/topics'; then echo 'false'; else echo 'true'; fi)" >> $GITHUB_OUTPUT
+        run: echo "changed=$(if git diff --quiet './core/generated-sources' './dataframe-csv/generated-sources' './docs/StardustDocs/resources/snippets' './docs/StardustDocs/topics' './examples/projects'; then echo 'false'; else echo 'true'; fi)" >> $GITHUB_OUTPUT
 
       - name: Commit and push if changes
         id: git-commit
         if: steps.git-diff.outputs.changed == 'true'
         run: |
           git checkout -b generated-sources/docs-update-${{ github.run_number }}
-          git add './core/generated-sources' './dataframe-csv/generated-sources' './docs/StardustDocs/resources/snippets' './docs/StardustDocs/topics'
+          git add './core/generated-sources' './dataframe-csv/generated-sources' './docs/StardustDocs/resources/snippets' './docs/StardustDocs/topics' './examples/projects'
           git commit -m "Update generated sources with recent changes"
           git push origin generated-sources/docs-update-${{ github.run_number }}
           echo "commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
