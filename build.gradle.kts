@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.publisher.githubRepo
 plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
+        alias(buildExampleProjects)
     }
 
     with(libs.plugins) {
