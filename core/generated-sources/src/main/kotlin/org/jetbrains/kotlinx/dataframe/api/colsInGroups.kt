@@ -97,13 +97,13 @@ public interface ColsInGroupsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -155,7 +155,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
     private interface ColsInGroupsDocs {
 
         /** Example argument to use */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**
