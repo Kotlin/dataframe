@@ -178,7 +178,7 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
  * For example, use `prev().newValue()` to access the new column value from the previous row.
  */
 @ExcludeFromSources
-internal interface AddExpressionDocs
+internal typealias AddExpressionDocs = Nothing
 
 /**
  * Creates a new column using an [AddExpression] and

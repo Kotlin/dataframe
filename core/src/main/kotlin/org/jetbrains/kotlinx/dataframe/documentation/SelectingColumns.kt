@@ -21,7 +21,7 @@ import kotlin.reflect.KProperty
 
 /** [Selecting Columns][SelectingColumns] */
 @ExcludeFromSources
-internal interface SelectingColumnsLink
+internal typealias SelectingColumnsLink = Nothing
 
 /**
  * ## Selecting Columns
@@ -44,30 +44,29 @@ internal interface SelectingColumns {
      * This can include [column groups][ColumnGroup] and nested columns.
      */
     @ExcludeFromSources
-    interface ColumnGroupsAndNestedColumnsMention
+    typealias ColumnGroupsAndNestedColumnsMention = Nothing
 
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
     @ExcludeFromSources
-    interface OPERATION
+    typealias OPERATION = Nothing
 
     /*
      * Operation receiver variable name
      */
     @ExcludeFromSources
-    interface RECEIVER
-
+    typealias RECEIVER = Nothing
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
     @ExcludeFromSources
-    interface SetDefaultOperationArg
+    typealias SetDefaultOperationArg = Nothing
 
     /** {@set [RECEIVER] <code>`df`</code>} */
     @ExcludeFromSources
-    interface SetDefaultReceiverArg
+    typealias SetDefaultReceiverArg = Nothing
 
     /**
      * Select or express columns using the {@include [ColumnsSelectionDslLink]}.
@@ -107,12 +106,12 @@ internal interface SelectingColumns {
          * @include [SetDefaultOperationArg]
          * @include [SetDefaultReceiverArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Columns Selection DSL][Dsl.WithExample] */
     @ExcludeFromSources
-    interface DslLink
+    typealias DslLink = Nothing
 
     /**
      * Select or express a single column using the Column Selection DSL.
@@ -147,12 +146,12 @@ internal interface SelectingColumns {
          * `df.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
          * @include [SetDefaultOperationArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Column Selection DSL][DslSingle.WithExample] */
     @ExcludeFromSources
-    interface DslSingleLink
+    typealias DslSingleLink = Nothing
 
     /**
      * Select columns using their [column names][String]
@@ -168,12 +167,12 @@ internal interface SelectingColumns {
          * `df.`{@get [OPERATION]}`("length", "age")`
          * @include [SetDefaultOperationArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Column names][ColumnNames.WithExample] */
     @ExcludeFromSources
-    interface ColumnNamesLink
+    typealias ColumnNamesLink = Nothing
 
     /**
      * Select columns using [column accessors][ColumnReference]
@@ -193,12 +192,12 @@ internal interface SelectingColumns {
          * `df.`{@get [OPERATION]}`(length, age)`
          * @include [SetDefaultOperationArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Column references][ColumnAccessors.WithExample] */
     @ExcludeFromSources
-    interface ColumnAccessorsLink
+    typealias ColumnAccessorsLink = Nothing
 
     /** Select columns using [KProperties][KProperty] ({@include [AccessApi.KPropertiesApiLink]}). */
     interface KProperties {
@@ -214,10 +213,10 @@ internal interface SelectingColumns {
          * `df.`{@get [OPERATION]}`(Person::length, Person::age)`
          * @include [SetDefaultOperationArg]
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [KProperties][KProperties.WithExample] */
     @ExcludeFromSources
-    interface KPropertiesLink
+    typealias KPropertiesLink = Nothing
 }

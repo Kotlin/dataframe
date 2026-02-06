@@ -129,7 +129,7 @@ internal interface RenameDocs {
      * `df.`[rename][org.jetbrains.kotlinx.dataframe.api.rename]`(Person::length, Person::age)`
      *
      */
-    interface RenameSelectingOptions
+    typealias RenameSelectingOptions = Nothing
 
     /**
      * ## Rename Operation Grammar
@@ -152,7 +152,7 @@ internal interface RenameDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`toCamelCase`**][RenameClause.toCamelCase]**`()`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /**
@@ -577,16 +577,16 @@ public interface RenameColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**named**][ColumnsSelectionDsl.named] */
-        public interface InfixNamedName
+        public typealias InfixNamedName = Nothing
 
         /** [**into**][ColumnsSelectionDsl.into] */
-        public interface InfixIntoName
+        public typealias InfixIntoName = Nothing
 
         /** __`.`__[**named**][ColumnsSelectionDsl.named] */
-        public interface NamedName
+        public typealias NamedName = Nothing
 
         /** __`.`__[**into**][ColumnsSelectionDsl.into] */
-        public interface IntoName
+        public typealias IntoName = Nothing
     }
 
     /**
@@ -617,51 +617,48 @@ public interface RenameColumnsSelectionDsl {
     @Suppress("ClassName")
     private interface CommonRenameDocs {
 
-        interface RECEIVER
-
-        interface RECEIVER_TYPE
+        typealias RECEIVER = Nothing
+        typealias RECEIVER_TYPE = Nothing
 
         /** "named" or "into" */
-        interface FUNCTION_NAME
+        typealias FUNCTION_NAME = Nothing
 
         /** "newName" or "nameOf" */
-        interface PARAM_NAME
-
-        interface PARAM
-
-        interface PARAM_TYPE
+        typealias PARAM_NAME = Nothing
+        typealias PARAM = Nothing
+        typealias PARAM_TYPE = Nothing
 
         /**
          */
-        interface ColumnReferenceReceiver
+        typealias ColumnReferenceReceiver = Nothing
 
         /**
          */
-        interface StringReceiver
+        typealias StringReceiver = Nothing
 
         /**
          */
-        interface KPropertyReceiver
+        typealias KPropertyReceiver = Nothing
 
         /**
          */
-        interface SingleColumnReceiver
+        typealias SingleColumnReceiver = Nothing
 
         /**
          */
-        interface ColumnReferenceParam
+        typealias ColumnReferenceParam = Nothing
 
         /**
          */
-        interface StringParam
+        typealias StringParam = Nothing
 
         /**
          */
-        interface KPropertyParam
+        typealias KPropertyParam = Nothing
 
-        interface NamedFunctionName
+        typealias NamedFunctionName = Nothing
 
-        interface IntoFunctionName
+        typealias IntoFunctionName = Nothing
     }
 
     // region named

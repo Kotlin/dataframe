@@ -98,7 +98,7 @@ public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> =
  *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
  * @return The sorted [DataColumn] [this] of the same type as the receiver.
  */
-private interface CommonDataColumnSortWithDocs
+private typealias CommonDataColumnSortWithDocs = Nothing
 
 /** ## Sort [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] With
  *

@@ -59,7 +59,7 @@ public interface ColumnDescription {
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  */
 @ExcludeFromSources
-internal interface SummaryMetrics
+internal typealias SummaryMetrics = Nothing
 
 /**
  * ## The Describe Operation
@@ -74,7 +74,7 @@ internal interface SummaryMetrics
  * {@include [SummaryMetrics]}
  */
 @ExcludeFromSources
-internal interface Describe
+internal typealias Describe = Nothing
 
 /**
  * {@include [Describe]} {@set COLUMNS the selected}
@@ -86,12 +86,11 @@ internal interface Describe
  * ### This Describe Overload
  */
 @ExcludeFromSources
-internal interface DescribeWithSelection
+internal typealias DescribeWithSelection = Nothing
 
 /** {@set [SelectingColumns.OPERATION] [describe][describe]} */
 @ExcludeFromSources
-private interface SetDescribeOperationArg
-
+private typealias SetDescribeOperationArg = Nothing
 // endregion
 
 // region DataColumn
