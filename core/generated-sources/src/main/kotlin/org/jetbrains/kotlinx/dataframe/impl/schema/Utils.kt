@@ -200,5 +200,6 @@ internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): L
         lexicographicalColumns.partition { it.getterName in primaryConstructorOrder.keys }
 
     return propsInConstructor
-        .sortedBy { primaryConstructorOrder[it.getterName] } + propsNotInConstructor
+        .sortedBy { primaryConstructorOrder[it.getterName] } +
+        propsNotInConstructor
 }

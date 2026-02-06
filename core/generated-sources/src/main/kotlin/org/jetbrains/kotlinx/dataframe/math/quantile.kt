@@ -227,10 +227,12 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
         private interface PieceWiseLinear : Interpolating {
             override fun quantile(p: Double, values: List<Double>): Double {
                 val h = oneBasedIndexOfQuantile(p, values.size)
-                return values.quickSelect(floor(h).toInt() - 1) + (h - floor(h)) * (
-                    values.quickSelect(ceil(h).toInt() - 1) -
-                        values.quickSelect(floor(h).toInt() - 1)
-                )
+                return values.quickSelect(floor(h).toInt() - 1) +
+                    (h - floor(h)) *
+                    (
+                        values.quickSelect(ceil(h).toInt() - 1) -
+                            values.quickSelect(floor(h).toInt() - 1)
+                    )
             }
         }
     }

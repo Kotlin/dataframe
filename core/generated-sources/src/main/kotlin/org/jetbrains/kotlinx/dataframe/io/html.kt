@@ -498,7 +498,8 @@ public fun AnyFrame.toStaticHtml(
             """
             document.getElementById("$id").style.display = "none";
             """.trimIndent(),
-    ) + DataFrameHtmlData.tableDefinitions(includeJs = false, includeCss = includeCss)
+    ) +
+        DataFrameHtmlData.tableDefinitions(includeJs = false, includeCss = includeCss)
 }
 
 /**

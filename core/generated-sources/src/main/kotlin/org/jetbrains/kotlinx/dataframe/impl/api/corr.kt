@@ -70,7 +70,8 @@ internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>):
                 val v1 = cols[c1.path]!!
                 val v2 = cols[c2.path]!!
                 val res = (0 until len)
-                    .sumOf { (v1[it] - s1.mean) * (v2[it] - s2.mean) } / sqrt(s1.variance * s2.variance)
+                    .sumOf { (v1[it] - s1.mean) * (v2[it] - s2.mean) } /
+                    sqrt(s1.variance * s2.variance)
                 cache[c1.path to c2.path] = res
                 res
             }

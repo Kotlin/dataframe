@@ -259,5 +259,6 @@ public inline fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression
     return backwardIterable().take(k).sumOf {
         count++
         expression(it).toDouble()
-    } / count
+    } /
+        count
 }

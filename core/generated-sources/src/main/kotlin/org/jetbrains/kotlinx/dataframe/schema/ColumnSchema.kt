@@ -77,7 +77,8 @@ public sealed class ColumnSchema {
             schema.compare(
                 other = other.schema,
                 comparisonMode = comparisonMode,
-            ) + CompareResult.compareNullability(thisIsNullable = nullable, otherIsNullable = other.nullable)
+            ) +
+                CompareResult.compareNullability(thisIsNullable = nullable, otherIsNullable = other.nullable)
     }
 
     /** Checks equality by kind, type, or schema. TODO was matching, check if == works. */
@@ -105,11 +106,13 @@ public sealed class ColumnSchema {
     override fun hashCode(): Int {
         var result = nullable.hashCode()
         result = 31 * result + kind.hashCode()
-        result = 31 * result + when (this) {
-            is Value -> type.hashCode()
-            is Group -> schema.hashCode()
-            is Frame -> schema.hashCode()
-        }
+        result = 31 *
+            result +
+            when (this) {
+                is Value -> type.hashCode()
+                is Group -> schema.hashCode()
+                is Frame -> schema.hashCode()
+            }
         return result
     }
 }

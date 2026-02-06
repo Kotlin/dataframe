@@ -427,7 +427,8 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
                     marker = marker,
                     fields = interfaceMode == WithFields,
                     readDfMethod = readDfMethod,
-                ) + if (extensionProperties) "\n" + generateExtensionProperties(marker) else ""
+                ) +
+                    if (extensionProperties) "\n" + generateExtensionProperties(marker) else ""
 
             Enum -> generateEnum(marker)
 
@@ -520,9 +521,10 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\n${visibility}interface ${marker.name}"
         val baseInterfacesDeclaration =
             if (marker.superMarkers.isNotEmpty()) {
-                " : " + marker.superMarkers
-                    .map { it.value.name + it.value.typeArguments }
-                    .joinToString()
+                " : " +
+                    marker.superMarkers
+                        .map { it.value.name + it.value.typeArguments }
+                        .joinToString()
             } else {
                 ""
             }
