@@ -21,3 +21,5 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
 - `dfbuild.buildConfig`: Generates build config compile-time constants,
    like `BuildConfig.VERSION` and `BuildConfig.DEBUG`.
    Is NOT included by default, but can be combined with `dfbuild.kotlinJvm<X>`.
+- `dfbuild.buildExampleProjects`: Generates tasks that syncs versions (on `assemble`) and
+    builds all example projects (on `check`) in the `examples/projects` directory.
