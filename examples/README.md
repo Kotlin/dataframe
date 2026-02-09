@@ -1,9 +1,9 @@
 # Examples of Kotlin DataFrame
 
-### Idea examples
-* [Gradle plugin example](kotlin-dataframe-plugin-gradle-example) IDEA project with a
+### Idea project examples
+* [Gradle plugin example](projects/kotlin-dataframe-plugin-gradle-example) IDEA project with a
   [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
-* [Maven plugin example](kotlin-dataframe-plugin-maven-example) IDEA project with a
+* [Maven plugin example](projects/kotlin-dataframe-plugin-maven-example) IDEA project with a
   [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example. 
 * [android example](android-example) A minimal Android project showcasing integration with Kotlin DataFrame.
 Also includes [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html).

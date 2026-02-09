@@ -17,6 +17,7 @@ korro = "0.1.6"
 
 gradlePlugin-gradle-foojayToolchains = "1.0.0"
 typesafe-conventions = "0.10.0"
+maven-invoker = "3.3.0"
 binaryCompatibilityValidator = "0.17.0"
 deephavenCsv = "0.19.0"
 fastDoubleParser = "2.0.1"
@@ -150,6 +151,7 @@ swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref
 
 gradlePlugin-gradle-foojayToolchains = { module = "org.gradle.toolchains:foojay-resolver", version.ref = "gradlePlugin-gradle-foojayToolchains" }
 typesafe-conventions = { module = "dev.panuszewski:typesafe-conventions-gradle-plugin", version.ref = "typesafe-conventions" }
+maven-invoker = { module = "org.apache.maven.shared:maven-invoker", version.ref = "maven-invoker" }
 kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging", version.ref = "kotlinLogging" }
 sl4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "sl4j" }
 sl4jsimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
