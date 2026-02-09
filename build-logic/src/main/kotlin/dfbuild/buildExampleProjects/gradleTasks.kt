@@ -1,5 +1,6 @@
 package dfbuild.buildExampleProjects
 
+import dfbuild.findRootDir
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.VersionCatalog
@@ -72,12 +73,13 @@ internal fun Project.setupGradleSyncVersionsTask(
 
             // this can also be done by the --include-build argument,
             // however, writing it in the settings.gradle.kts file makes the IDE aware of the dependency substitution
+            val relativePathToRoot = findRootDir().relativeTo(folder).path
             val generatedDevConfig =
                 """
                 // region generated-config
                 
                 // substitutes dependencies provided by the root project
-                includeBuild("../../../..")
+                includeBuild("$relativePathToRoot")
                 
                 // endregion
                 
