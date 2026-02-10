@@ -42,7 +42,9 @@ public abstract class KeywordsGeneratorAction : WorkAction<KeywordsGeneratorActi
     }
 
     private fun getKeywords(tokenSet: TokenSet): List<EnumEntry> {
-        fun id(value: String) = value.uppercase().replace("!", "NOT_")
+        fun id(value: String) = value.uppercase()
+            .replace("!", "NOT_")
+            .replace("?", "_OR_NULL")
 
         return tokenSet.types.map { t ->
             t as KtKeywordToken
