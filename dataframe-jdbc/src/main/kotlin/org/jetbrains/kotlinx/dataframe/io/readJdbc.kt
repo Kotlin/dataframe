@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
@@ -904,10 +905,13 @@ internal fun fetchAndConvertDataFromResultSet(
         limit = limit,
     )
 
+    val names = getDataFrameCompatibleColumnNames(tableColumns)
+
     val dataFrame = buildDataFrameFromColumnData(
         dbType = dbType,
-        columnData = columnData,
         tableColumns = tableColumns,
+        names = names,
+        columnData = columnData,
         targetColumnSchemas = targetColumnSchemas,
         inferNullability = inferNullability,
     )
@@ -919,32 +923,42 @@ internal fun fetchAndConvertDataFromResultSet(
     return dataFrame
 }
 
-internal fun getExpectedJdbcTypes(dbType: DbType, tableColumns: List<TableColumnMetadata>): Map<String, KType> =
-    tableColumns.associate {
-        it.name to dbType.getExpectedJdbcType(tableColumnMetadata = it)
+internal const val UNNAMED_COLUMN_PREFIX = "untitled"
+
+internal fun getDataFrameCompatibleColumnNames(tableColumns: List<TableColumnMetadata>): List<String> {
+    val generator = ColumnNameGenerator()
+    for (col in tableColumns) {
+        generator.addUnique(col.name.ifEmpty { UNNAMED_COLUMN_PREFIX })
+    }
+    return generator.names
+}
+
+internal fun getExpectedJdbcTypes(dbType: DbType, tableColumns: List<TableColumnMetadata>): List<KType> =
+    tableColumns.map {
+        dbType.getExpectedJdbcType(tableColumnMetadata = it)
     }
 
 internal fun getPreprocessedValueTypes(
     dbType: DbType,
     tableColumns: List<TableColumnMetadata>,
-    expectedJdbcTypes: Map<String, KType>,
-): Map<String, KType> =
-    tableColumns.associate {
-        it.name to dbType.getPreprocessedValueType(
+    expectedJdbcTypes: List<KType>,
+): List<KType> =
+    tableColumns.mapIndexed { index, it ->
+        dbType.getPreprocessedValueType(
             tableColumnMetadata = it,
-            expectedJdbcType = expectedJdbcTypes[it.name]!!,
+            expectedJdbcType = expectedJdbcTypes[index],
         )
     }
 
 internal fun getTargetColumnSchemas(
     dbType: DbType,
     tableColumns: List<TableColumnMetadata>,
-    preprocessedValueTypes: Map<String, KType>,
-): Map<String, ColumnSchema?> =
-    tableColumns.associate {
-        it.name to dbType.getTargetColumnSchema(
+    preprocessedValueTypes: List<KType>,
+): List<ColumnSchema?> =
+    tableColumns.mapIndexed { index, it ->
+        dbType.getTargetColumnSchema(
             tableColumnMetadata = it,
-            expectedValueType = preprocessedValueTypes[it.name]!!,
+            expectedValueType = preprocessedValueTypes[index],
         )
     }
 
@@ -955,23 +969,21 @@ private fun readAndPreprocessRowsFromResultSet(
     dbType: DbType,
     rs: ResultSet,
     tableColumns: List<TableColumnMetadata>,
-    expectedJdbcTypes: Map<String, KType>,
-    preprocessedValueTypes: Map<String, KType>,
+    expectedJdbcTypes: List<KType>,
+    preprocessedValueTypes: List<KType>,
     limit: Int?,
-): Map<String, List<Any?>> {
-    val columnNames = tableColumns.map { it.name }
-    val columnData = columnNames.associateWith { mutableListOf<Any?>() }
+): List<List<Any?>> {
+    val columnData = tableColumns.map { mutableListOf<Any?>() }.toMutableList()
     var rowsRead = 0
 
     while (rs.next() && (limit == null || rowsRead < limit)) {
-        columnNames.forEachIndexed { i, name ->
-            val tableColumnMetadata = tableColumns[i]
-            val expectedJdbcType = expectedJdbcTypes[name]!!
-            val preprocessedValueType = preprocessedValueTypes[name]!!
+        tableColumns.forEachIndexed { index, tableColumnMetadata ->
+            val expectedJdbcType = expectedJdbcTypes[index]
+            val preprocessedValueType = preprocessedValueTypes[index]
 
             val value = dbType.getValueFromResultSet<Any>(
                 rs = rs,
-                columnIndex = i,
+                columnIndex = index,
                 tableColumnMetadata = tableColumnMetadata,
                 expectedJdbcType = expectedJdbcType,
             )
@@ -981,7 +993,7 @@ private fun readAndPreprocessRowsFromResultSet(
                 expectedJdbcType = expectedJdbcType,
                 expectedPreprocessedValueType = preprocessedValueType,
             )
-            columnData[name]!!.add(preprocessedValue)
+            columnData[index] += preprocessedValue
         }
         rowsRead++
         // if (rowsRead % 1000 == 0) logger.debug { "Loaded $rowsRead rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
@@ -996,24 +1008,24 @@ private fun readAndPreprocessRowsFromResultSet(
  */
 private fun buildDataFrameFromColumnData(
     dbType: DbType,
-    columnData: Map<String, List<Any?>>,
     tableColumns: List<TableColumnMetadata>,
-    targetColumnSchemas: Map<String, ColumnSchema?>,
+    names: List<String>,
+    columnData: List<List<Any?>>,
+    targetColumnSchemas: List<ColumnSchema?>,
     inferNullability: Boolean,
-    checkSchema: Boolean = true, // TODO add as configurable parameter
+    checkSchema: Boolean = false, // TODO add as configurable parameter
 ): AnyFrame =
-    tableColumns.map {
-        val name = it.name
+    tableColumns.mapIndexed { index, it ->
         val column = dbType.buildDataColumn<Any, Any>(
-            name = name,
-            values = columnData[name]!!,
+            name = names[index],
+            values = columnData[index],
             tableColumnMetadata = it,
-            targetColumnSchema = targetColumnSchemas[name],
+            targetColumnSchema = targetColumnSchemas[index],
             inferNullability = inferNullability,
         )
 
         if (checkSchema) {
-            column.checkSchema(targetColumnSchemas[name])
+            column.checkSchema(targetColumnSchemas[index])
         }
 
         column

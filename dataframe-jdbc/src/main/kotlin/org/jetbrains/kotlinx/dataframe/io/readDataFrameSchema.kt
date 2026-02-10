@@ -325,8 +325,13 @@ public fun DataFrameSchema.Companion.readResultSet(resultSet: ResultSet, dbType:
     val tableColumns = getTableColumnsMetadata(resultSet, dbType)
     val expectedJdbcTypes = getExpectedJdbcTypes(dbType, tableColumns)
     val preprocessedValueTypes = getPreprocessedValueTypes(dbType, tableColumns, expectedJdbcTypes)
+    val names = getDataFrameCompatibleColumnNames(tableColumns)
     val targetColumnSchemas = getTargetColumnSchemas(dbType, tableColumns, preprocessedValueTypes)
-        .mapValues { (_, schema) -> schema ?: ColumnSchema.Value(typeOf<Any?>()) }
+        .withIndex()
+        .associate { (index, it) ->
+            names[index] to (it ?: ColumnSchema.Value(typeOf<Any?>()))
+        }
+
     return DataFrameSchemaImpl(targetColumnSchemas)
 }
 
