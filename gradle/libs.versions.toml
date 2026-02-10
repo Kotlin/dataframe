@@ -65,7 +65,7 @@ jts = "1.20.0"
 
 kandy = "0.8.3"
 
-exposed = "1.0.0-beta-2"
+exposed = "1.0.0"
 hibernate = "6.5.2.Final"
 
 # check the versions down in the [libraries] section too!
