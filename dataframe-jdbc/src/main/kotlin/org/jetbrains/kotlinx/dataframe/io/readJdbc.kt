@@ -982,13 +982,13 @@ private fun readAndPreprocessRowsFromResultSet(
             val expectedJdbcType = expectedJdbcTypes[index]
             val preprocessedValueType = preprocessedValueTypes[index]
 
-            val value = dbType.getValueFromResultSet<Any>(
+            val value = dbType.getValueFromResultSet<Any?>(
                 rs = rs,
                 columnIndex = index,
                 tableColumnMetadata = tableColumnMetadata,
                 expectedJdbcType = expectedJdbcType,
             )
-            val preprocessedValue = dbType.preprocessValue<Any, Any>(
+            val preprocessedValue = dbType.preprocessValue<Any?, Any?>(
                 value = value,
                 tableColumnMetadata = tableColumnMetadata,
                 expectedJdbcType = expectedJdbcType,
@@ -1017,7 +1017,7 @@ private fun buildDataFrameFromColumnData(
     checkSchema: Boolean = BuildConfig.DEBUG,
 ): AnyFrame =
     tableColumns.mapIndexed { index, it ->
-        val column = dbType.buildDataColumn<Any, Any>(
+        val column = dbType.buildDataColumn<Any?, Any?>(
             name = names[index],
             values = columnData[index],
             tableColumnMetadata = it,

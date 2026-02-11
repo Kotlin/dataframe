@@ -36,37 +36,43 @@ public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJ
         expectedValueType: KType,
     ): ColumnSchema? = getConverter(tableColumnMetadata).targetSchema
 
-    final override fun <J : Any> getValueFromResultSet(
+    @Suppress("UNCHECKED_CAST")
+    final override fun <J> getValueFromResultSet(
         rs: ResultSet,
         columnIndex: Int,
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
-    ): J? =
-        getConverter(tableColumnMetadata).cast<J, Any, Any>()
+    ): J =
+        getConverter(tableColumnMetadata)
+            .cast<J, Any?, Any?>()
             .getValueFromResultSetOrElse(rs, columnIndex) {
                 try {
                     rs.getObject(columnIndex + 1)
                 } catch (_: Throwable) {
                     // TODO?
                     rs.getString(columnIndex + 1)
-                } as J?
+                } as J
             }
 
-    final override fun <J : Any, D : Any> preprocessValue(
-        value: J?,
+    final override fun <J, D> preprocessValue(
+        value: J,
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
         expectedPreprocessedValueType: KType,
-    ): D? = getConverter(tableColumnMetadata).cast<J, D, Any>().preprocessOrCast(value)
+    ): D =
+        getConverter(tableColumnMetadata)
+            .cast<J, D, Any?>()
+            .preprocessOrCast(value)
 
-    final override fun <D : Any, P : Any> buildDataColumn(
+    final override fun <D, P> buildDataColumn(
         name: String,
-        values: List<D?>,
+        values: List<D>,
         tableColumnMetadata: TableColumnMetadata,
         targetColumnSchema: ColumnSchema?,
         inferNullability: Boolean,
-    ): DataColumn<P?> =
-        getConverter(tableColumnMetadata).cast<Any, D, P>()
+    ): DataColumn<P> =
+        getConverter(tableColumnMetadata)
+            .cast<Any?, D, P>()
             .buildDataColumnOrNull(name, values, inferNullability)
             ?: values.toDataColumn(
                 name = name,

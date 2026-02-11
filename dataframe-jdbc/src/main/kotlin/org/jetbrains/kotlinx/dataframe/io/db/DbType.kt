@@ -5,6 +5,8 @@ import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -137,6 +139,150 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         Types.TIMESTAMP_WITH_TIMEZONE to typeOf<OffsetDateTime>(),
     )
 
+    /**
+     * Retrieves column metadata from a JDBC ResultSet.
+     *
+     * This method reads column metadata from [ResultSetMetaData] with graceful fallbacks
+     * for JDBC drivers that throw [java.sql.SQLFeatureNotSupportedException] for certain methods
+     * (e.g., Apache Hive).
+     *
+     * Fallback behavior for unsupported methods:
+     * - `getColumnName()` → `getColumnLabel()` → `"column_N"`
+     * - `getTableName()` → extract from column name if contains '.' → `null`
+     * - `isNullable()` → [DatabaseMetaData.getColumns] → `true` (assume nullable)
+     * - `getColumnTypeName()` → `"OTHER"`
+     * - `getColumnType()` → [Types.OTHER]
+     * - `getColumnDisplaySize()` → `0`
+     * - `getColumnClassName()` → `"java.lang.Object"`
+     *
+     * Override this method in subclasses to provide database-specific behavior
+     * (for example, to disable fallback for databases like Teradata or Oracle
+     * where [DatabaseMetaData.getColumns] is known to be slow).
+     *
+     * @param resultSet The [ResultSet] containing query results.
+     * @return A list of [TableColumnMetadata] objects.
+     */
+    public open fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata> {
+        val rsMetaData = resultSet.metaData
+        val connection = resultSet.statement.connection
+        val dbMetaData = connection.metaData
+
+        // Some JDBC drivers (e.g., Hive) throw SQLFeatureNotSupportedException
+        val catalog = try {
+            connection.catalog.takeUnless { it.isNullOrBlank() }
+        } catch (_: Exception) {
+            null
+        }
+
+        val schema = try {
+            connection.schema.takeUnless { it.isNullOrBlank() }
+        } catch (_: Exception) {
+            null
+        }
+
+        val columnCount = rsMetaData.columnCount
+        val columns = mutableListOf<TableColumnMetadata>()
+        val nameCounter = mutableMapOf<String, Int>()
+
+        for (index in 1..columnCount) {
+            // Try to getColumnName, fallback to getColumnLabel, then generate name
+            val columnName = try {
+                rsMetaData.getColumnName(index)
+            } catch (_: Exception) {
+                try {
+                    rsMetaData.getColumnLabel(index)
+                } catch (_: Exception) {
+                    "column$index"
+                }
+            }
+
+            // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException
+            val tableName = try {
+                rsMetaData.getTableName(index).takeUnless { it.isBlank() }
+            } catch (_: Exception) {
+                // Fallback: try to extract table name from column name if it contains '.'
+                val dotIndex = columnName.lastIndexOf('.')
+                if (dotIndex > 0) columnName.take(dotIndex) else null
+            }
+
+            // Try to detect nullability from ResultSetMetaData
+            val isNullable = try {
+                when (rsMetaData.isNullable(index)) {
+                    ResultSetMetaData.columnNoNulls -> false
+
+                    ResultSetMetaData.columnNullable -> true
+
+                    // Unknown nullability: assume it nullable, may trigger fallback
+                    ResultSetMetaData.columnNullableUnknown -> true
+
+                    else -> true
+                }
+            } catch (_: Exception) {
+                // Some drivers may throw for unsupported features
+                // Try fallback to DatabaseMetaData, with additional safety
+                try {
+                    dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols ->
+                        if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
+                    }
+                } catch (_: Exception) {
+                    // Fallback failed, assume nullable as the safest default
+                    true
+                }
+            }
+
+            // adding fallbacks to avoid SQLException
+            val columnType = try {
+                rsMetaData.getColumnTypeName(index)
+            } catch (_: Exception) {
+                "OTHER"
+            }
+
+            val jdbcType = try {
+                rsMetaData.getColumnType(index)
+            } catch (_: Exception) {
+                Types.OTHER
+            }
+
+            val displaySize = try {
+                rsMetaData.getColumnDisplaySize(index)
+            } catch (_: Exception) {
+                0
+            }
+
+            val javaClassName = try {
+                rsMetaData.getColumnClassName(index)
+            } catch (_: Exception) {
+                "java.lang.Object"
+            }
+
+            val uniqueName = manageColumnNameDuplication(nameCounter, columnName)
+
+            columns += TableColumnMetadata(
+                name = uniqueName,
+                sqlTypeName = columnType,
+                jdbcType = jdbcType,
+                size = displaySize,
+                javaClassName = javaClassName,
+                isNullable = isNullable,
+            )
+        }
+
+        return columns
+    }
+
+    /**
+     * Returns the [type][KType] of the objects returned by [getValueFromResultSet]
+     * for the given [column][tableColumnMetadata]. Also called type `J`.
+     *
+     * While [DbType] contains a basic type mapping,
+     * it's often necessary to override this function for specific JDBC implementations,
+     * as each implementation can deviate from the standard type mapping and may return
+     * unexpected types when [ResultSet.getObject] is called.
+     *
+     * @param [tableColumnMetadata] all information we have about the column
+     * @return the type of the objects returned by [getValueFromResultSet] and
+     *   [ResultSet.getObject] for the given column
+     */
     public open fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         val kType = when (tableColumnMetadata.jdbcType) {
             Types.OTHER ->
@@ -179,27 +325,45 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     }
 
     /**
-     * Extracts a value from the ResultSet for the given column.
-     * This method can be overridden by custom database types to change low-level reading logic.
+     * Extracts a value from the [result set][rs] for the given [column][tableColumnMetadata].
      *
+     * This method can be overridden for custom database types to change low-level reading logic.
+     *
+     * The return value, of type [J], must match the [expectedJdbcType] parameter exactly.
+     * This parameter is obtained from [getExpectedJdbcType].
+     *
+     * @param [J] the JDBC type, [expectedJdbcType]
      * @param [rs] the ResultSet to read from
      * @param [columnIndex] zero-based column index
-     * @return the extracted value, or null
+     * @param [tableColumnMetadata] all information we have about the column
+     * @param [expectedJdbcType] the type of the return value, [J], obtained from [getExpectedJdbcType]
+     * @return the value extracted from the [result set][rs] for the given [column index][columnIndex]
      */
-    public open fun <J : Any> getValueFromResultSet(
+    @Suppress("UNCHECKED_CAST")
+    public open fun <J> getValueFromResultSet(
         rs: ResultSet,
         columnIndex: Int,
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
-    ): J? =
+    ): J =
         try {
             rs.getObject(columnIndex + 1)
         } catch (_: Throwable) {
             // TODO?
             rs.getString(columnIndex + 1)
-        } as J?
+        } as J
 
-    // TODO add preprocessors for common types, like sql Arrays, Java datetimes, etc.
+    /**
+     * Returns the [type][KType] of the objects returned by [preprocessValue]
+     * for the given [column][tableColumnMetadata]. Also called type `D`.
+     *
+     * This is the type of the value after preprocessing the individual value,
+     * which may differ from the JDBC type `J`.
+     *
+     * @param [tableColumnMetadata] all information we have about the column
+     * @param [expectedJdbcType] the JDBC type, `J`, obtained from [getExpectedJdbcType]
+     * @return the type of the objects returned by [preprocessValue] for the given column
+     */
     public open fun getPreprocessedValueType(
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
@@ -218,13 +382,28 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 expectedJdbcType
         }.withNullability(tableColumnMetadata.isNullable)
 
-    // TODO add preprocessors for common types, like sql Arrays, Java datetimes, etc.
-    public open fun <J : Any, D : Any> preprocessValue(
-        value: J?,
+    /**
+     * (Potentially) preprocesses the [value] for the given [column][tableColumnMetadata] before
+     * collecting it in a DataFrame [DataColumn].
+     *
+     * While [DbType] contains some basic preprocessing logic, converting some Java classes to Kotlin ones,
+     * it's often necessary to override this function for specific JDBC implementations.
+     *
+     * @param [J] the JDBC type, [expectedJdbcType]
+     * @param [D] the type of the return value, [expectedPreprocessedValueType]
+     * @param [value] the value to preprocess
+     * @param [tableColumnMetadata] all information we have about the column
+     * @param [expectedJdbcType] the JDBC type, [J], obtained from [getExpectedJdbcType]
+     * @param [expectedPreprocessedValueType] the type of the return value, [D], obtained from [getPreprocessedValueType]
+     * @return the preprocessed version of [value]
+     */
+    @Suppress("UNCHECKED_CAST")
+    public open fun <J, D> preprocessValue(
+        value: J,
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
         expectedPreprocessedValueType: KType,
-    ): D? =
+    ): D =
         when (tableColumnMetadata.jdbcType) {
             Types.TIMESTAMP if tableColumnMetadata.javaClassName == "java.time.LocalDateTime" ->
                 (value as JavaLocalDateTime?)?.toKotlinLocalDateTime()
@@ -237,8 +416,20 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
             else ->
                 value
-        } as D?
+        } as D
 
+    /**
+     * Returns the target [schema][ColumnSchema] of the given [column][tableColumnMetadata]
+     * which [buildDataColumn] will adhere to. This schema corresponds to type `P`, in the sense that
+     * it will describe the [schema][ColumnSchema] of `DataColumn<P>`.
+     *
+     * If `null` is returned, the [schema][ColumnSchema] cannot be determined before looking at the actual data.
+     *
+     * @param [tableColumnMetadata] all information we have about the column
+     * @param [expectedValueType] the type of the values after preprocessing, `P`
+     * @return the target [schema][ColumnSchema] of the given column,
+     *   or `null` if it cannot be determined from the types alone.
+     */
     public open fun getTargetColumnSchema(
         tableColumnMetadata: TableColumnMetadata,
         expectedValueType: KType,
@@ -250,13 +441,28 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             else -> ColumnSchema.Value(expectedValueType)
         }
 
-    public open fun <D : Any, P : Any> buildDataColumn(
+    /**
+     * Builds a [DataColumn] from the given ([preprocessed][preprocessValue]) [values],
+     * adhering to [targetColumnSchema].
+     *
+     * @param [D] the type of the values after preprocessing
+     * @param [P] the type of the resulting [DataColumn][DataColumn]`<`[P][P]`>`, [targetColumnSchema]
+     * @param [name] the name of the column
+     * @param [values] the ([preprocessed][preprocessValue]) values to put in the column
+     * @param [tableColumnMetadata] all information we have about the column
+     * @param [targetColumnSchema] the schema of the column [DataColumn][DataColumn]`<`[P][P]`>`,
+     *   as determined by [getTargetColumnSchema]
+     * @param [inferNullability] whether to infer nullability from the runtime values (this is more expensive),
+     *   as opposed to using the nullability information from the [targetColumnSchema]
+     * @return the built [DataColumn]
+     */
+    public open fun <D, P> buildDataColumn(
         name: String,
-        values: List<D?>,
+        values: List<D>,
         tableColumnMetadata: TableColumnMetadata,
         targetColumnSchema: ColumnSchema?,
         inferNullability: Boolean,
-    ): DataColumn<P?> {
+    ): DataColumn<P> {
         val postProcessedValues = when (tableColumnMetadata.jdbcType) {
             // Special case which post-processes java.sql.Array -> Kotlin arrays
             Types.ARRAY -> handleArrayValues(values)
@@ -270,11 +476,29 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         )
     }
 
-    protected fun <D : Any, P : Any> List<D?>.toDataColumn(
+    /**
+     * Helper function to convert [this] list of values to a [DataColumn][DataColumn]`<`[P][P]`>`.
+     *
+     * **NOTE:** While this function can handle
+     * [targetColumnSchema][targetColumnSchema]`  =  `[ColumnSchema.Group][ColumnSchema.Group],
+     * and [this] being a [List][List]`<`[`DataRow<*>`][DataRow]`>`,
+     * this should generally be avoided to circumvent creating `n` [data rows][DataRow],
+     * (which essentially are `n` single-row [dataframes][DataFrame]).
+     *
+     * Instead, use [preprocessValue][preprocessValue] to convert to [Map][Map]`<`[String][String]`, `[Any?][Any]`>`
+     * and then use the more efficient [Iterable<Map<String, Any?>>.toDataFrame()][Iterable.toDataFrame] in [buildDataColumn]:
+     * ```kt
+     * (values as List<Map<String, Any?>>)
+     *     .toDataFrame()
+     *     .asColumnGroup(name)
+     *     .asDataColumn()
+     * ```
+     */
+    protected fun <D, P> List<D>.toDataColumn(
         name: String,
         targetColumnSchema: ColumnSchema?,
         inferNullability: Boolean,
-    ): DataColumn<P?> =
+    ): DataColumn<P> =
         when (targetColumnSchema) {
             is ColumnSchema.Value ->
                 DataColumn.createValueColumn(
@@ -405,137 +629,6 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             connection.isReadOnly = true
         }
         return connection
-    }
-
-    /**
-     * Retrieves column metadata from a JDBC ResultSet.
-     *
-     * This method reads column metadata from [ResultSetMetaData] with graceful fallbacks
-     * for JDBC drivers that throw [java.sql.SQLFeatureNotSupportedException] for certain methods
-     * (e.g., Apache Hive).
-     *
-     * Fallback behavior for unsupported methods:
-     * - `getColumnName()` → `getColumnLabel()` → `"column_N"`
-     * - `getTableName()` → extract from column name if contains '.' → `null`
-     * - `isNullable()` → [DatabaseMetaData.getColumns] → `true` (assume nullable)
-     * - `getColumnTypeName()` → `"OTHER"`
-     * - `getColumnType()` → [Types.OTHER]
-     * - `getColumnDisplaySize()` → `0`
-     * - `getColumnClassName()` → `"java.lang.Object"`
-     *
-     * Override this method in subclasses to provide database-specific behavior
-     * (for example, to disable fallback for databases like Teradata or Oracle
-     * where [DatabaseMetaData.getColumns] is known to be slow).
-     *
-     * @param resultSet The [ResultSet] containing query results.
-     * @return A list of [TableColumnMetadata] objects.
-     */
-    public open fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata> {
-        val rsMetaData = resultSet.metaData
-        val connection = resultSet.statement.connection
-        val dbMetaData = connection.metaData
-
-        // Some JDBC drivers (e.g., Hive) throw SQLFeatureNotSupportedException
-        val catalog = try {
-            connection.catalog.takeUnless { it.isNullOrBlank() }
-        } catch (_: Exception) {
-            null
-        }
-
-        val schema = try {
-            connection.schema.takeUnless { it.isNullOrBlank() }
-        } catch (_: Exception) {
-            null
-        }
-
-        val columnCount = rsMetaData.columnCount
-        val columns = mutableListOf<TableColumnMetadata>()
-        val nameCounter = mutableMapOf<String, Int>()
-
-        for (index in 1..columnCount) {
-            // Try to getColumnName, fallback to getColumnLabel, then generate name
-            val columnName = try {
-                rsMetaData.getColumnName(index)
-            } catch (_: Exception) {
-                try {
-                    rsMetaData.getColumnLabel(index)
-                } catch (_: Exception) {
-                    "column$index"
-                }
-            }
-
-            // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException
-            val tableName = try {
-                rsMetaData.getTableName(index).takeUnless { it.isBlank() }
-            } catch (_: Exception) {
-                // Fallback: try to extract table name from column name if it contains '.'
-                val dotIndex = columnName.lastIndexOf('.')
-                if (dotIndex > 0) columnName.take(dotIndex) else null
-            }
-
-            // Try to detect nullability from ResultSetMetaData
-            val isNullable = try {
-                when (rsMetaData.isNullable(index)) {
-                    ResultSetMetaData.columnNoNulls -> false
-
-                    ResultSetMetaData.columnNullable -> true
-
-                    // Unknown nullability: assume it nullable, may trigger fallback
-                    ResultSetMetaData.columnNullableUnknown -> true
-
-                    else -> true
-                }
-            } catch (_: Exception) {
-                // Some drivers may throw for unsupported features
-                // Try fallback to DatabaseMetaData, with additional safety
-                try {
-                    dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols ->
-                        if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
-                    }
-                } catch (_: Exception) {
-                    // Fallback failed, assume nullable as the safest default
-                    true
-                }
-            }
-
-            // adding fallbacks to avoid SQLException
-            val columnType = try {
-                rsMetaData.getColumnTypeName(index)
-            } catch (_: Exception) {
-                "OTHER"
-            }
-
-            val jdbcType = try {
-                rsMetaData.getColumnType(index)
-            } catch (_: Exception) {
-                Types.OTHER
-            }
-
-            val displaySize = try {
-                rsMetaData.getColumnDisplaySize(index)
-            } catch (_: Exception) {
-                0
-            }
-
-            val javaClassName = try {
-                rsMetaData.getColumnClassName(index)
-            } catch (_: Exception) {
-                "java.lang.Object"
-            }
-
-            val uniqueName = manageColumnNameDuplication(nameCounter, columnName)
-
-            columns += TableColumnMetadata(
-                name = uniqueName,
-                sqlTypeName = columnType,
-                jdbcType = jdbcType,
-                size = displaySize,
-                javaClassName = javaClassName,
-                isNullable = isNullable,
-            )
-        }
-
-        return columns
     }
 
     /**

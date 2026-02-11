@@ -231,7 +231,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                                     ?.toList()
                                     ?.let { it as List<Struct?> }
                                     ?.mapNotNull {
-                                        parsedListType.cast<Struct, Map<String, Any?>, AnyRow>()
+                                        parsedListType.cast<Struct?, Map<String, Any?>?, AnyRow?>()
                                             .preprocessOrCast(it)
                                     }?.toDataFrame()
                             }
