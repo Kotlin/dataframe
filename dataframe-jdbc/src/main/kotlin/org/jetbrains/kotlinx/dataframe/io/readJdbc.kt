@@ -906,12 +906,9 @@ internal fun fetchAndConvertDataFromResultSet(
         limit = limit,
     )
 
-    val names = getDataFrameCompatibleColumnNames(tableColumns)
-
     val dataFrame = buildDataFrameFromColumnData(
         dbType = dbType,
         tableColumns = tableColumns,
-        names = names,
         columnData = columnData,
         targetColumnSchemas = targetColumnSchemas,
         inferNullability = inferNullability,
@@ -922,16 +919,6 @@ internal fun fetchAndConvertDataFromResultSet(
     }
 
     return dataFrame
-}
-
-internal const val UNNAMED_COLUMN_PREFIX = "untitled"
-
-internal fun getDataFrameCompatibleColumnNames(tableColumns: List<TableColumnMetadata>): List<String> {
-    val generator = ColumnNameGenerator()
-    for (col in tableColumns) {
-        generator.addUnique(col.name.ifEmpty { UNNAMED_COLUMN_PREFIX })
-    }
-    return generator.names
 }
 
 internal fun getExpectedJdbcTypes(dbType: DbType, tableColumns: List<TableColumnMetadata>): List<KType> =
@@ -1010,7 +997,6 @@ private fun readAndPreprocessRowsFromResultSet(
 private fun buildDataFrameFromColumnData(
     dbType: DbType,
     tableColumns: List<TableColumnMetadata>,
-    names: List<String>,
     columnData: List<List<Any?>>,
     targetColumnSchemas: List<ColumnSchema?>,
     inferNullability: Boolean,
@@ -1018,7 +1004,7 @@ private fun buildDataFrameFromColumnData(
 ): AnyFrame =
     tableColumns.mapIndexed { index, it ->
         val column = dbType.buildDataColumn<Any?, Any?>(
-            name = names[index],
+            name = it.name,
             values = columnData[index],
             tableColumnMetadata = it,
             targetColumnSchema = targetColumnSchemas[index],

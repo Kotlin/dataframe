@@ -4,12 +4,16 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.sql.Connection
+import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.ResultSet
+import java.sql.ResultSetMetaData
+import java.sql.SQLException
 import javax.sql.DataSource
 import kotlin.reflect.typeOf
 
@@ -325,11 +329,10 @@ public fun DataFrameSchema.Companion.readResultSet(resultSet: ResultSet, dbType:
     val tableColumns = getTableColumnsMetadata(resultSet, dbType)
     val expectedJdbcTypes = getExpectedJdbcTypes(dbType, tableColumns)
     val preprocessedValueTypes = getPreprocessedValueTypes(dbType, tableColumns, expectedJdbcTypes)
-    val names = getDataFrameCompatibleColumnNames(tableColumns)
     val targetColumnSchemas = getTargetColumnSchemas(dbType, tableColumns, preprocessedValueTypes)
         .withIndex()
         .associate { (index, it) ->
-            names[index] to (it ?: ColumnSchema.Value(typeOf<Any?>()))
+            tableColumns[index].name to (it ?: ColumnSchema.Value(typeOf<Any?>()))
         }
 
     return DataFrameSchemaImpl(targetColumnSchemas)

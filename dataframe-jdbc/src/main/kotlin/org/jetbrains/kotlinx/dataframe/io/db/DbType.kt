@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -34,7 +35,6 @@ import java.sql.Types
 import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.util.UUID
-import kotlin.collections.toTypedArray
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.safeCast
@@ -181,10 +181,11 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         }
 
         val columnCount = rsMetaData.columnCount
-        val columns = mutableListOf<TableColumnMetadata>()
-        val nameCounter = mutableMapOf<String, Int>()
+        val nameGenerator = ColumnNameGenerator()
+        val columns = List(columnCount) {
+            // SQL columns are 1-indexed
+            val index = it + 1
 
-        for (index in 1..columnCount) {
             // Try to getColumnName, fallback to getColumnLabel, then generate name
             val columnName = try {
                 rsMetaData.getColumnName(index)
@@ -192,7 +193,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 try {
                     rsMetaData.getColumnLabel(index)
                 } catch (_: Exception) {
-                    "column$index"
+                    null
                 }
             }
 
@@ -201,8 +202,11 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 rsMetaData.getTableName(index).takeUnless { it.isBlank() }
             } catch (_: Exception) {
                 // Fallback: try to extract table name from column name if it contains '.'
-                val dotIndex = columnName.lastIndexOf('.')
-                if (dotIndex > 0) columnName.take(dotIndex) else null
+                if (columnName?.contains('.') == true) {
+                    columnName.substringAfterLast('.')
+                } else {
+                    null
+                }
             }
 
             // Try to detect nullability from ResultSetMetaData
@@ -255,9 +259,12 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 "java.lang.Object"
             }
 
-            val uniqueName = manageColumnNameDuplication(nameCounter, columnName)
+            // Generate DataFrame-compatible unique names in the same way as creating a DataFrame would
+            val uniqueName = nameGenerator.addUnique(
+                preferredName = columnName.orEmpty().ifEmpty { UNNAMED_COLUMN_PREFIX },
+            )
 
-            columns += TableColumnMetadata(
+            TableColumnMetadata(
                 name = uniqueName,
                 sqlTypeName = columnType,
                 jdbcType = jdbcType,
@@ -632,31 +639,6 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     }
 
     /**
-     * Manages the duplication of column names by appending a unique identifier to the original name if necessary.
-     *
-     * @param columnNameCounter a mutable map that keeps track of the count for each column name.
-     * @param originalName the original name of the column to be managed.
-     * @return the modified column name that is free from duplication.
-     */
-    internal fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, Int>, originalName: String): String {
-        var name = originalName
-        val count = columnNameCounter[originalName]
-
-        if (count != null) {
-            var incrementedCount = count + 1
-            while (columnNameCounter.containsKey("${originalName}_$incrementedCount")) {
-                incrementedCount++
-            }
-            columnNameCounter[originalName] = incrementedCount
-            name = "${originalName}_$incrementedCount"
-        } else {
-            columnNameCounter[originalName] = 0
-        }
-
-        return name
-    }
-
-    /**
      * todo?
      * Converts SQL Array objects to strongly-typed arrays.
      *
@@ -695,3 +677,6 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     private fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> =
         array.mapNotNull { elementType.safeCast(it) }
 }
+
+// same as org.jetbrains.kotlinx.dataframe.impl.UNNAMED_COLUMN_PREFIX
+internal const val UNNAMED_COLUMN_PREFIX = "untitled"
