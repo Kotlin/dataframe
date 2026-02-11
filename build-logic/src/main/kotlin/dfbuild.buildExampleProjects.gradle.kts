@@ -54,7 +54,10 @@ tasks.named("assemble") {
     dependsOn(syncExampleFolders)
 }
 tasks.named("check") {
+//    // only builds the examples when debug mode is enabled
+//    if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
     dependsOn(buildExampleFolders)
+//    }
 }
 
 /**
@@ -102,9 +105,14 @@ private fun setupExampleProjectFolder(folder: File, isDev: Boolean) {
 
             BuildSystem.MAVEN ->
                 setupMavenBuildTask(name = name, folder = folder)
-                    .also { it { dependsOn(":publishToMavenLocal") } }
         }
-    buildTask { dependsOn(syncTask) }
+    buildTask {
+        dependsOn(syncTask)
+        val requiresPublishToMavenLocal = buildSystem == BuildSystem.MAVEN
+        if (requiresPublishToMavenLocal) {
+            dependsOn(":publishToMavenLocal")
+        }
+    }
     buildExampleFolders {
         dependsOn(buildTask)
     }

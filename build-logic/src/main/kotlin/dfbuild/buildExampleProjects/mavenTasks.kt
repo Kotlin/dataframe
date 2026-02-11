@@ -67,18 +67,19 @@ internal fun Project.setupMavenBuildTask(name: String, folder: File): TaskProvid
         group = "verification"
         description = "Builds the nested Maven build in ./${folder.name}"
         doLast {
-            DefaultInvoker().execute(
-                DefaultInvocationRequest().apply {
-                    pomFile = File(folder, "pom.xml")
-                    goals = listOf("clean", "compile")
-                },
-            ).let { result ->
-                if (result.exitCode != 0) {
-                    throw BuildException(
-                        "Could not build Maven project in '$folder'.",
-                        result.executionException,
-                    )
+            DefaultInvoker()
+                .execute(
+                    DefaultInvocationRequest().apply {
+                        pomFile = File(folder, "pom.xml")
+                        goals = listOf("clean", "compile")
+                    },
+                ).let { result ->
+                    if (result.exitCode != 0) {
+                        throw BuildException(
+                            "Could not build Maven project in '$folder'.",
+                            result.executionException,
+                        )
+                    }
                 }
-            }
         }
     }

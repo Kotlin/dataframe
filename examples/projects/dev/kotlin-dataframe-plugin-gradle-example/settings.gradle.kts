@@ -13,6 +13,11 @@ rootProject.name = "kotlin-dataframe-plugin-gradle-example"
 // region generated-config
 
 // substitutes dependencies provided by the root project
-includeBuild("../../../..")
+includeBuild("../../../..") {
+    dependencySubstitution {
+        substitute(module("com.jetbrains.kotlinx:dataframe-core"))
+            .using(project(":core"))
+    }
+}
 
 // endregion

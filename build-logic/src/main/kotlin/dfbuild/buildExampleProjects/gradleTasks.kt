@@ -36,7 +36,7 @@ internal fun Project.setupGradleSyncVersionsTask(
         outputs.upToDateWhen { false }
         val versions = versionsToSync.associateWith {
             versionCatalog.findVersion(it).get().requiredVersion
-        }
+        }.toMutableMap()
 
         val sourceGradleWrapperProperties = file("gradle/wrapper/gradle-wrapper.properties")
         val sourceEditorConfig = file(".editorconfig")
@@ -48,14 +48,28 @@ internal fun Project.setupGradleSyncVersionsTask(
             )
 
             // overwrite gradle.properties
-            folder.resolve("gradle.properties").writeText(
-                """
-                kotlin.code.style=official
-                # Disabling incremental compilation will no longer be necessary
-                # when https://youtrack.jetbrains.com/issue/KT-66735 is resolved.
-                kotlin.incremental=false
-                """.trimIndent(),
-            )
+            val gradleProperties = folder.resolve("gradle.properties")
+            val gradlePropertiesContent = gradleProperties
+                .readText()
+                .lines()
+                .toMutableList()
+
+            if ("kotlin.code.style=official" !in gradlePropertiesContent) {
+                gradlePropertiesContent.removeAll { it.startsWith("kotlin.code.style=") }
+                gradlePropertiesContent.add("kotlin.code.style=official")
+            }
+            if ("kotlin.incremental=false" !in gradlePropertiesContent) {
+                gradlePropertiesContent.removeAll { it.startsWith("kotlin.incremental=") }
+                gradlePropertiesContent.add(
+                    """
+                    # Disabling incremental compilation will no longer be necessary
+                    # when https://youtrack.jetbrains.com/issue/KT-66735 is resolved.
+                    kotlin.incremental=false
+                    """.trimIndent(),
+                )
+            }
+
+            gradleProperties.writeText(gradlePropertiesContent.joinToString("\n"))
 
             // overwrite libs.versions.toml
             val libsVersionsToml = folder.resolve("gradle/libs.versions.toml")
@@ -79,7 +93,12 @@ internal fun Project.setupGradleSyncVersionsTask(
                 // region generated-config
                 
                 // substitutes dependencies provided by the root project
-                includeBuild("$relativePathToRoot")
+                includeBuild("$relativePathToRoot") {
+                    dependencySubstitution {
+                        substitute(module("com.jetbrains.kotlinx:dataframe-core"))
+                            .using(project(":core"))
+                    }
+                }
                 
                 // endregion
                 
@@ -119,6 +138,25 @@ internal fun Project.setupGradleBuildTask(name: String, folder: File): TaskProvi
     tasks.register("build$name") {
         group = "verification"
         description = "Builds the nested Gradle build in ./${folder.name}"
+
+        // Needs the android.sdk.dir property to be set or -Pandroid.sdk.dir=... added as Gradle argument
+        // when and android-named example is run
+        val isAndroid = "android" in name.lowercase()
+        onlyIf {
+            when {
+                !isAndroid -> true
+
+                properties["android.sdk.dir"] is String -> true
+
+                else -> {
+                    logger.warn(
+                        "Skipping `build$name` because the `android.sdk.dir` property is not to run the Android example '$folder'.",
+                    )
+                    false
+                }
+            }
+        }
+
         doLast {
             GradleConnector.newConnector()
                 .forProjectDirectory(folder)
@@ -126,6 +164,14 @@ internal fun Project.setupGradleBuildTask(name: String, folder: File): TaskProvi
                 .use {
                     it.newBuild()
                         .forTasks("clean", "build")
+                        .withArguments(
+                            buildList {
+                                if (isAndroid) {
+                                    this += "-Dsdk.dir=${properties["android.sdk.dir"]}"
+                                    this += "-Dandroid.home=${properties["android.sdk.dir"]}"
+                                }
+                            },
+                        )
                         .setStandardInput(System.`in`)
                         .setStandardOutput(System.out)
                         .setStandardError(System.err)

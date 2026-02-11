@@ -1,6 +1,9 @@
 [versions]
 agp = "9.0.0"
-kotlin = "2.3.0-RC2"
+kotlin = "2.3.10"
+dataframe = "1.0.0-Beta4"
+ktlint-gradle = "14.0.1"
+ktlint = "1.8.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -10,6 +13,10 @@ activityCompose = "1.8.0"
 composeBom = "2024.09.00"
 
 [libraries]
+dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "dataframe" }
+dataframe-core = { module = "org.jetbrains.kotlinx:dataframe-core", version.ref = "dataframe" }
+dataframe-json = { module = "org.jetbrains.kotlinx:dataframe-json", version.ref = "dataframe" }
+dataframe-csv = { module = "org.jetbrains.kotlinx:dataframe-csv", version.ref = "dataframe" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -29,5 +36,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
+
+# The Kotlin DataFrame Compiler plugin is the same version as the Kotlin plugin.
 dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
 
