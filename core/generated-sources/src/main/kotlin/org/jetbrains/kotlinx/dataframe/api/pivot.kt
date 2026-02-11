@@ -143,7 +143,7 @@ internal interface PivotDocs {
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      * ### [Pivot] reducing
@@ -178,7 +178,7 @@ internal interface PivotDocs {
      *
      * For more information: [See "Pivot` reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
      */
-    interface Reducing
+    typealias Reducing = Nothing
 
     /**
      * ### [Pivot] aggregation
@@ -209,7 +209,7 @@ internal interface PivotDocs {
      *
      * For more information: [See "Pivot` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation)
      */
-    interface Aggregation
+    typealias Aggregation = Nothing
 
     /**
      * ### [Pivot] grouping
@@ -233,7 +233,7 @@ internal interface PivotDocs {
      *
      * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
      */
-    interface Grouping
+    typealias Grouping = Nothing
 
     /**
      * ### [Pivot] aggregation statistics
@@ -269,7 +269,7 @@ internal interface PivotDocs {
      *
      * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics)
      */
-    interface AggregationStatistics
+    typealias AggregationStatistics = Nothing
 }
 
 /**
@@ -704,7 +704,7 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
  *
  * ### This `pivotCounts` Overload
  */
-internal interface DataFramePivotCountsCommonDocs
+internal typealias DataFramePivotCountsCommonDocs = Nothing
 
 /**
  * Computes a **count matrix** (similar to frequency encoding) for the values in the
@@ -1043,7 +1043,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
  *
  * ### This `pivotMatches` Overload
  */
-internal interface GroupByPivotMatchesCommonDocs
+internal typealias GroupByPivotMatchesCommonDocs = Nothing
 
 /**
  * Computes a **presence matrix**
@@ -1210,7 +1210,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  *
  * ### This `pivotCounts` Overload
  */
-internal interface GroupByPivotCountsCommonDocs
+internal typealias GroupByPivotCountsCommonDocs = Nothing
 
 /**
  * Computes a **count matrix** (similar to frequency encoding) for the values in the
@@ -1807,7 +1807,7 @@ internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -
  */
 internal interface PivotGroupByDocs {
 
-    interface GroupingColumns
+    typealias GroupingColumns = Nothing
 
     /**
      * * **Columns** represent all unique values from the selected [columns]
@@ -1819,7 +1819,7 @@ internal interface PivotGroupByDocs {
      *   a distinct set of values for each row
      *   (similar to [keys][GroupBy.keys] in [GroupBy]).
      */
-    interface ResultingMatrixShortcutDescription
+    typealias ResultingMatrixShortcutDescription = Nothing
 
     /**
      * [PivotGroupBy] is a dataframe-like structure that combines [Pivot] and [GroupBy],
@@ -1839,13 +1839,10 @@ internal interface PivotGroupByDocs {
      *
      * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
      */
-    interface CommonDescription
-
-    interface Grammar
-
-    interface Reducing
-
-    interface Aggregation
+    typealias CommonDescription = Nothing
+    typealias Grammar = Nothing
+    typealias Reducing = Nothing
+    typealias Aggregation = Nothing
 }
 
 public interface PivotGroupBy<out T> : Aggregatable<T> {

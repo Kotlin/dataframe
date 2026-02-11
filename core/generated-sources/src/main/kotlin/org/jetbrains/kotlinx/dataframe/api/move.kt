@@ -129,7 +129,7 @@ internal interface Move {
      * `df.`[move][org.jetbrains.kotlinx.dataframe.api.move]`(Person::length, Person::age)`
      *
      */
-    interface MoveSelectingOptions
+    typealias MoveSelectingOptions = Nothing
 
     /**
      * ## Move Operation Grammar
@@ -167,7 +167,7 @@ internal interface Move {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`toEnd`**][MoveClause.toEnd]**`()`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /**
@@ -346,7 +346,7 @@ internal interface MoveTo {
      * `df.`[moveTo][org.jetbrains.kotlinx.dataframe.api.moveTo]`(Person::length, Person::age)`
      *
      */
-    interface MoveToSelectingOptions
+    typealias MoveToSelectingOptions = Nothing
 }
 
 /**
@@ -611,7 +611,7 @@ internal interface MoveToStart {
      * `df.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`(Person::length, Person::age)`
      *
      */
-    interface MoveToStartSelectingOptions
+    typealias MoveToStartSelectingOptions = Nothing
 }
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
@@ -873,7 +873,7 @@ internal interface MoveToEnd {
      * `df.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`(Person::length, Person::age)`
      *
      */
-    interface MoveToEndSelectingOptions
+    typealias MoveToEndSelectingOptions = Nothing
 }
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)

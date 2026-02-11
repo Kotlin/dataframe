@@ -47,6 +47,7 @@ internal class TwoStepMultipleColumnsHandler<in Value : Any, Return : Any?>(
                 ?: aggregator as AggregatorAggregationHandler<Return & Any, Return>,
             inputHandler = stepTwoInputHandler ?: aggregator as AggregatorInputHandler<Return & Any, Return>,
             multipleColumnsHandler = NoMultipleColumnsHandler(),
+            statisticsParameters = emptyMap(),
         ).create(aggregator!!.name)
     }
 

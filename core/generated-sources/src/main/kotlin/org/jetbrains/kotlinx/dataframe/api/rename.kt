@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
@@ -23,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
+import org.jetbrains.kotlinx.dataframe.impl.columns.renamedColumn
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -127,7 +129,7 @@ internal interface RenameDocs {
      * `df.`[rename][org.jetbrains.kotlinx.dataframe.api.rename]`(Person::length, Person::age)`
      *
      */
-    interface RenameSelectingOptions
+    typealias RenameSelectingOptions = Nothing
 
     /**
      * ## Rename Operation Grammar
@@ -150,7 +152,7 @@ internal interface RenameDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`toCamelCase`**][RenameClause.toCamelCase]**`()`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /**
@@ -575,16 +577,16 @@ public interface RenameColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**named**][ColumnsSelectionDsl.named] */
-        public interface InfixNamedName
+        public typealias InfixNamedName = Nothing
 
         /** [**into**][ColumnsSelectionDsl.into] */
-        public interface InfixIntoName
+        public typealias InfixIntoName = Nothing
 
         /** __`.`__[**named**][ColumnsSelectionDsl.named] */
-        public interface NamedName
+        public typealias NamedName = Nothing
 
         /** __`.`__[**into**][ColumnsSelectionDsl.into] */
-        public interface IntoName
+        public typealias IntoName = Nothing
     }
 
     /**
@@ -615,47 +617,48 @@ public interface RenameColumnsSelectionDsl {
     @Suppress("ClassName")
     private interface CommonRenameDocs {
 
-        interface RECEIVER
-
-        interface RECEIVER_TYPE
+        typealias RECEIVER = Nothing
+        typealias RECEIVER_TYPE = Nothing
 
         /** "named" or "into" */
-        interface FUNCTION_NAME
+        typealias FUNCTION_NAME = Nothing
 
         /** "newName" or "nameOf" */
-        interface PARAM_NAME
-
-        interface PARAM
-
-        interface PARAM_TYPE
+        typealias PARAM_NAME = Nothing
+        typealias PARAM = Nothing
+        typealias PARAM_TYPE = Nothing
 
         /**
          */
-        interface ColumnReferenceReceiver
+        typealias ColumnReferenceReceiver = Nothing
 
         /**
          */
-        interface StringReceiver
+        typealias StringReceiver = Nothing
 
         /**
          */
-        interface KPropertyReceiver
+        typealias KPropertyReceiver = Nothing
 
         /**
          */
-        interface ColumnReferenceParam
+        typealias SingleColumnReceiver = Nothing
 
         /**
          */
-        interface StringParam
+        typealias ColumnReferenceParam = Nothing
 
         /**
          */
-        interface KPropertyParam
+        typealias StringParam = Nothing
 
-        interface NamedFunctionName
+        /**
+         */
+        typealias KPropertyParam = Nothing
 
-        interface IntoFunctionName
+        typealias NamedFunctionName = Nothing
+
+        typealias IntoFunctionName = Nothing
     }
 
     // region named
@@ -922,6 +925,34 @@ public interface RenameColumnsSelectionDsl {
     public infix fun <C> KProperty<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
         toColumnAccessor().named(nameOf.columnName)
 
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar]
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { col(0)  `[named][SingleColumn.named]` "columnB" }`
+     *
+     * @receiver The [SingleColumn] referencing the column to rename.
+     * @param [newName] A [String] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    @Interpretable("Named1")
+    public infix fun <C> SingleColumn<C>.named(newName: String): SingleColumn<C> = renamedColumn(newName)
+
     // endregion
 
     // region into
@@ -1183,6 +1214,34 @@ public interface RenameColumnsSelectionDsl {
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> KProperty<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
+
+    /**
+     * ## Rename: `named` / `into`
+     * Renaming a column in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] is done by calling the `infix` functions
+     * [named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named] or [into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]. They behave exactly the same,
+     * so it's up to contextual preference which one to use. Any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be
+     * used to specify the column to rename and which name should be used instead.
+     *
+     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar]
+     *
+     * #### For Example:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
+     *
+     * #### Example for this overload:
+     *
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { col(0)  `[into][SingleColumn.into]` "columnB" }`
+     *
+     * @receiver The [SingleColumn] referencing the column to rename.
+     * @param [newName] A [String] used to specify the new name of the column.
+     * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
+     */
+    @Interpretable("Named1")
+    public infix fun <C> SingleColumn<C>.into(newName: String): SingleColumn<C> = named(newName)
 
     // endregion
 }

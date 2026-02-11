@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  * Note: The `AnyFrame` must contain a `geometry` column to be converted successfully.
  */
 @Suppress("UNCHECKED_CAST")
-fun AnyFrame.toGeo(crs: CoordinateReferenceSystem? = null): GeoDataFrame<*> =
+public fun AnyFrame.toGeo(crs: CoordinateReferenceSystem? = null): GeoDataFrame<*> =
     GeoDataFrame(
         this as DataFrame<WithGeometry>,
         crs,

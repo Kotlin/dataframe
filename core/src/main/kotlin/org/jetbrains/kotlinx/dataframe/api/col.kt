@@ -65,13 +65,13 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`col`**][ColumnsSelectionDsl.col] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -119,31 +119,31 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { $[CommonColDocs.RECEIVER]`[col][col]`($[CommonColDocs.ARG]) \}`
          */
-        interface SingleExample
+        typealias SingleExample = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { $[CommonColDocs.RECEIVER]`[col][col]`($[CommonColDocs.ARG]) \}`
          *
          * `df.`[select][DataFrame.select]` { $[CommonColDocs.RECEIVER]`[col][col]`<`[String][String]`>($[CommonColDocs.ARG]) \}`
          */
-        interface DoubleExample
+        typealias DoubleExample = Nothing
 
         // Receiver argument for the example(s)
-        interface RECEIVER
+        typealias RECEIVER = Nothing
 
         // Argument for the example(s)
-        interface ARG
+        typealias ARG = Nothing
 
         // Optional note
-        interface NOTE
+        typealias NOTE = Nothing
 
         /** @param [C\] The type of the column. */
-        interface ColumnTypeParam
+        typealias ColumnTypeParam = Nothing
     }
 
     // region reference
@@ -155,7 +155,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [col\] The [ColumnAccessor] pointing to the column.
      * @include [CommonColDocs.ColumnTypeParam]
      */
-    private interface ColReferenceDocs
+    private typealias ColReferenceDocs = Nothing
 
     /**
      * @include [ColReferenceDocs] {@set [CommonColDocs.RECEIVER]}
@@ -219,21 +219,21 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColDocs.EXAMPLE] {@include [CommonColDocs.DoubleExample]}}
      * @param [name\] The name of the column.
      */
-    private interface ColNameDocs
+    private typealias ColNameDocs = Nothing
 
     /**
      * @include [ColNameDocs] {@set [CommonColDocs.RECEIVER]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    @Interpretable("Col")
+    @Interpretable("ColByStringUntyped")
     public fun col(name: String): ColumnAccessor<*> = column<Any?>(name)
 
     /**
      * @include [ColNameDocs] {@set [CommonColDocs.RECEIVER]}
      * @include [CommonColDocs.ColumnTypeParam]
      */
-    @Interpretable("ColUntyped")
+    @Interpretable("ColByString")
     public fun <C> col(name: String): ColumnAccessor<C> = column(name)
 
     /**
@@ -331,7 +331,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColDocs.EXAMPLE] {@include [CommonColDocs.DoubleExample]}}
      * @param [path\] The path to the column.
      */
-    private interface ColPathDocs
+    private typealias ColPathDocs = Nothing
 
     /**
      * @include [ColPathDocs] {@set [CommonColDocs.RECEIVER]}
@@ -435,7 +435,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [property\] The [KProperty] reference to the column.
      * @include [CommonColDocs.ColumnTypeParam]
      */
-    private interface ColKPropertyDocs
+    private typealias ColKPropertyDocs = Nothing
 
     /**
      * @include [ColKPropertyDocs] {@set [CommonColDocs.RECEIVER]}
@@ -494,7 +494,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [index\] The index of the column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
-    private interface ColIndexDocs
+    private typealias ColIndexDocs = Nothing
 
     /**
      * @include [ColIndexDocs] {@set [CommonColDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
@@ -524,12 +524,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
+    @Interpretable("ColByIndexUntyped")
     public fun ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * @include [ColIndexDocs] {@set [CommonColDocs.RECEIVER]}
      * @include [CommonColDocs.ColumnTypeParam]
      */
+    @Interpretable("ColByIndex")
     public fun <C> ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<C> = asSingleColumn().col<C>(index)
 
     /**

@@ -10,17 +10,17 @@ import org.jetbrains.kotlinx.dataframe.io.asUrl
 import java.io.File
 import java.net.URL
 
-fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = readGeoJson(asUrl(path))
+public fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = readGeoJson(asUrl(path))
 
-fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
+public fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
     url.openStream().use { inputStream ->
         val featureCollection = FeatureJSON().readFeatureCollection(inputStream) as SimpleFeatureCollection
         featureCollection.toGeoDataFrame()
     }
 
-fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoDataFrame.readGeoJson(path)
+public fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoDataFrame.readGeoJson(path)
 
-fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataFrame.readGeoJson(url)
+public fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataFrame.readGeoJson(url)
 
 /**
  * Examples:
@@ -31,12 +31,12 @@ fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataFrame.re
  *
  * @param path path to *.shp or *.shp.gz file, or to a directory containing such a file
  */
-fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {
+public fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {
     val url = resolveShapefileUrl(path)
     return readShapeFileImpl(url)
 }
 
-fun GeoDataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> {
+public fun GeoDataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> {
     val resolvedUrl = if (url.protocol == "file") {
         resolveShapefileUrl(url.path)
     } else {
@@ -68,6 +68,6 @@ private fun findShapefileInDirectory(dir: File): File =
         ?: File(dir, "${dir.name}.shp.gz").takeIf { it.exists() }
         ?: throw IllegalArgumentException("No shapefile found in directory: ${dir.absolutePath}")
 
-fun DataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = GeoDataFrame.readShapefile(path)
+public fun DataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = GeoDataFrame.readShapefile(path)
 
-fun DataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> = GeoDataFrame.readShapefile(url)
+public fun DataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> = GeoDataFrame.readShapefile(url)

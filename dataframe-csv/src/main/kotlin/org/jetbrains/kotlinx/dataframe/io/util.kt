@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.ExcludeFromSources
 
 /** [\["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"\]][DEFAULT_DELIM_NULL_STRINGS] */
 @ExcludeFromSources
-internal interface DefaultNullStringsContentLink
+internal typealias DefaultNullStringsContentLink = Nothing
 
 /**
  * Default strings that are considered null when reading CSV / TSV / delim files:

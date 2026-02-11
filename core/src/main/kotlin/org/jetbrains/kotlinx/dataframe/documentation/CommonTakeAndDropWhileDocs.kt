@@ -46,17 +46,17 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 internal interface CommonTakeAndDropWhileDocs {
 
     /** Title, like "Take Last" */
-    interface TITLE
+    typealias TITLE = Nothing
 
     /** Operation, like "takeLast" */
-    interface OPERATION
+    typealias OPERATION = Nothing
 
     /** Operation, like "take" */
-    interface NOUN
+    typealias NOUN = Nothing
 
     /** like "last" */
-    interface FIRST_OR_LAST
+    typealias FIRST_OR_LAST = Nothing
 
     /** Example argument to use */
-    interface EXAMPLE
+    typealias EXAMPLE = Nothing
 }
