@@ -1,6 +1,7 @@
 plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
+        alias(buildConfig)
     }
     with(libs.plugins) {
         alias(publisher)

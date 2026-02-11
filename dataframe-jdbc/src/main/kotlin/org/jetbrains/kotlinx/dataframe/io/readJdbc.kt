@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.BuildConfig
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
@@ -1013,7 +1014,7 @@ private fun buildDataFrameFromColumnData(
     columnData: List<List<Any?>>,
     targetColumnSchemas: List<ColumnSchema?>,
     inferNullability: Boolean,
-    checkSchema: Boolean = false, // TODO add as configurable parameter
+    checkSchema: Boolean = BuildConfig.DEBUG,
 ): AnyFrame =
     tableColumns.mapIndexed { index, it ->
         val column = dbType.buildDataColumn<Any, Any>(
