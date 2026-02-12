@@ -277,6 +277,60 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         return columns
     }
 
+    public open fun getTableColumnsMetadata(
+        connection: Connection,
+        tableMetadata: TableMetadata,
+    ): List<TableColumnMetadata> {
+        val dbMetaData = connection.metaData
+        return dbMetaData.getColumns(
+            tableMetadata.catalogue,
+            tableMetadata.schemaName,
+            tableMetadata.name,
+            null,
+        ).use { rs ->
+            buildList {
+                val nameGenerator = ColumnNameGenerator()
+                while (rs.next()) {
+                    val columnName =
+                        runCatching { rs.getString("COLUMN_NAME") }.getOrNull()
+                            .orEmpty()
+                            .ifEmpty { UNNAMED_COLUMN_PREFIX }
+                            .let {
+                                nameGenerator.addUnique(preferredName = it)
+                            }
+                    val sqlTypeName =
+                        runCatching { rs.getString("TYPE_NAME") }.getOrNull()
+                            ?: "OTHER"
+
+                    val jdbcType =
+                        runCatching { rs.getInt("DATA_TYPE") }.getOrNull()
+                            .takeUnless { it == 0 }
+                            ?: Types.OTHER
+
+                    val isNullable =
+                        runCatching { rs.getInt("NULLABLE") != DatabaseMetaData.columnNoNulls }
+                            .recoverCatching { !rs.getString("IS_NULLABLE").equals("NO", ignoreCase = true) }
+                            .getOrDefault(true)
+
+                    // TODO This can cause issues, for instance on H2. Needs watertight TYPE_NAME mapping
+                    val javaClassName =
+                        runCatching { rs.getString("COLUMN_CLASS") }.getOrNull()
+                            ?: runCatching { rs.getString("UDT_CLASS_NAME") }.getOrNull()
+                            ?: "java.lang.Object" // fallback; some drivers don’t expose class here
+
+                    this += TableColumnMetadata(
+                        name = columnName,
+                        sqlTypeName = sqlTypeName,
+                        jdbcType = jdbcType,
+                        size = 0, // irrelevant when reading just the schema
+                        javaClassName = javaClassName,
+                        isNullable = isNullable,
+                    )
+                }
+            }
+        }
+    }
+
     /**
      * Returns the [type][KType] of the objects returned by [getValueFromResultSet]
      * for the given [column][tableColumnMetadata]. Also called type `J`.

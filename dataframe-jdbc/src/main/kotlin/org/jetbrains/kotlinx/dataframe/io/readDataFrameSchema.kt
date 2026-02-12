@@ -9,11 +9,9 @@ import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.sql.Connection
-import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
-import java.sql.SQLException
 import javax.sql.DataSource
 import kotlin.reflect.typeOf
 
@@ -102,18 +100,37 @@ public fun DataFrameSchema.Companion.readSqlTable(
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     // TODO don't need to read 1 row, take it just from TableColumnMetadatas
+    try {
+        val tableMetadata = connection.metaData.getTables(null, null, tableName, null).use { tables ->
+            if (!tables.next()) throw IllegalArgumentException("Table with name $tableName not found!")
+            determinedDbType.buildTableMetadata(tables)
+        }
+        val tableColumns = determinedDbType.getTableColumnsMetadata(
+            connection = connection,
+            tableMetadata = tableMetadata,
+        )
+        val expectedJdbcTypes = getExpectedJdbcTypes(determinedDbType, tableColumns)
+        val preprocessedValueTypes = getPreprocessedValueTypes(determinedDbType, tableColumns, expectedJdbcTypes)
+        val targetColumnSchemas = getTargetColumnSchemas(determinedDbType, tableColumns, preprocessedValueTypes)
+            .withIndex()
+            .associate { (index, it) ->
+                tableColumns[index].name to (it ?: ColumnSchema.Value(typeOf<Any?>()))
+            }
 
-    // Read just 1 row to get the schema
-    val singleRowDataFrame = DataFrame.readSqlTable(
-        connection = connection,
-        tableName = tableName,
-        limit = 1,
-        inferNullability = false, // Schema extraction doesn't need nullability inference
-        dbType = determinedDbType,
-        strictValidation = true,
-    )
+        return DataFrameSchemaImpl(targetColumnSchemas)
+    } catch (_: Exception) {
+        // Read just 1 row to get the schema as fallback mechanism
+        val singleRowDataFrame = DataFrame.readSqlTable(
+            connection = connection,
+            tableName = tableName,
+            limit = 1,
+            inferNullability = false, // Schema extraction doesn't need nullability inference
+            dbType = determinedDbType,
+            strictValidation = true,
+        )
 
-    return singleRowDataFrame.schema()
+        return singleRowDataFrame.schema()
+    }
 }
 
 /**
@@ -449,4 +466,34 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
     }
 
     return dataFrameSchemas
+}
+
+/**
+ * Alternative way to read metadata by reading 0 rows.
+ * Might still cause issues when we don't have query permission.
+ */
+private fun getTableColumnMetadatas(conn: Connection, fullTableName: String): List<TableColumnMetadata> {
+    val sql = "SELECT * FROM $fullTableName WHERE 1=0" // no rows returned
+    conn.createStatement().use { st ->
+        st.executeQuery(sql).use { rs ->
+            val resultSetMetaData = rs.metaData
+            val cols = List(resultSetMetaData.columnCount) { i ->
+                val name = resultSetMetaData.getColumnName(i)
+                val sqlTypeName = resultSetMetaData.getColumnTypeName(i)
+                val jdbcType = resultSetMetaData.getColumnType(i)
+                val className = resultSetMetaData.getColumnClassName(i)
+                val nullable = resultSetMetaData.isNullable(i) != ResultSetMetaData.columnNoNulls
+
+                TableColumnMetadata(
+                    name = name,
+                    sqlTypeName = sqlTypeName,
+                    jdbcType = jdbcType,
+                    size = -1, // irrelevant, we just need the schema
+                    javaClassName = className,
+                    isNullable = nullable,
+                )
+            }
+            return cols
+        }
+    }
 }
