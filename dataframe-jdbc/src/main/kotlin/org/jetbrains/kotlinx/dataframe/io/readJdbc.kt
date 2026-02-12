@@ -4,6 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.BuildConfig
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
@@ -865,7 +866,19 @@ internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): List
     dbType.getTableColumnsMetadata(resultSet)
 
 /**
- * Fetches and converts data from a ResultSet into a mutable map.
+ * Fetches and converts data from a ResultSet into a [DataFrame].
+ *
+ * Will handle data in the following order:
+ *
+ * - For each column (inside [readAndPreprocessRowsFromResultSet]):
+ *     - Fetches each individual value from the [ResultSet] using [DbType.getValueFromResultSet]
+ *       with the return type defined by [DbType.getExpectedJdbcType].
+ *     - Potentially preprocesses the value using [DbType.preprocessValue]
+ *       with the return type defined by [DbType.getPreprocessedValueType].
+ * - From the resulting list of columns,`List<List<Any?>>`, (inside [buildDataFrameFromColumnData]):
+ *     - Uses [DbType.buildDataColumn] to turn each list of values into a [DataColumn]
+ *       with the correct structure defined by [DbType.getTargetColumnSchema].
+ *     - Turns the result into a [DataFrame].
  *
  * @param [tableColumns] a list containing the column metadata for the table.
  * @param [rs] the ResultSet object containing the data to be fetched and converted.
@@ -873,7 +886,7 @@ internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): List
  * @param [limit] the maximum number of rows to retrieve from the table.
  *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return A mutable map containing the fetched and converted data.
+ * @return A [DataFrame] containing the fetched and converted data.
  */
 internal fun fetchAndConvertDataFromResultSet(
     dbType: DbType,
