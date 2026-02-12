@@ -1,7 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.duckdb.DuckDBColumnType
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalTime
 import org.duckdb.DuckDBColumnType.ARRAY
 import org.duckdb.DuckDBColumnType.BIGINT
 import org.duckdb.DuckDBColumnType.BIT
@@ -39,32 +40,43 @@ import org.duckdb.DuckDBColumnType.UUID
 import org.duckdb.DuckDBColumnType.VARCHAR
 import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.JsonNode
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asDataColumn
+import org.jetbrains.kotlinx.dataframe.api.inferType
+import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.tryParse
+import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.io.db.DuckDb.convertSqlTypeToKType
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.sql.Array
 import java.sql.Blob
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.Struct
-import java.sql.Timestamp
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.OffsetDateTime
-import java.time.OffsetTime
 import java.util.Properties
-import java.util.UUID
-import kotlin.reflect.KType
+import kotlin.reflect.KClass
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
+import kotlin.time.toKotlinInstant
+import kotlin.uuid.toKotlinUuid
+import java.sql.Array as SqlArray
+import java.sql.Timestamp as SqlTimestamp
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalTime as JavaLocalTime
+import java.time.OffsetDateTime as JavaOffsetDateTime
+import java.time.OffsetTime as JavaOffsetTime
+import java.util.UUID as JavaUUID
 
 private val logger = KotlinLogging.logger {}
 
@@ -74,88 +86,218 @@ private val logger = KotlinLogging.logger {}
  * This class provides methods to convert data from a [ResultSet] to the appropriate type for DuckDB,
  * and to generate the corresponding [column schema][ColumnSchema].
  */
-public object DuckDb : DbType("duckdb") {
+public object DuckDb : AdvancedDbType("duckdb") {
 
     /** the name of the class of the DuckDB JDBC driver */
     override val driverClassName: String = "org.duckdb.DuckDBDriver"
 
+    override fun generateConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter =
+        parseDuckDbType(tableColumnMetadata.sqlTypeName, tableColumnMetadata.isNullable)
+
+    private val duckDbTypeCache = mutableMapOf<Pair<String, Boolean>, AnyJdbcToDataFrameConverter>()
+
     /**
-     * How a column type from JDBC, [tableColumnMetadata], is read in Java/Kotlin.
+     * How a column type from JDBC, [sqlTypeName], is read in Java/Kotlin.
      * The returned type must exactly follow [ResultSet.getObject] of your specific database's JDBC driver.
      * Returning `null` defer the implementation to the default one (which may not always be correct).
      *
-     * Following [org.duckdb.DuckDBVector.getObject].
-     */
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType =
-        tableColumnMetadata.sqlTypeName.toKType(tableColumnMetadata.isNullable)
-
-    /**
-     * How a column from JDBC should be represented as DataFrame (value) column
-     * See [convertSqlTypeToKType].
-     */
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema {
-        val type = convertSqlTypeToKType(tableColumnMetadata)
-        return ColumnSchema.Value(type)
-    }
-
-    /**
-     * Follows exactly [org.duckdb.DuckDBVector.getObject].
+     * Following [org.duckdb.DuckDBVector.getObject] and converting the result to
      *
-     * "// dataframe-jdbc" is added for all types that are covered correctly by
-     * [org.jetbrains.kotlinx.dataframe.io.db.DbType.makeCommonSqlToKTypeMapping] at the moment, however, to cover
-     * all nested types, we'll use a full type-map for all [DuckDB types][DuckDBColumnType] exactly.
      */
-    @Suppress("ktlint:standard:blank-line-between-when-conditions")
-    internal fun String.toKType(isNullable: Boolean): KType {
-        val sqlTypeName = this
-        return when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
-            BOOLEAN -> typeOf<Boolean>() // dataframe-jdbc
-            TINYINT -> typeOf<Byte>()
-            SMALLINT -> typeOf<Short>()
-            INTEGER -> typeOf<Int>() // dataframe-jdbc
-            BIGINT -> typeOf<Long>() // dataframe-jdbc
-            HUGEINT -> typeOf<BigInteger>()
-            UHUGEINT -> typeOf<BigInteger>()
-            UTINYINT -> typeOf<Short>()
-            USMALLINT -> typeOf<Int>()
-            UINTEGER -> typeOf<Long>()
-            UBIGINT -> typeOf<BigInteger>()
-            FLOAT -> typeOf<Float>() // dataframe-jdbc
-            DOUBLE -> typeOf<Double>() // dataframe-jdbc
-            DECIMAL -> typeOf<BigDecimal>() // dataframe-jdbc
-            TIME -> typeOf<LocalTime>()
-            TIME_WITH_TIME_ZONE -> typeOf<OffsetTime>() // dataframe-jdbc
-            DATE -> typeOf<LocalDate>()
-            TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S -> typeOf<Timestamp>() // dataframe-jdbc
-            TIMESTAMP_WITH_TIME_ZONE -> typeOf<OffsetDateTime>() // dataframe-jdbc
-            JSON -> typeOf<JsonNode>()
-            BLOB -> typeOf<Blob>()
-            UUID -> typeOf<UUID>()
-            MAP -> {
-                val (key, value) = parseMapTypes(sqlTypeName)
-                Map::class.createType(
-                    listOf(
-                        KTypeProjection.invariant(key.toKType(false)),
-                        KTypeProjection.invariant(value.toKType(true)),
-                    ),
-                )
-            }
+    internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyJdbcToDataFrameConverter =
+        duckDbTypeCache.getOrPut(Pair(sqlTypeName, isNullable)) {
+            when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
+                BOOLEAN -> jdbcToDfConverterFor<Boolean>(isNullable)
 
-            LIST, ARRAY -> {
-                // TODO requires #1266 and #1273 for specific types
-                //   val listType = parseListType(sqlTypeName)
-                //   Array::class.createType(
-                //       listOf(KTypeProjection.invariant(listType.toKType(true))),
-                //   )
-                typeOf<Array>()
-            }
+                TINYINT -> jdbcToDfConverterFor<Byte>(isNullable)
 
-            STRUCT -> typeOf<Struct>() // TODO requires #1266 for specific types
-            UNION -> typeOf<Any>() // Cannot handle this in Kotlin
-            VARCHAR -> typeOf<String>()
-            UNKNOWN, BIT, INTERVAL, ENUM -> typeOf<String>()
-        }.withNullability(isNullable)
-    }
+                SMALLINT -> jdbcToDfConverterFor<Short>(isNullable)
+
+                INTEGER -> jdbcToDfConverterFor<Int>(isNullable)
+
+                BIGINT -> jdbcToDfConverterFor<Long>(isNullable)
+
+                HUGEINT -> jdbcToDfConverterFor<BigInteger>(isNullable)
+
+                UHUGEINT -> jdbcToDfConverterFor<BigInteger>(isNullable)
+
+                UTINYINT -> jdbcToDfConverterFor<Short>(isNullable)
+
+                USMALLINT -> jdbcToDfConverterFor<Int>(isNullable)
+
+                UINTEGER -> jdbcToDfConverterFor<Long>(isNullable)
+
+                UBIGINT -> jdbcToDfConverterFor<BigInteger>(isNullable)
+
+                FLOAT -> jdbcToDfConverterFor<Float>(isNullable)
+
+                DOUBLE -> jdbcToDfConverterFor<Double>(isNullable)
+
+                DECIMAL -> jdbcToDfConverterFor<BigDecimal>(isNullable)
+
+                TIME ->
+                    jdbcToDfConverterFor<JavaLocalTime>(isNullable)
+                        .withPreprocessor { it?.toKotlinLocalTime() }
+
+                // todo?
+                TIME_WITH_TIME_ZONE -> jdbcToDfConverterFor<JavaOffsetTime>(isNullable)
+
+                DATE -> jdbcToDfConverterFor<JavaLocalDate>(isNullable)
+                    .withPreprocessor { it?.toKotlinLocalDate() }
+
+                TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S ->
+                    jdbcToDfConverterFor<SqlTimestamp>(isNullable)
+                        .withPreprocessor { it?.toInstant()?.toKotlinInstant() }
+
+                // todo?
+                TIMESTAMP_WITH_TIME_ZONE -> jdbcToDfConverterFor<JavaOffsetDateTime>(isNullable)
+
+                JSON ->
+                    jdbcToDfConverterFor<JsonNode>(isNullable)
+                        .withPreprocessor { it?.toString() }
+                        .withColumnBuilder(targetSchema = null) { name, values, inferNullability ->
+                            values
+                                .toColumn(name, if (inferNullability) Infer.Nulls else Infer.None)
+                                .tryParse()
+                                .inferType()
+                        }
+
+                BLOB -> jdbcToDfConverterFor<Blob>(isNullable)
+
+                UUID -> jdbcToDfConverterFor<JavaUUID>(isNullable)
+                    .withPreprocessor { it?.toKotlinUuid() }
+
+                MAP -> {
+                    val (key, value) = parseMapTypes(sqlTypeName)
+
+                    val parsedKeyType = parseDuckDbType(key, false)
+                    val parsedValueType = parseDuckDbType(value, true).castToAny()
+
+                    val targetMapType = Map::class.createType(
+                        listOf(
+                            KTypeProjection.invariant(parsedKeyType.targetSchema?.type ?: typeOf<Any?>()),
+                            KTypeProjection.invariant(parsedValueType.targetSchema?.type ?: typeOf<Any?>()),
+                        ),
+                    ).withNullability(isNullable)
+
+                    jdbcToDfConverterFor<Map<String, Any?>>(isNullable)
+                        .withPreprocessor(preprocessedValueType = targetMapType) { map ->
+                            // only need to preprocess the values, as the keys are just Strings
+                            map?.mapValues { (_, value) ->
+                                parsedValueType.preprocessOrCast(value)
+                            }
+                        }
+                }
+
+                LIST, ARRAY -> {
+                    val listType = parseListType(sqlTypeName)
+                    val parsedListType =
+                        parseDuckDbType(listType, true).castToAny()
+
+                    val targetListType = List::class
+                        .createType(
+                            listOf(
+                                KTypeProjection.invariant(
+                                    parsedListType.targetSchema?.type ?: typeOf<Any?>(),
+                                ),
+                            ),
+                        )
+                        .withNullability(isNullable)
+
+                    when (val listTargetSchema = parsedListType.targetSchema) {
+                        // convert STRUCT[] -> DataFrame<*> to create a FrameColumn
+                        is ColumnSchema.Group if parsedListType.expectedJdbcType.isSubtypeOf(typeOf<Struct?>()) ->
+                            jdbcToDfConverterFor<SqlArray>(isNullable)
+                                .withPreprocessor { sqlArray ->
+                                    sqlArray
+                                        ?.toList<Struct?>()
+                                        ?.mapNotNull {
+                                            parsedListType.cast<Struct?, Map<String, Any?>?, AnyRow?>()
+                                                .preprocessOrCast(it)
+                                        }?.toDataFrame()
+                                }
+                                .withTargetSchema(
+                                    targetSchema = with(listTargetSchema) {
+                                        ColumnSchema.Frame(schema, nullable, contentType)
+                                    },
+                                )
+
+                        else ->
+                            jdbcToDfConverterFor<SqlArray>(isNullable)
+                                .withPreprocessor(preprocessedValueType = targetListType) { sqlArray ->
+                                    sqlArray
+                                        ?.toList<Any?>()
+                                        ?.map { parsedListType.preprocessOrCast(it) } // recursively preprocess
+                                }
+                    }
+                }
+
+                STRUCT -> {
+                    val structEntries = parseStructType(sqlTypeName)
+                    val parsedStructEntries = structEntries.mapValues { (_, type) ->
+                        parseDuckDbType(sqlTypeName = type, isNullable = true)
+                    }
+
+                    val targetSchema = ColumnSchema.Group(
+                        schema = DataFrameSchemaImpl(
+                            parsedStructEntries.mapValues {
+                                it.value.targetSchema ?: ColumnSchema.Value(typeOf<Any?>())
+                            },
+                        ),
+                        contentType = typeOf<Any?>(),
+                    )
+
+                    jdbcToDfConverterFor<Struct>(isNullable)
+                        .withPreprocessor { struct ->
+                            // NOTE DataRows cannot be `null` in DataFrame, instead, all its fields become `null`
+                            if (struct == null) {
+                                parsedStructEntries.mapValues { null }
+                            } else {
+                                // read data from the struct
+                                val attrs = struct.getAttributes(
+                                    parsedStructEntries.mapValues {
+                                        (it.value.expectedJdbcType.classifier!! as KClass<*>).java
+                                    },
+                                )
+
+                                // and potentially, preprocess each value individually
+                                parsedStructEntries.entries.withIndex().associate { (i, entry) ->
+                                    entry.key to entry.value.castToAny().preprocessOrCast(attrs[i])
+                                }
+                            }
+                        }
+                        .withColumnBuilder(targetSchema) { name, values, _ ->
+                            values
+                                .toDataFrame()
+                                .asColumnGroup(name)
+                                .asDataColumn()
+                        }
+                }
+
+                // Cannot handle this in Kotlin
+                UNION -> jdbcToDfConverterFor<Any>(isNullable)
+
+                VARCHAR -> jdbcToDfConverterFor<String>(isNullable)
+
+                UNKNOWN, BIT, INTERVAL, ENUM -> jdbcToDfConverterFor<String>(isNullable)
+            }
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> SqlArray.toList(): List<T> =
+        when (val array = this.array) {
+            is IntArray -> array.toList()
+            is LongArray -> array.toList()
+            is ShortArray -> array.toList()
+            is ByteArray -> array.toList()
+            is FloatArray -> array.toList()
+            is DoubleArray -> array.toList()
+            is BooleanArray -> array.toList()
+            is CharArray -> array.toList()
+            is Array<*> -> array.toList()
+            is SqlArray -> array.toList()
+            else -> error("unknown array type $array")
+        } as List<T>
 
     /** Parses "MAP(X, Y)" into "X" and "Y", taking parentheses into account */
     internal fun parseMapTypes(typeString: String): Pair<String, String> {
@@ -196,6 +338,17 @@ public object DuckDb : DbType("duckdb") {
         return typeString.take(typeString.indexOfLast { it == '[' })
     }
 
+    /** Parses "STRUCT(v VARCHAR, i INTEGER)" into [("v", "VARCHAR"), ("i", "INTEGER")] */
+    internal fun parseStructType(typeString: String): Map<String, String> {
+        if (!typeString.startsWith("STRUCT(")) {
+            error("invalid STRUCT type: $typeString")
+        }
+        return typeString.removeSurrounding("STRUCT(", ")")
+            .split(",")
+            .map { it.trim().split(" ") }
+            .associate { (name, type) -> name to type }
+    }
+
     /**
      * How to filter out system tables from user-created ones when using
      * [DataFrame.readAllSqlTables][DataFrame.Companion.readAllSqlTables] and
@@ -228,7 +381,7 @@ public object DuckDb : DbType("duckdb") {
      * but supports read-only mode through connection parameters.
      *
      * @param [dbConfig] The database configuration containing URL, credentials, and read-only flag.
-     * @return A configured [java.sql.Connection] instance.
+     * @return A configured [Connection] instance.
      */
     override fun createConnection(dbConfig: DbConnectionConfig): Connection {
         val properties = Properties().apply {
