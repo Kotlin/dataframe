@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql as PostgreSqlType
  *
  * NOTE: All date and timestamp-related types are converted to String to avoid java.sql.* types.
  */
-
 public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     @Deprecated("Use H2(mode = Mode.XXX) instead", ReplaceWith("H2(H2.Mode.MySql)"))
     public constructor(dialect: DbType) : this(
@@ -118,6 +117,9 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     override val driverClassName: String
         get() = "org.h2.Driver"
 
+    /**
+     * TODO check and map all types from https://www.h2database.com/html/datatypes.html
+     */
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
         delegate?.getExpectedJdbcType(tableColumnMetadata)
             ?: super.getExpectedJdbcType(tableColumnMetadata)
