@@ -11,6 +11,8 @@ import kotlin.reflect.KType
  *
  * This can be helpful for JDBC databases that support structured data, like [DuckDb]
  * or that need to a lot of type mapping.
+ *
+ * This API is experimental and subject to change.
  */
 public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJdbcUrl) {
 

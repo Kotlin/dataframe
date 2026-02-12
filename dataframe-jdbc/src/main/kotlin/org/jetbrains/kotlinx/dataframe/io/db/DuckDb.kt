@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalTime
 import org.duckdb.DuckDBColumnType.ARRAY
@@ -42,7 +40,6 @@ import org.duckdb.DuckDBColumnType.UUID
 import org.duckdb.DuckDBColumnType.VARCHAR
 import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.JsonNode
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -71,9 +68,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
-import kotlin.time.Instant
 import kotlin.time.toKotlinInstant
-import kotlin.uuid.Uuid
 import kotlin.uuid.toKotlinUuid
 import java.sql.Array as SqlArray
 import java.sql.Timestamp as SqlTimestamp
@@ -112,72 +107,65 @@ public object DuckDb : AdvancedDbType("duckdb") {
     internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyJdbcToDataFrameConverter =
         duckDbTypeCache.getOrPut(Pair(sqlTypeName, isNullable)) {
             when (DuckDBResultSetMetaData.TypeNameToType(sqlTypeName)) {
-                BOOLEAN -> jdbcToDfConverterForValueColumnOf<Boolean>(isNullable)
+                BOOLEAN -> jdbcToDfConverterFor<Boolean>(isNullable)
 
-                TINYINT -> jdbcToDfConverterForValueColumnOf<Byte>(isNullable)
+                TINYINT -> jdbcToDfConverterFor<Byte>(isNullable)
 
-                SMALLINT -> jdbcToDfConverterForValueColumnOf<Short>(isNullable)
+                SMALLINT -> jdbcToDfConverterFor<Short>(isNullable)
 
-                INTEGER -> jdbcToDfConverterForValueColumnOf<Int>(isNullable)
+                INTEGER -> jdbcToDfConverterFor<Int>(isNullable)
 
-                BIGINT -> jdbcToDfConverterForValueColumnOf<Long>(isNullable)
+                BIGINT -> jdbcToDfConverterFor<Long>(isNullable)
 
-                HUGEINT -> jdbcToDfConverterForValueColumnOf<BigInteger>(isNullable)
+                HUGEINT -> jdbcToDfConverterFor<BigInteger>(isNullable)
 
-                UHUGEINT -> jdbcToDfConverterForValueColumnOf<BigInteger>(isNullable)
+                UHUGEINT -> jdbcToDfConverterFor<BigInteger>(isNullable)
 
-                UTINYINT -> jdbcToDfConverterForValueColumnOf<Short>(isNullable)
+                UTINYINT -> jdbcToDfConverterFor<Short>(isNullable)
 
-                USMALLINT -> jdbcToDfConverterForValueColumnOf<Int>(isNullable)
+                USMALLINT -> jdbcToDfConverterFor<Int>(isNullable)
 
-                UINTEGER -> jdbcToDfConverterForValueColumnOf<Long>(isNullable)
+                UINTEGER -> jdbcToDfConverterFor<Long>(isNullable)
 
-                UBIGINT -> jdbcToDfConverterForValueColumnOf<BigInteger>(isNullable)
+                UBIGINT -> jdbcToDfConverterFor<BigInteger>(isNullable)
 
-                FLOAT -> jdbcToDfConverterForValueColumnOf<Float>(isNullable)
+                FLOAT -> jdbcToDfConverterFor<Float>(isNullable)
 
-                DOUBLE -> jdbcToDfConverterForValueColumnOf<Double>(isNullable)
+                DOUBLE -> jdbcToDfConverterFor<Double>(isNullable)
 
-                DECIMAL -> jdbcToDfConverterForValueColumnOf<BigDecimal>(isNullable)
+                DECIMAL -> jdbcToDfConverterFor<BigDecimal>(isNullable)
 
                 TIME ->
-                    jdbcToDfConverterWithPreprocessingForValueColumnOf<JavaLocalTime, LocalTime>(isNullable) {
-                        it?.toKotlinLocalTime()
-                    }
+                    jdbcToDfConverterFor<JavaLocalTime>(isNullable)
+                        .withPreprocessor { it?.toKotlinLocalTime() }
 
                 // todo?
-                TIME_WITH_TIME_ZONE -> jdbcToDfConverterForValueColumnOf<JavaOffsetTime>(isNullable)
+                TIME_WITH_TIME_ZONE -> jdbcToDfConverterFor<JavaOffsetTime>(isNullable)
 
-                DATE -> jdbcToDfConverterWithPreprocessingForValueColumnOf<JavaLocalDate, LocalDate>(isNullable) {
-                    it?.toKotlinLocalDate()
-                }
+                DATE -> jdbcToDfConverterFor<JavaLocalDate>(isNullable)
+                    .withPreprocessor { it?.toKotlinLocalDate() }
 
                 TIMESTAMP, TIMESTAMP_MS, TIMESTAMP_NS, TIMESTAMP_S ->
-                    jdbcToDfConverterWithPreprocessingForValueColumnOf<SqlTimestamp, Instant>(isNullable) {
-                        it?.toInstant()?.toKotlinInstant()
-                    }
+                    jdbcToDfConverterFor<SqlTimestamp>(isNullable)
+                        .withPreprocessor { it?.toInstant()?.toKotlinInstant() }
 
                 // todo?
-                TIMESTAMP_WITH_TIME_ZONE -> jdbcToDfConverterForValueColumnOf<JavaOffsetDateTime>(isNullable)
+                TIMESTAMP_WITH_TIME_ZONE -> jdbcToDfConverterFor<JavaOffsetDateTime>(isNullable)
 
-                // TODO!
-                JSON -> jdbcToDfConverterWithProcessingFor<JsonNode, String, Any>(
-                    isNullable = isNullable,
-                    targetSchema = null,
-                    valuePreprocessor = { jdbcValue -> jdbcValue?.toString() },
-                    columnBuilder = { name, values, inferNullability ->
-                        values
-                            .toColumn(name, if (inferNullability) Infer.Nulls else Infer.None)
-                            .tryParse()
-                            .inferType()
-                    },
-                )
+                JSON ->
+                    jdbcToDfConverterFor<JsonNode>(isNullable)
+                        .withPreprocessor { it?.toString() }
+                        .withColumnBuilder(targetSchema = null) { name, values, inferNullability ->
+                            values
+                                .toColumn(name, if (inferNullability) Infer.Nulls else Infer.None)
+                                .tryParse()
+                                .inferType()
+                        }
 
-                BLOB -> jdbcToDfConverterForValueColumnOf<Blob>(isNullable)
+                BLOB -> jdbcToDfConverterFor<Blob>(isNullable)
 
-                UUID -> jdbcToDfConverterWithPreprocessingForValueColumnOf<JavaUUID, Uuid>(isNullable) {
-                    it?.toKotlinUuid()
-                }
+                UUID -> jdbcToDfConverterFor<JavaUUID>(isNullable)
+                    .withPreprocessor { it?.toKotlinUuid() }
 
                 MAP -> {
                     val (key, value) = parseMapTypes(sqlTypeName)
@@ -192,15 +180,13 @@ public object DuckDb : AdvancedDbType("duckdb") {
                         ),
                     ).withNullability(isNullable)
 
-                    jdbcToDfConverterWithPreprocessingForValueColumnOf<Map<String, Any?>, Map<String, Any?>>(
-                        isNullable = isNullable,
-                        preprocessedValueType = targetMapType,
-                    ) { map ->
-                        // only need to preprocess the values, as the keys are just Strings
-                        map?.mapValues { (_, value) ->
-                            parsedValueType.preprocessOrCast(value)
+                    jdbcToDfConverterFor<Map<String, Any?>>(isNullable)
+                        .withPreprocessor(preprocessedValueType = targetMapType) { map ->
+                            // only need to preprocess the values, as the keys are just Strings
+                            map?.mapValues { (_, value) ->
+                                parsedValueType.preprocessOrCast(value)
+                            }
                         }
-                    }
                 }
 
                 LIST, ARRAY -> {
@@ -221,30 +207,28 @@ public object DuckDb : AdvancedDbType("duckdb") {
                     when (val listTargetSchema = parsedListType.targetSchema) {
                         // convert STRUCT[] -> DataFrame<*> to create a FrameColumn
                         is ColumnSchema.Group if parsedListType.expectedJdbcType.isSubtypeOf(typeOf<Struct?>()) ->
-                            jdbcToDfConverterWithPreprocessingFor<SqlArray, AnyFrame>(
-                                isNullable = isNullable,
-                                targetSchema = with(listTargetSchema) {
-                                    ColumnSchema.Frame(schema, nullable, contentType)
-                                },
-                            ) { sqlArray ->
-                                sqlArray
-                                    ?.toList()
-                                    ?.let { it as List<Struct?> }
-                                    ?.mapNotNull {
-                                        parsedListType.cast<Struct?, Map<String, Any?>?, AnyRow?>()
-                                            .preprocessOrCast(it)
-                                    }?.toDataFrame()
-                            }
+                            jdbcToDfConverterFor<SqlArray>(isNullable)
+                                .withPreprocessor { sqlArray ->
+                                    sqlArray
+                                        ?.toList<Struct?>()
+                                        ?.mapNotNull {
+                                            parsedListType.cast<Struct?, Map<String, Any?>?, AnyRow?>()
+                                                .preprocessOrCast(it)
+                                        }?.toDataFrame()
+                                }
+                                .withTargetSchema(
+                                    targetSchema = with(listTargetSchema) {
+                                        ColumnSchema.Frame(schema, nullable, contentType)
+                                    },
+                                )
 
                         else ->
-                            jdbcToDfConverterWithPreprocessingForValueColumnOf<SqlArray, List<Any?>>(
-                                isNullable = isNullable,
-                                preprocessedValueType = targetListType,
-                            ) { sqlArray ->
-                                sqlArray
-                                    ?.toList()
-                                    ?.map { parsedListType.preprocessOrCast(it) } // recursively preprocess
-                            }
+                            jdbcToDfConverterFor<SqlArray>(isNullable)
+                                .withPreprocessor(preprocessedValueType = targetListType) { sqlArray ->
+                                    sqlArray
+                                        ?.toList<Any?>()
+                                        ?.map { parsedListType.preprocessOrCast(it) } // recursively preprocess
+                                }
                     }
                 }
 
@@ -263,10 +247,8 @@ public object DuckDb : AdvancedDbType("duckdb") {
                         contentType = typeOf<Any?>(),
                     )
 
-                    jdbcToDfConverterWithProcessingFor<Struct, Map<String, Any?>, AnyRow>(
-                        isNullable = isNullable,
-                        targetSchema = targetSchema,
-                        valuePreprocessor = { struct ->
+                    jdbcToDfConverterFor<Struct>(isNullable)
+                        .withPreprocessor { struct ->
                             // NOTE DataRows cannot be `null` in DataFrame, instead, all its fields become `null`
                             if (struct == null) {
                                 parsedStructEntries.mapValues { null }
@@ -283,26 +265,26 @@ public object DuckDb : AdvancedDbType("duckdb") {
                                     entry.key to entry.value.castToAny().preprocessOrCast(attrs[i])
                                 }
                             }
-                        },
-                        columnBuilder = { name, values, _ ->
-                            (values as List<Map<String, Any?>>)
+                        }
+                        .withColumnBuilder(targetSchema) { name, values, _ ->
+                            values
                                 .toDataFrame()
                                 .asColumnGroup(name)
                                 .asDataColumn()
-                        },
-                    )
+                        }
                 }
 
                 // Cannot handle this in Kotlin
-                UNION -> jdbcToDfConverterForValueColumnOf<Any>(isNullable)
+                UNION -> jdbcToDfConverterFor<Any>(isNullable)
 
-                VARCHAR -> jdbcToDfConverterForValueColumnOf<String>(isNullable)
+                VARCHAR -> jdbcToDfConverterFor<String>(isNullable)
 
-                UNKNOWN, BIT, INTERVAL, ENUM -> jdbcToDfConverterForValueColumnOf<String>(isNullable)
+                UNKNOWN, BIT, INTERVAL, ENUM -> jdbcToDfConverterFor<String>(isNullable)
             }
         }
 
-    private fun SqlArray.toList(): List<Any?> =
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> SqlArray.toList(): List<T> =
         when (val array = this.array) {
             is IntArray -> array.toList()
             is LongArray -> array.toList()
@@ -315,7 +297,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
             is Array<*> -> array.toList()
             is SqlArray -> array.toList()
             else -> error("unknown array type $array")
-        }
+        } as List<T>
 
     /** Parses "MAP(X, Y)" into "X" and "Y", taking parentheses into account */
     internal fun parseMapTypes(typeString: String): Pair<String, String> {

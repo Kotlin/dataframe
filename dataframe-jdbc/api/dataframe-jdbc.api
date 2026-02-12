@@ -192,17 +192,19 @@ public final class org/jetbrains/kotlinx/dataframe/io/db/H2$Mode$Companion {
 	public final fun fromValue (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/db/H2$Mode;
 }
 
-public class org/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter {
-	public fun <init> (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)V
-	public fun buildDataColumnOrNull (Ljava/lang/String;Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public fun getColumnBuilder ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;
-	public fun getExpectedJdbcType ()Lkotlin/reflect/KType;
-	public fun getPreprocessedValueType ()Lkotlin/reflect/KType;
-	public fun getResultSetReader ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;
-	public fun getTargetSchema ()Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
-	public fun getValueFromResultSetOrElse (Ljava/sql/ResultSet;ILkotlin/jvm/functions/Function0;)Ljava/lang/Object;
-	public fun getValuePreprocessor ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;
-	public fun preprocessOrCast (Ljava/lang/Object;)Ljava/lang/Object;
+public final class org/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter {
+	public fun <init> (Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)V
+	public final fun buildDataColumnOrNull (Ljava/lang/String;Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public final fun copy (Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public final fun getColumnBuilder ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;
+	public final fun getExpectedJdbcType ()Lkotlin/reflect/KType;
+	public final fun getPreprocessedValueType ()Lkotlin/reflect/KType;
+	public final fun getResultSetReader ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;
+	public final fun getTargetSchema ()Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;
+	public final fun getValueFromResultSetOrElse (Ljava/sql/ResultSet;ILkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+	public final fun getValuePreprocessor ()Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;
+	public final fun preprocessOrCast (Ljava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverterKt {
@@ -212,20 +214,13 @@ public final class org/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverte
 	public static final fun castToAny (Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;
 	public static final fun castToAny (Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;)Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;
 	public static final fun castToAny (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static final fun jdbcToDfConverterFor (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static synthetic fun jdbcToDfConverterFor$default (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static final fun jdbcToDfConverterForValueColumnOf (Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static synthetic fun jdbcToDfConverterForValueColumnOf$default (Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static final fun jdbcToDfConverterWithPostprocessingFor (Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static synthetic fun jdbcToDfConverterWithPostprocessingFor$default (Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static final fun jdbcToDfConverterWithPostprocessingForValueColumnOf (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static synthetic fun jdbcToDfConverterWithPostprocessingForValueColumnOf$default (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static final fun jdbcToDfConverterWithPreprocessingFor (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static synthetic fun jdbcToDfConverterWithPreprocessingFor$default (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static final fun jdbcToDfConverterWithPreprocessingForValueColumnOf (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static synthetic fun jdbcToDfConverterWithPreprocessingForValueColumnOf$default (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static final fun jdbcToDfConverterWithProcessingFor (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
-	public static synthetic fun jdbcToDfConverterWithProcessingFor$default (Lkotlin/reflect/KType;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;Lorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;Lorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun jdbcToDfConverterFor (Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun withColumnBuilder (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static synthetic fun withColumnBuilder$default (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbColumnBuilder;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun withPreprocessor (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lkotlin/reflect/KType;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static synthetic fun withPreprocessor$default (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lkotlin/reflect/KType;ZLorg/jetbrains/kotlinx/dataframe/io/db/DbValuePreprocessor;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun withResultReader (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lorg/jetbrains/kotlinx/dataframe/io/db/DbResultSetReader;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
+	public static final fun withTargetSchema (Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;Lorg/jetbrains/kotlinx/dataframe/schema/ColumnSchema;)Lorg/jetbrains/kotlinx/dataframe/io/db/JdbcToDataFrameConverter;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/db/MariaDb : org/jetbrains/kotlinx/dataframe/io/db/DbType {

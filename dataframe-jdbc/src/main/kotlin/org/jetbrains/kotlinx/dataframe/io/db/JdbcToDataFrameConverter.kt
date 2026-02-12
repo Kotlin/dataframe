@@ -15,28 +15,32 @@ public typealias AnyJdbcToDataFrameConverter = JdbcToDataFrameConverter<*, *, *>
  *
  * This class needs to be stateless, so it can be memoized in [AdvancedDbType.generateConverter].
  *
+ * Use [jdbcToDfConverterFor] to create an instance.
  *
- * @param J the type of the value coming from the JDBC driver.
- * @param D the type of the column values after preprocessing. Will be equal to [J] if [valuePreprocessor] is `null`.
- * @param P the type of the column values after postprocessing. Will be equal to [D] if [columnBuilder] is `null`.
+ * This API is experimental and subject to change.
+ *
+ * @param J the type of the value coming from the JDBC driver, [expectedJdbcType].
+ * @param D the type of the column values after preprocessing, [preprocessedValueType]. Will be equal to [J] if [valuePreprocessor] is `null`.
+ * @param P the type of the column values after postprocessing, comparable to [DataColumn][DataColumn]`<`[P][P]`>` of [targetSchema].
+ *   Will be equal to [D] if [columnBuilder] is `null`.
  *
  * @property targetSchema the target schema of the column after running the optional
  *   [valuePreprocessor] and [columnBuilder]. Can be `null` if the target schema is dependent on the runtime input
  *   and thus cannot be determined from input types alone.
- * @property valuePreprocessor an optional function that converts values from [java.sql.ResultSet.getObject]
+ * @property valuePreprocessor an optional function that converts values from [ResultSet.getObject]
  *   to a cell/row suitable to be put into a [DataColumn].
  * @property columnBuilder an optional function that converts a [List] with values of type [D]
  *   to a [DataColumn] of with values of type [P].
  */
-public open class JdbcToDataFrameConverter<J, D, P>(
-    public open val expectedJdbcType: KType,
-    public open val preprocessedValueType: KType,
-    public open val targetSchema: ColumnSchema?,
-    public open val resultSetReader: DbResultSetReader<J>?,
-    public open val valuePreprocessor: DbValuePreprocessor<J, D>?,
-    public open val columnBuilder: DbColumnBuilder<D, P>?,
+public class JdbcToDataFrameConverter<J, D, P>(
+    public val expectedJdbcType: KType,
+    public val resultSetReader: DbResultSetReader<J>?,
+    public val preprocessedValueType: KType,
+    public val valuePreprocessor: DbValuePreprocessor<J, D>?,
+    public val targetSchema: ColumnSchema?,
+    public val columnBuilder: DbColumnBuilder<D, P>?,
 ) {
-    public open fun getValueFromResultSetOrElse(rs: ResultSet, columnIndex: Int, default: () -> J): J {
+    public fun getValueFromResultSetOrElse(rs: ResultSet, columnIndex: Int, default: () -> J): J {
         resultSetReader?.let { reader ->
             return reader.getValue(rs, columnIndex)
         }
@@ -44,19 +48,36 @@ public open class JdbcToDataFrameConverter<J, D, P>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    public open fun preprocessOrCast(value: J): D {
+    public fun preprocessOrCast(value: J): D {
         valuePreprocessor?.let { valuePreprocessor ->
             return valuePreprocessor.preprocess(value)
         }
         return value as D
     }
 
-    public open fun buildDataColumnOrNull(name: String, values: List<D>, inferNullability: Boolean): DataColumn<P>? {
+    public fun buildDataColumnOrNull(name: String, values: List<D>, inferNullability: Boolean): DataColumn<P>? {
         columnBuilder?.let { columnPostprocessor ->
             return columnPostprocessor.buildDataColumn(name, values, inferNullability)
         }
         return null
     }
+
+    public fun copy(
+        expectedJdbcType: KType = this.expectedJdbcType,
+        resultSetReader: DbResultSetReader<J>? = this.resultSetReader,
+        preprocessedValueType: KType = this.preprocessedValueType,
+        valuePreprocessor: DbValuePreprocessor<J, D>? = this.valuePreprocessor,
+        targetSchema: ColumnSchema? = this.targetSchema,
+        columnBuilder: DbColumnBuilder<D, P>? = this.columnBuilder,
+    ): JdbcToDataFrameConverter<J, D, P> =
+        JdbcToDataFrameConverter(
+            expectedJdbcType = expectedJdbcType,
+            resultSetReader = resultSetReader,
+            preprocessedValueType = preprocessedValueType,
+            valuePreprocessor = valuePreprocessor,
+            targetSchema = targetSchema,
+            columnBuilder = columnBuilder,
+        )
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -65,184 +86,100 @@ public fun <J, D, P> JdbcToDataFrameConverter<*, *, *>.cast(): JdbcToDataFrameCo
 
 public fun JdbcToDataFrameConverter<*, *, *>.castToAny(): JdbcToDataFrameConverter<Any?, Any?, Any?> = cast()
 
-// region generic constructors
+// region builders
 
-public fun <J, D, P> jdbcToDfConverterWithProcessingFor(
-    jdbcSourceType: KType,
-    preprocessedValueType: KType, // = jdbcSourceType
-    targetSchema: ColumnSchema?, // = ColumnSchema.Value(preprocessedValueType)
-    resultSetReader: DbResultSetReader<J?>? = null,
-    valuePreprocessor: DbValuePreprocessor<J?, D?>?,
-    columnBuilder: DbColumnBuilder<D?, P?>?,
-): JdbcToDataFrameConverter<J?, D?, P?> =
+public fun <J> jdbcToDfConverterFor(jdbcSourceType: KType): JdbcToDataFrameConverter<J?, J?, J?> =
     JdbcToDataFrameConverter(
         expectedJdbcType = jdbcSourceType,
-        preprocessedValueType = preprocessedValueType,
-        targetSchema = targetSchema,
-        resultSetReader = resultSetReader,
-        valuePreprocessor = valuePreprocessor,
-        columnBuilder = columnBuilder,
-    )
-
-public inline fun <reified J, reified D, P> jdbcToDfConverterWithProcessingFor(
-    isNullable: Boolean,
-    jdbcSourceType: KType = typeOf<J?>().withNullability(isNullable),
-    preprocessedValueType: KType = typeOf<D?>().withNullability(isNullable),
-    targetSchema: ColumnSchema?,
-    resultSetReader: DbResultSetReader<J?>? = null,
-    valuePreprocessor: DbValuePreprocessor<J?, D?>?,
-    columnBuilder: DbColumnBuilder<D?, P?>?,
-): JdbcToDataFrameConverter<J?, D?, P?> =
-    jdbcToDfConverterWithProcessingFor(
-        jdbcSourceType = jdbcSourceType,
-        preprocessedValueType = preprocessedValueType,
-        targetSchema = targetSchema,
-        resultSetReader = resultSetReader,
-        valuePreprocessor = valuePreprocessor,
-        columnBuilder = columnBuilder,
-    )
-
-public fun <J> jdbcToDfConverterFor(
-    jdbcSourceType: KType,
-    preprocessedValueType: KType,
-    targetSchema: ColumnSchema?,
-    resultSetReader: DbResultSetReader<J?>? = null,
-): JdbcToDataFrameConverter<J?, J?, J?> =
-    jdbcToDfConverterWithProcessingFor(
-        jdbcSourceType = jdbcSourceType,
-        preprocessedValueType = preprocessedValueType,
-        targetSchema = targetSchema,
-        resultSetReader = resultSetReader,
-        valuePreprocessor = null,
-        columnBuilder = null,
-    )
-
-public fun <J, D> jdbcToDfConverterWithPreprocessingFor(
-    jdbcSourceType: KType,
-    preprocessedValueType: KType,
-    targetSchema: ColumnSchema?,
-    resultSetReader: DbResultSetReader<J?>? = null,
-    valuePreprocessor: DbValuePreprocessor<J?, D?>?,
-): JdbcToDataFrameConverter<J?, D?, D?> =
-    jdbcToDfConverterWithProcessingFor(
-        jdbcSourceType = jdbcSourceType,
-        preprocessedValueType = preprocessedValueType,
-        targetSchema = targetSchema,
-        resultSetReader = resultSetReader,
-        valuePreprocessor = valuePreprocessor,
-        columnBuilder = null,
-    )
-
-public inline fun <reified J, reified D> jdbcToDfConverterWithPreprocessingFor(
-    isNullable: Boolean,
-    jdbcSourceType: KType = typeOf<J?>().withNullability(isNullable),
-    preprocessedValueType: KType = typeOf<D?>().withNullability(isNullable),
-    targetSchema: ColumnSchema?,
-    resultSetReader: DbResultSetReader<J?>? = null,
-    valuePreprocessor: DbValuePreprocessor<J?, D?>?,
-): JdbcToDataFrameConverter<J?, D?, D?> =
-    jdbcToDfConverterWithProcessingFor(
-        jdbcSourceType = jdbcSourceType,
-        preprocessedValueType = preprocessedValueType,
-        targetSchema = targetSchema,
-        resultSetReader = resultSetReader,
-        valuePreprocessor = valuePreprocessor,
-        columnBuilder = null,
-    )
-
-public fun <J, P> jdbcToDfConverterWithPostprocessingFor(
-    jdbcSourceType: KType,
-    targetSchema: ColumnSchema?,
-    resultSetReader: DbResultSetReader<J?>? = null,
-    columnBuilder: DbColumnBuilder<J?, P?>?,
-): JdbcToDataFrameConverter<J?, J?, P?> =
-    jdbcToDfConverterWithProcessingFor(
-        jdbcSourceType = jdbcSourceType,
+        resultSetReader = null,
         preprocessedValueType = jdbcSourceType,
-        targetSchema = targetSchema,
-        resultSetReader = resultSetReader,
         valuePreprocessor = null,
-        columnBuilder = columnBuilder,
+        targetSchema = ColumnSchema.Value(jdbcSourceType),
+        columnBuilder = null,
     )
 
-// endregion
-
-// region ValueColumn constructors
-
-public fun <J> jdbcToDfConverterForValueColumnOf(
-    kType: KType,
-    resultSetReader: DbResultSetReader<J?>? = null,
+public inline fun <reified J> jdbcToDfConverterFor(
+    isNullable: Boolean = typeOf<J>().isMarkedNullable,
 ): JdbcToDataFrameConverter<J?, J?, J?> =
     jdbcToDfConverterFor(
-        jdbcSourceType = kType,
-        preprocessedValueType = kType,
-        targetSchema = ColumnSchema.Value(kType),
-        resultSetReader = resultSetReader,
+        jdbcSourceType = typeOf<J?>().withNullability(isNullable),
     )
 
-public inline fun <reified J> jdbcToDfConverterForValueColumnOf(
-    isNullable: Boolean,
-    targetColumnType: KType = typeOf<J?>().withNullability(isNullable),
-    resultSetReader: DbResultSetReader<J?>? = null,
-): JdbcToDataFrameConverter<J?, J?, J?> = jdbcToDfConverterForValueColumnOf(targetColumnType, resultSetReader)
+public fun <J, D, P> JdbcToDataFrameConverter<J, D, P>.withResultReader(
+    resultSetReader: DbResultSetReader<J>?,
+): JdbcToDataFrameConverter<J, D, P> = copy(resultSetReader = resultSetReader)
 
-public fun <J, D> jdbcToDfConverterWithPreprocessingForValueColumnOf(
-    jdbcSourceType: KType,
+public fun <J, D> JdbcToDataFrameConverter<J, *, *>.withPreprocessor(
     preprocessedValueType: KType,
-    targetColumnType: KType,
-    resultSetReader: DbResultSetReader<J?>? = null,
-    valuePreprocessor: DbValuePreprocessor<J?, D?>?,
-): JdbcToDataFrameConverter<J?, D?, D?> =
-    jdbcToDfConverterWithPreprocessingFor(
-        jdbcSourceType = jdbcSourceType,
-        preprocessedValueType = preprocessedValueType,
-        targetSchema = ColumnSchema.Value(targetColumnType),
-        resultSetReader = resultSetReader,
+    canIntroduceNulls: Boolean = false,
+    valuePreprocessor: DbValuePreprocessor<J, D>?,
+): JdbcToDataFrameConverter<J, D, D> {
+    // carry definitely-not-null knowledge from expectedJdbcType to preprocessedValueType
+    // if the valuePreprocessor does not introduce nulls itself
+    val preprocessedValueType =
+        if (!expectedJdbcType.isMarkedNullable && !canIntroduceNulls) {
+            preprocessedValueType.withNullability(false)
+        } else {
+            preprocessedValueType
+        }
+    return cast<J, D, D>()
+        .copy(
+            preprocessedValueType = preprocessedValueType,
+            valuePreprocessor = valuePreprocessor,
+            targetSchema = ColumnSchema.Value(preprocessedValueType),
+            columnBuilder = null,
+        )
+}
+
+public inline fun <J, reified D> JdbcToDataFrameConverter<J, *, *>.withPreprocessor(
+    canIntroduceNulls: Boolean = false,
+    valuePreprocessor: DbValuePreprocessor<J, D>?,
+): JdbcToDataFrameConverter<J, D, D> =
+    withPreprocessor(
+        canIntroduceNulls = canIntroduceNulls,
+        preprocessedValueType = typeOf<D>(),
         valuePreprocessor = valuePreprocessor,
     )
 
-public inline fun <reified J, reified D> jdbcToDfConverterWithPreprocessingForValueColumnOf(
-    isNullable: Boolean,
-    jdbcSourceType: KType = typeOf<J?>().withNullability(isNullable),
-    preprocessedValueType: KType = typeOf<D?>().withNullability(isNullable),
-    targetColumnType: KType = preprocessedValueType,
-    resultSetReader: DbResultSetReader<J?>? = null,
-    valuePreprocessor: DbValuePreprocessor<J?, D?>?,
-): JdbcToDataFrameConverter<J?, D?, D?> =
-    jdbcToDfConverterWithPreprocessingForValueColumnOf(
-        jdbcSourceType = jdbcSourceType,
-        preprocessedValueType = preprocessedValueType,
-        targetColumnType = targetColumnType,
-        resultSetReader = resultSetReader,
-        valuePreprocessor = valuePreprocessor,
+public fun <J, D, P> JdbcToDataFrameConverter<J, D, P>.withTargetSchema(
+    targetSchema: ColumnSchema?,
+): JdbcToDataFrameConverter<J, D, P> =
+    withColumnBuilder(
+        targetSchema = targetSchema,
+        canIntroduceNulls = false,
+        columnBuilder = null,
     )
 
-public fun <J, P> jdbcToDfConverterWithPostprocessingForValueColumnOf(
-    jdbcSourceType: KType,
-    targetColumnType: KType,
-    resultSetReader: DbResultSetReader<J?>? = null,
-    columnPostprocessor: DbColumnBuilder<J?, P?>?,
-): JdbcToDataFrameConverter<J?, J?, P?> =
-    jdbcToDfConverterWithPostprocessingFor(
-        jdbcSourceType = jdbcSourceType,
-        targetSchema = ColumnSchema.Value(targetColumnType),
-        resultSetReader = resultSetReader,
-        columnBuilder = columnPostprocessor,
-    )
+public fun <J, D, P> JdbcToDataFrameConverter<J, D, *>.withColumnBuilder(
+    targetSchema: ColumnSchema?,
+    canIntroduceNulls: Boolean = false,
+    columnBuilder: DbColumnBuilder<D, P>?,
+): JdbcToDataFrameConverter<J, D, P> {
+    // carry definitely-not-null knowledge from preprocessedValueType to targetSchema
+    // if the columnBuilder does not introduce nulls itself
+    val targetSchema =
+        if (targetSchema != null && !preprocessedValueType.isMarkedNullable && !canIntroduceNulls) {
+            when (targetSchema) {
+                is ColumnSchema.Value ->
+                    ColumnSchema.Value(targetSchema.type.withNullability(false))
 
-public inline fun <reified J, reified P> jdbcToDfConverterWithPostprocessingForValueColumnOf(
-    isNullable: Boolean,
-    jdbcSourceType: KType = typeOf<J?>().withNullability(isNullable),
-    targetColumnType: KType = typeOf<P?>().withNullability(isNullable),
-    resultSetReader: DbResultSetReader<J?>? = null,
-    columnPostprocessor: DbColumnBuilder<J?, P?>?,
-): JdbcToDataFrameConverter<J?, J?, P?> =
-    jdbcToDfConverterWithPostprocessingForValueColumnOf(
-        jdbcSourceType = jdbcSourceType,
-        targetColumnType = targetColumnType,
-        resultSetReader = resultSetReader,
-        columnPostprocessor = columnPostprocessor,
-    )
+                is ColumnSchema.Group -> targetSchema
+
+                is ColumnSchema.Frame -> ColumnSchema.Frame(
+                    schema = targetSchema.schema,
+                    nullable = false,
+                    contentType = targetSchema.contentType,
+                )
+            }
+        } else {
+            targetSchema
+        }
+    return cast<J, D, P>()
+        .copy(
+            targetSchema = targetSchema,
+            columnBuilder = columnBuilder,
+        )
+}
 
 // endregion
 
@@ -253,7 +190,7 @@ public fun interface DbResultSetReader<out J> {
 
 /**
  * This preprocessor can be created for types where you want to convert the values
- * coming from [java.sql.ResultSet.getObject] to a different type more suitable to be put in a [DataColumn]
+ * coming from [ResultSet.getObject] to a different type more suitable to be put in a [DataColumn]
  *
  * @param J the type of the value coming from the JDBC driver.
  * @param D the type of the column values after preprocessing.
