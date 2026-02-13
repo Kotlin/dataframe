@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.getterName
 import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
+import org.jetbrains.kotlinx.dataframe.impl.isJavaRecord
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
@@ -172,18 +173,24 @@ internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame =
  * `null` otherwise.
  */
 internal fun getPropertyOrderFromPrimaryConstructor(clazz: KClass<*>): Map<String, Int>? =
-    (clazz.primaryConstructor ?: clazz.constructors.singleOrNull())
-        ?.parameters
-        ?.mapNotNull { it.name }
-        ?.mapIndexed { i, v -> v to i }
-        ?.toMap()
+    if (clazz.isJavaRecord) {
+        // Can fail for Java records with primitive types due to KT-58649
+        // https://youtrack.jetbrains.com/issue/KT-58649/Reflection-IllegalArgumentException-Cant-compute-ClassId-for-primitive-type-with-Record-class-constructor-access
+        // In this case, fall back to lexicographical sorting
+        null
+    } else {
+        (clazz.primaryConstructor ?: clazz.constructors.singleOrNull())
+            ?.parameters
+            ?.mapNotNull { it.name }
+            ?.mapIndexed { i, v -> v to i }
+            ?.toMap()
+    }
 
 /**
  * Sorts [this] according to the order of their [columnName] in the primary/single constructor of [klass]
  * if it exists, else, it falls back to lexicographical sorting.
  */
 internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): List<KCallable<T>> {
-    require(all { it.isGetterLike() })
     val primaryConstructorOrder = getPropertyOrderFromPrimaryConstructor(klass)
 
     // starting off lexicographically
