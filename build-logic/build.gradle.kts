@@ -6,18 +6,22 @@ plugins {
     // Convention plugins are located in `src/main/kotlin`, with the file extension `.gradle.kts`,
     // and are applied in the project's `build.gradle.kts` files as required.
     `kotlin-dsl`
+    alias(libs.plugins.ktlint.gradle)
 }
 
 kotlin {
     jvmToolchain(21)
 }
 
+// rules are set up through .editorconfig
+ktlint {
+    version = libs.versions.ktlint.asProvider()
+}
+
 dependencies {
     // Add a dependency on the Kotlin Gradle plugin so that convention plugins can apply it.
     implementation(libs.kotlin.gradle.plugin)
     implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:$expectedKotlinDslPluginsVersion")
-
-    implementation(libs.maven.invoker)
 
     // We need to declare a dependency for each plugin used in convention plugins below
     implementation(pluginMarker(libs.plugins.ktlint.gradle))

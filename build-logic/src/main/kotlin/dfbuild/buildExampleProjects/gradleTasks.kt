@@ -5,7 +5,6 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.tasks.TaskProvider
-import org.gradle.tooling.GradleConnector
 import java.io.File
 
 /**
@@ -128,54 +127,5 @@ internal fun Project.setupGradleSyncVersionsTask(
 
             // overwrite .editorconfig
             folder.resolve(".editorconfig").writeText(sourceEditorConfig.readText())
-        }
-    }
-
-/**
- * Registers task to build the example project.
- */
-internal fun Project.setupGradleBuildTask(name: String, folder: File): TaskProvider<Task> =
-    tasks.register("build$name") {
-        group = "verification"
-        description = "Builds the nested Gradle build in ./${folder.name}"
-
-        // Needs the android.sdk.dir property to be set or -Pandroid.sdk.dir=... added as Gradle argument
-        // when and android-named example is run
-        val isAndroid = "android" in name.lowercase()
-        onlyIf {
-            when {
-                !isAndroid -> true
-
-                properties["android.sdk.dir"] is String -> true
-
-                else -> {
-                    logger.warn(
-                        "Skipping `build$name` because the `android.sdk.dir` property is not to run the Android example '$folder'.",
-                    )
-                    false
-                }
-            }
-        }
-
-        doLast {
-            GradleConnector.newConnector()
-                .forProjectDirectory(folder)
-                .connect()
-                .use {
-                    it.newBuild()
-                        .forTasks("clean", "build")
-                        .withArguments(
-                            buildList {
-                                if (isAndroid) {
-                                    this += "-Dsdk.dir=${properties["android.sdk.dir"]}"
-                                    this += "-Dandroid.home=${properties["android.sdk.dir"]}"
-                                }
-                            },
-                        )
-                        .setStandardInput(System.`in`)
-                        .setStandardOutput(System.out)
-                        .setStandardError(System.err)
-                        .run()
-                }
         }
     }

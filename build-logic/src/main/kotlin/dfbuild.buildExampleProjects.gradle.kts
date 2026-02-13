@@ -1,10 +1,11 @@
 import dfbuild.buildExampleProjects.BuildSystem
 import dfbuild.buildExampleProjects.detectBuildSystem
-import dfbuild.buildExampleProjects.setupGradleBuildTask
 import dfbuild.buildExampleProjects.setupGradleSyncVersionsTask
-import dfbuild.buildExampleProjects.setupMavenBuildTask
 import dfbuild.buildExampleProjects.setupMavenSyncVersionsTask
 import dfbuild.toCamelCaseByDelimiters
+import org.gradle.internal.extensions.stdlib.capitalized
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(convention.plugins.kotlinJvmCommon)
@@ -23,9 +24,9 @@ val syncExampleFolders by tasks.registering {
     group = "build"
     description = "Sync the versions in the nested Gradle build in /examples/projects"
 }
-val buildExampleFolders by tasks.registering {
-    group = "verification"
-    description = "Builds the nested Gradle build in /examples/projects to verify they compile correctly."
+
+tasks.named("assemble") {
+    dependsOn(syncExampleFolders)
 }
 
 val promoteExamples by tasks.registering {
@@ -50,18 +51,91 @@ val promoteExamples by tasks.registering {
     finalizedBy(syncExampleFolders)
 }
 
-tasks.named("assemble") {
-    dependsOn(syncExampleFolders)
+val testBuildingExamples: SourceSet by sourceSets.creating {
+    kotlin.srcDir(file("build-logic/src/testBuildingExamples/kotlin"))
+    compileClasspath += sourceSets.main.get().output
+    runtimeClasspath += sourceSets.main.get().output
 }
-tasks.named("check") {
-//    // only builds the examples when debug mode is enabled
-//    if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
-    dependsOn(buildExampleFolders)
-//    }
+
+tasks.named<KotlinCompile>("compile${testBuildingExamples.name.capitalized()}Kotlin") {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
+        freeCompilerArgs.add("-Xjdk-release=21")
+    }
+}
+
+tasks.named<JavaCompile>("compile${testBuildingExamples.name.capitalized()}Java") {
+    sourceCompatibility = JavaVersion.VERSION_21.toString()
+    targetCompatibility = JavaVersion.VERSION_21.toString()
+    options.release.set(21)
+}
+
+val testBuildingExamplesImplementation: Configuration by configurations.getting {
+    extendsFrom(configurations.implementation.get())
+}
+val testBuildingExamplesRuntimeOnly: Configuration by configurations.getting {
+    extendsFrom(configurations.runtimeOnly.get())
+}
+
+dependencies {
+    testBuildingExamplesImplementation(gradleTestKit())
+    testBuildingExamplesImplementation(libs.junit.jupiter)
+    testBuildingExamplesImplementation(libs.junit)
+    testBuildingExamplesImplementation(libs.maven.invoker)
+    testBuildingExamplesImplementation(project(":build-logic"))
+    testBuildingExamplesRuntimeOnly(libs.junit.platform.launcher)
+}
+
+private fun Test.commonSetup() {
+    group = "verification"
+    dependsOn(syncExampleFolders)
+
+    testClassesDirs = testBuildingExamples.output.classesDirs
+    classpath = testBuildingExamples.runtimeClasspath
+    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
+    useJUnitPlatform()
+    testLogging { events("passed", "skipped", "failed") }
+
+    // pass all project properties down to the tests prepending them with 'gradle.properties.'
+    project.properties.forEach { (key, value) ->
+        systemProperty("gradle.properties.$key", value?.toString())
+    }
+}
+
+val buildMavenExampleFolders by tasks.registering(Test::class) {
+    commonSetup()
+    description = "Builds the nested Maven builds in /examples/projects to verify they compile correctly."
+
+    // Because we're including a Maven project, we need to publish to maven local to test it.
+    dependsOn(":publishToMavenLocal")
+    useJUnitPlatform {
+        includeTags("maven")
+    }
+}
+
+val buildGradleExampleFolders by tasks.registering(Test::class) {
+    commonSetup()
+    description = "Builds the nested Gradle builds in /examples/projects to verify they compile correctly."
+    useJUnitPlatform {
+        includeTags("gradle")
+    }
+}
+
+val buildExampleFolders by tasks.registering(Test::class) {
+    group = "verification"
+    description = "Builds all the nested builds in /examples/projects to verify they compile correctly."
+    dependsOn(buildMavenExampleFolders, buildGradleExampleFolders)
+}
+
+tasks.named("test") {
+    // only builds the examples on ':test' when debug mode is enabled
+    if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
+        dependsOn(buildExampleFolders)
+    }
 }
 
 /**
- * Sets up example folder with sync and build tasks
+ * Sets up example folders sync tasks
  */
 private fun setupExampleProjectFolder(folder: File, isDev: Boolean) {
     val name = folder.name.toCamelCaseByDelimiters().replaceFirstChar { it.uppercase() } +
@@ -96,25 +170,6 @@ private fun setupExampleProjectFolder(folder: File, isDev: Boolean) {
         }
     syncExampleFolders {
         dependsOn(syncTask)
-    }
-
-    val buildTask =
-        when (buildSystem) {
-            BuildSystem.GRADLE ->
-                setupGradleBuildTask(name = name, folder = folder)
-
-            BuildSystem.MAVEN ->
-                setupMavenBuildTask(name = name, folder = folder)
-        }
-    buildTask {
-        dependsOn(syncTask)
-        val requiresPublishToMavenLocal = buildSystem == BuildSystem.MAVEN
-        if (requiresPublishToMavenLocal) {
-            dependsOn(":publishToMavenLocal")
-        }
-    }
-    buildExampleFolders {
-        dependsOn(buildTask)
     }
 }
 
