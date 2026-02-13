@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import org.jetbrains.kotlinx.dataframe.BuildConfig
+import org.jetbrains.kotlinx.dataframe.core.BuildConfig
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 
 public class JupyterConfiguration(
