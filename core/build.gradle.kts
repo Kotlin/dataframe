@@ -1,5 +1,7 @@
 import io.github.devcrocod.korro.KorroTask
 import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
+import org.gradle.api.JavaVersion
+import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.jvm.tasks.Jar
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -75,6 +77,20 @@ dependencies {
 
     // for samples.api
     testImplementation(projects.dataframeCsv)
+}
+
+// Configure test sources to use Java 16+ to test record support
+tasks.named<JavaCompile>("compileTestJava") {
+    sourceCompatibility = JavaVersion.VERSION_16.toString()
+    targetCompatibility = JavaVersion.VERSION_16.toString()
+    options.release.set(16)
+}
+
+tasks.named<KotlinCompile>("compileTestKotlin") {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_16
+        freeCompilerArgs.add("-Xjdk-release=16")
+    }
 }
 
 benchmark {

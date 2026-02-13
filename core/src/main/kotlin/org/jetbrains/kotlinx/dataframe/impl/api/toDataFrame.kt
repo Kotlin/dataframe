@@ -19,7 +19,9 @@ import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
+import org.jetbrains.kotlinx.dataframe.impl.isJavaRecord
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
+import org.jetbrains.kotlinx.dataframe.impl.recordComponentNames
 import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -35,6 +37,7 @@ import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
@@ -431,7 +434,12 @@ private fun KClass<*>.properties(): List<KCallable<*>> {
     return memberProperties
         .filter { it.visibility == KVisibility.PUBLIC }
         .ifEmpty {
-            memberFunctions
-                .filter { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
+            if (this.isJavaRecord) {
+                val componentNames = this.recordComponentNames
+                memberFunctions.filter { it.name in componentNames }
+            } else {
+                memberFunctions
+                    .filter { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
+            }
         }
 }
