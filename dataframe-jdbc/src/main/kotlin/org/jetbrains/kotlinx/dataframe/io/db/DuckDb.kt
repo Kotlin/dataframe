@@ -255,8 +255,13 @@ public object DuckDb : AdvancedDbType("duckdb") {
                             } else {
                                 // read data from the struct
                                 val attrs = struct.getAttributes(
-                                    parsedStructEntries.mapValues {
-                                        (it.value.expectedJdbcType.classifier!! as KClass<*>).java
+                                    parsedStructEntries.mapValues { (fieldName, entry) ->
+                                        val expectedType = entry.expectedJdbcType
+                                        val classifier = expectedType.classifier as? KClass<*>
+                                            ?: error(
+                                                "DuckDB STRUCT field '$fieldName' has expected JDBC type '$expectedType' with no classifier; This is an incorrect KType.",
+                                            )
+                                        classifier.java
                                     },
                                 )
 
@@ -338,15 +343,58 @@ public object DuckDb : AdvancedDbType("duckdb") {
         return typeString.take(typeString.indexOfLast { it == '[' })
     }
 
-    /** Parses "STRUCT(v VARCHAR, i INTEGER)" into [("v", "VARCHAR"), ("i", "INTEGER")] */
+    /**
+     * Parses
+     * - `"STRUCT(v VARCHAR, i INTEGER)"` into `[("v", "VARCHAR"), ("i", "INTEGER")]`;
+     * - `"STRUCT(col1 STRUCT(i INTEGER, j VARCHAR), col2 INTEGER)"`
+     *   into `[("col1", "STRUCT(i INTEGER, j VARCHAR)"), ("col2", "INTEGER")]`;
+     * - etc.
+     */
     internal fun parseStructType(typeString: String): Map<String, String> {
-        if (!typeString.startsWith("STRUCT(")) {
+        if (!typeString.startsWith("STRUCT(") || !typeString.endsWith(")")) {
             error("invalid STRUCT type: $typeString")
         }
-        return typeString.removeSurrounding("STRUCT(", ")")
-            .split(",")
-            .map { it.trim().split(" ") }
-            .associate { (name, type) -> name to type }
+
+        val content = typeString.removeSurrounding("STRUCT(", ")")
+
+        // Split the struct into entries, taking parentheses and spaces into account
+        val entries = buildMap {
+            var parenCount = 0
+            var entryPart = ""
+            var spaceIndex = -1
+
+            fun yieldEntryPart() {
+                require(spaceIndex > 0) {
+                    "Invalid struct entry format: '$entryPart' in DuckDB Struct type: '$typeString'"
+                }
+                val key = entryPart.take(spaceIndex).trim()
+                val value = entryPart.substring(spaceIndex + 1).trim()
+                this += key to value
+                entryPart = ""
+                spaceIndex = -1
+            }
+
+            for (i in content.indices) {
+                when (content[i]) {
+                    '(' -> parenCount++
+
+                    ')' -> parenCount--
+
+                    ' ' if (parenCount == 0) -> {
+                        spaceIndex = entryPart.length
+                    }
+
+                    ',' if (parenCount == 0) -> {
+                        yieldEntryPart()
+                        continue
+                    }
+                }
+                entryPart += content[i]
+            }
+            yieldEntryPart()
+        }
+
+        return entries
     }
 
     /**

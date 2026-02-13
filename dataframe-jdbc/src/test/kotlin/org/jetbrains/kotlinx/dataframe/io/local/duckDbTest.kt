@@ -694,4 +694,41 @@ class DuckDbTest {
             Files.deleteIfExists(tempDir)
         }
     }
+
+    @Test
+    fun `parse Struct types`() {
+        DuckDb.parseStructType(
+            "STRUCT(v VARCHAR, i INTEGER)",
+        ) shouldBe mapOf("v" to "VARCHAR", "i" to "INTEGER")
+        DuckDb.parseStructType(
+            "STRUCT(col1 MAP(INTEGER, VARCHAR), col2 INTEGER)",
+        ) shouldBe mapOf("col1" to "MAP(INTEGER, VARCHAR)", "col2" to "INTEGER")
+        DuckDb.parseStructType(
+            "STRUCT(col1 STRUCT(i INTEGER, j VARCHAR), col2 INTEGER)",
+        ) shouldBe mapOf("col1" to "STRUCT(i INTEGER, j VARCHAR)", "col2" to "INTEGER")
+        DuckDb.parseStructType(
+            "STRUCT(col1 INTEGER[], col2 VARCHAR[][])",
+        ) shouldBe mapOf("col1" to "INTEGER[]", "col2" to "VARCHAR[][]")
+    }
+
+    @Test
+    fun `parse Map types`() {
+        DuckDb.parseMapTypes(
+            "MAP(INTEGER, VARCHAR)",
+        ) shouldBe ("INTEGER" to "VARCHAR")
+        DuckDb.parseMapTypes(
+            "MAP(INTEGER, MAP(VARCHAR, VARCHAR))",
+        ) shouldBe ("INTEGER" to "MAP(VARCHAR, VARCHAR)")
+        DuckDb.parseMapTypes(
+            "MAP(STRUCT(i INTEGER, j VARCHAR), VARCHAR)",
+        ) shouldBe ("STRUCT(i INTEGER, j VARCHAR)" to "VARCHAR")
+    }
+
+    @Test
+    fun `parse List types`() {
+        DuckDb.parseListType("INTEGER[]") shouldBe "INTEGER"
+        DuckDb.parseListType("INTEGER[3]") shouldBe "INTEGER"
+        DuckDb.parseListType("VARCHAR[][]") shouldBe "VARCHAR[]"
+        DuckDb.parseListType("STRUCT(i INTEGER, j VARCHAR)[]") shouldBe "STRUCT(i INTEGER, j VARCHAR)"
+    }
 }

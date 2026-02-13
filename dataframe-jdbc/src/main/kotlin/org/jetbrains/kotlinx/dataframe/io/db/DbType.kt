@@ -433,7 +433,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * If `null` is returned, the [schema][ColumnSchema] cannot be determined before looking at the actual data.
      *
      * @param [tableColumnMetadata] all information we have about the column
-     * @param [expectedValueType] the type of the values after preprocessing, `P`
+     * @param [expectedValueType] the type of the values after preprocessing, `D`
      * @return the target [schema][ColumnSchema] of the given column,
      *   or `null` if it cannot be determined from the types alone.
      */
