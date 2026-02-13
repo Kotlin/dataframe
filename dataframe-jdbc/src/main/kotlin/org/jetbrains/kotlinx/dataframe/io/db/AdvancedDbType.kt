@@ -18,10 +18,19 @@ public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJ
 
     protected abstract fun generateConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter
 
-    private val converterCache = mutableMapOf<TableColumnMetadata, AnyJdbcToDataFrameConverter>()
+    private data class CacheKey(
+        val sqlTypeName: String,
+        val jdbcType: Int,
+        val javaClassName: String,
+        val isNullable: Boolean,
+    )
+
+    private fun TableColumnMetadata.cacheKey(): CacheKey = CacheKey(sqlTypeName, jdbcType, javaClassName, isNullable)
+
+    private val converterCache = mutableMapOf<CacheKey, AnyJdbcToDataFrameConverter>()
 
     protected fun getConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter =
-        converterCache.getOrPut(tableColumnMetadata) {
+        converterCache.getOrPut(tableColumnMetadata.cacheKey()) {
             generateConverter(tableColumnMetadata)
         }
 
