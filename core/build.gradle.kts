@@ -41,6 +41,14 @@ sourceSets {
     create("samples") {
         kotlin.srcDir("src/test/kotlin")
     }
+
+    // Separate source set for Java 16+ language-specific tests (e.g., Java Records)
+    create("testJava16") {
+        java.srcDir("src/testJava16/java")
+        kotlin.srcDir("src/testJava16/kotlin")
+        compileClasspath += sourceSets.main.get().output + configurations.testCompileClasspath.get()
+        runtimeClasspath += output + compileClasspath + configurations.testRuntimeClasspath.get()
+    }
 }
 
 dependencies {
@@ -79,14 +87,24 @@ dependencies {
     testImplementation(projects.dataframeCsv)
 }
 
-// Configure test sources to use Java 16+ to test record support
-tasks.named<JavaCompile>("compileTestJava") {
+// Configure testJava16 dependencies to extend from test
+configurations {
+    val testJava16Implementation by getting {
+        extendsFrom(configurations.testImplementation.get())
+    }
+    val testJava16RuntimeOnly by getting {
+        extendsFrom(configurations.testRuntimeOnly.get())
+    }
+}
+
+// Configure testJava16 sources to use Java 16+
+tasks.named<JavaCompile>("compileTestJava16Java") {
     sourceCompatibility = JavaVersion.VERSION_16.toString()
     targetCompatibility = JavaVersion.VERSION_16.toString()
     options.release.set(16)
 }
 
-tasks.named<KotlinCompile>("compileTestKotlin") {
+tasks.named<KotlinCompile>("compileTestJava16Kotlin") {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_16
         freeCompilerArgs.add("-Xjdk-release=16")
@@ -399,6 +417,24 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "2048m"
+}
+
+// Test task for Java 16+ language-specific tests
+val testJava16 = tasks.register<Test>("testJava16") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+
+    testClassesDirs = sourceSets["testJava16"].output.classesDirs
+    classpath = sourceSets["testJava16"].runtimeClasspath
+
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+
+    maxHeapSize = "2048m"
+}
+
+tasks.check {
+    dependsOn(testJava16)
 }
 
 kotlinPublications {
