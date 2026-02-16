@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 /**
  * ## Access APIs
  *
- * Accessing column is the one of the most important parts of the API,
+ * Accessing and specifying columns is the one of the most important parts of the API,
  * used in the most of [DataFrame] operations.
  *
  * In the Kotlin DataFrame library, we provide two different ways to access columns —
@@ -35,8 +35,6 @@ internal interface `Access APIs` {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
      *
-     * For example: {@comment This works if you include the test module when running KoDEx}
-     * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.strings]
      */
     typealias `String API` = Nothing
 

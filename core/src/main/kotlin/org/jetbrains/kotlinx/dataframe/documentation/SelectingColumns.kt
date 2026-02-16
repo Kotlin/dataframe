@@ -52,11 +52,21 @@ internal interface SelectingColumns {
      */
     @ExcludeFromSources
     typealias OPERATION = Nothing
+
+    /*
+     * Operation receiver variable name
+     */
+    @ExcludeFromSources
+    typealias RECEIVER = Nothing
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
     @ExcludeFromSources
     typealias SetDefaultOperationArg = Nothing
+
+    /** {@set [RECEIVER] <code>`df`</code>} */
+    @ExcludeFromSources
+    typealias SetDefaultReceiverArg = Nothing
 
     /**
      * Select or express columns using the {@include [ColumnsSelectionDslLink]}.
@@ -67,12 +77,6 @@ internal interface SelectingColumns {
      * expects you to return a [SingleColumn] or [ColumnSet] (so, a [ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
-     *
-     * #### NOTE:
-     * While you can use the {@include [`Access APIs`.StringApiLink]} and {@include [`Access APIs`.KPropertiesApiLink]}
-     * in this DSL directly with any function, they are NOT valid return types for the
-     * [Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
-     * with a function like [`col("name")`][ColumnsSelectionDsl.col].
      *
      * ### Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
      * {@include [LineBreak]}
@@ -110,11 +114,6 @@ internal interface SelectingColumns {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into a single column.
      *
-     * #### NOTE:
-     * While you can use the {@include [`Access APIs`.StringApiLink]} and {@include [`Access APIs`.KPropertiesApiLink]}
-     * in this DSL directly with any function, they are NOT valid return types for the
-     * [Column Selector][ColumnSelector]/[Columns Selector][ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference] first, for instance
-     * with a function like [`col("name")`][ColumnsSelectionDsl.col].
      *
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
@@ -126,12 +125,14 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@get [OPERATION]}` { length }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}` { length }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         *
          * @include [SetDefaultOperationArg]
+         * @include [SetDefaultReceiverArg]
          */
         typealias WithExample = Nothing
     }

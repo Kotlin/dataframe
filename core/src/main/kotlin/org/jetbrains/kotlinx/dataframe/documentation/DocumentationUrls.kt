@@ -75,8 +75,11 @@ internal interface DocumentationUrls {
     /** [See `remove` on the documentation website.]({@include [Url]}/remove.html) */
     typealias Remove = Nothing
 
-    /** <a href="{@include [Url]}/distinct.html">See `distinct` on the documentation website.</a> */
+    /** [See `distinct` on the documentation website.]({@include [Url]}/distinct.html) */
     typealias Distinct = Nothing
+
+    /** [See `distinctBy` on the documentation website.]({@include [Url]}/distinct.html#distinctby) */
+    typealias DistinctBy = Nothing
 
     /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
     typealias Flatten = Nothing
@@ -144,6 +147,36 @@ internal interface DocumentationUrls {
     /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
     typealias GroupByAggregation = Nothing
 
+    /** [See "`groupBy` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#groupby-statistics) */
+    typealias GroupByStatistics = Nothing
+
     /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/groupby.html#pivot-groupby) */
     typealias PivotGroupBy = Nothing
+
+    /** [See `pivot` on the documentation website.]({@include [Url]}/pivot.html) */
+    typealias Pivot = Nothing
+
+    /** [See `pivotMatches` on the documentation website.]({@include [Url]}/pivot.html#pivotmatches) */
+    typealias PivotMatches = Nothing
+
+    /** [See `pivotCounts` on the documentation website.]({@include [Url]}/pivot.html#pivotcounts) */
+    typealias PivotCounts = Nothing
+
+    /** [See "`pivot` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#pivot-statistics) */
+    typealias PivotStatistics = Nothing
+
+    /** [See "Pivot` reducing" on the documentation website.]({@include [Url]}/pivot.html#reducing) */
+    typealias PivotReducing = Nothing
+
+    /** [See "Pivot` Aggregation" on the documentation website.]({@include [Url]}/pivot.html#aggregation) */
+    typealias PivotAggregation = Nothing
+
+    /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
+    typealias PivotInsideAggregationStatistics = Nothing
+
+    /** [See `join` on the documentation website.]({@include [Url]}/join.html) */
+    typealias Join = Nothing
+
+    /** [See `joinWith` on the documentation website.]({@include [Url]}/joinWith.html) */
+    typealias JoinWith = Nothing
 }
