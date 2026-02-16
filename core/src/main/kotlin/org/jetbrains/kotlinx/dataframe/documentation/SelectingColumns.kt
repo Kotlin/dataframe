@@ -89,12 +89,13 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
          *
+         * @include [SetDefaultOperationArg]
          * @include [SetDefaultOperationArg]
          */
         typealias WithExample = Nothing
