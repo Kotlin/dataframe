@@ -96,7 +96,7 @@ internal interface SelectingColumns {
          * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
          *
          * @include [SetDefaultOperationArg]
-         * @include [SetDefaultOperationArg]
+         * @include [SetDefaultReceiverArg]
          */
         typealias WithExample = Nothing
     }
