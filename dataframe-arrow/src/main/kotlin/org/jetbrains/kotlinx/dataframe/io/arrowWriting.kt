@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import java.io.File
 import java.io.OutputStream
 import java.nio.channels.WritableByteChannel
+import java.nio.file.Path
 
 /**
  * Create [ArrowWriter] for [this] DataFrame with target schema matching actual data
@@ -43,11 +44,20 @@ public fun AnyFrame.writeArrowIPC(stream: OutputStream) {
 
 /**
  * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
- * If file exists, it can be recreated or expanded.
+ * If [file] exists, it can be recreated or expanded.
  */
 public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
+    writeArrowIPC(file.toPath(), append)
+}
+
+/**
+ * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format),
+ * write to new or existing file on the given [path].
+ * If file exists, it can be recreated or expanded.
+ */
+public fun AnyFrame.writeArrowIPC(path: Path, append: Boolean = true) {
     this.arrowWriter().use { writer ->
-        writer.writeArrowIPC(file, append)
+        writer.writeArrowIPC(path, append)
     }
 }
 
@@ -84,8 +94,17 @@ public fun AnyFrame.writeArrowFeather(stream: OutputStream) {
  * If file exists, it would be recreated.
  */
 public fun AnyFrame.writeArrowFeather(file: File) {
+    writeArrowFeather(file.toPath())
+}
+
+/**
+ * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files),
+ * write to new or existing file on the given [path].
+ * If file exists, it would be recreated.
+ */
+public fun AnyFrame.writeArrowFeather(path: Path) {
     this.arrowWriter().use { writer ->
-        writer.writeArrowFeather(file)
+        writer.writeArrowFeather(path)
     }
 }
 

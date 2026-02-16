@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.with
  * @property df The underlying `DataFrame` containing geometries.
  * @property crs The coordinate reference system associated with the data, if any.
  */
-class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateReferenceSystem?) {
+public class GeoDataFrame<T : WithGeometry>(public val df: DataFrame<T>, public val crs: CoordinateReferenceSystem?) {
 
     /**
      * Creates a new [GeoDataFrame] by applying transformations to the underlying [DataFrame].
@@ -29,7 +29,7 @@ class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateRe
      * @param block A lambda defining the transformations to apply to the DataFrame.
      * @return A new [GeoDataFrame] instance with the modified DataFrame while preserving the original CRS.
      */
-    inline fun modify(block: DataFrame<T>.(DataFrame<T>) -> DataFrame<T>): GeoDataFrame<T> =
+    public inline fun modify(block: DataFrame<T>.(DataFrame<T>) -> DataFrame<T>): GeoDataFrame<T> =
         GeoDataFrame(df.block(df), crs)
 
     /**
@@ -41,7 +41,7 @@ class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateRe
      * @param targetCrs The target CRS for transformation.
      * @return A new `GeoDataFrame` with reprojected geometries and the specified CRS.
      */
-    fun applyCrs(targetCrs: CoordinateReferenceSystem): GeoDataFrame<T> {
+    public fun applyCrs(targetCrs: CoordinateReferenceSystem): GeoDataFrame<T> {
         if (targetCrs == this.crs) return this
         // Use WGS 84 by default TODO
         val sourceCRS: CoordinateReferenceSystem = this.crs ?: DEFAULT_CRS
@@ -75,7 +75,7 @@ class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateRe
 
     override fun toString(): String = "GeoDataFrame(df=$df, crs=$crs)"
 
-    companion object {
-        val DEFAULT_CRS = CRS.decode("EPSG:4326", true)
+    public companion object {
+        public val DEFAULT_CRS: CoordinateReferenceSystem = CRS.decode("EPSG:4326", true)
     }
 }

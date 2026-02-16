@@ -201,3 +201,9 @@
 <resource src="notebook_test_rename_3.html"></resource>
 <resource src="notebook_test_rename_4.html"></resource>
 <resource src="notebook_test_rename_5.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createNestedRandomDataFrame.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createRandomDataFrame.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromObject.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObject.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObjectWithExclude.html"></resource>

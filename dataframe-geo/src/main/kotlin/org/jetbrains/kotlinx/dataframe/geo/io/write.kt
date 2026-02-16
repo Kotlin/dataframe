@@ -8,29 +8,35 @@ import org.geotools.geojson.feature.FeatureJSON
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.geotools.toSimpleFeatureCollection
 import java.io.File
+import java.nio.file.Path
+import kotlin.io.path.createDirectories
+import kotlin.io.path.notExists
+import kotlin.io.path.outputStream
 
-fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(path))
+public fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(path))
 
-fun GeoDataFrame<*>.writeGeoJson(file: File) {
-    // TODO: adds ids that breaks order of reading
+public fun GeoDataFrame<*>.writeGeoJson(path: Path) {
     val featureJSON = FeatureJSON()
-    file.outputStream().use { outputStream ->
+    path.outputStream().use { outputStream ->
         featureJSON.writeFeatureCollection(toSimpleFeatureCollection(), outputStream)
     }
 }
 
-fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath))
+public fun GeoDataFrame<*>.writeGeoJson(file: File) {
+    writeGeoJson(file.toPath())
+}
 
-fun GeoDataFrame<*>.writeShapefile(directory: File) {
-    if (!directory.exists()) {
-        directory.mkdirs()
+public fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath))
+
+public fun GeoDataFrame<*>.writeShapefile(directory: Path) {
+    if (directory.notExists()) {
+        directory.createDirectories()
     }
-    val fileName = directory.name
-
-    val file = File(directory, "$fileName.shp")
+    val fileName = directory.fileName.toString()
+    val shp = directory.resolve("$fileName.shp")
 
     val creationParams = mutableMapOf<String, java.io.Serializable>()
-    creationParams["url"] = file.toURI().toURL()
+    creationParams["url"] = shp.toUri().toURL()
 
     val factory = FileDataStoreFinder.getDataStoreFactory("shp")
     val dataStore = factory.createNewDataStore(creationParams)
@@ -55,4 +61,8 @@ fun GeoDataFrame<*>.writeShapefile(directory: File) {
         dataStore.dispose()
         transaction.close()
     }
+}
+
+public fun GeoDataFrame<*>.writeShapefile(directory: File) {
+    writeShapefile(directory.toPath())
 }

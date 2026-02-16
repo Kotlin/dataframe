@@ -2464,8 +2464,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/JoinKt {
 	public static final fun fullJoin (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun fullJoin (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun fullJoin$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun getAllowLeftNulls (Lorg/jetbrains/kotlinx/dataframe/api/JoinType;)Z
-	public static final fun getAllowRightNulls (Lorg/jetbrains/kotlinx/dataframe/api/JoinType;)Z
 	public static final fun innerJoin (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun innerJoin (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun innerJoin$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -2539,17 +2537,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/JsonPath : java/io/Serial
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/KeyValueProperty {
 	public abstract fun getKey ()Ljava/lang/String;
 	public abstract fun getValue ()Ljava/lang/Object;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/api/KeyValueProperty_ExtensionsKt {
-	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/LastColumnsSelectionDsl {
@@ -3259,15 +3246,15 @@ public final class org/jetbrains/kotlinx/dataframe/api/MoveKt {
 	public static final fun under (Lorg/jetbrains/kotlinx/dataframe/api/MoveClause;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair {
+public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair : org/jetbrains/kotlinx/dataframe/api/NameValueProperty {
 	public fun <init> (Ljava/lang/String;Ljava/lang/Object;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/Object;
 	public final fun copy (Ljava/lang/String;Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;
 	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;Ljava/lang/String;Ljava/lang/Object;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/NameValuePair;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getName ()Ljava/lang/String;
-	public final fun getValue ()Ljava/lang/Object;
+	public fun getName ()Ljava/lang/String;
+	public fun getValue ()Ljava/lang/Object;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -3281,6 +3268,37 @@ public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair_ExtensionsK
 	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/api/NameValueProperty {
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getValue ()Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/api/NameValuePropertyKt {
+	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun KeyValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NullableKeyValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/api/NameValueProperty_ExtensionsKt {
+	public static final fun NameValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NameValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+	public static final fun NullableNameValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableNameValueProperty_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
+	public static final fun NullableNameValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableNameValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/NoneColumnsSelectionDsl {
@@ -3672,6 +3690,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumn
 	public fun into (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun into (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun into (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
+	public fun into (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public fun named (Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun named (Ljava/lang/String;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun named (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
@@ -3681,6 +3700,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumn
 	public fun named (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun named (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun named (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
+	public fun named (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/RenameColumnsSelectionDsl$Grammar {
@@ -5192,10 +5212,6 @@ public final class org/jetbrains/kotlinx/dataframe/impl/CacheKt {
 	public static final fun getListType (Lkotlin/reflect/KType;)Lkotlin/reflect/KType;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/impl/ColumnAccessTrackerKt {
-	public static final fun trackColumnAccess (Lkotlin/jvm/functions/Function0;)Ljava/util/List;
-}
-
 public final class org/jetbrains/kotlinx/dataframe/impl/ColumnNameGenerator {
 	public fun <init> ()V
 	public fun <init> (Ljava/util/List;)V
@@ -5265,8 +5281,6 @@ public final class org/jetbrains/kotlinx/dataframe/impl/UtilsKt {
 	public static final fun headPlusArray (Z[Z)[Z
 	public static final fun toCamelCaseByDelimiters (Ljava/lang/String;Lkotlin/text/Regex;Ljava/lang/String;)Ljava/lang/String;
 	public static synthetic fun toCamelCaseByDelimiters$default (Ljava/lang/String;Lkotlin/text/Regex;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
-	public static final fun zero (Lkotlin/reflect/KClass;)Ljava/lang/Number;
-	public static final fun zeroOrNull (Lkotlin/reflect/KClass;)Ljava/lang/Number;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/AggregatableInternalKt {
@@ -5282,7 +5296,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/Aggregations
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler {
-	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;Ljava/lang/String;)V
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;Ljava/lang/String;Ljava/util/Map;)V
 	public fun aggregateMultipleColumns (Lkotlin/sequences/Sequence;)Ljava/lang/Object;
 	public fun aggregateSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
 	public fun aggregateSingleColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
@@ -5295,6 +5309,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 	public final fun getInputHandler ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;
 	public final fun getMultipleColumnsHandler ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;
 	public final fun getName ()Ljava/lang/String;
+	public final fun getStatisticsParameters ()Ljava/util/Map;
 	public fun indexOfAggregationResultSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)I
 	public fun init (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)V
 	public fun preprocessAggregation (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Lkotlin/Pair;
@@ -5500,6 +5515,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/CodeGenerationRe
 public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/CodeGeneratorImplKt {
 	public static final fun isQuoted (Ljava/lang/String;)Z
 	public static final fun quoteIfNeeded (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun quotedQualifiedNameOrNull (Lkotlin/reflect/KClass;)Ljava/lang/String;
 	public static final fun toStandaloneSnippet (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
 	public static final fun toStandaloneSnippet (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
 	public static final fun toStandaloneSnippet (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithTypeCastGenerator;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
@@ -5606,6 +5622,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/CSV : org/jetbrains/kotlin
 	public fun getTestOrder ()I
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/CSVType : java/lang/Enum {
@@ -5830,23 +5847,31 @@ public final class org/jetbrains/kotlinx/dataframe/io/GuessKt {
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/net/URL;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/net/URL;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun read$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun readDataFrame (Ljava/net/URL;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Ljava/net/URL;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDataFrame$default (Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun readDataRow (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun readDataRow (Ljava/net/URL;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun readDataRow (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun readDataRow$default (Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun readDataRow$default (Ljava/net/URL;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun readDataRow$default (Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/HtmlKt {
@@ -5912,10 +5937,12 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedCode
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat : org/jetbrains/kotlinx/dataframe/io/SupportedFormat {
-	public abstract fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public abstract fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public abstract fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat;Ljava/io/File;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat;Ljava/io/InputStream;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDataFrame$default (Lorg/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat;Ljava/nio/file/Path;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedFormat {
@@ -5941,6 +5968,20 @@ public final class org/jetbrains/kotlinx/dataframe/io/SupportedFormatSample$Data
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Ljava/io/File;)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()Ljava/io/File;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/SupportedFormatSample$DataPath : org/jetbrains/kotlinx/dataframe/io/SupportedFormatSample {
+	public static final synthetic fun box-impl (Ljava/nio/file/Path;)Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample$DataPath;
+	public static fun constructor-impl (Ljava/nio/file/Path;)Ljava/nio/file/Path;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/nio/file/Path;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/nio/file/Path;Ljava/nio/file/Path;)Z
+	public final fun getSamplePath ()Ljava/nio/file/Path;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/nio/file/Path;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/nio/file/Path;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/nio/file/Path;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/SupportedFormatSample$DataString : org/jetbrains/kotlinx/dataframe/io/SupportedFormatSample {
@@ -5993,6 +6034,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/TSV : org/jetbrains/kotlin
 	public fun getTestOrder ()I
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/TsvKt {
@@ -6026,11 +6068,14 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/DefaultCellRenderer :
 }
 
 public final class org/jetbrains/kotlinx/dataframe/jupyter/DisableRowsLimitWrapper {
-	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)V
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/jupyter/DisableRowsLimitWrapper;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/jupyter/DisableRowsLimitWrapper;Lorg/jetbrains/kotlinx/dataframe/DataFrame;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/jupyter/DisableRowsLimitWrapper;
+	public final fun component2 ()Z
+	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)Lorg/jetbrains/kotlinx/dataframe/jupyter/DisableRowsLimitWrapper;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/jupyter/DisableRowsLimitWrapper;Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/jupyter/DisableRowsLimitWrapper;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAddHtml ()Z
 	public final fun getValue ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -6040,6 +6085,7 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema {
 	public fun <init> (Ljava/io/File;)V
 	public fun <init> (Ljava/lang/String;)V
 	public fun <init> (Ljava/net/URL;)V
+	public fun <init> (Ljava/nio/file/Path;)V
 	public final fun getUrl ()Ljava/net/URL;
 }
 
@@ -6047,6 +6093,7 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchemaKt {
 	public static final fun importDataSchema (Ljava/io/File;)Lorg/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema;
 	public static final fun importDataSchema (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema;
 	public static final fun importDataSchema (Ljava/net/URL;)Lorg/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema;
+	public static final fun importDataSchema (Ljava/nio/file/Path;)Lorg/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/jupyter/JupyterConfiguration {
@@ -6120,7 +6167,7 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/RenderedContent$Compa
 
 public final class org/jetbrains/kotlinx/dataframe/keywords/HardKeywords : java/lang/Enum {
 	public static final field AS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
-	public static final field AS_SAFE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field AS? Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
 	public static final field BREAK Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
 	public static final field CLASS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
 	public static final field CONTINUE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
@@ -6166,7 +6213,6 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords : j
 	public static final field ANNOTATION Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field COMPANION Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field CONST Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
-	public static final field CONTRACT Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field CROSSINLINE Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords$Companion;
 	public static final field DATA Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
@@ -6207,6 +6253,7 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords$Com
 public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords : java/lang/Enum {
 	public static final field ABSTRACT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
 	public static final field ACTUAL Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field ALL Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
 	public static final field ANNOTATION Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
 	public static final field BY Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
 	public static final field CATCH Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;

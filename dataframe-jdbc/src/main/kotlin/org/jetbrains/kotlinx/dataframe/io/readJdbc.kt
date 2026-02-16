@@ -12,7 +12,6 @@ import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
-import java.sql.ResultSetMetaData
 import javax.sql.DataSource
 import kotlin.reflect.KType
 
@@ -181,7 +180,7 @@ private fun executeQueryAndBuildDataFrame(
             configureStatement(statement)
             logger.debug { "Executing query: $sqlQuery" }
             statement.executeQuery().use { rs ->
-                val tableColumns = getTableColumnsMetadata(rs)
+                val tableColumns = getTableColumnsMetadata(rs, determinedDbType)
                 fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
             }
         }
@@ -562,7 +561,7 @@ public fun DataFrame.Companion.readResultSet(
     inferNullability: Boolean = true,
 ): AnyFrame {
     validateLimit(limit)
-    val tableColumns = getTableColumnsMetadata(resultSet)
+    val tableColumns = getTableColumnsMetadata(resultSet, dbType)
     return fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit, inferNullability)
 }
 
@@ -852,71 +851,8 @@ private fun readTableAsDataFrame(
     return dataFrame
 }
 
-/**
- * Retrieves the metadata of the columns in the result set.
- *
- * @param rs the result set
- * @return a mutable list of [TableColumnMetadata] objects,
- *         where each TableColumnMetadata object contains information such as the column type,
- *         JDBC type, size, and name.
- */
-internal fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetadata> {
-    val metaData: ResultSetMetaData = rs.metaData
-    val numberOfColumns: Int = metaData.columnCount
-    val tableColumns = mutableListOf<TableColumnMetadata>()
-    val columnNameCounter = mutableMapOf<String, Int>()
-    val databaseMetaData: DatabaseMetaData = rs.statement.connection.metaData
-    val catalog: String? = rs.statement.connection.catalog.takeUnless { it.isNullOrBlank() }
-    val schema: String? = rs.statement.connection.schema.takeUnless { it.isNullOrBlank() }
-
-    for (i in 1 until numberOfColumns + 1) {
-        val tableName = metaData.getTableName(i)
-        val columnName = metaData.getColumnName(i)
-
-        // this algorithm works correctly only for SQL Table and ResultSet opened on one SQL table
-        val columnResultSet: ResultSet =
-            databaseMetaData.getColumns(catalog, schema, tableName, columnName)
-        val isNullable = if (columnResultSet.next()) {
-            columnResultSet.getString("IS_NULLABLE") == "YES"
-        } else {
-            true // we assume that it's nullable by default
-        }
-
-        val name = manageColumnNameDuplication(columnNameCounter, columnName)
-        val size = metaData.getColumnDisplaySize(i)
-        val type = metaData.getColumnTypeName(i)
-        val jdbcType = metaData.getColumnType(i)
-        val javaClassName = metaData.getColumnClassName(i)
-
-        tableColumns += TableColumnMetadata(name, type, jdbcType, size, javaClassName, isNullable)
-    }
-    return tableColumns
-}
-
-/**
- * Manages the duplication of column names by appending a unique identifier to the original name if necessary.
- *
- * @param columnNameCounter a mutable map that keeps track of the count for each column name.
- * @param originalName the original name of the column to be managed.
- * @return the modified column name that is free from duplication.
- */
-internal fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, Int>, originalName: String): String {
-    var name = originalName
-    val count = columnNameCounter[originalName]
-
-    if (count != null) {
-        var incrementedCount = count + 1
-        while (columnNameCounter.containsKey("${originalName}_$incrementedCount")) {
-            incrementedCount++
-        }
-        columnNameCounter[originalName] = incrementedCount
-        name = "${originalName}_$incrementedCount"
-    } else {
-        columnNameCounter[originalName] = 0
-    }
-
-    return name
-}
+internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): MutableList<TableColumnMetadata> =
+    dbType.getTableColumnsMetadata(resultSet).toMutableList()
 
 /**
  * Fetches and converts data from a ResultSet into a mutable map.

@@ -41,7 +41,7 @@ public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInst
 // region DataSchema
 @DataSchema
 @RequiredByIntellijPlugin
-public data class NameValuePair<V>(val name: String, val value: V)
+public data class NameValuePair<V>(override val name: String, override val value: V) : NameValueProperty<V>
 
 // Without these overloads row.transpose().name or row.map { name } won't resolve
 public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String>

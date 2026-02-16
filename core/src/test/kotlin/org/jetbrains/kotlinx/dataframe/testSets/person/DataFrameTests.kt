@@ -174,7 +174,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
@@ -276,13 +275,6 @@ class DataFrameTests : BaseTest() {
         val sliced = typed[1..2]
         sliced.nrow shouldBe 2
         sliced[0].name shouldBe typed[1].name
-    }
-
-    @Test
-    fun `access tracking`() {
-        trackColumnAccess {
-            typed[2].age
-        } shouldBe listOf("age")
     }
 
     @Test
@@ -1712,7 +1704,7 @@ class DataFrameTests : BaseTest() {
         df.update("name").at(0).with { "ALICE" }
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = IllegalStateException::class)
     fun `update with wrong type`() {
         typed.update("age").with { "string" }
     }
@@ -2359,7 +2351,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitIntoThisAndNewColumn() {
-        val split = typed.split { name }.by { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
+        val split = typed.split { name }.by { listOf<Any>(it.dropLast(1), it.last()) }.into("name", "lastChar")
         split.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
     }
 

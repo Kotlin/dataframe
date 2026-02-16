@@ -25,7 +25,6 @@ import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.ByteArrayReadableSeekableByteChannel
-import org.apache.arrow.vector.util.Text
 import org.duckdb.DuckDBConnection
 import org.duckdb.DuckDBResultSet
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -39,7 +38,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.junit.Assert
 import org.junit.Test
@@ -68,13 +67,11 @@ internal class ArrowKtTest {
         val df = DataFrame.readArrowFeather(feather)
         val a by columnOf("one")
         val b by columnOf(2.0)
-        val c by listOf(
-            mapOf(
-                "c1" to Text("inner"),
-                "c2" to 4.0,
-                "c3" to 50.0,
-            ) as Map<String, Any?>,
-        ).toColumn()
+        val c by columnOf(
+            "c1" to columnOf("inner"),
+            "c2" to columnOf(4.0),
+            "c3" to columnOf(50.0),
+        )
         val d by columnOf("four")
         val expected = dataFrameOf(a, b, c, d)
         df shouldBe expected
@@ -727,5 +724,90 @@ internal class ArrowKtTest {
         val dataFrame = DataFrame.readParquet(resourcePath, resourcePath, resourcePath)
 
         dataFrame.rowsCount() shouldBe 900
+    }
+
+    @Test
+    fun testColumnGroupRoundtrip() {
+        val original = dataFrameOf(
+            "outer" to columnOf("x", "y", "z"),
+            "inner" to columnOf(
+                "nested1" to columnOf("a", "b", "c"),
+                "nested2" to columnOf(1, 2, 3),
+            ),
+        )
+
+        val featherBytes = original.saveArrowFeatherToByteArray()
+        val fromFeather = DataFrame.readArrowFeather(featherBytes)
+        fromFeather shouldBe original
+
+        val ipcBytes = original.saveArrowIPCToByteArray()
+        val fromIpc = DataFrame.readArrowIPC(ipcBytes)
+        fromIpc shouldBe original
+    }
+
+    @Test
+    fun testNestedColumnGroupRoundtrip() {
+        val deeplyNested by columnOf(
+            "level2" to columnOf(
+                "level3" to columnOf(1, 2, 3),
+            ),
+        )
+        val original = dataFrameOf(deeplyNested)
+
+        val bytes = original.saveArrowFeatherToByteArray()
+        val restored = DataFrame.readArrowFeather(bytes)
+
+        restored shouldBe original
+    }
+
+    @Test
+    fun testColumnGroupWithNulls() {
+        val group by columnOf(
+            "a" to columnOf("x", null, "z"),
+            "b" to columnOf(1, 2, null),
+        )
+        val original = dataFrameOf(group)
+
+        val bytes = original.saveArrowFeatherToByteArray()
+        val restored = DataFrame.readArrowFeather(bytes)
+
+        restored shouldBe original
+    }
+
+    @Test
+    fun testReadParquetWithNestedStruct() {
+        val resourceUrl = testResource("books.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
+        val df = DataFrame.readParquet(resourcePath)
+
+        df.columnNames() shouldBe listOf("id", "title", "author", "genre", "publisher")
+
+        val authorGroup = df["author"] as ColumnGroup<*>
+        authorGroup.columnNames() shouldBe listOf("id", "firstName", "lastName")
+
+        df["id"].type() shouldBe typeOf<Int>()
+        df["title"].type() shouldBe typeOf<String>()
+        df["genre"].type() shouldBe typeOf<String>()
+        df["publisher"].type() shouldBe typeOf<String>()
+        authorGroup["id"].type() shouldBe typeOf<Int>()
+        authorGroup["firstName"].type() shouldBe typeOf<String>()
+        authorGroup["lastName"].type() shouldBe typeOf<String>()
+    }
+
+    @Test
+    fun testParquetNestedStructRoundtrip() {
+        val resourceUrl = testResource("books.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
+        val original = DataFrame.readParquet(resourcePath)
+
+        val featherBytes = original.saveArrowFeatherToByteArray()
+        val fromFeather = DataFrame.readArrowFeather(featherBytes)
+        fromFeather shouldBe original
+
+        val ipcBytes = original.saveArrowIPCToByteArray()
+        val fromIpc = DataFrame.readArrowIPC(ipcBytes)
+        fromIpc shouldBe original
     }
 }

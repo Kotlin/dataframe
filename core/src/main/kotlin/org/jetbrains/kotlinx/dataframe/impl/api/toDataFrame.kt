@@ -319,9 +319,11 @@ internal fun convertToDataFrame(
         val shouldCreateValueCol = keepSubtree ||
             kClass in preserveClasses ||
             property in preserveProperties ||
-            !kClass.canBeUnfolded &&
-            !fieldKind.shouldBeConvertedToFrameColumn &&
-            !fieldKind.shouldBeConvertedToColumnGroup
+            (
+                !kClass.canBeUnfolded &&
+                    !fieldKind.shouldBeConvertedToFrameColumn &&
+                    !fieldKind.shouldBeConvertedToColumnGroup
+            )
 
         val shouldCreateFrameCol = kClass == DataFrame::class && !nullable
         val shouldCreateColumnGroup = kClass == DataRow::class

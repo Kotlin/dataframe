@@ -18,6 +18,7 @@
     <toc-element topic="Setup.md" accepts-web-file-names="gettingstarted">
         <toc-element topic="SetupKotlinNotebook.md" accepts-web-file-names="gettingstartedkotlinnotebook.html"/>
         <toc-element topic="SetupGradle.md" accepts-web-file-names="gettingstartedgradle.html"/>
+        <toc-element topic="SetupMaven.md"/>
         <toc-element topic="SetupJupyter.md" accepts-web-file-names="gettingstartedjupyternotebook.html"/>
         <toc-element topic="SetupDatalore.md" accepts-web-file-names="gettingstarteddatalore.html"/>
         <toc-element topic="SetupAndroid.md"/>
@@ -48,10 +49,12 @@
             <toc-element topic="schemasImportOpenApiGradle.md"/>
         </toc-element>
     </toc-element>
-    <toc-element topic="Compiler-Plugin.md">
+    <toc-element toc-title="Compiler Plugin">
+        <toc-element topic="Compiler-Plugin.md"/>
         <toc-element topic="staticInterpretation.md"/>
         <toc-element topic="dataSchema.md"/>
         <toc-element topic="compilerPluginExamples.md"/>
+        <toc-element topic="compilerPluginLimitationsAndWorkarounds.md"/>
     </toc-element>
     <toc-element topic="operations.md">
         <toc-element topic="create.md">
@@ -177,7 +180,6 @@
             <toc-element topic="joinWith.md"/>
         </toc-element>
         <toc-element topic="columnOperations.md">
-            <toc-element topic="columnArithmetics.md" toc-title="Arithmetics"/>
             <toc-element topic="columnStatistics.md" toc-title="Statistics"/>
             <toc-element topic="asIterable.md"/>
             <toc-element topic="asSequenceColumn.md" toc-title="asSequence"/>
@@ -225,5 +227,7 @@
     <toc-element topic="_shadow_resources.md" hidden="true"/>
     <toc-element topic="Support.md"/>
     <toc-element topic="FAQ.md"/>
-    <toc-element topic="Migration-From-Plugins.md"/>
+    <toc-element topic="MigrationTo_1_0.md">
+        <toc-element topic="Migration-From-Plugins.md"/>
+    </toc-element>
 </instance-profile>

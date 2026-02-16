@@ -22,6 +22,7 @@ import io.deephaven.csv.util.CsvReaderException
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -32,6 +33,24 @@ import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COMPRESSION
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.FIXED_COLUMN_WIDTHS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.HAS_FIXED_WIDTH_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.HEADER
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_EMPTY_LINES
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_EXCESS_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_SURROUNDING_SPACES
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.INPUT_STREAM_READ
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PARSER_OPTIONS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PARSE_PARALLEL
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.QUOTE
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.READ_LINES
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.SKIP_LINES
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
 import org.jetbrains.kotlinx.dataframe.io.ColType
@@ -44,6 +63,7 @@ import java.io.InputStream
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
+import java.nio.charset.Charset
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -55,6 +75,12 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  * Implementation to read delimiter-separated data from an [InputStream] based on the Deephaven CSV library.
  *
  * @param inputStream Represents the file to read.
+ *   Use [charset] to specify the encoding.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param delimiter The field delimiter character. The default is ',' for CSV, 't' for TSV.
  * @param header Optional column titles. Default: empty list.
  *
@@ -133,6 +159,7 @@ internal fun readDelimImpl(
     inputStream: InputStream,
     delimiter: Char,
     header: List<String>,
+    charset: Charset?,
     hasFixedWidthColumns: Boolean,
     fixedColumnWidths: List<Int>,
     colTypes: Map<String, ColType>,
@@ -178,10 +205,18 @@ internal fun readDelimImpl(
     val csvReaderResult = inputStream.useDecompressed(compression) { decompressedInputStream ->
         // read the csv
         try {
+            val deBommedInputString = decompressedInputStream.skippingBomCharacters()
+
+            // choose charset like: provided? -> from BOM? -> UTF-8
+            val streamCharset = charset
+                ?: (deBommedInputString as? BOMInputStream)?.bom?.let { Charset.forName(it.charsetName) }
+                ?: Charsets.UTF_8
+
             @Suppress("ktlint:standard:comment-wrapping")
             CsvReader.read(
                 /* specs = */ csvSpecs,
-                /* stream = */ decompressedInputStream.skippingBomCharacters(),
+                /* stream = */ deBommedInputString,
+                /* streamCharset = */ streamCharset,
                 /* sinkFactory = */ ListSink.SINK_FACTORY,
             )
         } catch (e: CsvReaderException) {

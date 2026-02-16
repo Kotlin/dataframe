@@ -6,6 +6,10 @@ import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonWriteDelimDocs
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_FORMAT
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CSV_DELIMITER
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.WRITER_WRITE
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 import org.jetbrains.kotlinx.dataframe.io.toJson
@@ -64,7 +68,7 @@ internal fun writeDelimImpl(
         setCommentMarker(commentChar)
         setHeaderComments(*headerComments.toTypedArray())
     }.let { adjustCsvFormat(it, it) }
-        .build()
+        .get()
 
     // let the format handle the writing, only converting AnyRow and AnyFrame to JSON
     format.print(writer).use { printer ->

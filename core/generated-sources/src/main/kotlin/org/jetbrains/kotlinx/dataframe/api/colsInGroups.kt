@@ -10,6 +10,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.util.COLS_IN_GROUPS
 import org.jetbrains.kotlinx.dataframe.util.COLS_IN_GROUPS_REPLACE
@@ -94,13 +97,13 @@ public interface ColsInGroupsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -152,7 +155,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
     private interface ColsInGroupsDocs {
 
         /** Example argument to use */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**

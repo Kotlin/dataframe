@@ -1,8 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.ARGUMENT_1
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.ARGUMENT_2
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_1
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_2
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_TYPE
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -10,6 +17,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
@@ -128,16 +140,16 @@ public interface AllExceptColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`allExcept`**][ColumnsSelectionDsl.allExcept] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** [**`except`**][ColumnsSelectionDsl.except] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`allColsExcept`**][ColumnsSelectionDsl.allColsExcept] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
 
         /** __`.`__[**`except`**][ColumnsSelectionDsl.except] */
-        public interface ColumnGroupExceptName
+        public typealias ColumnGroupExceptName = Nothing
     }
 
     // region ColumnSet

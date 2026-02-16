@@ -1,18 +1,14 @@
 plugins {
-    java
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(shadow)
         alias(publisher)
-        alias(ktlint)
     }
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compileOnly(libs.kotlin.compiler)

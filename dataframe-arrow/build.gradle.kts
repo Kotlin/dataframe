@@ -1,18 +1,14 @@
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-//        alias(kover)
-        alias(ktlint)
         alias(binary.compatibility.validator)
     }
 }
 
 group = "org.jetbrains.kotlinx"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     api(projects.core)
@@ -26,6 +22,7 @@ dependencies {
     implementation(libs.kotlin.datetimeJvm)
 
     testImplementation(libs.junit)
+    testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
@@ -40,10 +37,6 @@ kotlinPublications {
         description = "Apache Arrow support for Kotlin DataFrame"
         packageName = artifactId
     }
-}
-
-kotlin {
-    explicitApi()
 }
 
 tasks.test {

@@ -40,4 +40,4 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  *
  * For more information, see: [See Extension Properties API on the documentation website.](https://kotlin.github.io/dataframe/extensionpropertiesapi.html)
  */
-internal interface ExtensionPropertiesAPIDocs
+internal typealias ExtensionPropertiesAPIDocs = Nothing

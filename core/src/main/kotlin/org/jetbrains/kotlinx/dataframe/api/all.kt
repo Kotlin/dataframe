@@ -30,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -40,7 +41,10 @@ import kotlin.reflect.KProperty
 public fun <T> DataColumn<T>.all(predicate: Predicate<T>): Boolean = values.all(predicate)
 
 /** Returns `true` if all [values] are `null` or [values] is empty. */
-public fun <C> DataColumn<C>.allNulls(): Boolean = size == 0 || all { it == null }
+public fun <C> DataColumn<C>.allNulls(): Boolean =
+    size == 0 ||
+        type() == nullableNothingType ||
+        all { it == null }
 
 // endregion
 

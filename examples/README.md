@@ -1,8 +1,10 @@
 # Examples of Kotlin DataFrame
 
 ### Idea examples
-* [plugin example](kotlin-dataframe-plugin-example) IDEA project with a 
-[Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
+* [Gradle plugin example](kotlin-dataframe-plugin-gradle-example) IDEA project with a
+  [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
+* [Maven plugin example](kotlin-dataframe-plugin-maven-example) IDEA project with a
+  [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example. 
 * [android example](android-example) A minimal Android project showcasing integration with Kotlin DataFrame.
 Also includes [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html).
 * [movies](idea-examples/movies) Using extension properties [Access API](https://kotlin.github.io/dataframe/apilevels.html) to perform a data cleaning task
@@ -15,15 +17,13 @@ and how to transform the result of an SQL query into a DataFrame.
 * [unsupported-data-sources](idea-examples/unsupported-data-sources) Showcases of how to use DataFrame with
   (momentarily) unsupported data libraries such as [Spark](https://spark.apache.org/) and [Exposed](https://github.com/JetBrains/Exposed).
 They show how to convert to and from Kotlin DataFrame and their respective tables.
-  * **JetBrains Exposed**: See the [exposed folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/exposed)
+  * **JetBrains Exposed**: See the [exposed folder](./idea-examples/unsupported-data-sources/exposed)
     for an example of using Kotlin DataFrame with [Exposed](https://github.com/JetBrains/Exposed).
-  * **Hibernate**: See the [hibernate folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/hibernate)
+  * **Hibernate**: See the [hibernate folder](./idea-examples/unsupported-data-sources/hibernate)
     for an example of using Kotlin DataFrame with [Hibernate](https://hibernate.org/orm/).
-  * **Apache Spark**: See the [spark folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/spark)
-    for an example of using Kotlin DataFrame with [Spark](https://spark.apache.org/).
-  * **Spark (with Kotlin Spark API)**: See the [kotlinSpark folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/kotlinSpark)
-    for an example of using Kotlin DataFrame with the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
-  * **Multik**: See the [multik folder](./idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/multik)
+  * **Apache Spark**: See the [spark folder](./idea-examples/unsupported-data-sources/spark)
+    for an example of using Kotlin DataFrame with [Spark](https://spark.apache.org/) and with the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
+  * **Multik**: See the [multik folder](./idea-examples/unsupported-data-sources/multik)
     for an example of using Kotlin DataFrame with [Multik](https://github.com/Kotlin/multik).
 
 

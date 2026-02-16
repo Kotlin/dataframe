@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonReadDelimDocs
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
@@ -16,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PARSE_PARALL
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.QUOTE
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.SKIP_LINES
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TEXT_READ
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
@@ -60,6 +62,11 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -147,6 +154,7 @@ public fun DataFrame.Companion.readTsvStr(
 ): DataFrame<*> =
     readDelimImpl(
         inputStream = text.byteInputStream(),
+        charset = Charsets.UTF_8,
         delimiter = delimiter,
         header = header,
         hasFixedWidthColumns = hasFixedWidthColumns,

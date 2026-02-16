@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
-import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
+import org.jetbrains.kotlinx.dataframe.api.NameValueProperty
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
@@ -29,6 +29,8 @@ import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_C
 import java.io.File
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Path
+import kotlin.io.path.writeText
 import kotlin.reflect.typeOf
 
 public class JSON(
@@ -46,12 +48,12 @@ public class JSON(
             unifyNumbers = unifyNumbers,
         )
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
+    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
         DataFrame.readJson(
-            file = file,
+            path = path,
             header = header,
-            typeClashTactic = typeClashTactic,
             keyValuePaths = keyValuePaths,
+            typeClashTactic = typeClashTactic,
             unifyNumbers = unifyNumbers,
         )
 
@@ -132,7 +134,7 @@ internal const val VALUE_COLUMN_NAME: String = "value"
 
 /**
  * @param file Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
@@ -145,11 +147,28 @@ public fun DataFrame.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyFrame = DataFrame.readJson(file.toURI().toURL(), header, keyValuePaths, typeClashTactic, unifyNumbers)
+): AnyFrame = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers)
+
+/**
+ * @param path Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
+ *     will be created.
+ * @param typeClashTactic How to handle type clashes when reading a JSON file.
+ * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
+ * @return [DataFrame] from the given [path].
+ */
+public fun DataFrame.Companion.readJson(
+    path: Path,
+    header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
+    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+    unifyNumbers: Boolean = true,
+): AnyFrame = DataFrame.readJson(path.toUri().toURL(), header, keyValuePaths, typeClashTactic, unifyNumbers)
 
 /**
  * @param file Where to fetch the Json as [InputStream] to be converted to a [DataRow].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
@@ -162,11 +181,28 @@ public fun DataRow.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJson(file, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+): AnyRow = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+
+/**
+ * @param path Where to fetch the Json as [InputStream] to be converted to a [DataRow].
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
+ *     will be created.
+ * @param typeClashTactic How to handle type clashes when reading a JSON file.
+ * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
+ * @return [DataRow] from the given [path].
+ */
+public fun DataRow.Companion.readJson(
+    path: Path,
+    header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
+    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+    unifyNumbers: Boolean = true,
+): AnyRow = DataFrame.readJson(path, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
 
 /**
  * @param path URL or file path from where to fetch the Json as [InputStream] to be converted to a [DataFrame].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
@@ -183,7 +219,7 @@ public fun DataFrame.Companion.readJson(
 
 /**
  * @param path URL or file path from where to fetch the Json as [InputStream] to be converted to a [DataRow].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
@@ -200,7 +236,7 @@ public fun DataRow.Companion.readJson(
 
 /**
  * @param url Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
@@ -217,7 +253,7 @@ public fun DataFrame.Companion.readJson(
 
 /**
  * @param url Where to fetch the Json as [InputStream] to be converted to a [DataRow].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
@@ -234,7 +270,7 @@ public fun DataRow.Companion.readJson(
 
 /**
  * @param stream Json as [InputStream] to be converted to a [DataFrame].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
@@ -253,7 +289,7 @@ public fun DataFrame.Companion.readJson(
 
 /**
  * @param stream Json as [InputStream] to be converted to a [DataRow].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
@@ -270,7 +306,7 @@ public fun DataRow.Companion.readJson(
 
 /**
  * @param text Json as [String] to be converted to a [DataFrame].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [text] will be read like an object with [header] being the keys.
@@ -287,7 +323,7 @@ public fun DataFrame.Companion.readJsonStr(
 
 /**
  * @param text Json as [String] to be converted to a [DataRow].
- * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [text] will be read like an object with [header] being the keys.
@@ -409,7 +445,11 @@ public fun AnyRow.toJson(prettyPrint: Boolean = false): String {
 }
 
 public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false) {
-    file.writeText(toJson(prettyPrint))
+    writeJson(file.toPath(), prettyPrint)
+}
+
+public fun AnyFrame.writeJson(path: Path, prettyPrint: Boolean = false) {
+    path.writeText(toJson(prettyPrint))
 }
 
 public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false): Unit = writeJson(File(path), prettyPrint)
@@ -419,7 +459,11 @@ public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false) 
 }
 
 public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false) {
-    file.writeText(toJson(prettyPrint))
+    writeJson(file.toPath(), prettyPrint)
+}
+
+public fun AnyRow.writeJson(path: Path, prettyPrint: Boolean = false) {
+    path.writeText(toJson(prettyPrint))
 }
 
 public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false) {

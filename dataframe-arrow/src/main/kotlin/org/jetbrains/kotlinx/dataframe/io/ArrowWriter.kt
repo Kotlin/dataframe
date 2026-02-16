@@ -9,10 +9,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.io.OutputStream
 import java.nio.channels.Channels
 import java.nio.channels.WritableByteChannel
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
+import kotlin.io.path.outputStream
 
 public val ignoreMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> }
 public val writeMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch ->
@@ -93,7 +95,21 @@ public interface ArrowWriter : AutoCloseable {
      * If file exists, it can be recreated or expanded.
      */
     public fun writeArrowIPC(file: File, append: Boolean = true) {
-        writeArrowIPC(FileOutputStream(file, append))
+        writeArrowIPC(file.toPath(), append)
+    }
+
+    /**
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format),
+     * write to a new or existing file on the given [path].
+     * If file on the given [path] exists, it can be recreated or expanded.
+     */
+    public fun writeArrowIPC(path: Path, append: Boolean = true) {
+        val options = if (append) {
+            arrayOf(StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+        } else {
+            arrayOf(StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+        }
+        path.outputStream(*options).use { outputStream -> writeArrowIPC(outputStream) }
     }
 
     /**
@@ -127,10 +143,24 @@ public interface ArrowWriter : AutoCloseable {
 
     /**
      * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
-     * If file exists, it would be recreated.
+     * If [file] exists, it would be recreated.
      */
     public fun writeArrowFeather(file: File) {
-        writeArrowFeather(FileOutputStream(file))
+        writeArrowFeather(file.toPath())
+    }
+
+    /**
+     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files),
+     * write to a new or existing file on the given [path].
+     * If file on the given [path] exists, it would be recreated.
+     */
+    public fun writeArrowFeather(path: Path) {
+        path.outputStream(
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING,
+        ).use { outputStream ->
+            writeArrowFeather(outputStream)
+        }
     }
 
     /**

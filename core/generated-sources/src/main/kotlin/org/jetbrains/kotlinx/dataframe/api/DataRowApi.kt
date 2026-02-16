@@ -25,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.util.GET_ROW_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.IS_EMPTY_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.IS_NOT_EMPTY_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
-import org.jetbrains.kotlinx.dataframe.util.NAME_VALUE_PAIR
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -40,52 +39,18 @@ public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
 
 // region DataSchema
-
-/**
- * Instantiatable [KeyValueProperty] representing a key-value pair [DataSchema] for a [DataFrame].
- *
- * [NameValuePair] may be deprecated in favor of an instantiatable [KeyValueProperty] class in the future.
- *
- * @param V type of the value
- * @param key the name of the key column (previously called `name`)
- * @param value the name of the value column
- */
 @DataSchema
 @RequiredByIntellijPlugin
-public data class NameValuePair<V>(override val key: String, override val value: V) : KeyValueProperty<V> {
-    public companion object {
-        @Deprecated(NAME_VALUE_PAIR, level = DeprecationLevel.WARNING)
-        public operator fun <V> invoke(name: String, value: V): NameValuePair<V> = NameValuePair(name, value)
-    }
-}
-
-@Deprecated(NAME_VALUE_PAIR, ReplaceWith("key"), level = DeprecationLevel.WARNING)
-public val NameValuePair<*>.name: String
-    get() = key
-
-@Deprecated(NAME_VALUE_PAIR, ReplaceWith("this.copy(name, value)"), level = DeprecationLevel.WARNING)
-public fun <V> NameValuePair<V>.copy(name: String = this.key, value: V = this.value): NameValuePair<V> =
-    NameValuePair(key = name, value = value)
+public data class NameValuePair<V>(override val name: String, override val value: V) : NameValueProperty<V>
 
 // Without these overloads row.transpose().name or row.map { name } won't resolve
-
-@Deprecated(NAME_VALUE_PAIR, ReplaceWith("this.key"), level = DeprecationLevel.WARNING)
 public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String>
     @JvmName("NameValuePairAny_name")
-    get() = this["key"] as DataColumn<String>
+    get() = this["name"] as DataColumn<String>
 
-@Deprecated(NAME_VALUE_PAIR, ReplaceWith("this.key"), level = DeprecationLevel.WARNING)
 public val DataRow<NameValuePair<*>>.name: String
     @JvmName("NameValuePairAny_name")
-    get() = this["key"] as String
-
-public val ColumnsContainer<NameValuePair<*>>.key: DataColumn<String>
-    @JvmName("NameValuePairAny_key")
-    get() = this["key"] as DataColumn<String>
-
-public val DataRow<NameValuePair<*>>.key: String
-    @JvmName("NameValuePairAny_key")
-    get() = this["key"] as String
+    get() = this["name"] as String
 
 public val ColumnsContainer<NameValuePair<*>>.value: DataColumn<*>
     @JvmName("NameValuePairAny_value")
@@ -149,14 +114,14 @@ public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey
  *
  * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
  */
-internal interface DiffDocs
+internal typealias DiffDocs = Nothing
 
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
-internal interface DiffOrNullDocs
+internal typealias DiffOrNullDocs = Nothing
 
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.

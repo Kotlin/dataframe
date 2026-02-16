@@ -1,18 +1,14 @@
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-//        alias(kover)
-        alias(ktlint)
         alias(binary.compatibility.validator)
     }
 }
 
 group = "org.jetbrains.kotlinx"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     api(projects.core)
@@ -27,12 +23,13 @@ dependencies {
     testImplementation(libs.mssql)
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)
-    testImplementation(libs.jts)
+    testImplementation(libs.jts.core)
     testImplementation(libs.duckdb.jdbc)
     testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
+    testImplementation(libs.hikaricp)
 }
 
 kotlinPublications {
@@ -42,8 +39,4 @@ kotlinPublications {
         description = "JDBC support for Kotlin DataFrame"
         packageName = artifactId
     }
-}
-
-kotlin {
-    explicitApi()
 }

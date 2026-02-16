@@ -22,16 +22,16 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.Locale
 
-class SchemaGeneratorPlugin : Plugin<Project> {
+public class SchemaGeneratorPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         val extension = target.extensions.create<SchemaGeneratorExtension>("dataframes")
         extension.project = target
         target.afterEvaluate {
-            val appliedPlugin = KOTLIN_EXTENSIONS
-                .mapNotNull {
+            val appliedPlugin =
+                KOTLIN_EXTENSIONS.firstNotNullOfOrNull {
                     target.extensions.findByType(it.extensionClass)?.let { ext -> AppliedPlugin(ext, it) }
-                }.firstOrNull()
+                }
 
             if (appliedPlugin == null) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
@@ -91,7 +91,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 // Configure the right ksp task to be aware of these new sources
                 val kspTaskName = "ksp${sourceSetName.replaceFirstChar { it.uppercase() }}Kotlin"
                 target.tasks.withType(KspTaskJvm::class.java).configureEach {
-                    if (sourceSetName == "main" && name == "kspKotlin" || name == kspTaskName) {
+                    if ((sourceSetName == "main" && name == "kspKotlin") || name == kspTaskName) {
                         source(src)
                     }
                 }
