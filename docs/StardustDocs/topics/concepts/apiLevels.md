@@ -24,16 +24,17 @@ to any other library working with dataframes:
 
 ```kotlin
 // Get "name" column
-df["name"]
-// Rename "name" column into "firstName"
-df.rename("name").into("fullName")
+df["fullName"]
+// Rename "fullName" column into "name"
+df.rename("fullName").into("name")
 ```
 
-Also, String API methods can be used inside the [Columns Selection DSL](ColumnSelectors.md):
+Also, String API methods can be used inside the [Columns Selection DSL](ColumnSelectors.md)
+and [row expressions](DataRow.md#row-expressions) using a `String` invocation:
 
 ```kotlin
-// Select "firstName" and "lastName" columns from "name" column group
-df.select { colGroup("name").select { 
+// Select "firstName" and "lastName" columns from the "name" column group
+df.select { colGroup("fullName").select { 
     col<String>("firstName") and col<String>("lastName") } 
 }
 // Takes only rows where the "age" column 
@@ -51,10 +52,10 @@ a runtime exception will be thrown.
 The [**Extension Properties API**](extensionPropertiesApi.md) solves the 
 main problems of the String API - name- and type-safety;
 
-This is achieved by generating extension properties for **`DataFrame<T>`** 
+This is achieved by generating extension properties for **`DataFrame<T>`**
 (as well as for other related interfaces such as **`DataRow`** and others) 
 based on its [data schema](schemas.md), which is represented by the type parameter **`T`**.  
-This requires the [*Kotlin DataFrame Compiler Plugin*](Compiler-Plugin.md), 
+This requires the [*Kotlin DataFrame Compiler Plugin*](Compiler-Plugin.md),
 or alternatively, usage within the [*Kotlin Notebook*](SetupKotlinNotebook.md).
 
 > Extension Properties behavior differs in Kotlin Notebook 
@@ -66,10 +67,10 @@ and completely name- and typesafe:
 ```kotlin
 // Get "name" column
 df.name
-// Rename "name" column into "firstName"
-df.rename { name }.into("fullName")
-// Select "firstName" and "lastName" columns from "name" column group
-df.select { name.firstName and name.lastName }
+// Rename "fullName" column into "name"
+df.rename { fullName }.into("name")
+// Select "firstName" and "lastName" columns from "fullName" column group
+df.select { fullName.firstName and fullName.lastName }
 // Takes only rows where "age" column (the subcolumn of "info" column group) 
 // is greater or equal to 18; 
 // for DataRow API extension properties has direct value types
@@ -137,18 +138,18 @@ DataFrame.read("titanic.csv")
 The Extension Properties API provides column names and types at compile-time, 
 while the String API could be used with incorrect column names or types and break in runtime.
 
-Additionally, when using [IntelliJ IDEA](https://www.jetbrains.com/idea/) with  
-[Gradle](SetupGradle.md#kotlin-dataframe-compiler-plugin) or  
-[Maven](SetupMaven.md#kotlin-dataframe-compiler-plugin) projects that have the  
-[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enabled, as well as in  
-[Kotlin Notebook](SetupKotlinNotebook.md), extension properties are fully supported  
-by code completion.
+Additionally, when using [IntelliJ IDEA](https://www.jetbrains.com/idea/) with
+[Gradle](SetupGradle.md#kotlin-dataframe-compiler-plugin) or
+[Maven](SetupMaven.md#kotlin-dataframe-compiler-plugin) projects that have the 
+[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enabled, as well as in
+[Kotlin Notebook](SetupKotlinNotebook.md),
+code completion fully supports extension properties.
 
 ![Code Completion](codeCompletion.png)
 
-However, note that after operations where the resulting columns cannot be inferred  
-by the Compiler Plugin (for example, [`pivot`](pivot.md)), extension properties  
-cannot be inferred automatically either. In such cases, you can use [`cast`](cast.md)  
+However, note that after operations where the resulting columns cannot be inferred 
+by the Compiler Plugin (for example, [`pivot`](pivot.md)), extension properties
+cannot be inferred automatically either. In such cases, you can use [`cast`](cast.md)
 to define a new data schema or switch to the String API.
 
 <table>
