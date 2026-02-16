@@ -54,6 +54,17 @@ internal fun Project.setupMavenSyncVersionsTask(
             }
             pomFile.writeText(newLibsVersionsTomlContent)
 
+            // overwrite .mvn/wrapper/maven-wrapper.properties
+            folder.resolve(".mvn/wrapper/maven-wrapper.properties").writeText(
+                """
+                wrapperVersion=${versions["maven-wrapper"]}
+                distributionType=bin
+                distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${versions["maven"]}/apache-maven-${versions["maven"]}-bin.zip
+                wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/${versions["maven-wrapper"]}/maven-wrapper-${versions["maven-wrapper"]}.jar
+
+                """.trimIndent(),
+            )
+
             // overwrite .editorconfig
             folder.resolve(".editorconfig").writeText(sourceEditorConfig.readText())
         }

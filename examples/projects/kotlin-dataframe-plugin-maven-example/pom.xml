@@ -15,7 +15,7 @@
         <ktlint.version>1.8.0</ktlint.version>
 
         <junit.version>5.10.0</junit.version>
-        <maven.version>2.22.2</maven.version>
+        <maven.version>3.9.11</maven.version>
         <exec.version>3.5.0</exec.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -84,14 +84,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${exec.version}</version>
-                <configuration>
-                    <mainClass>MainKt</mainClass>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>${exec.version}</version>
                 <executions>
                     <execution>
                         <!--
@@ -103,19 +95,22 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <includePluginDependencies>true</includePluginDependencies>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <!-- automatically creates the classpath using all project dependencies, also adding the project build directory -->
+                                <classpath/>
+                                <argument>com.pinterest.ktlint.Main</argument>
+                                <!-- Actual wanted arguments to run ktlint with formatting -->
+                                <argument>--relative</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
-                    <includePluginDependencies>true</includePluginDependencies>
-                    <executable>java</executable>
-                    <arguments>
-                        <argument>-classpath</argument>
-                        <!-- automatically creates the classpath using all project dependencies, also adding the project build directory -->
-                        <classpath/>
-                        <argument>com.pinterest.ktlint.Main</argument>
-                        <!-- Actual wanted arguments to run ktlint with formatting -->
-                        <argument>--relative</argument>
-                    </arguments>
+                    <mainClass>MainKt</mainClass>
                 </configuration>
                 <dependencies>
                     <dependency>

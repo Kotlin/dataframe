@@ -18,6 +18,8 @@ val versionsToSync =
         "kandy",
         "ktlint-gradle",
         "ktlint",
+        "maven-wrapper",
+        "maven",
     )
 
 val syncExampleFolders by tasks.registering {
