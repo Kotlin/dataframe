@@ -143,8 +143,7 @@ It's up to the tag processor what to do with excessive arguments, but most tag p
 
 The most used tag across the library is `@include [Reference]`.
 This tag includes all the content of the supplied reference's KDoc in the current KDoc.
-The reference can be a class, function, property, or any other documented referable entity
-(type aliases are an exception, as Dokka does not support them).
+The reference can be a class, function, property, or any other documented referable entity.
 The reference can be a fully qualified name or a relative name; imports and aliases are taken into account.
 
 You cannot include something from another library at the moment.

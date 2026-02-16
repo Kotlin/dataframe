@@ -71,10 +71,11 @@ For flexible dependencies configuration see [Custom configuration](SetupCustomGr
 
 ## Hello World
 
-Let’s create your first [`DataFrame`](DataFrame.md) in the notebook — a simple "Hello, World!" style example:
+Let’s create your first [`DataFrame`](DataFrame.md) — a simple "Hello, World!" style example:
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.print
 
 fun main() {
     val df = dataFrameOf(
@@ -82,7 +83,7 @@ fun main() {
         "age" to listOf(25, 30)
     )
 
-    println(df)
+    df.print()
 }
 ```
 
@@ -120,12 +121,20 @@ plugins {
 </tab>
 </tabs>
 
-Due to [this issue](https://youtrack.jetbrains.com/issue/KT-66735), incremental compilation must be disabled for now.
+Due to the [known issue](https://youtrack.jetbrains.com/issue/KT-66735), incremental compilation must be disabled for now.
 Add the following line to your `gradle.properties` file:
 
 ```properties
 kotlin.incremental=false
 ```
+
+## Project Example
+
+See [the Gradle example project with the Kotlin DataFrame Compiler Plugin enabled on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-gradle-example).
+
+You can also
+[download this project](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip).
+
 
 ## Next Steps
 

@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.AnyApiLinks
+
 /**
  * ## Access APIs
  *
@@ -7,11 +9,8 @@ package org.jetbrains.kotlinx.dataframe.documentation
  * or deleted while wrangling. Kotlin, in contrast, is a statically typed language and all types are defined and verified
  * ahead of execution. That's why creating a flexible, handy, and, at the same time, safe API to a dataframe is tricky.
  *
- * In `Kotlin DataFrame` we provide four different ways to access columns, and, while they're essentially different, they
- * look pretty similar in the data wrangling DSL. These include:
+ * In `Kotlin DataFrame` we provide two different ways to access columns:
  * - [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
- * - [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
- * - [Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]
  * - [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]
  *
  * For more information: [See Access APIs on the documentation website.](https://kotlin.github.io/dataframe/apilevels.html)
@@ -21,11 +20,9 @@ internal interface AccessApi {
 
     /**
      * - [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
-     * - [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
-     * - [Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]
      * - [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]
      */
-    interface AnyApiLinks
+    typealias AnyApiLinks = Nothing
 
     /**
      * String API.
@@ -46,10 +43,10 @@ internal interface AccessApi {
      *     }
      * ```
      */
-    interface StringApi
+    typealias StringApi = Nothing
 
     /** [String API][StringApi] */
-    interface StringApiLink
+    typealias StringApiLink = Nothing
 
     /**
      * Column Accessors API.
@@ -57,25 +54,11 @@ internal interface AccessApi {
      * a variable that represents its name and type.
      *
      * For more information: [See Column Accessors API on the documentation website.](https://kotlin.github.io/dataframe/columnaccessorsapi.html)
-     *
-     * For example:
-     * ```kotlin
-     * val survived by column<Boolean>()
-     * val home by column<String>()
-     * val age by column<Int?>()
-     * val name by column<String>()
-     * val lastName by column<String>()
-     *
-     * DataFrame.read("titanic.csv")
-     *     .add(lastName) { name().split(",").last() }
-     *     .dropNulls { age }
-     *     .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
-     * ```
      */
-    interface ColumnAccessorsApi
+    typealias ColumnAccessorsApi = Nothing
 
     /** [Column Accessors API][AccessApi.ColumnAccessorsApi] */
-    interface ColumnAccessorsApiLink
+    typealias ColumnAccessorsApiLink = Nothing
 
     /**
      * KProperties API.
@@ -85,31 +68,11 @@ internal interface AccessApi {
      * The name and type of column should match the name and type of property, respectively.
      *
      * For more information: [See KProperties API on the documentation website.](https://kotlin.github.io/dataframe/kpropertiesapi.html)
-     *
-     * For example:
-     * ```kotlin
-     * data class Passenger(
-     *     val survived: Boolean,
-     *     val home: String,
-     *     val age: Int,
-     *     val lastName: String
-     * )
-     *
-     * val passengers = DataFrame.read("titanic.csv")
-     *     .add(Passenger::lastName) { "name"<String>().split(",").last() }
-     *     .dropNulls(Passenger::age)
-     *     .filter {
-     *         it[Passenger::survived] &&
-     *             it[Passenger::home].endsWith("NY") &&
-     *             it[Passenger::age] in 10..20
-     *     }
-     *     .toListOf<Passenger>()
-     * ```
      */
-    interface KPropertiesApi
+    typealias KPropertiesApi = Nothing
 
     /** [KProperties API][KPropertiesApi] */
-    interface KPropertiesApiLink
+    typealias KPropertiesApiLink = Nothing
 
     /**
      * Extension Properties API.
@@ -118,16 +81,21 @@ internal interface AccessApi {
      *
      * For more information: [See Extension Properties API on the documentation website.](https://kotlin.github.io/dataframe/extensionpropertiesapi.html)
      *
-     * For example:
+     * For example, in notebooks extension properties are generated from runtime data after the cell is executed:
      * ```kotlin
      * val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
      * ```
+     * ```kotlin
+     * df.add("lastName") { name.split(",").last() }
+     *     .dropNulls { age }
+     *     .filter { survived && home.endsWith("NY") && age in 10..20 }
+     * ```
      */
-    interface ExtensionPropertiesApi
+    typealias ExtensionPropertiesApi = Nothing
 
     /** [Extension Properties API][ExtensionPropertiesApi] */
-    interface ExtensionPropertiesApiLink
+    typealias ExtensionPropertiesApiLink = Nothing
 }
 
 /** [Access API][AccessApi] */
-internal interface AccessApiLink
+internal typealias AccessApiLink = Nothing

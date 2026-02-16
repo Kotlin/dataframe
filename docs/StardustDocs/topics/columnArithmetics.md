@@ -1,3 +1,0 @@
-[//]: # (title: Column arithmetics)
-
-// TODO

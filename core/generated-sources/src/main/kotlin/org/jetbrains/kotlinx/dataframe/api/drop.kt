@@ -13,6 +13,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
+import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
+import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.index
@@ -162,22 +165,22 @@ public interface DropColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnsSelectionDsl.dropLast]`)` */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnSet.dropLast]`)` */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropCols]`(`[**`Last`**][ColumnsSelectionDsl.dropLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.dropCols] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
 
         /** [**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile] */
-        public interface PlainDslWhileName
+        public typealias PlainDslWhileName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile] */
-        public interface ColumnSetWhileName
+        public typealias ColumnSetWhileName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.dropColsWhile] */
-        public interface ColumnGroupWhileName
+        public typealias ColumnGroupWhileName = Nothing
     }
 
     // region drop
@@ -212,7 +215,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
-    private interface CommonDropFirstDocs
+    private typealias CommonDropFirstDocs = Nothing
 
     /**
      * ## Drop (Cols)
@@ -448,7 +451,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    private interface CommonDropLastDocs
+    private typealias CommonDropLastDocs = Nothing
 
     /**
      * ## Drop Last (Cols)
@@ -683,7 +686,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    private interface CommonDropWhileDocs
+    private typealias CommonDropWhileDocs = Nothing
 
     /**
      * ## Drop (Cols) While
@@ -914,7 +917,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    private interface CommonDropLastWhileDocs
+    private typealias CommonDropLastWhileDocs = Nothing
 
     /**
      * ## Drop Last (Cols) While

@@ -20,7 +20,8 @@ jobs:
           java-version: '21'
 
       - name: Run Gradle task
-        run: ./gradlew :core:processKDocsMain korro
+        timeout-minutes: 60
+        run: ./gradlew processKDocsMain korro
 
       - name: Commit changes
         run: |

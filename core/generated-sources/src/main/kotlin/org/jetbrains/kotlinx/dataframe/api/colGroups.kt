@@ -12,6 +12,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -96,13 +99,13 @@ public interface ColGroupsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colGroups`**][ColumnsSelectionDsl.colGroups] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colGroups`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colGroups`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -138,7 +141,7 @@ public interface ColGroupsColumnsSelectionDsl {
     private interface CommonColGroupsDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**

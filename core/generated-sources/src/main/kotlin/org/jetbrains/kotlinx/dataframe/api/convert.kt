@@ -29,6 +29,14 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToDoubleImpl
@@ -72,7 +80,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  * See also [parse] — a specialized form of the [convert] operation that parses [String] columns
  * into other types without requiring explicit type specification.
  */
-internal interface SeeAlsoParse
+internal typealias SeeAlsoParse = Nothing
 
 /**
  * Converts the values in the specified [columns] either to a supported target type
@@ -124,6 +132,8 @@ internal interface ConvertDocs {
      * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+     * for type- and name-safe columns selection.
      *
      * #### NOTE:
      * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
@@ -139,11 +149,12 @@ internal interface ConvertDocs {
      *
      * #### For example:
      *
-     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
      *
-     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     *
      *
      *
      * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
@@ -178,7 +189,7 @@ internal interface ConvertDocs {
      * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`(Person::length, Person::age)`
      *
      */
-    interface ConvertSelectingOptions
+    typealias ConvertSelectingOptions = Nothing
 
     /**
      * List of types, supported in [convert to][Convert.to] operation:
@@ -195,7 +206,7 @@ internal interface ConvertDocs {
      *   To convert [Char]->[Int] the way it is written, use [parse()][parse] instead, or,
      *   in either case, use [String] as intermediary type.
      */
-    interface SupportedTypes
+    typealias SupportedTypes = Nothing
 
     /**
      * ## Convert Operation Grammar
@@ -275,7 +286,7 @@ internal interface ConvertDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`toDataFrames`**][Convert.toDataFrames]`()`
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /**
@@ -319,6 +330,8 @@ internal interface ConvertDocs {
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
+ * for type- and name-safe columns selection.
  *
  * #### NOTE:
  * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]

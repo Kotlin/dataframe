@@ -15,6 +15,7 @@ import java.sql.NClob
 import java.sql.PreparedStatement
 import java.sql.Ref
 import java.sql.ResultSet
+import java.sql.ResultSetMetaData
 import java.sql.RowId
 import java.sql.SQLXML
 import java.sql.Time
@@ -379,6 +380,10 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 tableColumnMetadata.jdbcType == Types.NUMERIC &&
                     tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
 
+                // Force BIGINT to always be Long, regardless of javaClassName
+                // Some JDBC drivers (e.g., MariaDB) may report Integer for small BIGINT values
+                // TODO: tableColumnMetadata.jdbcType == Types.BIGINT -> Long::class
+
                 else -> jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
             }
 
@@ -396,5 +401,161 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         val kClass: KClass<*> = determineKotlinClass(tableColumnMetadata)
         val kType = createArrayTypeIfNeeded(kClass, tableColumnMetadata.isNullable)
         return kType
+    }
+
+    /**
+     * Retrieves column metadata from a JDBC ResultSet.
+     *
+     * This method reads column metadata from [ResultSetMetaData] with graceful fallbacks
+     * for JDBC drivers that throw [java.sql.SQLFeatureNotSupportedException] for certain methods
+     * (e.g., Apache Hive).
+     *
+     * Fallback behavior for unsupported methods:
+     * - `getColumnName()` → `getColumnLabel()` → `"column_N"`
+     * - `getTableName()` → extract from column name if contains '.' → `null`
+     * - `isNullable()` → [DatabaseMetaData.getColumns] → `true` (assume nullable)
+     * - `getColumnTypeName()` → `"OTHER"`
+     * - `getColumnType()` → [java.sql.Types.OTHER]
+     * - `getColumnDisplaySize()` → `0`
+     * - `getColumnClassName()` → `"java.lang.Object"`
+     *
+     * Override this method in subclasses to provide database-specific behavior
+     * (for example, to disable fallback for databases like Teradata or Oracle
+     * where [DatabaseMetaData.getColumns] is known to be slow).
+     *
+     * @param resultSet The [ResultSet] containing query results.
+     * @return A list of [TableColumnMetadata] objects.
+     */
+    public open fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata> {
+        val rsMetaData = resultSet.metaData
+        val connection = resultSet.statement.connection
+        val dbMetaData = connection.metaData
+
+        // Some JDBC drivers (e.g., Hive) throw SQLFeatureNotSupportedException
+        val catalog = try {
+            connection.catalog.takeUnless { it.isNullOrBlank() }
+        } catch (_: Exception) {
+            null
+        }
+
+        val schema = try {
+            connection.schema.takeUnless { it.isNullOrBlank() }
+        } catch (_: Exception) {
+            null
+        }
+
+        val columnCount = rsMetaData.columnCount
+        val columns = mutableListOf<TableColumnMetadata>()
+        val nameCounter = mutableMapOf<String, Int>()
+
+        for (index in 1..columnCount) {
+            // Try to getColumnName, fallback to getColumnLabel, then generate name
+            val columnName = try {
+                rsMetaData.getColumnName(index)
+            } catch (_: Exception) {
+                try {
+                    rsMetaData.getColumnLabel(index)
+                } catch (_: Exception) {
+                    "column$index"
+                }
+            }
+
+            // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException
+            val tableName = try {
+                rsMetaData.getTableName(index).takeUnless { it.isBlank() }
+            } catch (_: Exception) {
+                // Fallback: try to extract table name from column name if it contains '.'
+                val dotIndex = columnName.lastIndexOf('.')
+                if (dotIndex > 0) columnName.take(dotIndex) else null
+            }
+
+            // Try to detect nullability from ResultSetMetaData
+            val isNullable = try {
+                when (rsMetaData.isNullable(index)) {
+                    ResultSetMetaData.columnNoNulls -> false
+
+                    ResultSetMetaData.columnNullable -> true
+
+                    // Unknown nullability: assume it nullable, may trigger fallback
+                    ResultSetMetaData.columnNullableUnknown -> true
+
+                    else -> true
+                }
+            } catch (_: Exception) {
+                // Some drivers may throw for unsupported features
+                // Try fallback to DatabaseMetaData, with additional safety
+                try {
+                    dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols ->
+                        if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
+                    }
+                } catch (_: Exception) {
+                    // Fallback failed, assume nullable as the safest default
+                    true
+                }
+            }
+
+            // adding fallbacks to avoid SQLException
+            val columnType = try {
+                rsMetaData.getColumnTypeName(index)
+            } catch (_: Exception) {
+                "OTHER"
+            }
+
+            val jdbcType = try {
+                rsMetaData.getColumnType(index)
+            } catch (_: Exception) {
+                Types.OTHER
+            }
+
+            val displaySize = try {
+                rsMetaData.getColumnDisplaySize(index)
+            } catch (_: Exception) {
+                0
+            }
+
+            val javaClassName = try {
+                rsMetaData.getColumnClassName(index)
+            } catch (_: Exception) {
+                "java.lang.Object"
+            }
+
+            val uniqueName = manageColumnNameDuplication(nameCounter, columnName)
+
+            columns += TableColumnMetadata(
+                uniqueName,
+                columnType,
+                jdbcType,
+                displaySize,
+                javaClassName,
+                isNullable,
+            )
+        }
+
+        return columns
+    }
+
+    /**
+     * Manages the duplication of column names by appending a unique identifier to the original name if necessary.
+     *
+     * @param columnNameCounter a mutable map that keeps track of the count for each column name.
+     * @param originalName the original name of the column to be managed.
+     * @return the modified column name that is free from duplication.
+     */
+    internal fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, Int>, originalName: String): String {
+        var name = originalName
+        val count = columnNameCounter[originalName]
+
+        if (count != null) {
+            var incrementedCount = count + 1
+            while (columnNameCounter.containsKey("${originalName}_$incrementedCount")) {
+                incrementedCount++
+            }
+            columnNameCounter[originalName] = incrementedCount
+            name = "${originalName}_$incrementedCount"
+        } else {
+            columnNameCounter[originalName] = 0
+        }
+
+        return name
     }
 }

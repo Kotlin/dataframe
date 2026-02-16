@@ -45,8 +45,7 @@ internal fun renderExtensions(
             val type = it.propertyType.resolve()
             val qualifiedTypeReference = getQualifiedTypeReference(type)
             val fieldType = when {
-                qualifiedTypeReference == "kotlin.collections.List" &&
-                    type.singleTypeArgumentIsDataSchema() ||
+                (qualifiedTypeReference == "kotlin.collections.List" && type.singleTypeArgumentIsDataSchema()) ||
                     qualifiedTypeReference == DataFrameNames.DATA_FRAME ->
                     FieldType.FrameFieldType(
                         markerName = type.renderTypeArguments(),

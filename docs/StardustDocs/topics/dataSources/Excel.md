@@ -35,7 +35,7 @@ val df = DataFrame.readExcel("https://kotlin.github.io/dataframe/resources/examp
 ## Write
 
 You can write a [`DataFrame`](DataFrame.md) to an Excel file using the 
-[`writeExcel()`](write.md#writing-to-csv) method:
+[`writeExcel()`](write.html#write-to-excel-spreadsheet) method:
 
 ```kotlin
 df.writeExcel("example.xlsx")

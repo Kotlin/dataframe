@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.JoinExpression
 import org.jetbrains.kotlinx.dataframe.api.JoinType
 import org.jetbrains.kotlinx.dataframe.api.JoinedDataRow
@@ -12,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 
@@ -91,8 +93,26 @@ internal fun <A, B> DataFrame<A>.joinWithImpl(
         }
     }
 
+    val leftColumns = columns()
+    val rightColumns = if (addNewColumns) right.columns() else emptyList()
     val df: DataFrame<*> = outputData.mapIndexed { index, values ->
-        DataColumn.createByInference(generator.names[index], values)
+        val srcColumn = if (index < leftColumns.size) {
+            leftColumns[index]
+        } else {
+            rightColumns[index - leftColumns.size]
+        }
+        // let's optimize an easy case.
+        // handling introduction of nulls into ColumnGroup and FrameColumn is not straightforward
+        when (srcColumn.kind()) {
+            ColumnKind.Value -> DataColumn.createByType(
+                name = generator.names[index],
+                values = values,
+                type = srcColumn.type(),
+                infer = Infer.Nulls,
+            )
+
+            else -> DataColumn.createByInference(generator.names[index], values)
+        }
     }.toDataFrame()
 
     return df.cast()

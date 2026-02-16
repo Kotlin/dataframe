@@ -487,27 +487,27 @@ This can be the difference between:
 and
 
 ```text
-⌌------------------------------------------------------------------------------------------------------⌍
-|  | dogs:[key:String, value:{age:Int, breed:String}]| cats:[key:String, value:{age:Int, breed:String}]|
-|--|-------------------------------------------------|-------------------------------------------------|
-| 0|                                          [7 x 2]|                                          [6 x 2]|
-⌎------------------------------------------------------------------------------------------------------⌏
+⌌--------------------------------------------------------------------------------------------------------⌍
+|  | dogs:[name:String, value:{age:Int, breed:String}]| cats:[name:String, value:{age:Int, breed:String}]|
+|--|--------------------------------------------------|--------------------------------------------------|
+| 0|                                           [7 x 2]|                                           [6 x 2]|
+⌎--------------------------------------------------------------------------------------------------------⌏
 ```
 
 with dogs looking like
 
 ```text
-⌌-------------------------------------------------⌍
-|  | key:String|     value:{age:Int, breed:String}|
-|--|-----------|----------------------------------|
-| 0|       fido|           { age:3, breed:poodle }|
-| 1|       spot|         { age:5, breed:labrador }|
-| 2|        rex| { age:2, breed:golden retriever }|
-| 3|      lucky|           { age:1, breed:poodle }|
-| 4|      rover|         { age:3, breed:labrador }|
-| 5|        max| { age:2, breed:golden retriever }|
-| 6|     buster|           { age:1, breed:poodle }|
-⌎-------------------------------------------------⌏
+⌌--------------------------------------------------⌍
+|  | name:String|     value:{age:Int, breed:String}|
+|--|------------|----------------------------------|
+| 0|        fido|           { age:3, breed:poodle }|
+| 1|        spot|         { age:5, breed:labrador }|
+| 2|         rex| { age:2, breed:golden retriever }|
+| 3|       lucky|           { age:1, breed:poodle }|
+| 4|       rover|         { age:3, breed:labrador }|
+| 5|         max| { age:2, breed:golden retriever }|
+| 6|      buster|           { age:1, breed:poodle }|
+⌎--------------------------------------------------⌏
 ```
 
 (The results are wrapped in a [`FrameColumn`](DataColumn.md#framecolumn) instead of a `ColumnGroup` since lengths between "cats" and "dogs" can vary,

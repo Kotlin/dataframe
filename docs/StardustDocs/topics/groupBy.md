@@ -215,7 +215,7 @@ Most common aggregation functions can be computed directly at [`GroupBy DataFram
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { city }.max() // max for every comparable column
+df.groupBy { city }.max() // max for every column with mutually comparable values
 df.groupBy { city }.mean() // mean for every numeric column
 df.groupBy { city }.max { age } // max age into column "age"
 df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
@@ -233,7 +233,7 @@ df.groupBy { city }.meanOf("mean ratio") { weight?.div(age) } // mean of weight/
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("city").max() // max for every comparable column
+df.groupBy("city").max() // max for every column with mutually comparable values
 df.groupBy("city").mean() // mean for every numeric column
 df.groupBy("city").max("age") // max age into column "age"
 df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"

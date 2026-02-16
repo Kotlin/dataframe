@@ -17,7 +17,7 @@ In these cases, the return type is always `Double?`.
 When the number of values is even, the median is the average of the two middle values.
 
 The operation is also available for self-comparable columns
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, etc.)
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 In this case, the return type remains `T?`.
 When the number of values is even, the median is the low of the two middle values.
 NOTE: This logic also applies to other self-comparable `Number` types, like `BigDecimal`.
@@ -30,7 +30,7 @@ When it's set to `true`, `NaN` values are ignored.
 <!---FUN medianModes-->
 
 ```kotlin
-df.median() // median of values per every comparable column
+df.median() // median of values for every column with mutually comparable values
 df.median { age and weight } // median of all values in `age` and `weight`
 df.medianFor(skipNaN = true) { age and name.firstName } // median of values per `age` and `firstName` separately
 df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row

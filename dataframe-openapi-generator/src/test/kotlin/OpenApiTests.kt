@@ -31,35 +31,15 @@ class OpenApiTests : JupyterReplTestCase() {
         return code
     }
 
-    private fun execGeneratedCode(file: File, name: String) =
-        execGeneratedCode(
-            code = openApi.readCodeForGeneration(
-                file = file,
-                name = name,
-                extensionProperties = true,
-                generateHelperCompanionObject = false,
-            ),
+    private fun execGeneratedCode(file: File, name: String): Code {
+        val code = openApi.readCodeForGeneration(
+            file = file,
+            name = name,
+            extensionProperties = true,
+            generateHelperCompanionObject = false,
         )
-
-    private fun execGeneratedCode(stream: InputStream, name: String) =
-        execGeneratedCode(
-            code = openApi.readCodeForGeneration(
-                stream = stream,
-                name = name,
-                extensionProperties = true,
-                generateHelperCompanionObject = false,
-            ),
-        )
-
-    private fun execGeneratedCode(text: String, name: String) =
-        execGeneratedCode(
-            code = openApi.readCodeForGeneration(
-                text = text,
-                name = name,
-                extensionProperties = true,
-                generateHelperCompanionObject = false,
-            ),
-        )
+        return execGeneratedCode(code)
+    }
 
     private val petstoreJson = File("src/test/resources/petstore.json")
     private val petstoreAdvancedJson = File("src/test/resources/petstore_advanced.json")
@@ -736,7 +716,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface ObjectWithAdditionalProperties : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.String> {
                 @ColumnName("value")
                 override val `value`: kotlin.String
-                override val key: kotlin.String
+                override val name: kotlin.String
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
@@ -769,7 +749,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface ObjectWithAdditional2 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.Any> {
                 @ColumnName("value")
                 override val `value`: kotlin.Any
-                override val key: kotlin.String
+                override val name: kotlin.String
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
@@ -802,7 +782,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface ObjectWithAdditional3 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.Any?> {
                 @ColumnName("value")
                 override val `value`: kotlin.Any?
-                override val key: kotlin.String
+                override val name: kotlin.String
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
@@ -916,7 +896,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface ObjectWithAdditional : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.Int> {
                 @ColumnName("value")
                 override val `value`: kotlin.Int
-                override val key: kotlin.String
+                override val name: kotlin.String
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))

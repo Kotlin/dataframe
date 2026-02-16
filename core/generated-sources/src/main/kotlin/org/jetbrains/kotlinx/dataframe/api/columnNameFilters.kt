@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -8,6 +9,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
@@ -107,22 +112,22 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`nameContains`**][ColumnsSelectionDsl.nameContains] */
-        public interface PlainDslNameContains
+        public typealias PlainDslNameContains = Nothing
 
         /** __`name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public interface PlainDslNameStartsEndsWith
+        public typealias PlainDslNameStartsEndsWith = Nothing
 
         /** __`.`__[**`nameContains`**][ColumnsSelectionDsl.nameContains] */
-        public interface ColumnSetNameContains
+        public typealias ColumnSetNameContains = Nothing
 
         /** __`.name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public interface ColumnSetNameStartsEndsWith
+        public typealias ColumnSetNameStartsEndsWith = Nothing
 
         /**__`.`__[**`colsNameContains`**][ColumnsSelectionDsl.colsNameContains] */
-        public interface ColumnGroupNameContains
+        public typealias ColumnGroupNameContains = Nothing
 
         /** __`.colsName`__`(`[**`Starts`**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
-        public interface ColumnGroupNameStartsWith
+        public typealias ColumnGroupNameStartsWith = Nothing
     }
 
     // region nameContains
@@ -386,7 +391,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    private interface NameContainsRegexDocs
+    private typealias NameContainsRegexDocs = Nothing
 
     /**
      * ## (Cols) Name Contains

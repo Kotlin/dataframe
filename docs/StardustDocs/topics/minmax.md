@@ -9,7 +9,7 @@ The operations either throw an exception when the input is empty (after filterin
 or they return `null` when using the `-orNull` overloads.
 
 They are available for self-comparable columns
-(so columns of type `T : Comparable<T>`, like `DateTime`, `String`, `Int`, etc.)
+(so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 which includes all primitive number columns, but no mix of different number types.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
@@ -19,7 +19,7 @@ When it's set to `true`, `NaN` values are ignored.
 <!---FUN minmaxModes-->
 
 ```kotlin
-df.min() // min of values per every comparable column
+df.min() // min of values for every comparable column with mutually comparable values
 df.min { age and weight } // min of all values in `age` and `weight`
 df.minFor(skipNaN = true) { age and name.firstName } // min of values per `age` and `firstName` separately
 df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row

@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.intoList
-import org.jetbrains.kotlinx.dataframe.api.key
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -110,7 +109,7 @@ class DataRowTests : BaseTest() {
     @Test
     fun transposeTo() {
         val df = dataFrameOf("a", "b")(1, 2).first().transposeTo<Int>()
-        df.key.toList() shouldBe listOf("a", "b")
+        df.name.toList() shouldBe listOf("a", "b")
         df.value.toList() shouldBe listOf(1, 2)
     }
 

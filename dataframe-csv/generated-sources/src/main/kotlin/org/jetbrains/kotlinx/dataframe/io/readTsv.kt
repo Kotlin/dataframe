@@ -4,28 +4,37 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonReadDelimDocs
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COMPRESSION
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.FILE_OR_URL_READ
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.FILE_READ
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.FIXED_COLUMN_WIDTHS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.HAS_FIXED_WIDTH_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.HEADER
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_EMPTY_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_EXCESS_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_SURROUNDING_SPACES
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.INPUT_STREAM_READ
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PARSER_OPTIONS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PARSE_PARALLEL
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PATH_READ
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.QUOTE
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
+import org.jetbrains.kotlinx.dataframe.util.READ_TSV_BINARY_COMPATIBILITY
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
+import java.nio.charset.Charset
 import java.nio.file.Path
 import kotlin.io.path.inputStream
 
@@ -66,12 +75,18 @@ import kotlin.io.path.inputStream
  * [DataFrame.readTsvStr][readTsvStr]`("a,b,c", delimiter = ",")`
  *
  * @param path The file path to read.
+ *   Use [charset] to specify the encoding.
  *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -143,6 +158,7 @@ public fun DataFrame.Companion.readTsv(
     path: Path,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -163,6 +179,7 @@ public fun DataFrame.Companion.readTsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -218,12 +235,18 @@ public fun DataFrame.Companion.readTsv(
  * [DataFrame.readTsvStr][readTsvStr]`("a,b,c", delimiter = ",")`
  *
  * @param file The file to read.
+ *   Use [charset] to specify the encoding.
  *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -295,6 +318,7 @@ public fun DataFrame.Companion.readTsv(
     file: File,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -315,6 +339,7 @@ public fun DataFrame.Companion.readTsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -370,12 +395,18 @@ public fun DataFrame.Companion.readTsv(
  * [DataFrame.readTsvStr][readTsvStr]`("a,b,c", delimiter = ",")`
  *
  * @param url The URL from which to fetch the data.
+ *   Use [charset] to specify the encoding.
  *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -447,6 +478,7 @@ public fun DataFrame.Companion.readTsv(
     url: URL,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -467,6 +499,7 @@ public fun DataFrame.Companion.readTsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -522,12 +555,18 @@ public fun DataFrame.Companion.readTsv(
  * [DataFrame.readTsvStr][readTsvStr]`("a,b,c", delimiter = ",")`
  *
  * @param fileOrUrl The file path or URL to read the data from.
+ *   Use [charset] to specify the encoding.
  *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -599,6 +638,7 @@ public fun DataFrame.Companion.readTsv(
     fileOrUrl: String,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -619,6 +659,7 @@ public fun DataFrame.Companion.readTsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            charset = charset,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
             colTypes = colTypes,
@@ -675,11 +716,17 @@ public fun DataFrame.Companion.readTsv(
  * [DataFrame.readTsvStr][readTsvStr]`("a,b,c", delimiter = ",")`
  *
  * @param inputStream Represents the file to read.
+ *   Use [charset] to specify the encoding.
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
  *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -755,6 +802,7 @@ public fun DataFrame.Companion.readTsv(
     inputStream: InputStream,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
+    charset: Charset? = CHARSET,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
@@ -775,6 +823,7 @@ public fun DataFrame.Companion.readTsv(
         inputStream = inputStream,
         delimiter = delimiter,
         header = header,
+        charset = charset,
         hasFixedWidthColumns = hasFixedWidthColumns,
         fixedColumnWidths = fixedColumnWidths,
         colTypes = colTypes,
@@ -791,3 +840,214 @@ public fun DataFrame.Companion.readTsv(
         compression = compression,
         adjustCsvSpecs = adjustCsvSpecs,
     )
+
+// region deprecations
+
+@Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readTsv(
+    path: Path,
+    delimiter: Char = TSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(path),
+): DataFrame<*> =
+    readTsv(
+        path,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readTsv(
+    file: File,
+    delimiter: Char = TSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(file),
+): DataFrame<*> =
+    readTsv(
+        file,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readTsv(
+    url: URL,
+    delimiter: Char = TSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(url),
+): DataFrame<*> =
+    readTsv(
+        url,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readTsv(
+    fileOrUrl: String,
+    delimiter: Char = TSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(fileOrUrl),
+): DataFrame<*> =
+    readTsv(
+        fileOrUrl,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+    )
+
+@Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readTsv(
+    inputStream: InputStream,
+    delimiter: Char = TSV_DELIMITER,
+    header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = COMPRESSION,
+    adjustCsvSpecs: AdjustCsvSpecs = ADJUST_CSV_SPECS,
+): DataFrame<*> =
+    readTsv(
+        inputStream,
+        delimiter,
+        header,
+        CHARSET,
+        hasFixedWidthColumns,
+        fixedColumnWidths,
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+        ignoreEmptyLines,
+        allowMissingColumns,
+        ignoreExcessColumns,
+        quote,
+        ignoreSurroundingSpaces,
+        trimInsideQuoted,
+        parseParallel,
+        compression,
+        adjustCsvSpecs,
+    )
+
+// endregion

@@ -1,8 +1,4 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import com.github.gmazzo.buildconfig.BuildConfigExtension
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -12,16 +8,16 @@ import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
+
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(serialization) apply false
         alias(dokka)
-//        alias(kover)
-        alias(ktlint)
 
         // TODO cannot define korro and kodex here due to leaking them kotlin-compiler-embeddable into the build classpath
         // alias(korro) apply false
@@ -29,23 +25,13 @@ plugins {
 
         alias(simpleGit) apply false
         alias(dependencyVersions)
-        alias(buildconfig) apply false
 
         // dependence on our own plugin
         alias(dataframe) apply false
-        alias(ksp) apply false
     }
 }
 
-val jupyterApiTCRepo: String by project
 val projectName: String by project
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-    if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
-}
 
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get())
@@ -63,16 +49,6 @@ dependencies {
 
     // experimental, so not included by default:
     // api(projects.dataframeOpenapi)
-
-//    kover(projects.core)
-//    kover(projects.dataframeArrow)
-//    kover(projects.dataframeExcel)
-//    kover(projects.dataframeOpenapi)
-//    kover(projects.dataframeJdbc)
-//    kover(projects.dataframeCsv)
-//    kover(projects.dataframeJson)
-//    kover(projects.plugins.kotlinDataframe)
-//    kover(projects.dataframeJupyter)
 }
 
 enum class Version : Comparable<Version> {
@@ -138,110 +114,6 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
             }
 
             else -> logger.info("No outdated dependencies found")
-        }
-    }
-}
-
-kotlin {
-    jvmToolchain(21)
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_1_8
-    }
-}
-
-// DataFrame targets Java 8 for maximum compatibility.
-// This is, however, not always possible thanks to external dependencies.
-// In those cases, we default to Java 11.
-val modulesUsingJava11 = with(projects) {
-    setOf(
-        dataframeJupyter,
-        dataframeGeoJupyter,
-        examples.ideaExamples.titanic,
-        examples.ideaExamples.unsupportedDataSources,
-        samples,
-        plugins.dataframeGradlePlugin,
-    )
-}.map { it.path }
-
-allprojects {
-    if (path in modulesUsingJava11) {
-        tasks.withType<KotlinCompile> {
-            compilerOptions {
-                jvmTarget = JvmTarget.JVM_11
-                freeCompilerArgs.add("-Xjdk-release=11")
-            }
-        }
-        tasks.withType<JavaCompile> {
-            sourceCompatibility = JavaVersion.VERSION_11.toString()
-            targetCompatibility = JavaVersion.VERSION_11.toString()
-            options.release.set(11)
-        }
-    } else {
-        tasks.withType<KotlinCompile> {
-            compilerOptions {
-                jvmTarget = JvmTarget.JVM_1_8
-                freeCompilerArgs.add("-Xjdk-release=8")
-            }
-        }
-        tasks.withType<JavaCompile> {
-            sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-            targetCompatibility = JavaVersion.VERSION_1_8.toString()
-            options.release.set(8)
-        }
-    }
-    tasks.withType<KotlinCompile> {
-        compilerOptions {
-            // enables support for kotlin.time.Instant as kotlinx.datetime.Instant was deprecated; Issue #1350
-            // Can be removed once kotlin.time.Instant is marked "stable".
-            optIn.add("kotlin.time.ExperimentalTime")
-
-            // enables support for nested type-aliases, to be used with KoDEx to save on bytecode size
-            freeCompilerArgs.add("-Xnested-type-aliases")
-        }
-    }
-
-    // Attempts to configure ktlint for each sub-project that uses the plugin
-    afterEvaluate {
-        try {
-            configure<KtlintExtension> {
-                version = "1.6.0"
-                // rules are set up through .editorconfig
-            }
-        } catch (_: UnknownDomainObjectException) {
-            logger.warn("Could not set ktlint config on :${this.name}")
-        }
-
-        // set the java toolchain version to 21 for all subprojects for CI stability
-        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(21)
-
-        // Attempts to configure buildConfig for each sub-project that uses it
-        try {
-            configure<BuildConfigExtension> {
-                packageName = "org.jetbrains.kotlinx.dataframe"
-                className = "BuildConfig"
-                buildConfigField("KOTLIN_VERSION", libs.versions.kotlin.asProvider().get())
-                buildConfigField("VERSION", "${project.version}")
-                buildConfigField("DEBUG", findProperty("kotlin.dataframe.debug")?.toString()?.toBoolean() ?: false)
-            }
-        } catch (_: UnknownDomainObjectException) {
-            logger.warn("Could not set buildConfig on :${this.name}")
-        }
-
-        // Adds the instrumentedJars configuration/artifact to all sub-projects with a `jar` task
-        // This allows other modules to depend on the output of this task, aka the compiled jar of that module
-        // Used in :plugins:dataframe-gradle-plugin integration tests and in :samples for compiler plugin support
-        try {
-            val instrumentedJars: Configuration by configurations.creating {
-                isCanBeConsumed = true
-                isCanBeResolved = false
-            }
-            artifacts {
-                add("instrumentedJars", tasks.jar.get().archiveFile) {
-                    builtBy(tasks.jar)
-                }
-            }
-        } catch (_: Exception) {
-            logger.warn("Could not set instrumentedJars on :${this.name}")
         }
     }
 }
@@ -317,6 +189,19 @@ kotlinPublications {
     localRepositories {
         maven {
             url = project.file(layout.buildDirectory.dir("maven")).toURI()
+        }
+    }
+}
+
+tasks.assemble {
+    // subprojects use the Gradle version from the root project, so let's sync them to ensure standalone version will build as well.
+    doLast {
+        val source = file("gradle/wrapper/gradle-wrapper.properties")
+        listOf("examples/android-example", "examples/kotlin-dataframe-plugin-gradle-example").forEach { sub ->
+            val target = file("$sub/gradle/wrapper/gradle-wrapper.properties")
+            if (source.readText() != target.readText()) {
+                source.copyTo(target, overwrite = true)
+            }
         }
     }
 }

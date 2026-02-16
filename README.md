@@ -63,7 +63,7 @@ You could find the following articles there:
 
 ### What's new
 
-1.0.0-Beta3: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-Beta3)
+1.0.0-Beta4: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-Beta4)
 
 Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
@@ -85,6 +85,7 @@ You can include all the necessary dependencies and imports in the notebook using
 %use dataframe
 ```
 
+This will add the `dataframe` of the version bundled in the selected Kotlin Jupyter kernel.
 You can use `%useLatestDescriptors`
 to get the latest stable version without updating the Kotlin kernel:
 
@@ -96,20 +97,33 @@ to get the latest stable version without updating the Kotlin kernel:
 Or manually specify the version:
 
 ```
-%use dataframe($dataframe_version)
+%use dataframe(1.0.0-Beta4n)
 ```
 
+> [!WARNING]  
+> Please, use `0.16.0-736` Kotlin Jupyter kernel version or higher for descriptor compatibility
+> 
+> Use specified `1.0.0-Beta4n` version in Kotlin Notebook. 
+> Due to [an known issue](https://github.com/Kotlin/dataframe/issues/1116), 
+> common `dataframe:1.0.0-Beta4` version works incorrectly in Notebook.
+>
+> If you use [`kandy`](https://github.com/Kotlin/kandy) in your notebook, add it after the `dataframe`:
+> ```kotlin
+> %useLatestDescriptors
+> %use dataframe, kandy
+> ```
+
 Refer to the
-[Get started with Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/gettingstartedkotlinnotebook.html)
+[Setup Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/setupkotlinnotebook.html)
 for details.
 
 ### Gradle
 
-Add dependencies in the build.gradle.kts script:
+Add dependencies in the `build.gradle.kts` script:
 
 ```kotlin
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta3")
+    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta4")
 }
 ```
 
@@ -121,18 +135,53 @@ repositories {
 }
 ```
 
+Refer to
+[Get started with Kotlin DataFrame on Gradle](https://kotlin.github.io/dataframe/setupgradle.html)
+for detailed setup instructions (including Groovy DSL).
+
+* You can also check the [Custom Gradle Configuration](https://kotlin.github.io/dataframe/setupcustomgradle.html) if you don't need certain formats as dependencies.
+* For Android projects, see [Setup Kotlin DataFrame on Android](https://kotlin.github.io/dataframe/setupandroid.html).
+* See [IDEA Gradle example projects](examples/idea-examples) 
+and [the Gradle project with the Kotlin DataFrame Compiler plugin](examples/kotlin-dataframe-plugin-gradle-example).
+
 Refer to the
-[Get started with Kotlin DataFrame on Gradle](https://kotlin.github.io/dataframe/gettingstartedgradle.html)
+[Setup Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/setupkotlinnotebook.html)
 for details.
-Also, check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html)
-if you don't need some formats as dependencies,
-for Groovy, and for configurations specific to Android projects.
+
+### Maven
+
+Add dependencies in the `pom.xml` configuration file:
+
+```xml
+<dependency>
+    <groupId>org.jetbrains.kotlinx</groupId>
+    <artifactId>dataframe</artifactId>
+    <version>1.0.0-Beta4</version>
+</dependency>
+```
+
+Make sure that you have `mavenCentral` in the list of repositories:
+
+```xml
+<repositories>
+    <repository>
+        <id>mavenCentral</id>
+        <url>https://repo1.maven.org/maven2/</url>
+    </repository>
+</repositories>
+```
+
+Refer to
+[Get started with Kotlin DataFrame on Maven](https://kotlin.github.io/dataframe/setupmaven.html).
+
+* See [the Maven project with the Kotlin DataFrame Compiler plugin](examples/kotlin-dataframe-plugin-gradle-example).
+
 
 ## Code example
 
 This example of Kotlin DataFrame code with
 the [Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) enabled.
-See [the full project](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-example).
+See [the full project](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-gradle-example).
 See also
 [this example in Kotlin Notebook](https://github.com/Kotlin/dataframe/tree/master/examples/notebooks/readme_example.ipynb).
 
@@ -200,6 +249,8 @@ other recommended versions.
 | 1.0.0-Beta2              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               | 2.2.20-dev-3524         | 0.8.1-dev-66             |
 | 1.0.0-Beta3n (notebooks) | 8 / 11               | 2.2.20         | 0.15.0-587 (K1 only)   | 18.3.0               | -                       | 0.8.1n                   |
 | 1.0.0-Beta3              | 8 / 11               | 2.2.20         | 0.15.0-587             | 18.3.0               | 2.2.20 / IDEA 2025.2+   | 0.8.1                    |
+| 1.0.0-Beta4n (notebooks) | 8 / 11               | 2.2.21         | 0.16.0-736             | 18.3.0               | -                       | 0.8.3                    |
+| 1.0.0-Beta4              | 8 / 11               | 2.2.21         | 0.16.0-736             | 18.3.0               | 2.2.21 / IDEA 2025.2+   | 0.8.3                    |
 
 ## Code of Conduct
 

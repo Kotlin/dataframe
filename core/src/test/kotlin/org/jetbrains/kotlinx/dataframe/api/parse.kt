@@ -175,12 +175,12 @@ class ParseTests {
 
     @Test
     fun `parse instant`() {
-        columnOf("2022-01-23T04:29:40Z").parse().type shouldBe typeOf<DeprecatedInstant>()
-        columnOf("2022-01-23T04:29:40+01:00").parse().type shouldBe typeOf<DeprecatedInstant>()
+        columnOf("2022-01-23T04:29:40Z").parse().type shouldBe typeOf<StdlibInstant>()
+        columnOf("2022-01-23T04:29:40+01:00").parse().type shouldBe typeOf<StdlibInstant>()
 
-        val options = ParserOptions(parseExperimentalInstant = true)
-        columnOf("2022-01-23T04:29:40Z").parse(options).type shouldBe typeOf<StdlibInstant>()
-        columnOf("2022-01-23T04:29:40+01:00").parse(options).type shouldBe typeOf<StdlibInstant>()
+        val options = ParserOptions(parseExperimentalInstant = false)
+        columnOf("2022-01-23T04:29:40Z").parse(options).type shouldBe typeOf<DeprecatedInstant>()
+        columnOf("2022-01-23T04:29:40+01:00").parse(options).type shouldBe typeOf<DeprecatedInstant>()
 
         columnOf("2022-01-23T04:29:40").parse().type shouldBe typeOf<LocalDateTime>()
     }

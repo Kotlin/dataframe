@@ -76,7 +76,7 @@ public fun AnyCol.isList(): Boolean = typeClass == List::class
 public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
 
 /**
- * Returns `true` if [this] column is intra-comparable, i.e.
+ * Returns `true` if [this] column is intra-comparable (mutually comparable), i.e.,
  * its values can be compared with each other and thus ordered.
  *
  * If true, operations like [`min()`][AnyCol.min], [`max()`][AnyCol.max], [`median()`][AnyCol.median], etc.
