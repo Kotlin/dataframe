@@ -11,6 +11,8 @@ plugins {
     alias(convention.plugins.kotlinJvmCommon)
 }
 
+// region syncing
+
 val versionsToSync =
     listOf(
         "kotlin",
@@ -27,9 +29,61 @@ val syncExampleFolders by tasks.registering {
     description = "Sync the versions in the nested Gradle build in /examples/projects"
 }
 
+/**
+ * Sets up example folders sync tasks
+ */
+private fun setupExampleProjectFolder(folder: File, isDev: Boolean) {
+    val name = folder.name.toCamelCaseByDelimiters().replaceFirstChar { it.uppercase() } +
+        (if (isDev) "Dev" else "")
+
+    val buildSystem = folder.detectBuildSystem()
+        ?: error(
+            "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
+        )
+
+    val libs = versionCatalogs.named("libs")
+
+    val syncTask =
+        when (buildSystem) {
+            BuildSystem.GRADLE ->
+                setupGradleSyncVersionsTask(
+                    name = name,
+                    folder = folder,
+                    isDev = isDev,
+                    versionCatalog = libs,
+                    versionsToSync = versionsToSync,
+                )
+
+            BuildSystem.MAVEN ->
+                setupMavenSyncVersionsTask(
+                    name = name,
+                    folder = folder,
+                    isDev = isDev,
+                    versionCatalog = libs,
+                    versionsToSync = versionsToSync,
+                )
+        }
+    syncExampleFolders {
+        dependsOn(syncTask)
+    }
+}
+
+file("examples/projects").listFiles()?.forEach {
+    if (!it.isDirectory || it.name == "dev") return@forEach
+    setupExampleProjectFolder(folder = it, isDev = false)
+}
+file("examples/projects/dev").listFiles()?.forEach {
+    if (!it.isDirectory) return@forEach
+    setupExampleProjectFolder(folder = it, isDev = true)
+}
+
 tasks.named("assemble") {
     dependsOn(syncExampleFolders)
 }
+
+// endregion
+
+// region promoting
 
 val promoteExamples by tasks.registering {
     group = "publishing"
@@ -52,6 +106,10 @@ val promoteExamples by tasks.registering {
     }
     finalizedBy(syncExampleFolders)
 }
+
+// endregion
+
+// region testing/building examples
 
 val testBuildingExamples: SourceSet by sourceSets.creating {
     kotlin.srcDir(file("build-logic/src/testBuildingExamples/kotlin"))
@@ -143,50 +201,4 @@ tasks.named("test") {
     }
 }
 
-/**
- * Sets up example folders sync tasks
- */
-private fun setupExampleProjectFolder(folder: File, isDev: Boolean) {
-    val name = folder.name.toCamelCaseByDelimiters().replaceFirstChar { it.uppercase() } +
-        (if (isDev) "Dev" else "")
-
-    val buildSystem = folder.detectBuildSystem()
-        ?: error(
-            "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
-        )
-
-    val libs = versionCatalogs.named("libs")
-
-    val syncTask =
-        when (buildSystem) {
-            BuildSystem.GRADLE ->
-                setupGradleSyncVersionsTask(
-                    name = name,
-                    folder = folder,
-                    isDev = isDev,
-                    versionCatalog = libs,
-                    versionsToSync = versionsToSync,
-                )
-
-            BuildSystem.MAVEN ->
-                setupMavenSyncVersionsTask(
-                    name = name,
-                    folder = folder,
-                    isDev = isDev,
-                    versionCatalog = libs,
-                    versionsToSync = versionsToSync,
-                )
-        }
-    syncExampleFolders {
-        dependsOn(syncTask)
-    }
-}
-
-file("examples/projects").listFiles()?.forEach {
-    if (!it.isDirectory || it.name == "dev") return@forEach
-    setupExampleProjectFolder(folder = it, isDev = false)
-}
-file("examples/projects/dev").listFiles()?.forEach {
-    if (!it.isDirectory) return@forEach
-    setupExampleProjectFolder(folder = it, isDev = true)
-}
+// endregion
