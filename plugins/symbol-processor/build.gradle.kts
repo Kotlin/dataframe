@@ -31,7 +31,7 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.h2db)
     testImplementation(libs.h2db)
-    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.kotlin.compile.testing)
     testImplementation(libs.kotlin.compile.testing.ksp)
     testImplementation(libs.ktor.server.netty)
