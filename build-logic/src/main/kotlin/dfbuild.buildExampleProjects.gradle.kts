@@ -98,9 +98,13 @@ private fun Test.commonSetup() {
     useJUnitPlatform()
     testLogging { events("passed", "skipped", "failed") }
 
-    // pass all project properties down to the tests prepending them with 'gradle.properties.'
-    project.properties.forEach { (key, value) ->
-        systemProperty("gradle.properties.$key", value?.toString())
+    // pass down project parameters -> JUnit configuration parameters
+    val props = listOf(
+        "android.sdk.dir",
+    )
+    for (prop in props) {
+        val value = project.properties[prop]?.toString() ?: continue
+        systemProperty("gradle.properties.$prop", value)
     }
 }
 

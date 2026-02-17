@@ -19,7 +19,7 @@ import kotlin.io.path.Path
 class TestBuildingExampleProjects {
 
     /**
-     * Retrieves the Gradle project property by [name].
+     * Allows receiving certain Gradle properties.
      * These are passed down to the tests from the `dfbuild.buildExampleProjects` convention plugin.
      */
     private fun getGradleProperty(name: String): String? = System.getProperty("gradle.properties.$name")
