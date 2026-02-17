@@ -124,7 +124,7 @@ class TestBuildingExampleProjects {
         DefaultInvoker()
             .execute(
                 DefaultInvocationRequest().apply {
-                    mavenHome = Path(".").toFile()
+                    // mavenHome = Path(".").toFile()
                     mavenExecutable = folder.resolve("mvnw").also { it.setExecutable(true) }
                     pomFile = folder.resolve("pom.xml")
                     goals = listOf("clean", "compile")
