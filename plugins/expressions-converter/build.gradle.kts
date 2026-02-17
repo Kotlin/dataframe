@@ -17,8 +17,7 @@ dependencies {
     testImplementation(libs.kotlin.compiler.internal.test.framework)
 
     testRuntimeOnly(projects.core)
-
-    testRuntimeOnly(libs.kotlin.test)
+    testImplementation(libs.kotlin.test.junit5)
     testRuntimeOnly(libs.kotlin.script.runtime)
     testRuntimeOnly(libs.kotlin.annotations.jvm)
 
