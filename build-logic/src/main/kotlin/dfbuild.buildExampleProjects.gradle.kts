@@ -169,11 +169,30 @@ private fun Test.commonSetup() {
     )
 }
 
+val buildReleaseExampleFolders by tasks.registering(Test::class) {
+    commonSetup()
+    description = "Builds the nested release builds in /examples/projects to verify they compile correctly."
+    useJUnitPlatform {
+        includeTags("release")
+    }
+}
+
+val buildDevExampleFolders by tasks.registering(Test::class) {
+    commonSetup()
+    description = "Builds the nested dev builds in /examples/projects to verify they compile correctly."
+
+    // Because we're including a dev Maven project, we need to publish to /build/maven to test it.
+    dependsOn(":publishLocal")
+    useJUnitPlatform {
+        includeTags("dev")
+    }
+}
+
 val buildMavenExampleFolders by tasks.registering(Test::class) {
     commonSetup()
     description = "Builds the nested Maven builds in /examples/projects to verify they compile correctly."
 
-    // Because we're including a Maven project, we need to publish to /build/maven to test it.
+    // Because we're including a dev Maven project, we need to publish to /build/maven to test it.
     dependsOn(":publishLocal")
     useJUnitPlatform {
         includeTags("maven")
@@ -191,7 +210,7 @@ val buildGradleExampleFolders by tasks.registering(Test::class) {
 val buildExampleFolders by tasks.registering(Test::class) {
     group = "verification"
     description = "Builds all the nested builds in /examples/projects to verify they compile correctly."
-    dependsOn(buildMavenExampleFolders, buildGradleExampleFolders)
+    dependsOn(buildReleaseExampleFolders, buildDevExampleFolders)
 }
 
 tasks.named("test") {

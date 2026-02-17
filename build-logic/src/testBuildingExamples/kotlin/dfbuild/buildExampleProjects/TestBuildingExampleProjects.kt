@@ -23,48 +23,61 @@ class TestBuildingExampleProjects {
      */
     private fun getGradleProperty(name: String): String? = System.getProperty("gradle.properties.$name")
 
+    data class TestCase(val isDev: Boolean, val buildSystem: BuildSystem, val dynamicTest: DynamicTest)
+
     @Tag("gradle")
     @TestFactory
     fun `test all example Gradle projects`(): List<DynamicNode> =
-        getExampleProjectTestsWhere { it.detectBuildSystem() == BuildSystem.GRADLE }
+        getExampleProjectTestsWhere { it.buildSystem == BuildSystem.GRADLE }
 
     @Tag("maven")
     @TestFactory
     fun `test all example Maven projects`(): List<DynamicNode> =
-        getExampleProjectTestsWhere { it.detectBuildSystem() == BuildSystem.MAVEN }
+        getExampleProjectTestsWhere { it.buildSystem == BuildSystem.MAVEN }
 
-    private fun getExampleProjectTestsWhere(predicate: (folder: File) -> Boolean): List<DynamicNode> =
+    @Tag("release")
+    @TestFactory
+    fun `test all example release projects`(): List<DynamicNode> = getExampleProjectTestsWhere { !it.isDev }
+
+    @Tag("dev")
+    @TestFactory
+    fun `test all example dev projects`(): List<DynamicNode> = getExampleProjectTestsWhere { it.isDev }
+
+    private fun getExampleProjectTestsWhere(predicate: (testCase: TestCase) -> Boolean): List<DynamicNode> =
         buildList {
             val rootFolder = File("").absoluteFile.findRootDir()
 
-            val releaseFolders = rootFolder.resolve("examples/projects")
+            val releaseTests = rootFolder.resolve("examples/projects")
                 .listFiles()
-                ?.filter { it.isDirectory && it.name != "dev" && predicate(it) }
                 .orEmpty()
-            if (releaseFolders.isNotEmpty()) {
+                .filter { it.isDirectory && it.name != "dev" }
+                .map { setupBuildExampleProjectTestCase(folder = it, isDev = false) }
+                .filter(predicate)
+                .map { it.dynamicTest }
+            if (releaseTests.isNotEmpty()) {
                 this += DynamicContainer.dynamicContainer(
                     "release",
-                    releaseFolders.map {
-                        setupBuildExampleProjectTest(folder = it, isDev = false)
-                    },
+                    releaseTests,
                 )
             }
 
-            val devFolders = rootFolder.resolve("examples/projects/dev")
+            val devTests = rootFolder.resolve("examples/projects/dev")
                 .listFiles()
-                ?.filter { it.isDirectory && predicate(it) }
                 .orEmpty()
-            if (devFolders.isNotEmpty()) {
+                .filter { it.isDirectory }
+                .map { setupBuildExampleProjectTestCase(folder = it, isDev = true) }
+                .filter(predicate)
+                .map { it.dynamicTest }
+
+            if (devTests.isNotEmpty()) {
                 this += DynamicContainer.dynamicContainer(
                     "dev",
-                    devFolders.map {
-                        setupBuildExampleProjectTest(folder = it, isDev = true)
-                    },
+                    devTests,
                 )
             }
         }
 
-    private fun setupBuildExampleProjectTest(folder: File, isDev: Boolean): DynamicTest {
+    private fun setupBuildExampleProjectTestCase(folder: File, isDev: Boolean): TestCase {
         val name = folder.name.toCamelCaseByDelimiters().replaceFirstChar { it.uppercase() } +
             (if (isDev) "Dev" else "")
 
@@ -73,7 +86,7 @@ class TestBuildingExampleProjects {
                 "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
             )
 
-        return DynamicTest.dynamicTest(name) {
+        val dynamicTest = DynamicTest.dynamicTest(name) {
             when (buildSystem) {
                 BuildSystem.GRADLE ->
                     buildGradleProject(name = name, folder = folder)
@@ -82,6 +95,11 @@ class TestBuildingExampleProjects {
                     buildMavenProject(name = name, folder = folder)
             }
         }
+        return TestCase(
+            isDev = isDev,
+            buildSystem = buildSystem,
+            dynamicTest = dynamicTest,
+        )
     }
 
     /**
