@@ -22,6 +22,7 @@ import java.sql.SQLException
 import java.util.Date
 import java.util.UUID
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
 
 private const val URL = "jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true"
 private const val USER_NAME = "root"
@@ -229,8 +230,8 @@ class MSSQLTest {
         schema.columns["bitColumn"]!!.type shouldBe typeOf<Boolean?>()
         schema.columns["charColumn"]!!.type shouldBe typeOf<Char?>()
         schema.columns["dateColumn"]!!.type shouldBe typeOf<Date?>()
-        schema.columns["datetime3Column"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
-        schema.columns["datetime2Column"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
+        schema.columns["datetime3Column"]!!.type shouldBe typeOf<Instant?>()
+        schema.columns["datetime2Column"]!!.type shouldBe typeOf<Instant?>()
         schema.columns["datetimeoffset2Column"]!!.type shouldBe typeOf<String?>()
         schema.columns["decimalColumn"]!!.type shouldBe typeOf<BigDecimal?>()
         schema.columns["floatColumn"]!!.type shouldBe typeOf<Double?>()
@@ -243,11 +244,11 @@ class MSSQLTest {
         schema.columns["nvarcharColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["nvarcharMaxColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["realColumn"]!!.type shouldBe typeOf<Float?>()
-        schema.columns["smalldatetimeColumn"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
+        schema.columns["smalldatetimeColumn"]!!.type shouldBe typeOf<Instant?>()
         schema.columns["smallintColumn"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallmoneyColumn"]!!.type shouldBe typeOf<BigDecimal?>()
         schema.columns["timeColumn"]!!.type shouldBe typeOf<java.sql.Time?>()
-        schema.columns["timestampColumn"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
+        schema.columns["timestampColumn"]!!.type shouldBe typeOf<Instant?>()
         schema.columns["tinyintColumn"]!!.type shouldBe typeOf<Int?>()
         schema.columns["uniqueidentifierColumn"]!!.type shouldBe typeOf<Char?>()
         schema.columns["varbinaryColumn"]!!.type shouldBe typeOf<ByteArray?>()
