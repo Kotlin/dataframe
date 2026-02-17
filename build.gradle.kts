@@ -189,6 +189,7 @@ kotlinPublications {
 
     localRepositories {
         maven {
+            // Maven directory for the `:publishLocal` task
             url = project.file(layout.buildDirectory.dir("maven")).toURI()
         }
     }

@@ -94,7 +94,6 @@ private fun Test.commonSetup() {
 
     testClassesDirs = testBuildingExamples.output.classesDirs
     classpath = testBuildingExamples.runtimeClasspath
-    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
     useJUnitPlatform()
     testLogging { events("passed", "skipped", "failed") }
 
@@ -106,14 +105,18 @@ private fun Test.commonSetup() {
         val value = project.properties[prop]?.toString() ?: continue
         systemProperty("gradle.properties.$prop", value)
     }
+    systemProperty(
+        "gradle.properties.maven.repo.local",
+        project.file(layout.buildDirectory.dir("maven")).absolutePath,
+    )
 }
 
 val buildMavenExampleFolders by tasks.registering(Test::class) {
     commonSetup()
     description = "Builds the nested Maven builds in /examples/projects to verify they compile correctly."
 
-    // Because we're including a Maven project, we need to publish to maven local to test it.
-    dependsOn(":publishToMavenLocal")
+    // Because we're including a Maven project, we need to publish to /build/maven to test it.
+    dependsOn(":publishLocal")
     useJUnitPlatform {
         includeTags("maven")
     }

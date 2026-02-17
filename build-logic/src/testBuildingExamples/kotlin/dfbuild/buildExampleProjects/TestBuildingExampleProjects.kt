@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.TestFactory
 import java.io.File
-import kotlin.io.path.Path
 
 @Suppress("FunctionName")
 class TestBuildingExampleProjects {
@@ -124,10 +123,10 @@ class TestBuildingExampleProjects {
         DefaultInvoker()
             .execute(
                 DefaultInvocationRequest().apply {
-                    // mavenHome = Path(".").toFile()
                     mavenExecutable = folder.resolve("mvnw").also { it.setExecutable(true) }
                     pomFile = folder.resolve("pom.xml")
                     goals = listOf("clean", "compile")
+                    setLocalRepositoryDirectory(File(getGradleProperty("maven.repo.local")!!))
                 },
             ).let { result ->
                 if (result.exitCode != 0) {
