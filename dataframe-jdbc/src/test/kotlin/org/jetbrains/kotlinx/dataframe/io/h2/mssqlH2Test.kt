@@ -32,34 +32,34 @@ interface Table1MSSSQL {
     val bigintColumn: Long
     val binaryColumn: ByteArray
     val bitColumn: Boolean
-    val charColumn: Char
+    val charColumn: String
     val dateColumn: Date
-    val datetime3Column: java.sql.Timestamp
-    val datetime2Column: java.sql.Timestamp
+    val datetime3Column: Instant
+    val datetime2Column: Instant
     val decimalColumn: BigDecimal
     val floatColumn: Double
     val imageColumn: ByteArray?
     val intColumn: Int
     val moneyColumn: BigDecimal
-    val ncharColumn: Char
+    val ncharColumn: String
     val ntextColumn: String
     val numericColumn: BigDecimal
     val nvarcharColumn: String
     val nvarcharMaxColumn: String
     val realColumn: Float
-    val smalldatetimeColumn: java.sql.Timestamp
+    val smalldatetimeColumn: Instant
     val smallintColumn: Int
     val smallmoneyColumn: BigDecimal
     val timeColumn: java.sql.Time
-    val timestampColumn: java.sql.Timestamp
+    val timestampColumn: Instant
     val tinyintColumn: Int
     val uniqueidentifierColumn: Char
     val varbinaryColumn: ByteArray
     val varbinaryMaxColumn: ByteArray
     val varcharColumn: String
     val varcharMaxColumn: String
-    val geometryColumn: String
-    val geographyColumn: String
+    val geometryColumn: ByteArray
+    val geographyColumn: ByteArray
 }
 
 class MSSQLH2Test {
