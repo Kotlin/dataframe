@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     with(convention.plugins) {
         alias(kotlinJvm11)
+        alias(buildConfig)
     }
     with(libs.plugins) {
         alias(publisher)

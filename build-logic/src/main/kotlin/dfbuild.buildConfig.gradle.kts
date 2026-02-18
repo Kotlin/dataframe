@@ -9,7 +9,7 @@ plugins {
 }
 
 buildConfig {
-    packageName = "org.jetbrains.kotlinx.dataframe"
+    packageName = "org.jetbrains.kotlinx.dataframe.`${project.name}`"
     className = "BuildConfig"
     buildConfigField("KOTLIN_VERSION", libs.versions.kotlin.asProvider().get())
     buildConfigField("KOTLIN_COMPILER_VERSION", kotlin.compilerVersion.get())
