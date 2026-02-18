@@ -14,6 +14,7 @@ group = "org.jetbrains.kotlinx"
 dependencies {
     api(projects.core)
     compileOnly(libs.duckdb.jdbc)
+    compileOnly(libs.postgresql)
     compileOnly(libs.sqlite)
     implementation(libs.kotlinLogging)
     testImplementation(libs.mariadb)

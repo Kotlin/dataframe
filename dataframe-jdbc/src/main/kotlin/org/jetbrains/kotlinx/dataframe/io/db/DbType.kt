@@ -39,6 +39,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.safeCast
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.javaType
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
 import kotlin.time.toKotlinInstant
@@ -331,6 +332,8 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         return kType.withNullability(tableColumnMetadata.isNullable)
     }
 
+    protected val javaClassCache: MutableMap<KType, Class<*>?> = mutableMapOf()
+
     /**
      * Extracts a value from the [result set][rs] for the given [column][tableColumnMetadata].
      *
@@ -343,7 +346,8 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param [rs] the ResultSet to read from
      * @param [columnIndex] zero-based column index
      * @param [tableColumnMetadata] all information we have about the column
-     * @param [expectedJdbcType] the type of the return value, [J], obtained from [getExpectedJdbcType]
+     * @param [expectedJdbcType] the type of the return value, [J], obtained from [getExpectedJdbcType].
+     *   If not [Any], it will be passed to [ResultSet.getObject] so the value will be converted to it.
      * @return the value extracted from the [result set][rs] for the given [column index][columnIndex]
      */
     @Suppress("UNCHECKED_CAST")
@@ -352,13 +356,23 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         columnIndex: Int,
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
-    ): J =
-        try {
+    ): J {
+        val javaClass = javaClassCache.getOrPut(expectedJdbcType.withNullability(false)) {
+            (expectedJdbcType.classifier as? KClass<*>)?.javaObjectType
+        }
+        if (javaClass != null && expectedJdbcType.withNullability(false) != typeOf<Any>()) {
+            try {
+                return rs.getObject(columnIndex + 1, javaClass) as J
+            } catch (_: Throwable) {
+            }
+        }
+        return try {
             rs.getObject(columnIndex + 1)
         } catch (_: Throwable) {
             // TODO?
             rs.getString(columnIndex + 1)
         } as J
+    }
 
     /**
      * Returns the [type][KType] of the objects returned by [preprocessValue]
