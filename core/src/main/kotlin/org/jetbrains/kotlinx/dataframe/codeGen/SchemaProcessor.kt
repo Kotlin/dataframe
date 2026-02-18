@@ -20,6 +20,8 @@ internal interface SchemaProcessor {
             namePrefix: String,
             existingMarkers: Iterable<Marker> = emptyList(),
             fieldNameNormalizer: (String) -> String = { it },
-        ): SchemaProcessorImpl = SchemaProcessorImpl(existingMarkers, namePrefix, fieldNameNormalizer)
+            nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
+        ): SchemaProcessorImpl =
+            SchemaProcessorImpl(existingMarkers, namePrefix, fieldNameNormalizer, nestedMarkerNameProvider)
     }
 }
