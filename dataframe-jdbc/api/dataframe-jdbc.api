@@ -129,6 +129,7 @@ public abstract class org/jetbrains/kotlinx/dataframe/io/db/DbType {
 	public fun getDefaultQueryTimeout ()Ljava/lang/Integer;
 	public abstract fun getDriverClassName ()Ljava/lang/String;
 	public fun getExpectedJdbcType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
+	protected final fun getJavaClassCache ()Ljava/util/Map;
 	public fun getPreprocessedValueType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Lkotlin/reflect/KType;
 	public fun getTableColumnsMetadata (Ljava/sql/ResultSet;)Ljava/util/List;
 	public fun getTableTypes ()Ljava/util/List;

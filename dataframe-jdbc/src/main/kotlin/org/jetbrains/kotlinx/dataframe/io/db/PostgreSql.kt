@@ -1,5 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import org.postgresql.geometric.PGbox
+import org.postgresql.geometric.PGcircle
+import org.postgresql.geometric.PGline
+import org.postgresql.geometric.PGlseg
+import org.postgresql.geometric.PGpath
+import org.postgresql.geometric.PGpoint
+import org.postgresql.geometric.PGpolygon
+import org.postgresql.util.PGInterval
+import org.postgresql.util.PGmoney
 import java.sql.ResultSet
 import java.util.Locale
 import kotlin.reflect.KType
@@ -16,15 +25,30 @@ public object PostgreSql : DbType("postgresql") {
     override val driverClassName: String
         get() = "org.postgresql.Driver"
 
-    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
-        // because of https://github.com/pgjdbc/pgjdbc/issues/425
-        if (tableColumnMetadata.sqlTypeName == "money") {
-            return typeOf<String>().withNullability(tableColumnMetadata.isNullable)
-        }
-        // TODO: Composite types like tableColumnMetadata.sqlTypeName = ROW("a" INTEGER, "b" CHARACTER VARYING(10))
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
+        when (tableColumnMetadata.sqlTypeName.lowercase()) {
+            "box" -> typeOf<PGbox>()
 
-        return super.getExpectedJdbcType(tableColumnMetadata)
-    }
+            "circle" -> typeOf<PGcircle>()
+
+            "line" -> typeOf<PGline>()
+
+            "lseg" -> typeOf<PGlseg>()
+
+            "path" -> typeOf<PGpath>()
+
+            "point" -> typeOf<PGpoint>()
+
+            "polygon" -> typeOf<PGpolygon>()
+
+            "money" -> typeOf<PGmoney>()
+
+            "interval" -> typeOf<PGInterval>()
+
+            // TODO: Composite types like tableColumnMetadata.sqlTypeName = ROW("a" INTEGER, "b" CHARACTER VARYING(10))
+            else -> null
+        }?.withNullability(tableColumnMetadata.isNullable)
+            ?: super.getExpectedJdbcType(tableColumnMetadata)
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean =
         tableMetadata.name.lowercase(Locale.getDefault()).contains("pg_") ||
