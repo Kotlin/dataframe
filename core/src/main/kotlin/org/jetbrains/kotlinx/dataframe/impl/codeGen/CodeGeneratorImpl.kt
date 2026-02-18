@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode.TypeAlias
 import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode.WithFields
 import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
@@ -33,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.TypeCastGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.toSnakeCase
 import org.jetbrains.kotlinx.dataframe.keywords.HardKeywords
 import org.jetbrains.kotlinx.dataframe.keywords.ModifierKeywords
@@ -491,8 +493,14 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         readDfMethod: DefaultReadDfMethod?,
         fieldNameNormalizer: NameNormalizer,
         asDataClass: Boolean,
+        nestedMarkerNameProvider: MarkerNameProvider,
     ): CodeGenResult {
-        val context = SchemaProcessor.create(name, if (asDataClass) emptyList() else knownMarkers, fieldNameNormalizer)
+        val context = SchemaProcessor.create(
+            name,
+            if (asDataClass) emptyList() else knownMarkers,
+            fieldNameNormalizer,
+            nestedMarkerNameProvider,
+        )
         val marker = context.process(schema, isOpen, visibility)
         val declarations = mutableListOf<Code>()
         context.generatedMarkers.forEach { itMarker ->

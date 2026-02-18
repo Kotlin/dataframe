@@ -1,11 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
@@ -14,6 +17,7 @@ internal class SchemaProcessorImpl(
     existingMarkers: Iterable<Marker>,
     override val namePrefix: String,
     private val fieldNameNormalizer: (String) -> String = { it },
+    private val nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ) : SchemaProcessor {
 
     private val registeredMarkers = existingMarkers.toMutableList()
@@ -61,24 +65,25 @@ internal class SchemaProcessorImpl(
         schema: DataFrameSchema,
         visibility: MarkerVisibility,
         requiredSuperMarkers: List<Marker> = emptyList(),
+        parentPath: ColumnPath = pathOf(),
     ): List<GeneratedField> {
         val usedFieldNames =
             requiredSuperMarkers.flatMap { it.allFields.map { it.fieldName.quotedIfNeeded } }.toMutableSet()
 
-        fun getFieldType(columnSchema: ColumnSchema): FieldType =
+        fun getFieldType(columnName: String, columnSchema: ColumnSchema): FieldType =
             when (columnSchema) {
                 is ColumnSchema.Value ->
                     FieldType.ValueFieldType(columnSchema.type.toString())
 
                 is ColumnSchema.Group ->
                     FieldType.GroupFieldType(
-                        process(columnSchema.schema, false, visibility).name,
+                        process(columnSchema.schema, false, visibility, parentPath + columnName).name,
                         renderAsObject = true,
                     )
 
                 is ColumnSchema.Frame ->
                     FieldType.FrameFieldType(
-                        process(columnSchema.schema, false, visibility).name,
+                        process(columnSchema.schema, false, visibility, parentPath + columnName).name,
                         columnSchema.nullable,
                         renderAsList = true,
                     )
@@ -86,7 +91,7 @@ internal class SchemaProcessorImpl(
 
         return schema.columns.asIterable().sortedBy { it.key }.flatMapIndexed { index, column ->
             val (columnName, columnSchema) = column
-            val fieldType = getFieldType(columnSchema)
+            val fieldType = getFieldType(columnName, columnSchema)
             // find all fields that were already generated for this column name in base interfaces
             val superFields = requiredSuperMarkers.mapNotNull { it.getField(columnName) }
 
@@ -118,6 +123,7 @@ internal class SchemaProcessorImpl(
         withBaseInterfaces: Boolean,
         isOpen: Boolean,
         visibility: MarkerVisibility,
+        parentPath: ColumnPath = pathOf(),
     ): Marker {
         val baseMarkers = mutableListOf<Marker>()
         val fields = if (withBaseInterfaces) {
@@ -145,30 +151,41 @@ internal class SchemaProcessorImpl(
                     }
                 }
             }
-            generateFields(scheme, visibility, baseMarkers)
+            generateFields(scheme, visibility, baseMarkers, parentPath)
         } else {
-            generateFields(scheme, visibility)
+            generateFields(scheme, visibility, parentPath = parentPath)
         }
         return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility, emptyList(), emptyList())
     }
 
     private fun DataFrameSchema.getRequiredMarkers() = registeredMarkers.filterRequiredForSchema(this)
 
-    override fun process(schema: DataFrameSchema, isOpen: Boolean, visibility: MarkerVisibility): Marker {
-        val markerName: String
+    override fun process(schema: DataFrameSchema, isOpen: Boolean, visibility: MarkerVisibility): Marker =
+        process(schema, isOpen, visibility, columnPath = pathOf())
+
+    internal fun process(
+        schema: DataFrameSchema,
+        isOpen: Boolean,
+        visibility: MarkerVisibility,
+        columnPath: ColumnPath,
+    ): Marker {
         val required = schema.getRequiredMarkers()
         val existingMarker = registeredMarkers.firstOrNull {
             (!isOpen || it.isOpen) && it.schema.compare(schema).matches() && it.implementsAll(required)
         }
         if (existingMarker != null) {
             return existingMarker
-        } else {
-            markerName = generateUniqueMarkerClassName(namePrefix)
-            usedMarkerNames.add(markerName)
-            val marker = createMarkerSchema(schema, markerName, true, isOpen, visibility)
-            registeredMarkers.add(marker)
-            generatedMarkers.add(marker)
-            return marker
         }
+        val baseName = if (columnPath.isNotEmpty()) {
+            nestedMarkerNameProvider(columnPath)
+        } else {
+            namePrefix
+        }
+        val markerName = generateUniqueMarkerClassName(baseName)
+        usedMarkerNames.add(markerName)
+        val marker = createMarkerSchema(schema, markerName, true, isOpen, visibility, columnPath)
+        registeredMarkers.add(marker)
+        generatedMarkers.add(marker)
+        return marker
     }
 }

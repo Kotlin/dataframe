@@ -4601,9 +4601,9 @@ public final class org/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult {
 public abstract interface class org/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator : org/jetbrains/kotlinx/dataframe/codeGen/ExtensionsCodeGenerator {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion;
 	public abstract fun generate (Lorg/jetbrains/kotlinx/dataframe/codeGen/Marker;Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;ZLorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithTypeCastGenerator;
-	public abstract fun generate (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Ljava/lang/String;ZZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;Lorg/jetbrains/kotlinx/dataframe/codeGen/NameNormalizer;Z)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;
+	public abstract fun generate (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Ljava/lang/String;ZZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;Lorg/jetbrains/kotlinx/dataframe/codeGen/NameNormalizer;ZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerNameProvider;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;
 	public static synthetic fun generate$default (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator;Lorg/jetbrains/kotlinx/dataframe/codeGen/Marker;Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;ZLorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithTypeCastGenerator;
-	public static synthetic fun generate$default (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator;Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Ljava/lang/String;ZZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;Lorg/jetbrains/kotlinx/dataframe/codeGen/NameNormalizer;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;
+	public static synthetic fun generate$default (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator;Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Ljava/lang/String;ZZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;Lorg/jetbrains/kotlinx/dataframe/codeGen/NameNormalizer;ZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerNameProvider;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion {
@@ -4771,6 +4771,14 @@ public class org/jetbrains/kotlinx/dataframe/codeGen/Marker : org/jetbrains/kotl
 	public final fun implements (Lorg/jetbrains/kotlinx/dataframe/codeGen/Marker;)Z
 	public final fun implementsAll (Ljava/lang/Iterable;)Z
 	public final fun isOpen ()Z
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/codeGen/MarkerNameProvider : kotlin/jvm/functions/Function1 {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/codeGen/MarkerNameProvider$Companion;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/codeGen/MarkerNameProvider$Companion {
+	public final fun getFromColumnName ()Lorg/jetbrains/kotlinx/dataframe/codeGen/MarkerNameProvider;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility : java/lang/Enum {
