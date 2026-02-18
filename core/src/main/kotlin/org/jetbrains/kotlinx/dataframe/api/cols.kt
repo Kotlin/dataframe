@@ -403,16 +403,12 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
     @Interpretable("Cols0")
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = asSingleColumn().cols(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -429,8 +425,6 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias SingleColumnColsVarargColumnReferenceDocs = Nothing
 
     /** @include [SingleColumnColsVarargColumnReferenceDocs] */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -439,8 +433,6 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [SingleColumnColsVarargColumnReferenceDocs]
      */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -457,14 +449,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias StringColsVarargColumnReferenceDocs = Nothing
 
     /** @include [StringColsVarargColumnReferenceDocs] */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun <C> String.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [StringColsVarargColumnReferenceDocs] */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public operator fun <C> String.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -509,14 +497,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias ColumnPathColsVarargColumnReferenceDocs = Nothing
 
     /** @include [ColumnPathColsVarargColumnReferenceDocs] */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun <C> ColumnPath.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [ColumnPathColsVarargColumnReferenceDocs] */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public operator fun <C> ColumnPath.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
