@@ -360,8 +360,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] (myColumn)} */
     @Interpretable("AllAfter0")
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun <C> ColumnSet<C>.allAfter(column: AnyColumnReference): ColumnSet<C> = allAfter(column.path())
 
     /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] (Type::myColumn)} */
@@ -396,8 +394,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] (myColumn)} */
     @Interpretable("AllAfter2")
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allAfter(column: AnyColumnReference): ColumnSet<*> = allAfter(column.path())
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] (Type::myColumn)} */
@@ -444,8 +440,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun SingleColumn<DataRow<*>>.allColsAfter(column: String): ColumnSet<*> = allColsAfter(pathOf(column))
 
     /** @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
         allColsAfter(column.path())
 
@@ -478,8 +472,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun String.allColsAfter(column: String): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
     /** @include [StringAllAfterDocs] {@set [StringAllAfterDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun String.allColsAfter(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
     /** @include [StringAllAfterDocs] {@set [StringAllAfterDocs.Arg] (Type::myColumn)} */
@@ -553,8 +545,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsAfter(column: String): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
     /** @include [ColumnPathAllAfterDocs] {@set [ColumnPathAllAfterDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun ColumnPath.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
         columnGroup(this).allColsAfter(column)
 
@@ -607,8 +597,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] (myColumn)} */
     @Interpretable("AllFrom0")
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun <C> ColumnSet<C>.allFrom(column: AnyColumnReference): ColumnSet<C> = allFrom(column.path())
 
     /** @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] (Type::myColumn)} */
@@ -642,8 +630,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] (myColumn)} */
     @Interpretable("AllFrom2")
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allFrom(column: AnyColumnReference): ColumnSet<*> =
         asSingleColumn().allColsFrom(column)
 
@@ -690,8 +676,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun SingleColumn<DataRow<*>>.allColsFrom(column: String): ColumnSet<*> = allColsFrom(pathOf(column))
 
     /** @include [SingleColumnAllFromDocs] {@set [SingleColumnAllFromDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsFrom(column: AnyColumnReference): ColumnSet<*> =
         allColsFrom(column.path())
 
@@ -724,8 +708,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun String.allColsFrom(column: String): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** @include [StringAllFromDocs] {@set [StringAllFromDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun String.allColsFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** @include [StringAllFromDocs] {@set [StringAllFromDocs.Arg] (Type::myColumn)} */
@@ -799,8 +781,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsFrom(column: String): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** @include [ColumnPathAllFromDocs] {@set [ColumnPathAllFromDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun ColumnPath.allColsFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** @include [ColumnPathAllFromDocs] {@set [ColumnPathAllFromDocs.Arg] (Type::myColumn)} */
@@ -852,8 +832,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] (myColumn)} */
     @Interpretable("AllBefore0")
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun <C> ColumnSet<C>.allBefore(column: AnyColumnReference): ColumnSet<C> = allBefore(column.path())
 
     /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] (Type::myColumn)} */
@@ -889,8 +867,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] (myColumn)} */
     @Interpretable("AllBefore2")
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allBefore(column: AnyColumnReference): ColumnSet<*> = allBefore(column.path())
 
     /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] (Type::myColumn)} */
@@ -934,8 +910,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun SingleColumn<DataRow<*>>.allColsBefore(column: String): ColumnSet<*> = allColsBefore(pathOf(column))
 
     /** @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
         allColsBefore(column.path())
 
@@ -969,8 +943,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun String.allColsBefore(column: String): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
     /** @include [StringAllBeforeDocs] {@set [StringAllBeforeDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun String.allColsBefore(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
     /** @include [StringAllBeforeDocs] {@set [StringAllBeforeDocs.Arg] (Type::myColumn)} */
@@ -1044,8 +1016,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsBefore(column: String): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
     /** @include [ColumnPathAllBeforeDocs] {@set [ColumnPathAllBeforeDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun ColumnPath.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
         columnGroup(this).allColsBefore(column)
 
@@ -1098,8 +1068,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] (myColumn)} */
     @Interpretable("AllUpTo0")
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun <C> ColumnSet<C>.allUpTo(column: AnyColumnReference): ColumnSet<C> = allUpTo(column.path())
 
     /** @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] (Type::myColumn)} */
@@ -1133,8 +1101,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] (myColumn)} */
     @Interpretable("AllUpTo2")
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allUpTo(column: AnyColumnReference): ColumnSet<*> =
         asSingleColumn().allColsUpTo(column)
 
@@ -1181,8 +1147,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun SingleColumn<DataRow<*>>.allColsUpTo(column: String): ColumnSet<*> = allColsUpTo(pathOf(column))
 
     /** @include [SingleColumnAllUpToDocs] {@set [SingleColumnAllUpToDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsUpTo(column: AnyColumnReference): ColumnSet<*> =
         allColsUpTo(column.path())
 
@@ -1215,8 +1179,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun String.allColsUpTo(column: String): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** @include [StringAllUpToDocs] {@set [StringAllUpToDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun String.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** @include [StringAllUpToDocs] {@set [StringAllUpToDocs.Arg] (Type::myColumn)} */
@@ -1290,8 +1252,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsUpTo(column: String): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** @include [ColumnPathAllUpToDocs] {@set [ColumnPathAllUpToDocs.Arg] (myColumn)} */
-    @Deprecated(DEPRECATED_ACCESS_API)
-    @AccessApiOverload
     public fun ColumnPath.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** @include [ColumnPathAllUpToDocs] {@set [ColumnPathAllUpToDocs.Arg] (Type::myColumn)} */
