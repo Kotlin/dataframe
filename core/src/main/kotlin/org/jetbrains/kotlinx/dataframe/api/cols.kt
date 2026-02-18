@@ -403,12 +403,16 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
     @Interpretable("Cols0")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = asSingleColumn().cols(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -425,6 +429,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias SingleColumnColsVarargColumnReferenceDocs = Nothing
 
     /** @include [SingleColumnColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -433,6 +439,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [SingleColumnColsVarargColumnReferenceDocs]
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -449,10 +457,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias StringColsVarargColumnReferenceDocs = Nothing
 
     /** @include [StringColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> String.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [StringColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> String.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -469,12 +481,16 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias KPropertyColsVarargColumnReferenceDocs = Nothing
 
     /** @include [KPropertyColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> KProperty<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertyColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> KProperty<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -493,10 +509,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias ColumnPathColsVarargColumnReferenceDocs = Nothing
 
     /** @include [ColumnPathColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnPath.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [ColumnPathColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> ColumnPath.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -594,14 +614,20 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertiesColsVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [KPropertiesColsVarargStringDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [KPropertiesColsVarargStringDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun KProperty<*>.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -730,14 +756,20 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertiesColsVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [KPropertiesColsVarargColumnPathDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [KPropertiesColsVarargColumnPathDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun KProperty<*>.get(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -782,10 +814,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias ColumnsSelectionDslColsVarargKPropertyDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnsSelectionDsl<*>.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         this.asSingleColumn().cols(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -802,12 +838,16 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias SingleColumnColsVarargKPropertyDocs = Nothing
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = colsInternal(listOf(firstCol, *otherCols).map { pathOf(it.name) }).cast()
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -824,10 +864,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias StringColsVarargKPropertyDocs = Nothing
 
     /** @include [StringColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> String.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [StringColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> String.get(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         cols(firstCol, *otherCols)
 
@@ -842,10 +886,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias KPropertyColsVarargKPropertyDocs = Nothing
 
     /** @include [KPropertyColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> KProperty<*>.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertyColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> KProperty<*>.get(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         cols(firstCol, *otherCols)
 
@@ -860,10 +908,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias ColumnPathColsVarargKPropertyDocs = Nothing
 
     /** @include [ColumnPathColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnPath.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [ColumnPathColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> ColumnPath.get(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         cols(firstCol, *otherCols)
 
@@ -963,10 +1015,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyColsIndicesDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(firstIndex: Int, vararg otherIndices: Int): ColumnSet<*> =
         cols<Any?>(firstIndex, *otherIndices)
 
     /** @include [KPropertyColsIndicesDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(firstIndex: Int, vararg otherIndices: Int): ColumnSet<T> =
         columnGroup(this).cols(firstIndex, *otherIndices).cast()
 
@@ -1081,9 +1137,13 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyColsRangeDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = cols<Any?>(range)
 
     /** @include [KPropertyColsRangeDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(range: IntRange): ColumnSet<T> = columnGroup(this).cols(range).cast()
 
     /**
