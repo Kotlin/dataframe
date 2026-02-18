@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -30,13 +30,13 @@ import kotlin.reflect.KProperty
  */
 internal interface UngroupDocs {
     /**
-     * {@comment Version of [SelectingColumns] with correctly filled in examples}
-     * @include [SelectingColumns] {@include [SetUngroupOperationArg]}
+     * {@comment Version of [`Selecting Columns`] with correctly filled in examples}
+     * @include [`Selecting Columns`] {@include [SetUngroupOperationArg]}
      */
     typealias UngroupSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [ungroup][ungroup]} */
+/** {@set [`Selecting Columns`.OPERATION] [ungroup][ungroup]} */
 @ExcludeFromSources
 private typealias SetUngroupOperationArg = Nothing
 
@@ -49,7 +49,7 @@ private typealias CommonUngroupDocs = Nothing
 
 /**
  * @include [CommonUngroupDocs]
- * @include [SelectingColumns.Dsl] {@include [SetUngroupOperationArg]}
+ * @include [`Selecting Columns`.`Columns Selection DSL`] {@include [SetUngroupOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.ungroup { groupA and groupB }
@@ -65,7 +65,7 @@ public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFram
 
 /**
  * @include [CommonUngroupDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetUngroupOperationArg]}
+ * @include [`Selecting Columns`.`Column Names API`.`Column Names API with Example`] {@include [SetUngroupOperationArg]}
  * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to ungroup.
  */
 public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungroup { columns.toColumnSet() }

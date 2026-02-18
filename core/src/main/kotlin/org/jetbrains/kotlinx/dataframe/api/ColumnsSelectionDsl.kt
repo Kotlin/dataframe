@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.ExportAsHtml
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -36,8 +36,8 @@ public annotation class ColumnsSelectionDslMarker
 
 /**
  * ## Columns Selection DSL
- * {@include [SelectingColumns.Dsl.WithExample]}
- * {@set [SelectingColumns.OPERATION] [select][DataFrame.select]}
+ * {@include [`Selecting Columns`.`Columns Selection DSL`.`Columns Selection DSL with Example`]}
+ * {@set [`Selecting Columns`.OPERATION] [select][DataFrame.select]}
  *
  * @comment This interface be safely cast to [SingleColumn] across the library because it's always
  * implemented in combination with [DataFrameReceiver] which is a [SingleColumn] itself.

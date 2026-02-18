@@ -4,7 +4,6 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.diff
 import org.jetbrains.kotlinx.dataframe.api.drop
@@ -66,7 +65,7 @@ internal interface SelectingRows {
     /** [Row-Value Condition][RowValueCondition.WithExample] */
     typealias RowValueConditionLink = Nothing
 
-    /** Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
+    /** Filter or find rows to operate on after [selecting columns][`Selecting Columns`] using a
      * [row value filter][RowValueFilter].
      */
     interface RowValueCondition {

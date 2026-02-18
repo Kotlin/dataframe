@@ -150,7 +150,7 @@ internal interface DocumentationUrls {
     /** [See "`groupBy` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#groupby-statistics) */
     typealias GroupByStatistics = Nothing
 
-    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/groupby.html#pivot-groupby) */
+    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/pivot.html#pivot-groupby) */
     typealias PivotGroupBy = Nothing
 
     /** [See `pivot` on the documentation website.]({@include [Url]}/pivot.html) */

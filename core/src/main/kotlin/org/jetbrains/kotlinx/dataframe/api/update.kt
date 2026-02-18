@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -25,7 +24,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
@@ -71,7 +70,7 @@ public class Update<T, C>(
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * {@get [UPDATE_OPERATION]}**`  {  `**[`columns`][SelectingColumns]**` }`**
+     * {@get [UPDATE_OPERATION]}**`  {  `**[`columns`][`Selecting Columns`]**` }`**
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`where`**][Update.where]**`  {  `**[`rowValueCondition`][SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
@@ -119,8 +118,8 @@ public class Update<T, C>(
     }
 
     /**
-     * {@comment Version of [SelectingColumns] with correctly filled in examples}
-     * @include [SelectingColumns] {@include [SetSelectingColumnsOperationArg]}
+     * {@comment Version of [`Selecting Columns`] with correctly filled in examples}
+     * @include [`Selecting Columns`] {@include [SetSelectingColumnsOperationArg]}
      */
     public typealias UpdateSelectingOptions = Nothing
 
@@ -140,7 +139,7 @@ public class Update<T, C>(
 
 // region update
 
-/** {@set [SelectingColumns.OPERATION] [update][update]} */
+/** {@set [`Selecting Columns`.OPERATION] [update][update]} */
 @ExcludeFromSources
 private typealias SetSelectingColumnsOperationArg = Nothing
 
@@ -163,7 +162,7 @@ private typealias UpdateWithNote = Nothing
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [`Selecting Columns`.`Columns Selection DSL`.`Columns Selection DSL with Example`] {@include [SetSelectingColumnsOperationArg]}
  * @include [Update.DslParam]
  */
 @Interpretable("Update0")
@@ -171,7 +170,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [`Selecting Columns`.`Column Names API`.`Column Names API with Example`] {@include [SetSelectingColumnsOperationArg]}
  * @include [UpdateWithNote]
  * @include [Update.ColumnNamesParam]
  */
@@ -179,7 +178,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [`Selecting Columns`.KProperties.WithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [UpdateWithNote]
  * @include [Update.KPropertiesParam]
  */
@@ -189,7 +188,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [`Selecting Columns`.ColumnAccessors.WithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [UpdateWithNote]
  * @include [Update.ColumnAccessorsParam]
  */
@@ -455,7 +454,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- * @include [SelectingColumns.ColumnAccessors]
+ * @include [`Selecting Columns`.ColumnAccessors]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
@@ -475,7 +474,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- * @include [SelectingColumns.KProperties]
+ * @include [`Selecting Columns`.KProperties]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
@@ -495,7 +494,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [`Selecting Columns`.`Column Names API`]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}

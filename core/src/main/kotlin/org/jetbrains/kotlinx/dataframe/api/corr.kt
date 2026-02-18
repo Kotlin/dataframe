@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.impl.api.corrImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -47,7 +47,7 @@ import kotlin.reflect.typeOf
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
@@ -56,8 +56,8 @@ import kotlin.reflect.typeOf
 internal interface CorrDocs {
 
     /**
-     * {@comment Version of [SelectingColumns] with correctly filled in examples}
-     * @include [SelectingColumns] {@include [SetCorrOperationArg]}
+     * {@comment Version of [`Selecting Columns`] with correctly filled in examples}
+     * @include [`Selecting Columns`] {@include [SetCorrOperationArg]}
      */
     typealias SelectingOptions = Nothing
 
@@ -78,7 +78,7 @@ internal interface CorrDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [corr][corr]} */
+/** {@set [`Selecting Columns`.OPERATION] [corr][corr]} */
 @ExcludeFromSources
 private typealias SetCorrOperationArg = Nothing
 
@@ -138,7 +138,7 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.Dsl] {@include [SetCorrOperationArg]}
+ * @include [`Selecting Columns`.`Columns Selection DSL`] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -162,7 +162,7 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.ColumnNames] {@include [SetCorrOperationArg]}
+ * @include [`Selecting Columns`.`Column Names API`] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -202,7 +202,7 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
@@ -219,7 +219,7 @@ private typealias CommonCorrWithDocs = Nothing
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.Dsl] {@include [SetCorrOperationArg]}
+ * @include [`Selecting Columns`.`Columns Selection DSL`] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin
@@ -238,7 +238,7 @@ public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataF
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.ColumnNames] {@include [SetCorrOperationArg]}
+ * @include [`Selecting Columns`.`Column Names API`] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin

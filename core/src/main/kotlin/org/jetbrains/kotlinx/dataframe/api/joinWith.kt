@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.impl.api.joinWithImpl
 
 /**
@@ -90,7 +90,7 @@ public typealias JoinExpression<A, B> = Selector<JoinedDataRow<A, B>, Boolean>
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
@@ -121,7 +121,7 @@ public fun <A, B> DataFrame<A>.joinWith(
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
@@ -148,7 +148,7 @@ public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
@@ -175,7 +175,7 @@ public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression:
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
@@ -202,7 +202,7 @@ public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
@@ -229,7 +229,7 @@ public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression:
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *
@@ -256,7 +256,7 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information, {@include [DocumentationUrls.JoinWith]}.
  *

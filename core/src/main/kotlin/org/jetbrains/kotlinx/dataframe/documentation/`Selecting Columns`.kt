@@ -7,38 +7,28 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.fillNulls
-import org.jetbrains.kotlinx.dataframe.api.gather
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import kotlin.reflect.KProperty
 
-/** [Selecting Columns][SelectingColumns] */
+/** [Selecting Columns][`Selecting Columns`] */
 @ExcludeFromSources
 internal typealias SelectingColumnsLink = Nothing
 
 /**
  * ## Selecting Columns
- * Selecting columns for various operations (including but not limited to
- * [DataFrame.select], [DataFrame.update], [DataFrame.gather], and [DataFrame.fillNulls])
+ *
+ * Selecting columns for various [DataFrame] operations
  * can be done in the following ways:
- * ### 1. {@include [DslLink]}
- * {@include [Dsl.WithExample]}
- * #### NOTE: There's also a 'single column' variant used sometimes: {@include [DslSingleLink]}.
- * ### 2. {@include [ColumnNamesLink]}
- * {@include [ColumnNames.WithExample]}
- * ### 3. {@include [ColumnAccessorsLink]}
- * {@include [ColumnAccessors.WithExample]}
- * ### 4. {@include [KPropertiesLink]}
- * {@include [KProperties.WithExample]}
+ * ### 1. {@include [CSDslWithExampleLink]}
+ * {@include [`Columns Selection DSL`.`Columns Selection DSL with Example`]}
+ * > There's also a 'single column' variant used sometimes: {@include [CSDslSingleWithExampleLink]}.
+ * ### 2. {@include [ColumnNamesWithExampleLink]}
+ * {@include [`Column Names API`.`Column Names API with Example`]}
  */
-internal interface SelectingColumns {
+@Suppress("ClassName")
+internal interface `Selecting Columns` {
 
     /**
      * This can include [column groups][ColumnGroup] and nested columns.
@@ -70,7 +60,6 @@ internal interface SelectingColumns {
 
     /**
      * Select or express columns using the {@include [ColumnsSelectionDslLink]}.
-     * (Any (combination of) {@include [AccessApiLink]}).
      *
      * This DSL is initiated by a [Columns Selector][ColumnsSelector] lambda,
      * which operates in the context of the {@include [ColumnsSelectionDslLink]} and
@@ -78,14 +67,14 @@ internal interface SelectingColumns {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * ### Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
+     * Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
      */
-    interface Dsl {
+    interface `Columns Selection DSL` {
 
         /**
-         * {@include [Dsl]}
+         * {@include [`Columns Selection DSL`]}
          *
          * #### For example:
          *
@@ -98,12 +87,16 @@ internal interface SelectingColumns {
          * @include [SetDefaultOperationArg]
          * @include [SetDefaultReceiverArg]
          */
-        typealias WithExample = Nothing
+        typealias `Columns Selection DSL with Example` = Nothing
     }
 
-    /** [Columns Selection DSL][Dsl.WithExample] */
+    /** [Columns Selection DSL][`Columns Selection DSL`] */
     @ExcludeFromSources
-    typealias DslLink = Nothing
+    typealias CSDslLink = Nothing
+
+    /** [Columns Selection DSL][`Columns Selection DSL`.`Columns Selection DSL with Example`] */
+    @ExcludeFromSources
+    typealias CSDslWithExampleLink = Nothing
 
     /**
      * Select or express a single column using the Column Selection DSL.
@@ -119,10 +112,10 @@ internal interface SelectingColumns {
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
      */
-    interface DslSingle {
+    interface `Column Selection DSL` {
 
         /**
-         * {@include [DslSingle]}
+         * {@include [`Column Selection DSL`]}
          *
          * #### For example:
          *
@@ -135,77 +128,41 @@ internal interface SelectingColumns {
          * @include [SetDefaultOperationArg]
          * @include [SetDefaultReceiverArg]
          */
-        typealias WithExample = Nothing
+        typealias `Columns Selection DSL with Example` = Nothing
     }
 
-    /** [Column Selection DSL][DslSingle.WithExample] */
+    /** [Column Selection DSL][`Column Selection DSL`] */
     @ExcludeFromSources
-    typealias DslSingleLink = Nothing
+    typealias CSDslSingleLink = Nothing
+
+    /** [Column Selection DSL][`Column Selection DSL`.`Columns Selection DSL with Example`] */
+    @ExcludeFromSources
+    typealias CSDslSingleWithExampleLink = Nothing
 
     /**
-     * Select columns using their [column names][String]
+     * Select single or multiple columns using their names as [String]s.
      * ({@include [`Access APIs`.StringApiLink]}).
      */
-    interface ColumnNames {
+    interface `Column Names API` {
 
         /**
-         * {@include [ColumnNames]}
+         * {@include [`Column Names API`]}
          *
          * #### For example:
          *
-         * `df.`{@get [OPERATION]}`("length", "age")`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`("length", "age")`
+         *
          * @include [SetDefaultOperationArg]
+         * @include [SetDefaultReceiverArg]
          */
-        typealias WithExample = Nothing
+        typealias `Column Names API with Example` = Nothing
     }
 
-    /** [Column names][ColumnNames.WithExample] */
+    /** [Column names][`Column Names API`] */
     @ExcludeFromSources
     typealias ColumnNamesLink = Nothing
 
-    /**
-     * Select columns using [column accessors][ColumnReference]
-     * ({@include [`Access APIs`.ColumnAccessorsApiLink]}).
-     */
-    interface ColumnAccessors {
-
-        /**
-         * {@include [ColumnAccessors]}
-         *
-         * #### For example:
-         *
-         * `val length by `[column][column]`<`[Double][Double]`>()`
-         *
-         * `val age by `[column][column]`<`[Double][Double]`>()`
-         *
-         * `df.`{@get [OPERATION]}`(length, age)`
-         * @include [SetDefaultOperationArg]
-         */
-        typealias WithExample = Nothing
-    }
-
-    /** [Column references][ColumnAccessors.WithExample] */
+    /** [Column names][`Column Names API`.`Column Names API with Example`] */
     @ExcludeFromSources
-    typealias ColumnAccessorsLink = Nothing
-
-    /** Select columns using [KProperties][KProperty] ({@include [`Access APIs`.KPropertiesApiLink]}). */
-    interface KProperties {
-
-        /**
-         * {@include [KProperties]}
-         *
-         * #### For example:
-         * ```kotlin
-         * data class Person(val length: Double, val age: Double)
-         * ```
-         *
-         * `df.`{@get [OPERATION]}`(Person::length, Person::age)`
-         * @include [SetDefaultOperationArg]
-         */
-        typealias WithExample = Nothing
-    }
-
-    /** [KProperties][KProperties.WithExample] */
-    @ExcludeFromSources
-    typealias KPropertiesLink = Nothing
+    typealias ColumnNamesWithExampleLink = Nothing
 }

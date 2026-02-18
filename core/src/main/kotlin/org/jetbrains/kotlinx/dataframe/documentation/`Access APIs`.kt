@@ -31,10 +31,15 @@ internal interface `Access APIs` {
      * ## String API
      *
      * In this [`Access APIs`], columns are accessed by a [String] representing their name.
-     * Type-checking is done at runtime, name-checking too.
+     * Type-checking and name-checking are done at runtime, too.
+     *
+     * ### String Column Accessors
+     *
+     * You can also specify a column using a [String] representing their name
+     * and path inside the [Columns Selection DSL][`Selecting Columns`.`Columns Selection DSL`] and
+     * [Row Expressions][ExpressionsGivenRow].
      *
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
-     *
      */
     typealias `String API` = Nothing
 
@@ -71,8 +76,8 @@ internal interface `Access APIs` {
      *
      * You can access columns using extension properties in a type-safe way, avoiding typos and relying on autocompletion.
      * These properties can be used in:
-     * - [Columns Selection DSL][SelectingColumns.Dsl.WithExample]
-     * - [DataRow Expressions][ExpressionsGivenRow]
+     * - [Columns Selection DSL][`Selecting Columns`.`Columns Selection DSL`]
+     * - [Row Expressions][ExpressionsGivenRow]
      *
      * ```kotlin
      * // Access the "name" column
