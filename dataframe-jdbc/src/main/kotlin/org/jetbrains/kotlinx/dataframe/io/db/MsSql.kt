@@ -17,8 +17,6 @@ public object MsSql : DbType("sqlserver") {
     override val driverClassName: String
         get() = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? = null
-
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
 
@@ -46,8 +44,6 @@ public object MsSql : DbType("sqlserver") {
             tables.getString("table_schem"),
             tables.getString("table_cat"),
         )
-
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 
     public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
         sqlQuery.replace("SELECT", "SELECT TOP $limit", ignoreCase = true)

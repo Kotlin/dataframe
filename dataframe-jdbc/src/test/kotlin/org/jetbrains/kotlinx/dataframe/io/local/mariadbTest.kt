@@ -24,6 +24,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Date
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
 
 private const val URL = "jdbc:mariadb://localhost:3307"
 private const val USER_NAME = "root"
@@ -348,8 +349,8 @@ class MariadbTest {
         schema.columns["longblobCol"]!!.type shouldBe typeOf<Blob>()
         schema.columns["tinyblobCol"]!!.type shouldBe typeOf<Blob>()
         schema.columns["dateCol"]!!.type shouldBe typeOf<Date>()
-        schema.columns["datetimeCol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
-        schema.columns["timestampCol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["datetimeCol"]!!.type shouldBe typeOf<Instant>()
+        schema.columns["timestampCol"]!!.type shouldBe typeOf<Instant>()
         schema.columns["timeCol"]!!.type shouldBe typeOf<java.sql.Time>()
         schema.columns["yearCol"]!!.type shouldBe typeOf<Date>()
 
