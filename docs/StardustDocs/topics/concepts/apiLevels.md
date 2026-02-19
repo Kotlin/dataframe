@@ -26,6 +26,13 @@ to any other library working with dataframes:
 
 <!---FUN stringApiExample1-->
 
+```kotlin
+// Get the "fullName" column
+df["fullName"]
+// Rename the "fullName" column into "name"
+df.rename("fullName").into("name")
+```
+
 <!---END-->
 
 Also, you can create [*String Column Accessors*](StringApi.md#string-column-accessors)
@@ -33,6 +40,18 @@ that can be used inside the [Columns Selection DSL](ColumnSelectors.md)
 and [row expressions](DataRow.md#row-expressions) using special methods:
 
 <!---FUN stringApiExample2-->
+
+```kotlin
+// Select the "firstName" column from the "fullName" column group
+// and the "age" column
+df.select { "fullName"["firstName"]<String>() and "age"<Int>() }
+// Takes only rows where the
+// "fullName"->"firstName" column value is equal to "Alice"
+// and "age" column value is greater or equal to 18
+df.filter {
+    "fullName"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18
+}
+```
 
 <!---END-->
 
@@ -58,6 +77,22 @@ The same operations as in the String API can be performed via extension properti
 and completely name- and typesafe:
 
 <!---FUN extensionPropertiesApiExample-->
+
+```kotlin
+// Get "fullName" column
+df.fullName
+// Rename "fullName" column into "name"
+df.rename { fullName }.into("name")
+// Select the "firstName" column from the "fullName" column group
+// and the "age" column
+df.select { fullName.firstName and age }
+// Takes only rows where the
+// "fullName"->"firstName" column value is equal to "Alice"
+// and "age" column value is greater or equal to 18
+df.filter {
+    fullName.firstName == "Alice" && age >= 18
+}
+```
 
 <!---END-->
 
