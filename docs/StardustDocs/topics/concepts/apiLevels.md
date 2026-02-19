@@ -23,14 +23,15 @@ The most basic String API usage is quite intuitive and looks very similar
 to any other library working with dataframes:
 
 ```kotlin
-// Get "name" column
+// Get "fullName" column
 df["fullName"]
 // Rename "fullName" column into "name"
 df.rename("fullName").into("name")
 ```
 
-Also, String API methods can be used inside the [Columns Selection DSL](ColumnSelectors.md)
-and [row expressions](DataRow.md#row-expressions) using a `String` invocation:
+Also, you can create [*String Column Accessors*](StringApi.md#string-column-accessors)
+that can be used inside the [Columns Selection DSL](ColumnSelectors.md)
+and [row expressions](DataRow.md#row-expressions) using special methods:
 
 ```kotlin
 // Select "firstName" and "lastName" columns from the "name" column group
@@ -40,7 +41,7 @@ df.select { colGroup("fullName").select {
 // Takes only rows where the "age" column 
 // (the subcolumn of the "info" column group) 
 // is greater or equal to 18
-df.filter { "info"["age"]<Int>() >= 18 }
+df.filter { getColumnGroup("info").getValue<Int>("age") >= 18 }
 ```
 
 Though the String API is the simplest of the two and doesn't require any additional setup, 
@@ -65,8 +66,8 @@ The same operations as in the String API could be performed via extension proper
 and completely name- and typesafe:
 
 ```kotlin
-// Get "name" column
-df.name
+// Get "fullName" column
+df.fullName
 // Rename "fullName" column into "name"
 df.rename { fullName }.into("name")
 // Select "firstName" and "lastName" columns from "fullName" column group

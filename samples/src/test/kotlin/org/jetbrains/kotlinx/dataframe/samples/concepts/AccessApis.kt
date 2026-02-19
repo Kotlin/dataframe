@@ -34,8 +34,8 @@ class AccessApis {
             columnOf("Alice") named "firstName",
             columnOf("Johnson") named "lastName",
         ) named "fullName",
-        columnOf(20) named "age"
-        ).cast<Person>()
+        columnOf(20) named "age",
+    ).cast<Person>()
 
     @Test
     fun stringApiExample1() {
@@ -76,7 +76,7 @@ class AccessApis {
     }
 
     fun stringApiExampleFull() {
-        /* Column Selection DSL */
+        // Column Selection DSL
 
         // Select the "firstName" subcolumn of the "name" column group
         // and the "age" column
@@ -86,7 +86,7 @@ class AccessApis {
         // specify the column type as an invocation type argument
         df.mean { "age"<Int>() }
 
-        /* Row Expressions */
+        // Row Expressions
 
         // Add a new "fullName" column by combining
         // the "firstName" and "lastName" column values
