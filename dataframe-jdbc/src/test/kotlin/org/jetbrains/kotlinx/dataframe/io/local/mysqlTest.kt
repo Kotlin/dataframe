@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.local
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -23,6 +24,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Date
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
 
 private const val URL = "jdbc:mysql://localhost:3306"
 private const val USER_NAME = "root"
@@ -343,8 +345,8 @@ class MySqlTest {
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
         schema.columns["dateCol"]!!.type shouldBe typeOf<Date>()
-        schema.columns["datetimeCol"]!!.type shouldBe typeOf<java.time.LocalDateTime>()
-        schema.columns["timestampCol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["datetimeCol"]!!.type shouldBe typeOf<LocalDateTime>()
+        schema.columns["timestampCol"]!!.type shouldBe typeOf<Instant>()
         schema.columns["timeCol"]!!.type shouldBe typeOf<java.sql.Time>()
         schema.columns["yearCol"]!!.type shouldBe typeOf<Date>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()

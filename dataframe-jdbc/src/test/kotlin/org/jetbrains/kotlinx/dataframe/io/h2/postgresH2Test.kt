@@ -123,6 +123,18 @@ class PostgresH2Test {
 
             connection.createStatement().execute(createTableQuery.trimIndent())
 
+            // Table with STRUCT/ROW column to verify JDBC Types.STRUCT handling
+            @Language("SQL")
+            val createTableWithStruct =
+                """
+                CREATE TABLE IF NOT EXISTS table3 (
+                    id serial PRIMARY KEY,
+                    structCol ROW(a INT, b VARCHAR(10)) not null
+                )
+                """.trimIndent()
+
+            connection.createStatement().execute(createTableWithStruct)
+
             @Language("SQL")
             val insertData1 =
                 """
@@ -196,6 +208,17 @@ class PostgresH2Test {
                     st.executeUpdate()
                 }
             }
+
+            // Insert data into table3 with ROW/STRUCT literals
+            @Language("SQL")
+            val insertStructs =
+                """
+                INSERT INTO table3 (structCol) VALUES
+                (ROW(1, 'X')),
+                (ROW(2, 'Y')),
+                (ROW(3, 'Z'))
+                """.trimIndent()
+            connection.createStatement().execute(insertStructs)
         }
 
         @AfterClass
@@ -284,6 +307,19 @@ class PostgresH2Test {
             it[Table2::realcol] == 12.34f
         }.rowsCount() shouldBe 3
         table2Df[0][4] shouldBe 1001
+    }
+
+    @Test
+    fun `read composite column from table`() {
+        val tableName3 = "table3"
+        val df3 = DataFrame.readSqlTable(connection, tableName3)
+
+        // Validate row count
+        df3.rowsCount() shouldBe 3
+
+        // Validate schema type stays as Any for STRUCT (no special mapping yet)
+        val schema3 = DataFrameSchema.readSqlTable(connection, tableName3)
+        schema3.columns["structcol"]!!.type shouldBe typeOf<Any>()
     }
 
     @Test

@@ -1,6 +1,7 @@
 plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
+        alias(buildConfig)
     }
     with(libs.plugins) {
         alias(publisher)
@@ -14,6 +15,7 @@ dependencies {
     api(projects.core)
     compileOnly(libs.duckdb.jdbc)
     compileOnly(libs.sqlite)
+    compileOnly(libs.postgresql)
     implementation(libs.kotlinLogging)
     testImplementation(libs.mariadb)
     testImplementation(libs.sqlite)
