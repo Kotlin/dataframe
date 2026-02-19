@@ -157,21 +157,21 @@ class CodeGenerationTests : BaseTest() {
         val property = ::df
         val grouped = df.move { name and city }.under("nameAndCity")
         val generated = ReplCodeGenerator.create().process(grouped, property)
-        val type1 = ReplCodeGeneratorImpl.markerInterfacePrefix + "1"
+        val nestedType = "NameAndCity"
         val type2 = ReplCodeGeneratorImpl.markerInterfacePrefix
         val declaration1 =
             """
             @DataSchema(isOpen = false)
-            interface $type1 {
+            interface $nestedType {
                 val city: String?
                 val name: String
             }
-            
-            val $dfName<$type1>.city: $dataCol<$stringName?> @JvmName("${type1}_city") get() = this["city"] as $dataCol<$stringName?>
-            val $dfRowName<$type1>.city: $stringName? @JvmName("${type1}_city") get() = this["city"] as $stringName?
-            val $dfName<$type1>.name: $dataCol<$stringName> @JvmName("${type1}_name") get() = this["name"] as $dataCol<$stringName>
-            val $dfRowName<$type1>.name: $stringName @JvmName("${type1}_name") get() = this["name"] as $stringName
-            
+
+            val $dfName<$nestedType>.city: $dataCol<$stringName?> @JvmName("${nestedType}_city") get() = this["city"] as $dataCol<$stringName?>
+            val $dfRowName<$nestedType>.city: $stringName? @JvmName("${nestedType}_city") get() = this["city"] as $stringName?
+            val $dfName<$nestedType>.name: $dataCol<$stringName> @JvmName("${nestedType}_name") get() = this["name"] as $dataCol<$stringName>
+            val $dfRowName<$nestedType>.name: $stringName @JvmName("${nestedType}_name") get() = this["name"] as $stringName
+
             """.trimIndent()
 
         val declaration2 =
@@ -179,14 +179,14 @@ class CodeGenerationTests : BaseTest() {
             @DataSchema
             interface $type2 {
                 val age: Int
-                val nameAndCity: _DataFrameType1
+                val nameAndCity: $nestedType
                 val weight: Int?
             }
-            
+
             val $dfName<$type2>.age: $dataCol<$intName> @JvmName("${type2}_age") get() = this["age"] as $dataCol<$intName>
             val $dfRowName<$type2>.age: $intName @JvmName("${type2}_age") get() = this["age"] as $intName
-            val $dfName<$type2>.nameAndCity: $colGroup<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $colGroup<$type1>
-            val $dfRowName<$type2>.nameAndCity: $dataRow<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$type1>
+            val $dfName<$type2>.nameAndCity: $colGroup<$nestedType> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $colGroup<$nestedType>
+            val $dfRowName<$type2>.nameAndCity: $dataRow<$nestedType> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$nestedType>
             val $dfName<$type2>.weight: $dataCol<$intName?> @JvmName("${type2}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$type2>.weight: $intName? @JvmName("${type2}_weight") get() = this["weight"] as $intName?
             """.trimIndent()

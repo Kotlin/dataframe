@@ -16,6 +16,10 @@ public data class ColumnPath(val path: List<String>) :
     List<String> by path,
     ColumnAccessor<Any?> {
 
+    internal companion object {
+        internal val EMPTY = ColumnPath(emptyList())
+    }
+
     public constructor(name: String) : this(listOf(name))
 
     public fun drop(size: Int): ColumnPath = ColumnPath(path.drop(size))

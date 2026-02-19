@@ -7,7 +7,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls

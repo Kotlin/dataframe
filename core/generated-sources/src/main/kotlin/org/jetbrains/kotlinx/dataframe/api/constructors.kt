@@ -567,6 +567,7 @@ public fun <T> emptyDataFrame(): DataFrame<T> = DataFrame.empty().cast()
 // region create ColumnPath
 
 @Interpretable("PathOf")
-public fun pathOf(vararg columnNames: String): ColumnPath = ColumnPath(columnNames.asList())
+public fun pathOf(vararg columnNames: String): ColumnPath =
+    if (columnNames.isEmpty()) ColumnPath.EMPTY else ColumnPath(columnNames.asList())
 
 // endregion
