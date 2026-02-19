@@ -255,6 +255,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/db/PostgreSql : org/jetbra
 	public fun buildTableMetadata (Ljava/sql/ResultSet;)Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;
 	public fun getDriverClassName ()Ljava/lang/String;
 	public fun getExpectedJdbcType (Lorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;)Lkotlin/reflect/KType;
+	public fun getValueFromResultSet (Ljava/sql/ResultSet;ILorg/jetbrains/kotlinx/dataframe/io/db/TableColumnMetadata;Lkotlin/reflect/KType;)Ljava/lang/Object;
 	public fun isSystemTable (Lorg/jetbrains/kotlinx/dataframe/io/db/TableMetadata;)Z
 	public fun quoteIdentifier (Ljava/lang/String;)Ljava/lang/String;
 }
