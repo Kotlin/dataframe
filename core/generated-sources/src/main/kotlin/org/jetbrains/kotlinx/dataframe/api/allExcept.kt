@@ -140,16 +140,16 @@ public interface AllExceptColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`allExcept`**][ColumnsSelectionDsl.allExcept] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** [**`except`**][ColumnsSelectionDsl.except] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`allColsExcept`**][ColumnsSelectionDsl.allColsExcept] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
 
         /** __`.`__[**`except`**][ColumnsSelectionDsl.except] */
-        public interface ColumnGroupExceptName
+        public typealias ColumnGroupExceptName = Nothing
     }
 
     // region ColumnSet

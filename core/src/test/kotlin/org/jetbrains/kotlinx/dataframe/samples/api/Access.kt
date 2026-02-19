@@ -6,10 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.countDistinct
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.drop
@@ -37,13 +34,11 @@ import org.jetbrains.kotlinx.dataframe.api.maxByOrNull
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.takeLast
 import org.jetbrains.kotlinx.dataframe.api.takeWhile
@@ -409,37 +404,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun namedAndRenameCol() {
-        // SampleStart
-        val unnamedCol = columnOf("Alice", "Bob")
-        val colRename = unnamedCol.rename("name")
-        val colNamed = columnOf("Alice", "Bob") named "name"
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun namedColumnWithoutValues() {
-        // SampleStart
-        val name by column<String>()
-        val col = column<String>("name")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun colRefForTypedAccess() {
-        val df = dataFrameOf("name")("Alice", "Bob")
-        val name by column<String>()
-        val col = column<String>("name")
-        // SampleStart
-        df.filter { it[name].startsWith("A") }
-        df.sortBy { col }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun iterableApi() {
         // SampleStart
         df.forEach { println(it) }
@@ -571,41 +535,6 @@ class Access : TestBase() {
     }
 
     @Test
-    fun columnSelectors_kproperties() {
-        // SampleStart
-        // by column name
-        df.select { it[Person::name] }
-        df.select { (Person::name)() }
-        df.select { col(Person::name) }
-
-        // by column path
-        df.select { it[Person::name][Name::firstName] }
-        df.select { Person::name[Name::firstName] }
-
-        // with a new name
-        df.select { Person::name named "Full Name" }
-
-        // converted
-        df.select { Person::name[Name::firstName].map { it.lowercase() } }
-
-        // column arithmetics
-        df.select { 2021 - (Person::age)() }
-
-        // two columns
-        df.select { Person::name and Person::age }
-
-        // range of columns
-        df.select { Person::name..Person::age }
-
-        // all columns of ColumnGroup
-        df.select { Person::name.allCols() }
-
-        // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { Person::name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
-        // SampleEnd
-    }
-
-    @Test
     @TransformDataFrameExpressions
     fun columnSelectors_strings() {
         // SampleStart
@@ -688,11 +617,6 @@ class Access : TestBase() {
             colGroup("name").lastCol { it.name().endsWith("Name") }
         }
 
-        // find the single column inside a column group satisfying the condition
-        df.select {
-            Person::name.singleCol { it.name().startsWith("first") }
-        }
-
         // traversal of columns at any depth from here excluding ColumnGroups
         df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 
@@ -700,7 +624,7 @@ class Access : TestBase() {
         df.select { colsAtAnyDepth() }
 
         // traversal of columns at any depth with condition
-        df.select { colsAtAnyDepth().filter() { it.name().contains(":") } }
+        df.select { colsAtAnyDepth().filter { it.name().contains(":") } }
 
         // traversal of columns at any depth to find columns of given type
         df.select { colsAtAnyDepth().colsOf<String>() }

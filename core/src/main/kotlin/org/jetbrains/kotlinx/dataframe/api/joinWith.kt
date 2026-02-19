@@ -24,12 +24,12 @@ import org.jetbrains.kotlinx.dataframe.impl.api.joinWithImpl
  * from both inputs according to the [\joinExpression] matching rule.
  */
 @ExcludeFromSources
-private interface JoinWithCommonDescription
+private typealias JoinWithCommonDescription = Nothing
 
 // `joinWith` method used in the example
 @Suppress("ClassName")
 @ExcludeFromSources
-private interface JOIN_WITH_METHOD
+private typealias JOIN_WITH_METHOD = Nothing
 
 /**
  * ### Examples
@@ -49,7 +49,7 @@ private interface JOIN_WITH_METHOD
  * ```
  */
 @ExcludeFromSources
-private interface JoinWithExample
+private typealias JoinWithExample = Nothing
 
 /**
  * A specialized [DataRow] used in a [JoinExpression].

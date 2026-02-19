@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe.keywords
 
-data class EnumEntry(
-    val name: String,
-    val strValue: String
+public data class EnumEntry(
+    public val name: String,
+    public val strValue: String
 )

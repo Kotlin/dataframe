@@ -105,13 +105,13 @@ public interface ColsOfKindColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -149,7 +149,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     private interface CommonColsOfKindDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**

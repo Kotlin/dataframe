@@ -2,20 +2,19 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.kotlin.dsl.withType
 
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.shadow)
-    alias(libs.plugins.publisher)
-    alias(libs.plugins.ktlint)
+    with(convention.plugins) {
+        alias(kotlinJvm11)
+    }
+    with(libs.plugins) {
+        alias(shadow)
+        alias(publisher)
+    }
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    implementation(project(":core")) {
+    implementation(projects.core) {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-reflect")
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib")
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-datetime-jvm")
@@ -34,8 +33,12 @@ dependencies {
     }
 
     // we assume Kotlin plugin has reflect dependency - we're not bringing our own version
-    testImplementation(kotlin("reflect"))
-    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlin.reflect)
+    testImplementation(libs.kotlin.test.junit5)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.withType<ShadowJar> {

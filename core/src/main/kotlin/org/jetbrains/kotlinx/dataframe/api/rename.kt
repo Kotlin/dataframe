@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
@@ -23,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
+import org.jetbrains.kotlinx.dataframe.impl.columns.renamedColumn
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -59,7 +61,7 @@ internal interface RenameDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetRenameOperationArg]}
      */
-    interface RenameSelectingOptions
+    typealias RenameSelectingOptions = Nothing
 
     /**
      * ## Rename Operation Grammar
@@ -78,19 +80,19 @@ internal interface RenameDocs {
      * {@include [Indent]}
      * `| `__`.`__[**`toCamelCase`**][RenameClause.toCamelCase]**`()`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [rename][rename]} */
 @ExcludeFromSources
-private interface SetRenameOperationArg
+private typealias SetRenameOperationArg = Nothing
 
 /**
  * {@include [RenameDocs]}
  * ### This Rename Overload
  */
 @ExcludeFromSources
-private interface CommonRenameDocs
+private typealias CommonRenameDocs = Nothing
 
 /**
  * Renames columns in the [DataFrame].
@@ -426,16 +428,16 @@ public interface RenameColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**named**][ColumnsSelectionDsl.named] */
-        public interface InfixNamedName
+        public typealias InfixNamedName = Nothing
 
         /** [**into**][ColumnsSelectionDsl.into] */
-        public interface InfixIntoName
+        public typealias InfixIntoName = Nothing
 
         /** __`.`__[**named**][ColumnsSelectionDsl.named] */
-        public interface NamedName
+        public typealias NamedName = Nothing
 
         /** __`.`__[**into**][ColumnsSelectionDsl.into] */
-        public interface IntoName
+        public typealias IntoName = Nothing
     }
 
     /**
@@ -466,64 +468,67 @@ public interface RenameColumnsSelectionDsl {
     @Suppress("ClassName")
     private interface CommonRenameDocs {
 
-        interface RECEIVER
-
-        interface RECEIVER_TYPE
+        typealias RECEIVER = Nothing
+        typealias RECEIVER_TYPE = Nothing
 
         /** "named" or "into" */
-        interface FUNCTION_NAME
+        typealias FUNCTION_NAME = Nothing
 
         /** "newName" or "nameOf" */
-        interface PARAM_NAME
-
-        interface PARAM
-
-        interface PARAM_TYPE
+        typealias PARAM_NAME = Nothing
+        typealias PARAM = Nothing
+        typealias PARAM_TYPE = Nothing
 
         /**
          * @set [RECEIVER] columnA
          * @set [RECEIVER_TYPE] ColumnReference
          */
-        interface ColumnReferenceReceiver
+        typealias ColumnReferenceReceiver = Nothing
 
         /**
          * @set [RECEIVER] "columnA"
          * @set [RECEIVER_TYPE] String
          */
-        interface StringReceiver
+        typealias StringReceiver = Nothing
 
         /**
          * @set [RECEIVER] Type::columnA
          * @set [RECEIVER_TYPE] KProperty
          */
-        interface KPropertyReceiver
+        typealias KPropertyReceiver = Nothing
+
+        /**
+         * @set [RECEIVER] col(0)
+         * @set [RECEIVER_TYPE] SingleColumn
+         */
+        typealias SingleColumnReceiver = Nothing
 
         /**
          * @set [PARAM] columnB
          * @set [PARAM_NAME] nameOf
          * @set [PARAM_TYPE] ColumnReference
          */
-        interface ColumnReferenceParam
+        typealias ColumnReferenceParam = Nothing
 
         /**
          * @set [PARAM] "columnB"
          * @set [PARAM_NAME] newName
          * @set [PARAM_TYPE] String
          */
-        interface StringParam
+        typealias StringParam = Nothing
 
         /**
          * @set [PARAM] Type::columnB
          * @set [PARAM_NAME] nameOf
          * @set [PARAM_TYPE] KProperty
          */
-        interface KPropertyParam
+        typealias KPropertyParam = Nothing
 
         /** @set [CommonRenameDocs.FUNCTION_NAME] named */
-        interface NamedFunctionName
+        typealias NamedFunctionName = Nothing
 
         /** @set [CommonRenameDocs.FUNCTION_NAME] into */
-        interface IntoFunctionName
+        typealias IntoFunctionName = Nothing
     }
 
     // region named
@@ -619,6 +624,15 @@ public interface RenameColumnsSelectionDsl {
     public infix fun <C> KProperty<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
         toColumnAccessor().named(nameOf.columnName)
 
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.NamedFunctionName]
+     * @include [CommonRenameDocs.SingleColumnReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
+    @Interpretable("Named1")
+    public infix fun <C> SingleColumn<C>.named(newName: String): SingleColumn<C> = renamedColumn(newName)
+
     // endregion
 
     // region into
@@ -709,6 +723,15 @@ public interface RenameColumnsSelectionDsl {
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> KProperty<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
+
+    /**
+     * @include [CommonRenameDocs]
+     * @include [CommonRenameDocs.IntoFunctionName]
+     * @include [CommonRenameDocs.SingleColumnReceiver]
+     * @include [CommonRenameDocs.StringParam]
+     */
+    @Interpretable("Named1")
+    public infix fun <C> SingleColumn<C>.into(newName: String): SingleColumn<C> = named(newName)
 
     // endregion
 }

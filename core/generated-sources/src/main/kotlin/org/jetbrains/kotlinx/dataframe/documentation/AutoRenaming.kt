@@ -16,4 +16,4 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  * It is recommended to [rename][org.jetbrains.kotlinx.dataframe.api.rename] them
  * to maintain clarity and improve code readability.
  */
-internal interface AutoRenaming
+internal typealias AutoRenaming = Nothing

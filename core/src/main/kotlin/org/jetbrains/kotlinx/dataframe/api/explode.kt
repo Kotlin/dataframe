@@ -48,7 +48,7 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
  * ### This `explode` overload
  */
 @ExcludeFromSources
-internal interface ExplodeDocs
+internal typealias ExplodeDocs = Nothing
 
 /**
  * {@include [ExplodeDocs]}
@@ -139,7 +139,7 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
  * ### This `explode` overload
  */
 @ExcludeFromSources
-internal interface ExplodeDataRowDocs
+internal typealias ExplodeDataRowDocs = Nothing
 
 /**
  * {@include [ExplodeDataRowDocs]}

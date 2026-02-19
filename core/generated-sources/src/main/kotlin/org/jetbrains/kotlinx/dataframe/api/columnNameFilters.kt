@@ -112,22 +112,22 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`nameContains`**][ColumnsSelectionDsl.nameContains] */
-        public interface PlainDslNameContains
+        public typealias PlainDslNameContains = Nothing
 
         /** __`name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public interface PlainDslNameStartsEndsWith
+        public typealias PlainDslNameStartsEndsWith = Nothing
 
         /** __`.`__[**`nameContains`**][ColumnsSelectionDsl.nameContains] */
-        public interface ColumnSetNameContains
+        public typealias ColumnSetNameContains = Nothing
 
         /** __`.name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public interface ColumnSetNameStartsEndsWith
+        public typealias ColumnSetNameStartsEndsWith = Nothing
 
         /**__`.`__[**`colsNameContains`**][ColumnsSelectionDsl.colsNameContains] */
-        public interface ColumnGroupNameContains
+        public typealias ColumnGroupNameContains = Nothing
 
         /** __`.colsName`__`(`[**`Starts`**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
-        public interface ColumnGroupNameStartsWith
+        public typealias ColumnGroupNameStartsWith = Nothing
     }
 
     // region nameContains
@@ -391,7 +391,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
-    private interface NameContainsRegexDocs
+    private typealias NameContainsRegexDocs = Nothing
 
     /**
      * ## (Cols) Name Contains

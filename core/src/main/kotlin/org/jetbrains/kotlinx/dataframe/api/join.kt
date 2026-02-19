@@ -32,7 +32,7 @@ import kotlin.reflect.KProperty
  * in the resulting [DataFrame].
  */
 @ExcludeFromSources
-private interface JoinBehavior
+private typealias JoinBehavior = Nothing
 
 /**
  * Joins this [DataFrame] with the [other][\other] [DataFrame] using the selected key columns.
@@ -58,12 +58,12 @@ private interface JoinBehavior
  * ### This `join` overload
  */
 @ExcludeFromSources
-private interface JoinDocs
+private typealias JoinDocs = Nothing
 
 // `join` method used in the example
 @Suppress("ClassName")
 @ExcludeFromSources
-private interface JOIN_METHOD
+private typealias JOIN_METHOD = Nothing
 
 /**
  * [JoinDsl] allows you to define the columns used for joining [DataFrame]s
@@ -91,7 +91,7 @@ private interface JOIN_METHOD
  * ```
  */
 @ExcludeFromSources
-internal interface JoinDslDescription
+internal typealias JoinDslDescription = Nothing
 
 /**
  * Select join columns (including those that have different names in different [DataFrame]s)
@@ -100,7 +100,7 @@ internal interface JoinDslDescription
  * @include [JoinDslDescription]
  */
 @ExcludeFromSources
-private interface SelectingColumnsJoinDsl
+private typealias SelectingColumnsJoinDsl = Nothing
 
 /**
  * @include [JoinDocs]
@@ -127,7 +127,7 @@ public fun <A, B> DataFrame<A>.join(
  * ```
  */
 @ExcludeFromSources
-private interface JoinStringApiExample
+private typealias JoinStringApiExample = Nothing
 
 /**
  * @include [JoinDocs]
@@ -165,7 +165,7 @@ public fun <A, B> DataFrame<A>.join(
  * ### This `innerJoin` overload
  */
 @ExcludeFromSources
-private interface InnerJoinDocs
+private typealias InnerJoinDocs = Nothing
 
 /**
  * @include [InnerJoinDocs]
@@ -214,7 +214,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  * ### This `leftJoin` overload
  */
 @ExcludeFromSources
-private interface LeftJoinDocs
+private typealias LeftJoinDocs = Nothing
 
 /**
  * @include [LeftJoinDocs]
@@ -263,7 +263,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  * ### This `rightJoin` overload
  */
 @ExcludeFromSources
-private interface RightJoinDocs
+private typealias RightJoinDocs = Nothing
 
 /**
  * @include [RightJoinDocs]
@@ -312,7 +312,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  * ### This `fullJoin` overload
  */
 @ExcludeFromSources
-private interface FullJoinDocs
+private typealias FullJoinDocs = Nothing
 
 /**
  * @include [FullJoinDocs]
@@ -361,7 +361,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  * ### This `filterJoin` overload
  */
 @ExcludeFromSources
-private interface FilterJoinDocs
+private typealias FilterJoinDocs = Nothing
 
 /**
  * @include [FilterJoinDocs]
@@ -410,7 +410,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  * ### This `excludeJoin` overload
  */
 @ExcludeFromSources
-private interface ExcludeJoinDocs
+private typealias ExcludeJoinDocs = Nothing
 
 /**
  * @include [ExcludeJoinDocs]
@@ -479,7 +479,7 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
      * @return [ColumnMatch] representing the column pair used for joining.
      */
     @ExcludeFromSources
-    private interface MatchDocs
+    private typealias MatchDocs = Nothing
 
     /** @include [MatchDocs] */
     @Interpretable("Match0")
@@ -583,42 +583,42 @@ public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>)
  * rows are merged.
  */
 @ExcludeFromSources
-internal interface InnerJoinTypeDocs
+internal typealias InnerJoinTypeDocs = Nothing
 
 /**
  * Includes all rows from the left [DataFrame]; matching rows are merged,
  * unmatched right-side values are filled with `null`.
  */
 @ExcludeFromSources
-internal interface LeftJoinTypeDocs
+internal typealias LeftJoinTypeDocs = Nothing
 
 /**
  * Includes all rows from the right [DataFrame]; matching rows are merged,
  * unmatched left-side values are filled with `null`.
  */
 @ExcludeFromSources
-internal interface RightJoinTypeDocs
+internal typealias RightJoinTypeDocs = Nothing
 
 /**
  * Includes only rows from the left [DataFrame] that have a match in the right one;
  * right-side columns are not merged.
  */
 @ExcludeFromSources
-internal interface FilterJoinTypeDocs
+internal typealias FilterJoinTypeDocs = Nothing
 
 /**
  * Includes all rows from both [DataFrame]s; matching rows are merged,
  * all mismatches are filled with `null`.
  */
 @ExcludeFromSources
-internal interface FullJoinTypeDocs
+internal typealias FullJoinTypeDocs = Nothing
 
 /**
  * Includes only rows from the left [DataFrame] that do *not* have a match in the right one;
  * right-side columns are not merged.
  */
 @ExcludeFromSources
-internal interface ExcludeJoinTypeDocs
+internal typealias ExcludeJoinTypeDocs = Nothing
 
 /**
  * Represents the type of [join] operation.
@@ -683,7 +683,7 @@ public enum class JoinType {
  * * [JoinType.Exclude] — {@include [ExcludeJoinTypeDocs]}
  */
 @ExcludeFromSources
-internal interface JoinTypeDescription
+internal typealias JoinTypeDescription = Nothing
 
 internal val JoinType.addNewColumns: Boolean
     get() = when (this) {

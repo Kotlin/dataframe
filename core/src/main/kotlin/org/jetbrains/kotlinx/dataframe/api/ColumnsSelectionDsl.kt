@@ -20,7 +20,7 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
-internal interface ColumnsSelectionDslLink
+internal typealias ColumnsSelectionDslLink = Nothing
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
@@ -167,7 +167,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          * {@include [DslGrammarTemplate.TextDef]}
          */
         @[ExcludeFromSources ExportAsHtml]
-        public interface DefinitionsPartOfGrammar
+        public typealias DefinitionsPartOfGrammar = Nothing
 
         /**
          * {@include [DslGrammarTemplate.ColumnRef]}` `{@include [ColumnRangeColumnsSelectionDsl.Grammar.PlainDslName]}` `{@include [DslGrammarTemplate.ColumnRef]}
@@ -229,7 +229,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          * `| `{@include [WithoutNullsColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
          */
         @[ExcludeFromSources ExportAsHtml]
-        public interface PlainDslPartOfGrammar
+        public typealias PlainDslPartOfGrammar = Nothing
 
         /**
          * {@include [Indent]}\[**`\[`**\][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}\[**`\]`**\][ColumnsSelectionDsl.col]
@@ -297,7 +297,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
              * {@include [ColumnSetPartOfGrammar]}
              */
             @ExportAsHtml
-            public interface ForHtml
+            public typealias ForHtml = Nothing
         }
 
         /**
@@ -374,7 +374,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
              * {@include [ColumnGroupPartOfGrammar]}
              */
             @ExportAsHtml
-            public interface ForHtml
+            public typealias ForHtml = Nothing
         }
     }
 

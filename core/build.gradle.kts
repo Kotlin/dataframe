@@ -1,50 +1,38 @@
-import com.google.devtools.ksp.gradle.KspTask
-import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
 import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
+import org.gradle.api.JavaVersion
+import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.jvm.tasks.Jar
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+        alias(buildConfig)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
         alias(korro)
-//        alias(kover)
-        alias(ktlint)
         alias(kodex)
-        alias(buildconfig)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
 
         // generates keywords using the :generator module
         alias(keywordGenerator)
-
-        // dependence on our own plugin
-        alias(dataframe)
-
-        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
-        alias(ksp)
     }
     idea
 }
 
 group = "org.jetbrains.kotlinx"
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-}
-
 kotlin.sourceSets {
     main {
-        kotlin.srcDir("build/generated/ksp/main/kotlin/")
+        kotlin.srcDir("src/generated-dataschema-accessors/main/kotlin/")
     }
     test {
-        kotlin.srcDir("build/generated/ksp/test/kotlin/")
+        kotlin.srcDir("src/generated-dataschema-accessors/test/kotlin/")
     }
 }
 
@@ -53,6 +41,14 @@ sourceSets {
     create("samples") {
         kotlin.srcDir("src/test/kotlin")
     }
+}
+
+// Separate source set for Java 16+ language-specific tests (e.g., Java Records)
+val testJava16 by sourceSets.creating {
+    java.srcDir("src/testJava16/java")
+    kotlin.srcDir("src/testJava16/kotlin")
+    compileClasspath += sourceSets.main.get().output + configurations.testCompileClasspath.get()
+    runtimeClasspath += output + compileClasspath + configurations.testRuntimeClasspath.get()
 }
 
 dependencies {
@@ -91,6 +87,30 @@ dependencies {
     testImplementation(projects.dataframeCsv)
 }
 
+// Configure testJava16 dependencies to extend from test
+configurations {
+    val testJava16Implementation by getting {
+        extendsFrom(configurations.testImplementation.get())
+    }
+    val testJava16RuntimeOnly by getting {
+        extendsFrom(configurations.testRuntimeOnly.get())
+    }
+}
+
+// Configure testJava16 sources to use Java 16+
+tasks.named<JavaCompile>("compileTestJava16Java") {
+    sourceCompatibility = JavaVersion.VERSION_16.toString()
+    targetCompatibility = JavaVersion.VERSION_16.toString()
+    options.release.set(16)
+}
+
+tasks.named<KotlinCompile>("compileTestJava16Kotlin") {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_16
+        freeCompilerArgs.add("-Xjdk-release=16")
+    }
+}
+
 benchmark {
     targets {
         register("test")
@@ -113,14 +133,6 @@ val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
     }
     source(sourceSets["test"].kotlin)
     destinationDirectory = layout.buildDirectory.dir("classes/testWithOutputs/kotlin")
-}
-
-tasks.withType<KspTask> {
-    // "test" classpath is re-used, so repeated generation should be disabled
-    if (name == "kspSamplesKotlin") {
-        dependsOn("kspTestKotlin")
-        enabled = false
-    }
 }
 
 val clearTestResults by tasks.registering(Delete::class, fun Delete.() {
@@ -201,7 +213,6 @@ val generatedSources by kotlin.sourceSets.creating {
     kotlin {
         setSrcDirs(
             listOf(
-                "build/generated/ksp/main/kotlin/",
                 "core/build/generatedSrc",
                 "$generatedSourcesFolderName/src/main/kotlin",
                 "$generatedSourcesFolderName/src/main/java",
@@ -372,42 +383,28 @@ korro {
     }
 }
 
-tasks.withType<KspTaskJvm> {
-    dependsOn(tasks.generateKeywordsSrc)
-}
-
 tasks.runKtlintFormatOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspTestKotlin")
 }
 
 tasks.named("runKtlintFormatOverGeneratedSourcesSourceSet") {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.runKtlintCheckOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
 }
 
 tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspTestKotlin")
 }
 
 tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
     dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
-}
-
-kotlin {
-    explicitApi()
 }
 
 tasks.withType<KotlinCompile> {
@@ -420,21 +417,24 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "2048m"
-//    kover {
-//        currentProject {
-//            instrumentation { disabledForTestTasks.addAll("samplesTest") }
-//        }
-//        reports {
-//            total {
-//                filters {
-//                    excludes {
-//                        classes("org.jetbrains.kotlinx.dataframe.jupyter.*")
-//                        classes("org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests")
-//                    }
-//                }
-//            }
-//        }
-//    }
+}
+
+// Test task for Java 16+ language-specific tests
+val testJava16Task = tasks.register<Test>("testJava16") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+
+    testClassesDirs = testJava16.output.classesDirs
+    classpath = testJava16.runtimeClasspath
+
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+
+    maxHeapSize = "2048m"
+}
+
+tasks.check {
+    dependsOn(testJava16Task)
 }
 
 kotlinPublications {
@@ -443,15 +443,5 @@ kotlinPublications {
         artifactId = "dataframe-core"
         description = "Dataframe core API"
         packageName = artifactId
-    }
-}
-
-// Disable and enable if updating plugin breaks the build
-dataframes {
-    schema {
-        sourceSet = "test"
-        visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
-        name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
     }
 }

@@ -98,13 +98,13 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colsAtAnyDepth`**][ColumnsSelectionDsl.colsAtAnyDepth] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsAtAnyDepth`**][ColumnsSelectionDsl.colsAtAnyDepth] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsAtAnyDepth`**][ColumnsSelectionDsl.colsAtAnyDepth] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -162,7 +162,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
     private interface CommonAtAnyDepthDocs {
 
         /** Example argument */
-        interface Examples
+        typealias Examples = Nothing
     }
 
     /**

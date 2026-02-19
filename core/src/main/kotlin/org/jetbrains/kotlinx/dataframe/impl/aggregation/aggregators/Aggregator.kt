@@ -42,6 +42,7 @@ public class Aggregator<in Value : Any, out Return : Any?>(
     public val inputHandler: AggregatorInputHandler<Value, Return>,
     public val multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
     public val name: String,
+    public val statisticsParameters: Map<String, Any>,
 ) : AggregatorInputHandler<Value, Return> by inputHandler,
     AggregatorMultipleColumnsHandler<Value, Return> by multipleColumnsHandler,
     AggregatorAggregationHandler<Value, Return> by aggregationHandler {
@@ -75,6 +76,7 @@ public class Aggregator<in Value : Any, out Return : Any?>(
             aggregationHandler: AggregatorAggregationHandler<Value, Return>,
             inputHandler: AggregatorInputHandler<Value, Return>,
             multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
+            statisticsParameters: Map<String, Any>,
         ): AggregatorProvider<Value, Return> =
             AggregatorProvider { name ->
                 Aggregator(
@@ -82,6 +84,7 @@ public class Aggregator<in Value : Any, out Return : Any?>(
                     inputHandler = inputHandler,
                     multipleColumnsHandler = multipleColumnsHandler,
                     name = name,
+                    statisticsParameters = statisticsParameters,
                 )
             }
     }

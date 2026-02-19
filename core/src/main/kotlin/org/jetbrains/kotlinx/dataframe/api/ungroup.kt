@@ -33,19 +33,19 @@ internal interface UngroupDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetUngroupOperationArg]}
      */
-    interface UngroupSelectingOptions
+    typealias UngroupSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [ungroup][ungroup]} */
 @ExcludeFromSources
-private interface SetUngroupOperationArg
+private typealias SetUngroupOperationArg = Nothing
 
 /**
  * {@include [UngroupDocs]}
  * ### This Ungroup Overload
  */
 @ExcludeFromSources
-private interface CommonUngroupDocs
+private typealias CommonUngroupDocs = Nothing
 
 /**
  * @include [CommonUngroupDocs]

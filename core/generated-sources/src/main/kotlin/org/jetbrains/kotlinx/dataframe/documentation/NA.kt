@@ -23,4 +23,4 @@ import org.jetbrains.kotlinx.dataframe.api.fillNA
  *
  * @see NaN
  */
-internal interface NA
+internal typealias NA = Nothing
