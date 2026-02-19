@@ -82,7 +82,6 @@ class AccessApis {
         // SampleEnd
     }
 
-
     @Ignore
     @Test
     fun strings() {
@@ -121,7 +120,7 @@ class AccessApis {
     @Test
     fun extensionProperties1() {
         // SampleStart
-        val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
+        val df = DataFrame.read("titanic.csv")
         // SampleEnd
     }
 }
