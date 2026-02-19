@@ -20,8 +20,10 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.sql.Timestamp
 import java.util.Date
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
 
 // NOTE: the names of testing databases should be different to avoid collisions and should not contain the system names itself
 private const val URL = "jdbc:h2:mem:test2;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE"
@@ -228,8 +230,8 @@ class MySqlH2Test {
                     st.setDouble(11, i * 10.0)
                     st.setBigDecimal(12, BigDecimal(i * 10))
                     st.setDate(13, java.sql.Date(System.currentTimeMillis()))
-                    st.setTimestamp(14, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(14, Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(15, Timestamp(System.currentTimeMillis()))
                     st.setTime(16, java.sql.Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
@@ -265,8 +267,8 @@ class MySqlH2Test {
                     st.setDouble(11, i * 20.0)
                     st.setBigDecimal(12, BigDecimal(i * 20))
                     st.setDate(13, java.sql.Date(System.currentTimeMillis()))
-                    st.setTimestamp(14, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(14, Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(15, Timestamp(System.currentTimeMillis()))
                     st.setTime(16, java.sql.Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
@@ -308,8 +310,8 @@ class MySqlH2Test {
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textcol"]!!.type shouldBe typeOf<String>()
         schema.columns["datecol"]!!.type shouldBe typeOf<Date>()
-        schema.columns["datetimecol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
-        schema.columns["timestampcol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["datetimecol"]!!.type shouldBe typeOf<Instant>()
+        schema.columns["timestampcol"]!!.type shouldBe typeOf<Instant>()
         schema.columns["timecol"]!!.type shouldBe typeOf<java.sql.Time>()
         schema.columns["yearcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["varbinarycol"]!!.type shouldBe typeOf<ByteArray>()

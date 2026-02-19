@@ -25,6 +25,7 @@ import org.postgresql.geometric.PGpath
 import org.postgresql.geometric.PGpoint
 import org.postgresql.geometric.PGpolygon
 import org.postgresql.util.PGInterval
+import org.postgresql.util.PGmoney
 import org.postgresql.util.PGobject
 import java.math.BigDecimal
 import java.sql.Connection
@@ -48,12 +49,12 @@ interface Table1 {
     val smallintcol: Int
     val bigserialcol: Long
     val booleancol: Boolean
-    val boxcol: String
+    val boxcol: PGbox
     val byteacol: ByteArray
     val charactercol: String
     val characterncol: String
     val charcol: String
-    val circlecol: String
+    val circlecol: PGcircle
     val datecol: java.sql.Date
     val doublecol: Double
     val integercol: Int?
@@ -65,14 +66,14 @@ interface Table1 {
 @DataSchema
 interface Table2 {
     val id: Int
-    val linecol: org.postgresql.geometric.PGline
-    val lsegcol: String
+    val linecol: PGline
+    val lsegcol: PGlseg
     val macaddrcol: String
-    val moneycol: String
+    val moneycol: PGmoney
     val numericcol: BigDecimal
-    val pathcol: org.postgresql.geometric.PGpath
-    val pointcol: String
-    val polygoncol: String
+    val pathcol: PGpath
+    val pointcol: PGpoint
+    val polygoncol: PGpolygon
     val realcol: Float
     val smallintcol: Int
     val smallserialcol: Int
@@ -298,7 +299,7 @@ class PostgresTest {
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
-        schema.columns["circlecol"]!!.type shouldBe typeOf<Any>()
+        schema.columns["circlecol"]!!.type shouldBe typeOf<PGcircle>()
         schema.columns["intarraycol"]!!.type.classifier shouldBe kotlin.Array::class
         schema.columns["doublearraycol"]!!.type.classifier shouldBe kotlin.Array::class
         schema.columns["datearraycol"]!!.type.classifier shouldBe kotlin.Array::class
@@ -313,9 +314,9 @@ class PostgresTest {
 
         val schema2 = DataFrameSchema.readSqlTable(connection, tableName2)
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
-        schema2.columns["pathcol"]!!.type shouldBe typeOf<Any>() // TODO: https://github.com/Kotlin/dataframe/issues/537
+        schema2.columns["pathcol"]!!.type shouldBe typeOf<PGpath>()
         schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
-        schema2.columns["linecol"]!!.type shouldBe typeOf<Any>() // TODO: https://github.com/Kotlin/dataframe/issues/537
+        schema2.columns["linecol"]!!.type shouldBe typeOf<PGline>()
     }
 
     @Test
@@ -357,7 +358,7 @@ class PostgresTest {
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
-            it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))")
+            it[Table2::pathcol] == PGpath("((1,2),(3,1))")
         }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
     }
@@ -383,7 +384,7 @@ class PostgresTest {
 
         val result3 = df2.select("moneycol")
             .add("moneycol2") { it[Table2::moneycol] }
-        result3[0][1] shouldBe "123,45 ?" // TODO: weird mapping
+        (result3[0][1] as PGmoney).`val` shouldBe 123.45
 
         val result4 = df2.select("numericcol")
             .add("numericcol2") { it[Table2::numericcol] }
@@ -407,7 +408,7 @@ class PostgresTest {
         schema.columns["doublecol"]!!.type shouldBe typeOf<Double>()
 
         val schema1 = DataFrameSchema.readSqlTable(connection, tableName2)
-        schema1.columns["moneycol"]!!.type shouldBe typeOf<String>()
+        schema1.columns["moneycol"]!!.type shouldBe typeOf<PGmoney>()
         schema1.columns["numericcol"]!!.type shouldBe typeOf<BigDecimal>()
         schema1.columns["realcol"]!!.type shouldBe typeOf<Float>()
         schema1.columns["smallserialcol"]!!.type shouldBe typeOf<Int>()

@@ -8,7 +8,7 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.register
-import org.jetbrains.kotlinx.dataframe.BuildConfig
+import org.jetbrains.kotlinx.dataframe.`keywords-generator`.BuildConfig
 import java.io.File
 
 @Suppress("UnstableApiUsage")
