@@ -23,6 +23,7 @@ in function arguments:
 <!---FUN simpleSelect-->
 
 ```kotlin
+// Select a sub-dataframe with the "name" and "info" columns
 df.select("name", "info")
 ```
 
@@ -56,7 +57,7 @@ a runtime exception may be thrown.
 | `valueCol("name")` / `valueCol<T>("name")` | `getValue<T>("name")`    | Resolves into [`ValueColumn`](DataColumn.md#valuecolumn) / row value with the provided `"name"` and type `T`.                              |
 | `frameCol("name")` / `frameCol<T>("name")` | `getFrameColumn("name")` | Resolves into [`FrameColumn`](DataColumn.md#framecolumn) / `DataFrame` with the provided `"name"` and type `T`.                            |
 
-> Row Expressions methods may change in the future.
+> Row Expressions methods may be changed in the future.
 > {style = "warning"}
 
 ### Example
@@ -102,7 +103,6 @@ Get a single "height" subcolumn from the "info" column group
 <!---FUN getColumn-->
 
 ```kotlin
-// Get a single "height" subcolumn from the "info" column group
 df.getColumn { colGroup("info").col("height") }
 ```
 
@@ -113,8 +113,6 @@ Select the "age" subcolumn of the "info" column group and the "name" column
 <!---FUN selectSubcolumnAndColumn-->
 
 ```kotlin
-// Select the "age" subcolumn of the "info" column group
-// and the "name" column
 df.select { colGroup("info").col("age") and col("name") }
 ```
 
@@ -125,8 +123,6 @@ Calculate the mean value of the ("info"->"age") column; specify the column type 
 <!---FUN meanValueBySubcolumn-->
 
 ```kotlin
-// Calculate the mean value of the ("info"->"age") column;
-// specify the column type as a `col` type argument
 df.mean { colGroup("info").col<Int>("age") }
 ```
 
@@ -163,7 +159,6 @@ Select all subcolumns from the "info" column group
 <!---FUN selectSubcolumns-->
 
 ```kotlin
-// Select all subcolumns from the "info" column group
 df.select { colGroup("info").select { col("age") and col("height") } }
 // or
 df.select { colGroup("info").allCols() }
@@ -215,6 +210,37 @@ where the receiver is the column group name.
 
 <!---FUN invocatedStringsApi-->
 
+```kotlin
+// Columns Selection DSL
+
+// Get a single "height" subcolumn from the "info" column group
+df.getColumn { "info"["height"]<Double>() }
+
+// Select the "age" subcolumn of the "info" column group
+// and the "name" column
+df.select { "info"["age"] and "name"() }
+
+// Calculate the mean value of the ("info"->"age") column;
+// specify the column type as an invocation type argument
+df.mean { "info" { "age"<Int>() } }
+
+// Select all subcolumns from the "info" column group
+df.select { "info" { "age"() and "height"() } }
+// or
+df.select { "info".allCols() }
+
+// Row Expressions
+
+// Add a new "heightInt" column by
+// casting the "height" column values to `Int`
+df.add("heightInt") {
+    "info"["height"]<Double>().toInt()
+}
+
+// Filter rows where the ("info"->"age") column value
+// is greater than or equal to 18
+df.filter { "info"["age"]<Int>() >= 18 }
+```
 
 <!---END-->
 
