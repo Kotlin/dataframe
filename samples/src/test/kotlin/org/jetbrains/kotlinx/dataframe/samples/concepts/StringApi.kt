@@ -52,8 +52,9 @@ class StringApi {
 
     @Test
     fun combineExtensionsAndStrings() {
+        run { df }
         // SampleStart
-        df.select { "info".col("height") and "name" }
+        df.select { "info".col("height") and name }
         // SampleEnd
     }
 

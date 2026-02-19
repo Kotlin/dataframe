@@ -135,7 +135,7 @@ for "info" and "name" columns but not for the ("info"->"height") column
 <!---FUN combineExtensionsAndStrings-->
 
 ```kotlin
-df.select { "info".col("height") and "name" }
+df.select { "info".col("height") and name }
 ```
 
 <!---END-->
