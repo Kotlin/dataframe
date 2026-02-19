@@ -1,15 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.samples.concepts
 
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -71,34 +67,8 @@ class AccessApis {
         // "fullName"->"firstName" column value is equal to "Alice"
         // and "age" column value is greater or equal to 18
         df.filter {
-            "fullName"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18
+            fullName.firstName == "Alice" && age >= 18
         }
     }
 
-    fun stringApiExampleFull() {
-        // Column Selection DSL
-
-        // Select the "firstName" subcolumn of the "name" column group
-        // and the "age" column
-        df.select { "name"["firstName"]<String>() and "age"<Int>() }
-
-        // Calculate the mean value of the "age" column;
-        // specify the column type as an invocation type argument
-        df.mean { "age"<Int>() }
-
-        // Row Expressions
-
-        // Add a new "fullName" column by combining
-        // the "firstName" and "lastName" column values
-        df.add("fullName") {
-            "name"["firstName"]<String>() + " " + "name"["lastName"]<String>()
-        }
-
-        // Takes only rows where the
-        // "fullName"->"firstName" column value is equal to "Alice"
-        // and "age" column value is greater or equal to 18
-        df.filter {
-            "fullName"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18
-        }
-    }
 }

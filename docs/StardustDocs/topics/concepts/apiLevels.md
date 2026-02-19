@@ -2,6 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels-->
 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.concepts.AccessApis-->
+
 By nature, dataframes are dynamic objects;
 column labels depend on the input source, and new columns can be added
 or deleted while wrangling.
@@ -22,27 +24,17 @@ Type-checking is done at runtime, name-checking too.
 The most basic String API usage is quite intuitive and looks very similar 
 to any other library working with dataframes:
 
-```kotlin
-// Get "fullName" column
-df["fullName"]
-// Rename "fullName" column into "name"
-df.rename("fullName").into("name")
-```
+<!---FUN stringApiExample1-->
+
+<!---END-->
 
 Also, you can create [*String Column Accessors*](StringApi.md#string-column-accessors)
 that can be used inside the [Columns Selection DSL](ColumnSelectors.md)
 and [row expressions](DataRow.md#row-expressions) using special methods:
 
-```kotlin
-// Select "firstName" and "lastName" columns from the "name" column group
-df.select { colGroup("fullName").select { 
-    col<String>("firstName") and col<String>("lastName") } 
-}
-// Takes only rows where the "age" column 
-// (the subcolumn of the "info" column group) 
-// is greater or equal to 18
-df.filter { getColumnGroup("info").getValue<Int>("age") >= 18 }
-```
+<!---FUN stringApiExample2-->
+
+<!---END-->
 
 Though the String API is the simplest of the two and doesn't require any additional setup, 
 it lacks name- and type-safety; if column names or cast types are incorrect,
@@ -62,21 +54,12 @@ or alternatively, usage within the [*Kotlin Notebook*](SetupKotlinNotebook.md).
 > Extension Properties behavior differs in Kotlin Notebook 
 > and in the Kotlin DataFrame Compiler Plugin. [Read about it here](extensionPropertiesApi.md).
 
-The same operations as in the String API could be performed via extension properties concisely
+The same operations as in the String API can be performed via extension properties concisely
 and completely name- and typesafe:
 
-```kotlin
-// Get "fullName" column
-df.fullName
-// Rename "fullName" column into "name"
-df.rename { fullName }.into("name")
-// Select "firstName" and "lastName" columns from "fullName" column group
-df.select { fullName.firstName and fullName.lastName }
-// Takes only rows where "age" column (the subcolumn of "info" column group) 
-// is greater or equal to 18; 
-// for DataRow API extension properties has direct value types
-df.filter { info.age >= 18 }
-```
+<!---FUN extensionPropertiesApiExample-->
+
+<!---END-->
 
 ## Comparing APIs
 
@@ -96,7 +79,7 @@ there's a tab selector that allows switching between Access APIs.
 <!---FUN extensionProperties1-->
 
 ```kotlin
-val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
+val df = DataFrame.read("titanic.csv")
 ```
 
 <!---END-->

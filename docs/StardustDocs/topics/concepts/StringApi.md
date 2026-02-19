@@ -23,7 +23,6 @@ in function arguments:
 <!---FUN simpleSelect-->
 
 ```kotlin
-// Select a sub-dataframe with the "name" and "info" columns
 df.select("name", "info")
 ```
 
@@ -96,30 +95,41 @@ which is a [**column group**](DataColumn.md#columngroup) containing two nested
   </tbody>
 </table>
 
-#### Column Selection DSL
+#### Columns Selection DSL
 
 Get a single "height" subcolumn from the "info" column group
 
 <!---FUN getColumn-->
+
 ```kotlin
+// Get a single "height" subcolumn from the "info" column group
 df.getColumn { colGroup("info").col("height") }
 ```
+
 <!---END-->
 
 Select the "age" subcolumn of the "info" column group and the "name" column
 
 <!---FUN selectSubcolumnAndColumn-->
+
 ```kotlin
+// Select the "age" subcolumn of the "info" column group
+// and the "name" column
 df.select { colGroup("info").col("age") and col("name") }
 ```
+
 <!---END-->
 
 Calculate the mean value of the ("info"->"age") column; specify the column type as a `col` type argument
 
 <!---FUN meanValueBySubcolumn-->
+
 ```kotlin
+// Calculate the mean value of the ("info"->"age") column;
+// specify the column type as a `col` type argument
 df.mean { colGroup("info").col<Int>("age") }
 ```
+
 <!---END-->
 
 Combine Extensions Properties and String Column Accessors.
@@ -127,31 +137,38 @@ Select "height" and "name" columns, assuming we have extensions properties
 for "info" and "name" columns but not for the ("info"->"height") column
 
 <!---FUN combineExtensionsAndStrings-->
+
 ```kotlin
 df.select { "info".col("height") and "name" }
 ```
+
 <!---END-->
 
 Combine Columns Selection DSL and String Column Accessors.
 Remove all `Number` columns from the dataframe except ("info"->"age")
 
 <!---FUN removeWithExcept-->
+
 ```kotlin
 df.remove {
     colsAtAnyDepth().colsOf<Number>() except
         colGroup("info").col("age")
 }
 ```
+
 <!---END-->
 
 Select all subcolumns from the "info" column group
 
 <!---FUN selectSubcolumns-->
+
 ```kotlin
+// Select all subcolumns from the "info" column group
 df.select { colGroup("info").select { col("age") and col("height") } }
-// or 
+// or
 df.select { colGroup("info").allCols() }
 ```
+
 <!---END-->
 
 
@@ -160,26 +177,31 @@ df.select { colGroup("info").allCols() }
 Add a new "heightInt" column by casting the "height" column values to `Int`
 
 <!---FUN addColumnFromSubcolumn-->
+
 ```kotlin
 df.add("heightInt") {
     "info"["height"]<Double>().toInt()
 }
 ```
+
 <!---END-->
 
 Filter rows where the ("info"->"age") column value is greater than or equal to 18
 
 <!---FUN filterBySubcolumn-->
-```kotlin
 
+```kotlin
 df.filter { "info"["age"]<Int>() >= 18 }
 ```
+
 <!---END-->
 
 
 ### Invoked String API
 
-> This API is outdated and may be hard to read and refactor. 
+> This API is outdated and may be hard to read and refactor;
+> it may be changed in the future.
+> 
 > Please don't mix it with the `col`/`colGroup` methods.
 > 
 > We don't recommend using it in production code.
@@ -192,6 +214,7 @@ You can't specify the column kind in this case, but you can access nested column
 where the receiver is the column group name.
 
 <!---FUN invocatedStringsApi-->
+
 
 <!---END-->
 

@@ -24,6 +24,7 @@ class StringApi {
     @Test
     fun simpleSelect() {
         // SampleStart
+        // Select a sub-dataframe with the "name" and "info" columns
         df.select("name", "info")
         // SampleEnd
     }
@@ -31,7 +32,6 @@ class StringApi {
     @Test
     fun getColumn() {
         // SampleStart
-        // Get a single "height" subcolumn from the "info" column group
         df.getColumn { colGroup("info").col("height") }
         // SampleEnd
     }
@@ -39,8 +39,6 @@ class StringApi {
     @Test
     fun selectSubcolumnAndColumn() {
         // SampleStart
-        // Select the "age" subcolumn of the "info" column group
-        // and the "name" column
         df.select { colGroup("info").col("age") and col("name") }
         // SampleEnd
     }
@@ -48,19 +46,12 @@ class StringApi {
     @Test
     fun meanValueBySubcolumn() {
         // SampleStart
-        // Calculate the mean value of the ("info"->"age") column;
-        // specify the column type as a `col` type argument
         df.mean { colGroup("info").col<Int>("age") }
         // SampleEnd
     }
 
     @Test
     fun combineExtensionsAndStrings() {
-        // Combine Extensions Properties and String Column Accessors.
-        // Select "height" and "name" columns,
-        // assuming we have extensions properties
-        // for "info" and "name" columns
-        // but not for the ("info"->"height") column
         // SampleStart
         df.select { "info".col("height") and "name" }
         // SampleEnd
@@ -68,9 +59,6 @@ class StringApi {
 
     @Test
     fun removeWithExcept() {
-        // Combine Columns Selection DSL and String Column Accessors.
-        // Remove all `Number` columns from the dataframe
-        // except ("info"->"age")
         // SampleStart
         df.remove {
             colsAtAnyDepth().colsOf<Number>() except
@@ -82,7 +70,6 @@ class StringApi {
     @Test
     fun selectSubcolumns() {
         // SampleStart
-        // Select all subcolumns from the "info" column group
         df.select { colGroup("info").select { col("age") and col("height") } }
         // or
         df.select { colGroup("info").allCols() }
@@ -92,8 +79,6 @@ class StringApi {
     @Test
     fun addColumnFromSubcolumn() {
         // SampleStart
-        // Add a new "heightInt" column by
-        // casting the "height" column values to `Int`
         df.add("heightInt") {
             "info"["height"]<Double>().toInt()
         }
@@ -103,15 +88,14 @@ class StringApi {
     @Test
     fun filterBySubcolumn() {
         // SampleStart
-        // Filter rows where the ("info"->"age") column value
-        // is greater than or equal to 18
         df.filter { "info"["age"]<Int>() >= 18 }
         // SampleEnd
     }
 
     @Test
     fun invocatedStringsApi() {
-        // Column Selection DSL
+        // SampleStart
+        // Columns Selection DSL
 
         // Get a single "height" subcolumn from the "info" column group
         df.getColumn { "info"["height"]<Double>() }
@@ -140,5 +124,6 @@ class StringApi {
         // Filter rows where the ("info"->"age") column value
         // is greater than or equal to 18
         df.filter { "info"["age"]<Int>() >= 18 }
+        // SampleEnd
     }
 }
