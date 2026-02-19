@@ -61,7 +61,7 @@ or alternatively, usage within the [*Kotlin Notebook*](SetupKotlinNotebook.md).
 > Extension Properties behavior differs in Kotlin Notebook 
 > and in the Kotlin DataFrame Compiler Plugin. [Read about it here](extensionPropertiesApi.md).
 
-The same operations as in the String API could be performed via extension properties briefly
+The same operations as in the String API could be performed via extension properties concisely
 and completely name- and typesafe:
 
 ```kotlin
@@ -135,7 +135,7 @@ DataFrame.read("titanic.csv")
 
 > The `titanic.csv` file can be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
 
-The Extension Properties API provides column names and types at compile-time, 
+The Extension Properties API provides column names and -types at compile-time, 
 while the String API could be used with incorrect column names or types and break in runtime.
 
 Additionally, when using [IntelliJ IDEA](https://www.jetbrains.com/idea/) with

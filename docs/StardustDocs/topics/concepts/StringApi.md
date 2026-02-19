@@ -15,7 +15,7 @@ An introduction to the Kotlin DataFrame String API for column selection.
 The String API is the most basic and straightforward way to select columns
 in Kotlin DataFrame [operations](operations.md).
 
-In String API overloads, column names are provided directly as `String` values
+In String API operation overloads, selected column names are provided directly as `String` values
 in function arguments:
 
 ```kotlin
@@ -23,51 +23,185 @@ in function arguments:
 df.select("name", "age")
 ```
 
-## Column Accessors
+## String Column Accessors
 
 The String API can also be used inside the
 [Columns Selection DSL](ColumnSelectors.md) and
 [row expressions](DataRow.md#row-expressions)
-via *column accessors*.
+via *`String` column accessors*.
 
-Column accessors allow you to access nested columns and combine them with the
-[](extensionPropertiesApi.md) or with any other [CS DSL functions](ColumnSelectors.md#functions-overview).
+`String` column accessors allow you to access nested columns and combine them with
+[the extensions properties](extensionPropertiesApi.md) 
+or with any other [CS DSL methods](ColumnSelectors.md#functions-overview).
 
-They are created using `String` invocation.
+String column accessors are created using special functions.
 In the Columns Selection DSL, they have the special type `ColumnAccessor`,
 while in row expressions they resolve to concrete value types.
 
-You can optionally specify the column type as a type argument of the invocation.
+You can optionally specify the column type as a type argument of the
+`String` column accessor creation function.
 This is required for row expressions and for some operations with a column selection.
 If the specified type does not match the actual column type,
 a runtime exception may be thrown.
 
+| Columns Seletcion DSL                      | Row Expressions          |                                                                                                                                            |
+|--------------------------------------------|--------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| `col("name")` / `col<T>("name")`           | `getValue<T>("name")`    | Resolves into general [`DataColumn`](DataColumn.md) / row value with the provided `"name"` and type `T`.                                   |
+| `colGroup("name")` / `colGroup<T>("name")` | `getColumnGroup("name")` | Resolves into [`ColumnGroup`](DataColumn.md#columngroup) with the provided `"name"` and type `T`. Can be used for accessing nested columns |
+| `valueCol("name")` / `valueCol<T>("name")` | `getValue<T>("name")`    | Resolves into [`ValueColumn`](DataColumn.md#valuecolumn) / row value with the provided `"name"` and type `T`.                              |
+| `frameCol("name")` / `frameCol<T>("name")` | `getFrameColumn("name")` | Resolves into [`FrameColumn`](DataColumn.md#framecolumn) / `DataFrame` with the provided `"name"` and type `T`.                            |
+
+> Row Expressions methods may change in the future.
+> {style = "warning"}
+
+### Example
+
+Consider a simple hierarchical dataframe from
+<resource src="example.csv"></resource>.
+
+This table consists of two columns: `name`, which is a `String` column, and `info`,
+which is a [**column group**](DataColumn.md#columngroup) containing two nested
+[value columns](DataColumn.md#valuecolumn) —
+`age` of type `Int`, and `height` of type `Double`.
+
+<table width="705">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th colspan="2">info</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>age</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Alice</td>
+      <td>23</td>
+      <td>175.5</td>
+    </tr>
+    <tr>
+      <td>Bob</td>
+      <td>27</td>
+      <td>160.2</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Column Selection DSL
+
 ```kotlin
 /* Column Selection DSL */
 
-// Select the "firstName" subcolumn of the "name" column group
-// and the "age" column
-df.select { "name"["firstName"]() and "age"() }
+// Get a single "height" subcolumn from the "info" column group
+df.getColumn { colGroup("info").col("height") }
 
-// Calculate the mean value of the "age" column;
-// specify the column type as an invocation type argument
-df.mean { "age"<Int>() }
+// Select the "age" subcolumn of the "info" column group
+// and the "name" column
+df.select { colGroup("info").col("age") and col("name") }
+
+// Calculate the mean value of the ("info"->"age") column;
+// specify the column type as a `col` type argument
+df.mean { colGroup("info").col<Int>("age") }
+
+// Combine Extensions Properties and String Column Accessors.
+// Select "height" and "name" columns,
+// assuming we have extensions properties 
+// for "info" and "name" columns
+// but not for the ("info"->"height") column
+df.select { info.col("height") and name }
+
+// Combine Columns Selection DSL and String Column Accessors.
+// Remove all `Number` columns from the dataframe 
+// except ("info"->"age")
+df.remove { 
+    colsAtAnyDepth().colsOf<Number>() except 
+        colGroup("info").col("age") 
+}
+
+// Select all subcolumns from the "info" column group
+df.select { colGroup("info").select { col("age") and col("height") } }
+// or 
+df.select { colGroup("info").allCols() }
 
 /* Row Expressions */
 
-// Add a new "fullName" column by combining
-// the "firstName" and "lastName" column values
-df.add("fullName") {
-    "name"["firstName"]<String>() + " " + "name"["lastName"]<String>()
+// Add a new "heightInt" column by 
+// casting the "height" column values to `Int`
+df.add("heightInt") {
+    getColumnGroup("info").getValue<Double>("height").toInt()
 }
 
-// Filter rows where the "age" column value is greater than or equal to 18
-df.filter { "age"<Int>() >= 18 }
+// Filter rows where the ("info"->"age") column value 
+// is greater than or equal to 18
+df.filter { getColumnGroup("info").getValue<Int>("age") >= 18 }
 ```
+
+#### Row Expressions
+
+
+
+### Invoked String API
+
+> This API is outdated and may be hard to read and refactor. 
+> Please don't mix it with the `col`/`colGroup` methods.
+> 
+> We don't recommend using it in production code.
+> {style = "warning"}
+
+Alternatively, you can use the `String` invocation (optional typed argument) for column accessor creation.
+It will create the same column accessors as in the Columns Selection DSL.
+You can't specify the column kind in this case, but you can access nested columns using the 
+`String.get` or `String.invoke` operators or using the ` String.select {} ` function, 
+where the receiver is the column group name.
+
+```kotlin
+/* Column Selection DSL */
+
+// Get a single "height" subcolumn from the "info" column group
+df.getColumn { "info" { "height"() } }
+// or
+df.getColumn { "info"["height"]() }
+// or
+df.getColumn { "info".select { "height"() } }
+
+// Select the "age" subcolumn of the "info" column group
+// and the "name" column
+df.select { "info"["age"]() and "name"() }
+
+// Calculate the mean value of the ("info"->"age") column;
+// specify the column type as an invocation type argument
+df.mean { "info" { "age"<Int>() } }
+
+// Select all subcolumns from the "info" column group
+df.select { "info" { "age"() and "height"() } }
+// or 
+df.select { "info".allCols() }
+
+/* Row Expressions */
+
+// Add a new "heightInt" column by 
+// casting the "height" column values to `Int`
+df.add("heightInt") {
+    "info"["height"]<Double>().toInt()
+}
+
+// Filter rows where the ("info"->"age") column value 
+// is greater than or equal to 18
+df.filter { "info"["age"]<Int>() >= 18 }
+```
+
+## When should I use the String API?
 
 The String API is a good starting point for learning the library
 and understanding how column selection works.
 
-However, for production code we strongly recommend using the
+For production code we strongly recommend using the
 [**Extension Properties API**](extensionPropertiesApi.md) instead.
 It is more concise, fully type-safe, and provides better IDE support.
+
+However, note that sometimes the usage of Extension Properties API is not possible
+or may require too many excess actions. 
+In such cases, use [](#string-column-accessors).

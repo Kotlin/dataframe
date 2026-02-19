@@ -173,7 +173,7 @@ df.rename { name }.into("firstName")
 > For some operations, in which resulting columns cannot be inferred
 > by the Compiler Plugin (for example, [`pivot`](pivot.md)),
 > extension properties can't be inferred automatically either. For such operations,
-> you can use [`cast`](cast.md) to a new data schema or use the String API.
+> you can [`cast`](cast.md) to a new data schema or use the String API.
 > { style = "warning" }
 
 See [Compiler Plugin Example](https://github.com/Kotlin/dataframe/tree/plugin_example/examples/kotlin-dataframe-plugin-gradle-example) 
