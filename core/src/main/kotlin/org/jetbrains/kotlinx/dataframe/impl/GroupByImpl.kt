@@ -8,7 +8,9 @@ import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.GroupedRowFilter
+import org.jetbrains.kotlinx.dataframe.api.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.getColumn
@@ -18,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
@@ -27,8 +30,10 @@ import org.jetbrains.kotlinx.dataframe.impl.api.GroupedDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.values
 
 /**
@@ -70,18 +75,28 @@ internal class GroupByImpl<T, G>(
 internal fun <T, G, R> aggregateGroupBy(
     df: DataFrame<T>,
     selector: ColumnSelector<T, DataFrame<G>?>,
-    removeColumns: Boolean,
     body: AggregateGroupedBody<G, R>,
 ): DataFrame<T> {
     val defaultAggregateName = "aggregated"
-
+    val groupedDfIsEmpty = df.size().nrow == 0
     val column = df.getColumn(selector)
-
     val removed = df.removeImpl(columns = selector)
-
     val hasKeyColumns = removed.df.ncol > 0
 
-    val groupedFrame = column.values.map {
+    val groups =
+        if (groupedDfIsEmpty) {
+            // if the grouped dataframe is empty, make sure the provided AggregateGroupedBody is called at least once
+            // to create aggregated columns. We empty them below.
+            listOf(
+                column.asFrameColumn().schema.value
+                    .createEmptyDataFrame()
+                    .cast(),
+            )
+        } else {
+            column.values
+        }
+
+    val groupedFrame = groups.map {
         if (it == null) {
             null
         } else {
@@ -101,17 +116,20 @@ internal fun <T, G, R> aggregateGroupBy(
             builder.compute()
         }
     }.concat()
+        .let {
+            // empty the aggregated columns that were created by calling the provided AggregateGroupedBody once
+            // if the grouped dataframe is empty
+            if (groupedDfIsEmpty) it.take(0) else it
+        }
 
     val removedNode = removed.removedColumns.single()
     val insertPath = removedNode.pathFromRoot().dropLast(1)
-
-    if (!removeColumns) removedNode.data.wasRemoved = false
 
     val columnsToInsert = groupedFrame.getColumnsWithPaths {
         colsAtAnyDepth().filter { !it.isColumnGroup() }
     }.map {
         ColumnToInsert(insertPath + it.path, it, removedNode)
     }
-    val src = if (removeColumns) removed.df else df
-    return src.insertImpl(columnsToInsert)
+
+    return removed.df.insertImpl(columnsToInsert)
 }
