@@ -98,6 +98,16 @@ dfRenamed.rename { firstName }.into("name")
 dfRenamed.filter { firstName == "Nikita" }
 ```
 
+> If you use any operation that changes the dataframe's schema,
+> you can use the [String API](StringApi.md) for further operations on the dataframe.
+> ```kotlin
+> df.rename { name }.into("firstName")
+>   .update("firstName").with { (it as String) ... }
+> ```
+> However, we'd recommend assigning the dataframe with a new schema to a variable, 
+> run the cell and continue to work with it in the next cell.
+> { style = "note" }
+
 See the [](quickstart.md) in Kotlin Notebook with basic Extension Properties API examples.
 
 </tab>
@@ -107,6 +117,7 @@ For now, if you read [`DataFrame`](DataFrame.md) from a file or URL, you need to
 You can do it quickly with [`generate..()` methods](DataSchemaGenerationMethods.md).
 
 Define schemas:
+
 ```kotlin
 @DataSchema
 data class PersonInfo(
@@ -158,6 +169,12 @@ df.rename { name }.into("firstName")
     // right after renaming
     .filter { firstName == "Nikita" }
 ```
+
+> For some operations, in which resulting columns cannot be inferred
+> by the Compiler Plugin (for example, [`pivot`](pivot.md)),
+> extension properties can't be inferred automatically either. For such operations,
+> you can [`cast`](cast.md) to a new data schema or use the String API.
+> { style = "warning" }
 
 See [Compiler Plugin Example](https://github.com/Kotlin/dataframe/tree/plugin_example/examples/kotlin-dataframe-plugin-gradle-example) 
 IDEA project with basic Extension Properties API examples.

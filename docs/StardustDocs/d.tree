@@ -26,7 +26,9 @@
         <toc-element topic="Modules.md"/>
     </toc-element>
     <toc-element topic="concepts.md" accepts-web-file-names="overview.html">
-        <toc-element topic="apiLevels.md"/>
+        <toc-element topic="apiLevels.md">
+            <toc-element topic="StringApi.md"/>
+        </toc-element>
         <toc-element topic="types.md">
             <toc-element topic="DataFrame.md"/>
             <toc-element topic="DataColumn.md"/>
