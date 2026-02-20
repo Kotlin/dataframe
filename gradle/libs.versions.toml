@@ -11,13 +11,15 @@ kotlinpoet = "2.2.0"
 dokka = "2.1.0"
 libsPublisher = "2.2.0-dev-61"
 
-# "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
-# dogfood Gradle / KSP plugins in tests and idea-examples modules
+# Latest release version of DataFrame, used in examples
 dataframe = "1.0.0-Beta4"
 korro = "0.1.6"
 
 gradlePlugin-gradle-foojayToolchains = "1.0.0"
 typesafe-conventions = "0.10.0"
+maven-invoker = "3.3.0"
+maven-wrapper = "3.3.4"
+maven = "3.9.11"
 binaryCompatibilityValidator = "0.17.0"
 deephavenCsv = "0.19.0"
 fastDoubleParser = "2.0.1"
@@ -151,6 +153,7 @@ swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref
 
 gradlePlugin-gradle-foojayToolchains = { module = "org.gradle.toolchains:foojay-resolver", version.ref = "gradlePlugin-gradle-foojayToolchains" }
 typesafe-conventions = { module = "dev.panuszewski:typesafe-conventions-gradle-plugin", version.ref = "typesafe-conventions" }
+maven-invoker = { module = "org.apache.maven.shared:maven-invoker", version.ref = "maven-invoker" }
 kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging", version.ref = "kotlinLogging" }
 sl4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "sl4j" }
 sl4jsimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }

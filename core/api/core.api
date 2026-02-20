@@ -6167,7 +6167,7 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/RenderedContent$Compa
 
 public final class org/jetbrains/kotlinx/dataframe/keywords/HardKeywords : java/lang/Enum {
 	public static final field AS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
-	public static final field AS? Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field AS_OR_NULL Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
 	public static final field BREAK Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
 	public static final field CLASS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
 	public static final field CONTINUE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
