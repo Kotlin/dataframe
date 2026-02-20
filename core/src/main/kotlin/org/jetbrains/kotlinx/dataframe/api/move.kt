@@ -47,6 +47,7 @@ import kotlin.reflect.KProperty
  * destination of the selected columns using methods such as [to][MoveClause.to], [toStart][MoveClause.toStart],
  * [toEnd][MoveClause.toEnd], [into][MoveClause.into], [intoIndexed][MoveClause.intoIndexed], [toTop][MoveClause.toTop],
  * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame] with updated columns structure.
+ *
  * Check out [Grammar].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
