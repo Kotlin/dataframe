@@ -37,7 +37,7 @@ import kotlin.reflect.KProperty
  * See also {@get [SEE_ALSO] [distinctBy] that removes duplicated rows based on the specified columns
  * and keeps all the columns in the resulting [DataFrame].}
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *

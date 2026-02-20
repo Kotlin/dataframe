@@ -47,7 +47,7 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][RenameSelectingOptions].
  *

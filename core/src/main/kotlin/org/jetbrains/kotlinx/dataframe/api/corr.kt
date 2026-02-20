@@ -47,7 +47,7 @@ import kotlin.reflect.typeOf
  *
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
@@ -202,7 +202,7 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *

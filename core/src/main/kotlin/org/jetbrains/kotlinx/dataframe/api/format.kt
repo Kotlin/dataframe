@@ -57,7 +57,7 @@ import kotlin.reflect.KProperty
  * This function does not immediately produce a [FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause] which serves as an intermediate step.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][FormatSelectingColumns].
  *

@@ -141,7 +141,7 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  *
  * @include [RowFilterDescription]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -175,7 +175,7 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  *
  * @include [RowFilterDescription]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -243,7 +243,7 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  *
  * @include [RowFilterDescription]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -295,7 +295,7 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  *
  * @include [RowFilterDescription]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -363,7 +363,7 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  *
  * @include [RowFilterDescription]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin

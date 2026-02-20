@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 /*
  * Access APIs KDoc-topic.
  * Link to here whenever you want to explain the different access APIs
- * with [AccessApiLink].
+ * with `@include [AccessApiLink]`.
  */
 
 /**
@@ -24,7 +24,7 @@ internal interface `Access APIs` {
 
     /*
      * String API KDoc-topic.
-     * Link with [StringApiLink].
+     * Link to it with `@include [StringApiLink]`.
      */
 
     /**
@@ -48,7 +48,7 @@ internal interface `Access APIs` {
 
     /*
      * Extension Properties API KDoc topic.
-     * Link with [ExtensionPropertiesApiLink].
+     * Link to it with `@include [ExtensionPropertiesApiLink]`.
      */
 
     /**

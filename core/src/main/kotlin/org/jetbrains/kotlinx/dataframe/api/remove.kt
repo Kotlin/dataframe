@@ -26,7 +26,7 @@ import kotlin.reflect.KProperty
  *
  * Removes the specified [columns] from the original [DataFrame] and returns a new [DataFrame] without them.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][Select.SelectSelectingOptions].
  *

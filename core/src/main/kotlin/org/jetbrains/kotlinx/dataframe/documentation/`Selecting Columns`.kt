@@ -16,6 +16,11 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 @ExcludeFromSources
 internal typealias SelectingColumnsLink = Nothing
 
+/*
+ * Selecting Columns KDoc-topic.
+ * Link to it with `@include [SelectingColumnsLink]`.
+ */
+
 /**
  * ## Selecting Columns
  *
@@ -30,11 +35,16 @@ internal typealias SelectingColumnsLink = Nothing
 @Suppress("ClassName")
 internal interface `Selecting Columns` {
 
+    /*
+     * Note about column groups and nested columns KDoc-snippet.
+     * Include it using `@include [ColumnGroupsAndNestedColumnsSnippet]`.
+     */
+
     /**
      * This can include [column groups][ColumnGroup] and nested columns.
      */
     @ExcludeFromSources
-    typealias ColumnGroupsAndNestedColumnsMention = Nothing
+    typealias ColumnGroupsAndNestedColumnsSnippet = Nothing
 
     /*
      * The key for a @set that will define the operation name for the examples below.
@@ -58,6 +68,11 @@ internal interface `Selecting Columns` {
     @ExcludeFromSources
     typealias SetDefaultReceiverArg = Nothing
 
+    /*
+     * Columns Selection DSL KDoc-topic.
+     * Link to it with `@include [CSDslLink]`.
+     */
+
     /**
      * Select or express columns using the {@include [ColumnsSelectionDslLink]}.
      *
@@ -72,6 +87,11 @@ internal interface `Selecting Columns` {
      * @include [DocumentationUrls.ColumnSelectors]
      */
     interface `Columns Selection DSL` {
+
+        /*
+         * Columns Selection DSL with example KDoc-topic.
+         * Link to it with `@include [CSDslWithExampleLink]`.
+         */
 
         /**
          * {@include [`Columns Selection DSL`]}
@@ -98,6 +118,11 @@ internal interface `Selecting Columns` {
     @ExcludeFromSources
     typealias CSDslWithExampleLink = Nothing
 
+    /*
+     * Column Selection DSL KDoc-topic.
+     * Link to it with `@include [CSDslSingleLink]`.
+     */
+
     /**
      * Select or express a single column using the Column Selection DSL.
      * (Any {@include [AccessApiLink]}).
@@ -113,6 +138,11 @@ internal interface `Selecting Columns` {
      * @include [DocumentationUrls.ColumnSelectors]
      */
     interface `Column Selection DSL` {
+
+        /*
+         * Column Selection DSL with example KDoc-topic.
+         * Link to it with `@include [CSDslSingleWithExampleLink]`.
+         */
 
         /**
          * {@include [`Column Selection DSL`]}
@@ -139,11 +169,21 @@ internal interface `Selecting Columns` {
     @ExcludeFromSources
     typealias CSDslSingleWithExampleLink = Nothing
 
+    /*
+     * Column Names API KDoc-topic.
+     * Link to it with `@include [ColumnNamesLink]`.
+     */
+
     /**
      * Select single or multiple columns using their names as [String]s.
      * ({@include [`Access APIs`.StringApiLink]}).
      */
     interface `Column Names API` {
+
+        /*
+         * CColumn Names API with Example KDoc-topic.
+         * Link to it with `@include [ColumnNamesWithExampleLink]`.
+         */
 
         /**
          * {@include [`Column Names API`]}

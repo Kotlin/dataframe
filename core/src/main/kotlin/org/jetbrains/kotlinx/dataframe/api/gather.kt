@@ -52,7 +52,7 @@ import kotlin.reflect.typeOf
  *
  * This operation is the reverse of [pivot].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * For more information: {@include [DocumentationUrls.Gather]}
  *

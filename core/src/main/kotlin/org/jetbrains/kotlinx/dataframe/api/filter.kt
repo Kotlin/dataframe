@@ -50,7 +50,7 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  *
  * {@include [RowFilterDescription]}
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * For more information, see: {@include [DocumentationUrls.Filter]}
  *

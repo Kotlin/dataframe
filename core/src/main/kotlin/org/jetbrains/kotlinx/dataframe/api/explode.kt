@@ -41,7 +41,7 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
  *
  * This operation is the reverse of [implode].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * For more information, see: {@include [DocumentationUrls.Explode]}
  *
@@ -132,7 +132,7 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
  * Each exploded column will have a new type (`List<T>` → `T`).
  * When several columns are exploded in one operation, lists in different columns will be aligned.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * For more information, see: {@include [DocumentationUrls.Explode]}
  *

@@ -105,7 +105,7 @@ internal typealias SeeAlsoParse = Nothing
  *
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][ConvertSelectingOptions].
  *

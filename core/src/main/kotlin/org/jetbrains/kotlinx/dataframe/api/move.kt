@@ -49,7 +49,7 @@ import kotlin.reflect.KProperty
  * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame] with updated columns structure.
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MoveSelectingOptions].
  *
@@ -154,7 +154,7 @@ public fun <T, C> DataFrame<T>.move(vararg columns: KProperty<C>): MoveClause<T,
  *
  * Returns a new [DataFrame] with updated columns structure.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MoveToSelectingOptions].
  *
@@ -278,7 +278,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, insideGroup: Boolean, va
  * Moves the specified [columns\] to the [DataFrame] start (on top-level).
  * Returns a new [DataFrame] with updated columns structure.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MoveToStartSelectingOptions].
  *
@@ -375,7 +375,7 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: KProperty<*>): DataFrame
  * Moves the specified [columns\] to the [DataFrame] end.
  * Returns a new [DataFrame] with updated columns structure.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MoveToEndSelectingOptions].
  *

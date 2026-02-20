@@ -53,7 +53,7 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][`Selecting Columns`].
  *
@@ -467,7 +467,7 @@ internal typealias PivotMatchesResultCellDescription = Nothing
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
  * and [matches][PivotGroupBy.matches] operations into a single call.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -561,7 +561,7 @@ internal typealias PivotCountsResultCellDescription = Nothing
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
  * and [count][PivotGroupBy.count] operations into a single call.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -700,7 +700,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
  * This function combines [pivot][GroupBy.pivot]
  * and [matches][PivotGroupBy.matches] operations into a single call.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -776,7 +776,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  * This function combines [pivot][GroupBy.pivot]
  * and [count][PivotGroupBy.count] operations into a single call.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *

@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
  * that return a new [DataFrame] with grouped columns.
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][GroupSelectingOptions].
  *
