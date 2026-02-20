@@ -54,7 +54,7 @@ val jsonStr = df.toJson(prettyPrint = true)
 Add dependency:
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-excel:$dataframe_version")
+implementation("org.jetbrains.kotlinx:dataframe-excel:%dataframeVersion%")
 ```
 
 You can write your [`DataFrame`](DataFrame.md) in XLS, XLSX format to a file, `OutputStream` or Workbook object.
@@ -141,7 +141,7 @@ df.filter { person -> !person.isHappy }.remove("isHappy")
 Add dependency:
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
+implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataframeVersion%")
 ```
 
 > Make sure to follow an

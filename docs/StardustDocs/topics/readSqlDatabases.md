@@ -14,19 +14,19 @@ Learn how to query, read, and inspect SQL database tables using Kotlin DataFrame
 with full schema inference and flexible JDBC setup.
 </link-summary>
 
-These functions allow you to interact with an SQL database using a Kotlin DataFrame library.
+These functions allow you to interact with an SQL database using the Kotlin DataFrame library.
 
 There are two main blocks of available functionality:
 * Methods for reading data from a database
-  *  ```readSqlTable``` reads specific database table
-  *  ```readSqlQuery``` executes SQL query
-  *  ```readResultSet``` reads from created earlier ResultSet
-  *  ```readAllSqlTables``` reads all tables (all non-system tables)
+  *  ```DataFrame.readSqlTable()``` reads a specific database table
+  *  ```DataFrame.readSqlQuery()``` executes an SQL query
+  *  ```DataFrame.readResultSet()``` reads from a `ResultSet`
+  *  ```DataFrame.readAllSqlTables()``` reads all non-system tables
 * Methods for reading table schemas
-  * ```readSqlTable``` on `DataFrameSchema` for specific tables
-  * ```readSqlQuery``` on `DataFrameSchema` for a specific SQL query
-  * ```readResultSet``` on `DataFrameSchema` for a `ResultSet` created earlier
-  * ```readAllSqlTables``` on `DataFrameSchema` for all non-system tables
+  * ```DataFrameSchema.readSqlTable()``` for specific tables
+  * ```DataFrameSchema.readSqlQuery()``` for a specific SQL query
+  * ```DataFrameSchema.readResultSet()``` for a `ResultSet`
+  * ```DataFrameSchema.readAllSqlTables()``` for all non-system tables
 
 >**NOTE (Beta-4 changes):** 
 > 
@@ -40,30 +40,30 @@ Also, there are a few **extension functions** available on `Connection`,
 `ResultSet`, `DbConnectionConfig`, and `DataSource` objects.
 
 * Methods for reading data from a database
-    *  ```readDataFrame``` on `Connection` or `DbConnectionConfig` 
+    *  ```readDataFrame()``` on `Connection` or `DbConnectionConfig` 
   converts the result of an SQL query or SQL table to a `DataFrame` object.
-    *  ```readDataFrame``` on `ResultSet` reads from created earlier `ResultSet`
+    *  ```readDataFrame()``` on `ResultSet` reads from created earlier `ResultSet`
 * Methods for reading table schemas from a database
-    * ```getDataFrameSchema``` on `Connection` or `DbConnectionConfig`
+    * ```getDataFrameSchema()``` on `Connection` or `DbConnectionConfig`
   for an SQL query result or the SQL table
-    * ```getDataFrameSchema``` on `ResultSet` for created earlier `ResultSet`
+    * ```getDataFrameSchema()``` on `ResultSet` for created earlier `ResultSet`
 
 
 > **NOTE:** This is an experimental module, and for now, 
 > we only support these databases: MS SQL, MariaDB, MySQL, PostgreSQL, SQLite, and DuckDB. 
 > 
-> Moreover, since release 0.15 we support the possibility to register custom SQL database, read more in our [guide](readSqlFromCustomDatabase.md).
+> Moreover, since release 0.15 we support the possibility to register a custom SQL database; read more in our [guide](readSqlFromCustomDatabase.md).
 >
 > Additionally, support for JSON and date-time types is limited. 
 > 
 > Please take this into consideration when using these functions.
 
-## Getting started with reading from SQL database in a Gradle Project
+## Getting started with reading from an SQL database in a Gradle Project
 
-First, you need to add a dependency
+First, you need to add the dependency
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-jdbc:$dataframe_version")
+implementation("org.jetbrains.kotlinx:dataframe-jdbc:%dataframeVersion%")
 ```
 
 after that, you need to add the dependency for the database's JDBC driver, for example
