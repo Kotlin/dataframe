@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.`Access APIs`
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -70,7 +70,7 @@ public interface ValueColsColumnsSelectionDsl {
      * Creates a subset of columns from [this\] that are [ValueColumns][ValueColumn].
      *
      * You can optionally use a [filter\] to only include certain columns.
-     * [valueCols] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     * [valueCols] can be called using any of the supported [APIs][`Access APIs`] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *

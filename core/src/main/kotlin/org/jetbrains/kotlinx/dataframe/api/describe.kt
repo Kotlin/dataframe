@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.impl.api.describeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -88,7 +88,7 @@ internal typealias Describe = Nothing
 @ExcludeFromSources
 internal typealias DescribeWithSelection = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [describe][describe]} */
+/** {@set [`Selecting Columns`.OPERATION] [describe][describe]} */
 @ExcludeFromSources
 private typealias SetDescribeOperationArg = Nothing
 // endregion
@@ -125,7 +125,7 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetDescribeOperationArg]}
+ * @include [`Selecting Columns`.`Columns Selection DSL`.`Columns Selection DSL with Example`] {@include [SetDescribeOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] that specifies which
  * columns of this [DataFrame] should be described.
  */
@@ -134,7 +134,7 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetDescribeOperationArg]}
+ * @include [`Selecting Columns`.`Column Names API`.`Column Names API with Example`] {@include [SetDescribeOperationArg]}
  * @param [columns] The [Column Names][String] that specifies which
  * columns of this [DataFrame] should be described.
  */
@@ -143,7 +143,7 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetDescribeOperationArg]}
+ * @include [`Selecting Columns`.ColumnAccessors.WithExample] {@include [SetDescribeOperationArg]}
  * @param [columns] The [Column Accessors][ColumnReference] that specifies which
  * columns of this [DataFrame] should be described.
  */
@@ -154,7 +154,7 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetDescribeOperationArg]}
+ * @include [`Selecting Columns`.KProperties.WithExample] {@include [SetDescribeOperationArg]}
  * @param [columns] The [KProperties][KProperty] that specifies which
  * columns of this [DataFrame] should be described.
  */

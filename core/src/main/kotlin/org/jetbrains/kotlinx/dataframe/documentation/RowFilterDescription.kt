@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.RowFilter
  * and is expected to return a [Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][ExtensionPropertiesAPIDocs] for convenient and type-safe access.
+ * including through [extension properties][`Access APIs`.`Extension Properties API`]
+ * for convenient and type-safe access.
  */
 internal typealias RowFilterDescription = Nothing

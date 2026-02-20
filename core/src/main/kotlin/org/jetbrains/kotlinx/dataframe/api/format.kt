@@ -28,7 +28,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExportAsHtml
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.RowConditionLink
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.api.MergedAttributes
 import org.jetbrains.kotlinx.dataframe.impl.api.SingleAttribute
@@ -57,7 +57,7 @@ import kotlin.reflect.KProperty
  * This function does not immediately produce a [FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause] which serves as an intermediate step.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * See [Selecting Columns][FormatSelectingColumns].
  *
@@ -90,8 +90,8 @@ import kotlin.reflect.KProperty
 internal interface FormatDocs {
 
     /**
-     * {@comment Version of [SelectingColumns] with correctly filled in examples}
-     * @include [SelectingColumns] {@include [SetFormatOperationArg]}
+     * {@comment Version of [`Selecting Columns`] with correctly filled in examples}
+     * @include [`Selecting Columns`] {@include [SetFormatOperationArg]}
      */
     typealias FormatSelectingColumns = Nothing
 
@@ -112,7 +112,7 @@ internal interface FormatDocs {
          *
          * ### Notation:
          *
-         * [**format**][DataFrame.format]**`  {  `**[`columns`][SelectingColumns]**` }`**
+         * [**format**][DataFrame.format]**`  {  `**[`columns`][`Selecting Columns`]**` }`**
          *
          * {@include [Indent]}
          * `\[ `__`.`__[**`where`**][FormatClause.where]**`  {  `**[`filter`][SelectingRows.RowValueCondition]`: `[`RowValueFilter`][RowValueFilter]**`  }  `**`]`
@@ -222,7 +222,7 @@ internal interface FormatDocs {
     }
 }
 
-/** {@set [SelectingColumns.OPERATION] [format][format]} */
+/** {@set [`Selecting Columns`.OPERATION] [format][format]} */
 @ExcludeFromSources
 private typealias SetFormatOperationArg = Nothing
 
@@ -238,7 +238,7 @@ private typealias CommonFormatDocs = Nothing
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.Dsl] {@include [SetFormatOperationArg]}
+ * @include [`Selecting Columns`.`Columns Selection DSL`] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format { temperature }.linearBg(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)
@@ -256,7 +256,7 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetFormatOperationArg]}
+ * @include [`Selecting Columns`.`Column Names API`] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }
@@ -308,7 +308,7 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.Dsl] {@include [SetFormatOperationArg]}
+ * @include [`Selecting Columns`.`Columns Selection DSL`] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format().with { background(white) and textColor(black) and bold }
@@ -328,7 +328,7 @@ public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): Form
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetFormatOperationArg]}
+ * @include [`Selecting Columns`.`Column Names API`] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }

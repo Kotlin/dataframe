@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -32,7 +32,7 @@ import kotlin.reflect.KProperty
  *
  * Returns a new [DataFrame] with only the columns selected by [columns\].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -41,13 +41,13 @@ import kotlin.reflect.KProperty
 internal interface Select {
 
     /**
-     * {@comment Version of [SelectingColumns] with correctly filled in examples}
-     * @include [SelectingColumns] {@include [SetSelectOperationArg]}
+     * {@comment Version of [`Selecting Columns`] with correctly filled in examples}
+     * @include [`Selecting Columns`] {@include [SetSelectOperationArg]}
      */
     typealias SelectSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [select][select]} */
+/** {@set [`Selecting Columns`.OPERATION] [select][select]} */
 @ExcludeFromSources
 private typealias SetSelectOperationArg = Nothing
 
@@ -60,7 +60,7 @@ private typealias CommonSelectDocs = Nothing
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectOperationArg]}
+ * @include [`Selecting Columns`.`Columns Selection DSL`.`Columns Selection DSL with Example`] {@include [SetSelectOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
 @Refine
@@ -69,7 +69,7 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetSelectOperationArg]}
+ * @include [`Selecting Columns`.KProperties.WithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
  */
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -78,7 +78,7 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectOperationArg]}
+ * @include [`Selecting Columns`.`Column Names API`.`Column Names API with Example`] {@include [SetSelectOperationArg]}
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
  */
 @Refine
@@ -87,7 +87,7 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectOperationArg]}
+ * @include [`Selecting Columns`.ColumnAccessors.WithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Column Accessors][ColumnReference] used to select the columns of this [DataFrame].
  */
 @Deprecated(DEPRECATED_ACCESS_API)

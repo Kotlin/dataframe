@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -52,7 +52,7 @@ import kotlin.reflect.typeOf
  *
  * This operation is the reverse of [pivot].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information: {@include [DocumentationUrls.Gather]}
  *
@@ -98,7 +98,7 @@ internal interface GatherDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [gather][gather]} */
+/** {@set [`Selecting Columns`.OPERATION] [gather][gather]} */
 @ExcludeFromSources
 private typealias SetGatherOperationArg = Nothing
 
@@ -111,7 +111,7 @@ private typealias CommonGatherDocs = Nothing
 
 /**
  * @include [CommonGatherDocs]
- * @include [SelectingColumns.Dsl] {@include [SetGatherOperationArg]}
+ * @include [`Selecting Columns`.`Columns Selection DSL`] {@include [SetGatherOperationArg]}
  * ### Examples
  * ```kotlin
  * // Gather `resultA` and `resultB` columns into a single "value" column,
@@ -138,7 +138,7 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
 
 /**
  * @include [CommonGatherDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetGatherOperationArg]}
+ * @include [`Selecting Columns`.`Column Names API`] {@include [SetGatherOperationArg]}
  * ### Example
  * ```kotlin
  * df.gather("resultA", "resultB").mapKeys { it.last() }.into("series", "value")

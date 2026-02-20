@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -50,7 +50,7 @@ internal typealias CountDistinctDocs = Nothing
 
 /**
  * {@include [CountDistinctDocs]}
- * {@include [SelectingColumns.Dsl]}
+ * {@include [`Selecting Columns`.`Columns Selection DSL`]}
  *
  * #### Example
  *
@@ -69,7 +69,7 @@ public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): In
 
 /**
  * {@include [CountDistinctDocs]}
- * {@include [SelectingColumns.ColumnNames]}
+ * {@include [`Selecting Columns`.`Column Names API`]}
  *
  * #### Example
  *

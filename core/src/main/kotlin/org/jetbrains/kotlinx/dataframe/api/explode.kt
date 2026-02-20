@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -41,7 +41,7 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
  *
  * This operation is the reverse of [implode].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information, see: {@include [DocumentationUrls.Explode]}
  *
@@ -52,7 +52,7 @@ internal typealias ExplodeDocs = Nothing
 
 /**
  * {@include [ExplodeDocs]}
- * {@include [SelectingColumns.Dsl]}
+ * {@include [`Selecting Columns`.`Columns Selection DSL`]}
  *
  * #### Examples
  *
@@ -82,7 +82,7 @@ public fun <T> DataFrame<T>.explode(
 
 /**
  * {@include [ExplodeDocs]}
- * {@include [SelectingColumns.ColumnNames]}
+ * {@include [`Selecting Columns`.`Column Names API`]}
  *
  * #### Example
  *
@@ -132,7 +132,7 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
  * Each exploded column will have a new type (`List<T>` → `T`).
  * When several columns are exploded in one operation, lists in different columns will be aligned.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsMention]
  *
  * For more information, see: {@include [DocumentationUrls.Explode]}
  *
@@ -143,7 +143,7 @@ internal typealias ExplodeDataRowDocs = Nothing
 
 /**
  * {@include [ExplodeDataRowDocs]}
- * {@include [SelectingColumns.Dsl]}
+ * {@include [`Selecting Columns`.`Columns Selection DSL`]}
  *
  * #### Example
  *
@@ -166,7 +166,7 @@ public fun <T> DataRow<T>.explode(
 
 /**
  * {@include [ExplodeDataRowDocs]}
- * {@include [SelectingColumns.ColumnNames]}
+ * {@include [`Selecting Columns`.`Column Names API`]}
  *
  * #### Example
  *
