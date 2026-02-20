@@ -63,7 +63,7 @@ Also, there are a few **extension functions** available on `Connection`,
 First, you need to add the dependency
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-jdbc:$dataframe_version")
+implementation("org.jetbrains.kotlinx:dataframe-jdbc:%dataframeVersion%")
 ```
 
 after that, you need to add the dependency for the database's JDBC driver, for example

@@ -36,10 +36,10 @@ The input string can be a file path or URL.
 Before you can read data from CSV, make sure you have the following dependency:
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-csv:$dataframe_version")
+implementation("org.jetbrains.kotlinx:dataframe-csv:%dataframeVersion%")
 ```
 
-It's included by default if you have `org.jetbrains.kotlinx:dataframe:$dataframe_version` already.
+It's included by default if you have `org.jetbrains.kotlinx:dataframe:%dataframeVersion%` already.
 
 To read a CSV file, use the `.readCsv()` function.
 
@@ -305,10 +305,10 @@ val df = DataFrame.readCsv(
 Before you can read data from JSON, make sure you have the following dependency:
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-json:$dataframe_version")
+implementation("org.jetbrains.kotlinx:dataframe-json:%dataframeVersion%")
 ```
 
-It's included by default if you have `org.jetbrains.kotlinx:dataframe:$dataframe_version` already.
+It's included by default if you have `org.jetbrains.kotlinx:dataframe:%dataframeVersion%` already.
 
 To read a JSON file, use the `.readJson()` function. JSON files can be read from a file or a URL.
 
@@ -536,10 +536,10 @@ For more examples, see the "examples/json" module.
 Before you can read data from Excel, add the following dependency:
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-excel:$dataframe_version")
+implementation("org.jetbrains.kotlinx:dataframe-excel:%dataframeVersion%")
 ```
 
-It's included by default if you have `org.jetbrains.kotlinx:dataframe:$dataframe_version` already.
+It's included by default if you have `org.jetbrains.kotlinx:dataframe:%dataframeVersion%` already.
 
 To read an Excel spreadsheet, use the `.readExcel()` function. Excel spreadsheets can be read from a file or a URL. Supported
 Excel spreadsheet formats are: xls, xlsx.
@@ -588,10 +588,10 @@ val df = DataFrame.readExcel("mixed_column.xlsx", stringColumns = StringColumns(
 Before you can read data from Apache Arrow format, add the following dependency:
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
+implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataframeVersion%")
 ```
 
-It's included by default if you have `org.jetbrains.kotlinx:dataframe:$dataframe_version` already.
+It's included by default if you have `org.jetbrains.kotlinx:dataframe:%dataframeVersion%` already.
 
 To read Apache Arrow formats, use the `.readArrowFeather()` function:
 
