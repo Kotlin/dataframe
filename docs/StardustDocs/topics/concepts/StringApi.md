@@ -23,7 +23,7 @@ in function arguments:
 <!---FUN simpleSelect-->
 
 ```kotlin
-// Select a sub-dataframe with the "name" and "info" columns
+// Select "name" and "info" columns
 df.select("name", "info")
 ```
 
