@@ -108,7 +108,7 @@ df.getColumn { colGroup("info").col("height") }
 
 <!---END-->
 
-Select the "age" subcolumn of the "info" column group and the "name" column
+Select the "age" subcolumn from the "info" column group and the "name" column
 
 <!---FUN selectSubcolumnAndColumn-->
 
@@ -118,7 +118,7 @@ df.select { colGroup("info").col("age") and col("name") }
 
 <!---END-->
 
-Calculate the mean value of the ("info"->"age") column; specify the column type as a `col` type argument
+Calculate the mean value of the ("info"/"age") column; specify the column type as a `col` type argument
 
 <!---FUN meanValueBySubcolumn-->
 
@@ -194,8 +194,7 @@ df.filter { "info"["age"]<Int>() >= 18 }
 
 ### Invoked String API
 
-> This API is outdated and may be hard to read and refactor;
-> it may be changed in the future.
+> This API is outdated and may be changed in the future.
 > 
 > Please don't mix it with the `col`/`colGroup` methods.
 > 
@@ -204,7 +203,7 @@ df.filter { "info"["age"]<Int>() >= 18 }
 
 Alternatively, you can use the `String` invocation (optional typed argument) for column accessor creation.
 It will create the same column accessors as in the Columns Selection DSL.
-You can't specify the column kind in this case, but you can access nested columns using the 
+You can access nested columns using the 
 `String.get` or `String.invoke` operators or using the ` String.select {} ` function, 
 where the receiver is the column group name.
 
