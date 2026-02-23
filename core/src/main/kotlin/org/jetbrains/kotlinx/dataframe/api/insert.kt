@@ -220,7 +220,7 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
  * Inserts the new column previously specified with [insert] under
  * the column group defined by the given [columnPath].
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *

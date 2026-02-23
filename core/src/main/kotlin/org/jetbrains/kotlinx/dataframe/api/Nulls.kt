@@ -17,8 +17,8 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.NA
-import org.jetbrains.kotlinx.dataframe.documentation.NaN
+import org.jetbrains.kotlinx.dataframe.documentation.`NA`
+import org.jetbrains.kotlinx.dataframe.documentation.`NaN`
 import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
 import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -112,7 +112,7 @@ internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (
  *
  * Overload of `isNA` with contract support.
  *
- * @see NA
+ * @see `NA`
  */
 @JvmName("isNaWithContract")
 @Suppress("NOTHING_TO_INLINE")
@@ -125,7 +125,7 @@ internal inline fun <T : Any?> T.isNA(): Boolean {
 /**
  * Is `true` if [this] is considered NA.
  * "NA", in DataFrame, roughly means `null` or `NaN`.
- * @see NA
+ * @see `NA`
  */
 internal inline val Any?.isNA: Boolean
     get() = when (this) {
@@ -140,20 +140,20 @@ internal inline val Any?.isNA: Boolean
 internal inline val AnyCol.canHaveNaN: Boolean get() = typeClass.let { it == Double::class || it == Float::class }
 
 /**
- * Is `true` when [this] column can have [NA] values.
- * @see NA
+ * Is `true` when [this] column can have [`NA`] values.
+ * @see `NA`
  */
 internal inline val AnyCol.canHaveNA: Boolean get() = hasNulls() || canHaveNaN || kind() != ColumnKind.Value
 
 /**
  * Is `true` when [this] is `null` or [Double.NaN].
- * @see NA
+ * @see `NA`
  */
 internal inline val Double?.isNA: Boolean get() = this == null || this.isNaN()
 
 /**
  * Is `true` when [this] is `null` or [Float.NaN].
- * @see NA
+ * @see `NA`
  */
 internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 
@@ -162,7 +162,7 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [`NaN`][NaN] values with given value or expression.
+ * Replaces [`NaN`][`NaN`] values with given value or expression.
  * Specific case of [update].
  *
  * ### Check out: [Grammar][FillNaNs.Grammar]
@@ -237,7 +237,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
 /**
  * ## The Fill NA Operation
  *
- * Replaces [`NA`][NA] values with given value or expression.
+ * Replaces [`NA`][`NA`] values with given value or expression.
  * Specific case of [update].
  *
  * ### Check out: [Grammar][FillNA.Grammar]
@@ -449,11 +449,11 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
 /**
  * ## The Drop `NA` Operation
  *
- * Removes rows with [`NA`][NA] values. Specific case of [drop][DataFrame.drop].
+ * Removes rows with [`NA`][`NA`] values. Specific case of [drop][DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][DropNASelectingOptions]).
- * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][NA]. By default,
- * rows are dropped if any of the selected cells are [`NA`][NA].
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][`NA`]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][`NA`].
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNA]}
  */
@@ -462,8 +462,8 @@ internal interface DropNA {
 
     /**
      * @param whereAllNA `false` by default.
-     *   If `true`, rows are dropped if all selected cells are [`NA`][NA].
-     *   If `false`, rows are dropped if any of the selected cells is [`NA`][NA].
+     *   If `true`, rows are dropped if all selected cells are [`NA`][`NA`].
+     *   If `false`, rows are dropped if any of the selected cells is [`NA`][`NA`].
      */
     typealias WhereAllNAParam = Nothing
 
@@ -549,7 +549,7 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = 
 /**
  * ## The Drop `NA` Operation
  *
- * Removes [`NA`][NA] values from this [DataColumn], adjusting the type accordingly.
+ * Removes [`NA`][`NA`] values from this [DataColumn], adjusting the type accordingly.
  */
 public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
     when (typeClass) {
@@ -660,7 +660,7 @@ public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T>
 /**
  * ## The Drop `NaN` Operation
  *
- * Removes [`NaN`][NaN] values from this [DataColumn], adjusting the type accordingly.
+ * Removes [`NaN`][`NaN`] values from this [DataColumn], adjusting the type accordingly.
  */
 public fun <T> DataColumn<T>.dropNaNs(): DataColumn<T> =
     when (typeClass) {

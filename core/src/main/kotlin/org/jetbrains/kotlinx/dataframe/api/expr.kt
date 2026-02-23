@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
+import org.jetbrains.kotlinx.dataframe.documentation.`Column Expression`
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import kotlin.reflect.typeOf
@@ -44,9 +44,7 @@ public interface ExprColumnsSelectionDsl {
 }
 
 /**
- * @include [ColumnExpression.CommonDocs]
- *
- * This function is essentially a shortcut for [ColumnsContainer.mapToColumn].
+ * @include [`Column Expression`.CommonDocs]
  *
  * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
  *
@@ -59,7 +57,6 @@ public interface ExprColumnsSelectionDsl {
  * @param [name] The name the temporary column. Is empty by default ("untitled" in the DataFrame).
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
- * @see [ColumnsContainer.mapToColumn]
  */
 @Interpretable("Expr0")
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(

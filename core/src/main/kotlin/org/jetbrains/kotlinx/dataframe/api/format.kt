@@ -29,7 +29,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.RowConditionLink
 import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Rows`
 import org.jetbrains.kotlinx.dataframe.impl.api.MergedAttributes
 import org.jetbrains.kotlinx.dataframe.impl.api.SingleAttribute
 import org.jetbrains.kotlinx.dataframe.impl.api.encode
@@ -115,7 +115,7 @@ internal interface FormatDocs {
          * [**format**][DataFrame.format]**`  {  `**[`columns`][`Selecting Columns`]**` }`**
          *
          * {@include [Indent]}
-         * `\[ `__`.`__[**`where`**][FormatClause.where]**`  {  `**[`filter`][SelectingRows.RowValueCondition]`: `[`RowValueFilter`][RowValueFilter]**`  }  `**`]`
+         * `\[ `__`.`__[**`where`**][FormatClause.where]**`  {  `**[`filter`][`Selecting Rows`.RowValueCondition]`: `[`RowValueFilter`][RowValueFilter]**`  }  `**`]`
          *
          * {@include [Indent]}
          * `\[ `__`.`__[**`at`**][FormatClause.at]**`(`**`rowIndices: `[Collection][Collection]`<`[Int][Int]`> | `[IntRange][IntRange]` | `**`vararg`**` `[Int][Int]**`)`**` ]`

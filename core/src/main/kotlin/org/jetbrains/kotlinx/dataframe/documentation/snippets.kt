@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 
-// File with KDF behaviors KDoc-topics.
+// File with KDF common KDoc-topics and -snippets.
 
 /*
  * Auto-renaming in [DataFrame] KDoc-topic.
@@ -28,3 +28,15 @@ internal typealias `Auto-renaming columns in DataFrame` = Nothing
 /** [Auto-renaming columns in DataFrame][`Auto-renaming columns in DataFrame`] */
 @ExcludeFromSources
 internal typealias AutoRenamingLink = Nothing
+
+/*
+ * Column Path auto creation KDoc-snippet.
+ * Include it into KDoc with `@include [ColumnPathCreationSnippet]`.
+ */
+
+/**
+ * If the specified path is partially or fully missing — that is, if any segment of the path
+ * does not correspond to an existing column or column group — all missing parts will be created automatically.
+ */
+@ExcludeFromSources
+internal typealias ColumnPathCreationSnippet = Nothing

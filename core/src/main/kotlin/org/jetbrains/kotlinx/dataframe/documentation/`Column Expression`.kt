@@ -1,0 +1,29 @@
+package org.jetbrains.kotlinx.dataframe.documentation
+
+import org.jetbrains.kotlinx.dataframe.api.expr
+
+/*
+ * Column Expression KDoc-topic.
+ * Link to it with `@include [ColumnExpressionLink]`.
+ */
+
+/**
+ * ## Column Expression
+ * In many DSLs, the lambda [`expr {}`][expr] can be used to
+ * create a new column by defining an expression to fill up each row.
+ *
+ * [`expr {}`][expr] behaves like a mapping statement, iterating over the object it's called on.
+ */
+@Suppress("ClassName")
+internal interface `Column Expression` {
+
+    /**
+     * Creates a temporary new column by defining an expression to fill up each row.
+     *
+     * See {@include [ColumnExpressionLink]} for more information.
+     */
+    typealias CommonDocs = Nothing
+}
+
+/** [Column Expression][`Column Expression`] */
+internal typealias ColumnExpressionLink = Nothing

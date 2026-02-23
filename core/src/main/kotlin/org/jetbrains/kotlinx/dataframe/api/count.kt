@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateValue
 
 // region DataColumn
@@ -70,7 +69,7 @@ public fun <T> DataFrame<T>.count(): Int = rowsCount()
 /**
  * Counts the number of rows in this [DataFrame] that satisfy the given [predicate].
  *
- * {@include [RowFilterDescription]}
+ * {@include [SelectingRows.RowFilterSnippet]}
  *
  * See also:
  * - [filter][DataFrame.filter] — filters rows using a [RowFilter] condition.
@@ -130,7 +129,7 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
  * Aggregates this [GroupBy] by counting the number of rows in each group
  * that satisfy the given [predicate].
  *
- * {@include [RowFilterDescription]}
+ * {@include [SelectingRows.RowFilterSnippet]}
  *
  * Returns a new [DataFrame] where each row corresponds to a group.
  * The resulting frame contains:
@@ -204,7 +203,7 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
  * Aggregates this [Pivot] by counting the number of rows in each group
  * that satisfy the given [predicate].
  *
- * {@include [RowFilterDescription]}
+ * {@include [SelectingRows.RowFilterSnippet]}
  *
  * Returns a single [DataRow] where:
  * - each column corresponds to a [pivot] group — if multiple pivot keys were used,

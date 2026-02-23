@@ -37,7 +37,7 @@ internal interface `Selecting Columns` {
 
     /*
      * Note about column groups and nested columns KDoc-snippet.
-     * Include it using `@include [ColumnGroupsAndNestedColumnsSnippet]`.
+     * Paste it into KDoc using `@include [ColumnGroupsAndNestedColumnsSnippet]`.
      */
 
     /**
@@ -70,7 +70,8 @@ internal interface `Selecting Columns` {
 
     /*
      * Columns Selection DSL KDoc-topic.
-     * Link to it with `@include [CSDslLink]`.
+     * Link to it with `@include [CSDslLink]`
+     * or paste it into KDoc with `@include [`Columns Selection DSL`]`.
      */
 
     /**
@@ -90,7 +91,8 @@ internal interface `Selecting Columns` {
 
         /*
          * Columns Selection DSL with example KDoc-topic.
-         * Link to it with `@include [CSDslWithExampleLink]`.
+         * Link to it with `@include [CSDslWithExampleLink]`
+         * or paste it into KDoc with `@include [`Columns Selection DSL with Example`]`
          */
 
         /**
@@ -120,7 +122,8 @@ internal interface `Selecting Columns` {
 
     /*
      * Column Selection DSL KDoc-topic.
-     * Link to it with `@include [CSDslSingleLink]`.
+     * Link to it with `@include [CSDslSingleLink]`
+     * or paste it into KDoc with `@include [`Column Selection DSL`]`.
      */
 
     /**
@@ -141,7 +144,8 @@ internal interface `Selecting Columns` {
 
         /*
          * Column Selection DSL with example KDoc-topic.
-         * Link to it with `@include [CSDslSingleWithExampleLink]`.
+         * Link to it with `@include [CSDslSingleWithExampleLink]`
+         * or paste it into KDoc with `@include [`Column Selection DSL with Example`]`
          */
 
         /**
@@ -171,7 +175,8 @@ internal interface `Selecting Columns` {
 
     /*
      * Column Names API KDoc-topic.
-     * Link to it with `@include [ColumnNamesLink]`.
+     * Link to it with `@include [ColumnNamesLink]`
+     * or paste it into KDoc with `@include [`Column Names API`]`.
      */
 
     /**
@@ -182,7 +187,8 @@ internal interface `Selecting Columns` {
 
         /*
          * CColumn Names API with Example KDoc-topic.
-         * Link to it with `@include [ColumnNamesWithExampleLink]`.
+         * Link to it with `@include [ColumnNamesWithExampleLink]`
+         * or paste it into KDoc with `@include [`Column Names API with Example`]`.
          */
 
         /**

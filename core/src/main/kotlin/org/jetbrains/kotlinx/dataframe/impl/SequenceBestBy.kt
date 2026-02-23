@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.api.isNA
-import org.jetbrains.kotlinx.dataframe.documentation.NA
+import org.jetbrains.kotlinx.dataframe.documentation.`NA`
 
 /**
  * Type alias for a function representing a reduction over a sequence of values trying to find the "best" value.
@@ -48,7 +48,7 @@ internal inline fun <C> Sequence<C>.indexOfBestNotNullBy(isBetterThan: IsBetterT
 
 /**
  * Returns the index of the first element in this sequence
- * that is not [NA (null or NaN)][NA] and is better than all previous elements.
+ * that is not [NA (null or NaN)][`NA`] and is better than all previous elements.
  *
  * Returns -1 if there are no elements non-`NA` elements in [this].
  *

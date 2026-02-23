@@ -475,7 +475,7 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
  * Moves columns, previously selected with [move] into a new position specified by a
  * given column path within the [DataFrame].
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][`Selecting Columns`].
  *
@@ -525,7 +525,7 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  * given column path within the [DataFrame].
  * Provides selected column indices.
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][`Selecting Columns`].
  *
@@ -589,7 +589,7 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
  * an existing column group specified by a
  * column path within the [DataFrame].
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][`Selecting Columns`].
  *

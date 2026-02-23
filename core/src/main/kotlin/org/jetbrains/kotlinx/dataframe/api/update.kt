@@ -25,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColum
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Rows`
 import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
@@ -73,7 +73,7 @@ public class Update<T, C>(
      * {@get [UPDATE_OPERATION]}**`  {  `**[`columns`][`Selecting Columns`]**` }`**
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`where`**][Update.where]**`  {  `**[`rowValueCondition`][SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
+     * `\[ `__`.`__[**`where`**][Update.where]**`  {  `**[`rowValueCondition`][`Selecting Rows`.RowValueCondition.WithExample]**`  }  `**`]`
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`at`**][Update.at]**`(`**[`rowIndices`][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
@@ -200,9 +200,9 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
 // endregion
 
 /** ## Where
- * @include [SelectingRows.RowValueCondition.WithExample]
- * {@set [SelectingRows.FIRST_OPERATION] [update][update]}
- * {@set [SelectingRows.SECOND_OPERATION] [where][where]}
+ * @include [`Selecting Rows`.RowValueCondition.WithExample]
+ * {@set [`Selecting Rows`.FIRST_OPERATION] [update][update]}
+ * {@set [`Selecting Rows`.SECOND_OPERATION] [where][where]}
  *
  * @param [predicate] The [row value filter][RowValueFilter] to select the rows to update.
  */

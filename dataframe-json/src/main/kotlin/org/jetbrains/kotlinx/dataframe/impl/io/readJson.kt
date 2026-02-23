@@ -37,7 +37,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
-import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
+import org.jetbrains.kotlinx.dataframe.documentation.`Unifying Numbers`
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataCollector
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -121,7 +121,7 @@ internal fun readJsonImpl(
  * A.k.a. [TypeClashTactic.ANY_COLUMNS].
  *
  * @param records List of json elements to be converted to a [DataFrame].
- * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers].
+ * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param header Optional list of column names. If given, [records] will be read like an object with [header] being the keys.
@@ -442,7 +442,7 @@ private fun AnyFrame.isSingleUnnamedColumn() = columnsCount() == 1 && getColumn(
  * A.k.a. [TypeClashTactic.ARRAY_AND_VALUE_COLUMNS].
  *
  * @param records List of json elements to be converted to a [DataFrame].
- * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers].
+ * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param header Optional list of column names. If given, [records] will be read like an object with [header] being the keys.

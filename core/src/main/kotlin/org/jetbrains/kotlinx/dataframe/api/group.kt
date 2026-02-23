@@ -184,7 +184,7 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  * Groups columns, previously selected with [group], into a new or existing column group
  * within the [DataFrame] by specifying its path via [ColumnsSelectionDsl] expression.
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][`Selecting Columns`].
  *

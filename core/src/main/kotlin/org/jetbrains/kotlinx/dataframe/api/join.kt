@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.`Auto-renaming columns in DataFrame`
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
@@ -28,7 +29,7 @@ import kotlin.reflect.KProperty
  *
  * If both [DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.`Auto-Renaming in DataFrame`]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame].
  */
 @ExcludeFromSources
