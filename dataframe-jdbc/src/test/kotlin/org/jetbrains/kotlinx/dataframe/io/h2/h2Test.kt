@@ -933,7 +933,7 @@ class JdbcTest {
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
         schema.columns.size shouldBe 2
         schema.columns.toList()[0].first shouldBe "name"
-        schema.columns.toList()[1].first shouldBe "name_1"
+        schema.columns.toList()[1].first shouldBe "name1"
     }
 
     @Test
@@ -949,8 +949,8 @@ class JdbcTest {
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
         schema.columns.size shouldBe 3
         schema.columns.toList()[0].first shouldBe "name"
-        schema.columns.toList()[1].first shouldBe "name_1"
-        schema.columns.toList()[2].first shouldBe "name_2"
+        schema.columns.toList()[1].first shouldBe "name1"
+        schema.columns.toList()[2].first shouldBe "name2"
     }
 
     @Test

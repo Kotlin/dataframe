@@ -1,6 +1,6 @@
 [//]: # (title: How to Extend DataFrame Library for Custom SQL Database Support: Example with HSQLDB)
 
-# How to Extend DataFrame Library for Custom SQL Database Support: Example with HSQLDB
+# How to Extend the DataFrame Library for Custom SQL Database Support: Example with HSQLDB
 
 This guide demonstrates how advanced users can extend the Kotlin DataFrame library to support a custom SQL database, 
 using HSQLDB as an example. By following these steps, 
@@ -21,11 +21,11 @@ Add the following dependencies and dataframe plugin to your `build.gradle.kts`:
 
 ```kotlin
 plugins {
-    id("org.jetbrains.kotlinx.dataframe") version "$dataframe_version"
+    id("org.jetbrains.kotlinx.dataframe") version "%dataframeVersion%"
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:$dataframe_version")
+    implementation("org.jetbrains.kotlinx:dataframe:%dataframeVersion%")
     implementation("org.hsqldb:hsqldb:$version")
 }
 ```

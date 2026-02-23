@@ -1628,6 +1628,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> KProperty<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -1666,6 +1668,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> KProperty<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -2308,6 +2312,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -2344,6 +2350,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
@@ -2380,6 +2388,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun KProperty<*>.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -3073,6 +3083,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -3111,6 +3123,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
@@ -3149,6 +3163,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun KProperty<*>.get(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -3379,6 +3395,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnsSelectionDsl<*>.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         this.asSingleColumn().cols(firstCol, *otherCols)
 
@@ -3415,6 +3433,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3489,6 +3509,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3527,6 +3549,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -3601,6 +3625,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> String.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
@@ -3637,6 +3663,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> String.get(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         cols(firstCol, *otherCols)
 
@@ -3709,6 +3737,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> KProperty<*>.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
@@ -3745,6 +3775,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> KProperty<*>.get(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         cols(firstCol, *otherCols)
 
@@ -3817,6 +3849,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnPath.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
@@ -3853,6 +3887,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> ColumnPath.get(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         cols(firstCol, *otherCols)
 
@@ -4272,6 +4308,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(firstIndex: Int, vararg otherIndices: Int): ColumnSet<*> =
         cols<Any?>(firstIndex, *otherIndices)
 
@@ -4301,6 +4339,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [otherIndices] The other indices of the columns to retrieve.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(firstIndex: Int, vararg otherIndices: Int): ColumnSet<T> =
         columnGroup(this).cols(firstIndex, *otherIndices).cast()
 
@@ -4804,6 +4844,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = cols<Any?>(range)
 
     /** ## Cols: Columns by Index Range
@@ -4832,6 +4874,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @param [range] The range of indices to retrieve in the form of an [IntRange].
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns found at the given indices.
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(range: IntRange): ColumnSet<T> = columnGroup(this).cols(range).cast()
 
     /**

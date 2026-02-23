@@ -14,7 +14,7 @@ plugins {
 group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
-    implementation(project(":core")) {
+    implementation(projects.core) {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-reflect")
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib")
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-datetime-jvm")
@@ -33,8 +33,12 @@ dependencies {
     }
 
     // we assume Kotlin plugin has reflect dependency - we're not bringing our own version
-    testImplementation(kotlin("reflect"))
-    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlin.reflect)
+    testImplementation(libs.kotlin.test.junit5)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.withType<ShadowJar> {
