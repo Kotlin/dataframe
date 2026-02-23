@@ -92,6 +92,7 @@ korro {
     docs = fileTree(rootProject.rootDir) {
         include("docs/StardustDocs/topics/DataSchema-Data-Classes-Generation.md")
         include("docs/StardustDocs/topics/read.md")
+        include("docs/StardustDocs/topics/readSqlFromCustomDatabase.md")
         include("docs/StardustDocs/topics/write.md")
         include("docs/StardustDocs/topics/rename.md")
         include("docs/StardustDocs/topics/format.md")
