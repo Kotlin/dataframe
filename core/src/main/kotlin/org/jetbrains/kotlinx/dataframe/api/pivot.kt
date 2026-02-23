@@ -24,8 +24,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`.CSDslLink
 import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`.CSDslLink
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotGroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotInAggregateImpl

@@ -19,8 +19,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Rows`
 import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Rows`
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
