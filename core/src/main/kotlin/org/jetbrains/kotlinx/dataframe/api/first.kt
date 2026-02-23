@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
+import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Rows`
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
@@ -138,7 +139,7 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
 /**
  * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
  *
- * @include [SelectingRows.RowFilterSnippet]
+ * @include [`Selecting Rows`.RowFilterSnippet]
  *
  * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -172,7 +173,7 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
  * (including the case when the [DataFrame] is empty).
  *
- * @include [SelectingRows.RowFilterSnippet]
+ * @include [`Selecting Rows`.RowFilterSnippet]
  *
  * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -240,7 +241,7 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
  * except the grouping key.
  *
- * @include [SelectingRows.RowFilterSnippet]
+ * @include [`Selecting Rows`.RowFilterSnippet]
  *
  * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -292,7 +293,7 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  *
  * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
  *
- * @include [SelectingRows.RowFilterSnippet]
+ * @include [`Selecting Rows`.RowFilterSnippet]
  *
  * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -360,7 +361,7 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  *
  * @include [DocumentationUrls.GroupBy]
  *
- * @include [SelectingRows.RowFilterSnippet]
+ * @include [`Selecting Rows`.RowFilterSnippet]
  *
  * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
  *

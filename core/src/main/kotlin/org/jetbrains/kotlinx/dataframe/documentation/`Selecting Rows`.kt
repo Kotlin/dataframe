@@ -32,7 +32,7 @@ internal interface `Selecting Rows` {
 
     /*
      * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [SelectingRows.RowFilterSnippet]`.
+     * Include it into KDoc with `@include [`Selecting Rows`.RowFilterSnippet]`.
      */
 
     /**
@@ -50,7 +50,7 @@ internal interface `Selecting Rows` {
 
     /*
      * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [SelectingRows.RowValueFilterSnippet]`.
+     * Include it into KDoc with `@include [`Selecting Rows`.RowValueFilterSnippet]`.
      */
 
     /**
