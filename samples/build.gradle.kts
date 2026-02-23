@@ -97,6 +97,7 @@ korro {
         include("docs/StardustDocs/topics/format.md")
         include("docs/StardustDocs/topics/toHTML.md")
         include("docs/StardustDocs/topics/guides/*.md")
+        include("docs/StardustDocs/topics/concepts/*.md")
         include("docs/StardustDocs/topics/operations/utils/*.md")
         include("docs/StardustDocs/topics/operations/multiple/*.md")
         include("docs/StardustDocs/topics/operations/column/*.md")
@@ -115,6 +116,7 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
     }
 
