@@ -27,7 +27,7 @@ get enums, correct inheritance and overall better type safety.
 First of all, you will need the extra dependency:
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-openapi:%dataframeVersion%")
+implementation("org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%")
 ```
 
 OpenAPI type schemas can be generated using both methods described above:
