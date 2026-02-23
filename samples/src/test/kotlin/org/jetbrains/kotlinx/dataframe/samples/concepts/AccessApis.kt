@@ -57,7 +57,7 @@ class AccessApis {
         df.select { "fullName"["firstName"]<String>() and "age"<Int>() }
 
         // Takes only rows where the
-        // "fullName"->"firstName" column value is equal to "Alice"
+        // ("fullName"/"firstName") column value is equal to "Alice"
         // and "age" column value is greater or equal to 18
         df.filter {
             "fullName"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18
@@ -79,7 +79,7 @@ class AccessApis {
         df.select { fullName.firstName and age }
 
         // Takes only rows where the
-        // "fullName"->"firstName" column value is equal to "Alice"
+        // ("fullName"/"firstName") column value is equal to "Alice"
         // and "age" column value is greater or equal to 18
         df.filter {
             fullName.firstName == "Alice" && age >= 18

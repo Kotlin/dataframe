@@ -105,7 +105,7 @@ class StringApi {
         // and the "name" column
         df.select { "info"["age"] and "name"() }
 
-        // Calculate the mean value of the ("info"->"age") column;
+        // Calculate the mean value of the ("info"/"age") column;
         // specify the column type as an invocation type argument
         df.mean { "info" { "age"<Int>() } }
 
@@ -122,7 +122,7 @@ class StringApi {
             "info"["height"]<Double>().toInt()
         }
 
-        // Filter rows where the ("info"->"age") column value
+        // Filter rows where the ("info"/"age") column value
         // is greater than or equal to 18
         df.filter { "info"["age"]<Int>() >= 18 }
         // SampleEnd
