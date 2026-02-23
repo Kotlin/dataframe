@@ -43,6 +43,7 @@ class AccessApis {
         // SampleStart
         // Get the "fullName" column
         df["fullName"]
+
         // Rename the "fullName" column into "name"
         df.rename("fullName").into("name")
         // SampleEnd
@@ -54,6 +55,7 @@ class AccessApis {
         // Select the "firstName" column from the "fullName" column group
         // and the "age" column
         df.select { "fullName"["firstName"]<String>() and "age"<Int>() }
+
         // Takes only rows where the
         // "fullName"->"firstName" column value is equal to "Alice"
         // and "age" column value is greater or equal to 18
@@ -68,11 +70,14 @@ class AccessApis {
         // SampleStart
         // Get "fullName" column
         df.fullName
+
         // Rename "fullName" column into "name"
         df.rename { fullName }.into("name")
+
         // Select the "firstName" column from the "fullName" column group
         // and the "age" column
         df.select { fullName.firstName and age }
+
         // Takes only rows where the
         // "fullName"->"firstName" column value is equal to "Alice"
         // and "age" column value is greater or equal to 18
