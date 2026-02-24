@@ -296,7 +296,7 @@ class PostgresH2Test {
         val table1Df = dataframes[0].cast<Table1>()
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { "integercol"<Int?>() != null && "integercol"<Int?>()!! > 12345 }.rowsCount() shouldBe 2
+        table1Df.filter { "integercol"<Int?>()?.let { it > 12345 } ?: false }.rowsCount() shouldBe 2
         table1Df[0][1] shouldBe 1000L
         table1Df[0][2] shouldBe 11
 

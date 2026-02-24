@@ -368,7 +368,7 @@ class MariadbH2Test {
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
-            "integercol"<Int?>() != null && "integercol"<Int?>()!! > 400
+            "integercol"<Int?>()?.let { it > 400 } ?: false
         }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null

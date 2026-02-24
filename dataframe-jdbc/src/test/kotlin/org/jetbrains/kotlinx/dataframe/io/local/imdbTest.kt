@@ -105,7 +105,7 @@ class ImdbTestTest {
         DriverManager.getConnection(URL, props).use { connection ->
             val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<RankedMoviesWithGenres>()
             val result =
-                df.filter { "year"<Int?>() != null && "year"<Int?>()!! > 2000 }
+                df.filter { "year"<Int?>()?.let { it > 2000 } ?: false }
             result[0][1] shouldBe 2003
 
             val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)

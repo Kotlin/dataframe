@@ -252,7 +252,7 @@ class SqliteTest {
         val customerDf = dataframes[0].cast<CustomerSQLite>()
 
         customerDf.rowsCount() shouldBe 2
-        customerDf.filter { "age"<Int?>() != null && "age"<Int?>()!! > 30 }.rowsCount() shouldBe 1
+        customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 1
         customerDf[0][1] shouldBe "John Doe"
 
         val orderDf = dataframes[1].cast<OrderSQLite>()

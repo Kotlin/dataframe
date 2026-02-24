@@ -185,7 +185,7 @@ class JdbcTest {
                 else -> 1 // for 1 row or other small limits in tests
             }
             casted.filter {
-            "age"<Int?>() != null && "age"<Int?>()!! > 30
+                "age"<Int?>()?.let { it > 30 } ?: false
             }.rowsCount() shouldBe expectedOlderThan30
             casted[0][1] shouldBe "John"
         }
@@ -216,7 +216,7 @@ class JdbcTest {
 
             val customerDf = dataframes[0].cast<Customer>()
             customerDf.rowsCount() shouldBe 4
-            customerDf.filter { "age"<Int?>() != null && "age"<Int?>()!! > 30 }.rowsCount() shouldBe 2
+            customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 2
             customerDf[0][1] shouldBe "John"
 
             val saleDf = dataframes[1].cast<Sale>()
@@ -230,7 +230,7 @@ class JdbcTest {
 
             val customerDf = dataframes[0].cast<Customer>()
             customerDf.rowsCount() shouldBe 1
-            customerDf.filter { "age"<Int?>() != null && "age"<Int?>()!! > 30 }.rowsCount() shouldBe 1
+            customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 1
             customerDf[0][1] shouldBe "John"
 
             val saleDf = dataframes[1].cast<Sale>()
