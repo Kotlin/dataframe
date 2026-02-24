@@ -472,7 +472,7 @@ override fun <D, P> buildDataColumn(
 
 <!---END-->
 
-### `AdvancedDbType`
+### `AdvancedDbType` (New in 1.0.0-Beta5)
 
 When you're dealing with an advanced database type, one that has structures and nested types,
 overriding the functions mentioned above might become a hassle quickly.
