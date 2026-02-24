@@ -1,27 +1,30 @@
 [//]: # (title: How to Extend DataFrame Library for Custom SQL Database Support: Example with HSQLDB)
 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.guides.HsqldbGuide-->
+
 # How to Extend the DataFrame Library for Custom SQL Database Support: Example with HSQLDB
 
-This guide demonstrates how advanced users can extend the Kotlin DataFrame library to support a custom SQL database, 
-using HSQLDB as an example. By following these steps, 
-you will be able to integrate your custom database into the DataFrame library, 
+This guide demonstrates how advanced users can extend the Kotlin DataFrame library to support a custom SQL database,
+using [HyperSQL (HSQLDB)](https://hsqldb.org/) as an example. By following these steps,
+you will be able to integrate your custom database into the DataFrame library,
 allowing for seamless DataFrame creation, manipulation, and querying.
 
-This guide is intended for Gradle projects, 
-but the experience will be similar in Kotlin Notebooks, 
-as demonstrated in this [Kotlin DataFrame SQL Example](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/customdb.ipynb).
+This guide is intended for Gradle projects,
+but the experience will be similar in Kotlin Notebooks,
+as demonstrated in
+this [Kotlin DataFrame SQL Example](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/customdb.ipynb).
 
 ---
 
 ## Prerequisites
 
-1. **Create a Gradle Project**:  
+1. **Create a Gradle Project**:
 
-Add the following dependencies and dataframe plugin to your `build.gradle.kts`:
+Add the following dependencies and optional DataFrame [compiler plugin](Compiler-Plugin.md) to your `build.gradle.kts`:
 
 ```kotlin
 plugins {
-    id("org.jetbrains.kotlinx.dataframe") version "%dataFrameVersion%"
+    kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
 }
 
 dependencies {
@@ -46,57 +49,72 @@ java -classpath lib/hsqldb.jar org.hsqldb.server.Server --database.0 file:hsqldb
 
 To enable HSQLDB integration, implement a custom `DbType` by overriding required methods.
 
-
 **Create the HSQLDB Type**
+
+<!---FUN HSQLDB_DbType-->
 
 ```kotlin
 /**
  * Represents the HSQLDB database type.
  *
- * This class provides methods to convert data from a ResultSet to the appropriate type for HSQLDB,
- * and to generate the corresponding column schema.
+ * This object provides all functions to read data from a HSQLDB [ResultSet],
+ * preprocess the values, and build [columns][DataColumn].
  */
-public object HSQLDB : DbType("hsqldb") {
-    override val driverClassName: String
-        get() = "org.hsqldb.jdbcDriver"
+object HSQLDB : DbType("hsqldb") {
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        return null
-    }
+    /** The JDBC driver class name. */
+    override val driverClassName: String = "org.hsqldb.jdbcDriver"
+
+    /**
+     * This function should return the correct type of the value returned by [ResultSet.getObject] from JDBC
+     * for the column with the given [tableColumnMetadata].
+     * [DbType] has a good default type-map, but your database type might deviate.
+     *
+     * Supplying these types helps you and DataFrame to correctly interpret and handle data from the database.
+     */
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
+        when (tableColumnMetadata.jdbcType) {
+            // For example, here we say that we expect .getObject() to return a Java SQL Date
+            // when the given JDBC SQL type is DATE
+            java.sql.Types.DATE -> typeOf<java.sql.Date>().withNullability(tableColumnMetadata.isNullable)
+
+            // TODO this list is likely incomplete for HSQLDB
+
+            // Else, we follow the default behavior
+            else -> super.getExpectedJdbcType(tableColumnMetadata)
+        }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
-        val locale = Locale.getDefault()
-        fun String?.containsWithLowercase(substr: String) = this?.lowercase(locale)?.contains(substr) == true
-        val schemaName = tableMetadata.schemaName
-        val name = tableMetadata.name
-        return schemaName.containsWithLowercase("information_schema") ||
-                schemaName.containsWithLowercase("system") ||
-                name.containsWithLowercase("system_")
+        val schemaName = tableMetadata.schemaName.orEmpty().lowercase()
+        val name = tableMetadata.name.lowercase()
+
+        return "information_schema" in schemaName ||
+            "system" in schemaName ||
+            "system_" in name
     }
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata =
         TableMetadata(
-            tables.getString("TABLE_NAME"),
-            tables.getString("TABLE_SCHEM"),
-            tables.getString("TABLE_CAT"),
+            name = tables.getString("TABLE_NAME"),
+            schemaName = tables.getString("TABLE_SCHEM"),
+            catalogue = tables.getString("TABLE_CAT"),
         )
-
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        return null
-    }
 }
 ```
 
+<!---END-->
+
 **Defining Helper Functions**
 
-Define utility functions to manage database connections and tables.
-For example purposes, we create a small function that can populate the table with a schema and some sample data.
+You can define some utility functions to manage database connections and -tables.
+For this example, we'll create a small function that can populate the table with a schema and some sample data.
+
+<!---FUN helper_functions-->
 
 ```kotlin
 const val URL = "jdbc:hsqldb:hsql://localhost/testdb"
 const val USER_NAME = "SA"
 const val PASSWORD = ""
-
 
 fun removeTable(con: Connection): Int {
     val stmt = con.createStatement()
@@ -107,29 +125,33 @@ fun createAndPopulateTable(con: Connection) {
     val stmt = con.createStatement()
     stmt.executeUpdate(
         """CREATE TABLE IF NOT EXISTS orders (
-                        id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-                        item VARCHAR(50) NOT NULL,
-                        price DOUBLE NOT NULL,
-                        order_date DATE
-                    );
-                """.trimIndent()
+                id INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+                item VARCHAR(50) NOT NULL,
+                price DOUBLE NOT NULL,
+                order_date DATE
+            );
+        """.trimIndent()
     )
 
     stmt.executeUpdate(
         """INSERT INTO orders (item, price, order_date) 
-                        VALUES ('Laptop', 1500.00, NOW())""".trimIndent()
+                VALUES ('Laptop', 1500.00, NOW())""".trimIndent()
     )
 
     stmt.executeUpdate(
         """INSERT INTO orders (item, price, order_date) 
-                        VALUES ('Smartphone', 700.00, NOW())""".trimIndent()
+                VALUES ('Smartphone', 700.00, NOW())""".trimIndent()
     )
 }
 ```
 
+<!---END-->
+
 **Define the Table Schema**
 
 Use the `@DataSchema` annotation to define a [**custom data schema**](schemas.md) for the `orders` table.
+
+<!---FUN data_schema-->
 
 ```kotlin
 @DataSchema
@@ -137,13 +159,17 @@ interface Orders {
     val id: Int
     val item: String
     val price: Double
-    val orderDate: java.util.Date
+    val orderDate: java.sql.Date
 }
 ```
+
+<!---END-->
 
 **End-to-End Example**
 
 Finally, use the following code to create, populate, read, and delete the table in HSQLDB.
+
+<!---FUN end_to_end_example-->
 
 ```kotlin
 fun main() {
@@ -155,59 +181,84 @@ fun main() {
             .renameToCamelCase()
             .cast<Orders>(verify = true)
 
-        df.filter { it.price > 800 }.print()
+        df.filter { price > 800 }.print()
 
         removeTable(con)
     }
 }
 ```
 
-Running the `main` function above will output filtered rows from the `orders` table where `price > 800`. 
+<!---END-->
 
-It will also demonstrate how to define and use custom SQL database extensions in the DataFrame library.
+Running the `main` function above will output all rows from the `orders` table where `price > 800`.
 
-Find a full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/tree/master/src/main/kotlin/customdb).
+Note the `readDataFrame()` function takes a `dbType` parameter, which specifies the (custom) database type to use.
 
-The core principles of working with `DbType` remain the same, and the example with HSQLDB demonstrates the basic implementation pattern. However, the `DbType` class now offers more methods for customization to give you greater control over database integration.
+Find the full example
+project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/tree/master/src/main/kotlin/customdb).
+NOTE: we're in the process of updating and moving these examples to the Kotlin DataFrame repository.
+They may not be up to date yet.
+
+Besides this core implementation, `DbType` has several other important features that we'll cover in the next section.
 
 ## Advanced Customization Options
 
-For advanced users, the `DbType` class provides additional properties and methods that can be overridden to fine-tune database integration:
+For advanced users, the `DbType` class provides additional properties and methods that can be overridden to fine-tune
+database integration:
 
 ### Performance and Configuration Properties
 
 You can customize default performance-related settings:
+
+<!---FUN HSQLDB_performance_DbType-->
 
 ```kotlin
 /**
  * Specifies the default batch size for fetching rows from the database during query execution.
  * Value is set to 1000 by default.
  */
-public open val defaultFetchSize: Int = 1000
+override val defaultFetchSize: Int = 1000
 
 /**
  * Specifies the default timeout in seconds for database queries.
  * If set to `null`, no timeout is applied, allowing queries to run indefinitely.
  */
-public open val defaultQueryTimeout: Int? = null // null = no timeout
+override val defaultQueryTimeout: Int? = null // null = no timeout
 ```
+
+<!---END-->
 
 ### Query Building and Statement Configuration
 
 Override these methods to customize SQL query generation and statement configuration:
 
+<!---FUN HSQLDB_queryBuilding_DbType -->
+
 ```kotlin
 /**
  * Builds a SELECT query for reading from a table.
  */
-public open fun buildSelectTableQueryWithLimit(tableName: String, limit: Int?): String
+override fun buildSelectTableQueryWithLimit(tableName: String, limit: Int?): String {
+    require(tableName.isNotBlank()) { "Table name cannot be blank" }
+    val quotedTableName = quoteIdentifier(tableName)
+
+    return if (limit != null && limit > 0) {
+        buildSqlQueryWithLimit("SELECT * FROM $quotedTableName", limit)
+    } else {
+        "SELECT * FROM $quotedTableName"
+    }
+}
 
 /**
  * Configures the provided `PreparedStatement` for optimized read operations.
  * This method sets the fetch size for efficient streaming, applies a query timeout if specified,
  * and configures the fetch direction to forward-only for better performance in read-only operations.
  */
-public open fun configureReadStatement(statement: PreparedStatement)
+override fun configureReadStatement(statement: PreparedStatement) {
+    statement.fetchSize = defaultFetchSize
+    defaultQueryTimeout?.let { statement.queryTimeout = it }
+    statement.fetchDirection = ResultSet.FETCH_FORWARD
+}
 
 /**
  * Quotes an identifier (table or column name) according to database-specific rules.
@@ -217,17 +268,26 @@ public open fun configureReadStatement(statement: PreparedStatement)
  * - MS SQL: [tableName] or [schema].[table]
  * - SQLite/H2: no quotes for simple names
  */
-public open fun quoteIdentifier(name: String): String
+override fun quoteIdentifier(name: String): String {
+    require(name.isNotBlank()) { "Identifier cannot be blank" }
+    return name
+}
 
 /**
  * Constructs a SQL query with a limit clause.
  */
-public open fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int = 1): String
+override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String {
+    return "$sqlQuery LIMIT $limit"
+}
 ```
+
+<!---END-->
 
 ### Connection and Data Handling
 
-For specialized connection handling and data extraction:
+For specialized connection handling and (meta) data extraction:
+
+<!---FUN HSQLDB_connectionData_DbType-->
 
 ```kotlin
 /**
@@ -235,47 +295,200 @@ For specialized connection handling and data extraction:
  * Some databases (like Sqlite) require read-only mode to be set during connection creation
  * rather than after the connection is established.
  */
-public open fun createConnection(dbConfig: DbConnectionConfig): Connection
+override fun createConnection(dbConfig: DbConnectionConfig): Connection {
+    val connection = DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
+    if (dbConfig.readOnly) {
+        connection.isReadOnly = true
+    }
+    return connection
+}
+
+/**
+ * Retrieves column metadata from a JDBC [ResultSet].
+ * This method reads column metadata from [java.sql.ResultSetMetaData] with graceful fallbacks
+ * for JDBC drivers that throw [SQLFeatureNotSupportedException] for certain methods.
+ */
+override fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata> {
+    // TODO, while the default implementation works for most databases,
+    //  this method might need to be overridden for some databases
+    return super.getTableColumnsMetadata(resultSet)
+}
 
 /**
  * Extracts a value from the ResultSet for the given column.
  * This method can be overridden by custom database types to provide specialized parsing logic.
  */
-public open fun extractValueFromResultSet(
+override fun <J> getValueFromResultSet(
     rs: ResultSet,
     columnIndex: Int,
-    columnMetadata: TableColumnMetadata,
-    kType: KType,
-): Any?
-
-/**
- * Builds a single DataColumn with proper type handling.
- */
-public open fun buildDataColumn(
-    name: String,
-    values: MutableList<Any?>,
-    kType: KType,
-    inferNullability: Boolean,
-): DataColumn<*>
+    tableColumnMetadata: TableColumnMetadata,
+    expectedJdbcType: KType
+): J {
+    try {
+        return rs.getObject(columnIndex + 1) as J
+    } catch (e: Throwable) {
+        throw IllegalStateException("Failed to read value from ResultSet", e)
+    }
+}
 ```
 
-### Type Mapping and Metadata
+<!---END-->
 
-For custom type mappings and metadata extraction:
+### Type Mapping, Preprocessing, and Column Building (New in 1.0.0-Beta5)
+
+We already saw in the basic example how to override `getExpectedJdbcType()` to make sure
+DataFrame knows which types to expect from JDBC (type `J`).
+
+However, there are two other places where you can customize how DataFrame will handle reading from your database:
+
+1. **Preprocessing**: Override `preprocessValue()` and `getPreprocessedValueType() `to apply custom logic to individual 
+  values before they are inserted into a column (type `J` -> type `D`).
+2. **Column Building**: Override `buildDataColumn()` and `getTargetColumnSchema()` to customize how DataFrame turns
+  a list of (preprocessed) values into an actual column (`List<D>` -> `DataColumn<P>`).
+
+Depending on your use case, you may want to override one or both of these.
+Let's demonstrate this with an example where we automatically convert all `DATE` columns to `kotlin.time.Instant`:
+
+<!---FUN HSQLDB_preprocessing_DbType-->
 
 ```kotlin
 /**
- * Creates a mapping between common SQL types and their corresponding KTypes.
+ * This function should return the correct type of the value returned by [ResultSet.getObject] from JDBC
+ * for the column with the given [tableColumnMetadata].
+ * [DbType] has a good default type-map, but your database type might deviate.
+ *
+ * This function was copied from the start of this page.
  */
-public open fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType
+override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
+    when (tableColumnMetadata.jdbcType) {
+        java.sql.Types.DATE -> typeOf<java.sql.Date>().withNullability(tableColumnMetadata.isNullable)
+        else -> super.getExpectedJdbcType(tableColumnMetadata)
+    }
 
 /**
- * Retrieves column metadata from a JDBC ResultSet.
- * This method reads column metadata from ResultSetMetaData with graceful fallbacks
- * for JDBC drivers that throw SQLFeatureNotSupportedException for certain methods.
+ * If you want to preprocess certain values before creating a [DataColumn], you can override this function.
+ * [DbType] already has a few types of values being preprocessed, but you can customize this behavior.
+ *
+ * This function just specifies the type-behavior, [preprocessValue] actually does the preprocessing.
  */
-public open fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata>
+override fun getPreprocessedValueType(
+    tableColumnMetadata: TableColumnMetadata,
+    expectedJdbcType: KType
+): KType =
+    when {
+        // Let's say we want to convert java.sql.Date to kotlinx.datetime.LocalDate (taking nullability into account)
+        expectedJdbcType.isSubtypeOf(typeOf<java.sql.Date?>()) ->
+            typeOf<LocalDate>().withNullability(tableColumnMetadata.isNullable)
+
+        // Else, we follow the default behavior
+        else ->
+            super.getPreprocessedValueType(tableColumnMetadata, expectedJdbcType)
+    }
+
+/**
+ * This function actually preprocesses the values returned by [ResultSet.getObject], following the
+ * [getPreprocessedValueType] type-behavior.
+ */
+override fun <J, D> preprocessValue(
+    value: J,
+    tableColumnMetadata: TableColumnMetadata,
+    expectedJdbcType: KType,
+    expectedPreprocessedValueType: KType
+): D = when {
+    // Here we actually perform the conversion from java.sql.Date to kotlinx.datetime.LocalDate
+    expectedJdbcType.isSubtypeOf(typeOf<java.sql.Date?>()) ->
+        (value as java.sql.Date?)?.toLocalDate()?.toKotlinLocalDate() as D
+
+    // Else, we follow the default behavior
+    else ->
+        super.preprocessValue(value, tableColumnMetadata, expectedJdbcType, expectedPreprocessedValueType)
+}
 ```
 
-> **Note:** The set of overridable methods and properties may change in the next Beta release as we continue to improve the API based on user feedback.
+<!---END-->
+
+While not needed for HSQLDB, you're able to adjust the column building behavior the following way:
+
+<!---FUN HSQLDB_columnBuilding_DbType-->
+
+```kotlin
+/**
+ * Returns the target [schema][ColumnSchema] of the given [column][tableColumnMetadata]
+ * which [buildDataColumn] will adhere to. This schema corresponds to type `P`, in the sense that
+ * it will describe the [schema][ColumnSchema] of `DataColumn<P>`.
+ *
+ * If `null` is returned, the [schema][ColumnSchema] cannot be determined before looking at the actual data.
+ *
+ * @param [tableColumnMetadata] all information we have about the column
+ * @param [expectedValueType] the type of the values after preprocessing, `D`
+ * @return the target [schema][ColumnSchema] of the given column,
+ *   or `null` if it cannot be determined from the types alone.
+ */
+override fun getTargetColumnSchema(
+    tableColumnMetadata: TableColumnMetadata,
+    expectedValueType: KType
+): ColumnSchema? {
+    // By default, we only form "flat" Value columns
+    // However, some databases, like DuckDb, support nested columns or other structures
+    // In this case, we can return a ColumnSchema.ColumnGroup or ColumnSchema.Frame here
+    return ColumnSchema.Value(expectedValueType)
+}
+
+/**
+ * Builds a [DataColumn] from the given ([preprocessed][preprocessValue]) [values],
+ * adhering to [targetColumnSchema].
+ *
+ * @param [D] the type of the values after preprocessing
+ * @param [P] the type of the resulting [DataColumn][DataColumn]`<`[P][P]`>`, [targetColumnSchema]
+ * @param [name] the name of the column
+ * @param [values] the ([preprocessed][preprocessValue]) values to put in the column
+ * @param [tableColumnMetadata] all information we have about the column
+ * @param [targetColumnSchema] the schema of the column [DataColumn][DataColumn]`<`[P][P]`>`,
+ *   as determined by [getTargetColumnSchema]
+ * @param [inferNullability] whether to infer nullability from the runtime values (this is more expensive),
+ *   as opposed to using the nullability information from the [targetColumnSchema]
+ * @return the built [DataColumn]
+ */
+override fun <D, P> buildDataColumn(
+    name: String,
+    values: List<D>,
+    tableColumnMetadata: TableColumnMetadata,
+    targetColumnSchema: ColumnSchema?,
+    inferNullability: Boolean,
+): DataColumn<P> {
+    // If needed `values` can be modified as a whole before turning them into a column
+    // the column needs to adhere to `targetColumnSchema` (if that isn't null)
+    // The `.toDataColumn()` helper function is available to create a:
+    //   - `ValueColumn`, if `targetColumnSchema` is a `ColumnSchema.Value`
+    //   - `FrameColumn`, if `targetColumnSchema` is a `ColumnSchema.Frame` (and `values` is a `List<DataFrame<*>>`)
+    //   - `ColumnGroup`, if `targetColumnSchema` is a `ColumnSchema.Group` (and `values` is a `List<DataRow<*>>`)
+    return values.toDataColumn(
+        name = name,
+        targetColumnSchema = targetColumnSchema,
+        inferNullability = inferNullability,
+    )
+}
+```
+
+<!---END-->
+
+### `AdvancedDbType`
+
+When you're dealing with an advanced database type, one that has structures and nested types,
+overriding the functions mentioned above might become a hassle quickly.
+This is especially noticeable when recursive conversion logic is involved
+(like converting a column of `STRUCT` to a [column group](DataColumn.md#columngroup),
+or `DICT[STR, INT[]]` to `Map<String, List<Int>>`).
+
+We faced this issue ourselves when working with [DuckDb](https://duckdb.org/),
+which supports nested columns and structures.
+
+To help write recursive conversion logic that also does the type-mapping correctly,
+we introduced the `AdvancedDbType` and `JdbcToDataFrameConverter` classes.
+
+This API is still experimental and may change in the future, but if you're interested in using it,
+check our [DuckDB implementation](https://github.com/Kotlin/dataframe/blob/master/dataframe-jdbc/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/db/DuckDb.kt).
+
+> **Note:** The set of overridable methods and properties may change in the next Beta release as we continue to improve
+> the API based on user feedback.
 
