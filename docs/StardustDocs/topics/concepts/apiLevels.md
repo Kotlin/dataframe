@@ -48,7 +48,7 @@ and [row expressions](DataRow.md#row-expressions) using special methods:
 df.select { "fullName"["firstName"]<String>() and "age"<Int>() }
 
 // Takes only rows where the
-// "fullName"->"firstName" column value is equal to "Alice"
+// ("fullName"/"firstName") column value is equal to "Alice"
 // and "age" column value is greater or equal to 18
 df.filter {
     "fullName"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18
@@ -92,7 +92,7 @@ df.rename { fullName }.into("name")
 df.select { fullName.firstName and age }
 
 // Takes only rows where the
-// "fullName"->"firstName" column value is equal to "Alice"
+// ("fullName"/"firstName") column value is equal to "Alice"
 // and "age" column value is greater or equal to 18
 df.filter {
     fullName.firstName == "Alice" && age >= 18
@@ -119,7 +119,7 @@ there's a tab selector that allows switching between Access APIs.
 <!---FUN extensionProperties1-->
 
 ```kotlin
-val df = DataFrame.read("titanic.csv")
+val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
 ```
 
 <!---END-->

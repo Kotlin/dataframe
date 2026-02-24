@@ -98,7 +98,7 @@ which is a [**column group**](DataColumn.md#columngroup) containing two nested
 
 #### Columns Selection DSL
 
-Get a single "height" subcolumn from the "info" column group
+[Get](getColumn.md) a single "height" subcolumn from the "info" column group
 
 <!---FUN getColumn-->
 
@@ -108,7 +108,7 @@ df.getColumn { colGroup("info").col("height") }
 
 <!---END-->
 
-Select the "age" subcolumn from the "info" column group and the "name" column
+[Select](select.md) the "age" subcolumn from the "info" column group and the "name" column
 
 <!---FUN selectSubcolumnAndColumn-->
 
@@ -118,7 +118,8 @@ df.select { colGroup("info").col("age") and col("name") }
 
 <!---END-->
 
-Calculate the mean value of the ("info"/"age") column; specify the column type as a `col` type argument
+[Calculate the mean](mean.md) value of the ("info"/"age") column; 
+specify the column type as a `col` type argument
 
 <!---FUN meanValueBySubcolumn-->
 
@@ -129,8 +130,8 @@ df.mean { colGroup("info").col<Int>("age") }
 <!---END-->
 
 Combine Extensions Properties and String Column Accessors.
-Select "height" and "name" columns, assuming we have extensions properties
-for "info" and "name" columns but not for the ("info"->"height") column
+[Select](select.md) "height" and "name" columns, assuming we have extensions properties
+for "info" and "name" columns but not for the ("info"/"height") column
 
 <!---FUN combineExtensionsAndStrings-->
 
@@ -141,7 +142,7 @@ df.select { "info".col("height") and name }
 <!---END-->
 
 Combine Columns Selection DSL and String Column Accessors.
-Remove all `Number` columns from the dataframe except ("info"->"age")
+[Remove](remove.md) all `Number` columns from the dataframe except ("info"/"age")
 
 <!---FUN removeWithExcept-->
 
@@ -154,7 +155,7 @@ df.remove {
 
 <!---END-->
 
-Select all subcolumns from the "info" column group
+[Select](select.md) all subcolumns from the "info" column group
 
 <!---FUN selectSubcolumns-->
 
@@ -169,7 +170,7 @@ df.select { colGroup("info").allCols() }
 
 #### Row Expressions
 
-Add a new "heightInt" column by casting the "height" column values to `Int`
+[Add](add.md) a new "heightInt" column by casting the "height" column values to `Int`
 
 <!---FUN addColumnFromSubcolumn-->
 
@@ -181,7 +182,7 @@ df.add("heightInt") {
 
 <!---END-->
 
-Filter rows where the ("info"->"age") column value is greater than or equal to 18
+[Filter](filter.md) rows where the ("info"/"age") column value is greater than or equal to 18
 
 <!---FUN filterBySubcolumn-->
 
@@ -219,7 +220,7 @@ df.getColumn { "info"["height"]<Double>() }
 // and the "name" column
 df.select { "info"["age"] and "name"() }
 
-// Calculate the mean value of the ("info"->"age") column;
+// Calculate the mean value of the ("info"/"age") column;
 // specify the column type as an invocation type argument
 df.mean { "info" { "age"<Int>() } }
 
@@ -236,7 +237,7 @@ df.add("heightInt") {
     "info"["height"]<Double>().toInt()
 }
 
-// Filter rows where the ("info"->"age") column value
+// Filter rows where the ("info"/"age") column value
 // is greater than or equal to 18
 df.filter { "info"["age"]<Int>() >= 18 }
 ```
