@@ -230,11 +230,11 @@ val buildExampleFolders by tasks.registering(Test::class) {
     dependsOn(buildReleaseExampleFolders, buildDevExampleFolders)
 }
 
-tasks.named("test") {
-    // only builds the examples on ':test' when debug mode is enabled
-    if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
-        dependsOn(buildExampleFolders)
-    }
-}
+// tasks.named("test") {
+//     // only builds the examples on ':test' when debug mode is enabled
+//     if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
+//         dependsOn(buildExampleFolders)
+//     }
+// }
 
 // endregion
