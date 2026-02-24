@@ -154,7 +154,7 @@ class SqliteTest {
     fun `read from tables`() {
         val customerTableName = "Customers"
         val df = DataFrame.readSqlTable(connection, customerTableName).cast<CustomerSQLite>()
-        val result = df.filter { it[CustomerSQLite::name] == "John Doe" }
+        val result = df.filter { "name"<String?>() == "John Doe" }
         result[0][2] shouldBe 30
 
         val schema = DataFrameSchema.readSqlTable(connection, customerTableName)
@@ -165,7 +165,7 @@ class SqliteTest {
 
         val orderTableName = "Orders"
         val df2 = DataFrame.readSqlTable(connection, orderTableName).cast<OrderSQLite>()
-        val result2 = df2.filter { it[OrderSQLite::totalAmount] > 10 }
+        val result2 = df2.filter { "totalAmount"<Double>() > 10 }
         result2[0][2] shouldBe "2023-07-21"
 
         val schema2 = DataFrameSchema.readSqlTable(connection, orderTableName)
@@ -181,7 +181,7 @@ class SqliteTest {
         val dbConnectionConfig = DbConnectionConfig(databaseUrl)
 
         val df = DataFrame.readSqlTable(dbConnectionConfig, customerTableName).cast<CustomerSQLite>()
-        val result = df.filter { it[CustomerSQLite::name] == "John Doe" }
+        val result = df.filter { "name"<String?>() == "John Doe" }
         result[0][2] shouldBe 30
 
         val schema = DataFrameSchema.readSqlTable(dbConnectionConfig, customerTableName)
@@ -192,7 +192,7 @@ class SqliteTest {
 
         val orderTableName = "Orders"
         val df2 = DataFrame.readSqlTable(dbConnectionConfig, orderTableName).cast<OrderSQLite>()
-        val result2 = df2.filter { it[OrderSQLite::totalAmount] > 10 }
+        val result2 = df2.filter { "totalAmount"<Double>() > 10 }
         result2[0][2] shouldBe "2023-07-21"
 
         val schema2 = DataFrameSchema.readSqlTable(dbConnectionConfig, orderTableName)
@@ -220,7 +220,7 @@ class SqliteTest {
     @Test
     fun `read from sql query`() {
         val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerOrderSQLite>()
-        val result = df.filter { it[CustomerOrderSQLite::customerSalary] > 1 }
+        val result = df.filter { "customerSalary"<Double>() > 1 }
         result[0][3] shouldBe 2500.5
 
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
@@ -235,7 +235,7 @@ class SqliteTest {
         val dbConnectionConfig = DbConnectionConfig(databaseUrl)
 
         val df = DataFrame.readSqlQuery(dbConnectionConfig, sqlQuery).cast<CustomerOrderSQLite>()
-        val result = df.filter { it[CustomerOrderSQLite::customerSalary] > 1 }
+        val result = df.filter { "customerSalary"<Double>() > 1 }
         result[0][3] shouldBe 2500.5
 
         val schema = DataFrameSchema.readSqlQuery(dbConnectionConfig, sqlQuery = sqlQuery)
@@ -252,13 +252,13 @@ class SqliteTest {
         val customerDf = dataframes[0].cast<CustomerSQLite>()
 
         customerDf.rowsCount() shouldBe 2
-        customerDf.filter { it[CustomerSQLite::age] != null && it[CustomerSQLite::age]!! > 30 }.rowsCount() shouldBe 1
+        customerDf.filter { "age"<Int?>() != null && "age"<Int?>()!! > 30 }.rowsCount() shouldBe 1
         customerDf[0][1] shouldBe "John Doe"
 
         val orderDf = dataframes[1].cast<OrderSQLite>()
 
         orderDf.rowsCount() shouldBe 2
-        orderDf.filter { it[OrderSQLite::totalAmount] > 200 }.rowsCount() shouldBe 1
+        orderDf.filter { "totalAmount"<Double>() > 200 }.rowsCount() shouldBe 1
         orderDf[0][1] shouldBe null
     }
 }

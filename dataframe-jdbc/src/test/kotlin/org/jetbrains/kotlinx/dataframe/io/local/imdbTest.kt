@@ -51,7 +51,7 @@ class ImdbTestTest {
 
         DriverManager.getConnection(URL, props).use { connection ->
             val df = DataFrame.readSqlTable(connection, tableName, 100).cast<ActorKDF>()
-            val result = df.filter { it[ActorKDF::id] in 11..19 }
+            val result = df.filter { "id"<Int>() in 11..19 }
             result[0][1] shouldBe "Víctor"
 
             val schema = DataFrameSchema.readSqlTable(connection, tableName)
@@ -72,7 +72,7 @@ class ImdbTestTest {
 
         DriverManager.getConnection(URL2, props).use { connection ->
             val df = DataFrame.readSqlTable(connection, imdbTableName, 100).cast<ActorKDF>()
-            val result = df.filter { it[ActorKDF::id] in 11..19 }
+            val result = df.filter { "id"<Int>() in 11..19 }
             result[0][1] shouldBe "Víctor"
 
             val schema = DataFrameSchema.readSqlTable(connection, imdbTableName)
@@ -105,7 +105,7 @@ class ImdbTestTest {
         DriverManager.getConnection(URL, props).use { connection ->
             val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<RankedMoviesWithGenres>()
             val result =
-                df.filter { it[RankedMoviesWithGenres::year] != null && it[RankedMoviesWithGenres::year]!! > 2000 }
+                df.filter { "year"<Int?>() != null && "year"<Int?>()!! > 2000 }
             result[0][1] shouldBe 2003
 
             val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)

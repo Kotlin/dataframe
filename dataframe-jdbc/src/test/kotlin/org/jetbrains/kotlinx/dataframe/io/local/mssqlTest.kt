@@ -216,12 +216,12 @@ class MSSQLTest {
     fun `basic test for reading sql tables`() {
         val df1 = DataFrame.readSqlTable(connection, "table1", limit = 5).cast<Table1MSSSQL>()
 
-        val result = df1.filter { it[Table1MSSSQL::id] == 1 }
+        val result = df1.filter { "id"<Int>() == 1 }
         result[0][30] shouldBe "Sample1"
-        result[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
-        result[0][Table1MSSSQL::bitColumn] shouldBe true
-        result[0][Table1MSSSQL::intColumn] shouldBe 123456
-        result[0][Table1MSSSQL::ntextColumn] shouldBe "Sample1 text"
+        result[0]["bigintColumn"] shouldBe 123456789012345L
+        result[0]["bitColumn"] shouldBe true
+        result[0]["intColumn"] shouldBe 123456
+        result[0]["ntextColumn"] shouldBe "Sample1 text"
 
         val schema = DataFrameSchema.readSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
@@ -273,8 +273,8 @@ class MSSQLTest {
             """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3).cast<Table1MSSSQL>()
-        val result = df.filter { it[Table1MSSSQL::id] == 1 }
-        result[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
+        val result = df.filter { "id"<Int>() == 1 }
+        result[0]["bigintColumn"] shouldBe 123456789012345L
 
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
@@ -288,8 +288,8 @@ class MSSQLTest {
         val table1Df = dataframes[0].cast<Table1MSSSQL>()
 
         table1Df.rowsCount() shouldBe 4
-        table1Df.filter { it[Table1MSSSQL::id] > 2 }.rowsCount() shouldBe 2
-        table1Df[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
+        table1Df.filter { "id"<Int>() > 2 }.rowsCount() shouldBe 2
+        table1Df[0]["bigintColumn"] shouldBe 123456789012345L
     }
 
     @Test

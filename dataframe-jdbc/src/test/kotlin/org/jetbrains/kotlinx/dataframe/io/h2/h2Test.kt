@@ -185,7 +185,7 @@ class JdbcTest {
                 else -> 1 // for 1 row or other small limits in tests
             }
             casted.filter {
-                it[Customer::age] != null && it[Customer::age]!! > 30
+            "age"<Int?>() != null && "age"<Int?>()!! > 30
             }.rowsCount() shouldBe expectedOlderThan30
             casted[0][1] shouldBe "John"
         }
@@ -199,7 +199,7 @@ class JdbcTest {
             val casted = df.cast<CustomerSales>()
             casted.rowsCount() shouldBe expectedRows
             // In current tests, regardless of limit (2 or 1), the count of totalSalesAmount > 100 is 1
-            casted.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
+            casted.filter { "totalSalesAmount"<Double?>()!! > 100 }.rowsCount() shouldBe 1
             casted[0][0] shouldBe "John"
         }
 
@@ -216,12 +216,12 @@ class JdbcTest {
 
             val customerDf = dataframes[0].cast<Customer>()
             customerDf.rowsCount() shouldBe 4
-            customerDf.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
+            customerDf.filter { "age"<Int?>() != null && "age"<Int?>()!! > 30 }.rowsCount() shouldBe 2
             customerDf[0][1] shouldBe "John"
 
             val saleDf = dataframes[1].cast<Sale>()
             saleDf.rowsCount() shouldBe 4
-            saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
+            saleDf.filter { "amount"<BigDecimal>() > BigDecimal(40) }.rowsCount() shouldBe 3
             (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
         }
 
@@ -230,12 +230,12 @@ class JdbcTest {
 
             val customerDf = dataframes[0].cast<Customer>()
             customerDf.rowsCount() shouldBe 1
-            customerDf.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
+            customerDf.filter { "age"<Int?>() != null && "age"<Int?>()!! > 30 }.rowsCount() shouldBe 1
             customerDf[0][1] shouldBe "John"
 
             val saleDf = dataframes[1].cast<Sale>()
             saleDf.rowsCount() shouldBe 1
-            saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
+            saleDf.filter { "amount"<BigDecimal>() > BigDecimal(40) }.rowsCount() shouldBe 1
             (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
         }
 
@@ -374,41 +374,41 @@ class JdbcTest {
         val tableName = "TestTable"
         val df = DataFrame.readSqlTable(connection, tableName).cast<TestTableData>()
         df.rowsCount() shouldBe 3
-        df.filter { it[TestTableData::integerCol]!! > 1000 }.rowsCount() shouldBe 2
+        df.filter { "integerCol"<Int?>()!! > 1000 }.rowsCount() shouldBe 2
 
         // testing numeric columns
         val result = df.select("tinyIntCol")
-            .add("tinyIntCol2") { it[TestTableData::tinyIntCol] }
+            .add("tinyIntCol2") { "tinyIntCol"<Int?>() }
 
         result[0][1] shouldBe 1
 
         val result1 = df.select("smallIntCol")
-            .add("smallIntCol2") { it[TestTableData::smallIntCol] }
+            .add("smallIntCol2") { "smallIntCol"<Int?>() }
 
         result1[0][1] shouldBe 100
 
         val result2 = df.select("bigIntCol")
-            .add("bigIntCol2") { it[TestTableData::bigIntCol] }
+            .add("bigIntCol2") { "bigIntCol"<Long?>() }
 
         result2[0][1] shouldBe 100000
 
         val result3 = df.select("numericCol")
-            .add("numericCol2") { it[TestTableData::numericCol] }
+            .add("numericCol2") { "numericCol"<BigDecimal?>() }
 
         BigDecimal("123.45").compareTo(result3[0][1] as BigDecimal) shouldBe 0
 
         val result4 = df.select("realCol")
-            .add("realCol2") { it[TestTableData::realCol] }
+            .add("realCol2") { "realCol"<Float?>() }
 
         result4[0][1] shouldBe 1.23f
 
         val result5 = df.select("doublePrecisionCol")
-            .add("doublePrecisionCol2") { it[TestTableData::doublePrecisionCol] }
+            .add("doublePrecisionCol2") { "doublePrecisionCol"<Double?>() }
 
         result5[0][1] shouldBe 3.14
 
         val result6 = df.select("decFloatCol")
-            .add("decFloatCol2") { it[TestTableData::decFloatCol] }
+            .add("decFloatCol2") { "decFloatCol"<BigDecimal?>() }
 
         BigDecimal("2.71").compareTo(result6[0][1] as BigDecimal) shouldBe 0
 

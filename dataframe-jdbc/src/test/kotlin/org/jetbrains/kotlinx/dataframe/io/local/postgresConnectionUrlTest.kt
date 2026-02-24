@@ -33,12 +33,12 @@ class PostgresConnectionUrlTest {
             createTestData(connection)
 
             val df1 = DataFrame.readSqlTable(connection, TABLE_NAME).cast<Table1>()
-            val result1 = df1.filter { it[Table1::id] == 1 }
+            val result1 = df1.filter { "id"<Int>() == 1 }
 
             result1[0][2] shouldBe 11
 
             val df2 = connection.readDataFrame(TABLE_NAME).cast<Table1>()
-            val result2 = df2.filter { it[Table1::id] == 1 }
+            val result2 = df2.filter { "id"<Int>() == 1 }
 
             result2[0][2] shouldBe 11
 
@@ -53,12 +53,12 @@ class PostgresConnectionUrlTest {
 
             val dbConfig = DbConnectionConfig(URL_WITH_LOGIN_PASSWORD)
             val df1 = DataFrame.readSqlTable(dbConfig = dbConfig, TABLE_NAME).cast<Table1>()
-            val result1 = df1.filter { it[Table1::id] == 1 }
+            val result1 = df1.filter { "id"<Int>() == 1 }
 
             result1[0][2] shouldBe 11
 
             val df2 = dbConfig.readDataFrame(TABLE_NAME).cast<Table1>()
-            val result2 = df2.filter { it[Table1::id] == 1 }
+            val result2 = df2.filter { "id"<Int>() == 1 }
 
             result2[0][2] shouldBe 11
 
@@ -98,7 +98,7 @@ class PostgresConnectionUrlTest {
             createTestData(connection)
 
             val df2 = dbConfig.readDataFrame(TABLE_NAME).cast<Table1>()
-            val result2 = df2.filter { it[Table1::id] == 1 }
+            val result2 = df2.filter { "id"<Int>() == 1 }
 
             result2[0][2] shouldBe 11
 
