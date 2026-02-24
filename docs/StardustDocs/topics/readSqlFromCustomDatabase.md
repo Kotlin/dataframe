@@ -74,9 +74,9 @@ object HSQLDB : DbType("hsqldb") {
      */
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
         when (tableColumnMetadata.jdbcType) {
-            // For example, here we say that we expect .getObject() to return a Java Date
+            // For example, here we say that we expect .getObject() to return a Java SQL Date
             // when the given JDBC SQL type is DATE
-            java.sql.Types.DATE -> typeOf<java.util.Date>().withNullability(tableColumnMetadata.isNullable)
+            java.sql.Types.DATE -> typeOf<java.sql.Date>().withNullability(tableColumnMetadata.isNullable)
 
             // TODO this list is likely incomplete for HSQLDB
 
@@ -159,7 +159,7 @@ interface Orders {
     val id: Int
     val item: String
     val price: Double
-    val orderDate: java.util.Date
+    val orderDate: java.sql.Date
 }
 ```
 
@@ -361,7 +361,7 @@ Let's demonstrate this with an example where we automatically convert all `DATE`
  */
 override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
     when (tableColumnMetadata.jdbcType) {
-        java.sql.Types.DATE -> typeOf<java.util.Date>().withNullability(tableColumnMetadata.isNullable)
+        java.sql.Types.DATE -> typeOf<java.sql.Date>().withNullability(tableColumnMetadata.isNullable)
         else -> super.getExpectedJdbcType(tableColumnMetadata)
     }
 
@@ -376,9 +376,9 @@ override fun getPreprocessedValueType(
     expectedJdbcType: KType
 ): KType =
     when {
-        // Let's say we want to convert java.util.Date to kotlin.time.Instant (taking nullability into account)
-        expectedJdbcType.isSubtypeOf(typeOf<java.util.Date?>()) ->
-            typeOf<Instant>().withNullability(tableColumnMetadata.isNullable)
+        // Let's say we want to convert java.sql.Date to kotlinx.datetime.LocalDate (taking nullability into account)
+        expectedJdbcType.isSubtypeOf(typeOf<java.sql.Date?>()) ->
+            typeOf<LocalDate>().withNullability(tableColumnMetadata.isNullable)
 
         // Else, we follow the default behavior
         else ->
@@ -395,9 +395,9 @@ override fun <J, D> preprocessValue(
     expectedJdbcType: KType,
     expectedPreprocessedValueType: KType
 ): D = when {
-    // Here we actually perform the conversion from java.util.Date to kotlin.time.Instant
-    expectedJdbcType.isSubtypeOf(typeOf<java.util.Date?>()) ->
-        (value as java.util.Date?)?.toInstant()?.toKotlinInstant() as D
+    // Here we actually perform the conversion from java.sql.Date to kotlinx.datetime.LocalDate
+    expectedJdbcType.isSubtypeOf(typeOf<java.sql.Date?>()) ->
+        (value as java.sql.Date?)?.toLocalDate()?.toKotlinLocalDate() as D
 
     // Else, we follow the default behavior
     else ->
