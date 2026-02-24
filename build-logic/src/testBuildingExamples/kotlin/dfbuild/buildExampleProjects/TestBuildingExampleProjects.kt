@@ -23,7 +23,16 @@ class TestBuildingExampleProjects {
      */
     private fun getGradleProperty(name: String): String? = System.getProperty("gradle.properties.$name")
 
-    data class TestCase(val isDev: Boolean, val buildSystem: BuildSystem, val dynamicTest: DynamicTest)
+    data class TestCase(
+        val isDev: Boolean,
+        val isAndroid: Boolean,
+        val buildSystem: BuildSystem,
+        val dynamicTest: DynamicTest,
+    )
+
+    @Tag("android")
+    @TestFactory
+    fun `test all Android projects`(): List<DynamicNode> = getExampleProjectTestsWhere { it.isAndroid }
 
     @Tag("gradle")
     @TestFactory
@@ -86,10 +95,11 @@ class TestBuildingExampleProjects {
                 "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
             )
 
+        val isAndroid = "android" in name.lowercase()
         val dynamicTest = DynamicTest.dynamicTest(name) {
             when (buildSystem) {
                 BuildSystem.GRADLE ->
-                    buildGradleProject(name = name, folder = folder)
+                    buildGradleProject(name = name, folder = folder, isAndroid = isAndroid)
 
                 BuildSystem.MAVEN ->
                     buildMavenProject(name = name, folder = folder)
@@ -97,6 +107,7 @@ class TestBuildingExampleProjects {
         }
         return TestCase(
             isDev = isDev,
+            isAndroid = isAndroid,
             buildSystem = buildSystem,
             dynamicTest = dynamicTest,
         )
@@ -105,10 +116,9 @@ class TestBuildingExampleProjects {
     /**
      * Registers task to build the example project.
      */
-    private fun buildGradleProject(name: String, folder: File) {
+    private fun buildGradleProject(name: String, folder: File, isAndroid: Boolean) {
         // Needs the android.sdk.dir property to be set or -Pandroid.sdk.dir=... added as Gradle argument
         // when and android-named example is run
-        val isAndroid = "android" in name.lowercase()
         val androidSdkDir = getGradleProperty("android.sdk.dir")
         if (isAndroid && androidSdkDir == null) {
             throw AssumptionViolatedException(

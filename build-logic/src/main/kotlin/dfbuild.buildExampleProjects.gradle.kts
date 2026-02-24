@@ -207,6 +207,22 @@ val buildGradleExampleFolders by tasks.registering(Test::class) {
     }
 }
 
+val buildAndroidExampleFolders by tasks.registering(Test::class) {
+    commonSetup()
+    description = "Builds the nested Android builds in /examples/projects to verify they compile correctly."
+    useJUnitPlatform {
+        includeTags("android")
+    }
+}
+
+val buildNonAndroidExampleFolders by tasks.registering(Test::class) {
+    commonSetup()
+    description = "Builds the nested non-Android builds in /examples/projects to verify they compile correctly."
+    useJUnitPlatform {
+        excludeTags("android")
+    }
+}
+
 val buildExampleFolders by tasks.registering(Test::class) {
     group = "verification"
     description = "Builds all the nested builds in /examples/projects to verify they compile correctly."
