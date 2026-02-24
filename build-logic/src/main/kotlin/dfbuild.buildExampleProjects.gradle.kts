@@ -150,6 +150,7 @@ private fun Test.commonSetup() {
     group = "verification"
     dependsOn(syncExampleFolders)
 
+    maxHeapSize = "1g"
     testClassesDirs = testBuildingExamples.output.classesDirs
     classpath = testBuildingExamples.runtimeClasspath
     useJUnitPlatform()

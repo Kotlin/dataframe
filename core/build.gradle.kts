@@ -382,7 +382,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.test {
-    maxHeapSize = "2048m"
+    maxHeapSize = "1g"
 }
 
 kotlinPublications {
