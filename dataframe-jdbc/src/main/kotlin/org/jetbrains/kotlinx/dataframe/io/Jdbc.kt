@@ -21,13 +21,10 @@ public class Jdbc :
         stream: InputStream,
         name: String,
         generateHelperCompanionObject: Boolean,
-    ): Code {
-        TODO("Not yet implemented")
-    }
+    ): Code = throw IllegalStateException("Jdbc.readCodeForGeneration() is not yet implemented: Issue #450")
 
-    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code {
-        TODO("Not yet implemented")
-    }
+    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code =
+        throw IllegalStateException("Jdbc.readCodeForGeneration() is not yet implemented: Issue #450")
 
     override fun acceptsExtension(ext: String): Boolean = ext == "jdbc"
 
