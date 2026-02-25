@@ -77,7 +77,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [(What is this notation?)][`DSL Grammar`]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -502,7 +502,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][ColumnSet].
      *
@@ -562,7 +562,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -624,7 +624,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -686,7 +686,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -746,7 +746,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -807,7 +807,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -870,7 +870,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -932,7 +932,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -992,7 +992,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1052,7 +1052,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1113,7 +1113,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1176,7 +1176,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1242,7 +1242,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1311,7 +1311,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1371,7 +1371,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1432,7 +1432,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1495,7 +1495,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1555,7 +1555,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1615,7 +1615,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1675,7 +1675,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1735,7 +1735,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1798,7 +1798,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1861,7 +1861,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1923,7 +1923,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -1985,7 +1985,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2048,7 +2048,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2110,7 +2110,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2171,7 +2171,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2231,7 +2231,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2291,7 +2291,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2352,7 +2352,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns after [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2419,7 +2419,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][ColumnSet].
      *
@@ -2479,7 +2479,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2541,7 +2541,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2603,7 +2603,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2663,7 +2663,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2724,7 +2724,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2786,7 +2786,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2848,7 +2848,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2908,7 +2908,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -2968,7 +2968,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3030,7 +3030,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3092,7 +3092,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3158,7 +3158,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3227,7 +3227,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3287,7 +3287,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3348,7 +3348,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3411,7 +3411,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3471,7 +3471,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3531,7 +3531,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3591,7 +3591,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3651,7 +3651,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3714,7 +3714,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3777,7 +3777,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3839,7 +3839,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3901,7 +3901,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -3964,7 +3964,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4026,7 +4026,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4087,7 +4087,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4147,7 +4147,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4207,7 +4207,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4267,7 +4267,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns from [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return an empty [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
@@ -4334,7 +4334,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][ColumnSet] containing all columns.
      *
@@ -4394,7 +4394,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -4456,7 +4456,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -4518,7 +4518,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -4578,7 +4578,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -4639,7 +4639,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -4702,7 +4702,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -4764,7 +4764,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -4825,7 +4825,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -4885,7 +4885,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -4946,7 +4946,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5009,7 +5009,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5075,7 +5075,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5141,7 +5141,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5201,7 +5201,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5262,7 +5262,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5325,7 +5325,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5386,7 +5386,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5446,7 +5446,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5506,7 +5506,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5566,7 +5566,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5629,7 +5629,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5692,7 +5692,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5754,7 +5754,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5816,7 +5816,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5879,7 +5879,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -5941,7 +5941,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6002,7 +6002,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6062,7 +6062,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6122,7 +6122,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6183,7 +6183,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns before [column], excluding [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6250,7 +6250,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][ColumnSet] containing all columns.
      *
@@ -6310,7 +6310,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6372,7 +6372,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6434,7 +6434,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6494,7 +6494,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6555,7 +6555,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6617,7 +6617,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6679,7 +6679,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6739,7 +6739,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6799,7 +6799,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6861,7 +6861,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6923,7 +6923,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -6989,7 +6989,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7058,7 +7058,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7118,7 +7118,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7179,7 +7179,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7242,7 +7242,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7302,7 +7302,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7362,7 +7362,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7422,7 +7422,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7482,7 +7482,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7545,7 +7545,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7608,7 +7608,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7670,7 +7670,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7732,7 +7732,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7795,7 +7795,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7857,7 +7857,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7918,7 +7918,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -7978,7 +7978,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8038,7 +8038,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *
@@ -8098,7 +8098,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * containing all columns up to [column], including [column] itself.
      *
      * [column] can be specified both relative to the current [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or the outer scope and
-     * can be referenced using any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * can be referenced using any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs].
      *
      * If [column] does not exist, the function will return a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns.
      *

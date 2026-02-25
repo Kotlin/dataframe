@@ -1,0 +1,102 @@
+package org.jetbrains.kotlinx.dataframe.documentation
+
+import org.jetbrains.kotlinx.dataframe.DataFrame
+
+/*
+ * Access APIs KDoc-topic.
+ * Link to here whenever you want to explain the different access APIs
+ * with `@include [AccessApiLink]`.
+ */
+
+/**
+ * ## Access APIs
+ *
+ * Accessing and specifying columns is the one of the most important parts of the API,
+ * used in the most of [DataFrame] operations.
+ *
+ * In the Kotlin DataFrame library, we provide two different ways to access columns —
+ * the [String API][`StringAPI`] and the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs.ExtensionPropertiesAPI].
+ *
+ * For more information: [See Access APIs on the documentation website.](https://kotlin.github.io/dataframe/apilevels.html)
+ */
+@Suppress("RemoveRedundantBackticks", "ClassName")
+internal interface AccessAPIs {
+
+    /*
+     * String API KDoc-topic.
+     * Link to it with `@include [StringApiLink]`.
+     */
+
+    /**
+     * ## String API
+     *
+     * In this [AccessAPIs], columns are accessed by a [String] representing their name.
+     * Type-checking and name-checking are done at runtime, too.
+     *
+     * ### String Column Accessors
+     *
+     * You can also specify a column using a [String] representing their name
+     * and path inside the [Columns Selection DSL][SelectingColumns.ColumnsSelectionDSL] and
+     * [Row Expressions][ExpressionsGivenRow].
+     *
+     * For more information: [See String API on the documentation website.](https://kotlin.github.io/dataframe/stringapi.html)
+     */
+    typealias StringAPI = Nothing
+
+    /** [String API][`StringAPI`] */
+    typealias StringApiLink = Nothing
+
+    /*
+     * Extension Properties API KDoc topic.
+     * Link to it with `@include [ExtensionPropertiesApiLink]`.
+     */
+
+    /**
+     * ## Extension Properties API
+     *
+     * When working with a [DataFrame], the most convenient and reliable way to [access its columns][AccessAPIs] —
+     * including for operations and retrieving column values in row expressions —
+     * is through auto-generated extension properties.
+     *
+     * These properties are generated based on the
+     * [dataframe schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema],
+     * with their names and types inferred from the names and types of the corresponding columns.
+     * This also works for hierarchical [DataFrame] structures
+     * (i.e., [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+     * and [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]).
+     *
+     * ### Example
+     *
+     * Given the following [DataFrame]:
+     *
+     * | name | age | height |
+     * |-------|-----|--------|
+     * | Alice | 23  | 175.5  |
+     * | Bob   | 27  | 160.2  |
+     *
+     * You can access columns using extension properties in a type-safe way, avoiding typos and relying on autocompletion.
+     * These properties can be used in:
+     * - [Columns Selection DSL][SelectingColumns.ColumnsSelectionDSL]
+     * - [Row Expressions][ExpressionsGivenRow]
+     *
+     * ```kotlin
+     * // Access the "name" column
+     * df.name
+     *
+     * // Select the "age" and "height" columns
+     * df.select { age and height }
+     *
+     * // Filter rows where "age" > 18 and "name" starts with 'A'
+     * df.filter { age > 18 && name.startsWith("A") }
+     * ```
+     *
+     * For more information: [See Extension Properties API on the documentation website.](https://kotlin.github.io/dataframe/extensionpropertiesapi.html)
+     */
+    typealias ExtensionPropertiesAPI = Nothing
+
+    /** [Extension Properties API][ExtensionPropertiesAPI] */
+    typealias ExtensionPropertiesApiLink = Nothing
+}
+
+/** [Access APIs][AccessAPIs] */
+internal typealias AccessApiLink = Nothing
