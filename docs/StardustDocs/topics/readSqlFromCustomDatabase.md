@@ -21,11 +21,11 @@ Add the following dependencies and dataframe plugin to your `build.gradle.kts`:
 
 ```kotlin
 plugins {
-    id("org.jetbrains.kotlinx.dataframe") version "%dataframeVersion%"
+    id("org.jetbrains.kotlinx.dataframe") version "%dataFrameVersion%"
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:%dataframeVersion%")
+    implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
     implementation("org.hsqldb:hsqldb:$version")
 }
 ```
