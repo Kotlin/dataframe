@@ -47,7 +47,7 @@ import kotlin.reflect.typeOf
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
@@ -138,7 +138,7 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.Dsl] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -162,7 +162,7 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.ColumnNames] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -202,7 +202,7 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
@@ -219,7 +219,7 @@ private typealias CommonCorrWithDocs = Nothing
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.Dsl] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin
@@ -238,7 +238,7 @@ public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataF
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.ColumnNames] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin
