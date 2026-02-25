@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.`Auto-renaming columns in DataFrame`
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -28,7 +29,7 @@ import kotlin.reflect.KProperty
  *
  * If both [DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame].
  */
 @ExcludeFromSources
@@ -49,7 +50,7 @@ private typealias JoinBehavior = Nothing
  *
  * See also [joinWith], which performs a join by matching row values condition.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -75,7 +76,7 @@ private typealias JOIN_METHOD = Nothing
  * Use [right][JoinDsl.right] to access columns from the right [DataFrame],
  * and [match][JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][SelectingColumns.Dsl].
+ * See also [Columns selection via DSL][SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -131,7 +132,7 @@ private typealias JoinStringApiExample = Nothing
 
 /**
  * @include [JoinDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  * @include [JoinStringApiExample]
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -156,7 +157,7 @@ public fun <A, B> DataFrame<A>.join(
  * See also general [join], as well as other shortcuts with each of join types:
  * [leftJoin], [rightJoin], [fullJoin], [filterJoin], [excludeJoin].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -184,7 +185,7 @@ public fun <A, B> DataFrame<A>.innerJoin(
 
 /**
  * @include [InnerJoinDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] innerJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -205,7 +206,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  * See also general [join], as well as other shortcuts with each of join types:
  * [innerJoin], [rightJoin], [fullJoin], [filterJoin], [excludeJoin].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -233,7 +234,7 @@ public fun <A, B> DataFrame<A>.leftJoin(
 
 /**
  * @include [LeftJoinDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] leftJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -254,7 +255,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  * See also general [join], as well as other shortcuts with each of join types:
  * [innerJoin], [leftJoin], [fullJoin], [filterJoin], [excludeJoin].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -282,7 +283,7 @@ public fun <A, B> DataFrame<A>.rightJoin(
 
 /**
  * @include [RightJoinDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] rightJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -303,7 +304,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  * See also general [join], as well as other shortcuts with each of join types:
  * [innerJoin], [leftJoin], [rightJoin], [filterJoin], [excludeJoin].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -331,7 +332,7 @@ public fun <A, B> DataFrame<A>.fullJoin(
 
 /**
  * @include [FullJoinDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] fullJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -352,7 +353,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  * See also general [join], as well as other shortcuts with each of join types:
  * [innerJoin], [leftJoin], [rightJoin], [fullJoin], [excludeJoin].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -380,7 +381,7 @@ public fun <A, B> DataFrame<A>.filterJoin(
 
 /**
  * @include [FilterJoinDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] filterJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -401,7 +402,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  * See also general [join], as well as other shortcuts with each of join types:
  * [innerJoin], [leftJoin], [rightJoin], [filterJoin], [fullJoin].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -429,7 +430,7 @@ public fun <A, B> DataFrame<A>.excludeJoin(
 
 /**
  * @include [ExcludeJoinDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] excludeJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.

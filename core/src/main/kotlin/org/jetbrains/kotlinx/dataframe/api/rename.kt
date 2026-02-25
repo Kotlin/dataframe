@@ -47,7 +47,7 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][RenameSelectingOptions].
  *
@@ -119,7 +119,7 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
 
 /**
  * @include [CommonRenameDocs]
- * @include [SelectingColumns.Dsl] {@include [SetRenameOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetRenameOperationArg]}
  * ### Examples:
  * ```kotlin
  * // Rename "col1" to "width" and "col2" to "length"
@@ -147,7 +147,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
 
 /**
  * @include [CommonRenameDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetRenameOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI] {@include [SetRenameOperationArg]}
  * ### Examples:
  * ```kotlin
  * // Rename "col1" to "width" and "col2" to "length"

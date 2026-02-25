@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.api.isNA
-import org.jetbrains.kotlinx.dataframe.documentation.NA
+import org.jetbrains.kotlinx.dataframe.documentation.`NA`
 
 /**
  * Type alias for a function representing a reduction over a sequence of values trying to find the "best" value.

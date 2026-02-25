@@ -32,7 +32,7 @@ import kotlin.reflect.KProperty
  *
  * Returns a new [DataFrame] with only the columns selected by [columns\].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -60,7 +60,7 @@ private typealias CommonSelectDocs = Nothing
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
 @Refine
@@ -69,7 +69,7 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetSelectOperationArg]}
+ *
  * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
  */
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -78,7 +78,7 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
  */
 @Refine
@@ -87,7 +87,7 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectOperationArg]}
+ *
  * @param [columns] The [Column Accessors][ColumnReference] used to select the columns of this [DataFrame].
  */
 @Deprecated(DEPRECATED_ACCESS_API)
