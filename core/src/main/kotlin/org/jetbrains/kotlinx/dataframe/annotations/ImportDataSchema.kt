@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.NameValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.documentation.`Unifying Numbers`
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 
 /**
  * Annotation preprocessing will generate a DataSchema interface from the data at `path`.
@@ -85,7 +85,7 @@ public annotation class JsonOptions(
      * `["""\$["store"]["book"][*]["author"]"""]`
      */
     public val keyValuePaths: Array<String> = [],
-    /** Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default. */
+    /** Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default. */
     public val unifyNumbers: Boolean = true,
 ) {
     public object TypeClashTactics {

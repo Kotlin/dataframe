@@ -35,7 +35,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToDoubleImpl
@@ -105,7 +105,7 @@ internal typealias SeeAlsoParse = Nothing
  *
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][ConvertSelectingOptions].
  *
@@ -116,8 +116,8 @@ internal typealias SeeAlsoParse = Nothing
 internal interface ConvertDocs {
 
     /**
-     * {@comment Version of [`Selecting Columns`] with correctly filled in examples}
-     * @include [`Selecting Columns`] {@include [SetConvertOperationArg]}
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetConvertOperationArg]}
      */
     typealias ConvertSelectingOptions = Nothing
 
@@ -215,7 +215,7 @@ internal interface ConvertDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [`Selecting Columns`.OPERATION] [convert][convert]} */
+/** {@set [SelectingColumns.OPERATION] [convert][convert]} */
 @ExcludeFromSources
 private typealias SetConvertOperationArg = Nothing
 
@@ -228,7 +228,7 @@ private typealias CommonConvertDocs = Nothing
 
 /**
  * @include [CommonConvertDocs]
- * @include [`Selecting Columns`.`Columns Selection DSL`] {@include [SetConvertOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetConvertOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.convert { columnA and columnB }.with { it.toString().lowercase() }
@@ -246,7 +246,7 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T,
 
 /**
  * @include [CommonConvertDocs]
- * @include [`Selecting Columns`.`Column Names API`] {@include [SetConvertOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI] {@include [SetConvertOperationArg]}
  * ### Example:
  * ```kotlin
  * df.convert("person", "position").toStr()

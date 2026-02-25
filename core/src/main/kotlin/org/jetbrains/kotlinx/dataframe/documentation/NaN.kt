@@ -3,6 +3,11 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.api.dropNaNs
 import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 
+/*
+ * NaN KDoc-topic.
+ * Link to it with `@include [NaNLink]`.
+ */
+
 /**
  * ## `NaN`
  *
@@ -14,7 +19,9 @@ import org.jetbrains.kotlinx.dataframe.api.fillNaNs
  *
  * For more information: {@include [DocumentationUrls.NanAndNa.NaN]}
  *
- * @see `NA`
+ * @see [NA]
  */
-@Suppress("RemoveRedundantBackticks")
-internal typealias `NaN` = Nothing
+internal typealias NaN = Nothing
+
+/** [`NaN`][NaN] */
+internal typealias NaNLink = Nothing

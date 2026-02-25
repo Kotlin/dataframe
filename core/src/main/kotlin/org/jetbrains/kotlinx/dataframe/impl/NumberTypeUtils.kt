@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.kotlinx.dataframe.documentation.`Unifying Numbers`
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.api.createConverter
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -35,7 +35,7 @@ private val unifiedNumberTypeGraphs = mutableMapOf<UnifiedNumberTypeOptions, Dir
  * Number type graph, structured in terms of number complexity.
  * A number can always be expressed lossless by a number of a more complex type (any of its parents).
  *
- * {@include [`Unifying Numbers`.Graph]}
+ * {@include [UnifyingNumbers.Graph]}
  *
  * For any two numbers, we can find the nearest common ancestor in this graph
  * by calling [DirectedAcyclicGraph.findNearestCommonVertex].
@@ -43,7 +43,7 @@ private val unifiedNumberTypeGraphs = mutableMapOf<UnifiedNumberTypeOptions, Dir
  * @param options See [UnifiedNumberTypeOptions]
  * @see getUnifiedNumberClassOrNull
  * @see unifiedNumberClassOrNull
- * @see `Unifying Numbers`
+ * @see UnifyingNumbers
  */
 internal fun getUnifiedNumberTypeGraph(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
@@ -106,7 +106,7 @@ internal fun getUnifiedNumberClassGraph(
  * @param options See [UnifiedNumberTypeOptions]
  * @return The nearest common numeric type between the two input classes.
  *   If no common class is found, [IllegalStateException] is thrown.
- * @see `Unifying Numbers`
+ * @see UnifyingNumbers
  */
 internal fun getUnifiedNumberTypeOrNull(
     first: KType?,
@@ -155,7 +155,7 @@ internal fun getUnifiedNumberClassOrNull(
  * @param options See [UnifiedNumberTypeOptions]
  * @return The nearest common numeric type between the input types.
  *   If no common type is found, it returns `null`.
- * @see `Unifying Numbers`
+ * @see UnifyingNumbers
  */
 internal fun Iterable<KType>.unifiedNumberTypeOrNull(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
@@ -181,7 +181,7 @@ internal fun Iterable<KClass<*>>.unifiedNumberClassOrNull(
  *   By default, (or if `null`), this is determined using the types of the elements in the iterable.
  * @return A new iterable of numbers where each element is converted to the specified or inferred common number type.
  * @throws IllegalStateException if an element cannot be converted to the common number type.
- * @see `Unifying Numbers`
+ * @see UnifyingNumbers
  */
 @Suppress("UNCHECKED_CAST")
 @JvmName("convertNullableIterableToUnifiedNumberType")

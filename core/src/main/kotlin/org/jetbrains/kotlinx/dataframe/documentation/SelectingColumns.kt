@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 
-/** [Selecting Columns][`Selecting Columns`] */
+/** [Selecting Columns][SelectingColumns] */
 @ExcludeFromSources
 internal typealias SelectingColumnsLink = Nothing
 
@@ -27,13 +27,12 @@ internal typealias SelectingColumnsLink = Nothing
  * Selecting columns for various [DataFrame] operations
  * can be done in the following ways:
  * ### 1. {@include [CSDslWithExampleLink]}
- * {@include [`Columns Selection DSL`.`Columns Selection DSL with Example`]}
+ * {@include [ColumnsSelectionDSL.ColumnsSelectionDSLWithExample]}
  * > There's also a 'single column' variant used sometimes: {@include [CSDslSingleWithExampleLink]}.
  * ### 2. {@include [ColumnNamesWithExampleLink]}
- * {@include [`Column Names API`.`Column Names API with Example`]}
+ * {@include [ColumnNamesAPI.ColumnNamesApiWithExample]}
  */
-@Suppress("ClassName")
-internal interface `Selecting Columns` {
+internal interface SelectingColumns {
 
     /*
      * Note about column groups and nested columns KDoc-snippet.
@@ -87,7 +86,7 @@ internal interface `Selecting Columns` {
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
      */
-    interface `Columns Selection DSL` {
+    interface ColumnsSelectionDSL {
 
         /*
          * Columns Selection DSL with example KDoc-topic.
@@ -96,7 +95,7 @@ internal interface `Selecting Columns` {
          */
 
         /**
-         * {@include [`Columns Selection DSL`]}
+         * {@include [ColumnsSelectionDSL]}
          *
          * #### For example:
          *
@@ -109,14 +108,14 @@ internal interface `Selecting Columns` {
          * @include [SetDefaultOperationArg]
          * @include [SetDefaultReceiverArg]
          */
-        typealias `Columns Selection DSL with Example` = Nothing
+        typealias ColumnsSelectionDSLWithExample = Nothing
     }
 
-    /** [Columns Selection DSL][`Columns Selection DSL`] */
+    /** [Columns Selection DSL][ColumnsSelectionDSL] */
     @ExcludeFromSources
     typealias CSDslLink = Nothing
 
-    /** [Columns Selection DSL][`Columns Selection DSL`.`Columns Selection DSL with Example`] */
+    /** [Columns Selection DSL][ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] */
     @ExcludeFromSources
     typealias CSDslWithExampleLink = Nothing
 
@@ -140,7 +139,7 @@ internal interface `Selecting Columns` {
      * {@include [LineBreak]}
      * @include [DocumentationUrls.ColumnSelectors]
      */
-    interface `Column Selection DSL` {
+    interface ColumnSelectionDSL {
 
         /*
          * Column Selection DSL with example KDoc-topic.
@@ -149,7 +148,7 @@ internal interface `Selecting Columns` {
          */
 
         /**
-         * {@include [`Column Selection DSL`]}
+         * {@include [ColumnSelectionDSL]}
          *
          * #### For example:
          *
@@ -162,14 +161,14 @@ internal interface `Selecting Columns` {
          * @include [SetDefaultOperationArg]
          * @include [SetDefaultReceiverArg]
          */
-        typealias `Columns Selection DSL with Example` = Nothing
+        typealias ColumnsSelectionDSLWithExample = Nothing
     }
 
-    /** [Column Selection DSL][`Column Selection DSL`] */
+    /** [Column Selection DSL][ColumnSelectionDSL] */
     @ExcludeFromSources
     typealias CSDslSingleLink = Nothing
 
-    /** [Column Selection DSL][`Column Selection DSL`.`Columns Selection DSL with Example`] */
+    /** [Column Selection DSL][ColumnSelectionDSL.ColumnsSelectionDSLWithExample] */
     @ExcludeFromSources
     typealias CSDslSingleWithExampleLink = Nothing
 
@@ -181,9 +180,9 @@ internal interface `Selecting Columns` {
 
     /**
      * Select single or multiple columns using their names as [String]s.
-     * ({@include [`Access APIs`.StringApiLink]}).
+     * ({@include [AccessAPIs.StringApiLink]}).
      */
-    interface `Column Names API` {
+    interface ColumnNamesAPI {
 
         /*
          * CColumn Names API with Example KDoc-topic.
@@ -192,7 +191,7 @@ internal interface `Selecting Columns` {
          */
 
         /**
-         * {@include [`Column Names API`]}
+         * {@include [ColumnNamesAPI]}
          *
          * #### For example:
          *
@@ -201,14 +200,14 @@ internal interface `Selecting Columns` {
          * @include [SetDefaultOperationArg]
          * @include [SetDefaultReceiverArg]
          */
-        typealias `Column Names API with Example` = Nothing
+        typealias ColumnNamesApiWithExample = Nothing
     }
 
-    /** [Column names][`Column Names API`] */
+    /** [Column names][ColumnNamesAPI] */
     @ExcludeFromSources
     typealias ColumnNamesLink = Nothing
 
-    /** [Column names][`Column Names API`.`Column Names API with Example`] */
+    /** [Column names][ColumnNamesAPI.ColumnNamesApiWithExample] */
     @ExcludeFromSources
     typealias ColumnNamesWithExampleLink = Nothing
 }

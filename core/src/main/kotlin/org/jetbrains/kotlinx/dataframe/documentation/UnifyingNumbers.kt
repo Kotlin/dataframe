@@ -30,7 +30,7 @@ import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
  * while [Nothing?][Nothing] can only be `null`.
  */
 @Suppress("ClassName")
-public interface `Unifying Numbers` {
+public interface UnifyingNumbers {
 
     /**
      * ```

@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.documentation.`Access APIs`
+import org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs
 
 // region DataFrame
 

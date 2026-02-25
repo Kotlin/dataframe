@@ -4,7 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.documentation.`Unifying Numbers`
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.commonParent
 import org.jetbrains.kotlinx.dataframe.impl.commonParents
@@ -420,8 +420,8 @@ class UtilTests {
     }
 
     /**
-     * See [`Unifying Numbers`] for more information.
-     * {@include [`Unifying Numbers`.Graph]}
+     * See [UnifyingNumbers] for more information.
+     * {@include [UnifyingNumbers.Graph]}
      */
     @Test
     fun `common number types`() {

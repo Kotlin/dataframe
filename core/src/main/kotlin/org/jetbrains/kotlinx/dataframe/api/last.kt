@@ -19,8 +19,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
-import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Rows`
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
@@ -108,9 +108,9 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
  * (including the case when the [DataFrame] is empty).
  *
- * @include [`Selecting Rows`.RowFilterSnippet]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -138,9 +138,9 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
 /**
  * Returns the last [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
  *
- * @include [`Selecting Rows`.RowFilterSnippet]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -237,9 +237,9 @@ public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNu
  * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
  * except the grouping key.
  *
- * @include [`Selecting Rows`.RowFilterSnippet]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -289,9 +289,9 @@ public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
  *
  * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
  *
- * @include [`Selecting Rows`.RowFilterSnippet]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -358,9 +358,9 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  *
  * @include [DocumentationUrls.GroupBy]
  *
- * @include [`Selecting Rows`.RowFilterSnippet]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin

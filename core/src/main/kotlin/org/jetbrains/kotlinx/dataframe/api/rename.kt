@@ -21,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.renamedColumn
@@ -47,7 +47,7 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][RenameSelectingOptions].
  *
@@ -58,8 +58,8 @@ import kotlin.reflect.KProperty
 internal interface RenameDocs {
 
     /**
-     * {@comment Version of [`Selecting Columns`] with correctly filled in examples}
-     * @include [`Selecting Columns`] {@include [SetRenameOperationArg]}
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetRenameOperationArg]}
      */
     typealias RenameSelectingOptions = Nothing
 
@@ -83,7 +83,7 @@ internal interface RenameDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [`Selecting Columns`.OPERATION] [rename][rename]} */
+/** {@set [SelectingColumns.OPERATION] [rename][rename]} */
 @ExcludeFromSources
 private typealias SetRenameOperationArg = Nothing
 
@@ -119,7 +119,7 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
 
 /**
  * @include [CommonRenameDocs]
- * @include [`Selecting Columns`.`Columns Selection DSL`] {@include [SetRenameOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetRenameOperationArg]}
  * ### Examples:
  * ```kotlin
  * // Rename "col1" to "width" and "col2" to "length"
@@ -147,7 +147,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
 
 /**
  * @include [CommonRenameDocs]
- * @include [`Selecting Columns`.`Column Names API`] {@include [SetRenameOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI] {@include [SetRenameOperationArg]}
  * ### Examples:
  * ```kotlin
  * // Rename "col1" to "width" and "col2" to "length"

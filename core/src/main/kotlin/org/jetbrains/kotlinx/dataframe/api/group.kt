@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.experimental.ExperimentalTypeInference
@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
  * that return a new [DataFrame] with grouped columns.
  * Check out [Grammar].
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][GroupSelectingOptions].
  *
@@ -52,8 +52,8 @@ import kotlin.reflect.KProperty
 internal interface GroupDocs {
 
     /**
-     * {@comment Version of [`Selecting Columns`] with correctly filled in examples}
-     * @include [`Selecting Columns`] {@include [SetGroupOperationArg]}
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetGroupOperationArg]}
      */
     typealias GroupSelectingOptions = Nothing
 
@@ -78,7 +78,7 @@ internal interface GroupDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [`Selecting Columns`.OPERATION] [group][group]} */
+/** {@set [SelectingColumns.OPERATION] [group][group]} */
 @ExcludeFromSources
 private typealias SetGroupOperationArg = Nothing
 
@@ -91,7 +91,7 @@ private typealias CommonGroupDocs = Nothing
 
 /**
  * @include [CommonGroupDocs]
- * @include [`Selecting Columns`.`Columns Selection DSL`] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetGroupOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.group { columnA and columnB }.into("valueCols")
@@ -104,7 +104,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
 
 /**
  * @include [CommonGroupDocs]
- * @include [`Selecting Columns`.`Column Names API`] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI] {@include [SetGroupOperationArg]}
  * ### Example:
  * ```kotlin
  * df.group("second").into("valueCols")
@@ -156,11 +156,11 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  *
  * If a column group with the specified name does not exist, it will be created.
  *
- * See [Selecting Columns][`Selecting Columns`].
+ * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [`Selecting Columns`.`Column Names API`]
+ * @include [SelectingColumns.ColumnNamesAPI]
  *
  * ### Example:
  * ```kotlin
@@ -186,11 +186,11 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  *
  * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
- * See [Selecting Columns][`Selecting Columns`].
+ * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [`Selecting Columns`.`Columns Selection DSL`]
+ * @include [SelectingColumns.ColumnsSelectionDSL]
  *
  * ### Examples:
  * ```kotlin
@@ -219,11 +219,11 @@ public fun <T, C> GroupClause<T, C>.into(
  *
  * If a column group with the specified name does not exist, it will be created.
  *
- * See [Selecting Columns][`Selecting Columns`].
+ * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [`Selecting Columns`.`Column Names API`]
+ * @include [SelectingColumns.ColumnNamesAPI]
  *
  * ### Examples:
  * ```kotlin

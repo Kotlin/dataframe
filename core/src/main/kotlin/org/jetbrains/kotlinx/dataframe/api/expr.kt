@@ -1,10 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.documentation.`Column Expression`
+import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import kotlin.reflect.typeOf
@@ -44,7 +43,7 @@ public interface ExprColumnsSelectionDsl {
 }
 
 /**
- * @include [`Column Expression`.CommonDocs]
+ * @include [ColumnExpression.CommonDocs]
  *
  * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
  *

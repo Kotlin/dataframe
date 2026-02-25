@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.expr
  * [`expr {}`][expr] behaves like a mapping statement, iterating over the object it's called on.
  */
 @Suppress("ClassName")
-internal interface `Column Expression` {
+internal interface ColumnExpression {
 
     /**
      * Creates a temporary new column by defining an expression to fill up each row.
@@ -25,5 +25,5 @@ internal interface `Column Expression` {
     typealias CommonDocs = Nothing
 }
 
-/** [Column Expression][`Column Expression`] */
+/** [Column Expression][ColumnExpression] */
 internal typealias ColumnExpressionLink = Nothing

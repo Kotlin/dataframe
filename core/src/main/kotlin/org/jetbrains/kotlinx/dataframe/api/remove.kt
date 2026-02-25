@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.`Selecting Columns`
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MINUS
@@ -26,7 +26,7 @@ import kotlin.reflect.KProperty
  *
  * Removes the specified [columns] from the original [DataFrame] and returns a new [DataFrame] without them.
  *
- * @include [`Selecting Columns`.ColumnGroupsAndNestedColumnsSnippet]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][Select.SelectSelectingOptions].
  *
@@ -34,7 +34,7 @@ import kotlin.reflect.KProperty
  */
 internal typealias Remove = Nothing
 
-/** {@set [`Selecting Columns`.OPERATION] [remove][remove]} */
+/** {@set [SelectingColumns.OPERATION] [remove][remove]} */
 @ExcludeFromSources
 private typealias SetRemoveOperationArg = Nothing
 
@@ -47,7 +47,7 @@ private typealias CommonRemoveDocs = Nothing
 
 /**
  * @include [CommonRemoveDocs]
- * @include [`Selecting Columns`.`Columns Selection DSL`.`Columns Selection DSL with Example`] {@include [SetRemoveOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] used to remove the columns of this [DataFrame].
  */
 @Refine
@@ -57,14 +57,14 @@ public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T>
 
 /**
  * @include [CommonRemoveDocs]
- * @include [`Selecting Columns`.`Column Names API`.`Column Names API with Example`] {@include [SetRemoveOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [Column Names][String] used to remove the columns of this [DataFrame].
  */
 public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remove { columns.toColumnSet() }
 
 /**
  * @include [CommonRemoveDocs]
- * @include [`Selecting Columns`.ColumnAccessors.WithExample] {@include [SetRemoveOperationArg]}
+ * G
  * @param [columns] The [Column Accessors][ColumnReference] used to remove the columns of this [DataFrame].
  */
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -73,7 +73,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFram
 
 /**
  * @include [CommonRemoveDocs]
- * @include [`Selecting Columns`.KProperties.WithExample] {@include [SetRemoveOperationArg]}
+ *
  * @param [columns] The [KProperties][KProperty] used to remove the columns of this [DataFrame].
  */
 @Deprecated(DEPRECATED_ACCESS_API)

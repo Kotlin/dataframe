@@ -1,5 +1,3 @@
-@file:Suppress("ClassName")
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -28,7 +26,7 @@ import org.jetbrains.kotlinx.dataframe.index
  *
  * A Row Condition is similar to a {@include [RowExpressionsLink]} but expects a [Boolean] as result.
  */
-internal interface `Selecting Rows` {
+internal interface SelectingRows {
 
     /*
      * Row filter KDoc-snippet.
@@ -40,7 +38,7 @@ internal interface `Selecting Rows` {
      * and is expected to return a [Boolean] value.
      *
      * It allows you to define conditions using the row's values directly,
-     * including through [extension properties][`Access APIs`.`Extension Properties API`]
+     * including through [extension properties][AccessAPIs.ExtensionPropertiesAPI]
      * for convenient and type-safe access.
      *
      * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
@@ -59,7 +57,7 @@ internal interface `Selecting Rows` {
      * and is expected to return a [Boolean] value.
      *
      * It allows you to define conditions using the row's values directly,
-     * including through [extension properties][`Access APIs`.`Extension Properties API`]
+     * including through [extension properties][AccessAPIs.ExtensionPropertiesAPI]
      * for convenient and type-safe access.
      *
      * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
@@ -104,7 +102,7 @@ internal interface `Selecting Rows` {
     /** [Row-Value Condition][RowValueCondition.WithExample] */
     typealias RowValueConditionLink = Nothing
 
-    /** Filter or find rows to operate on after [selecting columns][`Selecting Columns`] using a
+    /** Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
      * [row value filter][RowValueFilter].
      */
     interface RowValueCondition {
@@ -123,5 +121,5 @@ internal interface `Selecting Rows` {
     }
 }
 
-/** [Row Condition][`Selecting Rows`] */
+/** [Row Condition][SelectingRows] */
 internal typealias RowConditionLink = Nothing

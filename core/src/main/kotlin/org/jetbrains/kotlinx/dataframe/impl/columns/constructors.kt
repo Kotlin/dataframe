@@ -30,7 +30,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
-import org.jetbrains.kotlinx.dataframe.documentation.`Unifying Numbers`
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.createConverter
@@ -198,7 +198,7 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
  * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
  *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
  * @param unifyNumbers if `true`, then all numbers encountered in [values] will be converted to the smallest possible
- *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [`Unifying Numbers`].
+ *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [UnifyingNumbers].
  *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [Double].
  */
 @PublishedApi

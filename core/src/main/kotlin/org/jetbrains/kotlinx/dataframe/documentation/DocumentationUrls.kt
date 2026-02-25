@@ -2,6 +2,14 @@
 
 package org.jetbrains.kotlinx.dataframe.documentation
 
+/*
+ * Documentation URLs KDoc-snippets.
+ *
+ * Contains all links to Kotlin DataFrame documentation pages.
+ *
+ * Include it in KDoc with `@include [-class-]`.
+ * For example: `@include [DocumentationUrls.Select]`.
+ */
 internal interface DocumentationUrls {
 
     /** https://kotlin.github.io/dataframe */

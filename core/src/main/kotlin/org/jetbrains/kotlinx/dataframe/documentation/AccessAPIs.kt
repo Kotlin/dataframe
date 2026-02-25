@@ -19,8 +19,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  *
  * For more information: {@include [DocumentationUrls.AccessApis]}
  */
-@Suppress("ClassName")
-internal interface `Access APIs` {
+@Suppress("RemoveRedundantBackticks", "ClassName")
+internal interface AccessAPIs {
 
     /*
      * String API KDoc-topic.
@@ -30,20 +30,20 @@ internal interface `Access APIs` {
     /**
      * ## String API
      *
-     * In this [`Access APIs`], columns are accessed by a [String] representing their name.
+     * In this [AccessAPIs], columns are accessed by a [String] representing their name.
      * Type-checking and name-checking are done at runtime, too.
      *
      * ### String Column Accessors
      *
      * You can also specify a column using a [String] representing their name
-     * and path inside the [Columns Selection DSL][`Selecting Columns`.`Columns Selection DSL`] and
+     * and path inside the [Columns Selection DSL][SelectingColumns.ColumnsSelectionDSL] and
      * [Row Expressions][ExpressionsGivenRow].
      *
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
      */
-    typealias `String API` = Nothing
+    typealias StringAPI = Nothing
 
-    /** [String API][`String API`] */
+    /** [String API][`StringAPI`] */
     typealias StringApiLink = Nothing
 
     /*
@@ -54,7 +54,7 @@ internal interface `Access APIs` {
     /**
      * ## Extension Properties API
      *
-     * When working with a [DataFrame], the most convenient and reliable way to [access its columns][`Access APIs`] —
+     * When working with a [DataFrame], the most convenient and reliable way to [access its columns][AccessAPIs] —
      * including for operations and retrieving column values in row expressions —
      * is through auto-generated extension properties.
      *
@@ -76,7 +76,7 @@ internal interface `Access APIs` {
      *
      * You can access columns using extension properties in a type-safe way, avoiding typos and relying on autocompletion.
      * These properties can be used in:
-     * - [Columns Selection DSL][`Selecting Columns`.`Columns Selection DSL`]
+     * - [Columns Selection DSL][SelectingColumns.ColumnsSelectionDSL]
      * - [Row Expressions][ExpressionsGivenRow]
      *
      * ```kotlin
@@ -92,11 +92,11 @@ internal interface `Access APIs` {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.ExtensionPropertiesApi]}
      */
-    typealias `Extension Properties API` = Nothing
+    typealias ExtensionPropertiesAPI = Nothing
 
-    /** [Extension Properties API][`Extension Properties API`] */
+    /** [Extension Properties API][ExtensionPropertiesAPI] */
     typealias ExtensionPropertiesApiLink = Nothing
 }
 
-/** [Access APIs][`Access APIs`] */
+/** [Access APIs][AccessAPIs] */
 internal typealias AccessApiLink = Nothing

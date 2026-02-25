@@ -31,7 +31,7 @@ internal typealias AutoRenamingLink = Nothing
 
 /*
  * Column Path auto creation KDoc-snippet.
- * Include it into KDoc with `@include [ColumnPathCreationSnippet]`.
+ * Include it in KDoc with `@include [ColumnPathCreationSnippet]`.
  */
 
 /**

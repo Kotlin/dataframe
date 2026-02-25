@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.documentation.`Unifying Numbers`
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeDataFrameWithMetadata
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeRow
@@ -137,7 +137,7 @@ internal const val VALUE_COLUMN_NAME: String = "value"
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [file].
  */
 public fun DataFrame.Companion.readJson(
@@ -154,7 +154,7 @@ public fun DataFrame.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [path].
  */
 public fun DataFrame.Companion.readJson(
@@ -171,7 +171,7 @@ public fun DataFrame.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [file].
  */
 public fun DataRow.Companion.readJson(
@@ -188,7 +188,7 @@ public fun DataRow.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the file will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [path].
  */
 public fun DataRow.Companion.readJson(
@@ -205,7 +205,7 @@ public fun DataRow.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [path].
  */
 public fun DataFrame.Companion.readJson(
@@ -222,7 +222,7 @@ public fun DataFrame.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [path].
  */
 public fun DataRow.Companion.readJson(
@@ -239,7 +239,7 @@ public fun DataRow.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [url].
  */
 public fun DataFrame.Companion.readJson(
@@ -256,7 +256,7 @@ public fun DataFrame.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [url].
  */
 public fun DataRow.Companion.readJson(
@@ -273,7 +273,7 @@ public fun DataRow.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [stream].
  */
 @OptIn(ExperimentalSerializationApi::class)
@@ -292,7 +292,7 @@ public fun DataFrame.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [stream].
  */
 public fun DataRow.Companion.readJson(
@@ -309,7 +309,7 @@ public fun DataRow.Companion.readJson(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [text] will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [text].
  */
 public fun DataFrame.Companion.readJsonStr(
@@ -326,7 +326,7 @@ public fun DataFrame.Companion.readJsonStr(
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [text] will be read like an object with [header] being the keys.
- * @param unifyNumbers Whether to [unify the numbers that are read][`Unifying Numbers`]. `true` by default.
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [text].
  */
 public fun DataRow.Companion.readJsonStr(
