@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
+/*
+ * DSL Grammar KDoc-topic.
+ * Link to it with `@include [DslGrammarLink]`.
+ */
+
 /**
  * ## DSL Grammar
  *
@@ -29,7 +34,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
  * Always use your common sense reading it and if you're unsure, try out the function yourself or check
  * the source code :).
  */
-public typealias DslGrammar = Nothing
+public typealias `DSL Grammar` = Nothing
 
-/** [(What is this notation?)][DslGrammar] */
+/** [(What is this notation?)][`DSL Grammar`] */
 internal typealias DslGrammarLink = Nothing

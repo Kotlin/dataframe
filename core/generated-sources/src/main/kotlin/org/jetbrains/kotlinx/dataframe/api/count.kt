@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateValue
 
 // region DataColumn
@@ -74,7 +74,10 @@ public fun <T> DataFrame<T>.count(): Int = rowsCount()
  * and is expected to return a [Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs] for convenient and type-safe access.
+ * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs.ExtensionPropertiesAPI]
+ * for convenient and type-safe access.
+ *
+ * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
  *
  * See also:
  * - [filter][DataFrame.filter] — filters rows using a [RowFilter] condition.
@@ -138,7 +141,10 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
  * and is expected to return a [Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs] for convenient and type-safe access.
+ * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs.ExtensionPropertiesAPI]
+ * for convenient and type-safe access.
+ *
+ * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
  *
  * Returns a new [DataFrame] where each row corresponds to a group.
  * The resulting frame contains:
@@ -216,7 +222,10 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
  * and is expected to return a [Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs] for convenient and type-safe access.
+ * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs.ExtensionPropertiesAPI]
+ * for convenient and type-safe access.
+ *
+ * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
  *
  * Returns a single [DataRow] where:
  * - each column corresponds to a [pivot] group — if multiple pivot keys were used,

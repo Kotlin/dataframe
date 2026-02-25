@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
@@ -24,7 +23,7 @@ public interface ExprColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [(What is this notation?)][`DSL Grammar`]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -70,12 +69,9 @@ public interface ExprColumnsSelectionDsl {
 }
 
 /**
- * ## Column Expression
- * Create a temporary new column by defining an expression to fill up each row.
+ * Creates a temporary new column by defining an expression to fill up each row.
  *
  * See [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] for more information.
- *
- * This function is essentially a shortcut for [ColumnsContainer.mapToColumn].
  *
  * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
  *
@@ -89,7 +85,6 @@ public interface ExprColumnsSelectionDsl {
  * @param [infer] [An enum][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [DataColumn.type][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
  * Either [None][org.jetbrains.kotlinx.dataframe.api.Infer.None], [Nulls][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [Type][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [Nulls][Infer.Nulls].
  * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
- * @see [ColumnsContainer.mapToColumn]
  */
 @Interpretable("Expr0")
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(

@@ -40,7 +40,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [(What is this notation?)][`DSL Grammar`]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -129,7 +129,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor] (or [SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath], [KProperty], or [ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath], [KProperty], or [ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -205,7 +205,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -255,7 +255,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -308,7 +308,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -365,7 +365,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -418,7 +418,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -471,7 +471,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -524,7 +524,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -581,7 +581,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -632,7 +632,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -686,7 +686,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -739,7 +739,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -793,7 +793,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -851,7 +851,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -904,7 +904,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -956,7 +956,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1010,7 +1010,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1066,7 +1066,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1121,7 +1121,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1176,7 +1176,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1230,7 +1230,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1288,7 +1288,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1339,7 +1339,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1392,7 +1392,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1444,7 +1444,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1497,7 +1497,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1554,7 +1554,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1607,7 +1607,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1660,7 +1660,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1713,7 +1713,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1766,7 +1766,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1821,7 +1821,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1876,7 +1876,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1929,7 +1929,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -1986,7 +1986,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2036,7 +2036,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2088,7 +2088,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2140,7 +2140,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2193,7 +2193,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2246,7 +2246,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2299,7 +2299,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2356,7 +2356,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2408,7 +2408,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2463,7 +2463,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2517,7 +2517,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2572,7 +2572,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2626,7 +2626,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2680,7 +2680,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2737,7 +2737,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2791,7 +2791,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2844,7 +2844,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2900,7 +2900,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -2955,7 +2955,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
@@ -3009,7 +3009,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
      * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]).
      *
      * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).

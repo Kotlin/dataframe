@@ -88,7 +88,7 @@ public interface DropColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [(What is this notation?)][`DSL Grammar`]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -192,7 +192,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -224,7 +224,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -259,7 +259,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -292,7 +292,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -326,7 +326,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -358,7 +358,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -392,7 +392,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -428,7 +428,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -460,7 +460,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -495,7 +495,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -528,7 +528,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -562,7 +562,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -594,7 +594,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -628,7 +628,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -664,7 +664,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropWhile` is called
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -695,7 +695,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropWhile` is called
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -729,7 +729,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropWhile` is called
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -761,7 +761,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropWhile` is called
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -793,7 +793,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropWhile` is called
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -825,7 +825,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropWhile` is called
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -859,7 +859,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropWhile` is called
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -895,7 +895,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLastWhile` is called
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -926,7 +926,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLastWhile` is called
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -960,7 +960,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLastWhile` is called
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -992,7 +992,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLastWhile` is called
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -1024,7 +1024,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLastWhile` is called
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -1056,7 +1056,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLastWhile` is called
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -1092,7 +1092,7 @@ public interface DropColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `dropLastWhile` is called
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling

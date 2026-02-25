@@ -42,7 +42,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [(What is this notation?)][`DSL Grammar`]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -160,7 +160,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -188,7 +188,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
          * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
          *
          * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-         * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+         * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
          * a column name, -path, or index (range)).
          *
          * This function operates solely on columns at the top-level.
@@ -229,7 +229,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
          * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
          *
          * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-         * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+         * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
          * a column name, -path, or index (range)).
          *
          * This function operates solely on columns at the top-level.
@@ -334,7 +334,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -384,7 +384,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -438,7 +438,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -488,7 +488,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -539,7 +539,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -593,7 +593,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -645,7 +645,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -695,7 +695,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -749,7 +749,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -801,7 +801,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -847,7 +847,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -896,7 +896,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -943,7 +943,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -990,7 +990,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1039,7 +1039,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1088,7 +1088,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1132,7 +1132,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1179,7 +1179,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1228,7 +1228,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1263,7 +1263,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1302,7 +1302,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1341,7 +1341,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1376,7 +1376,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1415,7 +1415,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1454,7 +1454,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1489,7 +1489,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1525,7 +1525,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1564,7 +1564,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1599,7 +1599,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1639,7 +1639,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1680,7 +1680,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1717,7 +1717,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1755,7 +1755,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1800,7 +1800,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1837,7 +1837,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1877,7 +1877,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1915,7 +1915,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1954,7 +1954,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -1989,7 +1989,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2027,7 +2027,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2064,7 +2064,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2101,7 +2101,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2136,7 +2136,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2173,7 +2173,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2209,7 +2209,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2246,7 +2246,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2281,7 +2281,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2321,7 +2321,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2359,7 +2359,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2398,7 +2398,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2433,7 +2433,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2471,7 +2471,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2507,7 +2507,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2548,7 +2548,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2585,7 +2585,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2625,7 +2625,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2663,7 +2663,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2702,7 +2702,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2739,7 +2739,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2779,7 +2779,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2818,7 +2818,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2859,7 +2859,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2896,7 +2896,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2936,7 +2936,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -2974,7 +2974,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3013,7 +3013,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3050,7 +3050,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3092,7 +3092,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3132,7 +3132,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3173,7 +3173,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3210,7 +3210,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3250,7 +3250,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3288,7 +3288,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3331,7 +3331,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3366,7 +3366,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3404,7 +3404,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3445,7 +3445,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3480,7 +3480,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3520,7 +3520,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3561,7 +3561,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3596,7 +3596,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3634,7 +3634,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3673,7 +3673,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3708,7 +3708,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3746,7 +3746,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3785,7 +3785,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3820,7 +3820,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
@@ -3858,7 +3858,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Creates a subset of columns ([ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]) from [this].
      *
      * You can use either a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter], or any of the `vararg` overloads for any
-     * [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]. The function can be both typed and untyped (in case you're supplying
+     * [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs]. The function can be both typed and untyped (in case you're supplying
      * a column name, -path, or index (range)).
      *
      * This function operates solely on columns at the top-level.
