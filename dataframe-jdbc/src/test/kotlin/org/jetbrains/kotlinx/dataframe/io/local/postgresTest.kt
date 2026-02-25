@@ -358,7 +358,7 @@ class PostgresTest {
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
-            "pathcol"<PGpath?>() == PGpath("((1,2),(3,1))")
+            "pathcol"<PGpath>() == PGpath("((1,2),(3,1))")
         }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
     }
@@ -368,7 +368,7 @@ class PostgresTest {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
         val result = df1.select("smallintcol")
-            .add("smallintcol2") { "smallintcol"<Int?>() }
+            .add("smallintcol2") { "smallintcol"<Int>() }
         result[0][1] shouldBe 11
 
         val result1 = df1.select("bigserialcol")

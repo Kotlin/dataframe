@@ -221,7 +221,7 @@ class JdbcTest {
 
             val saleDf = dataframes[1].cast<Sale>()
             saleDf.rowsCount() shouldBe 4
-            saleDf.filter { "amount"<BigDecimal>() > BigDecimal(40) }.rowsCount() shouldBe 3
+            saleDf.filter { "amount"<Double>() > 40 }.rowsCount() shouldBe 3
             (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
         }
 
@@ -235,7 +235,7 @@ class JdbcTest {
 
             val saleDf = dataframes[1].cast<Sale>()
             saleDf.rowsCount() shouldBe 1
-            saleDf.filter { "amount"<BigDecimal>() > BigDecimal(40) }.rowsCount() shouldBe 1
+            saleDf.filter { "amount"<Double>() > 40 }.rowsCount() shouldBe 1
             (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
         }
 
