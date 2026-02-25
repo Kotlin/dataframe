@@ -237,7 +237,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
 /**
  * ## The Fill NA Operation
  *
- * Replaces [`NA`][`NA`] values with given value or expression.
+ * Replaces [`NA`][NA] values with given value or expression.
  * Specific case of [update].
  *
  * ### Check out: [Grammar][FillNA.Grammar]
@@ -449,11 +449,11 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
 /**
  * ## The Drop `NA` Operation
  *
- * Removes rows with [`NA`][`NA`] values. Specific case of [drop][DataFrame.drop].
+ * Removes rows with [`NA`][NA] values. Specific case of [drop][DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][DropNASelectingOptions]).
- * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][`NA`]. By default,
- * rows are dropped if any of the selected cells are [`NA`][`NA`].
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][NA]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][NA].
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNA]}
  */
@@ -462,8 +462,8 @@ internal interface DropNA {
 
     /**
      * @param whereAllNA `false` by default.
-     *   If `true`, rows are dropped if all selected cells are [`NA`][`NA`].
-     *   If `false`, rows are dropped if any of the selected cells is [`NA`][`NA`].
+     *   If `true`, rows are dropped if all selected cells are [`NA`][NA].
+     *   If `false`, rows are dropped if any of the selected cells is [`NA`][NA].
      */
     typealias WhereAllNAParam = Nothing
 
@@ -549,7 +549,7 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = 
 /**
  * ## The Drop `NA` Operation
  *
- * Removes [`NA`][`NA`] values from this [DataColumn], adjusting the type accordingly.
+ * Removes [`NA`][NA] values from this [DataColumn], adjusting the type accordingly.
  */
 public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
     when (typeClass) {
