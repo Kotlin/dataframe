@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs
  *
  * The [transform] is a [RowExpression] — a lambda that receives each [DataRow]
  * both as `this` and `it` and is expected to return a key, allowing you to compute keys directly from row values.
- * You can also use [extension properties][`Access APIs`.`Extension Properties API`] for concise and type-safe access.
+ * You can also use [extension properties][AccessAPIs.`Extension Properties API`] for concise and type-safe access.
  *
  * If multiple rows produce the same key, the last row for that key is stored,
  * consistent with Kotlin's [kotlin.collections.associateBy] behavior.
@@ -39,7 +39,7 @@ public inline fun <T, V> DataFrame<T>.associateBy(transform: RowExpression<T, V>
  *
  * The [transform] is a [RowExpression] — a lambda that receives each [DataRow]
  * both as `this` and `it` and is expected to return a pair, allowing you to generate [Pair]s of keys and values from row contents.
- * You can also use [extension properties][`Access APIs`.`Extension Properties API`] for concise and type-safe access.
+ * You can also use [extension properties][AccessAPIs.`Extension Properties API`] for concise and type-safe access.
  *
  * If multiple rows produce the same key, the last value for that key is stored,
  * consistent with Kotlin's [kotlin.collections.associate] behavior.

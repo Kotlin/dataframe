@@ -67,7 +67,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * Creates a subset of columns from [this\] that are [ColumnGroups][ColumnGroup].
      *
      * You can optionally use a [filter\] to only include certain columns.
-     * [colGroups] can be called using any of the supported [APIs][`Access APIs`] (+ [ColumnPath]).
+     * [colGroups] can be called using any of the supported [APIs][AccessAPIs] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *

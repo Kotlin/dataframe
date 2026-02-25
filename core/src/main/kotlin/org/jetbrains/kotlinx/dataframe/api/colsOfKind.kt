@@ -71,7 +71,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this\] that are of the given kind(s).
      *
      * You can optionally use a [filter\] to only include certain columns.
-     * [colsOfKind] can be called using any of the supported [APIs][`Access APIs`] (+ [ColumnPath]).
+     * [colsOfKind] can be called using any of the supported [APIs][AccessAPIs] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
