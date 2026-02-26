@@ -176,10 +176,11 @@ internal class SchemaProcessorImpl(
         if (existingMarker != null) {
             return existingMarker
         }
-        val baseName = if (columnPath.isNotEmpty()) {
-            nestedMarkerNameProvider(columnPath)
-        } else {
-            namePrefix
+        val baseName = when (val provider = nestedMarkerNameProvider) {
+            is MarkerNameProvider.GeneratedName if columnPath.isNotEmpty() ->
+                provider(columnPath)
+
+            else -> namePrefix
         }
         val markerName = generateUniqueMarkerClassName(baseName)
         usedMarkerNames.add(markerName)
