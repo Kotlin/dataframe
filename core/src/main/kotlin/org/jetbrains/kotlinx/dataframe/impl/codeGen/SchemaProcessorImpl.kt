@@ -20,6 +20,9 @@ internal class SchemaProcessorImpl(
     private val nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ) : SchemaProcessor {
 
+    override fun toString(): String =
+        "$namePrefix; registeredMarkers: $registeredMarkers, generatedMarkers: $generatedMarkers"
+
     private val registeredMarkers = existingMarkers.toMutableList()
 
     private val usedMarkerNames = existingMarkers.map { it.shortName }.toMutableSet()
