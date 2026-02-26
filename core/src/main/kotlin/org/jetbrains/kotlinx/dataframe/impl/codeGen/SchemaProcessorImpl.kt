@@ -57,18 +57,24 @@ internal class SchemaProcessorImpl(
         return result
     }
 
-    private fun generateUniqueMarkerClassName(prefix: String): String {
-        if (!usedMarkerNames.contains(prefix)) return prefix
+    private fun generateUniqueMarkerClassName(prefix: String, contextNames: ContextNames = emptySet()): String {
+        fun isReserved(name: String) = usedMarkerNames.contains(name) || contextNames.contains(name)
+
+        if (!isReserved(prefix)) return prefix
         var id = 1
-        while (usedMarkerNames.contains("$prefix$id")) id++
+        while (isReserved("$prefix$id")) id++
         return "$prefix$id"
     }
+
+    // for example, properties declared inside the class will conflict with nested classes with the same name.
+    private typealias ContextNames = Set<String>
 
     private fun generateFields(
         schema: DataFrameSchema,
         visibility: MarkerVisibility,
         requiredSuperMarkers: List<Marker> = emptyList(),
         parentPath: ColumnPath = pathOf(),
+        contextNames: ContextNames,
     ): List<GeneratedField> {
         val usedFieldNames =
             requiredSuperMarkers.flatMap { it.allFields.map { it.fieldName.quotedIfNeeded } }.toMutableSet()
@@ -80,13 +86,13 @@ internal class SchemaProcessorImpl(
 
                 is ColumnSchema.Group ->
                     FieldType.GroupFieldType(
-                        process(columnSchema.schema, false, visibility, parentPath + columnName).name,
+                        process(columnSchema.schema, false, visibility, parentPath + columnName, contextNames).name,
                         renderAsObject = true,
                     )
 
                 is ColumnSchema.Frame ->
                     FieldType.FrameFieldType(
-                        process(columnSchema.schema, false, visibility, parentPath + columnName).name,
+                        process(columnSchema.schema, false, visibility, parentPath + columnName, contextNames).name,
                         columnSchema.nullable,
                         renderAsList = true,
                     )
@@ -127,6 +133,7 @@ internal class SchemaProcessorImpl(
         isOpen: Boolean,
         visibility: MarkerVisibility,
         parentPath: ColumnPath = pathOf(),
+        contextNames: ContextNames,
     ): Marker {
         val baseMarkers = mutableListOf<Marker>()
         val fields = if (withBaseInterfaces) {
@@ -154,9 +161,9 @@ internal class SchemaProcessorImpl(
                     }
                 }
             }
-            generateFields(scheme, visibility, baseMarkers, parentPath)
+            generateFields(scheme, visibility, baseMarkers, parentPath, contextNames)
         } else {
-            generateFields(scheme, visibility, parentPath = parentPath)
+            generateFields(scheme, visibility, parentPath = parentPath, contextNames = contextNames)
         }
         return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility, emptyList(), emptyList())
     }
@@ -164,13 +171,14 @@ internal class SchemaProcessorImpl(
     private fun DataFrameSchema.getRequiredMarkers() = registeredMarkers.filterRequiredForSchema(this)
 
     override fun process(schema: DataFrameSchema, isOpen: Boolean, visibility: MarkerVisibility): Marker =
-        process(schema, isOpen, visibility, columnPath = pathOf())
+        process(schema, isOpen, visibility, columnPath = pathOf(), reservedNames = schema.columns.keys)
 
     internal fun process(
         schema: DataFrameSchema,
         isOpen: Boolean,
         visibility: MarkerVisibility,
         columnPath: ColumnPath,
+        reservedNames: ContextNames,
     ): Marker {
         val required = schema.getRequiredMarkers()
         val existingMarker = registeredMarkers.firstOrNull {
@@ -185,9 +193,10 @@ internal class SchemaProcessorImpl(
 
             else -> namePrefix
         }
-        val markerName = generateUniqueMarkerClassName(baseName)
+        val markerName =
+            generateUniqueMarkerClassName(baseName, if (columnPath.isNotEmpty()) reservedNames else emptySet())
         usedMarkerNames.add(markerName)
-        val marker = createMarkerSchema(schema, markerName, true, isOpen, visibility, columnPath)
+        val marker = createMarkerSchema(schema, markerName, true, isOpen, visibility, columnPath, reservedNames)
         registeredMarkers.add(marker)
         generatedMarkers.add(marker)
         return marker
