@@ -25,6 +25,26 @@ import org.junit.Test
 
 class CodeGenerationTests : BaseTest() {
 
+    @Test
+    fun `generateInterfaces with PredefinedName`() {
+        val df = dataFrameOf("a", "b")(
+            1, 2
+        ).move("a", "b").under("group")
+        val code = df.generateInterfaces("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
+        code.value shouldBe """
+            @DataSchema(isOpen = false)
+            interface Marker1 {
+                val a: Int
+                val b: Int
+            }
+
+            @DataSchema
+            interface Marker {
+                val group: Marker1
+            }
+        """.trimIndent().trim()
+    }
+
     val personClassName = Person::class.qualifiedName!!
 
     val personShortName = Person::class.simpleName!!
