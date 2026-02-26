@@ -49,7 +49,7 @@ abstract class TestBuildingExampleProjects {
         val androidSdkDir = getGradleProperty("android.sdk.dir")
         if (isAndroid && androidSdkDir == null) {
             throw AssumptionViolatedException(
-                "Skipping `build$name` because the `android.sdk.dir` property is not to run the Android example '$folder'.",
+                "Skipping `runBuild$name` because the `android.sdk.dir` property is not to run the Android example '$folder'.",
             )
         }
 
@@ -59,6 +59,7 @@ abstract class TestBuildingExampleProjects {
             .use {
                 it.newBuild()
                     .forTasks("clean", "build")
+                    .setJvmArguments("-Xmx2g", "-XX:MaxMetaspaceSize=512m")
                     .withArguments(
                         buildList {
                             if (isAndroid) {

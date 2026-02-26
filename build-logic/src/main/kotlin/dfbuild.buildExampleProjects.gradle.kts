@@ -203,7 +203,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
             dependsOn(":publishLocal")
         }
 
-        maxHeapSize = "3g"
+        maxHeapSize = "512m"
         testClassesDirs = testBuildingExamples.output.classesDirs
         classpath = testBuildingExamples.runtimeClasspath
         useJUnitPlatform()
