@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.Person
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class CodeGenerationTests : BaseTest() {
 
@@ -168,8 +169,8 @@ class CodeGenerationTests : BaseTest() {
 
         val expectedConverter = "it.cast<$typeName>()"
 
-        generated.declarations shouldBe expectedDeclaration
-        generated.typeCastGenerator("it") shouldBe expectedConverter
+        assertEquals(expectedDeclaration, generated.declarations)
+        assertEquals(expectedConverter, generated.typeCastGenerator("it"))
     }
 
     @Test
@@ -213,7 +214,7 @@ class CodeGenerationTests : BaseTest() {
 
         val expectedConverter = "it.cast<$type2>()"
 
-        generated.declarations shouldBe declaration1 + "\n" + declaration2
+        assertEquals(declaration1 + "\n" + declaration2, generated.declarations)
         generated.typeCastGenerator("it") shouldBe expectedConverter
     }
 
@@ -230,7 +231,7 @@ class CodeGenerationTests : BaseTest() {
             .create(useFqNames = false)
             .generate<Person>(InterfaceGenerationMode.NoFields, extensionProperties = true)
             .declarations
-        code shouldBe expected
+        assertEquals(expected, code)
     }
 
     @Test
@@ -262,13 +263,13 @@ class CodeGenerationTests : BaseTest() {
                 override val city: kotlin.String
                 override val weight: kotlin.Int
             }
-            
+
             val $packageName.ColumnsContainer<ValidPerson>.city: $packageName.DataColumn<kotlin.String> @JvmName("ValidPerson_city") get() = this["city"] as $packageName.DataColumn<kotlin.String>
             val $packageName.DataRow<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
             val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> @JvmName("ValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int>
             val $packageName.DataRow<ValidPerson>.weight: kotlin.Int @JvmName("ValidPerson_weight") get() = this["weight"] as kotlin.Int
             """.trimIndent()
-        code shouldBe expected
+        assertEquals(expected, code)
     }
 
     @Test
@@ -279,17 +280,15 @@ class CodeGenerationTests : BaseTest() {
             """
             @DataSchema
             interface Person { }
-            
-            """.trimIndent() + "\n" + expectedProperties("Person", "Person")
-        code shouldBe expected
+            """.trimIndent() + "\n\n" + expectedProperties("Person", "Person")
+        assertEquals(expected, code)
     }
 
     @Test
     fun `interface with fields`() {
         val repl = CodeGenerator.create()
         val code = repl.generate(typed.schema(), "DataType", true, false, false).code.declarations
-        code shouldBe
-            """
+        val expected = """
             @DataSchema(isOpen = false)
             interface DataType {
                 val age: kotlin.Int
@@ -297,7 +296,8 @@ class CodeGenerationTests : BaseTest() {
                 val name: kotlin.String
                 val weight: kotlin.Int?
             }
-            """.trimIndent()
+        """.trimIndent()
+        assertEquals(expected, code)
     }
 
     @Test
@@ -306,8 +306,7 @@ class CodeGenerationTests : BaseTest() {
         val code =
             repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        code shouldBe
-            """
+        val expected = """
             @DataSchema(isOpen = false)
             internal interface DataType {
                 val age: kotlin.Int
@@ -325,6 +324,7 @@ class CodeGenerationTests : BaseTest() {
             internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             internal val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
             """.trimIndent()
+        assertEquals(expected, code)
     }
 
     @Test
@@ -339,8 +339,7 @@ class CodeGenerationTests : BaseTest() {
             MarkerVisibility.EXPLICIT_PUBLIC,
         ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        code shouldBe
-            """
+        val expected = """
             @DataSchema(isOpen = false)
             public interface DataType {
                 public val age: kotlin.Int
@@ -357,7 +356,9 @@ class CodeGenerationTests : BaseTest() {
             public val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
             public val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             public val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
+            """
+
+        assertEquals(expected.trimIndent(), code)
     }
 
     @Test
@@ -373,14 +374,15 @@ class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `check name normalization for generated data classes`() {
-        dataFrameOf("my_name")(1).generateDataClasses() shouldBe
-            """
+        val code = dataFrameOf("my_name")(1).generateDataClasses()
+        val expected = """
             @DataSchema
             data class DataEntry(
                 @ColumnName("my_name")
                 val myName: Int
             )
-            """.trimIndent().toCodeString()
+        """.trimIndent()
+        assertEquals(expected, code.value)
     }
 
     @Test
@@ -426,7 +428,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -444,7 +446,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -467,7 +469,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -486,7 +488,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -505,7 +507,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -529,7 +531,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -551,7 +553,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = nameNormalizer,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     // endregion
