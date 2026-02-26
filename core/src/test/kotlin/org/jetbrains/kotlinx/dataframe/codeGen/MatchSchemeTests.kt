@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -95,7 +96,9 @@ class MatchSchemeTests {
         codeGen.process(DataRecord::class)
         codeGen.process(typed, ::typed).hasCaster shouldBe false
         val generated = codeGen.process(df, ::df)
-        generated.declarations.split("\n").size shouldBe 1
+        generated.declarations.shouldBeEmpty()
+        generated.declarationsWithCastExpression("df") shouldBe
+            "df.cast<org.jetbrains.kotlinx.dataframe.codeGen.MatchSchemeTests.DataRecord>()"
     }
 
     val modified = df.add("new") { 4 }
