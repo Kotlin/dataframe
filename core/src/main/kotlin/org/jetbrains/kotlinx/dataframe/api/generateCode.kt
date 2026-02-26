@@ -5,11 +5,11 @@ import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.Marker
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
-import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -87,6 +87,13 @@ private interface Params {
      *  Default is [NameNormalizer.default][NameNormalizer.Companion.default].
      */
     typealias NameNormalizer = Nothing
+
+    /**
+     * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
+     *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
+     *  - [MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+     */
+    typealias NestedMarkerNameProvider = Nothing
 }
 
 // endregion
@@ -104,6 +111,7 @@ private interface Params {
  * @include [Params.Visibility]
  * @include [Params.UseFqNames]
  * @include [Params.NameNormalizer]
+ * @include [Params.NestedMarkerNameProvider]
  */
 public fun <T> DataFrame<T>.generateInterfaces(
     markerName: String,
@@ -111,6 +119,7 @@ public fun <T> DataFrame<T>.generateInterfaces(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
     schema().generateCodeImpl(
         markerName = markerName,
@@ -119,6 +128,7 @@ public fun <T> DataFrame<T>.generateInterfaces(
         useFqNames = useFqNames,
         nameNormalizer = nameNormalizer,
         asDataClass = false,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
     )
 
 /** @include [DataFrame.generateInterfaces] */
@@ -127,6 +137,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
     schema().generateCodeImpl(
         markerName = markerName<T>(),
@@ -135,6 +146,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
         useFqNames = useFqNames,
         nameNormalizer = nameNormalizer,
         asDataClass = false,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
     )
 
 /**
@@ -151,6 +163,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
  * @include [Params.Visibility]
  * @include [Params.UseFqNames]
  * @include [Params.NameNormalizer]
+ * @include [Params.NestedMarkerNameProvider]
  */
 public fun <T> DataFrame<T>.generateDataClasses(
     markerName: String,
@@ -158,6 +171,7 @@ public fun <T> DataFrame<T>.generateDataClasses(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
     schema().generateCodeImpl(
         markerName = markerName,
@@ -166,6 +180,7 @@ public fun <T> DataFrame<T>.generateDataClasses(
         useFqNames = useFqNames,
         nameNormalizer = nameNormalizer,
         asDataClass = true,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
     )
 
 /** @include [DataFrame.generateDataClasses] */
@@ -174,6 +189,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
     schema().generateCodeImpl(
         markerName = markerName<T>(),
@@ -182,6 +198,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
         useFqNames = useFqNames,
         nameNormalizer = nameNormalizer,
         asDataClass = true,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
     )
 
 // endregion
@@ -199,6 +216,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
  * @include [Params.Visibility]
  * @include [Params.UseFqNames]
  * @include [Params.NameNormalizer]
+ * @include [Params.NestedMarkerNameProvider]
  */
 @JvmName("generateInterfacesForSchema")
 public fun DataFrameSchema.generateInterfaces(
@@ -207,6 +225,7 @@ public fun DataFrameSchema.generateInterfaces(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
     generateCodeImpl(
         markerName = markerName,
@@ -215,6 +234,7 @@ public fun DataFrameSchema.generateInterfaces(
         useFqNames = useFqNames,
         nameNormalizer = nameNormalizer,
         asDataClass = false,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
     )
 
 /**
@@ -231,6 +251,7 @@ public fun DataFrameSchema.generateInterfaces(
  * @include [Params.Visibility]
  * @include [Params.UseFqNames]
  * @include [Params.NameNormalizer]
+ * @include [Params.NestedMarkerNameProvider]
  */
 @JvmName("generateDataClassesForSchema")
 public fun DataFrameSchema.generateDataClasses(
@@ -239,6 +260,7 @@ public fun DataFrameSchema.generateDataClasses(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
     generateCodeImpl(
         markerName = markerName,
@@ -247,6 +269,7 @@ public fun DataFrameSchema.generateDataClasses(
         useFqNames = useFqNames,
         nameNormalizer = nameNormalizer,
         asDataClass = true,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
     )
 
 // endregion
@@ -290,6 +313,8 @@ internal fun DataFrameSchema.generateCodeImpl(
     useFqNames: Boolean,
     nameNormalizer: NameNormalizer,
     asDataClass: Boolean,
+    knownMarkers: Iterable<Marker> = emptyList(),
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString {
     val codeGen = CodeGenerator.create(useFqNames)
     return codeGen.generate(
@@ -299,8 +324,10 @@ internal fun DataFrameSchema.generateCodeImpl(
         extensionProperties = extensionProperties,
         isOpen = !asDataClass,
         visibility = visibility,
+        knownMarkers = knownMarkers,
         asDataClass = asDataClass,
         fieldNameNormalizer = nameNormalizer,
+        nestedMarkerNameProvider = nestedMarkerNameProvider,
     ).code.declarations.toCodeString()
 }
 
