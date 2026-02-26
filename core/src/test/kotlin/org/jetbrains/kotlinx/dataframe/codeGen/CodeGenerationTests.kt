@@ -5,13 +5,17 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
 import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
+import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toCodeString
 import org.jetbrains.kotlinx.dataframe.api.under
@@ -27,23 +31,169 @@ import kotlin.test.assertEquals
 class CodeGenerationTests : BaseTest() {
 
     @Test
-    fun `generateInterfaces with PredefinedName`() {
+    fun `generateInterfaces with PredefinedName and nested structures`() {
         val df = dataFrameOf("a", "b")(
-            1, 2
+            1,
+            2,
         ).move("a", "b").under("group")
         val code = df.generateInterfaces("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
-        code.value shouldBe """
-            @DataSchema(isOpen = false)
-            interface Marker1 {
-                val a: Int
-                val b: Int
-            }
-
+        val expected =
+            """
             @DataSchema
             interface Marker {
                 val group: Marker1
+
+                @DataSchema(isOpen = false)
+                interface Marker1 {
+                    val a: Int
+                    val b: Int
+                }
             }
-        """.trimIndent().trim()
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
+
+    @Test
+    fun `generateDataClasses with PredefinedName and nested structures`() {
+        val df = dataFrameOf("a", "b")(
+            1,
+            2,
+        ).move("a", "b").under("group")
+        val code = df.generateDataClasses("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
+        val expected =
+            """
+            @DataSchema
+            data class Marker(
+                val group: Marker1
+            ) {
+                @DataSchema
+                data class Marker1(
+                    val a: Int,
+                    val b: Int
+                )
+            }
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
+
+    @Test
+    fun `generateDataClasses with nested structures`() {
+        val df = dataFrameOf("a", "b")(
+            1,
+            2,
+        ).move("a", "b").under("group")
+        val code = df.generateDataClasses("Marker")
+        val expected =
+            """
+            @DataSchema
+            data class Marker(
+                val group: Group
+            ) {
+                @DataSchema
+                data class Group(
+                    val a: Int,
+                    val b: Int
+                )
+            }
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
+
+    @Test
+    fun `generateDataClasses with FrameColumn structure`() {
+        val df = dataFrameOf("personalInfo" to columnOf(dataFrameOf("age" to columnOf(19))))
+        val code = df.generateDataClasses("Accounts")
+        val expected =
+            """
+            @DataSchema
+            data class Accounts(
+                val personalInfo: List<PersonalInfo>
+            ) {
+                @DataSchema
+                data class PersonalInfo(
+                    val age: Int
+                )
+            }
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
+
+    @Test
+    fun `resolve name clash between nested marker and property`() {
+        val df = dataFrameOf("Person", "b")(
+            1,
+            2,
+        ).move("b").under("_person")
+
+        val code = df.generateInterfaces("Marker")
+
+        val expected = """
+            @DataSchema
+            interface Marker {
+                val Person: Int
+                val _person: Person1
+
+                @DataSchema(isOpen = false)
+                interface Person1 {
+                    val b: Int
+                }
+            }
+        """
+
+        assertEquals(expected.trimIndent().trim(), code.value)
+    }
+
+    @Test
+    fun `resolve name clash between nested marker and property with deep nesting`() {
+        val df = dataFrameOf("Person", "b")(
+            1,
+            2,
+        ).group("b").into { pathOf("bb", "_person") }
+
+        val code = df.generateInterfaces("Marker")
+
+        val expected = """
+            @DataSchema
+            interface Marker {
+                val Person: Int
+                val bb: Bb
+            
+                @DataSchema(isOpen = false)
+                interface Person1 {
+                    val b: Int
+                }
+            
+                @DataSchema(isOpen = false)
+                interface Bb {
+                    val _person: Person1
+                }
+            }
+        """
+
+        assertEquals(expected.trimIndent().trim(), code.value)
+    }
+
+    @Test
+    fun `generateInterfaces with PredefinedName`() {
+        val df = dataFrameOf("a", "b")(
+            1,
+            2,
+        ).move("a", "b").under("group")
+        val code = df.generateInterfaces("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
+        val expected =
+            """
+            @DataSchema
+            interface Marker {
+                val group: Marker1
+
+                @DataSchema(isOpen = false)
+                interface Marker1 {
+                    val a: Int
+                    val b: Int
+                }
+            }
+            """.trimIndent()
+        assertEquals(expected, code.value)
     }
 
     val personClassName = Person::class.qualifiedName!!
@@ -138,8 +288,8 @@ class CodeGenerationTests : BaseTest() {
 
         val expectedConverter = "it.cast<$typeName>()"
 
-        generated.declarations shouldBe expectedDeclaration
-        generated.typeCastGenerator("it") shouldBe expectedConverter
+        assertEquals(expectedDeclaration, generated.declarations)
+        assertEquals(expectedConverter, generated.typeCastGenerator("it"))
 
         val rowGenerated = codeGen.process(df[0], ::typedRow)
         rowGenerated.hasDeclarations shouldBe true
@@ -288,7 +438,8 @@ class CodeGenerationTests : BaseTest() {
     fun `interface with fields`() {
         val repl = CodeGenerator.create()
         val code = repl.generate(typed.schema(), "DataType", true, false, false).code.declarations
-        val expected = """
+        val expected =
+            """
             @DataSchema(isOpen = false)
             interface DataType {
                 val age: kotlin.Int
@@ -296,7 +447,7 @@ class CodeGenerationTests : BaseTest() {
                 val name: kotlin.String
                 val weight: kotlin.Int?
             }
-        """.trimIndent()
+            """.trimIndent()
         assertEquals(expected, code)
     }
 
@@ -306,7 +457,8 @@ class CodeGenerationTests : BaseTest() {
         val code =
             repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        val expected = """
+        val expected =
+            """
             @DataSchema(isOpen = false)
             internal interface DataType {
                 val age: kotlin.Int
@@ -375,13 +527,14 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `check name normalization for generated data classes`() {
         val code = dataFrameOf("my_name")(1).generateDataClasses()
-        val expected = """
+        val expected =
+            """
             @DataSchema
             data class DataEntry(
                 @ColumnName("my_name")
                 val myName: Int
             )
-        """.trimIndent()
+            """.trimIndent()
         assertEquals(expected, code.value)
     }
 
