@@ -4772,6 +4772,7 @@ public class org/jetbrains/kotlinx/dataframe/codeGen/Marker : org/jetbrains/kotl
 	public final fun implements (Lorg/jetbrains/kotlinx/dataframe/codeGen/Marker;)Z
 	public final fun implementsAll (Ljava/lang/Iterable;)Z
 	public final fun isOpen ()Z
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/codeGen/MarkerNameProvider {
@@ -4821,6 +4822,7 @@ public final class org/jetbrains/kotlinx/dataframe/codeGen/TypeCastGenerator$Dat
 	public synthetic fun <init> ([Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun addCastTo (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getTypes ()[Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/codeGen/TypeCastGenerator$DataFrameApi$Companion {
