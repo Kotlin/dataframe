@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
@@ -46,8 +45,6 @@ public interface ExprColumnsSelectionDsl {
 /**
  * @include [ColumnExpression.CommonDocs]
  *
- * This function is essentially a shortcut for [ColumnsContainer.mapToColumn].
- *
  * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
  *
  * #### For example:
@@ -59,7 +56,6 @@ public interface ExprColumnsSelectionDsl {
  * @param [name] The name the temporary column. Is empty by default ("untitled" in the DataFrame).
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
- * @see [ColumnsContainer.mapToColumn]
  */
 @Interpretable("Expr0")
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
