@@ -13,6 +13,8 @@ plugins {
     alias(convention.plugins.kotlinJvmCommon)
 }
 
+val buildExampleProjectsGroup = "build example projects"
+
 // region syncing
 
 val versionsToSync =
@@ -26,9 +28,12 @@ val versionsToSync =
         "maven",
     )
 
-val syncExampleFolders by tasks.registering {
-    group = "build"
+val syncAllExampleFolders by tasks.registering {
+    group = buildExampleProjectsGroup
     description = "Sync the versions in the nested Gradle build in /examples/projects"
+}
+tasks.named("assemble") {
+    dependsOn(syncAllExampleFolders)
 }
 
 /**
@@ -65,13 +70,10 @@ private fun setupExampleProjectFolderSyncTask(folder: File, isDev: Boolean) {
                     versionsToSync = versionsToSync,
                 )
         }
-    syncExampleFolders {
+    syncTask { group = buildExampleProjectsGroup }
+    syncAllExampleFolders {
         dependsOn(syncTask)
     }
-}
-
-tasks.named("assemble") {
-    dependsOn(syncExampleFolders)
 }
 
 // endregion
@@ -79,7 +81,7 @@ tasks.named("assemble") {
 // region promoting
 
 val promoteExamples by tasks.registering {
-    group = "publishing"
+    group = buildExampleProjectsGroup
     description = "Promotes the /examples/projects/dev example projects to /examples/projects"
 
     val projectsFolder = file("examples/projects")
@@ -97,15 +99,15 @@ val promoteExamples by tasks.registering {
         }
         logger.lifecycle("Copied example projects from /examples/projects/dev to examples/projects")
     }
-    finalizedBy(syncExampleFolders)
+    finalizedBy(syncAllExampleFolders)
 }
 
 // endregion
 
 // region testing/building examples
 
-val generateExampleFoldersTests by tasks.registering {
-    group = "build"
+val generateAllExampleFoldersTests by tasks.registering {
+    group = buildExampleProjectsGroup
     description = "Generates test classes for each example in /examples/projects"
 
     doFirst {
@@ -118,18 +120,57 @@ val generateExampleFoldersTests by tasks.registering {
     }
 }
 
-private fun setupGenerateTestClassTask(folder: File, isDev: Boolean) {
-    val testClassName = folder.name.toCamelCaseByDelimiters().replaceFirstChar { it.uppercase() } +
-        (if (isDev) "Dev" else "") +
-        "Test"
+val buildAllExampleFolders by tasks.registering {
+    group = buildExampleProjectsGroup
+    description = "Builds all the nested builds in /examples/projects to verify they compile correctly."
+}
+tasks.named("test") {
+    // builds the examples on ':test' when debug mode is enabled
+    if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
+        dependsOn(buildAllExampleFolders)
+    }
+}
+
+val buildReleaseExampleFolders by tasks.registering {
+    group = buildExampleProjectsGroup
+    description = "Builds the nested release builds in /examples/projects to verify they compile correctly."
+}
+val buildDevExampleFolders by tasks.registering {
+    group = buildExampleProjectsGroup
+    description = "Builds the nested dev builds in /examples/projects to verify they compile correctly."
+}
+val buildMavenExampleFolders by tasks.registering {
+    group = buildExampleProjectsGroup
+    description = "Builds the nested Maven builds in /examples/projects to verify they compile correctly."
+}
+val buildGradleExampleFolders by tasks.registering {
+    group = buildExampleProjectsGroup
+    description = "Builds the nested Gradle builds in /examples/projects to verify they compile correctly."
+}
+val buildAndroidExampleFolders by tasks.registering {
+    group = buildExampleProjectsGroup
+    description = "Builds the nested Android builds in /examples/projects to verify they compile correctly."
+}
+val buildNonAndroidExampleFolders by tasks.registering {
+    group = buildExampleProjectsGroup
+    description = "Builds the nested non-Android builds in /examples/projects to verify they compile correctly."
+}
+
+private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
+    val testClassName = folder.name
+        .toCamelCaseByDelimiters()
+        .replaceFirstChar { it.uppercase() }
+        .plus(if (isDev) "Dev" else "")
+        .plus("Test")
+
+    val isAndroid = folder.isAndroid()
+    val buildSystem = folder.detectBuildSystem() ?: error(
+        "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
+    )
 
     val generateTask = tasks.register("generate$testClassName") {
-        group = "build"
+        group = buildExampleProjectsGroup
 
-        val isAndroid = folder.isAndroid()
-        val buildSystem = folder.detectBuildSystem() ?: error(
-            "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
-        )
         val tags = buildList {
             if (isAndroid) add("android")
             add(buildSystem.name.lowercase())
@@ -149,8 +190,51 @@ private fun setupGenerateTestClassTask(folder: File, isDev: Boolean) {
             targetFile.writeText(text)
         }
     }
-    generateExampleFoldersTests {
+    generateAllExampleFoldersTests {
         finalizedBy(generateTask)
+    }
+
+    val testBuildTask = tasks.register<Test>("build$testClassName") {
+        group = buildExampleProjectsGroup
+        dependsOn(syncAllExampleFolders, generateAllExampleFoldersTests)
+
+        if (buildSystem == BuildSystem.MAVEN && isDev) {
+            // Because we're including a dev Maven project, we need to publish to /build/maven to test it.
+            dependsOn(":publishLocal")
+        }
+
+        maxHeapSize = "1g"
+        testClassesDirs = testBuildingExamples.output.classesDirs
+        classpath = testBuildingExamples.runtimeClasspath
+        useJUnitPlatform()
+        filter { includeTestsMatching(testClassName) }
+        testLogging { events("passed", "skipped", "failed") }
+
+        // pass down project parameters -> JUnit configuration parameters
+        val props = listOf(
+            "android.sdk.dir",
+        )
+        for (prop in props) {
+            val value = project.properties[prop]?.toString() ?: continue
+            systemProperty("gradle.properties.$prop", value)
+        }
+        systemProperty(
+            "gradle.properties.maven.repo.local",
+            layout.buildDirectory.dir("maven").get().asFile.absolutePath,
+        )
+    }
+    buildAllExampleFolders { dependsOn(testBuildTask) }
+    when (isDev) {
+        true -> buildDevExampleFolders { dependsOn(testBuildTask) }
+        false -> buildReleaseExampleFolders { dependsOn(testBuildTask) }
+    }
+    when (buildSystem) {
+        BuildSystem.MAVEN -> buildMavenExampleFolders { dependsOn(testBuildTask) }
+        BuildSystem.GRADLE -> buildGradleExampleFolders { dependsOn(testBuildTask) }
+    }
+    when (isAndroid) {
+        true -> buildAndroidExampleFolders { dependsOn(testBuildTask) }
+        false -> buildNonAndroidExampleFolders { dependsOn(testBuildTask) }
     }
 }
 
@@ -197,97 +281,6 @@ dependencies {
     testBuildingExamplesRuntimeOnly(libs.junit.platform.launcher)
 }
 
-private fun Test.commonSetup() {
-    group = "verification"
-    dependsOn(syncExampleFolders, generateExampleFoldersTests)
-
-    maxHeapSize = "1g"
-    testClassesDirs = testBuildingExamples.output.classesDirs
-    classpath = testBuildingExamples.runtimeClasspath
-    useJUnitPlatform()
-    testLogging { events("passed", "skipped", "failed") }
-
-    // pass down project parameters -> JUnit configuration parameters
-    val props = listOf(
-        "android.sdk.dir",
-    )
-    for (prop in props) {
-        val value = project.properties[prop]?.toString() ?: continue
-        systemProperty("gradle.properties.$prop", value)
-    }
-    systemProperty(
-        "gradle.properties.maven.repo.local",
-        project.file(layout.buildDirectory.dir("maven")).absolutePath,
-    )
-}
-
-val buildReleaseExampleFolders by tasks.registering(Test::class) {
-    commonSetup()
-    description = "Builds the nested release builds in /examples/projects to verify they compile correctly."
-    useJUnitPlatform {
-        includeTags("release")
-    }
-}
-
-val buildDevExampleFolders by tasks.registering(Test::class) {
-    commonSetup()
-    description = "Builds the nested dev builds in /examples/projects to verify they compile correctly."
-
-    // Because we're including a dev Maven project, we need to publish to /build/maven to test it.
-    dependsOn(":publishLocal")
-    useJUnitPlatform {
-        includeTags("dev")
-    }
-}
-
-val buildMavenExampleFolders by tasks.registering(Test::class) {
-    commonSetup()
-    description = "Builds the nested Maven builds in /examples/projects to verify they compile correctly."
-
-    // Because we're including a dev Maven project, we need to publish to /build/maven to test it.
-    dependsOn(":publishLocal")
-    useJUnitPlatform {
-        includeTags("maven")
-    }
-}
-
-val buildGradleExampleFolders by tasks.registering(Test::class) {
-    commonSetup()
-    description = "Builds the nested Gradle builds in /examples/projects to verify they compile correctly."
-    useJUnitPlatform {
-        includeTags("gradle")
-    }
-}
-
-val buildAndroidExampleFolders by tasks.registering(Test::class) {
-    commonSetup()
-    description = "Builds the nested Android builds in /examples/projects to verify they compile correctly."
-    useJUnitPlatform {
-        includeTags("android")
-    }
-}
-
-val buildNonAndroidExampleFolders by tasks.registering(Test::class) {
-    commonSetup()
-    description = "Builds the nested non-Android builds in /examples/projects to verify they compile correctly."
-    useJUnitPlatform {
-        excludeTags("android")
-    }
-}
-
-val buildExampleFolders by tasks.registering(Test::class) {
-    commonSetup()
-    group = "verification"
-    description = "Builds all the nested builds in /examples/projects to verify they compile correctly."
-}
-
-tasks.named("test") {
-    // builds the examples on ':test' when debug mode is enabled
-    if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
-        dependsOn(buildExampleFolders)
-    }
-}
-
 // endregion
 
 // region folder-scan and task registration
@@ -295,12 +288,12 @@ tasks.named("test") {
 file("examples/projects").listFiles()?.forEach {
     if (!it.isDirectory || it.name == "dev") return@forEach
     setupExampleProjectFolderSyncTask(folder = it, isDev = false)
-    setupGenerateTestClassTask(folder = it, isDev = false)
+    setupGenerateAndRunTestTasks(folder = it, isDev = false)
 }
 file("examples/projects/dev").listFiles()?.forEach {
     if (!it.isDirectory) return@forEach
     setupExampleProjectFolderSyncTask(folder = it, isDev = true)
-    setupGenerateTestClassTask(folder = it, isDev = true)
+    setupGenerateAndRunTestTasks(folder = it, isDev = true)
 }
 
 // endregion

@@ -24,7 +24,6 @@ internal fun Project.setupMavenSyncVersionsTask(
     versionsToSync: List<String>,
 ): TaskProvider<Task> =
     tasks.register("sync$name") {
-        group = "build"
         description = "Sync the versions in the nested Maven build in ./${folder.name}"
 
         outputs.upToDateWhen { false }

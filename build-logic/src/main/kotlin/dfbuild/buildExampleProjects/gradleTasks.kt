@@ -29,7 +29,6 @@ internal fun Project.setupGradleSyncVersionsTask(
     versionsToSync: List<String>,
 ): TaskProvider<Task> =
     tasks.register("sync$name") {
-        group = "build"
         description = "Sync the versions in the nested Gradle build in ./${folder.name}"
 
         outputs.upToDateWhen { false }
