@@ -303,7 +303,7 @@ class MySqlH2Test {
     @Test
     fun `basic test for reading sql tables`() {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
-        val result = df1.filter { it[Table1MySql::id] == 1 }
+        val result = df1.filter { "id"<Int>() == 1 }
         result[0][26] shouldBe "textValue1"
 
         val schema = DataFrameSchema.readSqlTable(connection, "table1")
@@ -320,7 +320,7 @@ class MySqlH2Test {
         schema.columns["tinyblobcol"]!!.type shouldBe typeOf<java.sql.Blob>()
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>()
-        val result2 = df2.filter { it[Table2MySql::id] == 1 }
+        val result2 = df2.filter { "id"<Int>() == 1 }
         result2[0][26] shouldBe null
 
         val schema2 = DataFrameSchema.readSqlTable(connection, "table2")
@@ -341,7 +341,7 @@ class MySqlH2Test {
             """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MySql>()
-        val result = df.filter { it[Table3MySql::id] == 1 }
+        val result = df.filter { "id"<Int>() == 1 }
         result[0][1] shouldBe "Value1"
 
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
@@ -356,7 +356,7 @@ class MySqlH2Test {
         val table1Df = dataframes[0].cast<Table1MySql>()
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { it[Table1MySql::integercol] > 100 }.rowsCount() shouldBe 2
+        table1Df.filter { "integercol"<Int>() > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
         table1Df[0][26] shouldBe "textValue1"
 
@@ -364,7 +364,7 @@ class MySqlH2Test {
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
-            it[Table2MySql::integercol] != null && it[Table2MySql::integercol]!! > 400
+            "integercol"<Int?>()?.let { it > 400 } ?: false
         }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
@@ -374,37 +374,37 @@ class MySqlH2Test {
     fun `reading numeric types`() {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
 
-        val result = df1.select("tinyintcol").add("tinyintcol2") { it[Table1MySql::tinyintcol] }
+        val result = df1.select("tinyintcol").add("tinyintcol2") { "tinyintcol"<Int>() }
 
         result[0][1] shouldBe 1.toByte()
 
         val result1 = df1.select("smallintcol")
-            .add("smallintcol2") { it[Table1MySql::smallintcol] }
+            .add("smallintcol2") { "smallintcol"<Int?>() }
 
         result1[0][1] shouldBe 10.toShort()
 
         val result2 = df1.select("mediumintcol")
-            .add("mediumintcol2") { it[Table1MySql::mediumintcol] }
+            .add("mediumintcol2") { "mediumintcol"<Int>() }
 
         result2[0][1] shouldBe 100
 
         val result3 = df1.select("mediumintunsignedcol")
-            .add("mediumintunsignedcol2") { it[Table1MySql::mediumintunsignedcol] }
+            .add("mediumintunsignedcol2") { "mediumintunsignedcol"<Int>() }
 
         result3[0][1] shouldBe 100
 
         val result5 = df1.select("bigintcol")
-            .add("bigintcol2") { it[Table1MySql::bigintcol] }
+            .add("bigintcol2") { "bigintcol"<Long>() }
 
         result5[0][1] shouldBe 100
 
         val result7 = df1.select("doublecol")
-            .add("doublecol2") { it[Table1MySql::doublecol] }
+            .add("doublecol2") { "doublecol"<Double>() }
 
         result7[0][1] shouldBe 10.0
 
         val result8 = df1.select("decimalcol")
-            .add("decimalcol2") { it[Table1MySql::decimalcol] }
+            .add("decimalcol2") { "decimalcol"<BigDecimal>() }
 
         result8[0][1] shouldBe BigDecimal("10")
 

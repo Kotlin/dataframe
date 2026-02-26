@@ -236,7 +236,7 @@ class PostgresH2Test {
     fun `read from tables`() {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
-        val result = df1.filter { it[Table1::id] == 1 }
+        val result = df1.filter { "id"<Int>() == 1 }
 
         result[0][0] shouldBe 1
         result[0][8] shouldBe "A"
@@ -258,7 +258,7 @@ class PostgresH2Test {
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
-        val result2 = df2.filter { it[Table2::id] == 1 }
+        val result2 = df2.filter { "id"<Int>() == 1 }
         result2[0][4] shouldBe 1001
 
         val schema2 = DataFrameSchema.readSqlTable(connection, tableName2)
@@ -280,7 +280,7 @@ class PostgresH2Test {
             """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>()
-        val result = df.filter { it[ViewTable::id] == 1 }
+        val result = df.filter { "id"<Int>() == 1 }
         result[0][2] shouldBe null
 
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
@@ -296,7 +296,7 @@ class PostgresH2Test {
         val table1Df = dataframes[0].cast<Table1>()
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { it[Table1::integercol] != null && it[Table1::integercol]!! > 12345 }.rowsCount() shouldBe 2
+        table1Df.filter { "integercol"<Int?>()?.let { it > 12345 } ?: false }.rowsCount() shouldBe 2
         table1Df[0][1] shouldBe 1000L
         table1Df[0][2] shouldBe 11
 
@@ -304,7 +304,7 @@ class PostgresH2Test {
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
-            it[Table2::realcol] == 12.34f
+            "realcol"<Float?>() == 12.34f
         }.rowsCount() shouldBe 3
         table2Df[0][4] shouldBe 1001
     }
@@ -327,30 +327,30 @@ class PostgresH2Test {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
         val result = df1.select("smallintcol")
-            .add("smallintcol2") { it[Table1::smallintcol] }
+            .add("smallintcol2") { "smallintcol"<Int?>() }
         result[0][1] shouldBe 11
 
         val result1 = df1.select("bigserialcol")
-            .add("bigserialcol2") { it[Table1::bigserialcol] }
+            .add("bigserialcol2") { "bigserialcol"<Long>() }
         result1[0][1] shouldBe 1000000001L
 
         val result2 = df1.select("doublecol")
-            .add("doublecol2") { it[Table1::doublecol] }
+            .add("doublecol2") { "doublecol"<Double>() }
         result2[0][1] shouldBe 12.34
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
 
         val result4 = df2.select("numericcol")
-            .add("numericcol2") { it[Table2::numericcol] }
+            .add("numericcol2") { "numericcol"<BigDecimal>() }
         result4[0][1] shouldBe BigDecimal("12.34")
 
         val result5 = df2.select("realcol")
-            .add("realcol2") { it[Table2::realcol] }
+            .add("realcol2") { "realcol"<Float>() }
         result5[0][1] shouldBe 12.34f
 
         val result8 = df2.select("serialcol")
-            .add("serialcol2") { it[Table2::serialcol] }
+            .add("serialcol2") { "serialcol"<Int>() }
         result8[0][1] shouldBe 1000001
 
         val schema = DataFrameSchema.readSqlTable(connection, tableName1)
