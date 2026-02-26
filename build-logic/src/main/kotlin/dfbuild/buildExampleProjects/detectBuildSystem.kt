@@ -21,3 +21,5 @@ fun File.detectBuildSystem(): BuildSystem? {
         else -> null
     }
 }
+
+fun File.isAndroid(): Boolean = "android" in name.lowercase()

@@ -1,5 +1,7 @@
 import dfbuild.buildExampleProjects.BuildSystem
 import dfbuild.buildExampleProjects.detectBuildSystem
+import dfbuild.buildExampleProjects.generateTestCase
+import dfbuild.buildExampleProjects.isAndroid
 import dfbuild.buildExampleProjects.setupGradleSyncVersionsTask
 import dfbuild.buildExampleProjects.setupMavenSyncVersionsTask
 import dfbuild.toCamelCaseByDelimiters
@@ -32,7 +34,7 @@ val syncExampleFolders by tasks.registering {
 /**
  * Sets up example folders sync tasks
  */
-private fun setupExampleProjectFolder(folder: File, isDev: Boolean) {
+private fun setupExampleProjectFolderSyncTask(folder: File, isDev: Boolean) {
     val name = folder.name.toCamelCaseByDelimiters().replaceFirstChar { it.uppercase() } +
         (if (isDev) "Dev" else "")
 
@@ -66,15 +68,6 @@ private fun setupExampleProjectFolder(folder: File, isDev: Boolean) {
     syncExampleFolders {
         dependsOn(syncTask)
     }
-}
-
-file("examples/projects").listFiles()?.forEach {
-    if (!it.isDirectory || it.name == "dev") return@forEach
-    setupExampleProjectFolder(folder = it, isDev = false)
-}
-file("examples/projects/dev").listFiles()?.forEach {
-    if (!it.isDirectory) return@forEach
-    setupExampleProjectFolder(folder = it, isDev = true)
 }
 
 tasks.named("assemble") {
@@ -111,8 +104,66 @@ val promoteExamples by tasks.registering {
 
 // region testing/building examples
 
+val generateExampleFoldersTests by tasks.registering {
+    group = "build"
+    description = "Generates test classes for each example in /examples/projects"
+
+    doFirst {
+        layout.buildDirectory
+            .dir("generated/testBuildingExamples")
+            .get()
+            .asFile
+            .takeIf { it.exists() }
+            ?.deleteRecursively()
+    }
+}
+
+private fun setupGenerateTestClassTask(folder: File, isDev: Boolean) {
+    val testClassName = folder.name.toCamelCaseByDelimiters().replaceFirstChar { it.uppercase() } +
+        (if (isDev) "Dev" else "") +
+        "Test"
+
+    val generateTask = tasks.register("generate$testClassName") {
+        group = "build"
+
+        val isAndroid = folder.isAndroid()
+        val buildSystem = folder.detectBuildSystem() ?: error(
+            "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
+        )
+        val tags = buildList {
+            if (isAndroid) add("android")
+            add(buildSystem.name.lowercase())
+            add(if (isDev) "dev" else "release")
+        }
+
+        val targetFile = layout.buildDirectory
+            .dir("generated/testBuildingExamples/src/test/kotlin").get()
+            .file("$testClassName.kt")
+            .asFile
+        doLast {
+            val text = generateTestCase(testClassName = testClassName, folder = folder, isDev = isDev, tags = tags)
+
+            if (!targetFile.parentFile.exists()) {
+                targetFile.parentFile.mkdirs()
+            }
+            targetFile.writeText(text)
+        }
+    }
+    generateExampleFoldersTests {
+        finalizedBy(generateTask)
+    }
+}
+
 val testBuildingExamples: SourceSet by sourceSets.creating {
-    kotlin.srcDir(file("build-logic/src/testBuildingExamples/kotlin"))
+    kotlin.setSrcDirs(
+        listOf(
+            // base class
+            file("build-logic/src/testBuildingExamples/kotlin"),
+            // generated test classes
+            layout.buildDirectory.dir("generated/testBuildingExamples/src/test/kotlin").get(),
+        ),
+    )
+
     compileClasspath += sourceSets.main.get().output
     runtimeClasspath += sourceSets.main.get().output
 }
@@ -148,7 +199,7 @@ dependencies {
 
 private fun Test.commonSetup() {
     group = "verification"
-    dependsOn(syncExampleFolders)
+    dependsOn(syncExampleFolders, generateExampleFoldersTests)
 
     maxHeapSize = "1g"
     testClassesDirs = testBuildingExamples.output.classesDirs
@@ -225,16 +276,31 @@ val buildNonAndroidExampleFolders by tasks.registering(Test::class) {
 }
 
 val buildExampleFolders by tasks.registering(Test::class) {
+    commonSetup()
     group = "verification"
     description = "Builds all the nested builds in /examples/projects to verify they compile correctly."
-    dependsOn(buildReleaseExampleFolders, buildDevExampleFolders)
 }
 
-// tasks.named("test") {
-//     // only builds the examples on ':test' when debug mode is enabled
-//     if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
-//         dependsOn(buildExampleFolders)
-//     }
-// }
+tasks.named("test") {
+    // builds the examples on ':test' when debug mode is enabled
+    if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
+        dependsOn(buildExampleFolders)
+    }
+}
+
+// endregion
+
+// region folder-scan and task registration
+
+file("examples/projects").listFiles()?.forEach {
+    if (!it.isDirectory || it.name == "dev") return@forEach
+    setupExampleProjectFolderSyncTask(folder = it, isDev = false)
+    setupGenerateTestClassTask(folder = it, isDev = false)
+}
+file("examples/projects/dev").listFiles()?.forEach {
+    if (!it.isDirectory) return@forEach
+    setupExampleProjectFolderSyncTask(folder = it, isDev = true)
+    setupGenerateTestClassTask(folder = it, isDev = true)
+}
 
 // endregion

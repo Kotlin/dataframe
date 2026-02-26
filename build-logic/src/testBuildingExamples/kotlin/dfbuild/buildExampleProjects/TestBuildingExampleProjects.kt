@@ -1,92 +1,30 @@
 package dfbuild.buildExampleProjects
 
-import dfbuild.findRootDir
 import dfbuild.toCamelCaseByDelimiters
 import org.apache.maven.shared.invoker.DefaultInvocationRequest
 import org.apache.maven.shared.invoker.DefaultInvoker
 import org.gradle.tooling.BuildException
 import org.gradle.tooling.GradleConnector
 import org.junit.AssumptionViolatedException
-import org.junit.jupiter.api.DynamicContainer
-import org.junit.jupiter.api.DynamicNode
-import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.TestFactory
 import java.io.File
 
-@Suppress("FunctionName")
-class TestBuildingExampleProjects {
-
+/**
+ * Implementations of this class are auto-generated from 'examples/projects'
+ * into 'build/generated/testBuildingExamples'.
+ *
+ * This class, as well as the generated tests, are automatically registered as
+ * the 'testBuildingExamples' [SourceSet][org.gradle.api.tasks.SourceSet] by the
+ * `dfbuild.buildExampleProjects` convention plugin.
+ */
+@Suppress("unused")
+abstract class TestBuildingExampleProjects {
     /**
      * Allows receiving certain Gradle properties.
      * These are passed down to the tests from the `dfbuild.buildExampleProjects` convention plugin.
      */
-    private fun getGradleProperty(name: String): String? = System.getProperty("gradle.properties.$name")
+    protected fun getGradleProperty(name: String): String? = System.getProperty("gradle.properties.$name")
 
-    data class TestCase(
-        val isDev: Boolean,
-        val isAndroid: Boolean,
-        val buildSystem: BuildSystem,
-        val dynamicTest: DynamicTest,
-    )
-
-    @Tag("android")
-    @TestFactory
-    fun `test all Android projects`(): List<DynamicNode> = getExampleProjectTestsWhere { it.isAndroid }
-
-    @Tag("gradle")
-    @TestFactory
-    fun `test all example Gradle projects`(): List<DynamicNode> =
-        getExampleProjectTestsWhere { it.buildSystem == BuildSystem.GRADLE }
-
-    @Tag("maven")
-    @TestFactory
-    fun `test all example Maven projects`(): List<DynamicNode> =
-        getExampleProjectTestsWhere { it.buildSystem == BuildSystem.MAVEN }
-
-    @Tag("release")
-    @TestFactory
-    fun `test all example release projects`(): List<DynamicNode> = getExampleProjectTestsWhere { !it.isDev }
-
-    @Tag("dev")
-    @TestFactory
-    fun `test all example dev projects`(): List<DynamicNode> = getExampleProjectTestsWhere { it.isDev }
-
-    private fun getExampleProjectTestsWhere(predicate: (testCase: TestCase) -> Boolean): List<DynamicNode> =
-        buildList {
-            val rootFolder = File("").absoluteFile.findRootDir()
-
-            val releaseTests = rootFolder.resolve("examples/projects")
-                .listFiles()
-                .orEmpty()
-                .filter { it.isDirectory && it.name != "dev" }
-                .map { setupBuildExampleProjectTestCase(folder = it, isDev = false) }
-                .filter(predicate)
-                .map { it.dynamicTest }
-            if (releaseTests.isNotEmpty()) {
-                this += DynamicContainer.dynamicContainer(
-                    "release",
-                    releaseTests,
-                )
-            }
-
-            val devTests = rootFolder.resolve("examples/projects/dev")
-                .listFiles()
-                .orEmpty()
-                .filter { it.isDirectory }
-                .map { setupBuildExampleProjectTestCase(folder = it, isDev = true) }
-                .filter(predicate)
-                .map { it.dynamicTest }
-
-            if (devTests.isNotEmpty()) {
-                this += DynamicContainer.dynamicContainer(
-                    "dev",
-                    devTests,
-                )
-            }
-        }
-
-    private fun setupBuildExampleProjectTestCase(folder: File, isDev: Boolean): TestCase {
+    protected fun buildExampleProject(folder: File, isDev: Boolean) {
         val name = folder.name.toCamelCaseByDelimiters().replaceFirstChar { it.uppercase() } +
             (if (isDev) "Dev" else "")
 
@@ -96,27 +34,16 @@ class TestBuildingExampleProjects {
             )
 
         val isAndroid = "android" in name.lowercase()
-        val dynamicTest = DynamicTest.dynamicTest(name) {
-            when (buildSystem) {
-                BuildSystem.GRADLE ->
-                    buildGradleProject(name = name, folder = folder, isAndroid = isAndroid)
+        when (buildSystem) {
+            BuildSystem.GRADLE ->
+                buildGradleProject(name = name, folder = folder, isAndroid = isAndroid)
 
-                BuildSystem.MAVEN ->
-                    buildMavenProject(name = name, folder = folder)
-            }
+            BuildSystem.MAVEN ->
+                buildMavenProject(name = name, folder = folder)
         }
-        return TestCase(
-            isDev = isDev,
-            isAndroid = isAndroid,
-            buildSystem = buildSystem,
-            dynamicTest = dynamicTest,
-        )
     }
 
-    /**
-     * Registers task to build the example project.
-     */
-    private fun buildGradleProject(name: String, folder: File, isAndroid: Boolean) {
+    protected fun buildGradleProject(name: String, folder: File, isAndroid: Boolean) {
         // Needs the android.sdk.dir property to be set or -Pandroid.sdk.dir=... added as Gradle argument
         // when and android-named example is run
         val androidSdkDir = getGradleProperty("android.sdk.dir")
@@ -147,7 +74,7 @@ class TestBuildingExampleProjects {
             }
     }
 
-    private fun buildMavenProject(name: String, folder: File) {
+    protected fun buildMavenProject(name: String, folder: File) {
         DefaultInvoker()
             .execute(
                 DefaultInvocationRequest().apply {
