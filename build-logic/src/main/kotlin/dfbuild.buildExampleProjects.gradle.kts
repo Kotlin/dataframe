@@ -120,38 +120,38 @@ val generateAllExampleFoldersTests by tasks.registering {
     }
 }
 
-val buildAllExampleFolders by tasks.registering {
+val runBuildAllExampleFolders by tasks.registering(Test::class) {
     group = buildExampleProjectsGroup
     description = "Builds all the nested builds in /examples/projects to verify they compile correctly."
 }
 tasks.named("test") {
     // builds the examples on ':test' when debug mode is enabled
     if (project.properties["kotlin.dataframe.debug"].toString() == "true") {
-        dependsOn(buildAllExampleFolders)
+        dependsOn(runBuildAllExampleFolders)
     }
 }
 
-val buildReleaseExampleFolders by tasks.registering {
+val runBuildReleaseExampleFolders by tasks.registering(Test::class) {
     group = buildExampleProjectsGroup
     description = "Builds the nested release builds in /examples/projects to verify they compile correctly."
 }
-val buildDevExampleFolders by tasks.registering {
+val runBuildDevExampleFolders by tasks.registering(Test::class) {
     group = buildExampleProjectsGroup
     description = "Builds the nested dev builds in /examples/projects to verify they compile correctly."
 }
-val buildMavenExampleFolders by tasks.registering {
+val runBuildMavenExampleFolders by tasks.registering(Test::class) {
     group = buildExampleProjectsGroup
     description = "Builds the nested Maven builds in /examples/projects to verify they compile correctly."
 }
-val buildGradleExampleFolders by tasks.registering {
+val runBuildGradleExampleFolders by tasks.registering(Test::class) {
     group = buildExampleProjectsGroup
     description = "Builds the nested Gradle builds in /examples/projects to verify they compile correctly."
 }
-val buildAndroidExampleFolders by tasks.registering {
+val runBuildAndroidExampleFolders by tasks.registering(Test::class) {
     group = buildExampleProjectsGroup
     description = "Builds the nested Android builds in /examples/projects to verify they compile correctly."
 }
-val buildNonAndroidExampleFolders by tasks.registering {
+val runBuildNonAndroidExampleFolders by tasks.registering(Test::class) {
     group = buildExampleProjectsGroup
     description = "Builds the nested non-Android builds in /examples/projects to verify they compile correctly."
 }
@@ -194,7 +194,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
         finalizedBy(generateTask)
     }
 
-    val testBuildTask = tasks.register<Test>("build$testClassName") {
+    val runTestBuildTask = tasks.register<Test>("runBuild$testClassName") {
         group = buildExampleProjectsGroup
         dependsOn(syncAllExampleFolders, generateAllExampleFoldersTests)
 
@@ -203,7 +203,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
             dependsOn(":publishLocal")
         }
 
-        maxHeapSize = "1g"
+        maxHeapSize = "3g"
         testClassesDirs = testBuildingExamples.output.classesDirs
         classpath = testBuildingExamples.runtimeClasspath
         useJUnitPlatform()
@@ -223,18 +223,18 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
             layout.buildDirectory.dir("maven").get().asFile.absolutePath,
         )
     }
-    buildAllExampleFolders { dependsOn(testBuildTask) }
+    runBuildAllExampleFolders { dependsOn(runTestBuildTask) }
     when (isDev) {
-        true -> buildDevExampleFolders { dependsOn(testBuildTask) }
-        false -> buildReleaseExampleFolders { dependsOn(testBuildTask) }
+        true -> runBuildDevExampleFolders { dependsOn(runTestBuildTask) }
+        false -> runBuildReleaseExampleFolders { dependsOn(runTestBuildTask) }
     }
     when (buildSystem) {
-        BuildSystem.MAVEN -> buildMavenExampleFolders { dependsOn(testBuildTask) }
-        BuildSystem.GRADLE -> buildGradleExampleFolders { dependsOn(testBuildTask) }
+        BuildSystem.MAVEN -> runBuildMavenExampleFolders { dependsOn(runTestBuildTask) }
+        BuildSystem.GRADLE -> runBuildGradleExampleFolders { dependsOn(runTestBuildTask) }
     }
     when (isAndroid) {
-        true -> buildAndroidExampleFolders { dependsOn(testBuildTask) }
-        false -> buildNonAndroidExampleFolders { dependsOn(testBuildTask) }
+        true -> runBuildAndroidExampleFolders { dependsOn(runTestBuildTask) }
+        false -> runBuildNonAndroidExampleFolders { dependsOn(runTestBuildTask) }
     }
 }
 
