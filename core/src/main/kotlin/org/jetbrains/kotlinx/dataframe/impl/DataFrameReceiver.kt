@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -21,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 import org.jetbrains.kotlinx.dataframe.nrow
+import kotlin.collections.map
 
 private fun <T> DataFrame<T>.unbox(): DataFrame<T> =
     when (this) {
@@ -47,9 +49,7 @@ internal open class DataFrameReceiver<T>(
                         host = this@DataFrameReceiver,
                     ).asDataColumn().cast()
 
-                UnresolvedColumnsPolicy.Fail -> error(
-                    "Column '${path.joinToString()}' not found among ${df.columnNames()}.",
-                )
+                UnresolvedColumnsPolicy.Fail -> error(formatMissingColumnMessage(path))
             }
 
             is MissingDataColumn -> this
@@ -58,6 +58,41 @@ internal open class DataFrameReceiver<T>(
 
             else -> this
         }
+
+    // it's strange that we have to reverse-search why the column is missing
+    // would be nice to "fail fast" exactly where resolve failed, knowing the current path and parent.
+    // but it's very unclear what to do with resolveSingle.
+    // at first glance: a lot of changes.
+    private fun formatMissingColumnMessage(path: ColumnPath): String {
+        val fullPath = path.joinToString()
+
+        for (index in path.indices) {
+            val currentPath = path.slice(0..index).toPath()
+            val currentPathString = currentPath.joinToString()
+            val column = df.getColumnOrNull(currentPath)
+            if (column == null) {
+                return if (index == 0) {
+                    "Column '$currentPathString' not found among ${df.columnNames()}."
+                } else {
+                    val parentPath = currentPath.dropLast()
+                    val parentPathString = parentPath.joinToString()
+                    val parentColumn = df.getColumnOrNull(parentPath)
+                    if (parentColumn != null && parentColumn.isColumnGroup()) {
+                        "Column '$currentPathString' not found among columns of '$parentPathString': ${parentColumn.columnNames()}."
+                    } else {
+                        "Column '$currentPathString' not found among ${df.columnNames()}."
+                    }
+                }
+            }
+
+            if (index != path.lastIndex) {
+                if (!column.isColumnGroup()) {
+                    return "Column '$fullPath' cannot be resolved: '$currentPathString' is not a column group."
+                }
+            }
+        }
+        return "Column '$fullPath' not found among ${df.columnNames()}."
+    }
 
     override fun getColumnOrNull(name: String) = df.getColumnOrNull(name).check(pathOf(name))
 
