@@ -132,6 +132,7 @@
             <toc-element topic="rename.md"/>
             <toc-element topic="reorder.md"/>
             <toc-element topic="replace.md"/>
+            <toc-element topic="require.md"/>
             <toc-element topic="reverse.md"/>
             <toc-element topic="select.md"/>
             <toc-element topic="sliceRows.md"/>
