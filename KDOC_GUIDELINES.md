@@ -10,20 +10,10 @@ This document outlines the guidelines for writing KDocs in the Kotlin DataFrame 
     * [KDoc-snippets: Reuse Common Parts](#kdoc-snippets-reuse-common-parts)
     * [KDoc-topics: Reference to Topics](#kdoc-topics-reference-to-topics)
     * [Common KDoc-helpers](#common-kdoc-helpers)
-      * [URLs](#urls)
-      * [Utils](#utils)
   * [Kotlin DataFrame Operations KDoc Structure](#kotlin-dataframe-operations-kdoc-structure)
     * [General Template](#general-template)
-      * [First line](#first-line)
-      * [Body](#body)
-      * [See also section](#see-also-section)
-      * [Documentation website link](#documentation-website-link-)
-      * [Columns selection information](#columns-selection-information)
-      * [Examples section](#examples-section)
-      * [Parameters and return section](#parameters-and-return-section)
   * [KDoc-helpers Structure](#kdoc-helpers-structure)
     * [Grammar](#grammar)
-      * [Symbols](#symbols)
     * [`@set`/`@get` references](#setget-references)
   * [Advanced KDocs](#advanced-kdocs)
     * [Clickable Examples](#clickable-examples)
@@ -204,6 +194,7 @@ and include things like:
     - To be linked to for more information on the concepts
 - [DslGrammar](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt)
     - To be linked to from each DSL grammar by the link interface
+- snippets
 - Check the folder to see if there are more and feel free to add them if needed :)
 
 #### URLs
