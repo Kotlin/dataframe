@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
 import org.junit.Test
 
 class RequireTests : ColumnsSelectionDslTests() {
@@ -28,6 +27,25 @@ class RequireTests : ColumnsSelectionDslTests() {
         val exception = shouldThrowAny {
             df.require { "name"["unknown"]<String>() }
         }
-        println(exception)
+        exception.message shouldBe
+            "Column 'name/unknown' not found among columns of 'name': [firstName, lastName]."
+    }
+
+    @Test
+    fun `require missing parent message includes available columns`() {
+        val exception = shouldThrowAny {
+            df.require { "name2"["unknown"]<String>() }
+        }
+        exception.message shouldBe
+            "Column 'name2' not found among [name, age, city, weight, isHappy]."
+    }
+
+    @Test
+    fun `require deep missing parent message uses nearest existing ancestor`() {
+        val exception = shouldThrowAny {
+            df.require { "name"["unknownGroup"]["value"]<String>() }
+        }
+        exception.message shouldBe
+            "Column 'name/unknownGroup' not found among columns of 'name': [firstName, lastName]."
     }
 }
