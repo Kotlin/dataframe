@@ -23,4 +23,22 @@ class CastTests {
         converted.cast<Data>(verify = false) shouldBe converted
         converted.cast<Data>() shouldBe converted
     }
+
+    @DataSchema
+    data class Container(val test: Schema)
+
+    @DataSchema
+    data class Schema(val score: Float, val rawData: String)
+
+    @Test
+    fun `cast should disregard column order`() {
+        // https://github.com/Kotlin/dataframe/issues/1644
+        // it ensures that variable in notebooks can be `castTo` to its own marker type
+        dataFrameOf(
+            "test" to columnOf(
+                "rawData" to columnOf("string"),
+                "score" to columnOf(1f),
+            ),
+        ).cast<Container>(verify = true)
+    }
 }
