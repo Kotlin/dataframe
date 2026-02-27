@@ -22,7 +22,7 @@ internal interface AccessApi {
      * - {@include [ExtensionPropertiesApiLink]}
      * - {@include [StringApiLink]}
      */
-    interface AnyApiLinks
+    typealias AnyApiLinks = Nothing
 
     /**
      * String API.
@@ -34,10 +34,10 @@ internal interface AccessApi {
      * For example: {@comment This works if you include the test module when running KoDEx}
      * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.strings]
      */
-    interface StringApi
+    typealias StringApi = Nothing
 
     /** [String API][StringApi] */
-    interface StringApiLink
+    typealias StringApiLink = Nothing
 
     /**
      * Column Accessors API.
@@ -46,10 +46,10 @@ internal interface AccessApi {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.ColumnAccessorsApi]}
      */
-    interface ColumnAccessorsApi
+    typealias ColumnAccessorsApi = Nothing
 
     /** [Column Accessors API][AccessApi.ColumnAccessorsApi] */
-    interface ColumnAccessorsApiLink
+    typealias ColumnAccessorsApiLink = Nothing
 
     /**
      * KProperties API.
@@ -60,10 +60,10 @@ internal interface AccessApi {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.KPropertiesApi]}
      */
-    interface KPropertiesApi
+    typealias KPropertiesApi = Nothing
 
     /** [KProperties API][KPropertiesApi] */
-    interface KPropertiesApiLink
+    typealias KPropertiesApiLink = Nothing
 
     /**
      * Extension Properties API.
@@ -76,11 +76,11 @@ internal interface AccessApi {
      * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.extensionProperties1]
      * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.extensionProperties2]
      */
-    interface ExtensionPropertiesApi
+    typealias ExtensionPropertiesApi = Nothing
 
     /** [Extension Properties API][ExtensionPropertiesApi] */
-    interface ExtensionPropertiesApiLink
+    typealias ExtensionPropertiesApiLink = Nothing
 }
 
 /** [Access API][AccessApi] */
-internal interface AccessApiLink
+internal typealias AccessApiLink = Nothing

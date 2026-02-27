@@ -2,17 +2,21 @@
 
 package org.jetbrains.kotlinx.dataframe.io.local
 
+import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import org.duckdb.DuckDBConnection
 import org.duckdb.DuckDBResultSet
-import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.single
@@ -21,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.assertInferredTypesMatchSchema
+import org.jetbrains.kotlinx.dataframe.io.assertMatches
 import org.jetbrains.kotlinx.dataframe.io.db.DuckDb
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readDataFrame
@@ -36,11 +41,11 @@ import java.nio.file.Files
 import java.sql.Blob
 import java.sql.DriverManager
 import java.sql.Timestamp
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.OffsetDateTime
-import java.util.UUID
 import kotlin.io.path.createTempDirectory
+import kotlin.time.Instant
+import kotlin.time.toKotlinInstant
+import kotlin.uuid.Uuid
+import java.time.OffsetDateTime as JavaOffsetDateTime
 
 private const val URL = "jdbc:duckdb:"
 
@@ -58,13 +63,16 @@ class DuckDbTest {
     ) {
         companion object {
             val expected = listOf(
-                Person(1, "John Doe", 30, 50000.0, LocalDate.of(2020, 1, 15)),
-                Person(2, "Jane Smith", 28, 55000.0, LocalDate.of(2021, 3, 20)),
-                Person(3, "Bob Johnson", 35, 65000.0, LocalDate.of(2019, 11, 10)),
-                Person(4, "Alice Brown", 32, 60000.0, LocalDate.of(2020, 7, 1)),
+                Person(1, "John Doe", 30, 50000.0, LocalDate(2020, 1, 15)),
+                Person(2, "Jane Smith", 28, 55000.0, LocalDate(2021, 3, 20)),
+                Person(3, "Bob Johnson", 35, 65000.0, LocalDate(2019, 11, 10)),
+                Person(4, "Alice Brown", 32, 60000.0, LocalDate(2020, 7, 1)),
             ).toDataFrame()
         }
     }
+
+    @DataSchema
+    data class SomeJson(val key: String)
 
     @DataSchema
     data class GeneralPurposeTypes(
@@ -91,7 +99,7 @@ class DuckDbTest {
         @ColumnName("date_col")
         val dateCol: LocalDate,
         @ColumnName("datetime_col")
-        val datetimeCol: Timestamp,
+        val datetimeCol: Instant,
         @ColumnName("decimal_col")
         val decimalCol: BigDecimal,
         @ColumnName("double_col")
@@ -129,7 +137,7 @@ class DuckDbTest {
         @ColumnName("interval_col")
         val intervalCol: String,
         @ColumnName("json_col")
-        val jsonCol: JsonNode,
+        val jsonCol: SomeJson,
         @ColumnName("logical_col")
         val logicalCol: Boolean,
         @ColumnName("long_col")
@@ -151,11 +159,11 @@ class DuckDbTest {
         @ColumnName("time_col")
         val timeCol: LocalTime,
         @ColumnName("timestamp_col")
-        val timestampCol: Timestamp,
+        val timestampCol: Instant,
         @ColumnName("timestamptz_col")
-        val timestamptzCol: OffsetDateTime,
+        val timestamptzCol: JavaOffsetDateTime,
         @ColumnName("timestampwtz_col")
-        val timestampwtzCol: OffsetDateTime,
+        val timestampwtzCol: JavaOffsetDateTime,
         @ColumnName("tinyint_col")
         val tinyintCol: Byte,
         @ColumnName("ubigint_col")
@@ -179,7 +187,7 @@ class DuckDbTest {
         @ColumnName("utinyint_col")
         val utinyintCol: Short,
         @ColumnName("uuid_col")
-        val uuidCol: UUID,
+        val uuidCol: Uuid,
         @ColumnName("varbinary_col")
         val varbinaryCol: Blob,
         @ColumnName("varchar_col")
@@ -199,7 +207,7 @@ class DuckDbTest {
                     byteaCol = DuckDBResultSet.DuckDBBlobResult(ByteBuffer.wrap("DEADBEEF".toByteArray())),
                     charCol = "test",
                     dateCol = LocalDate.parse("2025-06-19"),
-                    datetimeCol = Timestamp.valueOf("2025-06-19 12:34:56"),
+                    datetimeCol = Timestamp.valueOf("2025-06-19 12:34:56").toInstant().toKotlinInstant(),
                     decimalCol = BigDecimal("123.45"),
                     doubleCol = 3.14159,
                     enumCol = "female",
@@ -218,7 +226,7 @@ class DuckDbTest {
                     intCol = 2147483647,
                     integerCol = 2147483647,
                     intervalCol = "1 year",
-                    jsonCol = JsonNode("{\"key\": \"value\"}"),
+                    jsonCol = SomeJson("value"),
                     logicalCol = true,
                     longCol = 9223372036854775807L,
                     numericCol = BigDecimal("123.45"),
@@ -229,9 +237,9 @@ class DuckDbTest {
                     stringCol = "test string",
                     textCol = "test text",
                     timeCol = LocalTime.parse("12:34:56"),
-                    timestampCol = Timestamp.valueOf("2025-06-19 12:34:56"),
-                    timestamptzCol = OffsetDateTime.parse("2025-06-19T12:34:56+02:00"),
-                    timestampwtzCol = OffsetDateTime.parse("2025-06-19T12:34:56+02:00"),
+                    timestampCol = Timestamp.valueOf("2025-06-19 12:34:56").toInstant().toKotlinInstant(),
+                    timestamptzCol = JavaOffsetDateTime.parse("2025-06-19T12:34:56+02:00"),
+                    timestampwtzCol = JavaOffsetDateTime.parse("2025-06-19T12:34:56+02:00"),
                     tinyintCol = 127,
                     ubigintCol = BigInteger("18446744073709551615"),
                     uhugeintCol = BigInteger("340282366920938463463374607431768211455"),
@@ -243,7 +251,7 @@ class DuckDbTest {
                     uintCol = 4294967295L,
                     usmallintCol = 65535,
                     utinyintCol = 255,
-                    uuidCol = UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"),
+                    uuidCol = Uuid.parse("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"),
                     varbinaryCol = DuckDBResultSet.DuckDBBlobResult(ByteBuffer.wrap("DEADBEEF".toByteArray())),
                     varcharCol = "test string",
                 ),
@@ -252,23 +260,33 @@ class DuckDbTest {
     }
 
     @DataSchema
+    data class NestedEntry(val i: Int, val j: String) : DataRowSchema
+
+    @DataSchema
+    data class NullableNestedEntry(val i: Int?, val j: String?) : DataRowSchema
+
+    @DataSchema
     data class NestedTypes(
+        @ColumnName("test_col")
+        val testCol: Int,
         @ColumnName("ijstruct_col")
-        val ijstructCol: java.sql.Struct,
+        val ijstructCol: NestedEntry,
+        @ColumnName("ijstructlist_col")
+        val ijstructlistCol: DataFrame<NullableNestedEntry>,
         @ColumnName("intarray_col")
-        val intarrayCol: java.sql.Array,
+        val intarrayCol: List<Int?>,
         @ColumnName("intlist_col")
-        val intlistCol: java.sql.Array,
+        val intlistCol: List<Int?>,
         @ColumnName("intstringmap_col")
         val intstringmapCol: Map<Int, String?>,
         @ColumnName("intstrinstinggmap_col")
         val intstrinstinggmapCol: Map<Int, Map<String, String?>?>,
         @ColumnName("stringarray_col")
-        val stringarrayCol: java.sql.Array,
+        val stringarrayCol: List<String?>,
         @ColumnName("stringlist_col")
-        val stringlistCol: java.sql.Array,
+        val stringlistCol: List<String?>,
         @ColumnName("stringlistlist_col")
-        val stringlistlistCol: java.sql.Array,
+        val stringlistlistCol: List<List<String?>?>,
         @ColumnName("union_col")
         val unionCol: Any,
     )
@@ -310,7 +328,19 @@ class DuckDbTest {
             subset = DataFrame.readSqlQuery(connection, """SELECT test_table.name, test_table.age FROM test_table""")
         }
 
-        schema.compare(Person.expected.schema()).isSuperOrMatches() shouldBe true
+        withClue({
+            """
+            |Read schema must be <: expected schema
+            |
+            |Read Schema: 
+            |${schema.toString().lines().joinToString("\n|")}
+            |
+            |expected Schema:
+            |${Person.expected.schema().toString().lines().joinToString("\n|")}
+            """.trimMargin()
+        }) {
+            schema.compare(Person.expected.schema()).isSuperOrMatches() shouldBe true
+        }
 
         df.cast<Person>(verify = true) shouldBe Person.expected
         df.assertInferredTypesMatchSchema()
@@ -545,10 +575,12 @@ class DuckDbTest {
             df = DataFrame.readSqlTable(connection, "table1").reorderColumnsByName()
         }
 
-        schema.compare(GeneralPurposeTypes.expected.schema()).isSuperOrMatches() shouldBe true
+        GeneralPurposeTypes.expected.schema().toString().lines().sorted().joinToString("\n")
+
+        schema.assertMatches(GeneralPurposeTypes.expected.schema())
 
         // on some systems OffsetDateTime's get converted to UTC sometimes, let's compare them as Instant instead
-        fun AnyFrame.fixOffsetDateTime() = convert { colsOf<OffsetDateTime>() }.with { it.toInstant() }
+        fun AnyFrame.fixOffsetDateTime() = convert { colsOf<JavaOffsetDateTime>() }.with { it.toInstant() }
 
         df.cast<GeneralPurposeTypes>(verify = true).fixOffsetDateTime() shouldBe
             GeneralPurposeTypes.expected.fixOffsetDateTime()
@@ -567,6 +599,7 @@ class DuckDbTest {
             connection.prepareStatement(
                 """
                 CREATE TABLE IF NOT EXISTS table2 (
+                    test_col INTEGER,
                     intarray_col INTEGER[3],
                     stringarray_col VARCHAR[3],
                     intlist_col INTEGER[],
@@ -575,6 +608,7 @@ class DuckDbTest {
                     intstringmap_col MAP(INTEGER, VARCHAR),
                     intstrinstinggmap_col MAP(INTEGER, MAP(VARCHAR, VARCHAR)),
                     ijstruct_col STRUCT(i INTEGER, j VARCHAR),
+                    ijstructlist_col STRUCT(i INTEGER, j VARCHAR)[],
                     union_col UNION(num INTEGER, text VARCHAR),
                 )
                 """.trimIndent(),
@@ -583,6 +617,7 @@ class DuckDbTest {
             connection.prepareStatement(
                 """
                 INSERT INTO table2 VALUES (
+                    1,                                      -- int
                     array_value(1, 2, NULL),                    -- int array
                     array_value('a', 'ab', 'abc'),           -- string array
                     list_value(1, 2, 3),                     -- int list
@@ -591,6 +626,7 @@ class DuckDbTest {
                     MAP { 1: 'value1', 200: 'value2' },      -- int string map
                     MAP { 1: MAP { 'value1': 'a', 'value2': 'b' }, 200: MAP { 'value1': 'c', 'value2': 'd' } }, -- int string string map
                     { 'i': 42, 'j': 'answer' },               -- struct
+                    list_value({ 'i': 42, 'j': 'answer' }, { 'i': 44, 'j': 'answer' }), -- struct list
                     union_value(num := 2),                    -- union
                 )
                 """.trimIndent(),
@@ -606,19 +642,24 @@ class DuckDbTest {
         df as DataFrame<NestedTypes>
 
         df.single().let {
-            it[{ "intarray_col"<java.sql.Array>() }].array shouldBe arrayOf(1, 2, null)
-            it[{ "stringarray_col"<java.sql.Array>() }].array shouldBe arrayOf("a", "ab", "abc")
-            it[{ "intlist_col"<java.sql.Array>() }].array shouldBe arrayOf(1, 2, 3)
-            it[{ "stringlist_col"<java.sql.Array>() }].array shouldBe arrayOf("a", "ab", "abc")
-            (it[{ "stringlistlist_col"<java.sql.Array>() }].array as Array<*>)
-                .map { (it as java.sql.Array?)?.array } shouldBe listOf(arrayOf("a", "ab"), arrayOf("abc"), null)
-            it[{ "intstringmap_col"<Map<Int, String?>>() }] shouldBe mapOf(1 to "value1", 200 to "value2")
-            it[{ "intstrinstinggmap_col"<Map<Int, Map<String, String?>>>() }] shouldBe mapOf(
+            it["intarray_col"] shouldBe listOf(1, 2, null)
+            it["stringarray_col"] shouldBe listOf("a", "ab", "abc")
+            it["intlist_col"] shouldBe listOf(1, 2, 3)
+            it["stringlist_col"] shouldBe listOf("a", "ab", "abc")
+            it["stringlistlist_col"] shouldBe listOf(listOf("a", "ab"), listOf("abc"), null)
+            it["intstringmap_col"] shouldBe mapOf(1 to "value1", 200 to "value2")
+            it["intstrinstinggmap_col"] shouldBe mapOf(
                 1 to mapOf("value1" to "a", "value2" to "b"),
                 200 to mapOf("value1" to "c", "value2" to "d"),
             )
-            it[{ "ijstruct_col"<java.sql.Struct>() }].attributes shouldBe arrayOf<Any>(42, "answer")
-            it[{ "union_col"<Any>() }] shouldBe 2
+            it[{ "ijstruct_col"["i"]<Int>() }] shouldBe 42
+            it[{ "ijstruct_col"["j"]<String>() }] shouldBe "answer"
+            it[{ "ijstructlist_col"<DataFrame<NestedEntry>>() }] shouldBe
+                dataFrameOf(
+                    NestedEntry(42, "answer"),
+                    NestedEntry(44, "answer"),
+                )
+            it["union_col"] shouldBe 2
         }
     }
 
@@ -652,5 +693,42 @@ class DuckDbTest {
             Files.deleteIfExists(dbPath)
             Files.deleteIfExists(tempDir)
         }
+    }
+
+    @Test
+    fun `parse Struct types`() {
+        DuckDb.parseStructType(
+            "STRUCT(v VARCHAR, i INTEGER)",
+        ) shouldBe mapOf("v" to "VARCHAR", "i" to "INTEGER")
+        DuckDb.parseStructType(
+            "STRUCT(col1 MAP(INTEGER, VARCHAR), col2 INTEGER)",
+        ) shouldBe mapOf("col1" to "MAP(INTEGER, VARCHAR)", "col2" to "INTEGER")
+        DuckDb.parseStructType(
+            "STRUCT(col1 STRUCT(i INTEGER, j VARCHAR), col2 INTEGER)",
+        ) shouldBe mapOf("col1" to "STRUCT(i INTEGER, j VARCHAR)", "col2" to "INTEGER")
+        DuckDb.parseStructType(
+            "STRUCT(col1 INTEGER[], col2 VARCHAR[][])",
+        ) shouldBe mapOf("col1" to "INTEGER[]", "col2" to "VARCHAR[][]")
+    }
+
+    @Test
+    fun `parse Map types`() {
+        DuckDb.parseMapTypes(
+            "MAP(INTEGER, VARCHAR)",
+        ) shouldBe ("INTEGER" to "VARCHAR")
+        DuckDb.parseMapTypes(
+            "MAP(INTEGER, MAP(VARCHAR, VARCHAR))",
+        ) shouldBe ("INTEGER" to "MAP(VARCHAR, VARCHAR)")
+        DuckDb.parseMapTypes(
+            "MAP(STRUCT(i INTEGER, j VARCHAR), VARCHAR)",
+        ) shouldBe ("STRUCT(i INTEGER, j VARCHAR)" to "VARCHAR")
+    }
+
+    @Test
+    fun `parse List types`() {
+        DuckDb.parseListType("INTEGER[]") shouldBe "INTEGER"
+        DuckDb.parseListType("INTEGER[3]") shouldBe "INTEGER"
+        DuckDb.parseListType("VARCHAR[][]") shouldBe "VARCHAR[]"
+        DuckDb.parseListType("STRUCT(i INTEGER, j VARCHAR)[]") shouldBe "STRUCT(i INTEGER, j VARCHAR)"
     }
 }

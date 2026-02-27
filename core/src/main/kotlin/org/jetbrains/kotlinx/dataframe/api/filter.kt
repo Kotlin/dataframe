@@ -128,7 +128,7 @@ public interface FilterColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`filter`**][ColumnsSelectionDsl.filter] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
     }
 
     /**

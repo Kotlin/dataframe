@@ -88,16 +88,16 @@ public interface AllExceptColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`allExcept`**][ColumnsSelectionDsl.allExcept] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** [**`except`**][ColumnsSelectionDsl.except] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`allColsExcept`**][ColumnsSelectionDsl.allColsExcept] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
 
         /** __`.`__[**`except`**][ColumnsSelectionDsl.except] */
-        public interface ColumnGroupExceptName
+        public typealias ColumnGroupExceptName = Nothing
     }
 
     /**
@@ -192,10 +192,10 @@ public interface AllExceptColumnsSelectionDsl {
     private interface CommonExceptDocs {
 
         // Example argument
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
 
         // Parameter argument
-        interface PARAM
+        typealias PARAM = Nothing
     }
 
     // region ColumnSet
@@ -212,10 +212,10 @@ public interface AllExceptColumnsSelectionDsl {
     private interface ColumnSetInfixDocs {
 
         // argument
-        interface ARGUMENT_1
+        typealias ARGUMENT_1 = Nothing
 
         // argument
-        interface ARGUMENT_2
+        typealias ARGUMENT_2 = Nothing
     }
 
     /**
@@ -230,10 +230,10 @@ public interface AllExceptColumnsSelectionDsl {
     private interface ColumnSetVarargDocs {
 
         // argument
-        interface ARGUMENT_1
+        typealias ARGUMENT_1 = Nothing
 
         // argument
-        interface ARGUMENT_2
+        typealias ARGUMENT_2 = Nothing
     }
 
     /**
@@ -336,10 +336,10 @@ public interface AllExceptColumnsSelectionDsl {
     private interface ColumnsSelectionDslDocs {
 
         // argument
-        interface ARGUMENT_1
+        typealias ARGUMENT_1 = Nothing
 
         // argument
-        interface ARGUMENT_2
+        typealias ARGUMENT_2 = Nothing
     }
 
     /**
@@ -412,47 +412,47 @@ public interface AllExceptColumnsSelectionDsl {
     private interface ColumnGroupDocs {
 
         // receiver
-        interface RECEIVER_1
+        typealias RECEIVER_1 = Nothing
 
         // receiver
-        interface RECEIVER_2
+        typealias RECEIVER_2 = Nothing
 
         // type
-        interface RECEIVER_TYPE
+        typealias RECEIVER_TYPE = Nothing
 
         // argument
-        interface ARGUMENT_1
+        typealias ARGUMENT_1 = Nothing
 
         // argument
-        interface ARGUMENT_2
+        typealias ARGUMENT_2 = Nothing
 
         /**
          * @set [ColumnGroupDocs.RECEIVER_1] `userData.`
          * @set [ColumnGroupDocs.RECEIVER_2] `name.`
          * @set [ColumnGroupDocs.RECEIVER_TYPE] SingleColumn
          */
-        interface SingleColumnReceiverArgs
+        typealias SingleColumnReceiverArgs = Nothing
 
         /**
          * @set [ColumnGroupDocs.RECEIVER_1] `"userData".`
          * @set [ColumnGroupDocs.RECEIVER_2] `"name".`
          * @set [ColumnGroupDocs.RECEIVER_TYPE] String
          */
-        interface StringReceiverArgs
+        typealias StringReceiverArgs = Nothing
 
         /**
          * @set [ColumnGroupDocs.RECEIVER_1] `DataSchemaPerson::userData.`
          * @set [ColumnGroupDocs.RECEIVER_2] `Person::name.`
          * @set [ColumnGroupDocs.RECEIVER_TYPE] KProperty
          */
-        interface KPropertyReceiverArgs
+        typealias KPropertyReceiverArgs = Nothing
 
         /**
          * @set [ColumnGroupDocs.RECEIVER_1] `pathOf("userData").`
          * @set [ColumnGroupDocs.RECEIVER_2] `"pathTo"["myColGroup"].`
          * @set [ColumnGroupDocs.RECEIVER_TYPE] ColumnPath
          */
-        interface ColumnPathReceiverArgs
+        typealias ColumnPathReceiverArgs = Nothing
 
         /**
          * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
@@ -461,7 +461,7 @@ public interface AllExceptColumnsSelectionDsl {
          * @set [ColumnGroupDocs.ARGUMENT_1] `  { "age"  `[and][ColumnsSelectionDsl.and]` height }`
          * @set [ColumnGroupDocs.ARGUMENT_2] ` { firstName }`
          */
-        interface SelectorArgs
+        typealias SelectorArgs = Nothing
 
         /**
          * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [Strings][String] referring to
@@ -470,7 +470,7 @@ public interface AllExceptColumnsSelectionDsl {
          * @set [ColumnGroupDocs.ARGUMENT_1] `("age", "height")`
          * @set [ColumnGroupDocs.ARGUMENT_2] `("firstName", "middleName")`
          */
-        interface StringArgs
+        typealias StringArgs = Nothing
 
         /**
          * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [KProperties][KProperty] referring to
@@ -479,7 +479,7 @@ public interface AllExceptColumnsSelectionDsl {
          * @set [ColumnGroupDocs.ARGUMENT_1] `(Person::age, Person::height)`
          * @set [ColumnGroupDocs.ARGUMENT_2] `(Person::firstName, Person::middleName)`
          */
-        interface KPropertyArgs
+        typealias KPropertyArgs = Nothing
 
         /**
          * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
@@ -488,7 +488,7 @@ public interface AllExceptColumnsSelectionDsl {
          * @set [ColumnGroupDocs.ARGUMENT_1] `(pathOf("age"), "extraData"["item1"])`
          * @set [ColumnGroupDocs.ARGUMENT_2] `(pathOf("firstName"), "middleNames"["first"])`
          */
-        interface ColumnPathArgs
+        typealias ColumnPathArgs = Nothing
     }
 
     /**

@@ -56,13 +56,13 @@ public interface FrameColsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`frameCols`**][ColumnsSelectionDsl.colGroups] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.colGroups] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -98,7 +98,7 @@ public interface FrameColsColumnsSelectionDsl {
     private interface CommonFrameColsDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**

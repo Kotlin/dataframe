@@ -62,22 +62,22 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`nameContains`**][ColumnsSelectionDsl.nameContains] */
-        public interface PlainDslNameContains
+        public typealias PlainDslNameContains = Nothing
 
         /** __`name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public interface PlainDslNameStartsEndsWith
+        public typealias PlainDslNameStartsEndsWith = Nothing
 
         /** __`.`__[**`nameContains`**][ColumnsSelectionDsl.nameContains] */
-        public interface ColumnSetNameContains
+        public typealias ColumnSetNameContains = Nothing
 
         /** __`.name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public interface ColumnSetNameStartsEndsWith
+        public typealias ColumnSetNameStartsEndsWith = Nothing
 
         /**__`.`__[**`colsNameContains`**][ColumnsSelectionDsl.colsNameContains] */
-        public interface ColumnGroupNameContains
+        public typealias ColumnGroupNameContains = Nothing
 
         /** __`.colsName`__`(`[**`Starts`**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
-        public interface ColumnGroupNameStartsWith
+        public typealias ColumnGroupNameStartsWith = Nothing
     }
 
     // region nameContains
@@ -120,13 +120,13 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     private interface CommonNameContainsDocs {
 
         // Example to give
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
 
         // [text\] or [regex\]
-        interface ARGUMENT
+        typealias ARGUMENT = Nothing
 
         // Optional extra params.
-        interface EXTRA_PARAMS
+        typealias EXTRA_PARAMS = Nothing
     }
 
     /**
@@ -137,7 +137,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * }
      */
     @ExcludeFromSources
-    private interface NameContainsTextDocs
+    private typealias NameContainsTextDocs = Nothing
 
     /**
      * @include [NameContainsTextDocs]
@@ -206,7 +206,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     /**
      * @include [CommonNameContainsDocs]
      * @set [CommonNameContainsDocs.ARGUMENT] [regex\] */
-    private interface NameContainsRegexDocs
+    private typealias NameContainsRegexDocs = Nothing
 
     /**
      * @include [NameContainsRegexDocs]
@@ -302,24 +302,23 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     private interface CommonNameStartsEndsDocs {
 
         // "Starts" or "Ends"
-        interface CAPITAL_TITLE
+        typealias CAPITAL_TITLE = Nothing
 
         // "starting" or "ending"
-        interface NOUN
+        typealias NOUN = Nothing
 
         // "startsWith" or "endsWith"
-        interface OPERATION_NAME
+        typealias OPERATION_NAME = Nothing
 
         // "nameStartsWith" or "nameEndsWith"
-        interface NAME_OPERATION_NAME
+        typealias NAME_OPERATION_NAME = Nothing
 
         // "colsNameStartsWith" or "colsNameEndsWith"
-        interface COLS_NAME_OPERATION_NAME
+        typealias COLS_NAME_OPERATION_NAME = Nothing
 
         // [prefix\] or [suffix\]
-        interface ARGUMENT
-
-        interface EXAMPLE
+        typealias ARGUMENT = Nothing
+        typealias EXAMPLE = Nothing
     }
 
     // region nameStartsWith
@@ -337,7 +336,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameContains\]
      */
     @ExcludeFromSources
-    private interface CommonNameStartsWithDocs
+    private typealias CommonNameStartsWithDocs = Nothing
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -418,7 +417,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameContains\]
      */
     @ExcludeFromSources
-    private interface CommonNameEndsWithDocs
+    private typealias CommonNameEndsWithDocs = Nothing
 
     /**
      * @include [CommonNameEndsWithDocs]

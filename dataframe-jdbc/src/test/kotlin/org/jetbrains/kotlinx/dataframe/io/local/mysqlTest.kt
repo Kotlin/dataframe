@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.local
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -23,6 +24,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Date
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
 
 private const val URL = "jdbc:mysql://localhost:3306"
 private const val USER_NAME = "root"
@@ -335,7 +337,7 @@ class MySqlTest {
     @Test
     fun `basic test for reading sql tables`() {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
-        val result = df1.filter { it[Table1MySql::id] == 1 }
+        val result = df1.filter { "id"<Int>() == 1 }
         result[0][26] shouldBe "textValue1"
         result[0][22] shouldBe "tinyblobValue".toByteArray()
 
@@ -343,8 +345,8 @@ class MySqlTest {
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
         schema.columns["dateCol"]!!.type shouldBe typeOf<Date>()
-        schema.columns["datetimeCol"]!!.type shouldBe typeOf<java.time.LocalDateTime>()
-        schema.columns["timestampCol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["datetimeCol"]!!.type shouldBe typeOf<LocalDateTime>()
+        schema.columns["timestampCol"]!!.type shouldBe typeOf<Instant>()
         schema.columns["timeCol"]!!.type shouldBe typeOf<java.sql.Time>()
         schema.columns["yearCol"]!!.type shouldBe typeOf<Date>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
@@ -354,7 +356,7 @@ class MySqlTest {
         schema.columns["tinyblobCol"]!!.type shouldBe typeOf<ByteArray>()
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>()
-        val result2 = df2.filter { it[Table2MySql::id] == 1 }
+        val result2 = df2.filter { "id"<Int>() == 1 }
         result2[0][26] shouldBe null
 
         val schema2 = DataFrameSchema.readSqlTable(connection, "table2")
@@ -376,7 +378,7 @@ class MySqlTest {
             """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MySql>()
-        val result = df.filter { it[Table3MySql::id] == 1 }
+        val result = df.filter { "id"<Int>() == 1 }
         result[0][2] shouldBe "Option1"
 
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
@@ -392,7 +394,7 @@ class MySqlTest {
         val table1Df = dataframes[0].cast<Table1MySql>()
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { it[Table1MySql::integerCol] > 100 }.rowsCount() shouldBe 2
+        table1Df.filter { "integerCol"<Int>() > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
         table1Df[0][26] shouldBe "textValue1"
 
@@ -400,7 +402,7 @@ class MySqlTest {
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
-            it[Table2MySql::integerCol] != null && it[Table2MySql::integerCol]!! > 400
+            "integerCol"<Int?>()?.let { it > 400 } ?: false
         }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
@@ -410,47 +412,47 @@ class MySqlTest {
     fun `reading numeric types`() {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
 
-        val result = df1.select("tinyintCol").add("tinyintCol2") { it[Table1MySql::tinyintCol] }
+        val result = df1.select("tinyintCol").add("tinyintCol2") { "tinyintCol"<Int>() }
 
         result[0][1] shouldBe 1.toByte()
 
         val result1 = df1.select("smallintCol")
-            .add("smallintCol2") { it[Table1MySql::smallintCol] }
+            .add("smallintCol2") { "smallintCol"<Int?>() }
 
         result1[0][1] shouldBe 10.toShort()
 
         val result2 = df1.select("mediumintCol")
-            .add("mediumintCol2") { it[Table1MySql::mediumintCol] }
+            .add("mediumintCol2") { "mediumintCol"<Int>() }
 
         result2[0][1] shouldBe 100
 
         val result3 = df1.select("mediumintUnsignedCol")
-            .add("mediumintUnsignedCol2") { it[Table1MySql::mediumintUnsignedCol] }
+            .add("mediumintUnsignedCol2") { "mediumintUnsignedCol"<Int>() }
 
         result3[0][1] shouldBe 100
 
         val result4 = df1.select("integerUnsignedCol")
-            .add("integerUnsignedCol2") { it[Table1MySql::integerUnsignedCol] }
+            .add("integerUnsignedCol2") { "integerUnsignedCol"<Long>() }
 
         result4[0][1] shouldBe 100L
 
         val result5 = df1.select("bigintCol")
-            .add("bigintCol2") { it[Table1MySql::bigintCol] }
+            .add("bigintCol2") { "bigintCol"<Long>() }
 
         result5[0][1] shouldBe 100
 
         val result6 = df1.select("floatCol")
-            .add("floatCol2") { it[Table1MySql::floatCol] }
+            .add("floatCol2") { "floatCol"<Float>() }
 
         result6[0][1] shouldBe 10.0f
 
         val result7 = df1.select("doubleCol")
-            .add("doubleCol2") { it[Table1MySql::doubleCol] }
+            .add("doubleCol2") { "doubleCol"<Double>() }
 
         result7[0][1] shouldBe 10.0
 
         val result8 = df1.select("decimalCol")
-            .add("decimalCol2") { it[Table1MySql::decimalCol] }
+            .add("decimalCol2") { "decimalCol"<BigDecimal>() }
 
         result8[0][1] shouldBe BigDecimal("10")
 

@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.nrow
+import java.lang.reflect.Method
 import java.math.BigDecimal
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
@@ -26,6 +27,7 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.valueParameters
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
@@ -418,6 +420,57 @@ internal fun KCallable<*>.isGetterLike(): Boolean =
         is KProperty<*> -> isGetterLike()
         is KFunction<*> -> isGetterLike()
         else -> false
+    }
+
+/**
+ * Cached reference to the Class.isRecord() method, which exists only in Java 16+.
+ * This is cached to avoid repeated reflection lookups.
+ */
+private val isRecordMethod: Method? by lazy {
+    try {
+        Class::class.java.getMethod("isRecord")
+    } catch (e: NoSuchMethodException) {
+        // Running on JVM < 16, records don't exist
+        null
+    }
+}
+
+/**
+ * Returns `true` if this class is a Java record.
+ *
+ * This method is compatible with JVM 1.8+ by using reflection to check for the
+ * `Class.isRecord()` method which was introduced in Java 16. On older JVMs,
+ * this will always return `false`.
+ */
+internal val KClass<*>.isJavaRecord: Boolean
+    get() = try {
+        isRecordMethod?.invoke(this.java) as? Boolean ?: false
+    } catch (e: Exception) {
+        false
+    }
+
+private val getRecordComponentsMethod: Method? by lazy {
+    try {
+        Class::class.java.getMethod("getRecordComponents")
+    } catch (_: NoSuchMethodException) {
+        null
+    }
+}
+
+private val getComponentNameMethod: Method? by lazy {
+    try {
+        val recordComponentClass = Class.forName("java.lang.reflect.RecordComponent")
+        recordComponentClass.getMethod("getName")
+    } catch (_: Exception) {
+        null
+    }
+}
+
+internal val KClass<*>.recordComponentNames: Set<String>
+    get() {
+        val components = getRecordComponentsMethod?.invoke(this.java) as? Array<*> ?: return emptySet()
+        val getName = getComponentNameMethod ?: return emptySet()
+        return components.mapTo(mutableSetOf()) { getName.invoke(it) as String }
     }
 
 /** Returns the getter name for this callable.

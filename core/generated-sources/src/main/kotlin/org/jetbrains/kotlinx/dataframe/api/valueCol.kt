@@ -115,13 +115,13 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`valueCol`**][ColumnsSelectionDsl.valueCol] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -172,31 +172,31 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     private interface CommonValueColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { `[valueCol][valueCol]`() }`
          */
-        interface SingleExample
+        typealias SingleExample = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { `[valueCol][valueCol]`() }`
          *
          * `df.`[select][DataFrame.select]` { `[valueCol][valueCol]`<`[String][String]`>() }`
          */
-        interface DoubleExample
+        typealias DoubleExample = Nothing
 
         // Receiver argument for the example(s)
-        interface RECEIVER
+        typealias RECEIVER = Nothing
 
         // Argument for the example(s)
-        interface ARG
+        typealias ARG = Nothing
 
         // Optional note
-        interface NOTE
+        typealias NOTE = Nothing
 
         /** @param [C] The type of the value column. */
-        interface ValueColumnTypeParam
+        typealias ValueColumnTypeParam = Nothing
     }
 
     // region reference
@@ -250,7 +250,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [ColumnAccessor] pointing to the value column.
      * @param [C] The type of the value column.
      */
-    private interface ValueColReferenceDocs
+    private typealias ValueColReferenceDocs = Nothing
 
     /**
      * ## Value Col
@@ -628,7 +628,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      * @param [name] The name of the value column.
      */
-    private interface ValueColNameDocs
+    private typealias ValueColNameDocs = Nothing
 
     /**
      * ## Value Col
@@ -1340,7 +1340,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      * @param [path] The path to the value column.
      */
-    private interface ValueColPathDocs
+    private typealias ValueColPathDocs = Nothing
 
     /**
      * ## Value Col
@@ -2051,7 +2051,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the value column.
      */
-    private interface ValueColKPropertyDocs
+    private typealias ValueColKPropertyDocs = Nothing
 
     /**
      * ## Value Col
@@ -2431,7 +2431,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
-    private interface ValueColIndexDocs
+    private typealias ValueColIndexDocs = Nothing
 
     /**
      * ## Value Col

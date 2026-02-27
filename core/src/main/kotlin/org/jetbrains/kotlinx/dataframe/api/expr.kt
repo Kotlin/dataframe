@@ -39,7 +39,7 @@ public interface ExprColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`expr`**][ColumnsSelectionDsl.expr] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
     }
 }
 

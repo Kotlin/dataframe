@@ -44,7 +44,7 @@ internal interface CommonWriteDelimDocs {
      * @set [FUNCTION_NAME] writeCsv
      * @set [TO_STR_FUNCTION_NAME] toCsvStr
      */
-    interface CsvDocs
+    typealias CsvDocs = Nothing
 
     /**
      * @include [CommonWriteDelimDocs]
@@ -54,7 +54,7 @@ internal interface CommonWriteDelimDocs {
      * @set [FUNCTION_NAME] writeTsv
      * @set [TO_STR_FUNCTION_NAME] toTsvStr
      */
-    interface TsvDocs
+    typealias TsvDocs = Nothing
 
     /**
      * @include [CommonWriteDelimDocs]
@@ -64,7 +64,7 @@ internal interface CommonWriteDelimDocs {
      * @set [FUNCTION_NAME] writeDelim
      * @set [TO_STR_FUNCTION_NAME] toDelimStr
      */
-    interface DelimDocs
+    typealias DelimDocs = Nothing
 
     /**
      * @include [DelimParams.INCLUDE_HEADER]
@@ -75,35 +75,35 @@ internal interface CommonWriteDelimDocs {
      * @include [DelimParams.HEADER_COMMENTS]
      * @include [DelimParams.RECORD_SEPARATOR]
      */
-    interface CommonWriteParams
+    typealias CommonWriteParams = Nothing
 
     // something like "Write" or "Convert"
-    interface WRITE_OR_CONVERT
+    typealias WRITE_OR_CONVERT = Nothing
 
     // Like "CSV" or "TSV", capitalized
-    interface FILE_TYPE_TITLE
+    typealias FILE_TYPE_TITLE = Nothing
 
     // something like "File" or "String"
-    interface DATA_TITLE
+    typealias DATA_TITLE = Nothing
 
     // something like "file" or "text"
-    interface DATA
+    typealias DATA = Nothing
 
     // Like "CSV" or "TSV"
-    interface FILE_TYPE
+    typealias FILE_TYPE = Nothing
 
     // like "csv" or "txt"
-    interface FILE_EXTENSION
+    typealias FILE_EXTENSION = Nothing
 
     // Function name, like "readCsv"
-    interface FUNCTION_NAME
+    typealias FUNCTION_NAME = Nothing
 
     // Function name, like "toCsvStr"
-    interface TO_STR_FUNCTION_NAME
+    typealias TO_STR_FUNCTION_NAME = Nothing
 
     // A link to the main function, set by WriteDelim itself
-    interface FUNCTION_LINK
+    typealias FUNCTION_LINK = Nothing
 
     // A link to the str function, set by WriteDelim itself
-    interface TO_STR_FUNCTION_LINK
+    typealias TO_STR_FUNCTION_LINK = Nothing
 }

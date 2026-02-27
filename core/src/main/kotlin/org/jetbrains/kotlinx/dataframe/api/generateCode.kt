@@ -44,23 +44,23 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
 private interface CommonGenerateCodeDocs {
 
     // "interfaces" or "data classes"
-    interface TYPES
+    typealias TYPES = Nothing
 
     // "DataFrameSchema" or "DataFrame"
-    interface RECEIVER
+    typealias RECEIVER = Nothing
 
     // "Useful when statement" or "How to use"
-    interface USEFUL_WHEN
+    typealias USEFUL_WHEN = Nothing
 }
 
 @ExcludeFromSources
 private interface Params {
 
     /** @param markerName The base name to use for generated data schema declarations (markers). */
-    interface MarkerName
+    typealias MarkerName = Nothing
 
     /** @include [MarkerName] If not specified, it generates a name from type [T]. */
-    interface MarkerNameOptional
+    typealias MarkerNameOptional = Nothing
 
     /**
      * @param extensionProperties Whether to generate [extension properties (column accessors)][ExtensionPropertiesApi]
@@ -69,13 +69,13 @@ private interface Params {
      *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
      *   Default is `false`.
      */
-    interface ExtensionProperties
+    typealias ExtensionProperties = Nothing
 
     /** @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC]. */
-    interface Visibility
+    typealias Visibility = Nothing
 
     /** @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`. */
-    interface UseFqNames
+    typealias UseFqNames = Nothing
 
     /**
      * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
@@ -84,7 +84,7 @@ private interface Params {
      *  using the [@ColumnName][ColumnName] annotation.
      *  Default is [NameNormalizer.default][NameNormalizer.Companion.default].
      */
-    interface NameNormalizer
+    typealias NameNormalizer = Nothing
 }
 
 // endregion

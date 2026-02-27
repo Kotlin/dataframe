@@ -22,7 +22,7 @@ internal interface AccessApi {
      * - [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
      * - [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]
      */
-    interface AnyApiLinks
+    typealias AnyApiLinks = Nothing
 
     /**
      * String API.
@@ -43,10 +43,10 @@ internal interface AccessApi {
      *     }
      * ```
      */
-    interface StringApi
+    typealias StringApi = Nothing
 
     /** [String API][StringApi] */
-    interface StringApiLink
+    typealias StringApiLink = Nothing
 
     /**
      * Column Accessors API.
@@ -55,10 +55,10 @@ internal interface AccessApi {
      *
      * For more information: [See Column Accessors API on the documentation website.](https://kotlin.github.io/dataframe/columnaccessorsapi.html)
      */
-    interface ColumnAccessorsApi
+    typealias ColumnAccessorsApi = Nothing
 
     /** [Column Accessors API][AccessApi.ColumnAccessorsApi] */
-    interface ColumnAccessorsApiLink
+    typealias ColumnAccessorsApiLink = Nothing
 
     /**
      * KProperties API.
@@ -69,10 +69,10 @@ internal interface AccessApi {
      *
      * For more information: [See KProperties API on the documentation website.](https://kotlin.github.io/dataframe/kpropertiesapi.html)
      */
-    interface KPropertiesApi
+    typealias KPropertiesApi = Nothing
 
     /** [KProperties API][KPropertiesApi] */
-    interface KPropertiesApiLink
+    typealias KPropertiesApiLink = Nothing
 
     /**
      * Extension Properties API.
@@ -91,11 +91,11 @@ internal interface AccessApi {
      *     .filter { survived && home.endsWith("NY") && age in 10..20 }
      * ```
      */
-    interface ExtensionPropertiesApi
+    typealias ExtensionPropertiesApi = Nothing
 
     /** [Extension Properties API][ExtensionPropertiesApi] */
-    interface ExtensionPropertiesApiLink
+    typealias ExtensionPropertiesApiLink = Nothing
 }
 
 /** [Access API][AccessApi] */
-internal interface AccessApiLink
+internal typealias AccessApiLink = Nothing

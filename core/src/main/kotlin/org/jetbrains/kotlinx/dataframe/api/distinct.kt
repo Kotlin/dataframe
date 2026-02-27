@@ -55,19 +55,19 @@ import kotlin.reflect.KProperty
 @Suppress("ClassName")
 private interface DistinctDocs {
     // Parameter of the function (the `@param` part of the KDoc)
-    interface DISTINCT_PARAM
+    typealias DISTINCT_PARAM = Nothing
 
     // Value returned by the function (the `@return` part of the KDoc)
-    interface DISTINCT_RETURN
+    typealias DISTINCT_RETURN = Nothing
 
     // Description of what the function does
-    interface DESCRIPTION
+    typealias DESCRIPTION = Nothing
 
     // Part of the description that can be customized for a specific function
-    interface PHRASE_ENDING
+    typealias PHRASE_ENDING = Nothing
 
     // Reference to a related function (see also)
-    interface SEE_ALSO
+    typealias SEE_ALSO = Nothing
 }
 
 /**
@@ -172,7 +172,7 @@ public interface DistinctColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`distinct`**][ColumnsSelectionDsl.distinct] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
     }
 
     /**

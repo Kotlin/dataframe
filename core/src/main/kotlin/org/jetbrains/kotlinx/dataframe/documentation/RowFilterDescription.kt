@@ -10,4 +10,4 @@ import org.jetbrains.kotlinx.dataframe.RowFilter
  * It allows you to define conditions using the row's values directly,
  * including through [extension properties][ExtensionPropertiesAPIDocs] for convenient and type-safe access.
  */
-internal interface RowFilterDescription
+internal typealias RowFilterDescription = Nothing

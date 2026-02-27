@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
 import kotlin.reflect.KType
@@ -17,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql as PostgreSqlType
  *
  * NOTE: All date and timestamp-related types are converted to String to avoid java.sql.* types.
  */
-
 public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     @Deprecated("Use H2(mode = Mode.XXX) instead", ReplaceWith("H2(H2.Mode.MySql)"))
     public constructor(dialect: DbType) : this(
@@ -119,8 +117,12 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     override val driverClassName: String
         get() = "org.h2.Driver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? =
-        delegate?.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
+    /**
+     * TODO check and map all types from https://www.h2database.com/html/datatypes.html
+     */
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
+        delegate?.getExpectedJdbcType(tableColumnMetadata)
+            ?: super.getExpectedJdbcType(tableColumnMetadata)
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
@@ -145,9 +147,6 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
                 tables.getString("table_schem"),
                 tables.getString("table_cat"),
             )
-
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
-        delegate?.convertSqlTypeToKType(tableColumnMetadata)
 
     public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
         delegate?.buildSqlQueryWithLimit(sqlQuery, limit) ?: super.buildSqlQueryWithLimit(sqlQuery, limit)

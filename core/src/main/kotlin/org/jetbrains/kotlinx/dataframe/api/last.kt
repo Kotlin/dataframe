@@ -423,13 +423,13 @@ public interface LastColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`last`**][ColumnsSelectionDsl.last] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`last`**][ColumnsSelectionDsl.last] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`lastCol`**][ColumnsSelectionDsl.lastCol] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -462,7 +462,7 @@ public interface LastColumnsSelectionDsl {
     private interface CommonLastDocs {
 
         /** Examples key */
-        interface Examples
+        typealias Examples = Nothing
     }
 
     /**

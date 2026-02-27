@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression as DfDataFrameExpress
  */
 internal interface ExpressionsGivenDataFrame {
 
-    interface OPERATION
+    typealias OPERATION = Nothing
 
     /** Provide a new value for every selected dataframe using a [dataframe expression][DfDataFrameExpression]. */
     interface DataFrameExpression {
@@ -25,9 +25,9 @@ internal interface ExpressionsGivenDataFrame {
          *
          * {@get [OPERATION]}` { `[select][DataFrame.select]` { lastName } }`
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [DataFrame Expression][DataFrameExpression] */
-    interface DataFrameExpressionLink
+    typealias DataFrameExpressionLink = Nothing
 }
