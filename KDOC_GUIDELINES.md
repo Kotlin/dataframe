@@ -328,7 +328,7 @@ If the method uses columns selection, add a note about nested columns and column
 
 and add a link to the 
 [Selecting Columns topic](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/SelectingColumns.kt)
-with custom operation (usually with the customized examples, see [below](#kdoc-helpers-structure).
+usually with the customized examples, see [below](#kdoc-helpers-structure).
 
 ```
 See [Selecting Columns][InsertSelectingOptions].
@@ -383,7 +383,8 @@ and then use add it using `@include`:
 
 For any method with columns selection, add a section with information about the columns selection.
 
-Usually, just `@include` [custom SelectingOptions](#selecting-options).
+Usually, just `@include` 
+[custom `SelectingColumns` snippet](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/SelectingColumns.kt).
 
 #### Examples section
 
@@ -474,6 +475,50 @@ private interface Common~OperationName~Docs
 public fun <T, C> DataFrame<T>.operation(columns: ColumnsSelector<T, C>)
 ```
 
+### Grammar
+
+Grammar is a special notation for describing the complex operation.
+
+![dslgrammar.png](docs/imgs/dslgrammar.png)
+
+Any family of functions or operations can show off their notation in a DSL grammar.
+This is done by creating a KDoc-topic like
+[`InsertDocs.Grammar`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/insert.kt) and linking to it
+from each function.
+
+Each grammar doc must come with a `{@include [DslGrammarLink]}`, which is a link to provide the user with the details
+of how the [DSL grammar notation](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt)
+works.
+An explanation is provided for each symbol used in the grammar.
+
+I'll copy it here for reference:
+
+The notation we use is _roughly_ based on [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form)
+with some slight deviations to improve readability in the context of Kotlin.
+The grammars are also almost always decorated with highlighted code snippets allowing you to click around and explore!
+
+#### Symbols
+
+- '**`bold text`**' : literal Kotlin notation, e.g. '**`myFunction`**', '**`{ }`**', '**`[ ]`**', etc.
+- '`normal text`' : Definitions or types existing either just in the grammar or in the library itself.
+- '`:`' : Separates a definition from its type, e.g. '`name: String`'.
+- '`|`', '`/`' : Separates multiple possibilities, often clarified with `()` brackets or spaces, e.g. '**`a`**` ( `**`b`
+  **` | `**`c`**` )`'.
+- '`[ ... ]`' : Indicates that the contents are optional, e.g. '`[ `**`a`**` ]`'. Careful to not confuse this with *
+  *bold** Kotlin brackets **`[]`**.
+    - NOTE: sometimes **`function`**` [`**`{ }`**`]` notation is used to indicate that the function has an optional
+      lambda. This function will still require **`()`** brackets to work without lambda.
+- '**`,`**` ..`' : Indicates that the contents can be repeated with multiple arguments of the same type(s), e.g. '`[ `*
+  *`a,`**` .. ]`'.
+- '`( ... )`' : Indicates grouping, e.g. '`( `**`a`**` | `**`b`**` )` **`c`**'.
+
+No other symbols of [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) are used.
+
+Note that the grammar is not always 100% accurate to keep the readability acceptable.
+Always use your common sense reading it, and if you're unsure, try out the function yourself or check
+the source code :).
+
+
 ### `@set`/`@get` references
 
 Sometimes, when you create a template KDoc for different operations,
@@ -510,49 +555,6 @@ all the arguments accordingly.
 
 It's recommended to name write their name in `UPPER_CASE`
 and have them nested in the documentation interface.
-
-### Grammar
-
-Grammar is a special notation for describing the complex operation.
-
-![dslgrammar.png](docs/imgs/dslgrammar.png)
-
-Any family of functions or operations can show off their notation in a DSL grammar.
-This is done by creating a KDoc-topic like
-[`InsertDocs.Grammar`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/insert.kt) and linking to it
-from each function.
-
-Each grammar doc must come with a `{@include [DslGrammarLink]}`, which is a link to provide the user with the details
-of how the [DSL grammar notation](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt)
-works.
-An explanation is provided for each symbol used in the grammar.
-
-I'll copy it here for reference:
-
-The notation we use is _roughly_ based on [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form)
-with some slight deviations to improve readability in the context of Kotlin.
-The grammars are also almost always decorated with highlighted code snippets allowing you to click around and explore!
-
-#### Symbols
-
-- '**`bold text`**' : literal Kotlin notation, e.g. '**`myFunction`**', '**`{ }`**', '**`[ ]`**', etc.
-- '`normal text`' : Definitions or types existing either just in the grammar or in the library itself.
-- '`:`' : Separates a definition from its type, e.g. '`name: String`'.
-- '`|`', '`/`' : Separates multiple possibilities, often clarified with `()` brackets or spaces, e.g. '**`a`**` ( `**`b`
-  **` | `**`c`**` )`'.
-- '`[ ... ]`' : Indicates that the contents are optional, e.g. '`[ `**`a`**` ]`'. Careful to not confuse this with *
-  *bold** Kotlin brackets **`[]`**.
-    - NOTE: sometimes **`function`**` [`**`{ }`**`]` notation is used to indicate that the function has an optional
-      lambda. This function will still require **`()`** brackets to work without lambda.
-- '**`,`**` ..`' : Indicates that the contents can be repeated with multiple arguments of the same type(s), e.g. '`[ `*
-  *`a,`**` .. ]`'.
-- '`( ... )`' : Indicates grouping, e.g. '`( `**`a`**` | `**`b`**` )` **`c`**'.
-
-No other symbols of [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) are used.
-
-Note that the grammar is not always 100% accurate to keep the readability acceptable.
-Always use your common sense reading it, and if you're unsure, try out the function yourself or check
-the source code :).
 
 ## Advanced KDocs
 
