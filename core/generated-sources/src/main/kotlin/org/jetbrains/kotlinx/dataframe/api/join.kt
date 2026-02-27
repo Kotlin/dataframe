@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.`Auto-renaming columns in DataFrame`
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -56,7 +57,7 @@ import kotlin.reflect.KProperty
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Each join type has a corresponding shortcut function:
@@ -83,7 +84,7 @@ import kotlin.reflect.KProperty
  * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -144,7 +145,7 @@ public fun <A, B> DataFrame<A>.join(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Each join type has a corresponding shortcut function:
@@ -159,8 +160,8 @@ public fun <A, B> DataFrame<A>.join(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `join` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
@@ -189,7 +190,7 @@ public fun <A, B> DataFrame<A>.join(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -214,7 +215,7 @@ public fun <A, B> DataFrame<A>.join(
  * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -252,7 +253,7 @@ public fun <A, B> DataFrame<A>.innerJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -265,8 +266,8 @@ public fun <A, B> DataFrame<A>.innerJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `innerJoin` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
@@ -291,7 +292,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -316,7 +317,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -354,7 +355,7 @@ public fun <A, B> DataFrame<A>.leftJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -367,8 +368,8 @@ public fun <A, B> DataFrame<A>.leftJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `leftJoin` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
@@ -393,7 +394,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -418,7 +419,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -456,7 +457,7 @@ public fun <A, B> DataFrame<A>.rightJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -469,8 +470,8 @@ public fun <A, B> DataFrame<A>.rightJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `rightJoin` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
@@ -495,7 +496,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -520,7 +521,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -558,7 +559,7 @@ public fun <A, B> DataFrame<A>.fullJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -571,8 +572,8 @@ public fun <A, B> DataFrame<A>.fullJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `fullJoin` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
@@ -597,7 +598,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -622,7 +623,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -660,7 +661,7 @@ public fun <A, B> DataFrame<A>.filterJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -673,8 +674,8 @@ public fun <A, B> DataFrame<A>.filterJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `filterJoin` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
@@ -699,7 +700,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -724,7 +725,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -762,7 +763,7 @@ public fun <A, B> DataFrame<A>.excludeJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenaming]
+ * [automatically renamed][`Auto-renaming columns in DataFrame`]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -775,8 +776,8 @@ public fun <A, B> DataFrame<A>.excludeJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `excludeJoin` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
@@ -818,7 +819,7 @@ public fun <T> Iterable<DataFrame<T>>.joinOrNull(
  * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin

@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.CSDslLink
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotGroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotInAggregateImpl
@@ -72,7 +73,7 @@ internal interface PivotDocs {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [(What is this notation?)][`DSL Grammar`]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -286,7 +287,7 @@ internal interface PivotDocs {
  *   with nested [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], representing a hierarchical structure of
  *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
  *
- * See [Columns Selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -426,7 +427,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
  *   with nested [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], representing a hierarchical structure of
  *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
  *
- * See [Columns Selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -487,8 +488,8 @@ public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumns
  *
  * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  * ### This `pivot` Overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * * [pivot] with a single key column produces a [Pivot] containing one column for each unique key
  *   (i.e., key column unique values) with the corresponding group;
  * * [pivot] with multiple keys combined using [and] produces a [Pivot]
@@ -576,7 +577,7 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
  *   with nested [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], representing a hierarchical structure of
  *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
  *
- * See [Columns Selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -637,8 +638,8 @@ public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotC
  *   to produce a count matrix.
  *
  * ### This `pivotMatches` Overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  *
  * ### Example
  * ```kotlin
@@ -746,7 +747,7 @@ internal typealias DataFramePivotCountsCommonDocs = Nothing
  *   with nested [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], representing a hierarchical structure of
  *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
  *
- * See [Columns Selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -809,8 +810,8 @@ public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotCo
  * to produce a [Boolean] matrix.
  *
  * ### This `pivotCounts` Overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  *
  * ### Example
  * ```kotlin
@@ -882,23 +883,14 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
  * ```
  * ### This `pivot` Overload
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
- * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
  * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
- * for type- and name-safe columns selection.
  *
- * #### NOTE:
- * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
- * in this DSL directly with any function, they are NOT valid return types for the
- * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
- * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
- *
- * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -961,23 +953,14 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: B
  * ```
  * ### This `pivot` Overload
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
- * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
  * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
- * for type- and name-safe columns selection.
  *
- * #### NOTE:
- * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
- * in this DSL directly with any function, they are NOT valid return types for the
- * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
- * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
- *
- * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1086,7 +1069,7 @@ internal typealias GroupByPivotMatchesCommonDocs = Nothing
  *   with nested [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], representing a hierarchical structure of
  *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
  *
- * See [Columns Selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -1147,8 +1130,8 @@ public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: Pivot
  * but counts the number of matching rows instead of checking for their presence.
  *
  * ### This `pivotMatches` Overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  *
  * ### Example
  * ```kotlin
@@ -1251,7 +1234,7 @@ internal typealias GroupByPivotCountsCommonDocs = Nothing
  *   with nested [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], representing a hierarchical structure of
  *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
  *
- * See [Columns Selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -1310,8 +1293,8 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
  * but check if there is any matching row instead of counting then.
  *
  * ### This `pivotCounts` Overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  *
  * ### Example
  * ```kotlin
@@ -1433,8 +1416,8 @@ public fun <T> AggregateGroupedDsl<T>.pivot(
  * and [pivotCounts][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts] shortcuts.
  *
  * ### This `pivot` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * df.groupBy("firstName").aggregate {
@@ -1517,7 +1500,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: KProperty<*>, inward
  *   with nested [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], representing a hierarchical structure of
  *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
  *
- * See [Columns Selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -1572,8 +1555,8 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(
  * See also: [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [pivotCounts][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts].
  *
  * ### This `pivotMatches` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * df.groupBy("firstName").aggregate {
@@ -1642,7 +1625,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>,
  *   with nested [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], representing a hierarchical structure of
  *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
  *
- * See [Columns Selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl].
+ * See [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDSL].
  *
  * ### Examples
  * ```kotlin
@@ -1697,8 +1680,8 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(
  * See also: [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [pivotMatches][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches].
  *
  * ### This `pivotCounts` overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  * ### Example
  * ```kotlin
  * df.groupBy("firstName").aggregate {

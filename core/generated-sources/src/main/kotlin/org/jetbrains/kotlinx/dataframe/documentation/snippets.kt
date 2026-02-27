@@ -2,6 +2,13 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 
+// File with KDF common KDoc-topics and -snippets.
+
+/*
+ * Auto-renaming in [DataFrame] KDoc-topic.
+ * Link to it with `@include [AutoRenamingLink]`.
+ */
+
 /**
  * ## Auto-renaming in [DataFrame]
  *
@@ -16,4 +23,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  * It is recommended to [rename][org.jetbrains.kotlinx.dataframe.api.rename] them
  * to maintain clarity and improve code readability.
  */
-internal typealias AutoRenaming = Nothing
+internal typealias `Auto-renaming columns in DataFrame` = Nothing
+
+/*
+ * Column Path auto creation KDoc-snippet.
+ * Include it in KDoc with `@include [ColumnPathCreationSnippet]`.
+ */

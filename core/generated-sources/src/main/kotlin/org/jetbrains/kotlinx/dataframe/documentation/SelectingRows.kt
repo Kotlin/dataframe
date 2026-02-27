@@ -1,10 +1,8 @@
-@file:Suppress("ClassName")
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.diff
 import org.jetbrains.kotlinx.dataframe.api.drop
@@ -17,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.index
 
 /**
  * ## Selecting Rows
+ *
  * Selecting rows that satisfy a "Row Condition" ([See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions))
  * can occur in the following two types of operations:
  * - Selecting entire rows ([Entire-Row Condition][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.EntireRowCondition.WithExample]), for instance in [filter], [drop], [first], and [count]
@@ -28,6 +27,16 @@ import org.jetbrains.kotlinx.dataframe.index
  * A Row Condition is similar to a [Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow] but expects a [Boolean] as result.
  */
 internal interface SelectingRows {
+
+    /*
+     * Row filter KDoc-snippet.
+     * Include it into KDoc with `@include [`Selecting Rows`.RowFilterSnippet]`.
+     */
+
+    /*
+     * Row filter KDoc-snippet.
+     * Include it into KDoc with `@include [`Selecting Rows`.RowValueFilterSnippet]`.
+     */
 
     /*
      * The key for a @set that will define the operation name for the examples below.

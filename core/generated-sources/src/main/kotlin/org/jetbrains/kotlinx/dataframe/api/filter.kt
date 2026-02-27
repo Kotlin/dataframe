@@ -18,8 +18,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -52,7 +52,10 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  * and is expected to return a [Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs] for convenient and type-safe access.
+ * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs.ExtensionPropertiesAPI]
+ * for convenient and type-safe access.
+ *
+ * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -117,7 +120,7 @@ public interface FilterColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [(What is this notation?)][`DSL Grammar`]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
