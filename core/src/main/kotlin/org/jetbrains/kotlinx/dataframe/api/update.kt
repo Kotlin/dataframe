@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -163,7 +162,7 @@ private typealias UpdateWithNote = Nothing
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [Update.DslParam]
  */
 @Interpretable("Update0")
@@ -171,7 +170,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [UpdateWithNote]
  * @include [Update.ColumnNamesParam]
  */
@@ -179,7 +178,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ *
  * @include [UpdateWithNote]
  * @include [Update.KPropertiesParam]
  */
@@ -189,7 +188,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ *
  * @include [UpdateWithNote]
  * @include [Update.ColumnAccessorsParam]
  */
@@ -455,8 +454,6 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- * @include [SelectingColumns.ColumnAccessors]
- *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
  *
@@ -475,7 +472,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- * @include [SelectingColumns.KProperties]
+ *
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
@@ -495,7 +492,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}

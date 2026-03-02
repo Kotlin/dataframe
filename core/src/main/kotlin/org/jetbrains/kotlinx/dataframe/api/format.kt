@@ -57,7 +57,7 @@ import kotlin.reflect.KProperty
  * This function does not immediately produce a [FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause] which serves as an intermediate step.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][FormatSelectingColumns].
  *
@@ -238,7 +238,7 @@ private typealias CommonFormatDocs = Nothing
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.Dsl] {@include [SetFormatOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format { temperature }.linearBg(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)
@@ -256,7 +256,7 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetFormatOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }
@@ -308,7 +308,7 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.Dsl] {@include [SetFormatOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format().with { background(white) and textColor(black) and bold }
@@ -328,7 +328,7 @@ public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): Form
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetFormatOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }

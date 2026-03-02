@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
  * that return a new [DataFrame] with grouped columns.
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][GroupSelectingOptions].
  *
@@ -91,7 +91,7 @@ private typealias CommonGroupDocs = Nothing
 
 /**
  * @include [CommonGroupDocs]
- * @include [SelectingColumns.Dsl] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetGroupOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.group { columnA and columnB }.into("valueCols")
@@ -104,7 +104,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
 
 /**
  * @include [CommonGroupDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnNamesAPI] {@include [SetGroupOperationArg]}
  * ### Example:
  * ```kotlin
  * df.group("second").into("valueCols")
@@ -160,7 +160,7 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  *
  * ### Example:
  * ```kotlin
@@ -184,13 +184,13 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  * Groups columns, previously selected with [group], into a new or existing column group
  * within the [DataFrame] by specifying its path via [ColumnsSelectionDsl] expression.
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.ColumnsSelectionDSL]
  *
  * ### Examples:
  * ```kotlin
@@ -223,7 +223,7 @@ public fun <T, C> GroupClause<T, C>.into(
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesAPI]
  *
  * ### Examples:
  * ```kotlin

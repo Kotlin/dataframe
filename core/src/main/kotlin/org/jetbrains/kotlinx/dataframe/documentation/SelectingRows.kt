@@ -1,10 +1,8 @@
-@file:Suppress("ClassName")
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.diff
 import org.jetbrains.kotlinx.dataframe.api.drop
@@ -17,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.index
 
 /**
  * ## Selecting Rows
+ *
  * Selecting rows that satisfy a "Row Condition" ({@include [DocumentationUrls.DataRow.RowConditions]})
  * can occur in the following two types of operations:
  * - Selecting entire rows ({@include [RowConditionLink]}), for instance in [filter], [drop], [first], and [count]
@@ -28,6 +27,43 @@ import org.jetbrains.kotlinx.dataframe.index
  * A Row Condition is similar to a {@include [RowExpressionsLink]} but expects a [Boolean] as result.
  */
 internal interface SelectingRows {
+
+    /*
+     * Row filter KDoc-snippet.
+     * Include it into KDoc with `@include [`Selecting Rows`.RowFilterSnippet]`.
+     */
+
+    /**
+     * The [predicate] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and `it`
+     * and is expected to return a [Boolean] value.
+     *
+     * It allows you to define conditions using the row's values directly,
+     * including through [extension properties][AccessAPIs.ExtensionPropertiesAPI]
+     * for convenient and type-safe access.
+     *
+     * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
+     */
+    @ExcludeFromSources
+    typealias RowFilterSnippet = Nothing
+
+    /*
+     * Row filter KDoc-snippet.
+     * Include it into KDoc with `@include [`Selecting Rows`.RowValueFilterSnippet]`.
+     */
+
+    /**
+     * The [predicate] is a [RowValueFilter] — a lambda that receives each [DataRow] as `this` and
+     * given value as `it`
+     * and is expected to return a [Boolean] value.
+     *
+     * It allows you to define conditions using the row's values directly,
+     * including through [extension properties][AccessAPIs.ExtensionPropertiesAPI]
+     * for convenient and type-safe access.
+     *
+     * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
+     */
+    @ExcludeFromSources
+    typealias RowValueFilterSnippet = Nothing
 
     /*
      * The key for a @set that will define the operation name for the examples below.
