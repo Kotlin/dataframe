@@ -13,5 +13,5 @@ import kotlin.reflect.typeOf
  */
 @Refine
 @Interpretable("Require0")
-public inline fun <T, reified C> DataFrame<T>.require(noinline column: ColumnSelector<T, C>): DataFrame<T> =
+public inline fun <T, reified C> DataFrame<T>.requireColumn(noinline column: ColumnSelector<T, C>): DataFrame<T> =
     requireImpl(column, typeOf<C>())

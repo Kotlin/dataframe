@@ -9,14 +9,14 @@ class RequireTests : ColumnsSelectionDslTests() {
 
     @Test
     fun `require returns same dataframe for existing typed column`() {
-        val checked = df.require { "name"["firstName"]<String>() }
+        val checked = df.requireColumn { "name"["firstName"]<String>() }
         checked shouldBe df
     }
 
     @Test
     fun `require throws on type mismatch`() {
         val throwable = shouldThrow<IllegalArgumentException> {
-            df.require { "name"["firstName"]<Int>() }
+            df.requireColumn { "name"["firstName"]<Int>() }
         }
         throwable.message shouldBe
             "Column 'name/firstName' has type 'kotlin.String', which is not subtype of required 'kotlin.Int' type."
@@ -25,7 +25,7 @@ class RequireTests : ColumnsSelectionDslTests() {
     @Test
     fun `require throws when column cannot be resolved`() {
         val exception = shouldThrowAny {
-            df.require { "name"["unknown"]<String>() }
+            df.requireColumn { "name"["unknown"]<String>() }
         }
         exception.message shouldBe
             "Column 'name/unknown' not found among columns of 'name': [firstName, lastName]."
@@ -34,7 +34,7 @@ class RequireTests : ColumnsSelectionDslTests() {
     @Test
     fun `require missing parent message includes available columns`() {
         val exception = shouldThrowAny {
-            df.require { "name2"["unknown"]<String>() }
+            df.requireColumn { "name2"["unknown"]<String>() }
         }
         exception.message shouldBe
             "Column 'name2' not found among [name, age, city, weight, isHappy]."
@@ -43,7 +43,7 @@ class RequireTests : ColumnsSelectionDslTests() {
     @Test
     fun `require deep missing parent message uses nearest existing ancestor`() {
         val exception = shouldThrowAny {
-            df.require { "name"["unknownGroup"]["value"]<String>() }
+            df.requireColumn { "name"["unknownGroup"]["value"]<String>() }
         }
         exception.message shouldBe
             "Column 'name/unknownGroup' not found among columns of 'name': [firstName, lastName]."
