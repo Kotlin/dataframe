@@ -5,13 +5,17 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
 import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
+import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toCodeString
 import org.jetbrains.kotlinx.dataframe.api.under
@@ -22,8 +26,175 @@ import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.Person
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class CodeGenerationTests : BaseTest() {
+
+    @Test
+    fun `generateInterfaces with PredefinedName and nested structures`() {
+        val df = dataFrameOf("a", "b")(
+            1,
+            2,
+        ).move("a", "b").under("group")
+        val code = df.generateInterfaces("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
+        val expected =
+            """
+            @DataSchema
+            interface Marker {
+                val group: Marker1
+
+                @DataSchema(isOpen = false)
+                interface Marker1 {
+                    val a: Int
+                    val b: Int
+                }
+            }
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
+
+    @Test
+    fun `generateDataClasses with PredefinedName and nested structures`() {
+        val df = dataFrameOf("a", "b")(
+            1,
+            2,
+        ).move("a", "b").under("group")
+        val code = df.generateDataClasses("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
+        val expected =
+            """
+            @DataSchema
+            data class Marker(
+                val group: Marker1
+            ) {
+                @DataSchema
+                data class Marker1(
+                    val a: Int,
+                    val b: Int
+                )
+            }
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
+
+    @Test
+    fun `generateDataClasses with nested structures`() {
+        val df = dataFrameOf("a", "b")(
+            1,
+            2,
+        ).move("a", "b").under("group")
+        val code = df.generateDataClasses("Marker")
+        val expected =
+            """
+            @DataSchema
+            data class Marker(
+                val group: Group
+            ) {
+                @DataSchema
+                data class Group(
+                    val a: Int,
+                    val b: Int
+                )
+            }
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
+
+    @Test
+    fun `generateDataClasses with FrameColumn structure`() {
+        val df = dataFrameOf("personalInfo" to columnOf(dataFrameOf("age" to columnOf(19))))
+        val code = df.generateDataClasses("Accounts")
+        val expected =
+            """
+            @DataSchema
+            data class Accounts(
+                val personalInfo: List<PersonalInfo>
+            ) {
+                @DataSchema
+                data class PersonalInfo(
+                    val age: Int
+                )
+            }
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
+
+    @Test
+    fun `resolve name clash between nested marker and property`() {
+        val df = dataFrameOf("Person", "b")(
+            1,
+            2,
+        ).move("b").under("_person")
+
+        val code = df.generateInterfaces("Marker")
+
+        val expected = """
+            @DataSchema
+            interface Marker {
+                val Person: Int
+                val _person: Person1
+
+                @DataSchema(isOpen = false)
+                interface Person1 {
+                    val b: Int
+                }
+            }
+        """
+
+        assertEquals(expected.trimIndent().trim(), code.value)
+    }
+
+    @Test
+    fun `resolve name clash between nested marker and property with deep nesting`() {
+        val df = dataFrameOf("Person", "b")(
+            1,
+            2,
+        ).group("b").into { pathOf("bb", "_person") }
+
+        val code = df.generateInterfaces("Marker")
+
+        val expected = """
+            @DataSchema
+            interface Marker {
+                val Person: Int
+                val bb: Bb
+            
+                @DataSchema(isOpen = false)
+                interface Person1 {
+                    val b: Int
+                }
+            
+                @DataSchema(isOpen = false)
+                interface Bb {
+                    val _person: Person1
+                }
+            }
+        """
+
+        assertEquals(expected.trimIndent().trim(), code.value)
+    }
+
+    @Test
+    fun `generateInterfaces with PredefinedName`() {
+        val df = dataFrameOf("a", "b")(
+            1,
+            2,
+        ).move("a", "b").under("group")
+        val code = df.generateInterfaces("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
+        val expected =
+            """
+            @DataSchema
+            interface Marker {
+                val group: Marker1
+
+                @DataSchema(isOpen = false)
+                interface Marker1 {
+                    val a: Int
+                    val b: Int
+                }
+            }
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
 
     val personClassName = Person::class.qualifiedName!!
 
@@ -117,8 +288,8 @@ class CodeGenerationTests : BaseTest() {
 
         val expectedConverter = "it.cast<$typeName>()"
 
-        generated.declarations shouldBe expectedDeclaration
-        generated.typeCastGenerator("it") shouldBe expectedConverter
+        assertEquals(expectedDeclaration, generated.declarations)
+        assertEquals(expectedConverter, generated.typeCastGenerator("it"))
 
         val rowGenerated = codeGen.process(df[0], ::typedRow)
         rowGenerated.hasDeclarations shouldBe true
@@ -148,8 +319,8 @@ class CodeGenerationTests : BaseTest() {
 
         val expectedConverter = "it.cast<$typeName>()"
 
-        generated.declarations shouldBe expectedDeclaration
-        generated.typeCastGenerator("it") shouldBe expectedConverter
+        assertEquals(expectedDeclaration, generated.declarations)
+        assertEquals(expectedConverter, generated.typeCastGenerator("it"))
     }
 
     @Test
@@ -157,21 +328,21 @@ class CodeGenerationTests : BaseTest() {
         val property = ::df
         val grouped = df.move { name and city }.under("nameAndCity")
         val generated = ReplCodeGenerator.create().process(grouped, property)
-        val type1 = ReplCodeGeneratorImpl.markerInterfacePrefix + "1"
+        val nestedType = "NameAndCity"
         val type2 = ReplCodeGeneratorImpl.markerInterfacePrefix
         val declaration1 =
             """
             @DataSchema(isOpen = false)
-            interface $type1 {
+            interface $nestedType {
                 val city: String?
                 val name: String
             }
-            
-            val $dfName<$type1>.city: $dataCol<$stringName?> @JvmName("${type1}_city") get() = this["city"] as $dataCol<$stringName?>
-            val $dfRowName<$type1>.city: $stringName? @JvmName("${type1}_city") get() = this["city"] as $stringName?
-            val $dfName<$type1>.name: $dataCol<$stringName> @JvmName("${type1}_name") get() = this["name"] as $dataCol<$stringName>
-            val $dfRowName<$type1>.name: $stringName @JvmName("${type1}_name") get() = this["name"] as $stringName
-            
+
+            val $dfName<$nestedType>.city: $dataCol<$stringName?> @JvmName("${nestedType}_city") get() = this["city"] as $dataCol<$stringName?>
+            val $dfRowName<$nestedType>.city: $stringName? @JvmName("${nestedType}_city") get() = this["city"] as $stringName?
+            val $dfName<$nestedType>.name: $dataCol<$stringName> @JvmName("${nestedType}_name") get() = this["name"] as $dataCol<$stringName>
+            val $dfRowName<$nestedType>.name: $stringName @JvmName("${nestedType}_name") get() = this["name"] as $stringName
+
             """.trimIndent()
 
         val declaration2 =
@@ -179,21 +350,21 @@ class CodeGenerationTests : BaseTest() {
             @DataSchema
             interface $type2 {
                 val age: Int
-                val nameAndCity: _DataFrameType1
+                val nameAndCity: $nestedType
                 val weight: Int?
             }
-            
+
             val $dfName<$type2>.age: $dataCol<$intName> @JvmName("${type2}_age") get() = this["age"] as $dataCol<$intName>
             val $dfRowName<$type2>.age: $intName @JvmName("${type2}_age") get() = this["age"] as $intName
-            val $dfName<$type2>.nameAndCity: $colGroup<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $colGroup<$type1>
-            val $dfRowName<$type2>.nameAndCity: $dataRow<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$type1>
+            val $dfName<$type2>.nameAndCity: $colGroup<$nestedType> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $colGroup<$nestedType>
+            val $dfRowName<$type2>.nameAndCity: $dataRow<$nestedType> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$nestedType>
             val $dfName<$type2>.weight: $dataCol<$intName?> @JvmName("${type2}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$type2>.weight: $intName? @JvmName("${type2}_weight") get() = this["weight"] as $intName?
             """.trimIndent()
 
         val expectedConverter = "it.cast<$type2>()"
 
-        generated.declarations shouldBe declaration1 + "\n" + declaration2
+        assertEquals(declaration1 + "\n" + declaration2, generated.declarations)
         generated.typeCastGenerator("it") shouldBe expectedConverter
     }
 
@@ -210,7 +381,7 @@ class CodeGenerationTests : BaseTest() {
             .create(useFqNames = false)
             .generate<Person>(InterfaceGenerationMode.NoFields, extensionProperties = true)
             .declarations
-        code shouldBe expected
+        assertEquals(expected, code)
     }
 
     @Test
@@ -242,13 +413,13 @@ class CodeGenerationTests : BaseTest() {
                 override val city: kotlin.String
                 override val weight: kotlin.Int
             }
-            
+
             val $packageName.ColumnsContainer<ValidPerson>.city: $packageName.DataColumn<kotlin.String> @JvmName("ValidPerson_city") get() = this["city"] as $packageName.DataColumn<kotlin.String>
             val $packageName.DataRow<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
             val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> @JvmName("ValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int>
             val $packageName.DataRow<ValidPerson>.weight: kotlin.Int @JvmName("ValidPerson_weight") get() = this["weight"] as kotlin.Int
             """.trimIndent()
-        code shouldBe expected
+        assertEquals(expected, code)
     }
 
     @Test
@@ -259,16 +430,15 @@ class CodeGenerationTests : BaseTest() {
             """
             @DataSchema
             interface Person { }
-            
-            """.trimIndent() + "\n" + expectedProperties("Person", "Person")
-        code shouldBe expected
+            """.trimIndent() + "\n\n" + expectedProperties("Person", "Person")
+        assertEquals(expected, code)
     }
 
     @Test
     fun `interface with fields`() {
         val repl = CodeGenerator.create()
         val code = repl.generate(typed.schema(), "DataType", true, false, false).code.declarations
-        code shouldBe
+        val expected =
             """
             @DataSchema(isOpen = false)
             interface DataType {
@@ -278,6 +448,7 @@ class CodeGenerationTests : BaseTest() {
                 val weight: kotlin.Int?
             }
             """.trimIndent()
+        assertEquals(expected, code)
     }
 
     @Test
@@ -286,7 +457,7 @@ class CodeGenerationTests : BaseTest() {
         val code =
             repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        code shouldBe
+        val expected =
             """
             @DataSchema(isOpen = false)
             internal interface DataType {
@@ -305,6 +476,7 @@ class CodeGenerationTests : BaseTest() {
             internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             internal val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
             """.trimIndent()
+        assertEquals(expected, code)
     }
 
     @Test
@@ -319,8 +491,7 @@ class CodeGenerationTests : BaseTest() {
             MarkerVisibility.EXPLICIT_PUBLIC,
         ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        code shouldBe
-            """
+        val expected = """
             @DataSchema(isOpen = false)
             public interface DataType {
                 public val age: kotlin.Int
@@ -337,7 +508,9 @@ class CodeGenerationTests : BaseTest() {
             public val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
             public val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             public val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
+            """
+
+        assertEquals(expected.trimIndent(), code)
     }
 
     @Test
@@ -353,14 +526,16 @@ class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `check name normalization for generated data classes`() {
-        dataFrameOf("my_name")(1).generateDataClasses() shouldBe
+        val code = dataFrameOf("my_name")(1).generateDataClasses()
+        val expected =
             """
             @DataSchema
             data class DataEntry(
                 @ColumnName("my_name")
                 val myName: Int
             )
-            """.trimIndent().toCodeString()
+            """.trimIndent()
+        assertEquals(expected, code.value)
     }
 
     @Test
@@ -406,7 +581,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -424,7 +599,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -447,7 +622,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -466,7 +641,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -485,7 +660,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -509,7 +684,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = NameNormalizer.default,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     @Test
@@ -531,7 +706,7 @@ class CodeGenerationTests : BaseTest() {
             fieldNameNormalizer = nameNormalizer,
         ).code.declarations.toCodeString()
 
-        code shouldBe expected
+        code.value shouldBe expected.value
     }
 
     // endregion

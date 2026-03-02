@@ -74,6 +74,8 @@ public fun interface TypeCastGenerator {
                 "$expression.cast<${types.joinToString()}>()"
             }
 
+        override fun toString(): String = addCastTo($$"$var$")
+
         public companion object {
             public operator fun invoke(vararg types: String): TypeCastGenerator = DataFrameApi(types)
         }
