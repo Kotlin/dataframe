@@ -7,13 +7,24 @@ This document outlines the guidelines for writing KDocs in the Kotlin DataFrame 
   * [The most important advice](#the-most-important-advice)
   * [What should be documented?](#what-should-be-documented)
   * [KoDEx & KDoc-helpers](#kodex--kdoc-helpers)
+    * [Compiling KDocs](#compiling-kdocs)
     * [KDoc-snippets: Reuse Common Parts](#kdoc-snippets-reuse-common-parts)
     * [KDoc-topics: Reference to Topics](#kdoc-topics-reference-to-topics)
     * [Common KDoc-helpers](#common-kdoc-helpers)
+      * [URLs](#urls)
+      * [Utils](#utils)
   * [Kotlin DataFrame Operations KDoc Structure](#kotlin-dataframe-operations-kdoc-structure)
     * [General Template](#general-template)
+      * [First line](#first-line)
+      * [Body](#body)
+      * [See also section](#see-also-section)
+      * [Documentation website link](#documentation-website-link-)
+      * [Columns selection information](#columns-selection-information)
+      * [Examples section](#examples-section)
+      * [Parameters and return section](#parameters-and-return-section)
   * [KDoc-helpers Structure](#kdoc-helpers-structure)
     * [Grammar](#grammar)
+      * [Symbols](#symbols)
     * [`@set`/`@get` references](#setget-references)
   * [Advanced KDocs](#advanced-kdocs)
     * [Clickable Examples](#clickable-examples)
@@ -47,6 +58,16 @@ the [KDocs preprocessing using KoDEx](KDOC_PREPROCESSING.md) before working with
 
 Install the [KoDEx plugin for IDEA](https://plugins.jetbrains.com/plugin/27473---kodex---kotlin-documentation-extensions)
 for correct KDocs display inside the IntelliJ IDEA.
+
+### Compiling KDocs
+
+KoDEx KDocs can be compiled using the dedicated Gradle task `processKDocsMain`:
+```
+Gradle > Tasks > kdocs > processKDocsMain
+```
+
+After building the sources, the resulting artifact will contain standard KDocs 
+with all KoDEx utilities properly compiled and resolved.
 
 ### KDoc-snippets: Reuse Common Parts
 
