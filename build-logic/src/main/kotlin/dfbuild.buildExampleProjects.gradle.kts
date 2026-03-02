@@ -30,7 +30,7 @@ val versionsToSync =
 
 val syncAllExampleFolders by tasks.registering {
     group = buildExampleProjectsGroup
-    description = "Sync the versions in the nested Gradle build in /examples/projects"
+    description = "Sync the versions in the nested projects in /examples/projects"
 }
 tasks.named("assemble") {
     dependsOn(syncAllExampleFolders)

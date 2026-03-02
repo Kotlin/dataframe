@@ -1,11 +1,11 @@
 # Examples of Kotlin DataFrame
 
-### Idea project examples
+### IDEA project examples
 * [Gradle plugin example](projects/kotlin-dataframe-plugin-gradle-example) IDEA project with a
   [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
 * [Maven plugin example](projects/kotlin-dataframe-plugin-maven-example) IDEA project with a
   [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example. 
-* [android example](android-example) A minimal Android project showcasing integration with Kotlin DataFrame.
+* [android example](projects/android-example) A minimal Android project showcasing integration with Kotlin DataFrame.
 Also includes [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html).
 * [movies](idea-examples/movies) Using extension properties [Access API](https://kotlin.github.io/dataframe/apilevels.html) to perform a data cleaning task
 * [titanic](idea-examples/titanic)
@@ -26,6 +26,17 @@ They show how to convert to and from Kotlin DataFrame and their respective table
   * **Multik**: See the [multik folder](./idea-examples/unsupported-data-sources/multik)
     for an example of using Kotlin DataFrame with [Multik](https://github.com/Kotlin/multik).
 
+The example projects in [examples/projects](projects) always target the latest stable version of the library.
+Projects compatible with the latest dev/master version are located in the [examples/projects/dev](projects/dev) folder.
+
+All examples are tested by the main project in debug mode when `gradlew test` is run
+(or manually by`gradlew runBuildAllExampleFolders -Pkotlin.dataframe.debug=true`).
+Android example projects, require the `android.sdk.dir=` property to be set.
+
+Versions inside the example projects are overwritten automatically upon `gradlew assemble`
+(or manually by `gradlew syncAllExampleFolders`).
+
+See the [convention plugins README](../build-logic/README.md) for more information.
 
 ### Notebook examples
 
