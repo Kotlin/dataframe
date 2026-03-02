@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode.TypeAlias
 import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode.WithFields
 import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
@@ -491,84 +492,138 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         readDfMethod: DefaultReadDfMethod?,
         fieldNameNormalizer: NameNormalizer,
         asDataClass: Boolean,
+        nestedMarkerNameProvider: MarkerNameProvider,
     ): CodeGenResult {
-        val context = SchemaProcessor.create(name, if (asDataClass) emptyList() else knownMarkers, fieldNameNormalizer)
+        val context = SchemaProcessor.create(
+            name,
+            if (asDataClass) emptyList() else knownMarkers,
+            fieldNameNormalizer,
+            nestedMarkerNameProvider,
+        )
         val marker = context.process(schema, isOpen, visibility)
-        val declarations = mutableListOf<Code>()
-        context.generatedMarkers.forEach { itMarker ->
-            val declaration = if (asDataClass) {
-                generateClasses(itMarker)
-            } else {
-                generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker })
-            }
-            declarations.add(declaration)
-            if (extensionProperties) {
+        // see [org.jetbrains.kotlinx.dataframe.codeGen.MatchSchemeTests.marker is reused]
+        val code = if (extensionProperties) {
+            val declarations = mutableListOf<Code>()
+            context.generatedMarkers.forEach { itMarker ->
+                val declaration = if (asDataClass) {
+                    generateClasses(itMarker)
+                } else {
+                    generateInterface(itMarker, fields, readDfMethod = readDfMethod.takeIf { marker == itMarker })
+                }
+                declarations.add(declaration)
                 declarations.add(generateExtensionProperties(itMarker, withNullable = false))
             }
+            createCodeWithTypeCastGenerator(declarations.joinToString("\n\n"), marker.name)
+        } else if (context.generatedMarkers.isEmpty()) {
+            createCodeWithTypeCastGenerator("", marker.name)
+        } else {
+            val nested = context.generatedMarkers.filterNot { it == marker }
+                .map { itMarker ->
+                    if (asDataClass) {
+                        generateClasses(itMarker)
+                    } else {
+                        generateInterface(itMarker, fields)
+                    }
+                }
+
+            val rootDeclaration = if (asDataClass) {
+                generateClasses(marker, nested, readDfMethod)
+            } else {
+                generateInterface(marker, fields, nested, readDfMethod)
+            }
+            createCodeWithTypeCastGenerator(rootDeclaration, marker.name)
         }
-        val code = createCodeWithTypeCastGenerator(declarations.joinToString("\n\n"), marker.name)
+
         return CodeGenResult(code, context.generatedMarkers)
     }
 
-    private fun generateInterface(marker: Marker, fields: Boolean, readDfMethod: DefaultReadDfMethod? = null): Code {
+    private fun generateInterface(
+        marker: Marker,
+        fields: Boolean,
+        nested: List<Code> = emptyList(),
+        readDfMethod: DefaultReadDfMethod? = null,
+    ): Code {
         val annotationName = DataSchema::class.simpleName
-
         val visibility = renderTopLevelDeclarationVisibility(marker)
         val propertyVisibility = renderInternalDeclarationVisibility(marker)
 
         val header =
             "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\n${visibility}interface ${marker.name}"
-        val baseInterfacesDeclaration =
-            if (marker.superMarkers.isNotEmpty()) {
-                " : " + marker.superMarkers
-                    .map { it.value.name + it.value.typeArguments }
-                    .joinToString()
-            } else {
-                ""
-            }
-        val resultDeclarations = mutableListOf<String>()
+        val baseInterfaces = if (marker.superMarkers.isNotEmpty()) {
+            " : " + marker.superMarkers.values.joinToString { it.name + it.typeArguments }
+        } else {
+            ""
+        }
 
-        val fieldsDeclaration = if (fields) renderFields(marker, propertyVisibility).join() else ""
+        val fieldsCode = (if (fields) renderFields(marker, propertyVisibility) else emptyList()).joinToString("\n")
 
-        val readDfMethodDeclaration = readDfMethod?.toDeclaration(marker, propertyVisibility)
-
-        val body = if (fieldsDeclaration.isNotBlank() || readDfMethodDeclaration?.isNotBlank() == true) {
+        val body = if (fieldsCode.isNotEmpty() || nested.isNotEmpty() || readDfMethod != null) {
             buildString {
                 append(" {\n")
-                append(fieldsDeclaration)
-                if (readDfMethodDeclaration != null) {
-                    append("\n")
-                    val companionObject = buildCodeBlock {
-                        add("    ")
-                        indent()
-                        indent()
-                        add(readDfMethodDeclaration)
-                    }
-                    append(companionObject.toString())
-                }
+                appendNestedDeclarations(
+                    fieldsCode = fieldsCode.takeIf { it.isNotEmpty() },
+                    nestedDeclarationsCode = nested,
+                    readDfMethod?.let { renderReadDfMethod(it, marker, propertyVisibility) },
+                )
                 append("\n}")
             }
         } else {
             " { }"
         }
-        resultDeclarations.add(header + baseInterfacesDeclaration + body)
-        return resultDeclarations.join()
+        return header + baseInterfaces + body
     }
 
-    private fun generateClasses(marker: Marker): Code {
+    private fun generateClasses(
+        marker: Marker,
+        nested: List<Code> = emptyList(),
+        readDfMethod: DefaultReadDfMethod? = null,
+    ): Code {
         val annotationName = DataSchema::class.simpleName
-
         val visibility = renderTopLevelDeclarationVisibility(marker)
         val propertyVisibility = renderInternalDeclarationVisibility(marker)
-        val header =
-            "@$annotationName\n${visibility}data class ${marker.name}("
 
-        val fieldsDeclaration = renderFields(marker, propertyVisibility).joinToString(",\n")
+        val header = "@$annotationName\n${visibility}data class ${marker.name}("
+        val fieldsCode = renderFields(marker, propertyVisibility).joinToString(",\n")
+
         return buildString {
             appendLine(header)
-            appendLine(fieldsDeclaration)
+            appendLine(fieldsCode)
             append(")")
+
+            if (nested.isNotEmpty() || readDfMethod != null) {
+                append(" {\n")
+                appendNestedDeclarations(
+                    fieldsCode = null,
+                    nested,
+                    readDfMethod?.let {
+                        renderReadDfMethod(it, marker, propertyVisibility)
+                    },
+                )
+                append("\n}")
+            }
         }
+    }
+
+    private fun StringBuilder.appendNestedDeclarations(
+        fieldsCode: Code? = null,
+        nestedDeclarationsCode: List<Code>,
+        readDfMethodCode: Code?,
+    ) {
+        val contents = mutableListOf<String>()
+
+        if (fieldsCode != null) {
+            contents += fieldsCode
+        }
+
+        if (nestedDeclarationsCode.isNotEmpty()) {
+            contents += nestedDeclarationsCode.joinToString("\n\n") { it.prependIndent("    ") }
+        }
+
+        if (readDfMethodCode != null) {
+            contents += readDfMethodCode
+        }
+
+        append(contents.joinToString("\n\n"))
     }
 
     private fun renderFields(marker: Marker, propertyVisibility: String): List<String> =
@@ -583,6 +638,14 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             val fieldType = it.renderFieldType()
             "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
         }
+
+    private fun renderReadDfMethod(readDfMethod: DefaultReadDfMethod, marker: Marker, propertyVisibility: String) =
+        buildCodeBlock {
+            add("    ")
+            indent()
+            indent()
+            add(readDfMethod.toDeclaration(marker, propertyVisibility))
+        }.toString()
 }
 
 public fun CodeWithTypeCastGenerator.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =

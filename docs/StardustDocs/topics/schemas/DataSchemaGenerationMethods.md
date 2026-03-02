@@ -26,6 +26,7 @@ inline fun <reified T> DataFrame<T>.generateDataClasses(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
+    nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString
 ```
 
@@ -58,10 +59,14 @@ Useful when you want to:
   Kotlin-style identifiers.
   Generated properties will still refer to columns by their actual name using the `@ColumnName` annotation.
   Default: `NameNormalizer.default`.
+* `nestedMarkerNameProvider`: `MarkerNameProvider` – Strategy for generating names for nested data schema declarations (markers).  
+  - `MarkerNameProvider.fromColumnName` (default) generates descriptive names from the column names.
+  - `MarkerNameProvider.PredefinedName` uses the name of the root marker for all nested declarations and appends a numerical suffix to resolve name conflicts.  
+  Default: `MarkerNameProvider.fromColumnName`.
 
 ### Returns {id="generateDataClasses-returns"}
 
-* `CodeString` – A value class wrapper for `String`, containing  
+* `CodeString` — A value class wrapper for `String`, containing  
   the generated Kotlin code of `data class` declarations and optionally [extension properties](extensionPropertiesApi.md).
 
 ### Examples {id="generateDataClasses-examples"}
@@ -133,6 +138,10 @@ in cases where the schema cannot be inferred automatically from the source.
   Kotlin-style identifiers.
   Generated properties will still refer to columns by their actual name using the `@ColumnName` annotation.
   Default: `NameNormalizer.default`.
+* `nestedMarkerNameProvider`: `MarkerNameProvider` – Strategy for generating names for nested data schema declarations (markers).  
+  - `MarkerNameProvider.fromColumnName` (default) generates descriptive names from the column names.
+  - `MarkerNameProvider.PredefinedName` uses the name of the root marker for all nested declarations and appends a numerical suffix to resolve name conflicts.  
+  Default: `MarkerNameProvider.fromColumnName`.
 
 ### Returns {id="generateInterfaces-returns"}
 
