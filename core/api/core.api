@@ -5473,6 +5473,10 @@ public final class org/jetbrains/kotlinx/dataframe/impl/api/MapKt {
 	public static final fun mapNotNullValues (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/impl/api/RequireKt {
+	public static final fun requireImpl (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/impl/api/SchemaKt {
 	public static final fun compileTimeSchemaImpl (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lkotlin/reflect/KClass;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
 }
