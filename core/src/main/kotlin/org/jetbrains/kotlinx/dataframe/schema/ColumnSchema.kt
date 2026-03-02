@@ -80,7 +80,7 @@ public sealed class ColumnSchema {
             ) + CompareResult.compareNullability(thisIsNullable = nullable, otherIsNullable = other.nullable)
     }
 
-    /** Checks equality by kind, type, or schema. TODO was matching, check if == works. */
+    /** Checks equality by kind, type, or schema */
     override fun equals(other: Any?): Boolean {
         val otherType = other as? ColumnSchema ?: return false
         if (otherType.kind != kind) return false

@@ -91,7 +91,7 @@ internal class SchemaProcessorImpl(
             val superFields = requiredSuperMarkers.mapNotNull { it.getField(columnName) }
 
             val fieldsToOverride = superFields
-                .filter { it.columnSchema != columnSchema }
+                .filter { !it.columnSchema.compare(columnSchema).matches() }
                 .map { it.fieldName }
                 .distinctBy { it.unquoted }
 

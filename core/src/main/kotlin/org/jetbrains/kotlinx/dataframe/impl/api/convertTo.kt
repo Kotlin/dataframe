@@ -125,7 +125,7 @@ internal fun AnyFrame.convertToImpl(
                 visited.add(originalColumn.name())
                 val currentSchema = originalColumn.extractSchema()
                 when {
-                    targetSchema == currentSchema -> originalColumn
+                    targetSchema.compare(currentSchema).matches() -> originalColumn
 
                     !allowConversion -> {
                         val originalSchema = mapOf(originalColumn.name to currentSchema)
