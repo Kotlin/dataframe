@@ -5,6 +5,11 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.fillNA
 
+/*
+ * NA KDoc-topic.
+ * Link to it with `@include [NALink]`.
+ */
+
 /**
  * ## `NA`
  * `NA` in Dataframe can be seen as "[NaN] or `null`".
@@ -21,6 +26,9 @@ import org.jetbrains.kotlinx.dataframe.api.fillNA
  *
  * For more information: [See `NA` on the documentation website.](https://kotlin.github.io/dataframe/nanAndNa.html#na)
  *
- * @see NaN
+ * @see [NaN]
  */
 internal typealias NA = Nothing
+
+/** [`NA`][NA] */
+internal typealias NALink = Nothing

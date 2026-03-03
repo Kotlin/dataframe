@@ -153,38 +153,6 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * ### This Describe Overload
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
- * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
- *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
- * This is an entity formed by calling any (combination) of the functions
- * in the DSL that is or can be resolved into one or more columns.
- * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
- * for type- and name-safe columns selection.
- *
- * #### NOTE:
- * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
- * in this DSL directly with any function, they are NOT valid return types for the
- * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
- * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
- *
- * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
- *
- * #### For example:
- *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
- *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
- *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
- *
- *
  *
  * @param [columns] The [Columns Selector][ColumnsSelector] that specifies which
  * columns of this [DataFrame] should be described.
@@ -229,12 +197,6 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * ### This Describe Overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
- *
- * #### For example:
- *
- * `df.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`("length", "age")`
  *
  * @param [columns] The [Column Names][String] that specifies which
  * columns of this [DataFrame] should be described.
@@ -279,16 +241,6 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * ### This Describe Overload
- * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
- * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
- *
- * #### For example:
- *
- * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
- *
- * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
- *
- * `df.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`(length, age)`
  *
  * @param [columns] The [Column Accessors][ColumnReference] that specifies which
  * columns of this [DataFrame] should be described.
@@ -335,14 +287,6 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * ### This Describe Overload
- * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
- *
- * #### For example:
- * ```kotlin
- * data class Person(val length: Double, val age: Double)
- * ```
- *
- * `df.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`(Person::length, Person::age)`
  *
  * @param [columns] The [KProperties][KProperty] that specifies which
  * columns of this [DataFrame] should be described.

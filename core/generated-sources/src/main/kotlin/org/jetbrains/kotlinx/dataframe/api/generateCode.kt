@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi
+import org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs.ExtensionPropertiesAPI
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
@@ -44,7 +44,7 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
  * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
  *   the generated Kotlin code of data schema declarations (markers).
  * @param markerName The base name to use for generated data schema declarations (markers). If not specified, it generates a name from type [T].
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
+ * @param extensionProperties Whether to generate [extension properties (column accessors)][`Extension Properties API`]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
  *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
@@ -91,7 +91,7 @@ public fun <T> DataFrame<T>.generateInterfaces(
  * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
  *   the generated Kotlin code of data schema declarations (markers).
  * @param markerName The base name to use for generated data schema declarations (markers). If not specified, it generates a name from type [T].
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
+ * @param extensionProperties Whether to generate [extension properties (column accessors)][`Extension Properties API`]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
  *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
@@ -140,7 +140,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
  * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
  *   the generated Kotlin code of data schema declarations (markers).
  * @param markerName The base name to use for generated data schema declarations (markers). If not specified, it generates a name from type [T].
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
+ * @param extensionProperties Whether to generate [extension properties (column accessors)][`Extension Properties API`]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
  *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
@@ -190,7 +190,7 @@ public fun <T> DataFrame<T>.generateDataClasses(
  * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
  *   the generated Kotlin code of data schema declarations (markers).
  * @param markerName The base name to use for generated data schema declarations (markers). If not specified, it generates a name from type [T].
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
+ * @param extensionProperties Whether to generate [extension properties (column accessors)][`Extension Properties API`]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
  *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
@@ -240,7 +240,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
  * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
  *   the generated Kotlin code of data schema declarations (markers).
  * @param markerName The base name to use for generated data schema declarations (markers).
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
+ * @param extensionProperties Whether to generate [extension properties (column accessors)][`Extension Properties API`]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
  *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
@@ -294,7 +294,7 @@ public fun DataFrameSchema.generateInterfaces(
  *
  *
  * @param markerName The base name to use for generated data schema declarations (markers).
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi]
+ * @param extensionProperties Whether to generate [extension properties (column accessors)][`Extension Properties API`]
  *   in addition to data schema declarations (markers).
  *   Useful if you don't use the compiler plugin, otherwise they are not needed;
  *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.

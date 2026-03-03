@@ -81,7 +81,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [(What is this notation?)][`DSL Grammar`]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -185,7 +185,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -217,7 +217,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -252,7 +252,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -285,7 +285,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -319,7 +319,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -351,7 +351,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -387,7 +387,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `take` is called `takeCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -423,7 +423,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -455,7 +455,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -490,7 +490,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -523,7 +523,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -557,7 +557,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -589,7 +589,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -625,7 +625,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLast` is called `takeLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -661,7 +661,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeWhile` is called
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -692,7 +692,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeWhile` is called
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -726,7 +726,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeWhile` is called
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -758,7 +758,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeWhile` is called
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -790,7 +790,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeWhile` is called
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -822,7 +822,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeWhile` is called
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -858,7 +858,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeWhile` is called
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -894,7 +894,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLastWhile` is called
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -925,7 +925,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLastWhile` is called
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -959,7 +959,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLastWhile` is called
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -991,7 +991,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLastWhile` is called
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -1023,7 +1023,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLastWhile` is called
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -1055,7 +1055,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLastWhile` is called
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
@@ -1091,7 +1091,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] can be used as receiver for these functions.
+     * Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessAPIs] can be used as receiver for these functions.
      *
      * NOTE: To avoid ambiguity, `takeLastWhile` is called
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
