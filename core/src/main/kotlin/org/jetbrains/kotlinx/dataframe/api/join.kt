@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.`Auto-renaming columns in DataFrame`
+import org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -29,7 +29,7 @@ import kotlin.reflect.KProperty
  *
  * If both [DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame] will be
- * [automatically renamed][`Auto-renaming columns in DataFrame`]
+ * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
  * in the resulting [DataFrame].
  */
 @ExcludeFromSources
@@ -76,7 +76,7 @@ private typealias JOIN_METHOD = Nothing
  * Use [right][JoinDsl.right] to access columns from the right [DataFrame],
  * and [match][JoinDsl.match] to explicitly pair columns with different names.
  *
- * See also [Columns selection via DSL][SelectingColumns.ColumnsSelectionDSL].
+ * See also [Columns selection via DSL][SelectingColumns.ColumnsSelectionDsl].
  *
  * ### Examples
  * ```kotlin
@@ -132,7 +132,7 @@ private typealias JoinStringApiExample = Nothing
 
 /**
  * @include [JoinDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * @include [JoinStringApiExample]
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -185,7 +185,7 @@ public fun <A, B> DataFrame<A>.innerJoin(
 
 /**
  * @include [InnerJoinDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] innerJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -234,7 +234,7 @@ public fun <A, B> DataFrame<A>.leftJoin(
 
 /**
  * @include [LeftJoinDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] leftJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -283,7 +283,7 @@ public fun <A, B> DataFrame<A>.rightJoin(
 
 /**
  * @include [RightJoinDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] rightJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -332,7 +332,7 @@ public fun <A, B> DataFrame<A>.fullJoin(
 
 /**
  * @include [FullJoinDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] fullJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -381,7 +381,7 @@ public fun <A, B> DataFrame<A>.filterJoin(
 
 /**
  * @include [FilterJoinDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] filterJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
@@ -430,7 +430,7 @@ public fun <A, B> DataFrame<A>.excludeJoin(
 
 /**
  * @include [ExcludeJoinDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * @include [JoinStringApiExample] {@set [JOIN_METHOD] excludeJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.

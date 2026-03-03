@@ -32,7 +32,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
  * Always use your common sense reading it and if you're unsure, try out the function yourself or check
  * the source code :).
  */
-public typealias `DSL Grammar` = Nothing
+public typealias DslGrammar = Nothing
 
-/** [(What is this notation?)][`DSL Grammar`] */
+/** [(What is this notation?)][DslGrammar] */
 internal typealias DslGrammarLink = Nothing

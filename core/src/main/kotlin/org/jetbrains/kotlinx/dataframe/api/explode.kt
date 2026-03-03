@@ -52,7 +52,7 @@ internal typealias ExplodeDocs = Nothing
 
 /**
  * {@include [ExplodeDocs]}
- * {@include [SelectingColumns.ColumnsSelectionDSL]}
+ * {@include [SelectingColumns.ColumnsSelectionDsl]}
  *
  * #### Examples
  *
@@ -82,7 +82,7 @@ public fun <T> DataFrame<T>.explode(
 
 /**
  * {@include [ExplodeDocs]}
- * {@include [SelectingColumns.ColumnNamesAPI]}
+ * {@include [SelectingColumns.ColumnNamesApi]}
  *
  * #### Example
  *
@@ -143,7 +143,7 @@ internal typealias ExplodeDataRowDocs = Nothing
 
 /**
  * {@include [ExplodeDataRowDocs]}
- * {@include [SelectingColumns.ColumnsSelectionDSL]}
+ * {@include [SelectingColumns.ColumnsSelectionDsl]}
  *
  * #### Example
  *
@@ -166,7 +166,7 @@ public fun <T> DataRow<T>.explode(
 
 /**
  * {@include [ExplodeDataRowDocs]}
- * {@include [SelectingColumns.ColumnNamesAPI]}
+ * {@include [SelectingColumns.ColumnNamesApi]}
  *
  * #### Example
  *

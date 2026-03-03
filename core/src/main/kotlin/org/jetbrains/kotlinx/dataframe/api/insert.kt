@@ -197,7 +197,7 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
- * See [SelectingColumns.ColumnsSelectionDSL].
+ * See [SelectingColumns.ColumnsSelectionDsl].
  *
  * ### Examples
  * ```kotlin
@@ -312,7 +312,7 @@ public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T>
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.ColumnNamesAPI].
+ * See also: [SelectingColumns.ColumnNamesApi].
  *
  * ### Example
  * ```kotlin
@@ -352,7 +352,7 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.ColumnsSelectionDSL].
+ * See also: [SelectingColumns.ColumnsSelectionDsl].
  *
  * ### Examples:
  * ```kotlin
@@ -379,7 +379,7 @@ public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.ColumnNamesAPI].
+ * See also: [SelectingColumns.ColumnNamesApi].
  *
  * ### Example
  * ```kotlin

@@ -91,7 +91,7 @@ private typealias CommonGroupDocs = Nothing
 
 /**
  * @include [CommonGroupDocs]
- * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetGroupOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.group { columnA and columnB }.into("valueCols")
@@ -104,7 +104,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
 
 /**
  * @include [CommonGroupDocs]
- * @include [SelectingColumns.ColumnNamesAPI] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetGroupOperationArg]}
  * ### Example:
  * ```kotlin
  * df.group("second").into("valueCols")
@@ -160,7 +160,7 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example:
  * ```kotlin
@@ -190,7 +190,7 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnsSelectionDSL]
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples:
  * ```kotlin
@@ -223,7 +223,7 @@ public fun <T, C> GroupClause<T, C>.into(
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Examples:
  * ```kotlin

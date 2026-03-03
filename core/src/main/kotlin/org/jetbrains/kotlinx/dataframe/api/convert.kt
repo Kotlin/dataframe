@@ -228,7 +228,7 @@ private typealias CommonConvertDocs = Nothing
 
 /**
  * @include [CommonConvertDocs]
- * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetConvertOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetConvertOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.convert { columnA and columnB }.with { it.toString().lowercase() }
@@ -246,7 +246,7 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T,
 
 /**
  * @include [CommonConvertDocs]
- * @include [SelectingColumns.ColumnNamesAPI] {@include [SetConvertOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetConvertOperationArg]}
  * ### Example:
  * ```kotlin
  * df.convert("person", "position").toStr()

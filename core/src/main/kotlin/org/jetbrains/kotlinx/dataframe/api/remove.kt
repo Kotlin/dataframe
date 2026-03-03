@@ -47,7 +47,7 @@ private typealias CommonRemoveDocs = Nothing
 
 /**
  * @include [CommonRemoveDocs]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetRemoveOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] used to remove the columns of this [DataFrame].
  */
 @Refine
@@ -57,14 +57,14 @@ public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T>
 
 /**
  * @include [CommonRemoveDocs]
- * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetRemoveOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [Column Names][String] used to remove the columns of this [DataFrame].
  */
 public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remove { columns.toColumnSet() }
 
 /**
  * @include [CommonRemoveDocs]
- * G
+ *
  * @param [columns] The [Column Accessors][ColumnReference] used to remove the columns of this [DataFrame].
  */
 @Deprecated(DEPRECATED_ACCESS_API)

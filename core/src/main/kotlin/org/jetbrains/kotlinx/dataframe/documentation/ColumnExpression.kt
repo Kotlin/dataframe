@@ -14,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.api.expr
  *
  * [`expr {}`][expr] behaves like a mapping statement, iterating over the object it's called on.
  */
-@Suppress("ClassName")
 internal interface ColumnExpression {
 
     /**

@@ -162,7 +162,7 @@ private typealias UpdateWithNote = Nothing
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [Update.DslParam]
  */
 @Interpretable("Update0")
@@ -170,7 +170,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [UpdateWithNote]
  * @include [Update.ColumnNamesParam]
  */
@@ -472,8 +472,6 @@ public fun <T, C> DataFrame<T>.update(
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- *
- *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
  *
@@ -492,7 +490,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}

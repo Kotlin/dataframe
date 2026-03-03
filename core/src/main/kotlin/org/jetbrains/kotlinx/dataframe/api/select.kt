@@ -60,7 +60,7 @@ private typealias CommonSelectDocs = Nothing
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetSelectOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
 @Refine
@@ -78,7 +78,7 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
 
 /**
  * @include [CommonSelectDocs]
- * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetSelectOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
  */
 @Refine

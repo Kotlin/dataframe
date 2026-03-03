@@ -111,7 +111,7 @@ private typealias CommonGatherDocs = Nothing
 
 /**
  * @include [CommonGatherDocs]
- * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetGatherOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetGatherOperationArg]}
  * ### Examples
  * ```kotlin
  * // Gather `resultA` and `resultB` columns into a single "value" column,
@@ -138,7 +138,7 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
 
 /**
  * @include [CommonGatherDocs]
- * @include [SelectingColumns.ColumnNamesAPI] {@include [SetGatherOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetGatherOperationArg]}
  * ### Example
  * ```kotlin
  * df.gather("resultA", "resultB").mapKeys { it.last() }.into("series", "value")

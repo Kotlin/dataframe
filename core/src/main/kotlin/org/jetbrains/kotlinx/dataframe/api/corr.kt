@@ -138,7 +138,7 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -162,7 +162,7 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.ColumnNamesAPI] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -219,7 +219,7 @@ private typealias CommonCorrWithDocs = Nothing
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin
@@ -238,7 +238,7 @@ public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataF
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.ColumnNamesAPI] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin

@@ -125,6 +125,7 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
 
 /**
  * @include [DescribeWithSelection]
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetDescribeOperationArg]}
  *
  * @param [columns] The [Columns Selector][ColumnsSelector] that specifies which
  * columns of this [DataFrame] should be described.
@@ -134,6 +135,7 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
 
 /**
  * @include [DescribeWithSelection]
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetDescribeOperationArg]}
  *
  * @param [columns] The [Column Names][String] that specifies which
  * columns of this [DataFrame] should be described.

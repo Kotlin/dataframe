@@ -6,6 +6,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
  * Issues URLs KDoc-snippets.
  *
  * Contains all links to Kotlin DataFrame related issues.
+ * Note that Kotlin/dataframe issues can be simply written as `#1234`.
  *
  * Include it in KDoc with `@include [-class-]`.
  * For example: `@include [Issues.ConflictingOverloadsK2Link]`.

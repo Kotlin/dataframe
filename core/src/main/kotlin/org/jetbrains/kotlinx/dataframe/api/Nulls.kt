@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.`NA`
+import org.jetbrains.kotlinx.dataframe.documentation.NA
 import org.jetbrains.kotlinx.dataframe.documentation.`NaN`
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.get
@@ -67,7 +67,7 @@ private typealias CommonFillNullsFunctionDoc = Nothing
 
 /**
  * @include [CommonFillNullsFunctionDoc]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetFillNullsOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.DslParam]
  */
 @Interpretable("FillNulls0")
@@ -76,7 +76,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
 
 /**
  * @include [CommonFillNullsFunctionDoc]
- * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetFillNullsOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> = fillNulls { columns.toColumnSet() }
@@ -112,7 +112,7 @@ internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (
  *
  * Overload of `isNA` with contract support.
  *
- * @see `NA`
+ * @see NA
  */
 @JvmName("isNaWithContract")
 @Suppress("NOTHING_TO_INLINE")
@@ -125,7 +125,7 @@ internal inline fun <T : Any?> T.isNA(): Boolean {
 /**
  * Is `true` if [this] is considered NA.
  * "NA", in DataFrame, roughly means `null` or `NaN`.
- * @see `NA`
+ * @see NA
  */
 internal inline val Any?.isNA: Boolean
     get() = when (this) {
@@ -141,19 +141,19 @@ internal inline val AnyCol.canHaveNaN: Boolean get() = typeClass.let { it == Dou
 
 /**
  * Is `true` when [this] column can have [`NA`] values.
- * @see `NA`
+ * @see NA
  */
 internal inline val AnyCol.canHaveNA: Boolean get() = hasNulls() || canHaveNaN || kind() != ColumnKind.Value
 
 /**
  * Is `true` when [this] is `null` or [Double.NaN].
- * @see `NA`
+ * @see NA
  */
 internal inline val Double?.isNA: Boolean get() = this == null || this.isNaN()
 
 /**
  * Is `true` when [this] is `null` or [Float.NaN].
- * @see `NA`
+ * @see NA
  */
 internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 
@@ -197,7 +197,7 @@ private typealias CommonFillNaNsFunctionDoc = Nothing
 
 /**
  * @include [CommonFillNaNsFunctionDoc]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetFillNaNsOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.DslParam]
  */
 @Interpretable("FillNaNs0")
@@ -206,7 +206,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
 
 /**
  * @include [CommonFillNaNsFunctionDoc]
- * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetFillNaNsOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> = fillNaNs { columns.toColumnSet() }
@@ -272,7 +272,7 @@ private typealias CommonFillNAFunctionDoc = Nothing
 
 /**
  * @include [CommonFillNAFunctionDoc]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetFillNAOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetFillNAOperationArg]}
  * @include [Update.DslParam]
  */
 @Interpretable("FillNulls0") // fillNA changes schema same as fillNulls
@@ -281,7 +281,7 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
 
 /**
  * @include [CommonFillNAFunctionDoc]
- * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetFillNAOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetFillNAOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> = fillNA { columns.toColumnSet() }
@@ -366,7 +366,7 @@ private typealias CommonDropNullsFunctionDoc = Nothing
 
 /**
  * @include [CommonDropNullsFunctionDoc]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetDropNullsOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetDropNullsOperationArg]}
  * `df.`[dropNulls][dropNulls]`(whereAllNull = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
  * @include [DropNulls.WhereAllNullParam]
  * @include [DropDslParam]
@@ -487,7 +487,7 @@ private typealias CommonDropNAFunctionDoc = Nothing
 
 /**
  * @include [CommonDropNAFunctionDoc]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetDropNAOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetDropNAOperationArg]}
  * `df.`[dropNA][dropNA]`(whereAllNA = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
  * @include [DropNA.WhereAllNAParam]
  * @include [DropDslParam]
@@ -517,7 +517,7 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
 
 /**
  * @include [CommonDropNAFunctionDoc]
- * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetDropNAOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetDropNAOperationArg]}
  * `df.`[dropNA][dropNA]`("length", whereAllNA = true)`
  * @include [DropNA.WhereAllNAParam]
  * @include [DropColumnNamesParam]
@@ -602,7 +602,7 @@ private typealias CommonDropNaNsFunctionDoc = Nothing
 
 /**
  * @include [CommonDropNaNsFunctionDoc]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetDropNaNsOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetDropNaNsOperationArg]}
  * `df.`[dropNaNs][dropNaNs]`(whereAllNaN = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
  * @include [DropNaNs.WhereAllNaNParam]
  * @include [DropDslParam]

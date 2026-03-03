@@ -49,7 +49,7 @@ private typealias CommonUngroupDocs = Nothing
 
 /**
  * @include [CommonUngroupDocs]
- * @include [SelectingColumns.ColumnsSelectionDSL] {@include [SetUngroupOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetUngroupOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.ungroup { groupA and groupB }
@@ -65,7 +65,7 @@ public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFram
 
 /**
  * @include [CommonUngroupDocs]
- * @include [SelectingColumns.ColumnNamesAPI.ColumnNamesApiWithExample] {@include [SetUngroupOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetUngroupOperationArg]}
  * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to ungroup.
  */
 public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungroup { columns.toColumnSet() }

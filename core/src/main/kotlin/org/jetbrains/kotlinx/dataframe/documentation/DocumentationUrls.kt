@@ -8,7 +8,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
  * Contains all links to Kotlin DataFrame documentation pages.
  *
  * Include it in KDoc with `@include [-class-]`.
- * For example: `@include [DocumentationUrls.Select]`.
+ * For example: `For more information: {@include [DocumentationUrls.SomeUrl]}`.
  */
 internal interface DocumentationUrls {
 

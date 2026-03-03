@@ -50,7 +50,7 @@ internal typealias CountDistinctDocs = Nothing
 
 /**
  * {@include [CountDistinctDocs]}
- * {@include [SelectingColumns.ColumnsSelectionDSL]}
+ * {@include [SelectingColumns.ColumnsSelectionDsl]}
  *
  * #### Example
  *
@@ -69,7 +69,7 @@ public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): In
 
 /**
  * {@include [CountDistinctDocs]}
- * {@include [SelectingColumns.ColumnNamesAPI]}
+ * {@include [SelectingColumns.ColumnNamesApi]}
  *
  * #### Example
  *

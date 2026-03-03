@@ -403,7 +403,7 @@ public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumns
 
 /**
  * @include [CommonPivotDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * * [pivot] with a single key column produces a [Pivot] containing one column for each unique key
  *   (i.e., key column unique values) with the corresponding group;
  * * [pivot] with multiple keys combined using [and] produces a [Pivot]
@@ -507,7 +507,7 @@ public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotC
 
 /**
  * @include [DataFramePivotMatchesCommonDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -599,7 +599,7 @@ public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotCo
 
 /**
  * @include [DataFramePivotCountsCommonDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -655,7 +655,7 @@ private typealias CommonPivotForGroupByDocs = Nothing
 
 /**
  * @include [CommonPivotForGroupByDocs]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
  * @include [PivotDocs.InwardKDocsForGrouped]
  * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector] that defines which columns are pivoted.
  * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
@@ -671,7 +671,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: B
 
 /**
  * @include [CommonPivotForGroupByDocs]
- * @include [SelectingColumns.ColumnsSelectionDSL.ColumnsSelectionDSLWithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
  * @include [PivotDocs.InwardKDocsForGrouped]
  * @param [columns] The [Column names][String] that defines which columns are pivoted.
  * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
@@ -736,7 +736,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: Pivot
 
 /**
  * @include [GroupByPivotMatchesCommonDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -812,7 +812,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
 
 /**
  * @include [GroupByPivotCountsCommonDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -914,7 +914,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(
 
 /**
  * @include [AggregateGroupedDslPivotDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * ### Example
  * ```kotlin
  * df.groupBy("firstName").aggregate {
@@ -1014,7 +1014,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(
 
 /**
  * @include [AggregateGroupedDslPivotMatchesDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * ### Example
  * ```kotlin
  * df.groupBy("firstName").aggregate {
@@ -1100,7 +1100,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(
 
 /**
  * @include [AggregateGroupedDslPivotCountsDocs]
- * @include [SelectingColumns.ColumnNamesAPI]
+ * @include [SelectingColumns.ColumnNamesApi]
  * ### Example
  * ```kotlin
  * df.groupBy("firstName").aggregate {

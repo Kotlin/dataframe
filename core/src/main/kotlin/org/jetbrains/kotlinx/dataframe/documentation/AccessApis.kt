@@ -19,8 +19,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  *
  * For more information: {@include [DocumentationUrls.AccessApis]}
  */
-@Suppress("RemoveRedundantBackticks", "ClassName")
-internal interface AccessAPIs {
+internal interface AccessApis {
 
     /*
      * String API KDoc-topic.
@@ -30,13 +29,13 @@ internal interface AccessAPIs {
     /**
      * ## String API
      *
-     * In this [AccessAPIs], columns are accessed by a [String] representing their name.
+     * In this [AccessApis], columns are accessed by a [String] representing their name.
      * Type-checking and name-checking are done at runtime, too.
      *
      * ### String Column Accessors
      *
      * You can also specify a column using a [String] representing their name
-     * and path inside the [Columns Selection DSL][SelectingColumns.ColumnsSelectionDSL] and
+     * and path inside the [Columns Selection DSL][SelectingColumns.ColumnsSelectionDsl] and
      * [Row Expressions][ExpressionsGivenRow].
      *
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
@@ -54,7 +53,7 @@ internal interface AccessAPIs {
     /**
      * ## Extension Properties API
      *
-     * When working with a [DataFrame], the most convenient and reliable way to [access its columns][AccessAPIs] —
+     * When working with a [DataFrame], the most convenient and reliable way to [access its columns][AccessApis] —
      * including for operations and retrieving column values in row expressions —
      * is through auto-generated extension properties.
      *
@@ -76,7 +75,7 @@ internal interface AccessAPIs {
      *
      * You can access columns using extension properties in a type-safe way, avoiding typos and relying on autocompletion.
      * These properties can be used in:
-     * - [Columns Selection DSL][SelectingColumns.ColumnsSelectionDSL]
+     * - [Columns Selection DSL][SelectingColumns.ColumnsSelectionDsl]
      * - [Row Expressions][ExpressionsGivenRow]
      *
      * ```kotlin
@@ -92,11 +91,11 @@ internal interface AccessAPIs {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.ExtensionPropertiesApi]}
      */
-    typealias ExtensionPropertiesAPI = Nothing
+    typealias ExtensionPropertiesApi = Nothing
 
-    /** [Extension Properties API][ExtensionPropertiesAPI] */
+    /** [Extension Properties API][ExtensionPropertiesApi] */
     typealias ExtensionPropertiesApiLink = Nothing
 }
 
-/** [Access APIs][AccessAPIs] */
+/** [Access APIs][AccessApis] */
 internal typealias AccessApiLink = Nothing

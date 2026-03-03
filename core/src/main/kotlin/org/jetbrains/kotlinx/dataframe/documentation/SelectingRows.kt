@@ -38,7 +38,7 @@ internal interface SelectingRows {
      * and is expected to return a [Boolean] value.
      *
      * It allows you to define conditions using the row's values directly,
-     * including through [extension properties][AccessAPIs.ExtensionPropertiesAPI]
+     * including through [extension properties][AccessApis.ExtensionPropertiesApi]
      * for convenient and type-safe access.
      *
      * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
@@ -57,7 +57,7 @@ internal interface SelectingRows {
      * and is expected to return a [Boolean] value.
      *
      * It allows you to define conditions using the row's values directly,
-     * including through [extension properties][AccessAPIs.ExtensionPropertiesAPI]
+     * including through [extension properties][AccessApis.ExtensionPropertiesApi]
      * for convenient and type-safe access.
      *
      * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
