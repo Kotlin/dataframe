@@ -18,8 +18,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -48,9 +48,9 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  * Filters the rows of this [DataFrame] based on the provided [RowFilter].
  * Returns a new [DataFrame] containing only the rows that satisfy the given [predicate].
  *
- * {@include [RowFilterDescription]}
+ * {@include [SelectingRows.RowFilterSnippet]}
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * For more information, see: {@include [DocumentationUrls.Filter]}
  *

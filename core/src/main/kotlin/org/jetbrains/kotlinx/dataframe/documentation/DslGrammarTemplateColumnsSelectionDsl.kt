@@ -57,7 +57,6 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *  {@get [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]}
      * }
      */
-    @Suppress("ClassName")
     public interface DslGrammarTemplate {
 
         // region parts

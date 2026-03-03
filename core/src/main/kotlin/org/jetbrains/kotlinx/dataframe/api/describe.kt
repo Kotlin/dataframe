@@ -125,7 +125,8 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetDescribeOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetDescribeOperationArg]}
+ *
  * @param [columns] The [Columns Selector][ColumnsSelector] that specifies which
  * columns of this [DataFrame] should be described.
  */
@@ -134,7 +135,8 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetDescribeOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetDescribeOperationArg]}
+ *
  * @param [columns] The [Column Names][String] that specifies which
  * columns of this [DataFrame] should be described.
  */
@@ -143,7 +145,7 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetDescribeOperationArg]}
+ *
  * @param [columns] The [Column Accessors][ColumnReference] that specifies which
  * columns of this [DataFrame] should be described.
  */
@@ -154,7 +156,7 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
 
 /**
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetDescribeOperationArg]}
+ *
  * @param [columns] The [KProperties][KProperty] that specifies which
  * columns of this [DataFrame] should be described.
  */

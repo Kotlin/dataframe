@@ -24,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeRow
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
-import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import java.io.File
 import java.io.InputStream
