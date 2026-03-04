@@ -10,7 +10,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(libs.versions.gradle.jdk.get().toInt())
 }
 
 // rules are set up through .editorconfig

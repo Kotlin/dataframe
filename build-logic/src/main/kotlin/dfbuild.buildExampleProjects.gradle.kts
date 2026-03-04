@@ -252,17 +252,19 @@ val testBuildingExamples: SourceSet by sourceSets.creating {
     runtimeClasspath += sourceSets.main.get().output
 }
 
+// because testBuildingExamples depends on :build-logic, we must match the JDK version
+// with the version we use to run Gradle project-wide.
 tasks.named<KotlinCompile>("compile${testBuildingExamples.name.capitalized()}Kotlin") {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_21
-        freeCompilerArgs.add("-Xjdk-release=21")
+        jvmTarget = JvmTarget.fromTarget(libs.versions.gradle.jdk.get())
+        freeCompilerArgs.add("-Xjdk-release=${libs.versions.gradle.jdk.get()}")
     }
 }
-
 tasks.named<JavaCompile>("compile${testBuildingExamples.name.capitalized()}Java") {
-    sourceCompatibility = JavaVersion.VERSION_21.toString()
-    targetCompatibility = JavaVersion.VERSION_21.toString()
-    options.release.set(21)
+    val javaVersion = JavaVersion.toVersion(libs.versions.gradle.jdk.get())
+    sourceCompatibility = javaVersion.toString()
+    targetCompatibility = javaVersion.toString()
+    options.release.set(javaVersion.majorVersion.toInt())
 }
 
 val testBuildingExamplesImplementation: Configuration by configurations.getting {

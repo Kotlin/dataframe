@@ -8,6 +8,9 @@ ktlint = "1.8.0"
 kotlin = "2.3.10"
 kotlinpoet = "2.2.0"
 
+# The jvmToolchain version. Gradle should run with this JDK version.
+gradle-jdk = "21"
+
 dokka = "2.1.0"
 libsPublisher = "2.2.0-dev-61"
 
