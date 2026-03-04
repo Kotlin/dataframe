@@ -80,7 +80,7 @@ private fun setupExampleProjectFolderSyncTask(folder: File, isDev: Boolean) {
 
 // region promoting
 
-val promoteExamples by tasks.registering {
+val promoteDevExamples by tasks.registering {
     group = buildExampleProjectsGroup
     description = "Promotes the /examples/projects/dev example projects to /examples/projects"
 

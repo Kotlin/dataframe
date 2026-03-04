@@ -38,7 +38,7 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
         - `sync<NameOfFolder(Dev)>`: Syncs and overwrites build settings and versions.
           Copies and overwrites versions from the main `libs.versions.toml`, `gradle.properties`, etc.
         - `syncAllExampleFolders`: Syncs all example projects. Automatically called on `assemble`.
-        - `promoteExamples`: Promotes the `/examples/projects/dev` example projects to `/examples/project`.
+        - `promoteDevExamples`: Promotes the `/examples/projects/dev` example projects to `/examples/project`.
           To be called after a release. Automatically calls `syncAllExampleFolders` afterward.
         - `generate<NameOfFolder(Dev)>Test`: Generates a Junit test class for the given folder in
           `/build/generated/testBuildingExamples/src/test/kotlin`.

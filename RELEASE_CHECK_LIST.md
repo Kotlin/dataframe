@@ -38,6 +38,6 @@
     - Update regions in the file accordingly.
 22. Update Notebook examples, both in the project and on Datalore.
     - Dev notebooks may contain updated code for release Notebook examples.
-23. Promote dev project examples by running `gradlew promoteExamples`.
+23. Promote dev project examples by running `gradlew promoteDevExamples`.
 
 (Activities that need to be done for **R**elease **C**andidate releases are marked as such)
