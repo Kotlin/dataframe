@@ -54,7 +54,7 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][GroupBySelectingOptions].
  *
@@ -346,7 +346,7 @@ private typealias CommonGroupByDocs = Nothing
 
 /**
  * @include [CommonGroupByDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetGroupByOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetGroupByOperationArg]}
  *
  * @param [moveToTop] Specifies whether nested grouping columns should be moved to the top level
  * or kept inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -367,7 +367,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
 
 /**
  * @include [CommonGroupByDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetGroupByOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetGroupByOperationArg]}
  *
  * @param [cols] The [Column names][String] that defines which columns are used
  * as keys for grouping.
@@ -405,7 +405,7 @@ private typealias CommonGroupByForPivotDocs = Nothing
 
 /**
  * {@include [CommonGroupByForPivotDocs]}
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetGroupByOperationArg] {@set [SelectingColumns.RECEIVER] <code>`pivot`</code>}}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetGroupByOperationArg] {@set [SelectingColumns.RECEIVER] <code>`pivot`</code>}}
  *
  * @param moveToTop Specifies whether nested grouping columns should be moved to the top level
  * or kept inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -424,7 +424,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupB
 
 /**
  * {@include [CommonGroupByForPivotDocs]}
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * #### For example:
  *

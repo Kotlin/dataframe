@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -18,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
-import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty

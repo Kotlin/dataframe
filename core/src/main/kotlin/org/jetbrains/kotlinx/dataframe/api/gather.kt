@@ -52,7 +52,7 @@ import kotlin.reflect.typeOf
  *
  * This operation is the reverse of [pivot].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * For more information: {@include [DocumentationUrls.Gather]}
  *
@@ -111,7 +111,7 @@ private typealias CommonGatherDocs = Nothing
 
 /**
  * @include [CommonGatherDocs]
- * @include [SelectingColumns.Dsl] {@include [SetGatherOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetGatherOperationArg]}
  * ### Examples
  * ```kotlin
  * // Gather `resultA` and `resultB` columns into a single "value" column,
@@ -138,7 +138,7 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
 
 /**
  * @include [CommonGatherDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetGatherOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetGatherOperationArg]}
  * ### Example
  * ```kotlin
  * df.gather("resultA", "resultB").mapKeys { it.last() }.into("series", "value")

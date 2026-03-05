@@ -2,6 +2,14 @@
 
 package org.jetbrains.kotlinx.dataframe.documentation
 
+/*
+ * Documentation URLs KDoc-snippets.
+ *
+ * Contains all links to Kotlin DataFrame documentation pages.
+ *
+ * Include it in KDoc with `@include [-class-]`.
+ * For example: `For more information: {@include [DocumentationUrls.SomeUrl]}`.
+ */
 internal interface DocumentationUrls {
 
     /** https://kotlin.github.io/dataframe */
@@ -13,21 +21,12 @@ internal interface DocumentationUrls {
         /** [See String API on the documentation website.]({@include [Url]}/stringapi.html) */
         typealias StringApi = Nothing
 
-        /** [See Column Accessors API on the documentation website.]({@include [Url]}/columnaccessorsapi.html) */
-        typealias ColumnAccessorsApi = Nothing
-
-        /** [See KProperties API on the documentation website.]({@include [Url]}/kpropertiesapi.html) */
-        typealias KPropertiesApi = Nothing
-
         /** [See Extension Properties API on the documentation website.]({@include [Url]}/extensionpropertiesapi.html) */
         typealias ExtensionPropertiesApi = Nothing
     }
 
     /** [See Column Selectors on the documentation website.]({@include [Url]}/columnselectors.html) */
     typealias ColumnSelectors = Nothing
-
-    /** [See Extension Properties API on the documentation website.]({@include [Url]}/extensionpropertiesapi.html) */
-    typealias ExtensionPropertiesApi = Nothing
 
     /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
     typealias CompilerPlugin = Nothing
