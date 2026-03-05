@@ -1,18 +1,14 @@
 plugins {
-    java
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(shadow)
         alias(publisher)
-        alias(ktlint)
     }
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compileOnly(libs.kotlin.compiler)
@@ -21,8 +17,7 @@ dependencies {
     testImplementation(libs.kotlin.compiler.internal.test.framework)
 
     testRuntimeOnly(projects.core)
-
-    testRuntimeOnly(libs.kotlin.test)
+    testImplementation(libs.kotlin.test.junit5)
     testRuntimeOnly(libs.kotlin.script.runtime)
     testRuntimeOnly(libs.kotlin.annotations.jvm)
 

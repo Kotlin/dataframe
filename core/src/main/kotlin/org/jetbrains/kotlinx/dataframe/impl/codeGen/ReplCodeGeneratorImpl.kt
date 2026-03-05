@@ -168,7 +168,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                 if (baseClassNames == tempBaseClassNames) {
                     val newBaseMarkers = baseClasses.map { resolve(it) }
                     val newMarker = Marker(
-                        name = clazz.qualifiedName!!,
+                        name = clazz.quotedQualifiedNameOrNull()!!,
                         isOpen = temp.isOpen,
                         fields = temp.fields,
                         superMarkers = newBaseMarkers,

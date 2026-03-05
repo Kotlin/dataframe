@@ -156,6 +156,40 @@ class RenameTests : ColumnsSelectionDslTests() {
             df.select { col("age") into col("age2") },
         ).shouldAllBeEqual()
     }
+
+    @Test
+    fun `col by index named`() {
+        val df = dataFrameOf(
+            "col0" to columnOf(1, 4),
+            "col1" to columnOf(2, 5),
+            "col2" to columnOf(3, 6),
+        )
+
+        listOf(
+            df.select { col(0) and (col(1) named "renamed") and col(2) },
+            df.select { col(0) and (col(1) into "renamed") and col(2) },
+            df.select { col(0) and (col<Int>(1) named "renamed") and col(2) },
+            df.select { col(0) and (col<Int>(1) into "renamed") and col(2) },
+        ).shouldAllBeEqual()
+
+        val result = df.select { col(0) and (col(1) named "renamed") and col(2) }
+        result.columnNames() shouldBe listOf("col0", "renamed", "col2")
+        result["renamed"].toList() shouldBe listOf(2, 5)
+    }
+
+    @Test
+    fun `col by index named with convert`() {
+        val df = dataFrameOf(
+            "a" to columnOf(1, 4),
+            "b" to columnOf(2, 5),
+            "c" to columnOf(3, 6),
+        )
+
+        val result = df.convert { col<Int>(0) named "newA" }.with { it * 10 }
+
+        result.columnNames() shouldBe listOf("newA", "b", "c")
+        result["newA"].toList() shouldBe listOf(10, 40)
+    }
 }
 
 class RenameToCamelCaseTests {

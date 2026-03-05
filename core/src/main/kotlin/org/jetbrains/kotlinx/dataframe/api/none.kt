@@ -23,7 +23,7 @@ public fun <T> DataColumn<T>.none(predicate: Predicate<T>): Boolean = values.non
 /**
  * Returns `true` if none of the rows in this [DataFrame] satisfies the given [predicate].
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowFilterSnippet]}
  *
  * ### Example
  * ```kotlin
@@ -64,7 +64,7 @@ public interface NoneColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`none`**][ColumnsSelectionDsl.none] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
     }
 
     /**

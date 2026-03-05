@@ -33,18 +33,18 @@ internal interface SelectingRows {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface FIRST_OPERATION
+    typealias FIRST_OPERATION = Nothing
 
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface SECOND_OPERATION
+    typealias SECOND_OPERATION = Nothing
 
-    interface SetDefaultOperationArg
+    typealias SetDefaultOperationArg = Nothing
 
     /** [Entire-Row Condition][EntireRowCondition.WithExample] */
-    interface RowConditionLink
+    typealias RowConditionLink = Nothing
 
     /** Filter or find rows to operate on using a [row filter][RowFilter]. */
     interface EntireRowCondition {
@@ -59,11 +59,11 @@ internal interface SelectingRows {
          * `df.`operation` { `[diff][diff]` { age } == 0 }`
          *
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 
     /** [Row-Value Condition][RowValueCondition.WithExample] */
-    interface RowValueConditionLink
+    typealias RowValueConditionLink = Nothing
 
     /** Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
      * [row value filter][RowValueFilter].
@@ -81,9 +81,9 @@ internal interface SelectingRows {
          * `df.`operation` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`where` { `[index][index]`() > 4 && city != "Paris" }`
          *
          */
-        interface WithExample
+        typealias WithExample = Nothing
     }
 }
 
 /** [Row Condition][SelectingRows] */
-internal interface RowConditionLink
+internal typealias RowConditionLink = Nothing

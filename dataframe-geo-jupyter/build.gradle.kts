@@ -1,13 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm11)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
         alias(jupyter.api)
-        alias(ktlint)
-        alias(dataframe)
-        alias(ksp)
     }
 }
 
@@ -15,7 +14,7 @@ group = "org.jetbrains.kotlinx"
 
 repositories {
     // geo repository should come before Maven Central
-    maven("https://repo.osgeo.org/repository/release")
+    maven(url = "https://repo.osgeo.org/repository/release")
     mavenCentral()
     mavenLocal()
 }

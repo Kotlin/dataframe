@@ -7,7 +7,7 @@ import kotlin.reflect.KType
 
 internal class ValueColumnWithParent<T>(override val parent: ColumnGroup<*>, override val source: ValueColumn<T>) :
     ColumnWithParent<T>,
-    ValueColumn<T> by source,
+    ValueColumnInternal<T> by source.internalValueColumn(),
     DataColumnInternal<T> {
 
     override fun equals(other: Any?) = source.checkEquals(other)

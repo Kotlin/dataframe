@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
  * that return a new [DataFrame] with grouped columns.
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][GroupSelectingOptions].
  *
@@ -55,7 +55,7 @@ internal interface GroupDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetGroupOperationArg]}
      */
-    interface GroupSelectingOptions
+    typealias GroupSelectingOptions = Nothing
 
     /**
      * ## Group Operation Grammar
@@ -75,23 +75,23 @@ internal interface GroupDocs {
      * __`.`__[**`into`**][GroupClause.into]` { column: `[`ColumnsSelectionDsl<T>`][ColumnsSelectionDsl]`.(`[`ColumnWithPath<C>`][ColumnWithPath]`) -> `[`AnyColumnReference`][AnyColumnReference]` }`
      *
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [group][group]} */
 @ExcludeFromSources
-private interface SetGroupOperationArg
+private typealias SetGroupOperationArg = Nothing
 
 /**
  * {@include [GroupDocs]}
  * ### This Group Overload
  */
 @ExcludeFromSources
-private interface CommonGroupDocs
+private typealias CommonGroupDocs = Nothing
 
 /**
  * @include [CommonGroupDocs]
- * @include [SelectingColumns.Dsl] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetGroupOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.group { columnA and columnB }.into("valueCols")
@@ -104,7 +104,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
 
 /**
  * @include [CommonGroupDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetGroupOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetGroupOperationArg]}
  * ### Example:
  * ```kotlin
  * df.group("second").into("valueCols")
@@ -160,7 +160,7 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example:
  * ```kotlin
@@ -184,13 +184,13 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  * Groups columns, previously selected with [group], into a new or existing column group
  * within the [DataFrame] by specifying its path via [ColumnsSelectionDsl] expression.
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples:
  * ```kotlin
@@ -223,7 +223,7 @@ public fun <T, C> GroupClause<T, C>.into(
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Examples:
  * ```kotlin

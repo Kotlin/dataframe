@@ -19,7 +19,7 @@ public class CsvDeephaven(private val delimiter: Char = DelimParams.CSV_DELIMITE
         DataFrame.readCsv(file = file, header = header, delimiter = delimiter)
 
     override fun readDataFrame(path: Path, header: List<String>): DataFrame<*> =
-        DataFrame.readCsv(path = path, header = header, delimiter = delimiter)
+        DataFrame.readCsv(path = path, delimiter = delimiter, header = header)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "csv"
 

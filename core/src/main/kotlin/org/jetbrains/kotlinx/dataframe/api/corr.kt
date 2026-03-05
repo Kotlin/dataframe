@@ -47,7 +47,7 @@ import kotlin.reflect.typeOf
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
@@ -59,7 +59,7 @@ internal interface CorrDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetCorrOperationArg]}
      */
-    interface SelectingOptions
+    typealias SelectingOptions = Nothing
 
     /**
      * ## Corr Operation Grammar
@@ -75,19 +75,19 @@ internal interface CorrDocs {
      * {@include [Indent]}
      *`| `__`.`__[**`withItself`**][Corr.withItself]`()`
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [corr][corr]} */
 @ExcludeFromSources
-private interface SetCorrOperationArg
+private typealias SetCorrOperationArg = Nothing
 
 /**
  * {@include [CorrDocs]}
  * ### This Corr Overload
  */
 @ExcludeFromSources
-private interface CommonCorrDocs
+private typealias CommonCorrDocs = Nothing
 
 internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typeOf<Boolean>()
 
@@ -138,7 +138,7 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.Dsl] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -162,7 +162,7 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
 
 /**
  * {@include [CommonCorrDocs]}
- * @include [SelectingColumns.ColumnNames] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetCorrOperationArg]}
  *
  * The function is available for numeric- and [Boolean] columns.
  * [Boolean] values are converted into 1 for true and 0 for false.
@@ -202,24 +202,24 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
  * For more information, see: {@include [DocumentationUrls.Corr]}
  */
-internal interface CorrWithDocs
+internal typealias CorrWithDocs = Nothing
 
 /**
  * {@include [CorrWithDocs]}
  * ### This Corr With Overload
  */
 @ExcludeFromSources
-private interface CommonCorrWithDocs
+private typealias CommonCorrWithDocs = Nothing
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.Dsl] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin
@@ -238,7 +238,7 @@ public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataF
 
 /**
  * {@include [CommonCorrWithDocs]}
- * @include [SelectingColumns.ColumnNames] {@include [SetCorrOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetCorrOperationArg]}
  *
  * ### Examples
  * ```kotlin

@@ -38,6 +38,7 @@ import org.jetbrains.kotlinx.dataframe.keywords.HardKeywords
 import org.jetbrains.kotlinx.dataframe.keywords.ModifierKeywords
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import kotlin.reflect.KClass
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
@@ -77,6 +78,24 @@ internal fun String.needsQuoting(): Boolean =
 public fun String.isQuoted(): Boolean = startsWith("`") && endsWith("`")
 
 public fun String.quoteIfNeeded(): String = if (needsQuoting()) "`$this`" else this
+
+public fun KClass<*>.quotedQualifiedNameOrNull(): String? {
+    fun String.partNeedsQuoting(): Boolean =
+        if (isQuoted()) {
+            false
+        } else {
+            isBlank() ||
+                contains(charsToQuote) ||
+                all { it == '_' } ||
+                any { it != '_' && it.category !in letterCategories }
+        }
+
+    fun String.quotePartIfNeeded(): String = if (partNeedsQuoting()) "`$this`" else this
+
+    return qualifiedName
+        ?.split('.')
+        ?.joinToString(".") { it.quotePartIfNeeded() }
+}
 
 internal fun List<Code>.join() = joinToString("\n")
 

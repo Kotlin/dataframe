@@ -43,7 +43,7 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][InsertSelectingOptions].
  *
@@ -60,7 +60,7 @@ internal interface InsertDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetInsertOperationArg]}
      */
-    interface InsertSelectingOptions
+    typealias InsertSelectingOptions = Nothing
 
     /**
      * ## Insert Operation Grammar
@@ -84,12 +84,12 @@ internal interface InsertDocs {
      * {@include [Indent]}
      * `| `__`.`__[**`at`**][InsertClause.at]**`(`**`position: `[`Int`][Int]**`)`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [insert][insert]} */
 @ExcludeFromSources
-private interface SetInsertOperationArg
+private typealias SetInsertOperationArg = Nothing
 
 /**
  * Inserts the given [column] into this [DataFrame].
@@ -197,7 +197,7 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
- * See [SelectingColumns.Dsl].
+ * See [SelectingColumns.ColumnsSelectionDsl].
  *
  * ### Examples
  * ```kotlin
@@ -220,7 +220,7 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
  * Inserts the new column previously specified with [insert] under
  * the column group defined by the given [columnPath].
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
@@ -285,7 +285,7 @@ public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathO
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.Dsl].
+ * See {@include [SelectingColumns.CSDslSingleLink]}.
  *
  * ### Examples:
  * ```kotlin
@@ -312,7 +312,7 @@ public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T>
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.ColumnNames].
+ * See also: [SelectingColumns.ColumnNamesApi].
  *
  * ### Example
  * ```kotlin
@@ -352,7 +352,7 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.Dsl].
+ * See also: [SelectingColumns.ColumnsSelectionDsl].
  *
  * ### Examples:
  * ```kotlin
@@ -379,7 +379,7 @@ public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.ColumnNames].
+ * See also: [SelectingColumns.ColumnNamesApi].
  *
  * ### Example
  * ```kotlin

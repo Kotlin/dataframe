@@ -20,8 +20,8 @@ public interface ColumnsForAggregateSelectionDsl<out T> : ColumnsSelectionDsl<T>
     public infix fun <C> ColumnSet<C>.into(name: String): ColumnSet<C> =
         ConfiguredAggregateColumn.withPath(this, pathOf(name))
 
-    public infix fun <C> SingleColumn<C>.into(name: String): SingleColumn<C> =
-        ConfiguredAggregateColumn.withPath(this, pathOf(name))
+    override infix fun <C> SingleColumn<C>.into(newName: String): SingleColumn<C> =
+        ConfiguredAggregateColumn.withPath(this, pathOf(newName))
 
     public infix fun <C> ColumnSet<C>.into(path: ColumnPath): ColumnSet<C> =
         ConfiguredAggregateColumn.withPath(this, path)

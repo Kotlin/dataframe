@@ -62,6 +62,11 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+ *   Default: `null`
+ *
+ *   If `null`, the Charset will be read from the BOM of the provided input,
+ *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -149,6 +154,7 @@ public fun DataFrame.Companion.readDelimStr(
 ): DataFrame<*> =
     readDelimImpl(
         inputStream = text.byteInputStream(),
+        charset = Charsets.UTF_8,
         delimiter = delimiter,
         header = header,
         hasFixedWidthColumns = hasFixedWidthColumns,

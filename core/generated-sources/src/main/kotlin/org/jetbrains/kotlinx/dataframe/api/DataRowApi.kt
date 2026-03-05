@@ -114,14 +114,14 @@ public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey
  *
  * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
  */
-internal interface DiffDocs
+internal typealias DiffDocs = Nothing
 
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
-internal interface DiffOrNullDocs
+internal typealias DiffOrNullDocs = Nothing
 
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.

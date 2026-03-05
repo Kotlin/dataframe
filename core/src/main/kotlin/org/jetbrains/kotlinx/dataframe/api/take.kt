@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -18,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
-import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -83,22 +81,22 @@ public interface TakeColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`take`**][ColumnsSelectionDsl.take]`(`[**`Last`**][ColumnsSelectionDsl.takeLast]`)` */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.take]`(`[**`Last`**][ColumnSet.takeLast]`)` */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.takeCols]`(`[**`Last`**][ColumnsSelectionDsl.takeLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.takeCols] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
 
         /** [**`take`**][ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][ColumnsSelectionDsl.takeWhile] */
-        public interface PlainDslWhileName
+        public typealias PlainDslWhileName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][ColumnsSelectionDsl.takeWhile] */
-        public interface ColumnSetWhileName
+        public typealias ColumnSetWhileName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.takeColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.takeColsWhile] */
-        public interface ColumnGroupWhileName
+        public typealias ColumnGroupWhileName = Nothing
     }
 
     // region take
@@ -110,7 +108,7 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.NOUN] take
      * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] first
      */
-    private interface CommonTakeFirstDocs
+    private typealias CommonTakeFirstDocs = Nothing
 
     /**
      * @include [CommonTakeFirstDocs]
@@ -181,7 +179,7 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.NOUN] take
      * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] last
      */
-    private interface CommonTakeLastDocs
+    private typealias CommonTakeLastDocs = Nothing
 
     /**
      * @include [CommonTakeLastDocs]
@@ -252,7 +250,7 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.NOUN] take
      * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] first
      */
-    private interface CommonTakeFirstWhileDocs
+    private typealias CommonTakeFirstWhileDocs = Nothing
 
     /**
      * @include [CommonTakeFirstWhileDocs]
@@ -325,7 +323,7 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.NOUN] take
      * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] last
      */
-    private interface CommonTakeLastWhileDocs
+    private typealias CommonTakeLastWhileDocs = Nothing
 
     /**
      * @include [CommonTakeLastWhileDocs]

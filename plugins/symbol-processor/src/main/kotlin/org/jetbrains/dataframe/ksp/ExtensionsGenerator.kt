@@ -21,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import java.io.IOException
 import java.io.OutputStreamWriter
 
-class ExtensionsGenerator(
+public class ExtensionsGenerator(
     private val resolver: Resolver,
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger,
@@ -30,7 +30,7 @@ class ExtensionsGenerator(
         val EXPECTED_VISIBILITIES = setOf(Visibility.PUBLIC, Visibility.INTERNAL)
     }
 
-    fun resolveDataSchemaDeclarations(): Pair<Sequence<DataSchemaDeclaration>, List<KSClassDeclaration>> {
+    public fun resolveDataSchemaDeclarations(): Pair<Sequence<DataSchemaDeclaration>, List<KSClassDeclaration>> {
         val dataSchemaAnnotation = resolver.getKSNameFromString(DataFrameNames.DATA_SCHEMA)
         val symbols = resolver.getSymbolsWithAnnotation(dataSchemaAnnotation.asString())
 
@@ -45,12 +45,15 @@ class ExtensionsGenerator(
         return Pair(preprocessedDeclarations, invalidDeclarations)
     }
 
-    class DataSchemaDeclaration(val origin: KSClassDeclaration, val properties: List<KSAnnotatedWithType>)
+    public class DataSchemaDeclaration(
+        public val origin: KSClassDeclaration,
+        public val properties: List<KSAnnotatedWithType>,
+    )
 
-    class KSAnnotatedWithType(
+    public class KSAnnotatedWithType(
         private val declaration: KSAnnotated,
-        val simpleName: KSName,
-        val type: KSTypeReference,
+        public val simpleName: KSName,
+        public val type: KSTypeReference,
     ) : KSAnnotated by declaration
 
     private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? =
@@ -104,7 +107,7 @@ class ExtensionsGenerator(
 
     private val KSDeclaration.nameString get() = (qualifiedName ?: simpleName).asString()
 
-    fun generateExtensions(file: KSFile, dataSchema: KSClassDeclaration, properties: List<KSAnnotatedWithType>) {
+    public fun generateExtensions(file: KSFile, dataSchema: KSClassDeclaration, properties: List<KSAnnotatedWithType>) {
         val packageName = file.packageName.asString()
         val fileName = getFileName(dataSchema)
         val generatedFile = codeGenerator.createNewFile(Dependencies(false, file), packageName, fileName)

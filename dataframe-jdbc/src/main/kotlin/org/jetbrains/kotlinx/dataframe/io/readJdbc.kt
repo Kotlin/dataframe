@@ -1,19 +1,30 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.isValueColumn
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.`dataframe-jdbc`.BuildConfig
+import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import javax.sql.DataSource
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
 
 private val logger = KotlinLogging.logger {}
 
@@ -181,7 +192,7 @@ private fun executeQueryAndBuildDataFrame(
             logger.debug { "Executing query: $sqlQuery" }
             statement.executeQuery().use { rs ->
                 val tableColumns = getTableColumnsMetadata(rs, determinedDbType)
-                fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
+                fetchAndConvertDataFromResultSet(determinedDbType, tableColumns, rs, limit, inferNullability)
             }
         }
     } catch (e: java.sql.SQLException) {
@@ -562,7 +573,7 @@ public fun DataFrame.Companion.readResultSet(
 ): AnyFrame {
     validateLimit(limit)
     val tableColumns = getTableColumnsMetadata(resultSet, dbType)
-    return fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit, inferNullability)
+    return fetchAndConvertDataFromResultSet(dbType, tableColumns, resultSet, limit, inferNullability)
 }
 
 /**
@@ -851,11 +862,23 @@ private fun readTableAsDataFrame(
     return dataFrame
 }
 
-internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): MutableList<TableColumnMetadata> =
-    dbType.getTableColumnsMetadata(resultSet).toMutableList()
+internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): List<TableColumnMetadata> =
+    dbType.getTableColumnsMetadata(resultSet)
 
 /**
- * Fetches and converts data from a ResultSet into a mutable map.
+ * Fetches and converts data from a ResultSet into a [DataFrame].
+ *
+ * Will handle data in the following order:
+ *
+ * - For each column (inside [readAndPreprocessRowsFromResultSet]):
+ *     - Fetches each individual value from the [ResultSet] using [DbType.getValueFromResultSet]
+ *       with the return type defined by [DbType.getExpectedJdbcType].
+ *     - Potentially preprocesses the value using [DbType.preprocessValue]
+ *       with the return type defined by [DbType.getPreprocessedValueType].
+ * - From the resulting list of columns,`List<List<Any?>>`, (inside [buildDataFrameFromColumnData]):
+ *     - Uses [DbType.buildDataColumn] to turn each list of values into a [DataColumn]
+ *       with the correct structure defined by [DbType.getTargetColumnSchema].
+ *     - Turns the result into a [DataFrame].
  *
  * @param [tableColumns] a list containing the column metadata for the table.
  * @param [rs] the ResultSet object containing the data to be fetched and converted.
@@ -863,18 +886,46 @@ internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): Muta
  * @param [limit] the maximum number of rows to retrieve from the table.
  *                `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return A mutable map containing the fetched and converted data.
+ * @return A [DataFrame] containing the fetched and converted data.
  */
 internal fun fetchAndConvertDataFromResultSet(
-    tableColumns: MutableList<TableColumnMetadata>,
-    rs: ResultSet,
     dbType: DbType,
+    tableColumns: List<TableColumnMetadata>,
+    rs: ResultSet,
     limit: Int?,
     inferNullability: Boolean,
 ): AnyFrame {
-    val columnKTypes = buildColumnKTypes(tableColumns, dbType)
-    val columnData = readAllRowsFromResultSet(rs, tableColumns, columnKTypes, dbType, limit)
-    val dataFrame = buildDataFrameFromColumnData(columnData, tableColumns, columnKTypes, dbType, inferNullability)
+    val expectedJdbcTypes = getExpectedJdbcTypes(
+        dbType = dbType,
+        tableColumns = tableColumns,
+    )
+    val preprocessedValueTypes = getPreprocessedValueTypes(
+        dbType = dbType,
+        tableColumns = tableColumns,
+        expectedJdbcTypes = expectedJdbcTypes,
+    )
+    val targetColumnSchemas = getTargetColumnSchemas(
+        dbType = dbType,
+        tableColumns = tableColumns,
+        preprocessedValueTypes = preprocessedValueTypes,
+    )
+
+    val columnData = readAndPreprocessRowsFromResultSet(
+        rs = rs,
+        tableColumns = tableColumns,
+        expectedJdbcTypes = expectedJdbcTypes,
+        preprocessedValueTypes = preprocessedValueTypes,
+        dbType = dbType,
+        limit = limit,
+    )
+
+    val dataFrame = buildDataFrameFromColumnData(
+        dbType = dbType,
+        tableColumns = tableColumns,
+        columnData = columnData,
+        targetColumnSchemas = targetColumnSchemas,
+        inferNullability = inferNullability,
+    )
 
     logger.debug {
         "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query."
@@ -883,38 +934,67 @@ internal fun fetchAndConvertDataFromResultSet(
     return dataFrame
 }
 
-/**
- * Builds a map of column indices to their Kotlin types.
- */
-private fun buildColumnKTypes(tableColumns: List<TableColumnMetadata>, dbType: DbType): Map<Int, KType> =
-    tableColumns.indices.associateWith { index ->
-        generateKType(dbType, tableColumns[index])
+internal fun getExpectedJdbcTypes(dbType: DbType, tableColumns: List<TableColumnMetadata>): List<KType> =
+    tableColumns.map {
+        dbType.getExpectedJdbcType(tableColumnMetadata = it)
+    }
+
+internal fun getPreprocessedValueTypes(
+    dbType: DbType,
+    tableColumns: List<TableColumnMetadata>,
+    expectedJdbcTypes: List<KType>,
+): List<KType> =
+    tableColumns.mapIndexed { index, it ->
+        dbType.getPreprocessedValueType(
+            tableColumnMetadata = it,
+            expectedJdbcType = expectedJdbcTypes[index],
+        )
+    }
+
+internal fun getTargetColumnSchemas(
+    dbType: DbType,
+    tableColumns: List<TableColumnMetadata>,
+    preprocessedValueTypes: List<KType>,
+): List<ColumnSchema?> =
+    tableColumns.mapIndexed { index, it ->
+        dbType.getTargetColumnSchema(
+            tableColumnMetadata = it,
+            expectedValueType = preprocessedValueTypes[index],
+        )
     }
 
 /**
  * Reads all rows from ResultSet and returns a column-oriented data structure.
- * Returns mutable lists to allow efficient post-processing without copying.
  */
-private fun readAllRowsFromResultSet(
+private fun readAndPreprocessRowsFromResultSet(
+    dbType: DbType,
     rs: ResultSet,
     tableColumns: List<TableColumnMetadata>,
-    columnKTypes: Map<Int, KType>,
-    dbType: DbType,
+    expectedJdbcTypes: List<KType>,
+    preprocessedValueTypes: List<KType>,
     limit: Int?,
-): List<MutableList<Any?>> {
-    val columnsCount = tableColumns.size
-    val columnData = List(columnsCount) { mutableListOf<Any?>() }
+): List<List<Any?>> {
+    val columnData = tableColumns.map { mutableListOf<Any?>() }.toMutableList()
     var rowsRead = 0
 
     while (rs.next() && (limit == null || rowsRead < limit)) {
-        repeat(columnsCount) { columnIndex ->
-            val value = dbType.extractValueFromResultSet(
+        tableColumns.forEachIndexed { index, tableColumnMetadata ->
+            val expectedJdbcType = expectedJdbcTypes[index]
+            val preprocessedValueType = preprocessedValueTypes[index]
+
+            val value = dbType.getValueFromResultSet<Any?>(
                 rs = rs,
-                columnIndex = columnIndex,
-                columnMetadata = tableColumns[columnIndex],
-                kType = columnKTypes.getValue(columnIndex),
+                columnIndex = index,
+                tableColumnMetadata = tableColumnMetadata,
+                expectedJdbcType = expectedJdbcType,
             )
-            columnData[columnIndex].add(value)
+            val preprocessedValue = dbType.preprocessValue<Any?, Any?>(
+                value = value,
+                tableColumnMetadata = tableColumnMetadata,
+                expectedJdbcType = expectedJdbcType,
+                expectedPreprocessedValueType = preprocessedValueType,
+            )
+            columnData[index] += preprocessedValue
         }
         rowsRead++
         // if (rowsRead % 1000 == 0) logger.debug { "Loaded $rowsRead rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
@@ -928,29 +1008,91 @@ private fun readAllRowsFromResultSet(
  * Accepts mutable lists to enable efficient in-place transformations.
  */
 private fun buildDataFrameFromColumnData(
-    columnData: List<MutableList<Any?>>,
-    tableColumns: List<TableColumnMetadata>,
-    columnKTypes: Map<Int, KType>,
     dbType: DbType,
+    tableColumns: List<TableColumnMetadata>,
+    columnData: List<List<Any?>>,
+    targetColumnSchemas: List<ColumnSchema?>,
     inferNullability: Boolean,
+    checkSchema: Boolean = BuildConfig.DEBUG,
 ): AnyFrame =
-    columnData.mapIndexed { index, values ->
-        dbType.buildDataColumn(
-            name = tableColumns[index].name,
-            values = values,
-            kType = columnKTypes.getValue(index),
+    tableColumns.mapIndexed { index, it ->
+        val column = dbType.buildDataColumn<Any?, Any?>(
+            name = it.name,
+            values = columnData[index],
+            tableColumnMetadata = it,
+            targetColumnSchema = targetColumnSchemas[index],
             inferNullability = inferNullability,
         )
+
+        if (checkSchema) {
+            column.checkSchema(targetColumnSchemas[index])
+        }
+
+        column
     }.toDataFrame()
 
-/**
- * Generates a KType based on the given database type and table column metadata.
- *
- * @param dbType The database type.
- * @param tableColumnMetadata The table column metadata.
- *
- * @return The generated KType.
- */
-internal fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType =
-    dbType.convertSqlTypeToKType(tableColumnMetadata)
-        ?: dbType.makeCommonSqlToKTypeMapping(tableColumnMetadata)
+private fun AnyCol.checkSchema(expected: ColumnSchema?) {
+    when (expected) {
+        null -> {
+            // nothing to check
+        }
+
+        is ColumnSchema.Value -> {
+            require(this.isValueColumn()) {
+                """
+                Found mismatching schema for column '${this.name()}'.
+                Column ${this.name()} is expected to be a value column of type ${expected.type} but it is ${this.type()}.
+                """.trimIndent()
+            }
+            require(values().all { it == null || it::class.isSubclassOf(expected.type.classifier as KClass<*>) }) {
+                """
+                Found mismatching type for value column '${this.name()}'.
+                Expected type: ${expected.type}
+                Actual types: ${values().map { it?.javaClass?.name ?: "null" }.distinct()}
+                """.trimIndent()
+            }
+        }
+
+        is ColumnSchema.Group -> {
+            require(this.isColumnGroup()) {
+                """
+                Found mismatching schema for column '${name()}'.
+                Column ${this.name()} is expected to be a column group but it is ${this.type()}.
+                """.trimIndent()
+            }
+            require(expected.schema.compare(this.schema()).isSuperOrMatches()) {
+                """
+                Found mismatching schema for column group '${name()}'.
+                Expected schema:
+                ${expected.schema}
+                
+                Actual schema:
+                ${this.schema()}
+                """.trimIndent()
+            }
+        }
+
+        is ColumnSchema.Frame -> {
+            require(this.isFrameColumn()) {
+                """
+                Found mismatching schema for column '${this.name()}'.
+                Column ${this.name()} is expected to be a frame column but it is ${this.type()}.
+                """.trimIndent()
+            }
+            require(values().all { expected.schema.compare(it.schema()).isSuperOrMatches() }) {
+                """
+                Found mismatching schema for frame column '${this.name()}'.
+                Expected schema:
+                ${expected.schema}
+                
+                Actual (deviating) schemas:
+                ${
+                    values().map { it.schema() }
+                        .distinct()
+                        .filterNot { expected.schema.compare(it).isSuperOrMatches() }
+                }
+                """.trimIndent()
+            }
+        }
+    }
+}

@@ -26,7 +26,7 @@ import org.locationtech.jts.io.geojson.GeoJsonReader
  * Experimental geo coding utility.
  */
 @Experimental
-object Geocoder {
+public object Geocoder {
 
     private val url = "https://geo2.datalore.jetbrains.com/map_data/geocoding"
 
@@ -86,7 +86,7 @@ object Geocoder {
         }
     }
 
-    fun geocodeCountries(countries: List<String>): GeoDataFrame<*> {
+    public fun geocodeCountries(countries: List<String>): GeoDataFrame<*> {
         val query = geocodeQuery(countries)
         val foundNames = mutableListOf<String>()
         val geometries = mutableListOf<Geometry>()

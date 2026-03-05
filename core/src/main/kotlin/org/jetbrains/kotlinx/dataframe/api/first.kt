@@ -19,8 +19,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.RowFilterDescription
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
@@ -139,9 +139,9 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
 /**
  * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
  *
- * @include [RowFilterDescription]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -173,9 +173,9 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
  * (including the case when the [DataFrame] is empty).
  *
- * @include [RowFilterDescription]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -241,9 +241,9 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
  * except the grouping key.
  *
- * @include [RowFilterDescription]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -293,9 +293,9 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  *
  * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
  *
- * @include [RowFilterDescription]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -361,9 +361,9 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  *
  * @include [DocumentationUrls.GroupBy]
  *
- * @include [RowFilterDescription]
+ * @include [SelectingRows.RowFilterSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -427,13 +427,13 @@ public interface FirstColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`first`**][ColumnsSelectionDsl.first] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`first`**][ColumnsSelectionDsl.first] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`firstCol`**][ColumnsSelectionDsl.firstCol] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -467,7 +467,7 @@ public interface FirstColumnsSelectionDsl {
     private interface CommonFirstDocs {
 
         /** Examples key */
-        interface Examples
+        typealias Examples = Nothing
     }
 
     /**

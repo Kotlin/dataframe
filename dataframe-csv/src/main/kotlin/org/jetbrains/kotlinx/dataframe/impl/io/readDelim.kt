@@ -22,6 +22,7 @@ import io.deephaven.csv.util.CsvReaderException
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -34,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COMPRESSION
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.FIXED_COLUMN_WIDTHS
@@ -61,6 +63,7 @@ import java.io.InputStream
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
+import java.nio.charset.Charset
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -72,6 +75,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  * Implementation to read delimiter-separated data from an [InputStream] based on the Deephaven CSV library.
  *
  * @include [INPUT_STREAM_READ]
+ * @include [CHARSET]
  * @param delimiter The field delimiter character. The default is ',' for CSV, '\t' for TSV.
  * @include [HEADER]
  * @include [COL_TYPES]
@@ -94,6 +98,7 @@ internal fun readDelimImpl(
     inputStream: InputStream,
     delimiter: Char,
     header: List<String>,
+    charset: Charset?,
     hasFixedWidthColumns: Boolean,
     fixedColumnWidths: List<Int>,
     colTypes: Map<String, ColType>,
@@ -139,10 +144,18 @@ internal fun readDelimImpl(
     val csvReaderResult = inputStream.useDecompressed(compression) { decompressedInputStream ->
         // read the csv
         try {
+            val deBommedInputString = decompressedInputStream.skippingBomCharacters()
+
+            // choose charset like: provided? -> from BOM? -> UTF-8
+            val streamCharset = charset
+                ?: (deBommedInputString as? BOMInputStream)?.bom?.let { Charset.forName(it.charsetName) }
+                ?: Charsets.UTF_8
+
             @Suppress("ktlint:standard:comment-wrapping")
             CsvReader.read(
                 /* specs = */ csvSpecs,
-                /* stream = */ decompressedInputStream.skippingBomCharacters(),
+                /* stream = */ deBommedInputString,
+                /* streamCharset = */ streamCharset,
                 /* sinkFactory = */ ListSink.SINK_FACTORY,
             )
         } catch (e: CsvReaderException) {

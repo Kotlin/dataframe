@@ -54,7 +54,7 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][GroupBySelectingOptions].
  *
@@ -171,13 +171,13 @@ internal interface GroupByDocs {
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetGroupByOperationArg]}
      */
-    interface GroupBySelectingOptions
+    typealias GroupBySelectingOptions = Nothing
 
     /**
      * ### [GroupBy] aggregation statistics
@@ -213,7 +213,7 @@ internal interface GroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.GroupByStatistics]}
      */
-    interface AggregationStatistics
+    typealias AggregationStatistics = Nothing
 
     /**
      * ### [GroupBy] transformations
@@ -235,7 +235,7 @@ internal interface GroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.GroupByTransformation]}
      */
-    interface Transformation
+    typealias Transformation = Nothing
 
     /**
      * ### [GroupBy] reducing
@@ -270,7 +270,7 @@ internal interface GroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.GroupByReducing]}
      */
-    interface Reducing
+    typealias Reducing = Nothing
 
     /**
      * ### [GroupBy] aggregation
@@ -308,7 +308,7 @@ internal interface GroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.GroupByAggregation]}
      */
-    interface Aggregation
+    typealias Aggregation = Nothing
 
     /**
      * ### [GroupBy] pivoting
@@ -317,7 +317,7 @@ internal interface GroupByDocs {
      *
      * @include [PivotGroupByDocs.CommonDescription]
      */
-    interface Pivoting
+    typealias Pivoting = Nothing
 
     /**
      * Grouping keys can also be created inline
@@ -330,23 +330,23 @@ internal interface GroupByDocs {
      * ```
      */
     @ExcludeFromSources
-    interface GroupingKeysInline
+    typealias GroupingKeysInline = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [groupBy][groupBy]} */
 @ExcludeFromSources
-private interface SetGroupByOperationArg
+private typealias SetGroupByOperationArg = Nothing
 
 /**
  * {@include [GroupByDocs]}
  * ### This `groupBy` Overload
  */
 @ExcludeFromSources
-private interface CommonGroupByDocs
+private typealias CommonGroupByDocs = Nothing
 
 /**
  * @include [CommonGroupByDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetGroupByOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetGroupByOperationArg]}
  *
  * @param [moveToTop] Specifies whether nested grouping columns should be moved to the top level
  * or kept inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -367,7 +367,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
 
 /**
  * @include [CommonGroupByDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetGroupByOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetGroupByOperationArg]}
  *
  * @param [cols] The [Column names][String] that defines which columns are used
  * as keys for grouping.
@@ -393,20 +393,19 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
  * @include [GroupByDocs.GroupingKeysInline]
  */
 @ExcludeFromSources
-private interface GroupByForPivotDocs
+private typealias GroupByForPivotDocs = Nothing
 
 /**
  * {@include [GroupByForPivotDocs]}
  * ### This `groupBy` Overload
  */
 @ExcludeFromSources
-private interface CommonGroupByForPivotDocs
-
+private typealias CommonGroupByForPivotDocs = Nothing
 // region Pivot
 
 /**
  * {@include [CommonGroupByForPivotDocs]}
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetGroupByOperationArg] {@set [SelectingColumns.RECEIVER] <code>`pivot`</code>}}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetGroupByOperationArg] {@set [SelectingColumns.RECEIVER] <code>`pivot`</code>}}
  *
  * @param moveToTop Specifies whether nested grouping columns should be moved to the top level
  * or kept inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
@@ -425,7 +424,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupB
 
 /**
  * {@include [CommonGroupByForPivotDocs]}
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * #### For example:
  *

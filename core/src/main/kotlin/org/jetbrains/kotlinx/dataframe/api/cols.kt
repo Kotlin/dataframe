@@ -90,13 +90,13 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`cols`**][ColumnsSelectionDsl.cols] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`cols`**][ColumnsSelectionDsl.cols] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`cols`**][ColumnsSelectionDsl.cols] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -143,7 +143,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
          * @see [ColumnsSelectionDsl.frameCols\]
          * @see [ColumnsSelectionDsl.colGroups\]
          */
-        interface Predicate
+        typealias Predicate = Nothing
 
         /**
          * @include [CommonColsDocs]
@@ -156,11 +156,11 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
          */
         interface Vararg {
 
-            interface AccessorType
+            typealias AccessorType = Nothing
         }
 
         /** Example argument */
-        interface Examples
+        typealias Examples = Nothing
     }
 
     /**
@@ -191,7 +191,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsIndicesDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     /**
@@ -222,7 +222,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsRangeDocs {
 
         /** Example argument */
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     // region predicate
@@ -244,7 +244,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.all\]
      * @see [ColumnsSelectionDsl.filter\]
      */
-    private interface ColumnSetColsPredicateDocs
+    private typealias ColumnSetColsPredicateDocs = Nothing
 
     /** @include [ColumnSetColsPredicateDocs] */
     @Suppress("UNCHECKED_CAST")
@@ -273,7 +273,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * @see [ColumnsSelectionDsl.all\]
      */
-    private interface ColumnsSelectionDslColsPredicateDocs
+    private typealias ColumnsSelectionDslColsPredicateDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
     public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
@@ -301,7 +301,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * @see [ColumnsSelectionDsl.allCols\]
      */
-    private interface SingleColumnAnyRowColsPredicateDocs
+    private typealias SingleColumnAnyRowColsPredicateDocs = Nothing
 
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
     public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
@@ -328,7 +328,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myGroupCol".`[`cols`][String.cols]`() }`
      */
-    private interface StringColsPredicateDocs
+    private typealias StringColsPredicateDocs = Nothing
 
     /** @include [StringColsPredicateDocs] */
     public fun String.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
@@ -353,7 +353,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * @see [ColumnsSelectionDsl.allCols\]
      */
-    private interface KPropertyColsPredicateDocs
+    private typealias KPropertyColsPredicateDocs = Nothing
 
     /** @include [KPropertyColsPredicateDocs] */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -376,7 +376,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["myGroupCol"].`[`cols`][ColumnPath.cols]`() } // identity call, same as `[`allCols`][ColumnsSelectionDsl.allCols]
      */
-    private interface ColumnPathPredicateDocs
+    private typealias ColumnPathPredicateDocs = Nothing
 
     /** @include [ColumnPathPredicateDocs] */
     public fun ColumnPath.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
@@ -399,7 +399,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
-    private interface ColumnsSelectionDslColsVarargColumnReferenceDocs
+    private typealias ColumnsSelectionDslColsVarargColumnReferenceDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
     @Interpretable("Cols0")
@@ -422,7 +422,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
      */
-    private interface SingleColumnColsVarargColumnReferenceDocs
+    private typealias SingleColumnColsVarargColumnReferenceDocs = Nothing
 
     /** @include [SingleColumnColsVarargColumnReferenceDocs] */
     public fun <C> SingleColumn<DataRow<*>>.cols(
@@ -446,7 +446,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`columnA, columnB`[`]`][String.cols]` }`
      */
-    private interface StringColsVarargColumnReferenceDocs
+    private typealias StringColsVarargColumnReferenceDocs = Nothing
 
     /** @include [StringColsVarargColumnReferenceDocs] */
     public fun <C> String.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
@@ -466,15 +466,19 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][KProperty.cols]` }`
      */
-    private interface KPropertyColsVarargColumnReferenceDocs
+    private typealias KPropertyColsVarargColumnReferenceDocs = Nothing
 
     /** @include [KPropertyColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> KProperty<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
     ): ColumnSet<C> = columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertyColsVarargColumnReferenceDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> KProperty<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -490,7 +494,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`columnA, columnB`[`]`][ColumnPath.cols]` }`
      */
-    private interface ColumnPathColsVarargColumnReferenceDocs
+    private typealias ColumnPathColsVarargColumnReferenceDocs = Nothing
 
     /** @include [ColumnPathColsVarargColumnReferenceDocs] */
     public fun <C> ColumnPath.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
@@ -516,7 +520,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][ColumnsSelectionDsl.cols]` }`
      */
-    private interface ColumnsSelectionDslVarargStringDocs
+    private typealias ColumnsSelectionDslVarargStringDocs = Nothing
 
     /** @include [ColumnsSelectionDslVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -540,7 +544,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
      */
-    private interface SingleColumnColsVarargStringDocs
+    private typealias SingleColumnColsVarargStringDocs = Nothing
 
     /** @include [SingleColumnColsVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -566,7 +570,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`"columnA", "columnB"`[`]`][String.cols]` }`
      */
-    private interface StringColsVarargStringDocs
+    private typealias StringColsVarargStringDocs = Nothing
 
     /** @include [StringColsVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -589,19 +593,25 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
-    private interface KPropertiesColsVarargStringDocs
+    private typealias KPropertiesColsVarargStringDocs = Nothing
 
     /** @include [KPropertiesColsVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [KPropertiesColsVarargStringDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(firstCol: String, vararg otherCols: String): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [KPropertiesColsVarargStringDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun KProperty<*>.get(firstCol: String, vararg otherCols: String): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -613,7 +623,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"columnA", "columnB"`[`]`][ColumnPath.cols]` }`
      */
-    private interface ColumnPathColsVarargStringDocs
+    private typealias ColumnPathColsVarargStringDocs = Nothing
 
     /** @include [ColumnPathColsVarargStringDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -643,7 +653,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnsSelectionDsl.cols]` }`
      */
-    private interface ColumnsSelectionDslVarargColumnPathDocs
+    private typealias ColumnsSelectionDslVarargColumnPathDocs = Nothing
 
     /** @include [ColumnsSelectionDslVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -669,7 +679,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][SingleColumn.cols]` }`
      */
-    private interface SingleColumnColsVarargColumnPathDocs
+    private typealias SingleColumnColsVarargColumnPathDocs = Nothing
 
     /** @include [SingleColumnColsVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -699,7 +709,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      */
-    private interface StringColsVarargColumnPathDocs
+    private typealias StringColsVarargColumnPathDocs = Nothing
 
     /** @include [StringColsVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -725,19 +735,25 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
-    private interface KPropertiesColsVarargColumnPathDocs
+    private typealias KPropertiesColsVarargColumnPathDocs = Nothing
 
     /** @include [KPropertiesColsVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
     /** @include [KPropertiesColsVarargColumnPathDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<T> =
         columnGroup(this).cols(firstCol, *otherCols).cast()
 
     /** @include [KPropertiesColsVarargColumnPathDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun KProperty<*>.get(firstCol: ColumnPath, vararg otherCols: ColumnPath): ColumnSet<*> =
         cols<Any?>(firstCol, *otherCols)
 
@@ -751,7 +767,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      */
-    private interface ColumnPathColsVarargColumnPathDocs
+    private typealias ColumnPathColsVarargColumnPathDocs = Nothing
 
     /** @include [ColumnPathColsVarargColumnPathDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -779,13 +795,17 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
-    private interface ColumnsSelectionDslColsVarargKPropertyDocs
+    private typealias ColumnsSelectionDslColsVarargKPropertyDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnsSelectionDsl<*>.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         this.asSingleColumn().cols(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -799,15 +819,19 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      */
-    private interface SingleColumnColsVarargKPropertyDocs
+    private typealias SingleColumnColsVarargKPropertyDocs = Nothing
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.cols(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
     ): ColumnSet<C> = colsInternal(listOf(firstCol, *otherCols).map { pathOf(it.name) }).cast()
 
     /** @include [SingleColumnColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> SingleColumn<DataRow<*>>.get(
         firstCol: KProperty<C>,
         vararg otherCols: KProperty<C>,
@@ -821,13 +845,17 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`Type::colA, Type::colB`[`]`][String.cols]` }`
      */
-    private interface StringColsVarargKPropertyDocs
+    private typealias StringColsVarargKPropertyDocs = Nothing
 
     /** @include [StringColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> String.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [StringColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> String.get(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         cols(firstCol, *otherCols)
 
@@ -839,13 +867,17 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      */
-    private interface KPropertyColsVarargKPropertyDocs
+    private typealias KPropertyColsVarargKPropertyDocs = Nothing
 
     /** @include [KPropertyColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> KProperty<*>.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [KPropertyColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> KProperty<*>.get(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         cols(firstCol, *otherCols)
 
@@ -857,13 +889,17 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`Type::colA, Type::colB`[`]`][ColumnPath.cols]` }`
      */
-    private interface ColumnPathColsVarargKPropertyDocs
+    private typealias ColumnPathColsVarargKPropertyDocs = Nothing
 
     /** @include [ColumnPathColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnPath.cols(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         columnGroup(this).cols(firstCol, *otherCols)
 
     /** @include [ColumnPathColsVarargKPropertyDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public operator fun <C> ColumnPath.get(firstCol: KProperty<C>, vararg otherCols: KProperty<C>): ColumnSet<C> =
         cols(firstCol, *otherCols)
 
@@ -879,7 +915,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`all`][ColumnsSelectionDsl.all]`()`[`[`][ColumnSet.cols]`5, 1`[`]`][ColumnSet.cols]` }`
      */
-    private interface ColumnSetColsIndicesDocs
+    private typealias ColumnSetColsIndicesDocs = Nothing
 
     /** @include [ColumnSetColsIndicesDocs] */
     @Suppress("UNCHECKED_CAST")
@@ -898,7 +934,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`<`[`String`][String]`>(1, 3) }`
      */
-    private interface ColumnsSelectionDslColsIndicesDocs
+    private typealias ColumnsSelectionDslColsIndicesDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsIndicesDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -918,7 +954,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(3, 4) }`
      */
-    private interface SingleColumnColsIndicesDocs
+    private typealias SingleColumnColsIndicesDocs = Nothing
 
     /** @include [SingleColumnColsIndicesDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -938,7 +974,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`cols`][String.cols]`<`[`String`][String]`>(5, 3, 1) }`
      */
-    private interface StringColsIndicesDocs
+    private typealias StringColsIndicesDocs = Nothing
 
     /** @include [StringColsIndicesDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -958,15 +994,19 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(5, 4) }`
      */
-    private interface KPropertyColsIndicesDocs
+    private typealias KPropertyColsIndicesDocs = Nothing
 
     /** @include [KPropertyColsIndicesDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(firstIndex: Int, vararg otherIndices: Int): ColumnSet<*> =
         cols<Any?>(firstIndex, *otherIndices)
 
     /** @include [KPropertyColsIndicesDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(firstIndex: Int, vararg otherIndices: Int): ColumnSet<T> =
         columnGroup(this).cols(firstIndex, *otherIndices).cast()
 
@@ -978,7 +1018,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`<`[`String`][String]`>(0, 1) }`
      */
-    private interface ColumnPathColsIndicesDocs
+    private typealias ColumnPathColsIndicesDocs = Nothing
 
     /** @include [ColumnPathColsIndicesDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1002,7 +1042,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`all`][all]`()`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
      */
-    private interface ColumnSetColsRangeDocs
+    private typealias ColumnSetColsRangeDocs = Nothing
 
     /** @include [ColumnSetColsRangeDocs] */
     @Suppress("UNCHECKED_CAST")
@@ -1019,7 +1059,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
-    private interface ColumnsSelectionDslColsRangeDocs
+    private typealias ColumnsSelectionDslColsRangeDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsRangeDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1038,7 +1078,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
-    private interface SingleColumnColsRangeDocs
+    private typealias SingleColumnColsRangeDocs = Nothing
 
     /** @include [SingleColumnColsRangeDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1057,7 +1097,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`cols`][String.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
-    private interface StringColsRangeDocs
+    private typealias StringColsRangeDocs = Nothing
 
     /** @include [StringColsRangeDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1076,14 +1116,18 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      *
      */
-    private interface KPropertyColsRangeDocs
+    private typealias KPropertyColsRangeDocs = Nothing
 
     /** @include [KPropertyColsRangeDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colsUnTyped")
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun KProperty<*>.cols(range: IntRange): ColumnSet<*> = cols<Any?>(range)
 
     /** @include [KPropertyColsRangeDocs] */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <T> KProperty<*>.cols(range: IntRange): ColumnSet<T> = columnGroup(this).cols(range).cast()
 
     /**
@@ -1094,7 +1138,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`<`[`String`][String]`>(0`[`..`][Int.rangeTo]`1) }`
      */
-    private interface ColumnPathColsRangeDocs
+    private typealias ColumnPathColsRangeDocs = Nothing
 
     /** @include [ColumnPathColsRangeDocs] */
     @Suppress("INAPPLICABLE_JVM_NAME")

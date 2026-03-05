@@ -41,30 +41,30 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 @OptIn(KspExperimental::class)
-class DataSchemaGenerator(
+public class DataSchemaGenerator(
     private val resolver: Resolver,
     private val resolutionDir: String?,
     private val logger: KSPLogger,
     private val codeGenerator: com.google.devtools.ksp.processing.CodeGenerator,
 ) {
 
-    fun resolveImportStatements(): List<ImportDataSchemaStatement> = resolvePathImports(resolver).toList()
+    public fun resolveImportStatements(): List<ImportDataSchemaStatement> = resolvePathImports(resolver).toList()
 
-    class ImportDataSchemaStatement(
-        val origin: KSFile,
-        val name: String,
-        val dataSource: CodeGeneratorDataSource,
-        val visibility: MarkerVisibility,
-        val normalizationDelimiters: List<Char>,
-        val withDefaultPath: Boolean,
-        val csvOptions: CsvOptions,
-        val jsonOptions: JsonOptions,
-        val jdbcOptions: JdbcOptions,
-        val isJdbc: Boolean = false,
-        val enableExperimentalOpenApi: Boolean = false,
+    public class ImportDataSchemaStatement(
+        public val origin: KSFile,
+        public val name: String,
+        public val dataSource: CodeGeneratorDataSource,
+        public val visibility: MarkerVisibility,
+        public val normalizationDelimiters: List<Char>,
+        public val withDefaultPath: Boolean,
+        public val csvOptions: CsvOptions,
+        public val jsonOptions: JsonOptions,
+        public val jdbcOptions: JdbcOptions,
+        public val isJdbc: Boolean = false,
+        public val enableExperimentalOpenApi: Boolean = false,
     )
 
-    class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
+    public class CodeGeneratorDataSource(public val pathRepresentation: String, public val data: URL)
 
     private fun resolvePathImports(resolver: Resolver) =
         resolver.getSymbolsWithAnnotation(ImportDataSchema::class.qualifiedName!!)
@@ -151,7 +151,7 @@ class DataSchemaGenerator(
         )
     }
 
-    fun generateDataSchema(importStatement: ImportDataSchemaStatement) {
+    public fun generateDataSchema(importStatement: ImportDataSchemaStatement) {
         val packageName = importStatement.origin.packageName.asString()
         val name = importStatement.name
         val schemaFile =

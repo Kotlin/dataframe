@@ -9,7 +9,7 @@ import org.locationtech.jts.geom.util.AffineTransformation
  * @param factor The scaling factor for both the X and Y axes.
  * @return A new geometry scaled around its center.
  */
-fun Geometry.scaleAroundCenter(factor: Double): Geometry = scaleAroundCenter(factor, factor)
+public fun Geometry.scaleAroundCenter(factor: Double): Geometry = scaleAroundCenter(factor, factor)
 
 /**
  * Scales the geometry around its center using different scaling factors for the X and Y axes.
@@ -18,7 +18,7 @@ fun Geometry.scaleAroundCenter(factor: Double): Geometry = scaleAroundCenter(fac
  * @param yFactor The scaling factor for the Y axis.
  * @return A new geometry scaled around its center.
  */
-fun Geometry.scaleAroundCenter(xFactor: Double, yFactor: Double): Geometry {
+public fun Geometry.scaleAroundCenter(xFactor: Double, yFactor: Double): Geometry {
     val centroid = centroid.coordinate
 
     val moveToOrigin = AffineTransformation
@@ -37,7 +37,7 @@ fun Geometry.scaleAroundCenter(xFactor: Double, yFactor: Double): Geometry {
  * @param valueY The translation distance along the Y axis.
  * @return A new geometry translated by the specified distances.
  */
-fun Geometry.translate(valueX: Double, valueY: Double): Geometry =
+public fun Geometry.translate(valueX: Double, valueY: Double): Geometry =
     AffineTransformation().translate(valueX, valueY).transform(this)
 
 /**
@@ -46,7 +46,7 @@ fun Geometry.translate(valueX: Double, valueY: Double): Geometry =
  * @param angleRadians The rotation angle in radians.
  * @return A new geometry rotated around its center.
  */
-fun Geometry.rotate(angleRadians: Double): Geometry {
+public fun Geometry.rotate(angleRadians: Double): Geometry {
     val centroid = centroid.coordinate
 
     val moveToOrigin = AffineTransformation.translationInstance(-centroid.x, -centroid.y)
@@ -62,11 +62,11 @@ fun Geometry.rotate(angleRadians: Double): Geometry {
  *
  * @return A new geometry reflected across the X axis.
  */
-fun Geometry.reflectX(): Geometry = scaleAroundCenter(-1.0, 1.0)
+public fun Geometry.reflectX(): Geometry = scaleAroundCenter(-1.0, 1.0)
 
 /**
  * Reflects the geometry across the Y axis, inverting its vertical position.
  *
  * @return A new geometry reflected across the Y axis.
  */
-fun Geometry.reflectY(): Geometry = scaleAroundCenter(1.0, -1.0)
+public fun Geometry.reflectY(): Geometry = scaleAroundCenter(1.0, -1.0)

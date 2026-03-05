@@ -57,7 +57,7 @@ import kotlin.reflect.KProperty
  * This function does not immediately produce a [FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause] which serves as an intermediate step.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][FormatSelectingColumns].
  *
@@ -93,7 +93,7 @@ internal interface FormatDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetFormatOperationArg]}
      */
-    interface FormatSelectingColumns
+    typealias FormatSelectingColumns = Nothing
 
     /**
      * ## Format Operation Grammar
@@ -141,7 +141,7 @@ internal interface FormatDocs {
          */
         @ExportAsHtml
         @ExcludeFromSources
-        interface ForHtml
+        typealias ForHtml = Nothing
 
         /**
          * ## Formatting DSL Grammar
@@ -178,68 +178,67 @@ internal interface FormatDocs {
          *
          * `| `[**`linear`**][FormattingDsl.linear]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
          */
-        interface FormattingDslGrammarDef
+        typealias FormattingDslGrammarDef = Nothing
 
         /**
          * `cellFormatter: `{@include [FormattingDslGrammarRef]}`.(cell: C) -> `[CellAttributes][CellAttributes]`?`
          */
-        interface CellFormatterDef
+        typealias CellFormatterDef = Nothing
 
         /**
          * `rowColFormatter: `{@include [FormattingDslGrammarRef]}`.(row: `[DataRow][DataRow]`<T>, col: `[ColumnWithPath][ColumnWithPath]`<C>) -> `[CellAttributes][CellAttributes]`?`
          */
-        interface RowColFormatterDef
+        typealias RowColFormatterDef = Nothing
 
         /**
          * `cellAttributes: `[CellAttributes][CellAttributes]
          */
-        interface CellAttributesDef
+        typealias CellAttributesDef = Nothing
 
         /**
          * `color: `[RgbColor][RgbColor]
          */
-        interface RgbColorDef
+        typealias RgbColorDef = Nothing
 
         /** [cellFormatter][CellFormatterDef] */
         @ExcludeFromSources
-        interface CellFormatterRef
+        typealias CellFormatterRef = Nothing
 
         /** [rowColFormatter][RowColFormatterDef] */
         @ExcludeFromSources
-        interface RowColFormatterRef
+        typealias RowColFormatterRef = Nothing
 
         /** [FormattingDsl][FormattingDslGrammarDef] */
         @ExcludeFromSources
-        interface FormattingDslGrammarRef
+        typealias FormattingDslGrammarRef = Nothing
 
         /** [cellAttributes][CellAttributesDef] */
         @ExcludeFromSources
-        interface CellAttributesRef
+        typealias CellAttributesRef = Nothing
 
         /** [color][RgbColorDef] */
         @ExcludeFromSources
-        interface RgbColorRef
+        typealias RgbColorRef = Nothing
     }
 }
 
 /** {@set [SelectingColumns.OPERATION] [format][format]} */
 @ExcludeFromSources
-private interface SetFormatOperationArg
+private typealias SetFormatOperationArg = Nothing
 
 /**
  * @include [FormatDocs]
  * ### This Format Overload
  */
 @ExcludeFromSources
-private interface CommonFormatDocs
-
+private typealias CommonFormatDocs = Nothing
 // endregion
 
 // region DataFrame format
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.Dsl] {@include [SetFormatOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format { temperature }.linearBg(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)
@@ -257,7 +256,7 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetFormatOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }
@@ -309,7 +308,7 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.Dsl] {@include [SetFormatOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format().with { background(white) and textColor(black) and bold }
@@ -329,7 +328,7 @@ public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): Form
 
 /**
  * @include [CommonFormatDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetFormatOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetFormatOperationArg]}
  * ### Examples:
  * ```kt
  * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }
@@ -406,7 +405,7 @@ public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): Format
  * ### Examples using [at]
  */
 @ExcludeFromSources
-private interface CommonFormatAtDocs
+private typealias CommonFormatAtDocs = Nothing
 
 /**
  * @include [CommonFormatAtDocs]

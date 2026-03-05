@@ -42,14 +42,13 @@ import kotlin.reflect.KProperty
 @ExcludeFromSources
 @Suppress("ClassName")
 private interface FlattenDocs {
-    interface FLATTEN_PARAM
-
-    interface GROUPS
+    typealias FLATTEN_PARAM = Nothing
+    typealias GROUPS = Nothing
 
     /**
      * @include [SelectingColumns] {@set [SelectingColumns.OPERATION] [flatten][flatten]}
      */
-    interface FlattenSelectingOptions
+    typealias FlattenSelectingOptions = Nothing
 }
 
 /**

@@ -31,9 +31,9 @@ fun main() {
         .read(pathToCsv).convertTo<Movie>()
         .split { genres }.by("|").inplace()
         .split { title }.by {
-            listOf(
+            listOf<Any>(
                 """\s*\(\d{4}\)\s*$""".toRegex().replace(it, ""),
-                "\\d{4}".toRegex().findAll(it).lastOrNull()?.value?.toIntOrNull() ?: -1
+                "\\d{4}".toRegex().findAll(it).lastOrNull()?.value?.toIntOrNull() ?: -1,
             )
         }.into("title", "year")
         .explode("genres")

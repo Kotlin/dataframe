@@ -3,7 +3,7 @@ package org.jetbrains.dataframe.ksp
 import com.google.devtools.ksp.symbol.KSDeclaration
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.quoteIfNeeded
 
-fun KSDeclaration.getQualifiedNameOrThrow(): String =
+public fun KSDeclaration.getQualifiedNameOrThrow(): String =
     qualifiedName
         ?.let {
             buildString {

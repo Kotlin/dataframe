@@ -64,13 +64,13 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`colGroup`**][ColumnsSelectionDsl.colGroup] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
     }
 
     /**
@@ -120,31 +120,31 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColGroupDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[colGroup][colGroup]`($[CommonColGroupDocs.ARG]) \}`
          */
-        interface SingleExample
+        typealias SingleExample = Nothing
 
         /**
          * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[colGroup][colGroup]`($[CommonColGroupDocs.ARG]) \}`
          *
          * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[colGroup][colGroup]`<`[String][String]`>($[CommonColGroupDocs.ARG]) \}`
          */
-        interface DoubleExample
+        typealias DoubleExample = Nothing
 
         // Receiver argument for the example(s)
-        interface RECEIVER
+        typealias RECEIVER = Nothing
 
         // Argument for the example(s)
-        interface ARG
+        typealias ARG = Nothing
 
         // Optional note
-        interface NOTE
+        typealias NOTE = Nothing
 
         /** @param [C\] The type of the column group. */
-        interface ColumnGroupTypeParam
+        typealias ColumnGroupTypeParam = Nothing
     }
 
     // region reference
@@ -156,7 +156,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @param [col\] The [ColumnAccessor] pointing to the value column.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
-    private interface ColGroupReferenceDocs
+    private typealias ColGroupReferenceDocs = Nothing
 
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER]}
@@ -223,7 +223,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [name\] The name of the value column.
      */
-    private interface ColGroupNameDocs
+    private typealias ColGroupNameDocs = Nothing
 
     /**
      * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER]}
@@ -327,7 +327,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [path\] The path to the value column.
      */
-    private interface ColGroupPathDocs
+    private typealias ColGroupPathDocs = Nothing
 
     /**
      * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER]}
@@ -433,7 +433,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @param [property\] The [KProperty] reference to the value column.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
-    private interface ColGroupKPropertyDocs
+    private typealias ColGroupKPropertyDocs = Nothing
 
     /**
      * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER]}
@@ -554,7 +554,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @param [index\] The index of the value column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
-    private interface ColGroupIndexDocs
+    private typealias ColGroupIndexDocs = Nothing
 
     /**
      * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}

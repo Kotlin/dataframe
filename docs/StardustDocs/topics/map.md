@@ -69,8 +69,8 @@ columnMapping = column into columnName | columnName from column | columnName fro
 
 ```kotlin
 df.mapToFrame {
-    "year of birth" from 2021 - age
-    age gt 18 into "is adult"
+    "year of birth" from { 2021 - age }
+    expr { age > 18 } into "is adult"
     name.lastName.map { it.length } into "last name length"
     "full name" from { name.firstName + " " + name.lastName }
     +city
@@ -82,8 +82,8 @@ df.mapToFrame {
 
 ```kotlin
 df.mapToFrame {
-    "year of birth" from 2021 - "age"<Int>()
-    "age"<Int>() gt 18 into "is adult"
+    "year of birth" from { 2021 - "age"<Int>() }
+    expr { "age"<Int>() > 18 } into "is adult"
     "name"["lastName"]<String>().map { it.length } into "last name length"
     "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
     +"city"

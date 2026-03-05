@@ -108,25 +108,25 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`all`**][ColumnsSelectionDsl.all] */
-        public interface PlainDslName
+        public typealias PlainDslName = Nothing
 
         /** __`.`__[**`all`**][ColumnsSelectionDsl.all] */
-        public interface ColumnSetName
+        public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`allCols`**][ColumnsSelectionDsl.allCols] */
-        public interface ColumnGroupName
+        public typealias ColumnGroupName = Nothing
 
         /** [**`Before`**][ColumnsSelectionDsl.allColsBefore] */
-        public interface Before
+        public typealias Before = Nothing
 
         /** [**`After`**][ColumnsSelectionDsl.allAfter] */
-        public interface After
+        public typealias After = Nothing
 
         /** [**`From`**][ColumnsSelectionDsl.allColsFrom] */
-        public interface From
+        public typealias From = Nothing
 
         /** [**`UpTo`**][ColumnsSelectionDsl.allColsUpTo] */
-        public interface UpTo
+        public typealias UpTo = Nothing
     }
 
     /**
@@ -148,7 +148,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *     All columns up to the specified column, including that column
      */
     @ExcludeFromSources
-    private interface AllFlavors
+    private typealias AllFlavors = Nothing
 
     /**
      * ## {@get [TITLE]}
@@ -195,27 +195,27 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface CommonAllSubsetDocs {
 
         // The title of the function, a.k.a. "All (Cols) After"
-        interface TITLE
+        typealias TITLE = Nothing
 
         // The exact name of the function, a.k.a. "allAfter"
-        interface FUNCTION
+        typealias FUNCTION = Nothing
 
         // The exact name of the function, a.k.a. "allColsAfter"
-        interface FUNCTION_COLS
+        typealias FUNCTION_COLS = Nothing
 
         /*
          * Small line of text explaining the behavior of the function,
          * a.k.a. "after [column\], excluding [column\]"
          */
-        interface BEHAVIOR
+        typealias BEHAVIOR = Nothing
 
         /*
          * Small line of text explaining what happens if `column` does not exist.
          */
-        interface COLUMN_DOES_NOT_EXIST
+        typealias COLUMN_DOES_NOT_EXIST = Nothing
 
         // Example argument
-        interface EXAMPLE
+        typealias EXAMPLE = Nothing
     }
 
     // region all
@@ -257,7 +257,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface CommonAllDocs {
 
         /** Example argument */
-        interface Examples
+        typealias Examples = Nothing
     }
 
     /**
@@ -330,7 +330,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
-    private interface AllAfterDocs
+    private typealias AllAfterDocs = Nothing
 
     /**
      * @include [AllAfterDocs]
@@ -342,7 +342,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnSetAllAfterDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] \ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}} */
@@ -363,6 +363,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.allAfter(column: AnyColumnReference): ColumnSet<C> = allAfter(column.path())
 
     /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnSet<C>.allAfter(column: KProperty<*>): ColumnSet<C> =
         allAfter(column.toColumnAccessor().path())
 
@@ -376,7 +378,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnsSelectionDslAllAfterDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] \ \{ myColumn \}} */
@@ -395,6 +397,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnsSelectionDsl<*>.allAfter(column: AnyColumnReference): ColumnSet<*> = allAfter(column.path())
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allAfter(column: KProperty<*>): ColumnSet<*> =
         allAfter(column.toColumnAccessor().path())
 
@@ -408,7 +412,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface SingleColumnAllAfterDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] \ \{ myColumn \}} */
@@ -440,6 +444,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         allColsAfter(column.path())
 
     /** @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsAfter(column: KProperty<*>): ColumnSet<*> =
         allColsAfter(column.toColumnAccessor().path())
 
@@ -453,7 +459,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface StringAllAfterDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [StringAllAfterDocs] {@set [StringAllAfterDocs.Arg] \ \{ myColumn \}} */
@@ -469,6 +475,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun String.allColsAfter(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
     /** @include [StringAllAfterDocs] {@set [StringAllAfterDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun String.allColsAfter(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
     /**
@@ -481,7 +489,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface KPropertyAllAfterDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /**
@@ -523,7 +531,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnPathAllAfterDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnPathAllAfterDocs] {@set [ColumnPathAllAfterDocs.Arg] \ \{ myColumn \}} */
@@ -541,6 +549,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         columnGroup(this).allColsAfter(column)
 
     /** @include [ColumnPathAllAfterDocs] {@set [ColumnPathAllAfterDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnPath.allColsAfter(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
     // endregion
@@ -557,7 +567,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
-    private interface AllFromDocs
+    private typealias AllFromDocs = Nothing
 
     /**
      * @include [AllFromDocs]
@@ -569,7 +579,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnSetAllFromDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] \ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}} */
@@ -590,6 +600,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.allFrom(column: AnyColumnReference): ColumnSet<C> = allFrom(column.path())
 
     /** @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnSet<C>.allFrom(column: KProperty<*>): ColumnSet<C> = allFrom(column.toColumnAccessor().path())
 
     /**
@@ -602,7 +614,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnsSelectionDslAllFromDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] \ \{ myColumn \}} */
@@ -622,6 +634,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsFrom(column)
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allFrom(column: KProperty<*>): ColumnSet<*> = asSingleColumn().allColsFrom(column)
 
     /**
@@ -634,7 +648,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface SingleColumnAllFromDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [SingleColumnAllFromDocs] {@set [SingleColumnAllFromDocs.Arg] \ \{ myColumn \}} */
@@ -666,6 +680,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         allColsFrom(column.path())
 
     /** @include [SingleColumnAllFromDocs] {@set [SingleColumnAllFromDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsFrom(column: KProperty<*>): ColumnSet<*> =
         allColsFrom(column.toColumnAccessor().path())
 
@@ -679,7 +695,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface StringAllFromDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [StringAllFromDocs] {@set [StringAllFromDocs.Arg] \ \{ myColumn \}} */
@@ -695,6 +711,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun String.allColsFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** @include [StringAllFromDocs] {@set [StringAllFromDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun String.allColsFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /**
@@ -707,7 +725,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface KPropertyAllFromDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /**
@@ -749,7 +767,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnPathAllFromDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnPathAllFromDocs] {@set [ColumnPathAllFromDocs.Arg] \ \{ myColumn \}} */
@@ -766,6 +784,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** @include [ColumnPathAllFromDocs] {@set [ColumnPathAllFromDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnPath.allColsFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     // endregion
@@ -782,7 +802,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
-    private interface AllBeforeDocs
+    private typealias AllBeforeDocs = Nothing
 
     /**
      * @include [AllBeforeDocs]
@@ -794,7 +814,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnSetAllBeforeDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] \ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}} */
@@ -815,6 +835,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.allBefore(column: AnyColumnReference): ColumnSet<C> = allBefore(column.path())
 
     /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnSet<C>.allBefore(column: KProperty<*>): ColumnSet<C> =
         allBefore(column.toColumnAccessor().path())
 
@@ -828,7 +850,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnsSelectionDslAllBeforeDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] \ \{ myColumn \}} */
@@ -848,6 +870,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnsSelectionDsl<*>.allBefore(column: AnyColumnReference): ColumnSet<*> = allBefore(column.path())
 
     /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allBefore(column: KProperty<*>): ColumnSet<*> =
         allBefore(column.toColumnAccessor().path())
 
@@ -861,7 +885,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface SingleColumnAllBeforeDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] \ \{ myColumn \}} */
@@ -890,6 +914,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         allColsBefore(column.path())
 
     /** @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsBefore(column: KProperty<*>): ColumnSet<*> =
         allColsBefore(column.toColumnAccessor().path())
 
@@ -903,7 +929,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface StringAllBeforeDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [StringAllBeforeDocs] {@set [StringAllBeforeDocs.Arg] \ \{ myColumn \}} */
@@ -920,6 +946,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun String.allColsBefore(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
     /** @include [StringAllBeforeDocs] {@set [StringAllBeforeDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun String.allColsBefore(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
     /**
@@ -932,7 +960,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface KPropertyAllBeforeDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /**
@@ -974,7 +1002,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnPathAllBeforeDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnPathAllBeforeDocs] {@set [ColumnPathAllBeforeDocs.Arg] \ \{ myColumn \}} */
@@ -992,6 +1020,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         columnGroup(this).allColsBefore(column)
 
     /** @include [ColumnPathAllBeforeDocs] {@set [ColumnPathAllBeforeDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnPath.allColsBefore(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
     // endregion
@@ -1008,7 +1038,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
-    private interface AllUpToDocs
+    private typealias AllUpToDocs = Nothing
 
     /**
      * @include [AllUpToDocs]
@@ -1020,7 +1050,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnSetAllUpToDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] \ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}} */
@@ -1041,6 +1071,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.allUpTo(column: AnyColumnReference): ColumnSet<C> = allUpTo(column.path())
 
     /** @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun <C> ColumnSet<C>.allUpTo(column: KProperty<*>): ColumnSet<C> = allUpTo(column.toColumnAccessor().path())
 
     /**
@@ -1053,7 +1085,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnsSelectionDslAllUpToDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] \ \{ myColumn \}} */
@@ -1073,6 +1105,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsUpTo(column)
 
     /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allUpTo(column: KProperty<*>): ColumnSet<*> = asSingleColumn().allColsUpTo(column)
 
     /**
@@ -1085,7 +1119,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface SingleColumnAllUpToDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [SingleColumnAllUpToDocs] {@set [SingleColumnAllUpToDocs.Arg] \ \{ myColumn \}} */
@@ -1117,6 +1151,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         allColsUpTo(column.path())
 
     /** @include [SingleColumnAllUpToDocs] {@set [SingleColumnAllUpToDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsUpTo(column: KProperty<*>): ColumnSet<*> =
         allColsUpTo(column.toColumnAccessor().path())
 
@@ -1130,7 +1166,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface StringAllUpToDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [StringAllUpToDocs] {@set [StringAllUpToDocs.Arg] \ \{ myColumn \}} */
@@ -1146,6 +1182,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun String.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** @include [StringAllUpToDocs] {@set [StringAllUpToDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun String.allColsUpTo(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /**
@@ -1158,7 +1196,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface KPropertyAllUpToDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /**
@@ -1200,7 +1238,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnPathAllUpToDocs {
 
         /** Example argument to use */
-        interface Arg
+        typealias Arg = Nothing
     }
 
     /** @include [ColumnPathAllUpToDocs] {@set [ColumnPathAllUpToDocs.Arg] \ \{ myColumn \}} */
@@ -1217,6 +1255,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** @include [ColumnPathAllUpToDocs] {@set [ColumnPathAllUpToDocs.Arg] (Type::myColumn)} */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnPath.allColsUpTo(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     // endregion

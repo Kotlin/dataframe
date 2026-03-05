@@ -19,20 +19,14 @@ import org.gradle.kotlin.dsl.testImplementation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    java
-    with(libs.plugins) {
-        alias(kotlin.jvm)
-        alias(korro)
+    with(convention.plugins) {
+        alias(kotlinJvm11)
         alias(ktlint)
-        alias(dataframe.compiler.plugin)
-//        alias(kover)
-        alias(ksp)
     }
-}
-
-repositories {
-    mavenCentral()
-    mavenLocal() // for local development
+    with(libs.plugins) {
+        alias(korro)
+        alias(dataframe.compiler.plugin)
+    }
 }
 
 val dependentProjects = with(projects) {
@@ -94,15 +88,6 @@ dependencies {
     testImplementation(libs.arrow.vector)
 }
 
-kotlin.sourceSets {
-    main {
-        kotlin.srcDir("build/generated/ksp/main/kotlin/")
-    }
-    test {
-        kotlin.srcDir("build/generated/ksp/test/kotlin/")
-    }
-}
-
 korro {
     docs = fileTree(rootProject.rootDir) {
         include("docs/StardustDocs/topics/DataSchema-Data-Classes-Generation.md")
@@ -112,6 +97,7 @@ korro {
         include("docs/StardustDocs/topics/format.md")
         include("docs/StardustDocs/topics/toHTML.md")
         include("docs/StardustDocs/topics/guides/*.md")
+        include("docs/StardustDocs/topics/concepts/*.md")
         include("docs/StardustDocs/topics/operations/utils/*.md")
         include("docs/StardustDocs/topics/operations/multiple/*.md")
         include("docs/StardustDocs/topics/operations/column/*.md")
@@ -130,6 +116,7 @@ korro {
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
         include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
     }
 
@@ -150,22 +137,6 @@ korro {
         beforeGroup = "<tabs>\n"
         afterGroup = "</tabs>"
     }
-}
-
-tasks.runKtlintFormatOverMainSourceSet {
-    dependsOn("kspKotlin")
-}
-
-tasks.runKtlintFormatOverTestSourceSet {
-    dependsOn("kspTestKotlin")
-}
-
-tasks.runKtlintCheckOverMainSourceSet {
-    dependsOn("kspKotlin")
-}
-
-tasks.runKtlintCheckOverTestSourceSet {
-    dependsOn("kspTestKotlin")
 }
 
 tasks.test {

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.apache.commons.io.ByteOrderMark
 import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -88,5 +89,12 @@ public fun asUrl(fileOrUrl: String): URL =
 public fun InputStream.skippingBomCharacters(): InputStream =
     BOMInputStream.builder()
         .setInputStream(this)
+        .setByteOrderMarks(
+            ByteOrderMark.UTF_8,
+            ByteOrderMark.UTF_16LE,
+            ByteOrderMark.UTF_16BE,
+            ByteOrderMark.UTF_32LE,
+            ByteOrderMark.UTF_32BE,
+        )
         .setInclude(false)
         .get()

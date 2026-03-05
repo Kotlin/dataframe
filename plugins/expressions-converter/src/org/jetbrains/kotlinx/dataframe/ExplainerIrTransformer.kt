@@ -48,14 +48,14 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import java.io.File
 
-data class ContainingDeclarations(val clazz: IrClass?, val function: IrFunction?, val statementIndex: Int = 0)
+public data class ContainingDeclarations(val clazz: IrClass?, val function: IrFunction?, val statementIndex: Int = 0)
 
 @OptIn(UnsafeDuringIrConstructionAPI::class)
-class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
+public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
     IrTransformer<ContainingDeclarations>(),
     FileLoweringPass {
-    lateinit var file: IrFile
-    lateinit var source: String
+    public lateinit var file: IrFile
+    public lateinit var source: String
 
     override fun lower(irFile: IrFile) {
         var file: File
@@ -120,7 +120,7 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
 
     override fun visitExpressionBody(body: IrExpressionBody, data: ContainingDeclarations): IrBody = body
 
-    val dataFrameLike = setOf(
+    public val dataFrameLike: Set<FqName> = setOf(
         FqName("org.jetbrains.kotlinx.dataframe.api.Pivot"),
         FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivot"),
         FqName("org.jetbrains.kotlinx.dataframe.api.PivotGroupBy"),
@@ -137,7 +137,7 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
         FqName("org.jetbrains.kotlinx.dataframe.DataRow"),
     )
 
-    val explainerPackage = FqName("org.jetbrains.kotlinx.dataframe.explainer")
+    public val explainerPackage: FqName = FqName("org.jetbrains.kotlinx.dataframe.explainer")
 
     override fun visitGetValue(expression: IrGetValue, data: ContainingDeclarations): IrExpression {
         if (expression.startOffset < 0) return expression

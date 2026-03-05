@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /** [Column Selection DSL][ColumnSelectionDsl] */
-internal interface ColumnSelectionDslLink
+internal typealias ColumnSelectionDslLink = Nothing
 
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
@@ -27,7 +27,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * This is a shorthand for [get][ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
-    private interface CommonColumnReferenceInvokeDocs
+    private typealias CommonColumnReferenceInvokeDocs = Nothing
 
     /**
      * Retrieves the value of this [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [-Accessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
@@ -71,6 +71,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] this [ColumnPath] points to.
      */
+    @Interpretable("ColumnPathInvokeTyped")
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
 
     /**
@@ -79,7 +80,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * This is a shorthand for [get][ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
-    private interface CommonKPropertyInvokeDocs
+    private typealias CommonKPropertyInvokeDocs = Nothing
 
     /**
      * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -127,7 +128,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * @throws [IllegalArgumentException] if the column is not found.
      */
-    private interface CommonKPropertyGetDocs
+    private typealias CommonKPropertyGetDocs = Nothing
 
     /**
      * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -286,6 +287,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * "myColumn"["myNestedColumn"]["myDoublyNestedColumn"]<NestedColumnType>()
      * ```
      */
+    @Interpretable("StringGetColumn")
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
 
     /**
@@ -293,5 +295,6 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * `"myColumn"["myNestedColumn"]["myDoublyNestedColumn"]` as alternative to
      * [pathOf]`("myColumn", "myNestedColumn", "myDoublyNestedColumn")`
      */
+    @Interpretable("ColumnPathGetColumn")
     public operator fun ColumnPath.get(column: String): ColumnPath = this + column
 }

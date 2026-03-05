@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.addAll
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asFrame
@@ -854,7 +855,7 @@ class Modify : TestBase() {
         // SampleStart
         val score by columnOf(4, 3, 5, 2, 1, 3, 5)
 
-        df.add(score)
+        df.addAll(score)
         df + score
         // SampleEnd
     }
@@ -865,7 +866,7 @@ class Modify : TestBase() {
         val df1 = df.select { name named "name2" }
         val df2 = df.select { age named "age2" }
         // SampleStart
-        df.add(df1, df2)
+        df.addAll(df1, df2)
         // SampleEnd
     }
 
@@ -890,7 +891,7 @@ class Modify : TestBase() {
         val personWithCityInfo = df.add {
             val cityInfo = city.map { queryCityInfo(it) }
             "cityInfo" {
-                cityInfo.map { it.location } into CityInfo::location
+                cityInfo.map { it.location } into "location"
                 cityInfo.map { it.population } into "population"
             }
         }
@@ -905,7 +906,7 @@ class Modify : TestBase() {
         val personWithCityInfo = df.add {
             val cityInfo = "city"<String?>().map { queryCityInfo(it) }
             "cityInfo" {
-                cityInfo.map { it.location } into CityInfo::location
+                cityInfo.map { it.location } into "location"
                 cityInfo.map { it.population } into "population"
             }
         }
@@ -918,8 +919,8 @@ class Modify : TestBase() {
     fun addMany_properties() {
         // SampleStart
         df.add {
-            "year of birth" from 2021 - age
-            age gt 18 into "is adult"
+            "year of birth" from { 2021 - age }
+            expr { age > 18 } into "is adult"
             "details" {
                 name.lastName.map { it.length } into "last name length"
                 "full name" from { name.firstName + " " + name.lastName }
@@ -933,8 +934,8 @@ class Modify : TestBase() {
     fun addMany_strings() {
         // SampleStart
         df.add {
-            "year of birth" from 2021 - "age"<Int>()
-            "age"<Int>() gt 18 into "is adult"
+            "year of birth" from { 2021 - "age"<Int>() }
+            expr { "age"<Int>() > 18 } into "is adult"
             "details" {
                 "name"["lastName"]<String>().map { it.length } into "last name length"
                 "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
@@ -988,8 +989,8 @@ class Modify : TestBase() {
     fun mapMany_properties() {
         // SampleStart
         df.mapToFrame {
-            "year of birth" from 2021 - age
-            age gt 18 into "is adult"
+            "year of birth" from { 2021 - age }
+            expr { age > 18 } into "is adult"
             name.lastName.map { it.length } into "last name length"
             "full name" from { name.firstName + " " + name.lastName }
             +city
@@ -1002,8 +1003,8 @@ class Modify : TestBase() {
     fun mapMany_strings() {
         // SampleStart
         df.mapToFrame {
-            "year of birth" from 2021 - "age"<Int>()
-            "age"<Int>() gt 18 into "is adult"
+            "year of birth" from { 2021 - "age"<Int>() }
+            expr { "age"<Int>() > 18 } into "is adult"
             "name"["lastName"]<String>().map { it.length } into "last name length"
             "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
             +"city"
@@ -1048,16 +1049,6 @@ class Modify : TestBase() {
         // name.firstName -> firstName
         // name.lastName -> lastName
         df.flatten("name")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun flatten_KProperties() {
-        // SampleStart
-        // name.firstName -> firstName
-        // name.lastName -> lastName
-        df.flatten(df::name)
         // SampleEnd
     }
 

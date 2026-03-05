@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import kotlin.reflect.KType
 
 /**
@@ -26,13 +28,32 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
-     * Calls [aggregateSequence].
+     * Calls [aggregateSequence]. It tries to exploit a cache for statistics which can be accessed by
+     * [ValueColumnInternal]
      */
-    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
-        aggregateSequence(
+    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return {
+        if (column is ValueColumnInternal<*>) {
+            // cache check, cache is dynamically created
+            val aggregator = this.aggregator ?: throw IllegalStateException("Aggregator is required")
+            val statisticName = aggregator.name
+            val parameters = aggregator.statisticsParameters
+            val desiredStatistic = column.getStatisticCacheOrNull(statisticName, parameters)
+            // if desiredStatistic is null, statistic was never calculated.
+            if (desiredStatistic != null) {
+                return desiredStatistic.value as Return
+            }
+            val statisticValue = aggregateSequence(
+                values = column.asSequence(),
+                valueType = column.type().toValueType(),
+            )
+            column.putStatisticCache(statisticName, parameters, StatisticResult(statisticValue))
+            return aggregateSingleColumn(column)
+        }
+        return aggregateSequence(
             values = column.asSequence(),
             valueType = column.type().toValueType(),
         )
+    }
 
     /**
      * Function that can give the return type of [aggregateSequence] as [KType], given the type of the input.

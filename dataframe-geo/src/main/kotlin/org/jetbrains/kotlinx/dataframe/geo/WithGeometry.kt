@@ -10,36 +10,36 @@ import org.locationtech.jts.geom.Point
 import org.locationtech.jts.geom.Polygon
 
 @DataSchema
-interface WithGeometry {
-    val geometry: Geometry
+public interface WithGeometry {
+    public val geometry: Geometry
 }
 
 @DataSchema
-interface WithPolygonGeometry : WithGeometry {
+public interface WithPolygonGeometry : WithGeometry {
     override val geometry: Polygon
 }
 
 @DataSchema
-interface WithMultiPolygonGeometry : WithGeometry {
+public interface WithMultiPolygonGeometry : WithGeometry {
     override val geometry: MultiPolygon
 }
 
 @DataSchema
-interface WithPointGeometry : WithGeometry {
+public interface WithPointGeometry : WithGeometry {
     override val geometry: Point
 }
 
 @DataSchema
-interface WithMultiPointGeometry : WithGeometry {
+public interface WithMultiPointGeometry : WithGeometry {
     override val geometry: MultiPoint
 }
 
 @DataSchema
-interface WithLineStringGeometry : WithGeometry {
+public interface WithLineStringGeometry : WithGeometry {
     override val geometry: LineString
 }
 
 @DataSchema
-interface WithMultiLineStringGeometry : WithGeometry {
+public interface WithMultiLineStringGeometry : WithGeometry {
     override val geometry: MultiLineString
 }

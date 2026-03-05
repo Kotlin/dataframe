@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -178,7 +177,7 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
  * For example, use `prev().newValue()` to access the new column value from the previous row.
  */
 @ExcludeFromSources
-internal interface AddExpressionDocs
+internal typealias AddExpressionDocs = Nothing
 
 /**
  * Creates a new column using an [AddExpression] and
@@ -248,7 +247,7 @@ public inline fun <reified R, T> DataFrame<T>.add(
  * For more information: {@include [DocumentationUrls.Add]}.
  *
  * Returns a new [DataFrame] with the new column inserted at the given [path].
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * ## Example
  *

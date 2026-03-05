@@ -8,8 +8,6 @@ import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.count
@@ -442,31 +440,6 @@ class Analyze : TestBase() {
         df.sumFor { age and weight }
         df.meanFor { cols(1, 3).asNumbers() }
         df.medianFor { name.allCols().asComparable() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnsFor_accessors() {
-        // SampleStart
-        val name by columnGroup()
-        val firstName by name.column<String>()
-        val lastName by name.column<String>()
-        val age by column<Int>()
-        val weight by column<Int?>()
-
-        df.minFor { colsOf<Int>() }
-
-        df.maxFor { firstName and age }
-        // or
-        df.maxFor(firstName, lastName)
-
-        df.sumFor { age and weight }
-        // or
-        df.sum(age, weight)
-
-        df.mean { cols(1, 3).asNumbers() }
-        df.median<_, String> { name.allCols().cast() }
         // SampleEnd
     }
 

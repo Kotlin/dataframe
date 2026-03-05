@@ -1,0 +1,17 @@
+@file:Suppress("UNCHECKED_CAST", "USELESS_CAST")
+package org.jetbrains.kotlinx.dataframe.api
+import org.jetbrains.kotlinx.dataframe.annotations.*
+import org.jetbrains.kotlinx.dataframe.ColumnsScope
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+
+public val <T : kotlin.Any?> ColumnsScope<org.jetbrains.kotlinx.dataframe.api.NameValueProperty<T>>.`value`: DataColumn<T> @JvmName("NameValueProperty_value") get() = this["value"] as DataColumn<T>
+public val <T : kotlin.Any?> DataRow<org.jetbrains.kotlinx.dataframe.api.NameValueProperty<T>>.`value`: T @JvmName("NameValueProperty_value") get() = this["value"] as T
+public val <T : kotlin.Any?> ColumnsScope<org.jetbrains.kotlinx.dataframe.api.NameValueProperty<T>?>.`value`: DataColumn<T?> @JvmName("NullableNameValueProperty_value") get() = this["value"] as DataColumn<T?>
+public val <T : kotlin.Any?> DataRow<org.jetbrains.kotlinx.dataframe.api.NameValueProperty<T>?>.`value`: T? @JvmName("NullableNameValueProperty_value") get() = this["value"] as T?
+public val <T : kotlin.Any?> ColumnsScope<org.jetbrains.kotlinx.dataframe.api.NameValueProperty<T>>.name: DataColumn<String> @JvmName("NameValueProperty_name") get() = this["name"] as DataColumn<String>
+public val <T : kotlin.Any?> DataRow<org.jetbrains.kotlinx.dataframe.api.NameValueProperty<T>>.name: String @JvmName("NameValueProperty_name") get() = this["name"] as String
+public val <T : kotlin.Any?> ColumnsScope<org.jetbrains.kotlinx.dataframe.api.NameValueProperty<T>?>.name: DataColumn<String?> @JvmName("NullableNameValueProperty_name") get() = this["name"] as DataColumn<String?>
+public val <T : kotlin.Any?> DataRow<org.jetbrains.kotlinx.dataframe.api.NameValueProperty<T>?>.name: String? @JvmName("NullableNameValueProperty_name") get() = this["name"] as String?

@@ -1,23 +1,21 @@
 plugins {
+    with(convention.plugins) {
+        alias(kotlinJvm8)
+        alias(buildConfig)
+    }
     with(libs.plugins) {
-        alias(kotlin.jvm)
         alias(publisher)
-//        alias(kover)
-        alias(ktlint)
         alias(binary.compatibility.validator)
     }
 }
 
 group = "org.jetbrains.kotlinx"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     api(projects.core)
     compileOnly(libs.duckdb.jdbc)
     compileOnly(libs.sqlite)
+    compileOnly(libs.postgresql)
     implementation(libs.kotlinLogging)
     testImplementation(libs.mariadb)
     testImplementation(libs.sqlite)
@@ -43,8 +41,4 @@ kotlinPublications {
         description = "JDBC support for Kotlin DataFrame"
         packageName = artifactId
     }
-}
-
-kotlin {
-    explicitApi()
 }

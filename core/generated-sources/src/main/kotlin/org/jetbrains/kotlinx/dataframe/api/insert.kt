@@ -128,7 +128,7 @@ internal interface InsertDocs {
      * `df.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]`(Person::length, Person::age)`
      *
      */
-    interface InsertSelectingOptions
+    typealias InsertSelectingOptions = Nothing
 
     /**
      * ## Insert Operation Grammar
@@ -156,7 +156,7 @@ internal interface InsertDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`at`**][InsertClause.at]**`(`**`position: `[`Int`][Int]**`)`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /**

@@ -47,10 +47,10 @@ import kotlin.reflect.KProperty
 private interface CumSumDocs {
 
     // Can be emptied to disable information about selecting columns
-    interface CUMSUM_PARAM
+    typealias CUMSUM_PARAM = Nothing
 
     // Either [DataColumn] or [DataFrame]
-    interface DATA_TYPE
+    typealias DATA_TYPE = Nothing
 }
 
 /**

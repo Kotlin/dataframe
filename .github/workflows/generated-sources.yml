@@ -38,6 +38,7 @@ jobs:
           git config --global user.name "GitHub Actions"
 
       - name: Run Gradle task
+        timeout-minutes: 60
         run: ./gradlew processKDocsMain korro
 
       - name: Check for changes in generated sources

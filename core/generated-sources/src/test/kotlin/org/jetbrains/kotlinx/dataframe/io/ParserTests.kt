@@ -66,13 +66,13 @@ class ParserTests {
 
     @Test(expected = TypeConversionException::class)
     fun `converter for mixed column should throw`() {
-        val col by columnOf(1, "a")
+        val col by columnOf<Any>(1, "a")
         col.convertTo<Int>()
     }
 
     @Test
     fun `convert mixed column`() {
-        val col by columnOf(1.0, "1")
+        val col by columnOf<Any>(1.0, "1")
         val converted = col.convertTo<Int>()
         converted.type() shouldBe typeOf<Int>()
         converted[0] shouldBe 1
@@ -90,7 +90,7 @@ class ParserTests {
 
     @Test
     fun `convert to Boolean`() {
-        val col by columnOf(BigDecimal(1.0), BigDecimal(0.0), 0, 1, 10L, 0.0, 0.1)
+        val col by columnOf<Number>(BigDecimal(1.0), BigDecimal(0.0), 0, 1, 10L, 0.0, 0.1)
         col.convertTo<Boolean>().shouldBe(
             DataColumn.createValueColumn("col", listOf(true, false, false, true, true, false, true), typeOf<Boolean>()),
         )

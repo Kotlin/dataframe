@@ -99,7 +99,7 @@ internal interface GatherDocs {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`valuesInto`**][Gather.valuesInto]**`(`**`valueColumn: `[`String`][String]**`)`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /**

@@ -3,6 +3,7 @@
 package org.jetbrains.kotlinx.dataframe.documentationCsv
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import java.io.File
 import java.io.InputStream
@@ -60,7 +61,7 @@ internal interface CommonReadDelimDocs {
      * @set [FUNCTION_NAME] readCsv
      * @set [OLD_FUNCTION_NAME] readCSV
      */
-    interface CsvDocs
+    typealias CsvDocs = Nothing
 
     /**
      * @include [CommonReadDelimDocs]
@@ -70,7 +71,7 @@ internal interface CommonReadDelimDocs {
      * @set [FUNCTION_NAME] readTsv
      * @set [OLD_FUNCTION_NAME] readTSV
      */
-    interface TsvDocs
+    typealias TsvDocs = Nothing
 
     /**
      * @include [CommonReadDelimDocs]
@@ -80,9 +81,10 @@ internal interface CommonReadDelimDocs {
      * @set [FUNCTION_NAME] readDelim
      * @set [OLD_FUNCTION_NAME] readDelim{@comment cannot differentiate between old and new}
      */
-    interface DelimDocs
+    typealias DelimDocs = Nothing
 
     /**
+     * @include [CHARSET]
      * @include [DelimParams.HEADER]
      * @include [DelimParams.HAS_FIXED_WIDTH_COLUMNS]
      * @include [DelimParams.FIXED_COLUMN_WIDTHS]
@@ -98,35 +100,35 @@ internal interface CommonReadDelimDocs {
      * @include [DelimParams.TRIM_INSIDE_QUOTED]
      * @include [DelimParams.PARSE_PARALLEL]
      */
-    interface CommonReadParams
+    typealias CommonReadParams = Nothing
 
     // something like "File" or "File/URL"
-    interface DATA_TITLE
+    typealias DATA_TITLE = Nothing
 
     // something like "file" or "file or url"
-    interface DATA
+    typealias DATA = Nothing
 
     // Like "CSV" or "TSV", capitalized
-    interface FILE_TYPE_TITLE
+    typealias FILE_TYPE_TITLE = Nothing
 
     // Like "CSV" or "TSV"
-    interface FILE_TYPE
+    typealias FILE_TYPE = Nothing
 
     // like "csv" or "txt"
-    interface FILE_EXTENSION
+    typealias FILE_EXTENSION = Nothing
 
     // Function name, like "readCsv"
-    interface FUNCTION_NAME
+    typealias FUNCTION_NAME = Nothing
 
     // Old function name, like "readCSV"
-    interface OLD_FUNCTION_NAME
+    typealias OLD_FUNCTION_NAME = Nothing
 
     // A link to the main function, set by ReadDelim itself
-    interface FUNCTION_LINK
+    typealias FUNCTION_LINK = Nothing
 
     // A link to the str function, set by ReadDelim itself
-    interface STR_FUNCTION_LINK
+    typealias STR_FUNCTION_LINK = Nothing
 
     // A link to the old function, set by ReadDelim itself
-    interface OLD_FUNCTION_LINK
+    typealias OLD_FUNCTION_LINK = Nothing
 }

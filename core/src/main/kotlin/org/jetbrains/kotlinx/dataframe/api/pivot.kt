@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.CSDslLink
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotGroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotInAggregateImpl
@@ -52,7 +53,7 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectingColumns].
  *
@@ -132,7 +133,7 @@ internal interface PivotDocs {
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
-    interface Grammar
+    typealias Grammar = Nothing
 
     /**
      * ### [Pivot] reducing
@@ -167,7 +168,7 @@ internal interface PivotDocs {
      *
      * For more information: {@include [DocumentationUrls.PivotReducing]}
      */
-    interface Reducing
+    typealias Reducing = Nothing
 
     /**
      * ### [Pivot] aggregation
@@ -198,7 +199,7 @@ internal interface PivotDocs {
      *
      * For more information: {@include [DocumentationUrls.PivotAggregation]}
      */
-    interface Aggregation
+    typealias Aggregation = Nothing
 
     /**
      * ### [Pivot] grouping
@@ -207,7 +208,7 @@ internal interface PivotDocs {
      *
      * @include [PivotGroupByDocs.CommonDescription]
      */
-    interface Grouping
+    typealias Grouping = Nothing
 
     /**
      * ### [Pivot] aggregation statistics
@@ -243,7 +244,7 @@ internal interface PivotDocs {
      *
      * For more information: {@include [DocumentationUrls.PivotStatistics]}
      */
-    interface AggregationStatistics
+    typealias AggregationStatistics = Nothing
 
     /**
      * Pivoted columns can also be created inline
@@ -256,7 +257,7 @@ internal interface PivotDocs {
      * ```
      */
     @ExcludeFromSources
-    interface PivotedColumnsInline
+    typealias PivotedColumnsInline = Nothing
 
     /**
      * @param [\inward] Defines whether the generated columns are nested under a supercolumn:
@@ -267,7 +268,7 @@ internal interface PivotDocs {
      *     or when the [Pivot] has been grouped; `false` otherwise.
      */
     @ExcludeFromSources
-    interface InwardKDocs
+    typealias InwardKDocs = Nothing
 
     /**
      * @param [\inward] Defines whether the generated columns are nested under a supercolumn:
@@ -276,12 +277,12 @@ internal interface PivotDocs {
      *   - `false` — pivot key columns are not nested (i.e., placed at the top level);
      */
     @ExcludeFromSources
-    interface InwardKDocsForGrouped
+    typealias InwardKDocsForGrouped = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [pivot][pivot]} */
 @ExcludeFromSources
-private interface SetPivotOperationArg
+private typealias SetPivotOperationArg = Nothing
 
 /**
  * A specialized [ColumnsSelectionDsl] that allows specifying [pivot] key ordering
@@ -324,7 +325,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      * @return A special [ColumnSet] representing the hierarchical pivot key ordering.
      */
     @ExcludeFromSources
-    private interface ThenDocs
+    private typealias ThenDocs = Nothing
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -359,7 +360,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
  *   with nested [column groups][ColumnGroup], representing a hierarchical structure of
  *   keys combinations from the pivoted columns — i.e., one group per unique key combination.
  *
- * See [Columns Selection via DSL][SelectingColumns.Dsl].
+ * See {@include [CSDslLink]}.
  *
  * ### Examples
  * ```kotlin
@@ -374,8 +375,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
  * ```
  */
 @ExcludeFromSources
-private interface PivotDslDocs
-
+private typealias PivotDslDocs = Nothing
 // region DataFrame
 
 /**
@@ -383,8 +383,7 @@ private interface PivotDslDocs
  * ### This `pivot` Overload
  */
 @ExcludeFromSources
-private interface CommonPivotDocs
-
+private typealias CommonPivotDocs = Nothing
 // region pivot
 
 /**
@@ -404,7 +403,7 @@ public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumns
 
 /**
  * @include [CommonPivotDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  * * [pivot] with a single key column produces a [Pivot] containing one column for each unique key
  *   (i.e., key column unique values) with the corresponding group;
  * * [pivot] with multiple keys combined using [and] produces a [Pivot]
@@ -451,14 +450,14 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
  * specified [\columns] of this [DataFrame], returning a new [DataFrame] where:
  */
 @ExcludeFromSources
-internal interface PivotMatchesCommonDescription
+internal typealias PivotMatchesCommonDescription = Nothing
 
 /**
  * * **Cells** contain a [Boolean] value indicating whether a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame].
  */
 @ExcludeFromSources
-internal interface PivotMatchesResultCellDescription
+internal typealias PivotMatchesResultCellDescription = Nothing
 
 /**
  * {@include [PivotMatchesCommonDescription]}
@@ -468,7 +467,7 @@ internal interface PivotMatchesResultCellDescription
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
  * and [matches][PivotGroupBy.matches] operations into a single call.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -482,7 +481,7 @@ internal interface PivotMatchesResultCellDescription
  * ### This `pivotMatches` Overload
  */
 @ExcludeFromSources
-internal interface DataFramePivotMatchesCommonDocs
+internal typealias DataFramePivotMatchesCommonDocs = Nothing
 
 /**
  * @include [DataFramePivotMatchesCommonDocs]
@@ -508,7 +507,7 @@ public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotC
 
 /**
  * @include [DataFramePivotMatchesCommonDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -545,14 +544,14 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
  * specified [\columns] of this [DataFrame], returning a new [DataFrame] where:
  */
 @ExcludeFromSources
-internal interface PivotCountsCommonDescription
+internal typealias PivotCountsCommonDescription = Nothing
 
 /**
  * * **Cells** contain a [Int] value indicating number a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame].
  */
 @ExcludeFromSources
-internal interface PivotCountsResultCellDescription
+internal typealias PivotCountsResultCellDescription = Nothing
 
 /**
  * {@include [PivotCountsCommonDescription]}
@@ -562,7 +561,7 @@ internal interface PivotCountsResultCellDescription
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
  * and [count][PivotGroupBy.count] operations into a single call.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -574,7 +573,7 @@ internal interface PivotCountsResultCellDescription
  *
  * ### This `pivotCounts` Overload
  */
-internal interface DataFramePivotCountsCommonDocs
+internal typealias DataFramePivotCountsCommonDocs = Nothing
 
 /**
  * @include [DataFramePivotCountsCommonDocs]
@@ -600,7 +599,7 @@ public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotCo
 
 /**
  * @include [DataFramePivotCountsCommonDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -645,18 +644,18 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
  * @include [PivotDocs.PivotedColumnsInline]
  */
 @ExcludeFromSources
-private interface PivotForGroupByDocs
+private typealias PivotForGroupByDocs = Nothing
 
 /**
  * {@include [PivotForGroupByDocs]}
  * ### This `pivot` Overload
  */
 @ExcludeFromSources
-private interface CommonPivotForGroupByDocs
+private typealias CommonPivotForGroupByDocs = Nothing
 
 /**
  * @include [CommonPivotForGroupByDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
  * @include [PivotDocs.InwardKDocsForGrouped]
  * @param [columns] The [Pivot Columns Selector][PivotColumnsSelector] that defines which columns are pivoted.
  * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
@@ -672,7 +671,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: B
 
 /**
  * @include [CommonPivotForGroupByDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetPivotOperationArg] {@set [SelectingColumns.RECEIVER] <code>`gb`</code>}}
  * @include [PivotDocs.InwardKDocsForGrouped]
  * @param [columns] The [Column names][String] that defines which columns are pivoted.
  * @return A new [PivotGroupBy] that preserves the original [groupBy] key columns
@@ -701,7 +700,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
  * This function combines [pivot][GroupBy.pivot]
  * and [matches][PivotGroupBy.matches] operations into a single call.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -712,7 +711,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
  *
  * ### This `pivotMatches` Overload
  */
-internal interface GroupByPivotMatchesCommonDocs
+internal typealias GroupByPivotMatchesCommonDocs = Nothing
 
 /**
  * @include [GroupByPivotMatchesCommonDocs]
@@ -737,7 +736,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: Pivot
 
 /**
  * @include [GroupByPivotMatchesCommonDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -777,7 +776,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  * This function combines [pivot][GroupBy.pivot]
  * and [count][PivotGroupBy.count] operations into a single call.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -788,7 +787,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  *
  * ### This `pivotCounts` Overload
  */
-internal interface GroupByPivotCountsCommonDocs
+internal typealias GroupByPivotCountsCommonDocs = Nothing
 
 /**
  * @include [GroupByPivotCountsCommonDocs]
@@ -813,7 +812,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
 
 /**
  * @include [GroupByPivotCountsCommonDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -872,7 +871,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
  * ### This `pivot` overload
  */
 @ExcludeFromSources
-internal interface AggregateGroupedDslPivotDocs
+internal typealias AggregateGroupedDslPivotDocs = Nothing
 
 /**
  * @include [AggregateGroupedDslPivotDocs]
@@ -915,7 +914,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(
 
 /**
  * @include [AggregateGroupedDslPivotDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  * ### Example
  * ```kotlin
  * df.groupBy("firstName").aggregate {
@@ -985,7 +984,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: KProperty<*>, inward
  * ### This `pivotMatches` overload
  */
 @ExcludeFromSources
-internal interface AggregateGroupedDslPivotMatchesDocs
+internal typealias AggregateGroupedDslPivotMatchesDocs = Nothing
 
 /**
  * @include [AggregateGroupedDslPivotMatchesDocs]
@@ -1015,7 +1014,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(
 
 /**
  * @include [AggregateGroupedDslPivotMatchesDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  * ### Example
  * ```kotlin
  * df.groupBy("firstName").aggregate {
@@ -1071,7 +1070,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>,
  * ### This `pivotCounts` overload
  */
 @ExcludeFromSources
-internal interface AggregateGroupedDslPivotCountsDocs
+internal typealias AggregateGroupedDslPivotCountsDocs = Nothing
 
 /**
  * @include [AggregateGroupedDslPivotCountsDocs]
@@ -1101,7 +1100,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(
 
 /**
  * @include [AggregateGroupedDslPivotCountsDocs]
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  * ### Example
  * ```kotlin
  * df.groupBy("firstName").aggregate {
@@ -1207,7 +1206,7 @@ internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -
  */
 internal interface PivotGroupByDocs {
 
-    interface GroupingColumns
+    typealias GroupingColumns = Nothing
 
     /**
      * * **Columns** represent all unique values from the selected [\columns]
@@ -1219,7 +1218,7 @@ internal interface PivotGroupByDocs {
      *   a distinct set of values for each row
      *   (similar to [keys][GroupBy.keys] in [GroupBy]).
      */
-    interface ResultingMatrixShortcutDescription
+    typealias ResultingMatrixShortcutDescription = Nothing
 
     /**
      * [PivotGroupBy] is a dataframe-like structure that combines [Pivot] and [GroupBy],
@@ -1239,13 +1238,10 @@ internal interface PivotGroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.PivotGroupBy]}
      */
-    interface CommonDescription
-
-    interface Grammar
-
-    interface Reducing
-
-    interface Aggregation
+    typealias CommonDescription = Nothing
+    typealias Grammar = Nothing
+    typealias Reducing = Nothing
+    typealias Aggregation = Nothing
 }
 
 public interface PivotGroupBy<out T> : Aggregatable<T> {

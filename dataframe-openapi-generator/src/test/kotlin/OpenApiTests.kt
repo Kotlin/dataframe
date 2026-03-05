@@ -31,35 +31,15 @@ class OpenApiTests : JupyterReplTestCase() {
         return code
     }
 
-    private fun execGeneratedCode(file: File, name: String) =
-        execGeneratedCode(
-            code = openApi.readCodeForGeneration(
-                file = file,
-                name = name,
-                extensionProperties = true,
-                generateHelperCompanionObject = false,
-            ),
+    private fun execGeneratedCode(file: File, name: String): Code {
+        val code = openApi.readCodeForGeneration(
+            file = file,
+            name = name,
+            extensionProperties = true,
+            generateHelperCompanionObject = false,
         )
-
-    private fun execGeneratedCode(stream: InputStream, name: String) =
-        execGeneratedCode(
-            code = openApi.readCodeForGeneration(
-                stream = stream,
-                name = name,
-                extensionProperties = true,
-                generateHelperCompanionObject = false,
-            ),
-        )
-
-    private fun execGeneratedCode(text: String, name: String) =
-        execGeneratedCode(
-            code = openApi.readCodeForGeneration(
-                text = text,
-                name = name,
-                extensionProperties = true,
-                generateHelperCompanionObject = false,
-            ),
-        )
+        return execGeneratedCode(code)
+    }
 
     private val petstoreJson = File("src/test/resources/petstore.json")
     private val petstoreAdvancedJson = File("src/test/resources/petstore_advanced.json")

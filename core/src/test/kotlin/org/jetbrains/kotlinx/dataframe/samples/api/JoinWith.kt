@@ -144,7 +144,7 @@ class JoinWith : TestBase() {
             cellRenderer = renderer,
             configuration = SamplesDisplayConfiguration.copy(
                 cellFormatter = { row, col ->
-                    val value = row[col]
+                    val value = col[row]
                     if (value is ColoredValue<*>) {
                         background(value.backgroundColor) and textColor(value.textColor)
                     } else {

@@ -42,21 +42,20 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
  * @param [predicate\] The [ColumnFilter] to control which columns to {@get [NOUN]}.
  * @return A [ColumnSet] containing the {@get [FIRST_OR_LAST]} columns adhering to the [predicate\].
  */
-@Suppress("ClassName")
 internal interface CommonTakeAndDropWhileDocs {
 
     /** Title, like "Take Last" */
-    interface TITLE
+    typealias TITLE = Nothing
 
     /** Operation, like "takeLast" */
-    interface OPERATION
+    typealias OPERATION = Nothing
 
     /** Operation, like "take" */
-    interface NOUN
+    typealias NOUN = Nothing
 
     /** like "last" */
-    interface FIRST_OR_LAST
+    typealias FIRST_OR_LAST = Nothing
 
     /** Example argument to use */
-    interface EXAMPLE
+    typealias EXAMPLE = Nothing
 }

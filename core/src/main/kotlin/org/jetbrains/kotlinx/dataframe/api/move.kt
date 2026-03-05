@@ -50,7 +50,7 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MoveSelectingOptions].
  *
@@ -62,7 +62,7 @@ internal interface Move {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetMoveOperationArg]}
      */
-    interface MoveSelectingOptions
+    typealias MoveSelectingOptions = Nothing
 
     /**
      * ## Move Operation Grammar
@@ -96,23 +96,23 @@ internal interface Move {
      * {@include [Indent]}
      * `| `__`.`__[**`toEnd`**][MoveClause.toEnd]**`()`**
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [move][move]} */
 @ExcludeFromSources
-private interface SetMoveOperationArg
+private typealias SetMoveOperationArg = Nothing
 
 /**
  * {@include [Move]}
  * ### This Move Overload
  */
 @ExcludeFromSources
-private interface CommonMoveDocs
+private typealias CommonMoveDocs = Nothing
 
 /**
  * @include [CommonMoveDocs]
- * @include [SelectingColumns.Dsl] {@include [SetMoveOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetMoveOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.move { columnA and columnB }.after { columnC }
@@ -126,7 +126,7 @@ public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<
 
 /**
  * @include [CommonMoveDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetMoveOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetMoveOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.move("columnA", "columnB").after("columnC")
@@ -155,7 +155,7 @@ public fun <T, C> DataFrame<T>.move(vararg columns: KProperty<C>): MoveClause<T,
  *
  * Returns a new [DataFrame] with updated columns structure.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MoveToSelectingOptions].
  *
@@ -166,23 +166,23 @@ internal interface MoveTo {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetMoveToOperationArg]}
      */
-    interface MoveToSelectingOptions
+    typealias MoveToSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [moveTo][moveTo]} */
 @ExcludeFromSources
-private interface SetMoveToOperationArg
+private typealias SetMoveToOperationArg = Nothing
 
 /**
  * {@include [MoveTo]}
  * ### This MoveTo Overload
  */
 @ExcludeFromSources
-private interface CommonMoveToDocs
+private typealias CommonMoveToDocs = Nothing
 
 /**
  * @include [CommonMoveToDocs]
- * @include [SelectingColumns.Dsl] {@include [SetMoveToOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetMoveToOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.moveTo(0) { length and age }
@@ -199,7 +199,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector
 
 /**
  * @include [CommonMoveToDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetMoveToOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetMoveToOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.moveTo(0) { length and age }
@@ -229,7 +229,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KPropert
  * else they will be moved to the top level.
  *
  * @include [CommonMoveToDocs]
- * @include [SelectingColumns.Dsl] {@include [SetMoveToOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetMoveToOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.moveTo(0, true) { length and age }
@@ -256,7 +256,7 @@ public fun <T> DataFrame<T>.moveTo(
  * else they will be moved to the top level.
  *
  * @include [CommonMoveToDocs]
- * @include [SelectingColumns.ColumnNames] {@include [SetMoveToOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi] {@include [SetMoveToOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.moveTo(0, true) { length and age }
@@ -279,7 +279,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, insideGroup: Boolean, va
  * Moves the specified [columns\] to the [DataFrame] start (on top-level).
  * Returns a new [DataFrame] with updated columns structure.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MoveToStartSelectingOptions].
  *
@@ -290,26 +290,26 @@ internal interface MoveToStart {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetMoveToStartOperationArg]}
      */
-    interface MoveToStartSelectingOptions
+    typealias MoveToStartSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [moveToStart][moveToStart]} */
 @ExcludeFromSources
-private interface SetMoveToStartOperationArg
+private typealias SetMoveToStartOperationArg = Nothing
 
 /**
  * {@include [MoveToStart]}
  * ### This MoveToStart Overload
  */
 @ExcludeFromSources
-private interface CommonMoveToStartDocs
+private typealias CommonMoveToStartDocs = Nothing
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
 
 /**
  * @include [CommonMoveToStartDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToStartOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetMoveToStartOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 @Refine
@@ -318,7 +318,7 @@ public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFra
 
 /**
  * @include [CommonMoveToStartDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToStartOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetMoveToStartOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
  * else they will be moved to the start of the top level.
@@ -333,14 +333,14 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = m
 
 /**
  * @include [CommonMoveToStartDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToStartOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetMoveToStartOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
 
 /**
  * @include [CommonMoveToStartDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToStartOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetMoveToStartOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
  * else they will be moved to the start of the top level.
@@ -376,7 +376,7 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: KProperty<*>): DataFrame
  * Moves the specified [columns\] to the [DataFrame] end.
  * Returns a new [DataFrame] with updated columns structure.
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MoveToEndSelectingOptions].
  *
@@ -387,26 +387,26 @@ internal interface MoveToEnd {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetMoveToEndOperationArg]}
      */
-    interface MoveToEndSelectingOptions
+    typealias MoveToEndSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [moveToEnd][moveToEnd]} */
 @ExcludeFromSources
-private interface SetMoveToEndOperationArg
+private typealias SetMoveToEndOperationArg = Nothing
 
 /**
  * {@include [MoveToEnd]}
  * ### This MoveToEnd Overload
  */
 @ExcludeFromSources
-private interface CommonMoveToEndDocs
+private typealias CommonMoveToEndDocs = Nothing
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
 
 /**
  * @include [CommonMoveToEndDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToEndOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetMoveToEndOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 @Refine
@@ -415,7 +415,7 @@ public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame
 
 /**
  * @include [CommonMoveToEndDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToEndOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetMoveToEndOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
  * else they will be moved to the end of the top level.
@@ -430,14 +430,14 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = 
 
 /**
  * @include [CommonMoveToEndDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToEndOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetMoveToEndOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
 
 /**
  * @include [CommonMoveToEndDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToEndOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetMoveToEndOperationArg]}
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
  * else they will be moved to the end of the top level.
@@ -476,13 +476,13 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
  * Moves columns, previously selected with [move] into a new position specified by a
  * given column path within the [DataFrame].
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Move]}
  *
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples:
  * ```kotlin
@@ -526,13 +526,13 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  * given column path within the [DataFrame].
  * Provides selected column indices.
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Move]}
  *
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples:
  * ```kotlin
@@ -565,7 +565,7 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
  *
  * For more information: {@include [DocumentationUrls.Move]}
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Examples:
  * ```kotlin
@@ -590,13 +590,13 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
  * an existing column group specified by a
  * column path within the [DataFrame].
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreation]}
+ * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
  *
  * See [Selecting Columns][SelectingColumns].
  *
  * For more information: {@include [DocumentationUrls.Move]}
  *
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples:
  * ```kotlin
@@ -712,11 +712,11 @@ public fun <T, C> MoveClause<T, C>.toTop(
  * ### This After Overload
  */
 @ExcludeFromSources
-internal interface MoveAfter
+internal typealias MoveAfter = Nothing
 
 /**
  * {@include [MoveAfter]}
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples:
  * ```kotlin
@@ -733,7 +733,7 @@ public fun <T, C> MoveClause<T, C>.after(column: ColumnSelector<T, *>): DataFram
 
 /**
  * {@include [MoveAfter]}
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Examples:
  * ```kotlin
@@ -769,11 +769,11 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
  * ### This Before Overload
  */
 @ExcludeFromSources
-internal interface MoveBefore
+internal typealias MoveBefore = Nothing
 
 /**
  * {@include [MoveBefore]}
- * @include [SelectingColumns.Dsl]
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples:
  * ```kotlin
@@ -790,7 +790,7 @@ public fun <T, C> MoveClause<T, C>.before(column: ColumnSelector<T, *>): DataFra
 
 /**
  * {@include [MoveBefore]}
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Examples:
  * ```kotlin

@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ScopeProperty
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.quoteIfNeeded
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.quotedQualifiedNameOrNull
 import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertyOrderFromPrimaryConstructor
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KClass
@@ -86,7 +88,7 @@ internal object MarkersExtractor {
 
             val baseSchemas = markerClass.superclasses.filter { it != Any::class }.map { get(it, nullableProperties) }
             Marker(
-                name = markerClass.qualifiedName ?: markerClass.simpleName!!,
+                name = markerClass.quotedQualifiedNameOrNull() ?: markerClass.simpleName!!.quoteIfNeeded(),
                 isOpen = isOpen,
                 fields = fields,
                 superMarkers = baseSchemas,

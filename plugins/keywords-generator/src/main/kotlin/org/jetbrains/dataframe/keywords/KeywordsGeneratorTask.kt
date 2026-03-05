@@ -11,22 +11,22 @@ import org.gradle.workers.WorkerExecutor
 import java.io.File
 import javax.inject.Inject
 
-abstract class KeywordsGeneratorTask: DefaultTask() {
+public abstract class KeywordsGeneratorTask: DefaultTask() {
 
     @get:Inject
-    abstract val executor: WorkerExecutor
+    public abstract val executor: WorkerExecutor
 
     @get:Classpath
-    abstract val kotlinCompiler: ConfigurableFileCollection
+    public abstract val kotlinCompiler: ConfigurableFileCollection
 
     @OutputDirectory
-    lateinit var srcDir: File
+    public lateinit var srcDir: File
 
     @Input
-    override fun getGroup() = "codegen"
+    override fun getGroup(): String = "codegen"
 
     @TaskAction
-    fun generate() {
+    public fun generate() {
         val workQueue = executor.classLoaderIsolation {
             classpath.from(kotlinCompiler)
         }
@@ -35,7 +35,7 @@ abstract class KeywordsGeneratorTask: DefaultTask() {
         }
     }
 
-    companion object {
-        const val NAME = "generateKeywordsSrc"
+    public companion object {
+        public const val NAME: String = "generateKeywordsSrc"
     }
 }

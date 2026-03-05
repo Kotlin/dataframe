@@ -9,7 +9,6 @@ abstract class DataFrameJupyterTest :
         ReplProvider.forLibrariesTesting(
             libraries = setOf("dataframe", "kandy-geo", "kandy"),
             extraCompilerArguments = listOf(
-                "-Xopt-in=kotlin.time.ExperimentalTime",
                 "-Xopt-in=kotlin.uuid.ExperimentalUuidApi",
             ),
         ),

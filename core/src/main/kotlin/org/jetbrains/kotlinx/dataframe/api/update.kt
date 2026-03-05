@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -63,7 +62,7 @@ public class Update<T, C>(
      */
     @Suppress("ClassName")
     @ExcludeFromSources
-    internal interface UPDATE_OPERATION
+    internal typealias UPDATE_OPERATION = Nothing
 
     /**
      * ## {@get [UPDATE_OPERATION]} Operation Grammar
@@ -105,7 +104,7 @@ public class Update<T, C>(
      *
      * {@set [UPDATE_OPERATION] [**`update`**][update]}{@comment The default name of the `update` operation function name.}
      */
-    public interface Grammar
+    public typealias Grammar = Nothing
 
     /**
      * The columns to update need to be selected. See {@get [Columns.SELECTING_COLUMNS]}
@@ -115,27 +114,26 @@ public class Update<T, C>(
 
         // Optional argument that can be set to redirect where the [Selecting Columns] link points to
         @Suppress("ClassName")
-        public interface SELECTING_COLUMNS
+        public typealias SELECTING_COLUMNS = Nothing
     }
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetSelectingColumnsOperationArg]}
      */
-    public interface UpdateSelectingOptions
+    public typealias UpdateSelectingOptions = Nothing
 
     /** @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to update. */
-    internal interface DslParam
+    internal typealias DslParam = Nothing
 
     /** @param [columns\] The [Column References][ColumnReference] of this [DataFrame] to update. */
-    internal interface ColumnAccessorsParam
+    internal typealias ColumnAccessorsParam = Nothing
 
     /** @param [columns\] The [KProperties][KProperty] corresponding to columns of this [DataFrame] to update. */
-    internal interface KPropertiesParam
+    internal typealias KPropertiesParam = Nothing
 
     /** @param [columns\] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame] to update. */
-    internal interface ColumnNamesParam
-
+    internal typealias ColumnNamesParam = Nothing
     // endregion
 }
 
@@ -143,7 +141,7 @@ public class Update<T, C>(
 
 /** {@set [SelectingColumns.OPERATION] [update][update]} */
 @ExcludeFromSources
-private interface SetSelectingColumnsOperationArg
+private typealias SetSelectingColumnsOperationArg = Nothing
 
 /**
  * @include [Update] {@comment Description of the update operation.}
@@ -152,7 +150,7 @@ private interface SetSelectingColumnsOperationArg
  * ### This Update Overload
  */
 @ExcludeFromSources
-private interface CommonUpdateFunctionDoc
+private typealias CommonUpdateFunctionDoc = Nothing
 
 /**
  * ## Optional
@@ -160,11 +158,11 @@ private interface CommonUpdateFunctionDoc
  * into `df.`[update][update]`(...) { ... }`
  */
 @ExcludeFromSources
-private interface UpdateWithNote
+private typealias UpdateWithNote = Nothing
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [Update.DslParam]
  */
 @Interpretable("Update0")
@@ -172,7 +170,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [UpdateWithNote]
  * @include [Update.ColumnNamesParam]
  */
@@ -180,7 +178,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ *
  * @include [UpdateWithNote]
  * @include [Update.KPropertiesParam]
  */
@@ -190,7 +188,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectingColumnsOperationArg]}
+ *
  * @include [UpdateWithNote]
  * @include [Update.ColumnAccessorsParam]
  */
@@ -229,7 +227,7 @@ public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T,
 private interface CommonUpdateAtFunctionDoc {
 
     /** The indices of the rows to update. Either a [Collection]<[Int]>, an [IntRange], or just `vararg` indices. */
-    interface RowIndicesParam
+    typealias RowIndicesParam = Nothing
 }
 
 /**
@@ -278,7 +276,7 @@ public inline fun <T, C> Update<T, C>.perRowCol(crossinline expression: RowColum
 
 /** [Update per row col][Update.perRowCol] to provide a new value for every selected cell giving its row and column. */
 @ExcludeFromSources
-private interface SeeAlsoUpdatePerRowCol
+private typealias SeeAlsoUpdatePerRowCol = Nothing
 
 /**
  * ## Update Expression
@@ -308,7 +306,7 @@ public inline fun <T, C, R : C?> Update<T, C>.with(crossinline expression: Updat
 /** [Update with][Update.with] to provide a new value for every selected cell giving its row
  * and its previous value. */
 @ExcludeFromSources
-private interface SeeAlsoUpdateWith
+private typealias SeeAlsoUpdateWith = Nothing
 
 /** ## As Frame
  *
@@ -333,12 +331,12 @@ public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpressi
  * ### This Per Col Overload
  */
 @ExcludeFromSources
-private interface CommonUpdatePerColDoc
+private typealias CommonUpdatePerColDoc = Nothing
 
 /** Provide a new value for every selected cell per column using a [Map][Map]`<`[colName: String][String]`, value: C>`
  *  or [DataRow][DataRow] as Map. */
 @ExcludeFromSources
-private interface UpdatePerColMap
+private typealias UpdatePerColMap = Nothing
 
 /**
  * @include [CommonUpdatePerColDoc]
@@ -353,7 +351,7 @@ private interface UpdatePerColMap
  * @throws [IllegalArgumentException] if a value for a selected cell's column is not defined in [values\].
  */
 @ExcludeFromSources
-private interface CommonUpdatePerColMapDoc
+private typealias CommonUpdatePerColMapDoc = Nothing
 
 /**
  * @include [CommonUpdatePerColMapDoc]
@@ -399,7 +397,7 @@ public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): Da
 
 /** [Update per col][Update.perCol] to provide a new value for every selected cell giving its column. */
 @ExcludeFromSources
-private interface SeeAlsoUpdatePerCol
+private typealias SeeAlsoUpdatePerCol = Nothing
 
 /** Chains up two row value filters together. */
 internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>): RowValueFilter<T, C> {
@@ -456,8 +454,6 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- * @include [SelectingColumns.ColumnAccessors]
- *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
  *
@@ -475,8 +471,6 @@ public fun <T, C> DataFrame<T>.update(
 /**
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
- *
- * @include [SelectingColumns.KProperties]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
@@ -496,7 +490,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [CommonUpdateFunctionDoc]
  * This overload is a combination of [update] and [with][Update.with].
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
  * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
@@ -521,10 +515,10 @@ public fun <T> DataFrame<T>.update(
 private interface CommonSpecificWithDoc {
 
     /** Arg for the resulting value */
-    private interface FIRST
+    private typealias FIRST = Nothing
 
     /** Arg for the function call */
-    private interface SECOND
+    private typealias SECOND = Nothing
 }
 
 /**

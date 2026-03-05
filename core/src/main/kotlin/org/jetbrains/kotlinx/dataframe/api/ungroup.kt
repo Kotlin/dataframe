@@ -33,23 +33,23 @@ internal interface UngroupDocs {
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetUngroupOperationArg]}
      */
-    interface UngroupSelectingOptions
+    typealias UngroupSelectingOptions = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [ungroup][ungroup]} */
 @ExcludeFromSources
-private interface SetUngroupOperationArg
+private typealias SetUngroupOperationArg = Nothing
 
 /**
  * {@include [UngroupDocs]}
  * ### This Ungroup Overload
  */
 @ExcludeFromSources
-private interface CommonUngroupDocs
+private typealias CommonUngroupDocs = Nothing
 
 /**
  * @include [CommonUngroupDocs]
- * @include [SelectingColumns.Dsl] {@include [SetUngroupOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetUngroupOperationArg]}
  * ### Examples:
  * ```kotlin
  * df.ungroup { groupA and groupB }
@@ -65,7 +65,7 @@ public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFram
 
 /**
  * @include [CommonUngroupDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetUngroupOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetUngroupOperationArg]}
  * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to ungroup.
  */
 public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungroup { columns.toColumnSet() }
