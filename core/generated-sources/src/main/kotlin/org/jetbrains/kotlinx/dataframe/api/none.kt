@@ -27,7 +27,10 @@ public fun <T> DataColumn<T>.none(predicate: Predicate<T>): Boolean = values.non
  * and is expected to return a [Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs] for convenient and type-safe access.
+ * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for convenient and type-safe access.
+ *
+ * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
  *
  * ### Example
  * ```kotlin

@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -113,7 +113,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are [ColumnGroups][ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colGroups] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     * [colGroups] can be called using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -149,7 +149,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -187,7 +187,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -223,7 +223,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -259,7 +259,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -294,7 +294,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -329,7 +329,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *

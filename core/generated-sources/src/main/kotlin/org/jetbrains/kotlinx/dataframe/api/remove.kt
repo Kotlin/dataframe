@@ -46,23 +46,14 @@ internal typealias Remove = Nothing
  * For more information: [See `remove` on the documentation website.](https://kotlin.github.io/dataframe/remove.html)
  * ### This Remove Overload
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
- * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
  * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
- * This also allows you to use [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.ExtensionPropertiesAPIDocs]
- * for type- and name-safe columns selection.
  *
- * #### NOTE:
- * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
- * in this DSL directly with any function, they are NOT valid return types for the
- * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
- * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
- *
- * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -70,7 +61,7 @@ internal typealias Remove = Nothing
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]` { length `[and][ColumnsSelectionDsl.and]` age }`
  *
  * <code>`df`</code>`.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
@@ -96,12 +87,14 @@ public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T>
  *
  * For more information: [See `remove` on the documentation website.](https://kotlin.github.io/dataframe/remove.html)
  * ### This Remove Overload
- * Select columns using their [column names][String]
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * Select single or multiple columns using their names as [String]s.
+ * ([String API][`StringAPI`]).
  *
  * #### For example:
  *
- * `df.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`("length", "age")`
+ * <code>`df`</code>`.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`("length", "age")`
+ *
+ *
  *
  * @param [columns] The [Column Names][String] used to remove the columns of this [DataFrame].
  */
@@ -118,16 +111,6 @@ public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remov
  *
  * For more information: [See `remove` on the documentation website.](https://kotlin.github.io/dataframe/remove.html)
  * ### This Remove Overload
- * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
- * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
- *
- * #### For example:
- *
- * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
- *
- * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
- *
- * `df.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`(length, age)`
  *
  * @param [columns] The [Column Accessors][ColumnReference] used to remove the columns of this [DataFrame].
  */
@@ -146,14 +129,6 @@ public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFram
  *
  * For more information: [See `remove` on the documentation website.](https://kotlin.github.io/dataframe/remove.html)
  * ### This Remove Overload
- * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
- *
- * #### For example:
- * ```kotlin
- * data class Person(val length: Double, val age: Double)
- * ```
- *
- * `df.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`(Person::length, Person::age)`
  *
  * @param [columns] The [KProperties][KProperty] used to remove the columns of this [DataFrame].
  */

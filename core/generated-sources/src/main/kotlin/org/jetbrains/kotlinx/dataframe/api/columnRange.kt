@@ -70,7 +70,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -97,7 +97,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -126,7 +126,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -153,7 +153,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -182,7 +182,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -211,7 +211,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -240,7 +240,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -267,7 +267,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -294,7 +294,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
+     * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
