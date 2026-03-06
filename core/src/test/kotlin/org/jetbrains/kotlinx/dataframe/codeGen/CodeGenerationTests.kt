@@ -543,6 +543,19 @@ class CodeGenerationTests : BaseTest() {
         """^[\d]""".toRegex().matches("3fds")
     }
 
+    @Test
+    fun shortenKotlinCollections() {
+        val df = dataFrameOf("a" to columnOf(listOf("abc")))
+        val expected =
+            """
+            @DataSchema
+            data class DataEntry(
+                val a: List<String>
+            )
+            """.trimIndent()
+        assertEquals(expected, df.generateDataClasses().value)
+    }
+
     // region Tests for generateX functions
 
     @Test

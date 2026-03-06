@@ -40,6 +40,7 @@ import org.jetbrains.kotlinx.dataframe.keywords.ModifierKeywords
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
+import kotlin.text.replace
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
@@ -246,17 +247,14 @@ internal object ShortNames : TypeRenderingStrategy {
             }
         }
 
-    private fun String.shorten() = removeRedundantQualifier(this)
-
-    private fun removeRedundantQualifier(markerName: String): String {
-        val parts = markerName.split('.')
-        return if (parts.size == 2 && parts[0] == "kotlin") {
-            parts[1]
-        } else {
-            markerName
-        }
-    }
+    private fun String.shorten() = this.dropKotlinPackages()
 }
+
+internal fun String.dropKotlinPackages() = replace(REDUNDANT_PACKAGE_QUALIFIER, "")
+
+private val REDUNDANT_PACKAGE_QUALIFIER = Regex(
+    """kotlin(?:\.(?:collections|sequences|ranges|text|io|comparisons))?\.(?=[A-Z])""",
+)
 
 internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeRenderingStrategy) :
     ExtensionsCodeGenerator,

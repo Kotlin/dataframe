@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ShortNames
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.TypeRenderingStrategy
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.dropKotlinPackages
 import org.junit.Test
 
 internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
@@ -61,8 +62,8 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `short functional types are not supported`() {
         fields.keys.asClue {
-            fields["d"]!!.renderAccessorFieldType() shouldBe "() -> kotlin.Unit"
-            fields["d"]!!.renderFieldType() shouldBe "() -> kotlin.Unit"
+            fields["d"]!!.renderAccessorFieldType() shouldBe "() -> Unit"
+            fields["d"]!!.renderFieldType() shouldBe "() -> Unit"
         }
     }
 
@@ -112,7 +113,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `functional type column`() {
         fields.keys.asClue {
-            fields["d"]!!.renderColumnType() shouldBe "DataColumn<() -> kotlin.Unit>"
+            fields["d"]!!.renderColumnType() shouldBe "DataColumn<() -> Unit>"
         }
     }
 
@@ -145,5 +146,15 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `generic column`() {
         MarkersExtractor.get(GenericDataSchema::class).allFields[0].renderColumnType() shouldBe "DataColumn<A>"
+    }
+
+    @Test
+    fun `drop redundant kotlin package prefixes`() {
+        "kotlin.String".dropKotlinPackages() shouldBe "String"
+        "kotlin.collections.List<kotlin.String>".dropKotlinPackages() shouldBe "List<String>"
+        "kotlin.collections.Map<kotlin.String, kotlin.collections.List<kotlin.Int>>".dropKotlinPackages() shouldBe
+            "Map<String, List<Int>>"
+        "org.example.Foo<kotlin.String>".dropKotlinPackages() shouldBe "org.example.Foo<String>"
+        "kotlin.internal.Foo".dropKotlinPackages() shouldBe "kotlin.internal.Foo"
     }
 }
