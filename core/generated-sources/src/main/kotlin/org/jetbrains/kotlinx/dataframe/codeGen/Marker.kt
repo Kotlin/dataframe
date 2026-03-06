@@ -57,6 +57,8 @@ public open class Marker(
     typeArguments: List<String>,
 ) : AbstractMarker(typeParameters, typeArguments) {
 
+    override fun toString(): String = name
+
     public val shortName: String
         get() = name.substringAfterLast(".")
 
