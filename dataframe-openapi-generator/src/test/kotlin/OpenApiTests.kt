@@ -91,6 +91,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val id: kotlin.Long
                 val name: kotlin.String
                 val tag: kotlin.String?
+                
                 public companion object {
         """.trimLines()
 
@@ -127,6 +128,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface Error {
                 val code: kotlin.Int
                 val message: kotlin.String
+                
                 public companion object {
         """.trimLines()
 
@@ -191,6 +193,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val shipDate: kotlinx.datetime.LocalDateTime?
                 val status: $functionName.Status?
                 val complete: kotlin.Boolean?
+                
                 public companion object {
         """.trimLines()
 
@@ -203,6 +206,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val id: kotlin.Long?
                 val username: kotlin.String?
                 val address: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>
+                
                 public companion object {
         """.trimLines() // address is a nullable array of objects -> DataFrame<Address?>
 
@@ -264,6 +268,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val city: kotlin.String?
                 val state: kotlin.String?
                 val zip: kotlin.String?
+                
                 public companion object {
         """.trimLines()
 
@@ -297,6 +302,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface Category {
                 val id: kotlin.Long?
                 val name: kotlin.String?
+                
                 public companion object {
         """.trimLines()
 
@@ -328,6 +334,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val password: kotlin.String?
                 val phone: kotlin.String?
                 val userStatus: kotlin.Int?
+                
                 public companion object {
         """.trimLines()
 
@@ -377,6 +384,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface Tag {
                 val id: kotlin.Long?
                 val name: kotlin.String?
+                
                 public companion object {
         """.trimLines()
 
@@ -403,6 +411,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val photoUrls: kotlin.collections.List<kotlin.String>
                 val tags: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>
                 val status: $functionName.Status1?
+                
                 public companion object {
         """.trimLines()
         // category is a single other object, photoUrls is a primitive array, tags is a nullable array of objects
@@ -446,6 +455,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val code: kotlin.Int?
                 val type: kotlin.String?
                 val message: kotlin.String?
+                
                 public companion object {
         """.trimLines()
 
@@ -511,6 +521,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 override val tag: kotlin.String
                 val bark: kotlin.Boolean?
                 val breed: $functionName.Breed
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf()
@@ -563,6 +574,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val hunts: kotlin.Boolean?
                 val age: kotlin.Float?
                 val breed: $functionName.Breed1?
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf()
@@ -619,6 +631,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val other: kotlin.Any?
                 @ColumnName("eye_color")
                 val eyeColor: $functionName.EyeColor?
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf()
@@ -688,6 +701,7 @@ class OpenApiTests : JupyterReplTestCase() {
             @DataSchema(isOpen = false)
             interface IntList {
                 val list: kotlin.collections.List<kotlin.Int>
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf()
@@ -717,6 +731,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("value")
                 override val `value`: kotlin.String
                 override val name: kotlin.String
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
@@ -750,6 +765,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("value")
                 override val `value`: kotlin.Any
                 override val name: kotlin.String
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
@@ -783,6 +799,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("value")
                 override val `value`: kotlin.Any?
                 override val name: kotlin.String
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
@@ -824,6 +841,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?>
                 val objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3>
                 val array: kotlin.collections.List<SomeArrayArray>?
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}["objectWithAdditional"]""${'"'}), JsonPath(""${'"'}${'$'}["objectWithAdditionalList"][*]""${'"'}), JsonPath(""${'"'}${'$'}["objectWithAdditional2"]""${'"'}), JsonPath(""${'"'}${'$'}["objectWithAdditional3"]""${'"'}), JsonPath(""${'"'}${'$'}["array"][*][*][*]["objectWithAdditional"]""${'"'}))
@@ -897,6 +915,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("value")
                 override val `value`: kotlin.Int
                 override val name: kotlin.String
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
@@ -932,6 +951,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("value")
                 val `value`: $functionName.Value?
                 val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}["objectWithAdditional"]""${'"'}))
@@ -982,6 +1002,7 @@ class OpenApiTests : JupyterReplTestCase() {
             @DataSchema(isOpen = false)
             interface ErrorHolder {
                 val errors: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error>
+                
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditional"]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditionalList"][*]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditional2"]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditional3"]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["array"][*][*][*]["objectWithAdditional"]""${'"'}))
