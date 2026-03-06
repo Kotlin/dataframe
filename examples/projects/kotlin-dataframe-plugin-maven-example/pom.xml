@@ -25,18 +25,21 @@
 
     <repositories>
         <repository>
-            <id>mavenLocal</id>
-            <url>file://${user.home}/.m2/repository</url>
-        </repository>
-        <repository>
             <id>mavenCentral</id>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
     </repositories>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mavenCentral</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
-<!--        <testSourceDirectory>src/test/kotlin</testSourceDirectory>-->
+        <!--        <testSourceDirectory>src/test/kotlin</testSourceDirectory>-->
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -90,7 +93,7 @@
                         Format and autocorrect lint errors when possible during compile. This helps in committing autocorrect changes in the
                         same commit as where the original code changes were made.
                         -->
-                        <id>ktlint-check</id>
+                        <id>ktlint-format</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>exec</goal>
@@ -104,6 +107,7 @@
                                 <classpath/>
                                 <argument>com.pinterest.ktlint.Main</argument>
                                 <!-- Actual wanted arguments to run ktlint with formatting -->
+                                <argument>--format</argument>
                                 <argument>--relative</argument>
                             </arguments>
                         </configuration>

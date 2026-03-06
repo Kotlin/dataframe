@@ -25,20 +25,12 @@
 
     <repositories>
         <repository>
-            <id>mavenLocal</id>
-            <url>file://${user.home}/.m2/repository</url>
-        </repository>
-        <repository>
             <id>mavenCentral</id>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
-        <pluginRepository>
-            <id>mavenLocal</id>
-            <url>file://${user.home}/.m2/repository</url>
-        </pluginRepository>
         <pluginRepository>
             <id>mavenCentral</id>
             <url>https://repo1.maven.org/maven2/</url>
@@ -47,7 +39,7 @@
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
-<!--        <testSourceDirectory>src/test/kotlin</testSourceDirectory>-->
+        <!--        <testSourceDirectory>src/test/kotlin</testSourceDirectory>-->
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>

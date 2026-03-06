@@ -13,6 +13,7 @@ activityCompose = "1.8.0"
 composeBom = "2024.09.00"
 
 [libraries]
+dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "dataframe" }
 dataframe-core = { module = "org.jetbrains.kotlinx:dataframe-core", version.ref = "dataframe" }
 dataframe-json = { module = "org.jetbrains.kotlinx:dataframe-json", version.ref = "dataframe" }
 dataframe-csv = { module = "org.jetbrains.kotlinx:dataframe-csv", version.ref = "dataframe" }
