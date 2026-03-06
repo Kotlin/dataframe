@@ -96,7 +96,7 @@ has the best support for Kotlin, compiler plugins, Gradle, and [Kotlin Notebook]
 * We recommend using the [Ktlint plugin](https://plugins.jetbrains.com/plugin/15057-ktlint) for [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
 It is able to read the `.editorconfig` file and apply the same formatting rules as [Ktlint](https://pinterest.github.io/ktlint/latest/) in the CI.
 
-* Check out the [KDoc Preprocessor guide](KDOC_PREPROCESSING.md) to understand how to work with
+* Check out the [KDoc Preprocessor guide](KODEX_KDOC_PREPROCESSING.md) to understand how to work with
 [KoDEx](https://github.com/Jolanrensen/KoDEx).
 
 ## Building
@@ -108,7 +108,7 @@ This library is built with Gradle.
   things up during development.
 * Make sure to pass the extra parameter `-Pkotlin.dataframe.debug=true` to enable debug mode. This flag will
   make sure some extra checks are run, which are important but too heavy for production.
-* The parameter `-PskipKodex` allows you to skip [kdoc processing](KDOC_PREPROCESSING.md),
+* The parameter `-PskipKodex` allows you to skip [kdoc processing](KODEX_KDOC_PREPROCESSING.md),
   making local publishing faster: `./gradlew publishToMavenLocal -PskipKodex`.
   This, however, publishes the library with "broken" KDocs, 
   so it's only meant for faster iterations during development.

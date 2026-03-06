@@ -54,7 +54,7 @@ We use [KoDEx](https://github.com/Jolanrensen/KoDEx) KDocs preprocessor.
 It adds several useful utilities for writing KDocs. 
 
 Please read about 
-the [KDocs preprocessing using KoDEx](KDOC_PREPROCESSING.md) before working with Kotlin DataFrame KDocs.
+the [KDocs preprocessing using KoDEx](KODEX_KDOC_PREPROCESSING.md) before working with Kotlin DataFrame KDocs.
 
 Install the [KoDEx plugin for IDEA](https://plugins.jetbrains.com/plugin/27473---kodex---kotlin-documentation-extensions)
 for correct KDocs display inside the IntelliJ IDEA.
@@ -101,7 +101,7 @@ public fun someFunction()
 ```
 
 For example, 
-[`ColumnPathCreation` interface](https://github.com/Kotlin/dataframe/blob/master/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ColumnPathCreation.ktc)
+[`ColumnPathCreationSnippet` typealias](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/snippets.kt)
 has a KDoc which describes column path creation behavior. 
 The whole file is excluded from sources,
 but the KDoc is included in other KDocs.
@@ -126,7 +126,7 @@ internal interface ~SnippetDescription~Snippet {
      * The key for a @set that will define the operation name for the snippet example.
      */
     @ExcludeFromSources
-    interface OPERATION
+    typealias OPERATION = Nothing
 }
 
 /**
@@ -197,26 +197,24 @@ Common KDoc-helpers in
 the [documentation folder](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation)
 and include things like:
 
-- [Access APIs](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/AccessApi.kt)
-    - To be linked to
-    - String API, Column Accessors API etc.
+- [Access APIs](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/AccessApis.kt) 
+  topics and snippets about String Names and Extension Properties API. 
+  To be linked and included in KDocs of methods that use column accessing.
 - [Selecting Columns](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/SelectingColumns.kt)
-    - To be included in `select`, `update` etc. like `{@include [SelectingColumns.ColumnNames.WithExample]}` (with
-      args).
-    - Or to be linked to with `{@include [SelectingColumnsLink]}`.
-    - By name, by column accessor, by DSL etc.
+  topics and snippets about different columns selection options.
+  To be linked and included in KDocs of methods with columns selection.
 - [Selecting Rows](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/SelectingRows.kt)
-    - To be included like `{@include [SelectingRows.RowValueCondition.WithExample]}` in `Update.where`, `filter`, etc.
-    - Explains the concept and provides examples (with args)
+  snippets about rows selection for operations with row selection or filtering (like `filter`).
 - [`ExpressionsGivenColumn`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ExpressionsGivenColumn.kt) / [`-DataFrame`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ExpressionsGivenDataFrame.kt) / [`-Row`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ExpressionsGivenRow.kt) / [`-RowAndColumn`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ExpressionsGivenRowAndColumn.kt)
-    - To be included or linked to in functions like `perRowCol`, `asFrame`, etc.
-    - Explains the concepts of `ColumnExpression`, `DataFrameExpression`, `RowExpression`, etc.
+  topics and snippets to be included or linked to in functions like `perRowCol`, `asFrame`, etc.
+  Explains the concepts of `ColumnExpression`, `DataFrameExpression`, `RowExpression`, etc.
 - [`NA`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/NA.kt) / [`NaN`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/NaN.kt)
-    - To be linked to for more information on the concepts
+   topics to be linked to for more information on the concepts
 - [DslGrammar](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt)
-    - To be linked to from each DSL grammar by the link interface
-- snippets
-- Check the folder to see if there are more and feel free to add them if needed :)
+   topic to be linked to from each DSL grammar by the link typealias
+- [various snippets and topics](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/snippets.kt)
+  with common mechanisms description.
+- And many others; Check the folder to see if there are more and feel free to add them if needed :)
 
 #### URLs
 
@@ -227,11 +225,14 @@ When linking to external URLs, it's recommended to use
 It's a central place where we can store URLs that can be used in multiple places in the library. Plus, it makes
 it easier to update the documentation whenever (part of) a URL changes.
 
+For [Kotlin DataFrame GitHub issues and PRs](https://github.com/Kotlin/dataframe/issues),
+you can just write its number like `#1234` in the KDoc.
+
 #### Utils
 
-The [`utils.kt` file](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/utils.kt) contains all sorts of helper interfaces for the documentation.
+The [`utils.kt` file](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/utils.kt) contains all sorts of KDoc-helpers for the documentation.
 For instance `{@include [LineBreak]}` can insert a line break in the KDoc and the family of `Indent`
-documentation interfaces can provide you with different non-breaking-space-based indents.
+documentation snippets can provide you with different non-breaking-space-based indents.
 
 If you need a new utility, feel free to add it to this file.
 
@@ -247,10 +248,10 @@ There are four kinds; here's a list of them:
 1. Simple, Stdlib-like operations that don't have arguments or have simple types (primitives, classes) 
 as arguments and return simple value, `DataFrame`, `DataRow` or `DataColumn`.
    * For example, 
-[`first` without arguments](https://github.com/Kotlin/dataframe/blob/master/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/first.kt#L106).
+[`first` without arguments](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/first.kt).
    * KDocs for such operations can be short, especially if it's trivial enough.
 2. Operations with [`DataRow` API](https://kotlin.github.io/dataframe/datarow.html). 
-   * For example, [`first` with predicate](https://github.com/Kotlin/dataframe/blob/master/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/first.kt#L139).
+   * For example, [`first` with predicate](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/first.kt).
    * Remember to describe a mechanism of `DataRow` API usage in the KDoc - it's not obvious to the user.
 3. Operations with the [Columns Selection DSL](https://kotlin.github.io/dataframe/columnselectors.html) that return a single and return simple value, `DataFrame`, `DataRow` or `DataColumn`.
    * For example, [`remove`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/remove.kt).
@@ -264,7 +265,7 @@ as arguments and return simple value, `DataFrame`, `DataRow` or `DataColumn`.
      [Columns Selection DSL](https://kotlin.github.io/dataframe/columnselectors.html); 
      these methods should be documented by the rules above.
    * For a better understanding of the complex operation, we write an [operation grammar](#grammar) using a 
-   [special notation](https://github.com/Kotlin/dataframe/blob/master/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt).
+   [special notation](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt).
    Add a reference to the operation Grammar in each related class and method KDoc.
 
 ### General Template
@@ -383,7 +384,7 @@ For example, from `group` KDoc:
 Add a link to the corresponding operation in the 
 [documentation website](https://kotlin.github.io/dataframe).
 
-Please add it as an interface KDoc inside 
+Please add it as a KDoc-snippet inside 
 [DocumentationUrls](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt)
 and then use add it using `@include`:
 
@@ -457,7 +458,7 @@ internal interface ~OperationName~Docs {
      * ## ~OperationName~ Operation Grammar
      * ...
      */
-    interface Grammar
+    typealias Grammar = Nothing
 }
 
 // Set operation in [SelectingColumns] examples (in [SelectingColumns.Dsl] and so on)
@@ -544,7 +545,7 @@ internal interface CommonDoc {
     
     // Use UPPER_CASE for references to the set/get arguments
     @ExcludeFromSources
-    interface OPERATION
+    typealias OPERATION = Nothing
 }
 ```
 
@@ -557,12 +558,12 @@ A good example of this concept can be found in the
 This interface provides a template for all overloads of `allBefore`,
 `allAfter`, `allFrom`, and `allUpTo` in a single place.
 
-Nested in the documentation interface, there are several other interfaces that define the expected arguments
+Nested in the documentation interface, there are several other KDoc-helpers that define the expected arguments
 of the template.
-These interfaces are named `TITLE`, `FUNCTION`, etc. and commonly have no KDocs itself,
+These KDoc-helpes are named `TITLE`, `FUNCTION`, etc. and commonly have no KDocs itself,
 just a simple comment explaining what the argument is for.
 
-Other documentation interfaces like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set
+Other KDoc-helpers like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set
 all the arguments accordingly.
 
 It's recommended to name write their name in `UPPER_CASE`
@@ -668,13 +669,13 @@ All other parts are filled in like:
 interface Grammar {
 
     /** [**`first`**][ColumnsSelectionDsl.first] */
-    interface PlainDslName
+    typealias PlainDslName = Nothing
 
     /** __`.`__[**`first`**][ColumnsSelectionDsl.first] */
-    interface ColumnSetName
+    typealias ColumnSetName = Nothing
 
     /** __`.`__[**`firstCol`**][ColumnsSelectionDsl.firstCol] */
-    interface ColumnGroupName
+    typealias ColumnGroupName = Nothing
 }
 ```
 
@@ -682,7 +683,8 @@ When a reference to a certain definition is used, we take `DslGrammarTemplate.XR
 Clicking on them takes users to the respective
 `XDef` and thus provides them with the formal name and type of the definition.
 
-You may also notice that the `PlainDslName`, `ColumnSetName`, and `ColumnGroupName` interfaces are defined separately.
+You may also notice that the `PlainDslName`, `ColumnSetName`, and `ColumnGroupName` 
+KDoc-helpers are defined separately.
 This is to make sure they can be reused in the large Columns Selection DSL grammar and on the website.
 
 You don't always need all three parts in the grammar; not all functions can be used in each context.

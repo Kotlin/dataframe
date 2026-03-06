@@ -340,6 +340,30 @@ Since [v0.3.9](https://github.com/Jolanrensen/KoDEx/releases/tag/v0.3.9) it's al
 exclude a whole file from the `sources.jar` by adding the annotation to the top of the file,
 like `@file:ExcludeFromSources`.
 
+### Using (nested) Type Aliases Instead of Interfaces
+
+([Nested](https://kotlinlang.org/docs/type-aliases.html#nested-type-aliases))
+[Type aliases](https://kotlinlang.org/docs/type-aliases.html)
+can be used to save byte size in the published library.jar file.
+This is useful when you have a lot of documentation interfaces without a body that are only used to host KDoc.
+
+For example:
+
+```kt
+/** [Common doc][CommonDoc] */
+typealias CommonDocLink = Nothing
+
+/**
+ * ## {@include [CommonDocLink]}
+ * Hello from $[NAME]!
+ */
+interface CommonDoc {
+
+    // name argument
+    typealias NAME = Nothing
+}
+```
+
 ## KoDEx Conventions in DataFrame
 
 See [KDoc Guidelines](KDOC_GUIDELINES.md).
@@ -347,7 +371,7 @@ See [KDoc Guidelines](KDOC_GUIDELINES.md).
 ## KDoc -> WriterSide
 
 There's a special annotation, `@ExportAsHtml`, that allows you to export the content of the KDoc of the annotated
-function, interface, or class as HTML.
+function, interface, typealias, or class as HTML.
 The Markdown of the KDoc is rendered to HTML using [JetBrains/markdown](https://github.com/JetBrains/markdown) and, in
 the case of DataFrame, put in [./docs/StardustDocs/resources/snippets/kdocs](docs/StardustDocs/resources/snippets/kdocs).
 From there, the HTML can be included in any WriterSide page as an iFrame.
