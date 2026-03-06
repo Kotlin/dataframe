@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -112,6 +113,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
  * ```
  * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to group.
  */
+@StringApiOverload(interpreter = "Group0", argumentMapping = "columns")
 public fun <T> DataFrame<T>.group(vararg columns: String): GroupClause<T, Any?> = group { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)

@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -68,6 +69,7 @@ public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFram
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetUngroupOperationArg]}
  * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to ungroup.
  */
+@StringApiOverload(interpreter = "Ungroup0", argumentMapping = "columns")
 public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungroup { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)

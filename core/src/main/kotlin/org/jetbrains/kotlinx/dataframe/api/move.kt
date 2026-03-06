@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -133,6 +134,7 @@ public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<
  * ```
  * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to move.
  */
+@StringApiOverload(interpreter = "Move0", argumentMapping = "columns")
 public fun <T> DataFrame<T>.move(vararg columns: String): MoveClause<T, Any?> = move { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)

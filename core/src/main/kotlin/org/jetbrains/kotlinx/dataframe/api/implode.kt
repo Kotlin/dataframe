@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.implodeImpl
@@ -23,6 +24,7 @@ public fun <T> DataFrame<T>.implode(dropNA: Boolean = false): DataRow<T> = implo
 public fun <T, C> DataFrame<T>.implode(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
     implodeImpl(dropNA, columns)
 
+@StringApiOverload(interpreter = "Implode", argumentMapping = "columns")
 public fun <T> DataFrame<T>.implode(vararg columns: String, dropNA: Boolean = false): DataFrame<T> =
     implode(dropNA) { columns.toColumnSet() }
 

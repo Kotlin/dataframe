@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -78,6 +79,7 @@ public fun <T> DataFrame<T>.valueCounts(
         .cast()
 }
 
+@StringApiOverload(interpreter = "ValueCounts", argumentMapping = "columns")
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: String,
     sort: Boolean = true,

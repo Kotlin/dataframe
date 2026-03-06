@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -60,6 +61,7 @@ public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T>
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [Column Names][String] used to remove the columns of this [DataFrame].
  */
+@StringApiOverload(interpreter = "Remove0", argumentMapping = "columns")
 public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remove { columns.toColumnSet() }
 
 /**

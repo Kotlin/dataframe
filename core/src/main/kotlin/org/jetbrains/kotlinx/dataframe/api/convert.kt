@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Converter
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.api.convertToDeprecatedInstant
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -256,6 +257,7 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T,
  * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to group.
  */
 @Interpretable("Convert2")
+@StringApiOverload(interpreter = "Convert0", argumentMapping = "columns")
 public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)

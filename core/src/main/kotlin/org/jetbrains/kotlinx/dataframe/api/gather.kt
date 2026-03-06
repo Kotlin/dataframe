@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.api.GatherDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -145,6 +146,7 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
  * ```
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame] to gather.
  */
+@StringApiOverload(interpreter = "Gather0", argumentMapping = "selector")
 public fun <T> DataFrame<T>.gather(vararg columns: String): Gather<T, Any?, String, Any?> =
     gather { columns.toColumnSet() }
 

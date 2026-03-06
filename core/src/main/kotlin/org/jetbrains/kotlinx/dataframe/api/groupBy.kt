@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionD
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -374,6 +375,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  * @return A new [GroupBy] containing the unique combinations of values from the provided [key columns][cols],
  * together with their corresponding groups of rows.
  */
+@StringApiOverload(interpreter = "DataFrameGroupBy", argumentMapping = "cols")
 public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupBy { cols.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)

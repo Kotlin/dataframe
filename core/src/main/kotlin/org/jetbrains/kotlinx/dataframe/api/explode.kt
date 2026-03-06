@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -98,6 +99,7 @@ public fun <T> DataFrame<T>.explode(
  *                If not specified, all applicable columns will be exploded.
  * @return A new [DataFrame] with exploded columns.
  */
+@StringApiOverload(interpreter = "Explode0", argumentMapping = "selector")
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 

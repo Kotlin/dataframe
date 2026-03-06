@@ -74,3 +74,14 @@ internal annotation class AccessApiOverload
  */
 @Target(AnnotationTarget.FUNCTION)
 public annotation class Converter(val klass: KClass<*>, val nullable: Boolean = false)
+
+/**
+ * Marks String API overloads (functions with vararg String parameters) with metadata
+ * to enable automatic delegation to their typed counterparts implementations in the compiler plugin.
+ *
+ * @param interpreter The interpreter name from the corresponding @Interpretable annotation
+ *                    on the typed API function (the one with ColumnSelectionDsl parameter)
+ * @param argumentMapping The name of the ColumnSelectionDsl parameter in the typed API function
+ */
+@Target(AnnotationTarget.FUNCTION)
+public annotation class StringApiOverload(val interpreter: String, val argumentMapping: String)

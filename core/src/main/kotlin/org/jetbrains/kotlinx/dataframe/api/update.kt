@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -176,6 +177,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * @include [UpdateWithNote]
  * @include [Update.ColumnNamesParam]
  */
+@StringApiOverload(interpreter = "Update0", argumentMapping = "columns")
 public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumnSet() }
 
 /**
