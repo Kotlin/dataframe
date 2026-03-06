@@ -5,22 +5,19 @@ Automatically generated archives of example projects.
 ## Available archives:
 
 ### Android Example
-Example of using Kotlin DataFrame in an Android application.
 
 **Download:** [android-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/android-example.zip)
 
-### Kotlin DataFrame Plugin Gradle Example
-Example of using the compiler plugin for Kotlin DataFrame in Gradle project.
+### Kotlin Dataframe Plugin Gradle Example
 
 **Download:** [kotlin-dataframe-plugin-gradle-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip)
 
-### Kotlin DataFrame Plugin Maven Example
-Example of using the compiler plugin for Kotlin DataFrame in Gradle project.
+### Kotlin Dataframe Plugin Maven Example
 
 **Download:** [kotlin-dataframe-plugin-maven-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip)
 
 ---
 
-Last updated: 2026-02-04 23:01 UTC
+Last updated: 2026-03-06 13:26 UTC
 
-Source commit: 2666ba9c3cb27f7af51dca31381ee9ccdabbb3af
+Source commit: 0ed4c44f1828a36937ab996599d9e9cf46d68454
