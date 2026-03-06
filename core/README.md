@@ -16,7 +16,7 @@ The code you're working on needs to be edited in [src](src), but the KDocs are p
 [KoDEx](https://github.com/Jolanrensen/kodex) when the project is published (or the task
 is run manually). The generated sources with adjusted KDocs will be overwritten
 in [generated-sources](generated-sources).
-See the [KDoc Preprocessing Guide](../KDOC_PREPROCESSING.md) for more information.
+See the [KDoc Preprocessing Guide](../KODEX_KDOC_PREPROCESSING.md) for more information.
 
 KDocs can also be exported to HTML, for them to be reused on the website.
 Elements annotated with `@ExportAsHtml` will have their generated content be copied over to

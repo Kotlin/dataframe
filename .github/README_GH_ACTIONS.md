@@ -20,7 +20,7 @@ fails if any unknown Gradle Wrapper JAR files are found.
 
 Anytime the source code changes on [master](https://github.com/Kotlin/dataframe/tree/master),
 this [GitHub Action](./workflows/generated-sources-master.yml) makes sure
-[`processKDocsMain`](../KDOC_PREPROCESSING.md),
+[`processKDocsMain`](../KODEX_KDOC_PREPROCESSING.md),
 and `korro` are run. If there have been any changes in either [core/generated-sources](../core/generated-sources) or
 [docs/StardustDocs/resources/snippets](../docs/StardustDocs/resources/snippets), these are auto-committed to the branch, to keep
 it up to date.
