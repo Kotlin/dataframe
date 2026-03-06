@@ -30,6 +30,7 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         readDfMethod: DefaultReadDfMethod? = null,
         fieldNameNormalizer: NameNormalizer = NameNormalizer.id(),
         asDataClass: Boolean = false,
+        nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
     ): CodeGenResult
 
     public fun generate(
