@@ -5,9 +5,8 @@
       branches:
         - master
       paths:
-        - 'examples/android-example/**'
-        - 'examples/kotlin-dataframe-plugin-gradle-example/**'
-        - 'examples/kotlin-dataframe-plugin-maven-example/**'
+        - 'examples/projects/**'
+        - '!examples/projects/dev/**'
     workflow_dispatch:
 
   jobs:
@@ -21,15 +20,16 @@
         - name: Create archives in temp directory
           run: |
             mkdir -p /tmp/archives
-
-            cd examples/android-example
-            zip -r /tmp/archives/android-example.zip . -x "*.git*" "build/*" ".gradle/*" "*/build/*"
-
-            cd ../kotlin-dataframe-plugin-gradle-example
-            zip -r /tmp/archives/kotlin-dataframe-plugin-gradle-example.zip . -x "*.git*" "build/*" ".gradle/*" "*/build/*" ".idea/*"
-
-            cd ../kotlin-dataframe-plugin-maven-example
-            zip -r /tmp/archives/kotlin-dataframe-plugin-maven-example.zip . -x "*.git*" "target/*" ".idea/*"
+            cd examples/projects
+            for dir in */ ; do
+              dirname="${dir%/}"
+              if [ "$dirname" != "dev" ]; then
+                echo "Archiving $dirname"
+                cd "$dirname"
+                zip -r "/tmp/archives/${dirname}.zip" . -x "*.git*" "build/*" ".gradle/*" "*/build/*" ".idea/*" "target/*"
+                cd ..
+              fi
+            done
 
         - name: Checkout example-projects-archives branch
           run: |
@@ -58,21 +58,22 @@
             Automatically generated archives of example projects.
             
             ## Available archives:
+            EOF
             
-            ### Android Example
-            Example of using Kotlin DataFrame in an Android application.
+            for zipfile in *.zip; do
+              if [ "$zipfile" = "*.zip" ]; then continue; fi
+              project_name="${zipfile%.zip}"
+              title=$(echo "$project_name" | sed -r 's/-/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1')
+              
+              cat >> README.md << EOF
             
-            **Download:** [android-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/android-example.zip)
+            ### $title
             
-            ### Kotlin DataFrame Plugin Gradle Example
-            Example of using the compiler plugin for Kotlin DataFrame in Gradle project.
+            **Download:** [$zipfile](https://github.com/Kotlin/dataframe/raw/example-projects-archives/$zipfile)
+            EOF
+            done
             
-            **Download:** [kotlin-dataframe-plugin-gradle-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip)
-            
-            ### Kotlin DataFrame Plugin Maven Example
-            Example of using the compiler plugin for Kotlin DataFrame in Gradle project.
-            
-            **Download:** [kotlin-dataframe-plugin-maven-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip)
+            cat >> README.md << EOF
             
             ---
             

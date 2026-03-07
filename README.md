@@ -141,8 +141,8 @@ for detailed setup instructions (including Groovy DSL).
 
 * You can also check the [Custom Gradle Configuration](https://kotlin.github.io/dataframe/setupcustomgradle.html) if you don't need certain formats as dependencies.
 * For Android projects, see [Setup Kotlin DataFrame on Android](https://kotlin.github.io/dataframe/setupandroid.html).
-* See [IDEA Gradle example projects](examples/idea-examples) 
-and [the Gradle project with the Kotlin DataFrame Compiler plugin](examples/kotlin-dataframe-plugin-gradle-example).
+* See [IDEA Gradle example projects](examples) 
+and [the Gradle project with the Kotlin DataFrame Compiler plugin](examples/projects/kotlin-dataframe-plugin-gradle-example).
 
 Refer to the
 [Setup Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/setupkotlinnotebook.html)
@@ -174,14 +174,14 @@ Make sure that you have `mavenCentral` in the list of repositories:
 Refer to
 [Get started with Kotlin DataFrame on Maven](https://kotlin.github.io/dataframe/setupmaven.html).
 
-* See [the Maven project with the Kotlin DataFrame Compiler plugin](examples/kotlin-dataframe-plugin-gradle-example).
+* See [the Maven project with the Kotlin DataFrame Compiler plugin](examples/projects/kotlin-dataframe-plugin-gradle-example).
 
 
 ## Code example
 
 This example of Kotlin DataFrame code with
 the [Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) enabled.
-See [the full project](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-gradle-example).
+See [the full project](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-dataframe-plugin-gradle-example).
 See also
 [this example in Kotlin Notebook](https://github.com/Kotlin/dataframe/tree/master/examples/notebooks/readme_example.ipynb).
 

@@ -420,7 +420,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.test {
-    maxHeapSize = "2048m"
+    maxHeapSize = "1g"
 }
 
 // Test task for Java 16+ language-specific tests
