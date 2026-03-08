@@ -472,7 +472,7 @@ private typealias Set~OperationName~OperationArg = Nothing
  * ### This ~OperationName~ Overload
  */
 @ExcludeFromSources
-private interface Common~OperationName~Docs
+private typealias Common~OperationName~Docs = Nothing
 
 /**
  * (Include common docs)
