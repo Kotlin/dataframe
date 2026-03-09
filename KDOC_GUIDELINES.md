@@ -35,29 +35,33 @@ This document outlines the guidelines for writing KDocs in the Kotlin DataFrame 
 
 Please never write KDocs from scratch without a necessity!
 Find existing KDocs for the similar operation or other entity and reuse it.
-However, take its specific into account.
+However, take its specifics into account.
 
 And don't be afraid to deviate from the rules or add something new –
 the most important thing is to help users to understand the library better!
 
 ## What should be documented?
 
-**All public API should be documented!** Our goal is 100% public functions, classes, and variable KDocs coverage.
+**All public APIs should be documented!** Our goal is 100% public functions, classes, and variable KDocs coverage.
 Some parts of public API are not intended for end users but can be used in Compiler Plugin or potential
-KDF extension libraries. These methods should have a small KDocs as well.
+KDF extension libraries. These methods should have a small KDoc as well.
 
-For internal API, please add at least a small note.
+Deprecated methods, properties, classes, and constructors are not required to have KDocs.
+
+For the internal API, please add at least a small note.
 
 ## KoDEx & KDoc-helpers
 
-We use [KoDEx](https://github.com/Jolanrensen/KoDEx) KDocs preprocessor.
+We use [KoDEx](https://github.com/Jolanrensen/KoDEx), a KDocs preprocessor.
 It adds several useful utilities for writing KDocs. 
 
 Please read about 
 the [KDocs preprocessing using KoDEx](KODEX_KDOC_PREPROCESSING.md) before working with Kotlin DataFrame KDocs.
 
 Install the [KoDEx plugin for IDEA](https://plugins.jetbrains.com/plugin/27473---kodex---kotlin-documentation-extensions)
-for correct KDocs display inside the IntelliJ IDEA.
+for a preview of the rendered KDocs inside IntelliJ IDEA.
+
+> Note that this preview may deviate from the actual Gradle results.
 
 ### Compiling KDocs
 
@@ -77,10 +81,11 @@ This can be done by using the
 which allows you to include a KDoc for another documentable element.
 This could be a class, an interface, a typealias, and so on.
 
-There are a lot of empty interfaces and typealiases in the project that are only used for including their KDocs
-to other KDocs. They are called *KDoc-snippets*; they are marked with `@ExcludeFromSources` 
+There are a lot of empty interfaces and `Nothing` typealiases in the project
+that are only used by having their KDocs included in other KDocs.
+They are called *KDoc-snippets*; they are marked with `@ExcludeFromSources` 
 and not included in the sources after the compilation (make sure you are not referencing them directly,
-i.e., only use it inside the `@include`). 
+i.e., only use it inside the `@include` or other KoDEx tags). 
 
 ```kotlin
 /**
@@ -100,7 +105,7 @@ internal typealias ~SnippetDescription~Snippet = Nothing
 public fun someFunction()
 ```
 
-For example, 
+For example, the
 [`ColumnPathCreationSnippet` typealias](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/snippets.kt)
 has a KDoc which describes column path creation behavior. 
 The whole file is excluded from sources,
@@ -108,7 +113,7 @@ but the KDoc is included in other KDocs.
 
 Also, you can use 
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
-along with `@include` to change variables value in common parts. This is especially useful for 
+along with `@include` to change variable values in common parts. This is especially useful for 
 writing examples of methods with similar usage but with different names.
 
 More about `@set` and `@get` connventions [here](#setget-references).
@@ -118,7 +123,7 @@ More about `@set` and `@get` connventions [here](#setget-references).
  * (Snippet body)
  * 
  * ### Example
- * `df.`{@get [OPERATION]}`  { name and age }`
+ * `df.`{@get [OPERATION]}` { name and age }`
  */
 @ExcludeFromSources
 internal interface ~SnippetDescription~Snippet {
@@ -140,7 +145,9 @@ internal interface ~SnippetDescription~Snippet {
 public fun someFunction()
 ```
 
-Naming convention for KDoc-snippet — the name must fully reflect its content and have `Snippet` at the end.
+Naming convention for KDoc-snippet — the name must fully reflect its content;
+For a text snippet, also add `Snippet` at the end of its name.
+For utility snippets, like `Indent` or `LineBreak`, it is not necessary.
 
 ### KDoc-topics: Reference to Topics
 
@@ -223,7 +230,7 @@ When linking to external URLs, it's recommended to use
 [Issues](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/Issues.kt).
 
 It's a central place where we can store URLs that can be used in multiple places in the library. Plus, it makes
-it easier to update the documentation whenever (part of) a URL changes.
+it easier to update the documentation whenever (a part of) a URL changes.
 
 For [Kotlin DataFrame GitHub issues and PRs](https://github.com/Kotlin/dataframe/issues),
 you can just write its number like `#1234` in the KDoc.
@@ -238,12 +245,12 @@ If you need a new utility, feel free to add it to this file.
 
 ## Kotlin DataFrame Operations KDoc Structure
 
-Operation KDocs size and structure completely depend on the operation complexity. 
+Operation KDocs size and structure completely depend on the operation's complexity. 
 
 The best way to write a new KDoc for an operation is to define its kind and 
 use the existing KDoc of an operation of the same kind as a template.
 
-There are four kinds; here's a list of them:
+There are four kinds:
 
 1. Simple, Stdlib-like operations that don't have arguments or have simple types (primitives, classes) 
 as arguments and return simple value, `DataFrame`, `DataRow` or `DataColumn`.
@@ -252,16 +259,16 @@ as arguments and return simple value, `DataFrame`, `DataRow` or `DataColumn`.
    * KDocs for such operations can be short, especially if it's trivial enough.
 2. Operations with [`DataRow` API](https://kotlin.github.io/dataframe/datarow.html). 
    * For example, [`first` with predicate](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/first.kt).
-   * Remember to describe a mechanism of `DataRow` API usage in the KDoc - it's not obvious to the user.
-3. Operations with the [Columns Selection DSL](https://kotlin.github.io/dataframe/columnselectors.html) that return a single and return simple value, `DataFrame`, `DataRow` or `DataColumn`.
+   * Remember to describe the mechanism of `DataRow` API usage in the KDoc - it's not obvious to the user.
+3. Operations with the [Columns Selection DSL](https://kotlin.github.io/dataframe/columnselectors.html) that return a single and simple value, `DataFrame`, `DataRow` or `DataColumn`.
    * For example, [`remove`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/remove.kt).
-   * Remember to describe a mechanism of Columns Selection DSL. 
+   * Remember to describe the mechanism of Columns Selection DSL. 
    * Add several examples with different columns selection options.
-4. Complex operations with a multiple methods chain.
+4. Complex operations with a multiple-methods chain.
    * For example, [`convert`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/convert.kt).
    * Such operations consist of at least two methods and special resulting classes as the intermediate steps. 
      All of them should be well-documented and have cross-references to each other.
-   * Usually complex operation methods have the 
+   * Usually, complex operation methods have the 
      [Columns Selection DSL](https://kotlin.github.io/dataframe/columnselectors.html); 
      these methods should be documented by the rules above.
    * For a better understanding of the complex operation, we write an [operation grammar](#grammar) using a 
@@ -302,11 +309,11 @@ Should start with a verb. Usually "returns" or "creates" for operations that ret
 
 #### Body
 
-For the non-trivial operations, write a detailed description of the operation, 
-describe method behavior and resulting value.
+For non-trivial operations, write a detailed description of the operation, 
+describe method behavior and the resulting value.
 
-Describe method-specific mechanisms, especially if it has non-trivial lambda as an argument. 
-For example, for methods with `RowFilter` predicate, add
+Describe method-specific mechanisms, especially if it has a non-trivial lambda as an argument. 
+For example, for methods with the `RowFilter` predicate, add
 
 ```kotlin
 {@include [SelectingRows.RowFilterSnippet]}
@@ -333,7 +340,7 @@ For example (from the `insert` KDoc):
 The next methods in the chain may be finalizing or intermediate steps - write about it explicitly.
 Remember to add a link to the initial method and [operation grammar](#grammar) in all of them.
 
-If the method uses columns selection, add a note about nested columns and column groups:
+If the method uses column(s) selection, add a note about nested columns and column groups:
 
 ```
 @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
@@ -401,7 +408,7 @@ Usually, just `@include`
 
 #### Examples section
 
-Write meaningful, easy-to-undertand examples, with detailed comments.
+Write meaningful, easy-to-understand examples, with detailed comments.
 
 For complex operations, write a **complete** example with all steps.
 
@@ -416,7 +423,7 @@ Start the section with
 #### Parameters and return section
 
 Describe parameters and return of the method using `@param` and `@return` tags. 
-Remember about type parameters.
+Remember type parameters.
 
 Wrap parameter names into `[]` for better readability.
 
@@ -456,6 +463,9 @@ internal interface ~OperationName~Docs {
     // Operation Grammar - for the initial method of the complex operations
     /**
      * ## ~OperationName~ Operation Grammar
+     * {@include [LineBreak]}
+     * {@include [DslGrammarLink]}
+     * {@include [LineBreak]}
      * ...
      */
     typealias Grammar = Nothing
@@ -490,7 +500,9 @@ public fun <T, C> DataFrame<T>.operation(columns: ColumnsSelector<T, C>)
 
 ### Grammar
 
-Grammar is a special notation for describing the complex operation.
+DSL Grammar (helpers usually are called simply `Grammar` and place inside the
+helper interface) is a special notation for describing 
+the complex operation.
 
 ![dslgrammar.png](docs/imgs/dslgrammar.png)
 
