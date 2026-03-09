@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
@@ -184,7 +184,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -288,7 +288,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -392,7 +392,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -496,7 +496,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -600,7 +600,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -704,7 +704,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -810,7 +810,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -916,7 +916,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1020,7 +1020,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1128,7 +1128,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1233,7 +1233,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1337,7 +1337,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1441,7 +1441,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1547,7 +1547,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1656,7 +1656,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1777,7 +1777,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1882,7 +1882,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1989,7 +1989,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2098,7 +2098,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2211,7 +2211,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2316,7 +2316,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2423,7 +2423,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2528,7 +2528,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2649,7 +2649,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2754,7 +2754,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2861,7 +2861,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2966,7 +2966,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3091,7 +3091,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3198,7 +3198,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3307,7 +3307,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3414,7 +3414,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3523,7 +3523,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3630,7 +3630,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3739,7 +3739,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3860,7 +3860,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3965,7 +3965,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4072,7 +4072,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4182,7 +4182,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4303,7 +4303,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4408,7 +4408,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4515,7 +4515,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4624,7 +4624,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4749,7 +4749,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4856,7 +4856,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -4963,7 +4963,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5074,7 +5074,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5195,7 +5195,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5300,7 +5300,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -5405,7 +5405,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *
      * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
+     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi] to prevent scoping issues if possible.
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *

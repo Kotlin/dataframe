@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -119,7 +119,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind] can be called using any of the supported [APIs][AccessApi] (+ [ColumnPath]).
+     * [colsOfKind] can be called using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -157,7 +157,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -203,7 +203,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -245,7 +245,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -287,7 +287,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -325,7 +325,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -365,7 +365,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * Creates a subset of columns from [this] that are of the given kind(s).
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *

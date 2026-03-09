@@ -75,6 +75,7 @@ public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>
 
 public inline fun <reified T> AnyRow.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[0]
 
+@Interpretable("AnyColCast")
 public fun <T> AnyCol.cast(): DataColumn<T> = this as DataColumn<T>
 
 public fun <T> ValueColumn<*>.cast(): ValueColumn<T> = this as ValueColumn<T>
@@ -93,6 +94,7 @@ public fun <C> ColumnSet<*>.cast(): ColumnSet<C> = this as ColumnSet<C>
 
 public fun <C> ColumnsResolver<*>.cast(): ColumnsResolver<C> = this as ColumnsResolver<C>
 
+@Interpretable("SingleColumnCast")
 public fun <C> SingleColumn<*>.cast(): SingleColumn<C> = this as SingleColumn<C>
 
 public fun <C> ColumnReference<*>.cast(): ColumnReference<C> = this as ColumnReference<C>

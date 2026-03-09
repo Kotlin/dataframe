@@ -42,7 +42,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
  * @param [predicate\] The [ColumnFilter] to control which columns to {@get [NOUN]}.
  * @return A [ColumnSet] containing the {@get [FIRST_OR_LAST]} columns adhering to the [predicate\].
  */
-@Suppress("ClassName")
 internal interface CommonTakeAndDropWhileDocs {
 
     /** Title, like "Take Last" */

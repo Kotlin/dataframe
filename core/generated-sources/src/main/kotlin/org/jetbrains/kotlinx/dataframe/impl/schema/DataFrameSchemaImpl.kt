@@ -126,8 +126,6 @@ internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, in
                     sb.appendLine()
                 }
             }
-
-            else -> throw NotImplementedError(columnSchema::class.toString())
         }
     }
     return sb.toString()

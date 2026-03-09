@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
@@ -33,9 +35,20 @@ import kotlin.uuid.Uuid
 public val DataFrame.Companion.parser: GlobalParserOptions
     get() = Parsers
 
+@Refine
+@Interpretable("ParseDefault")
+public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
+    parse(options) {
+        colsAtAnyDepth().filter { !it.isColumnGroup() }
+    }
+
+@Refine
+@Interpretable("Parse")
 public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
     parseImpl(options, columns)
 
+@Refine
+@Interpretable("ParseString")
 public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 
@@ -322,11 +335,6 @@ public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataCol
 @JvmName("tryParseChar")
 public fun DataColumn<Char?>.tryParse(options: ParserOptions? = null): DataColumn<*> =
     map { it?.toString() }.tryParseImpl(options)
-
-public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
-    parse(options) {
-        colsAtAnyDepth().filter { !it.isColumnGroup() }
-    }
 
 /**
  * Tries to parse a column of strings into a column of a different type.

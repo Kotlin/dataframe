@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotBeEmpty
+import io.kotest.matchers.string.shouldNotContain
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -9,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.asFrame
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -278,26 +281,61 @@ class ReplCodeGenTests : BaseTest() {
         c.declarations shouldBe
             """
             @DataSchema(isOpen = false)
-            interface _DataFrameType3 {
+            interface Leaf {
                 val a: Int
                 val c: Int
             }
 
-            val $dfName<_DataFrameType3>.a: $dataCol<Int> @JvmName("_DataFrameType3_a") get() = this["a"] as $dataCol<Int>
-            val $dfRowName<_DataFrameType3>.a: Int @JvmName("_DataFrameType3_a") get() = this["a"] as Int
-            val $dfName<_DataFrameType3>.c: $dataCol<Int> @JvmName("_DataFrameType3_c") get() = this["c"] as $dataCol<Int>
-            val $dfRowName<_DataFrameType3>.c: Int @JvmName("_DataFrameType3_c") get() = this["c"] as Int
+            val $dfName<Leaf>.a: $dataCol<Int> @JvmName("Leaf_a") get() = this["a"] as $dataCol<Int>
+            val $dfRowName<Leaf>.a: Int @JvmName("Leaf_a") get() = this["a"] as Int
+            val $dfName<Leaf>.c: $dataCol<Int> @JvmName("Leaf_c") get() = this["c"] as $dataCol<Int>
+            val $dfRowName<Leaf>.c: Int @JvmName("Leaf_c") get() = this["c"] as Int
 
             @DataSchema
             interface _DataFrameType2 {
                 val col: String
-                val leaf: _DataFrameType3
+                val leaf: Leaf
             }
 
             val $dfName<_DataFrameType2>.col: $dataCol<String> @JvmName("_DataFrameType2_col") get() = this["col"] as $dataCol<String>
             val $dfRowName<_DataFrameType2>.col: String @JvmName("_DataFrameType2_col") get() = this["col"] as String
-            val $dfName<_DataFrameType2>.leaf: ColumnGroup<_DataFrameType3> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as ColumnGroup<_DataFrameType3>
-            val $dfRowName<_DataFrameType2>.leaf: $dfRowName<_DataFrameType3> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as $dfRowName<_DataFrameType3>
+            val $dfName<_DataFrameType2>.leaf: ColumnGroup<Leaf> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as ColumnGroup<Leaf>
+            val $dfRowName<_DataFrameType2>.leaf: $dfRowName<Leaf> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as $dfRowName<Leaf>
             """.trimIndent()
+    }
+
+    object TestColumnOrderInGroup {
+        @DataSchema
+        interface Nested {
+            val x: Int
+            val y: String
+        }
+
+        @DataSchema
+        interface Base {
+            val nested: Nested
+            val extra: Int?
+        }
+
+        val df = dataFrameOf(
+            "nested" to columnOf(
+                "y" to columnOf("hello"),
+                "x" to columnOf(42),
+            ),
+            "extra" to columnOf(1),
+        )
+    }
+
+    @Test
+    fun `column order in nested group should not cause override`() {
+        val repl = ReplCodeGenerator.create()
+        repl.process<TestColumnOrderInGroup.Nested>()
+        repl.process<TestColumnOrderInGroup.Base>()
+        val c = repl.process(TestColumnOrderInGroup.df)
+
+        // extra: Int? → Int — valid
+        c.declarations shouldContain "override val extra"
+        // nested: Group{y,x} vs Group{x,y} — semantically the same, no need to override
+        c.declarations shouldNotContain "override val nested"
     }
 }
