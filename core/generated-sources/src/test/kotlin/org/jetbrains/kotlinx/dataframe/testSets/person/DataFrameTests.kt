@@ -257,7 +257,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `toMap`() {
+    fun toMap() {
         val map = df.toMap()
         map.size shouldBe 4
         map.forEach {
@@ -266,19 +266,19 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `size`() {
+    fun size() {
         df.size() shouldBe DataFrameSize(df.ncol, df.nrow)
     }
 
     @Test
-    fun `slicing`() {
+    fun slicing() {
         val sliced = typed[1..2]
         sliced.nrow shouldBe 2
         sliced[0].name shouldBe typed[1].name
     }
 
     @Test
-    fun `indexing`() {
+    fun indexing() {
         val expected = 45
         val i = 1
 
@@ -333,7 +333,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `chunked`() {
+    fun chunked() {
         val res = df.chunked(2)
         res.size() shouldBe 4
         res.toList().dropLast(1).forEach {
@@ -342,7 +342,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `update`() {
+    fun update() {
         fun AnyFrame.check() {
             getColumn(1).name() shouldBe "age"
             ncol shouldBe typed.ncol
@@ -423,7 +423,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `resetToNull`() {
+    fun resetToNull() {
         val updated = typed.update { all() }.withNull()
 
         updated.columns().forEach {
@@ -432,7 +432,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `sort`() {
+    fun sort() {
         val expected = listOf(null, "London", "Dubai", "Tokyo", "Milan", "Moscow", "Moscow")
 
         fun AnyFrame.check() = this[city].toList() shouldBe expected
@@ -472,7 +472,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `equals`() {
+    fun equals() {
         typed shouldBe typed.update { age }.with { age }
     }
 
@@ -504,7 +504,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `filter`() {
+    fun filter() {
         val expected = listOf("Bob", "Bob", "Charlie")
 
         fun AnyFrame.check() = this[name].toList() shouldBe expected
@@ -703,7 +703,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `groupBy`() {
+    fun groupBy() {
         fun AnyFrame.check() {
             nrow shouldBe 3
             this["name"].toList() shouldBe listOf("Alice", "Bob", "Charlie")
@@ -792,7 +792,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `min`() {
+    fun min() {
         val expected = 15
 
         fun Any?.check() = this shouldBe expected
@@ -848,7 +848,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `maxBy`() {
+    fun maxBy() {
         val expected = "Bob"
 
         fun AnyRow?.check() = this!![name] shouldBe expected
@@ -998,7 +998,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `distinct`() {
+    fun distinct() {
         val expected = 6
         typed.countDistinct { name and city } shouldBe expected
         typed.select { name and city }.distinct().nrow shouldBe expected
@@ -1018,7 +1018,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `addRow`() {
+    fun addRow() {
         val res = typed.append("Bob", null, "Paris", null)
         res.nrow shouldBe typed.nrow + 1
         res.name.type() shouldBe typeOf<String>()
@@ -1034,7 +1034,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `rename`() {
+    fun rename() {
         fun AnyFrame.check() {
             this["name2"].toList() shouldBe typed.name.toList()
             this["age2"].toList() shouldBe typed.age.toList()
@@ -1053,7 +1053,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `nunique`() {
+    fun nunique() {
         typed.name.countDistinct() shouldBe 3
     }
 
@@ -1486,7 +1486,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `forEachIn`() {
+    fun forEachIn() {
         val pivoted = typed.pivot(inward = true) { city }.groupBy { name and weight }.with { age }
         val sum = pivoted
             .select { "city".allCols() }
@@ -1497,7 +1497,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `parse`() {
+    fun parse() {
         val toStr = typed.convert { weight }.notNull { it.toString() }
         val weightStr = "weight".toColumnOf<String?>()
         val parsed = toStr.convert { weightStr }.toInt()
@@ -2190,7 +2190,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `isNumber`() {
+    fun isNumber() {
         typed.age.isNumber() shouldBe true
         typed.weight.isNumber() shouldBe true
 
