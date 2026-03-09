@@ -624,8 +624,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface Pet {
                 @ColumnName("pet_type")
                 val petType: kotlin.String
-                @ColumnName("value")
-                val `value`: kotlin.Any?
+                val value: kotlin.Any?
                 val name: kotlin.String
                 val tag: kotlin.String?
                 val other: kotlin.Any?
@@ -647,10 +646,6 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val petExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("Pet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.`value`: kotlin.Any? @JvmName("Pet_value") get() = this["value"] as kotlin.Any?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.`value`: kotlin.Any? @JvmName("NullablePet_value") get() = this["value"] as kotlin.Any?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?> @JvmName("Pet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.eyeColor: $functionName.EyeColor? @JvmName("Pet_eyeColor") get() = this["eye_color"] as $functionName.EyeColor?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?> @JvmName("NullablePet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?>
@@ -671,6 +666,10 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.tag: kotlin.String? @JvmName("Pet_tag") get() = this["tag"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.tag: kotlin.String? @JvmName("NullablePet_tag") get() = this["tag"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("Pet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.value: kotlin.Any? @JvmName("Pet_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.value: kotlin.Any? @JvmName("NullablePet_value") get() = this["value"] as kotlin.Any?
         """.trimLines()
 
         code should haveSubstring(petExtensions)
@@ -728,8 +727,7 @@ class OpenApiTests : JupyterReplTestCase() {
         val objectWithAdditionalPropertiesInterface = """
             @DataSchema(isOpen = false)
             interface ObjectWithAdditionalProperties : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.String> {
-                @ColumnName("value")
-                override val `value`: kotlin.String
+                override val value: kotlin.String
                 override val name: kotlin.String
                 
                 public companion object {
@@ -750,10 +748,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditionalPropertiesExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditionalProperties>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditionalProperties>.`value`: kotlin.String @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditionalProperties?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditionalProperties?>.`value`: kotlin.String? @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditionalProperties>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditionalProperties>.value: kotlin.String @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditionalProperties?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditionalProperties?>.value: kotlin.String? @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(objectWithAdditionalPropertiesExtensions)
@@ -762,8 +760,7 @@ class OpenApiTests : JupyterReplTestCase() {
         val objectWithAdditional2Interface = """
             @DataSchema(isOpen = false)
             interface ObjectWithAdditional2 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.Any> {
-                @ColumnName("value")
-                override val `value`: kotlin.Any
+                override val value: kotlin.Any
                 override val name: kotlin.String
                 
                 public companion object {
@@ -784,10 +781,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditional2Extensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional2>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any> @JvmName("ObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional2>.`value`: kotlin.Any @JvmName("ObjectWithAdditional2_value") get() = this["value"] as kotlin.Any
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional2?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional2?>.`value`: kotlin.Any? @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional2>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any> @JvmName("ObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional2>.value: kotlin.Any @JvmName("ObjectWithAdditional2_value") get() = this["value"] as kotlin.Any
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional2?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional2?>.value: kotlin.Any? @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as kotlin.Any?
         """.trimLines()
 
         code should haveSubstring(objectWithAdditional2Extensions)
@@ -796,8 +793,7 @@ class OpenApiTests : JupyterReplTestCase() {
         val objectWithAdditional3Interface = """
             @DataSchema(isOpen = false)
             interface ObjectWithAdditional3 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.Any?> {
-                @ColumnName("value")
-                override val `value`: kotlin.Any?
+                override val value: kotlin.Any?
                 override val name: kotlin.String
                 
                 public companion object {
@@ -818,10 +814,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditional3Extensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional3>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("ObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional3>.`value`: kotlin.Any? @JvmName("ObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional3?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional3?>.`value`: kotlin.Any? @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional3>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("ObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional3>.value: kotlin.Any? @JvmName("ObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional3?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional3?>.value: kotlin.Any? @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
         """.trimLines()
 
         code should haveSubstring(objectWithAdditional3Extensions)
@@ -912,8 +908,7 @@ class OpenApiTests : JupyterReplTestCase() {
         val objectWithAdditionalInterface = """
             @DataSchema(isOpen = false)
             interface ObjectWithAdditional : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.Int> {
-                @ColumnName("value")
-                override val `value`: kotlin.Int
+                override val value: kotlin.Int
                 override val name: kotlin.String
                 
                 public companion object {
@@ -934,10 +929,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditionalExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("ObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional>.`value`: kotlin.Int @JvmName("ObjectWithAdditional_value") get() = this["value"] as kotlin.Int
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional?>.`value`: kotlin.Int? @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("ObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional>.value: kotlin.Int @JvmName("ObjectWithAdditional_value") get() = this["value"] as kotlin.Int
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional?>.value: kotlin.Int? @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as kotlin.Int?
         """.trimLines()
 
         code should haveSubstring(objectWithAdditionalExtensions)
@@ -948,8 +943,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface SomeArrayContent {
                 val op: $functionName.Op
                 val path: kotlin.String
-                @ColumnName("value")
-                val `value`: $functionName.Value?
+                val value: $functionName.Value?
                 val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>
                 
                 public companion object {
@@ -970,10 +964,6 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val someArrayContentExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent>.`value`: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>> @JvmName("SomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?> @JvmName("SomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>> @JvmName("NullableSomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>>
@@ -986,6 +976,10 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent>.path: kotlin.String @JvmName("SomeArrayContent_path") get() = this["path"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent?>.path: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableSomeArrayContent_path") get() = this["path"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent?>.path: kotlin.String? @JvmName("NullableSomeArrayContent_path") get() = this["path"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent>.value: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent>.value: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent?>.value: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent?>.value: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?>
         """.trimLines()
 
         code should haveSubstring(someArrayContentExtensions)
