@@ -79,7 +79,7 @@ class CumsumTests {
     }
 
     @Test
-    fun `groupBy`() {
+    fun groupBy() {
         val df = dataFrameOf("str", "col")(
             "a", 1,
             "b", 2,
