@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.junit.Test
 
-class NestedColumnPathResolutionTests: TestBase() {
+class NestedColumnPathResolutionTests : TestBase() {
 
     val deepCol = columnOf(1) named "deep"
 
@@ -33,5 +33,4 @@ class NestedColumnPathResolutionTests: TestBase() {
             },
         ).shouldAllBeEqual()
     }
-
 }
