@@ -109,7 +109,7 @@ To enable the plugin in your Maven project, add it to the `plugins` section:
 
 ## Project Example
 
-See [the Maven example project with the Kotlin DataFrame Compiler Plugin enabled on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/kotlin-dataframe-plugin-maven-example).
+See [the Maven example project with the Kotlin DataFrame Compiler Plugin enabled on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-dataframe-plugin-maven-example).
 
 You can also 
 [download this project](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip).
@@ -122,5 +122,5 @@ You can also
 * Explore [detailed guides and real-world examples](Guides-And-Examples.md)
   to see how Kotlin DataFrame helps with different data tasks.
 * Check out various
-  [IDEA examples using Kotlin DataFrame on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples).
+  [IDEA examples using Kotlin DataFrame on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples).
 * Learn more about the [compiler plugin](Compiler-Plugin.md).
