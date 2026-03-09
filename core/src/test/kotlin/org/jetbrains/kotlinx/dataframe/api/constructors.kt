@@ -20,6 +20,33 @@ import kotlin.reflect.typeOf
 class ConstructorsTests {
 
     @Test
+    fun `columnOf correct types`() {
+        val intCol = columnOf(1, 2, 3)
+        intCol.type shouldBe typeOf<Int>()
+
+        val stringCol = columnOf("a", "b", "c")
+        stringCol.type shouldBe typeOf<String>()
+
+        val nullableIntCol = columnOf(1, 2, null)
+        nullableIntCol.type shouldBe typeOf<Int?>()
+
+        val doubleCol = columnOf(1.0, 2.5, 3.7)
+        doubleCol.type shouldBe typeOf<Double>()
+
+        val booleanCol = columnOf(true, false, true)
+        booleanCol.type shouldBe typeOf<Boolean>()
+
+        val arrayIntCol = columnOf(arrayOf(1))
+        arrayIntCol.type shouldBe typeOf<Array<Int>>()
+
+        val intArrayCol = columnOf(intArrayOf(1))
+        intArrayCol.type shouldBe typeOf<IntArray>()
+
+        val nullableArrayIntCol = columnOf(arrayOf(1, null))
+        nullableArrayIntCol.type shouldBe typeOf<Array<Int?>>()
+    }
+
+    @Test
     fun `untitled column naming`() {
         val builder = DynamicDataFrameBuilder()
         repeat(5) {
