@@ -9,7 +9,7 @@ import org.junit.Test
 class FilterTests : ColumnsSelectionDslTests() {
 
     @Test
-    fun `filter`() {
+    fun filter() {
         listOf(
             df.select { cols(name, age, weight) },
             df.select { all().filter { "e" in it.name() } },
