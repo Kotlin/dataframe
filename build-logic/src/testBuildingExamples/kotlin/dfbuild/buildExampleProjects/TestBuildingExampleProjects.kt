@@ -87,6 +87,7 @@ abstract class TestBuildingExampleProjects {
                     pomFile = folder.resolve("pom.xml")
                     goals = listOf("clean", "compile")
                     setLocalRepositoryDirectory(File(getGradleProperty("maven.repo.local")!!))
+                    addArgs(listOf("--no-transfer-progress", "-B"))
                 },
             ).let { result ->
                 if (result.exitCode != 0) {
