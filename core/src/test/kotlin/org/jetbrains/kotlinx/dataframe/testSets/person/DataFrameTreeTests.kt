@@ -869,6 +869,24 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun `move under new group`() {
+        val df0 = typed2.move { age and weight }.under { col("newGroup") }
+        df0.getColumnGroup("newGroup").columnNames() shouldBe listOf("age", "weight")
+
+        val df1 = typed2.move { age and weight }.under { pathOf("newGroup") }
+        df1.getColumnGroup("newGroup").columnNames() shouldBe listOf("age", "weight")
+
+        val df2 = typed2.move { age and weight }.under { pathOf("newGroup", "newGroup2") }
+        df2.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("age", "weight")
+
+        val df3 = typed2.move { age and weight }.under { colGroup("newGroup").colGroup("newGroup2") }
+        df3.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("age", "weight")
+
+        val df4 = typed2.move { age and weight }.under("newGroup")
+        df4.getColumnGroup("newGroup").columnNames() shouldBe listOf("age", "weight")
+    }
+
+    @Test
     fun `insert under new group`() {
         val df0 = typed2.insert("newColumn") { 123 }.under { col("newGroup") }
         df0.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
