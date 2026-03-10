@@ -76,6 +76,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
         property: KProperty<*>,
     ): VariableName? {
         val formats = supportedFormats.filterIsInstance<SupportedCodeGenerationFormat>()
+        require(formats.isNotEmpty()) {
+            "importDataSchema() did not find any supported type-only data schema generation providers (`SupportedCodeGenerationFormat`). If you were looking for OpenAPI 3.0.0 types, set `%use dataframe(..., enableExperimentalOpenApi=true)`."
+        }
         val name = property.name + "DataSchema"
         return when (
             val codeGenResult = CodeGenerator.urlCodeGenReader(importDataSchema.url, name, formats, true)
@@ -87,14 +90,40 @@ internal class Integration(private val notebook: Notebook, private val options: 
                     codeGenResult.code
 
                 execute(code)
-                execute("""DISPLAY("Data schema successfully imported as ${property.name}: $name")""")
+                display("Data schema successfully imported as ${property.name}: $name", null)
 
                 name
             }
 
             is CodeGenerationReadResult.Error -> {
-                execute(
-                    """DISPLAY("Failed to read data schema from ${importDataSchema.url}: ${codeGenResult.reason}")""",
+                display(
+                    buildString {
+                        appendLine(
+                            """
+                            Failed to read data schema from ${importDataSchema.url}.
+                            
+                            Cause: ${codeGenResult.reason},
+                            
+                            Available formats: ${formats.map { it::class.qualifiedName ?: it }}
+                            
+                            """.trimIndent(),
+                        )
+
+                        if (formats.none { it::class.simpleName?.lowercase()?.contains("openapi") == true }) {
+                            appendLine(
+                                "If you were looking for OpenAPI 3.0.0 types, set `%use dataframe(..., enableExperimentalOpenApi=true)`.",
+                            )
+                        }
+
+                        appendLine(
+                            """
+                                |
+                                |StackTrace:
+                                |${codeGenResult.reason.stackTrace.joinToString("\n|")}
+                            """.trimMargin(),
+                        )
+                    },
+                    null,
                 )
                 null
             }
