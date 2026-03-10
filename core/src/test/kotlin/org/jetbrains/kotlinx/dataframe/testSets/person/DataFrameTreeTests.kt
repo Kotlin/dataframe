@@ -84,7 +84,6 @@ import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toStr
@@ -107,7 +106,6 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import java.util.stream.Collectors
 import kotlin.reflect.typeOf
-import kotlin.streams.toList
 
 class DataFrameTreeTests : BaseTest() {
 
@@ -868,5 +866,23 @@ class DataFrameTreeTests : BaseTest() {
     fun `move under existing group`() {
         val df = typed2.move { age }.under { nameAndCity }
         df.nameAndCity.columnNames() shouldBe listOf("name", "city", "age")
+    }
+
+    @Test
+    fun `insert under new group`() {
+        val df0 = typed2.insert("newColumn") { 123 }.under { col("newGroup") }
+        df0.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
+
+        val df1 = typed2.insert("newColumn") { 123 }.under { pathOf("newGroup") }
+        df1.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
+
+        val df2 = typed2.insert("newColumn") { 123 }.under { pathOf("newGroup", "newGroup2") }
+        df2.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("newColumn")
+
+        val df3 = typed2.insert("newColumn") { 123 }.under { colGroup("newGroup").colGroup("newGroup2") }
+        df3.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("newColumn")
+
+        val df4 = typed2.insert("newColumn") { 123 }.under("newGroup")
+        df4.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
     }
 }

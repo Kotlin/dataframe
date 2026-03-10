@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -20,10 +21,12 @@ import org.jetbrains.kotlinx.dataframe.impl.api.afterImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.beforeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
+import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.INSERT_AFTER_COL_PATH
 import org.jetbrains.kotlinx.dataframe.util.INSERT_AFTER_COL_PATH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.INSERT_UNDER
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -214,7 +217,13 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  */
 @Refine
 @Interpretable("Under0")
-public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
+public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> {
+    val parentPath = df.getColumnPaths(UnresolvedColumnsPolicy.Create, column).single()
+    return df.insertImpl(
+        path = parentPath + this.column.name,
+        column = this.column,
+    )
+}
 
 /**
  * Inserts the new column previously specified with [insert] under
@@ -236,14 +245,18 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
  * under which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed under the specified column group.
  */
+@Deprecated(
+    message = INSERT_UNDER,
+    replaceWith = ReplaceWith("this.under { columnPath }"),
+    level = DeprecationLevel.ERROR,
+)
 @Refine
 @Interpretable("Under1")
-public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> =
-    df.insertImpl(columnPath + column.name, column)
+public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> = under { columnPath }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
+public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under { column }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -271,7 +284,7 @@ public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under
  */
 @Refine
 @Interpretable("Under4")
-public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathOf(column))
+public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under { pathOf(column) }
 
 // endregion
 
