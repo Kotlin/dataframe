@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -20,10 +21,12 @@ import org.jetbrains.kotlinx.dataframe.impl.api.afterImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.beforeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
+import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.INSERT_AFTER_COL_PATH
 import org.jetbrains.kotlinx.dataframe.util.INSERT_AFTER_COL_PATH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.INSERT_UNDER
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -117,9 +120,6 @@ internal interface InsertDocs {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[**`under`**][InsertClause.under]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`under`**][InsertClause.under]**`(`**` columnPath: `[`ColumnPath`][ColumnPath]**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`after`**][InsertClause.after]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
@@ -274,10 +274,8 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  * Inserts the new column previously specified with [insert] under
  * the selected [column group][column].
  *
- * Works only with existing column groups.
- * To insert into a new column group, use the overloads:
- * `under(path: ColumnPath)` or `under(column: String)`.
- * [Should be fixed](https://github.com/Kotlin/dataframe/issues/1411).
+ * This works for existing column groups, as well as for ones that don't exist yet;
+ * in that case, they will be created.
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
@@ -290,47 +288,46 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  * // Insert a new column "age" under the column group with path ("info", "personal")
  * df.insert(age).under { info.personal }
  *
+ * // Insert a new column "age" under the previously-nonexistent column group with path ("info", "extraData")
+ * df.insert(age).under { info.colGroup("extraData") }
+ *
  * // Insert a new column "sum" under the only top-level column group
  * val dfWithSum = df.insert("sum") { a + b }.under { colGroups().single() }
  * ```
  *
- * @param column The [ColumnSelector] used to choose an existing column group in this [DataFrame]
+ * @param column The [ColumnSelector] used to choose a new or existing column group in this [DataFrame]
  * under which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed under the selected group.
  */
 @Refine
 @Interpretable("Under0")
-public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
+public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> {
+    val parentPath = df.getColumnPaths(UnresolvedColumnsPolicy.Create, column).single()
+    return df.insertImpl(
+        path = parentPath + this.column.name,
+        column = this.column,
+    )
+}
 
 /**
- * Inserts the new column previously specified with [insert] under
- * the column group defined by the given [columnPath].
+ * __DEPRECATED__:
  *
- * If the specified path is partially or fully missing — that is, if any segment of the path
- * does not correspond to an existing column or column group — all missing parts will be created automatically.
+ * Use `insert {}.under { columnPath }` instead.
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
- *
- * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
- *
- * ### Example
- * ```kotlin
- * // Insert a new column "age" under the column group with path ("info", "personal")
- * df.insert(age).under(pathOf("info", "personal"))
- * ```
- *
- * @param [columnPath] The [ColumnPath] specifying the path to a column group in this [DataFrame]
- * under which the new column will be inserted.
- * @return A new [DataFrame] with the inserted column placed under the specified column group.
  */
+@Deprecated(
+    message = INSERT_UNDER,
+    replaceWith = ReplaceWith("this.under { columnPath }"),
+    level = DeprecationLevel.ERROR,
+)
 @Refine
 @Interpretable("Under1")
-public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> =
-    df.insertImpl(columnPath + column.name, column)
+public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> = under { columnPath }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
+public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under { column }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -358,7 +355,7 @@ public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under
  */
 @Refine
 @Interpretable("Under4")
-public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathOf(column))
+public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under { pathOf(column) }
 
 // endregion
 
