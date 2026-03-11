@@ -578,12 +578,11 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
  */
 @Refine
 @Interpretable("MoveUnder0")
-public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = pathOf(column).let { path -> under { path } }
+public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = under { pathOf(column) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> =
-    column.path().let { path -> under { path } }
+public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> = under { column.path() }
 
 /**
  * Moves columns, previously selected with [move] under a new or
