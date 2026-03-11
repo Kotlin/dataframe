@@ -150,6 +150,8 @@ internal const val DISPLAY_CONFIGURATION_COPY = "This function is only here for 
 internal const val COMPARE_RESULT_EQUALS =
     "'Equals' is deprecated in favor of 'Matches' to clarify column order is irrelevant. $MESSAGE_1_0"
 
+internal const val INSERT_UNDER = "This `ColumnPath` overload is deprecated in favor of `.under { path }`. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
