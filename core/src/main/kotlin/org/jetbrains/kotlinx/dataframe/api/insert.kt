@@ -79,9 +79,6 @@ internal interface InsertDocs {
      * __`.`__[**`under`**][InsertClause.under]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`under`**][InsertClause.under]**`(`**` columnPath: `[`ColumnPath`][ColumnPath]**`)`**
-     *
-     * {@include [Indent]}
      * `| `__`.`__[**`after`**][InsertClause.after]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
      * {@include [Indent]}
@@ -191,10 +188,8 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  * Inserts the new column previously specified with [insert] under
  * the selected [column group][column].
  *
- * Works only with existing column groups.
- * To insert into a new column group, use the overloads:
- * `under(path: ColumnPath)` or `under(column: String)`.
- * [Should be fixed](https://github.com/Kotlin/dataframe/issues/1411).
+ * This works for existing column groups, as well as for ones that don't exist yet;
+ * in that case, they will be created.
  *
  * For more information: {@include [DocumentationUrls.Insert]}
  *
@@ -207,11 +202,14 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  * // Insert a new column "age" under the column group with path ("info", "personal")
  * df.insert(age).under { info.personal }
  *
+ * // Insert a new column "age" under the previously-nonexistent column group with path ("info", "extraData")
+ * df.insert(age).under { info.colGroup("extraData") }
+ *
  * // Insert a new column "sum" under the only top-level column group
  * val dfWithSum = df.insert("sum") { a + b }.under { colGroups().single() }
  * ```
  *
- * @param column The [ColumnSelector] used to choose an existing column group in this [DataFrame]
+ * @param column The [ColumnSelector] used to choose a new or existing column group in this [DataFrame]
  * under which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed under the selected group.
  */
@@ -226,24 +224,11 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
 }
 
 /**
- * Inserts the new column previously specified with [insert] under
- * the column group defined by the given [columnPath].
+ * __DEPRECATED__:
  *
- * {@include [org.jetbrains.kotlinx.dataframe.documentation.ColumnPathCreationSnippet]}
+ * Use `insert {}.under { columnPath }` instead.
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
- *
- * For more information: {@include [DocumentationUrls.Insert]}
- *
- * ### Example
- * ```kotlin
- * // Insert a new column "age" under the column group with path ("info", "personal")
- * df.insert(age).under(pathOf("info", "personal"))
- * ```
- *
- * @param [columnPath] The [ColumnPath] specifying the path to a column group in this [DataFrame]
- * under which the new column will be inserted.
- * @return A new [DataFrame] with the inserted column placed under the specified column group.
  */
 @Deprecated(
     message = INSERT_UNDER,
