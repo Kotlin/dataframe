@@ -196,6 +196,20 @@ class CodeGenerationTests : BaseTest() {
         assertEquals(expected, code.value)
     }
 
+    @Test
+    fun `generateDataClasses with SoftKeywords`() {
+        val df = dataFrameOf("value" to columnOf(123))
+        val code = df.generateDataClasses()
+        val expected =
+            """
+            @DataSchema
+            data class DataEntry(
+                val value: Int
+            )
+            """.trimIndent()
+        assertEquals(expected, code.value)
+    }
+
     val personClassName = Person::class.qualifiedName!!
 
     val personShortName = Person::class.simpleName!!
