@@ -11,12 +11,14 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 
-/*
- * This template is to be used in displaying the Usage / DSL grammar
- * of each individual ColumnsSelectionDsl function group, as well as the entire
- * thing itself.
+/**
+ * {@comment
+ *    This template is to be used in displaying the Usage / DSL grammar
+ *    of each individual ColumnsSelectionDsl function group, as well as the entire
+ *    thing itself.
  *
- * See an example of how to use this template at [UsageTemplateColumnsSelectionDsl.UsageTemplateExample]
+ *    See an example of how to use this template at [UsageTemplateColumnsSelectionDsl.UsageTemplateExample]
+ * }
  */
 public interface DslGrammarTemplateColumnsSelectionDsl {
 
