@@ -11,9 +11,11 @@ import org.jetbrains.kotlinx.dataframe.RowColumnExpression as DfRowColumnExpress
  */
 internal interface ExpressionsGivenRowAndColumn {
 
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
+    /**
+     * {@comment
+     *    The key for a @set that will define the operation name for the examples below.
+     *    Make sure to [alias][your examples].
+     * }
      */
     typealias OPERATION = Nothing
     // Using <code>` notation to not create double `` when including

@@ -28,12 +28,12 @@ import org.jetbrains.kotlinx.dataframe.index
  */
 internal interface SelectingRows {
 
-    /*
-     * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [`Selecting Rows`.RowFilterSnippet]`.
-     */
-
     /**
+     * {@comment
+     *    Row filter KDoc-snippet.
+     *    Include it into KDoc with `@include [`Selecting Rows`.RowFilterSnippet]`.
+     * }
+     *
      * The [predicate] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and `it`
      * and is expected to return a [Boolean] value.
      *
@@ -46,12 +46,12 @@ internal interface SelectingRows {
     @ExcludeFromSources
     typealias RowFilterSnippet = Nothing
 
-    /*
-     * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [`Selecting Rows`.RowValueFilterSnippet]`.
-     */
-
     /**
+     * {@comment
+     *    Row filter KDoc-snippet.
+     *    Include it into KDoc with `@include [`Selecting Rows`.RowValueFilterSnippet]`.
+     * }
+     *
      * The [predicate] is a [RowValueFilter] — a lambda that receives each [DataRow] as `this` and
      * given value as `it`
      * and is expected to return a [Boolean] value.
@@ -65,15 +65,19 @@ internal interface SelectingRows {
     @ExcludeFromSources
     typealias RowValueFilterSnippet = Nothing
 
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
+    /**
+     * {@comment
+     *    The key for a @set that will define the operation name for the examples below.
+     *    Make sure to [alias][your examples].
+     * }
      */
     typealias FIRST_OPERATION = Nothing
 
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
+    /**
+     * {@comment
+     *    The key for a @set that will define the operation name for the examples below.
+     *    Make sure to [alias][your examples].
+     * }
      */
     typealias SECOND_OPERATION = Nothing
 
