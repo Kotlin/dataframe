@@ -99,7 +99,7 @@ public fun extractDBTypeFromUrl(url: String?): DbType {
 
         MySql.dbTypeInJdbcUrl in url -> MySql
 
-        Sqlite.dbTypeInJdbcUrl in url -> Sqlite
+        Sqlite.default.dbTypeInJdbcUrl in url -> Sqlite.default
 
         PostgreSql.dbTypeInJdbcUrl in url -> PostgreSql
 
