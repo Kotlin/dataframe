@@ -87,11 +87,17 @@ internal interface FillNulls {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -118,6 +124,10 @@ internal interface FillNulls {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
      * ([String API][`StringAPI`]).
      *
@@ -149,6 +159,10 @@ private typealias SetFillNullsOperationArg = Nothing
  * for all the selecting options.
  *
  * ### This Fill Nulls Overload
+ *
+ *
+ *
+ *
  *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
@@ -196,6 +210,10 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  * for all the selecting options.
  *
  * ### This Fill Nulls Overload
+ *
+ *
+ *
+ *
  *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
@@ -376,11 +394,17 @@ internal interface FillNaNs {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -407,6 +431,10 @@ internal interface FillNaNs {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
      * ([String API][`StringAPI`]).
      *
@@ -436,6 +464,10 @@ internal interface FillNaNs {
  * for all the selecting options.
  *
  * ### This Fill NaNs Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -482,6 +514,10 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  * for all the selecting options.
  *
  * ### This Fill NaNs Overload
+ *
+ *
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -604,11 +640,17 @@ internal interface FillNA {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -635,6 +677,10 @@ internal interface FillNA {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
      * ([String API][`StringAPI`]).
      *
@@ -664,6 +710,10 @@ internal interface FillNA {
  * for all the selecting options.
  *
  * ### This Fill NA Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -710,6 +760,10 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  * for all the selecting options.
  *
  * ### This Fill NA Overload
+ *
+ *
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -786,6 +840,10 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
  *
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
  * ### This Drop Nulls Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -950,6 +1008,10 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  * ### This Drop NA Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -1025,6 +1087,10 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  * ### This Drop NA Overload
+ *
+ *
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -1112,6 +1178,10 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
  * ### This Drop NaNs Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,

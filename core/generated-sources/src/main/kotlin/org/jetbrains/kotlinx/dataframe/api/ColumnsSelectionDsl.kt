@@ -36,6 +36,10 @@ public annotation class ColumnsSelectionDslMarker
 
 /**
  * ## Columns Selection DSL
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,

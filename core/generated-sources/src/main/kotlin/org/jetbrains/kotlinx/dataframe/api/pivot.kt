@@ -60,6 +60,8 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][SelectingColumns].
@@ -409,6 +411,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.PivotDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
@@ -482,12 +486,16 @@ public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumns
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.PivotDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
  * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  * ### This `pivot` Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * * [pivot] with a single key column produces a [Pivot] containing one column for each unique key
@@ -552,6 +560,8 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
  *
  * This function combines [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [groupByOther][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
  * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -626,6 +636,8 @@ public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotC
  * This function combines [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [groupByOther][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
  * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
@@ -638,6 +650,8 @@ public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotC
  *   to produce a count matrix.
  *
  * ### This `pivotMatches` Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -693,6 +707,8 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
  * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
  * and [count][PivotGroupBy.count] operations into a single call.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][SelectSelectingOptions].
@@ -723,6 +739,8 @@ internal typealias DataFramePivotCountsCommonDocs = Nothing
  *
  * This function combines [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [groupByOther][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
  * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -799,6 +817,8 @@ public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotCo
  * This function combines [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [groupByOther][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
  * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
@@ -810,6 +830,8 @@ public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotCo
  * to produce a [Boolean] matrix.
  *
  * ### This `pivotCounts` Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -882,6 +904,10 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
  * df.pivot { expr("newName") { oldName.drop(5) } }
  * ```
  * ### This `pivot` Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -952,6 +978,10 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: B
  * df.pivot { expr("newName") { oldName.drop(5) } }
  * ```
  * ### This `pivot` Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -1015,6 +1045,8 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
  * This function combines [pivot][GroupBy.pivot]
  * and [matches][PivotGroupBy.matches] operations into a single call.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][SelectSelectingOptions].
@@ -1046,6 +1078,8 @@ internal typealias GroupByPivotMatchesCommonDocs = Nothing
  *
  * This function combines [pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
  * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -1120,6 +1154,8 @@ public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: Pivot
  * This function combines [pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
  * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
@@ -1130,6 +1166,8 @@ public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: Pivot
  * but counts the number of matching rows instead of checking for their presence.
  *
  * ### This `pivotMatches` Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -1182,6 +1220,8 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  * This function combines [pivot][GroupBy.pivot]
  * and [count][PivotGroupBy.count] operations into a single call.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][SelectSelectingOptions].
@@ -1211,6 +1251,8 @@ internal typealias GroupByPivotCountsCommonDocs = Nothing
  *
  * This function combines [pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
  * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -1283,6 +1325,8 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
  * This function combines [pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
  * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
@@ -1293,6 +1337,8 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
  * but check if there is any matching row instead of counting then.
  *
  * ### This `pivotCounts` Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -1416,6 +1462,8 @@ public fun <T> AggregateGroupedDsl<T>.pivot(
  * and [pivotCounts][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts] shortcuts.
  *
  * ### This `pivot` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example
@@ -1555,6 +1603,8 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(
  * See also: [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [pivotCounts][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts].
  *
  * ### This `pivotMatches` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example
@@ -1680,6 +1730,8 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(
  * See also: [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [pivotMatches][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches].
  *
  * ### This `pivotCounts` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example

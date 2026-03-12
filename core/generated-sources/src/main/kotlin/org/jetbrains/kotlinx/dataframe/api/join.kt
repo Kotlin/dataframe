@@ -65,6 +65,8 @@ import kotlin.reflect.KProperty
  *
  * See also [joinWith][org.jetbrains.kotlinx.dataframe.api.joinWith], which performs a join by matching row values condition.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
@@ -153,6 +155,8 @@ public fun <A, B> DataFrame<A>.join(
  *
  * See also [joinWith][org.jetbrains.kotlinx.dataframe.api.joinWith], which performs a join by matching row values condition.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
@@ -160,6 +164,8 @@ public fun <A, B> DataFrame<A>.join(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `join` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example
@@ -195,6 +201,8 @@ public fun <A, B> DataFrame<A>.join(
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -259,6 +267,8 @@ public fun <A, B> DataFrame<A>.innerJoin(
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
@@ -266,6 +276,8 @@ public fun <A, B> DataFrame<A>.innerJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `innerJoin` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example
@@ -297,6 +309,8 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -361,6 +375,8 @@ public fun <A, B> DataFrame<A>.leftJoin(
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
@@ -368,6 +384,8 @@ public fun <A, B> DataFrame<A>.leftJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `leftJoin` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example
@@ -399,6 +417,8 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -463,6 +483,8 @@ public fun <A, B> DataFrame<A>.rightJoin(
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
@@ -470,6 +492,8 @@ public fun <A, B> DataFrame<A>.rightJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `rightJoin` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example
@@ -501,6 +525,8 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -565,6 +591,8 @@ public fun <A, B> DataFrame<A>.fullJoin(
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
@@ -572,6 +600,8 @@ public fun <A, B> DataFrame<A>.fullJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `fullJoin` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example
@@ -603,6 +633,8 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -667,6 +699,8 @@ public fun <A, B> DataFrame<A>.filterJoin(
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin], [excludeJoin][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
@@ -674,6 +708,8 @@ public fun <A, B> DataFrame<A>.filterJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `filterJoin` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example
@@ -705,6 +741,8 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin].
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -769,6 +807,8 @@ public fun <A, B> DataFrame<A>.excludeJoin(
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
  * [innerJoin][org.jetbrains.kotlinx.dataframe.api.innerJoin], [leftJoin][org.jetbrains.kotlinx.dataframe.api.leftJoin], [rightJoin][org.jetbrains.kotlinx.dataframe.api.rightJoin], [filterJoin][org.jetbrains.kotlinx.dataframe.api.filterJoin], [fullJoin][org.jetbrains.kotlinx.dataframe.api.fullJoin].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
@@ -776,6 +816,8 @@ public fun <A, B> DataFrame<A>.excludeJoin(
  * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
  *
  * ### This `excludeJoin` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example

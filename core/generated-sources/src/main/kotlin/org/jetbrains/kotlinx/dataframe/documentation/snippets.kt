@@ -4,12 +4,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 
 // File with KDF common KDoc-topics and -snippets.
 
-/*
- * Auto-renaming in [DataFrame] KDoc-topic.
- * Link to it with `@include [AutoRenamingLink]`.
- */
-
 /**
+ *
+ *
  * ## Auto-renaming in [DataFrame]
  *
  * In some operations, multiple columns with the same name may appear
@@ -24,8 +21,3 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  * to maintain clarity and improve code readability.
  */
 internal typealias AutoRenamingColumnsInDataFrame = Nothing
-
-/*
- * Column Path auto creation KDoc-snippet.
- * Include it in KDoc with `@include [ColumnPathCreationSnippet]`.
- */

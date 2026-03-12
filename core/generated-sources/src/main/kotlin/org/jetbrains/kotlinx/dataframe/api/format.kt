@@ -57,6 +57,8 @@ import kotlin.reflect.KProperty
  * This function does not immediately produce a [FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause] which serves as an intermediate step.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][FormatSelectingColumns].
@@ -91,11 +93,17 @@ internal interface FormatDocs {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -122,6 +130,10 @@ internal interface FormatDocs {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
      * ([String API][`StringAPI`]).
      *
@@ -287,6 +299,8 @@ internal interface FormatDocs {
  * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
@@ -317,6 +331,8 @@ internal interface FormatDocs {
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -352,6 +368,8 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
  * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
@@ -382,6 +400,8 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Examples:
@@ -406,6 +426,8 @@ public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?
  *
  * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -475,6 +497,8 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
@@ -505,6 +529,8 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -542,6 +568,8 @@ public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): Form
  * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
@@ -572,6 +600,8 @@ public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): Form
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Examples:
@@ -597,6 +627,8 @@ public fun <T> FormattedFrame<T>.format(vararg columns: String): FormatClause<T,
  *
  * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
  * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *

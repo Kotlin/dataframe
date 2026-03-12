@@ -47,6 +47,8 @@ import kotlin.reflect.typeOf
  *
  * Check out [Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also: [Selecting Columns][SelectingOptions].
@@ -57,11 +59,17 @@ internal interface CorrDocs {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -88,6 +96,10 @@ internal interface CorrDocs {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
      * ([String API][`StringAPI`]).
      *
@@ -193,12 +205,16 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also: [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions].
  *
  * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  * ### This Corr Overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -258,12 +274,16 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also: [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions].
  *
  * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  * ### This Corr Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -305,6 +325,8 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * Check out [Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also: [Selecting Columns][SelectingOptions].
@@ -323,12 +345,16 @@ internal typealias CorrWithDocs = Nothing
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also: [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions].
  *
  * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  * ### This Corr With Overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -368,12 +394,16 @@ public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataF
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also: [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions].
  *
  * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  * ### This Corr With Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *

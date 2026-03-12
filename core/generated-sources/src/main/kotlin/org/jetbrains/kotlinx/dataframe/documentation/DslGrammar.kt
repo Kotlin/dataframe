@@ -1,11 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-/*
- * DSL Grammar KDoc-topic.
- * Link to it with `@include [DslGrammarLink]`.
- */
-
 /**
+ *
+ *
  * ## DSL Grammar
  *
  * If you've come across notations like **`a(`**` (`**`b`**` | [`**`c, .. `**`] ) `**`)`**

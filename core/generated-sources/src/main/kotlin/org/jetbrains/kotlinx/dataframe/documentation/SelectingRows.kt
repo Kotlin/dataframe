@@ -28,25 +28,13 @@ import org.jetbrains.kotlinx.dataframe.index
  */
 internal interface SelectingRows {
 
-    /*
-     * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [`Selecting Rows`.RowFilterSnippet]`.
-     */
-
-    /*
-     * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [`Selecting Rows`.RowValueFilterSnippet]`.
-     */
-
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
+    /**
+     *
      */
     typealias FIRST_OPERATION = Nothing
 
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
+    /**
+     *
      */
     typealias SECOND_OPERATION = Nothing
 

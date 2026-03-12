@@ -36,6 +36,8 @@ import kotlin.reflect.KProperty
  * that return a new [DataFrame] with grouped columns.
  * Check out [Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][GroupSelectingOptions].
@@ -53,11 +55,17 @@ internal interface GroupDocs {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -84,6 +92,10 @@ internal interface GroupDocs {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
      * ([String API][`StringAPI`]).
      *
@@ -134,6 +146,8 @@ internal interface GroupDocs {
  * that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.GroupDocs.GroupSelectingOptions].
@@ -147,6 +161,8 @@ internal interface GroupDocs {
  * Don't confuse this with [groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy],
  * which groups the dataframe by the values in the selected columns!
  * ### This Group Overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -183,6 +199,8 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
  * that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.GroupDocs.GroupSelectingOptions].
@@ -196,6 +214,8 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
  * Don't confuse this with [groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy],
  * which groups the dataframe by the values in the selected columns!
  * ### This Group Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Example:
@@ -253,6 +273,8 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  *
  * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/group.html)
  *
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -278,12 +300,16 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  * Groups columns, previously selected with [group], into a new or existing column group
  * within the [DataFrame] by specifying its path via [ColumnsSelectionDsl] expression.
  *
+ *
+ *
  * If the specified path is partially or fully missing — that is, if any segment of the path
  * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
  * See [Selecting Columns][SelectingColumns].
  *
  * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/group.html)
+ *
+ *
  *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
@@ -329,6 +355,8 @@ public fun <T, C> GroupClause<T, C>.into(
  * See [Selecting Columns][SelectingColumns].
  *
  * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/group.html)
+ *
+ *
  *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).

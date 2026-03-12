@@ -47,6 +47,8 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][RenameSelectingOptions].
@@ -59,11 +61,17 @@ internal interface RenameDocs {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -90,6 +98,10 @@ internal interface RenameDocs {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
      * ([String API][`StringAPI`]).
      *
@@ -165,6 +177,8 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.RenameDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.RenameDocs.RenameSelectingOptions].
@@ -173,6 +187,8 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
  *
  * See also [renameToCamelCase][org.jetbrains.kotlinx.dataframe.api.renameToCamelCase] which renames all columns to "camelCase" format.
  * ### This Rename Overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -227,6 +243,8 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.RenameDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.RenameDocs.RenameSelectingOptions].
@@ -235,6 +253,8 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  *
  * See also [renameToCamelCase][org.jetbrains.kotlinx.dataframe.api.renameToCamelCase] which renames all columns to "camelCase" format.
  * ### This Rename Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  * ### Examples:

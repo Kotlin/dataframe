@@ -41,11 +41,15 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
  *
  * This operation is the reverse of [implode][org.jetbrains.kotlinx.dataframe.api.implode].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
  * ### This `explode` overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -104,11 +108,15 @@ public fun <T> DataFrame<T>.explode(
  *
  * This operation is the reverse of [implode][org.jetbrains.kotlinx.dataframe.api.implode].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
  * ### This `explode` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *
@@ -160,11 +168,15 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
  * Each exploded column will have a new type (`List<T>` → `T`).
  * When several columns are exploded in one operation, lists in different columns will be aligned.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
  * ### This `explode` overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -215,11 +227,15 @@ public fun <T> DataRow<T>.explode(
  * Each exploded column will have a new type (`List<T>` → `T`).
  * When several columns are exploded in one operation, lists in different columns will be aligned.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, see: [See `explode` on the documentation website.](https://kotlin.github.io/dataframe/explode.html)
  *
  * ### This `explode` overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *

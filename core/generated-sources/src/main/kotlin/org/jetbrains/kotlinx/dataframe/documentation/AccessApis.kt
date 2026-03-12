@@ -2,13 +2,9 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 
-/*
- * Access APIs KDoc-topic.
- * Link to here whenever you want to explain the different access APIs
- * with `@include [AccessApiLink]`.
- */
-
 /**
+ *
+ *
  * ## Access APIs
  *
  * Accessing and specifying columns is the one of the most important parts of the API,
@@ -21,12 +17,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  */
 internal interface AccessApis {
 
-    /*
-     * String API KDoc-topic.
-     * Link to it with `@include [StringApiLink]`.
-     */
-
     /**
+     *
+     *
      * ## String API
      *
      * In this [AccessApis], columns are accessed by a [String] representing their name.
@@ -45,12 +38,9 @@ internal interface AccessApis {
     /** [String API][`StringAPI`] */
     typealias StringApiLink = Nothing
 
-    /*
-     * Extension Properties API KDoc topic.
-     * Link to it with `@include [ExtensionPropertiesApiLink]`.
-     */
-
     /**
+     *
+     *
      * ## Extension Properties API
      *
      * When working with a [DataFrame], the most convenient and reliable way to [access its columns][AccessApis] —

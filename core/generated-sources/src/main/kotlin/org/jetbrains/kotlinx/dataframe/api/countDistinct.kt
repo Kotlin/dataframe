@@ -44,6 +44,8 @@ public fun AnyFrame.countDistinct(): Int = countDistinct { all() }
  * For more information: [See `countDistinct` on the documentation website.](https://kotlin.github.io/dataframe/countdistinct.html)
  *
  * ### This [countDistinct][org.jetbrains.kotlinx.dataframe.api.countDistinct] overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -86,6 +88,8 @@ public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): In
  * For more information: [See `countDistinct` on the documentation website.](https://kotlin.github.io/dataframe/countdistinct.html)
  *
  * ### This [countDistinct][org.jetbrains.kotlinx.dataframe.api.countDistinct] overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
  * ([String API][`StringAPI`]).
  *

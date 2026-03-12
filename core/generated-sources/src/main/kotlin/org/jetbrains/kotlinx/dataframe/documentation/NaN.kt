@@ -3,12 +3,9 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.api.dropNaNs
 import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 
-/*
- * NaN KDoc-topic.
- * Link to it with `@include [NaNLink]`.
- */
-
 /**
+ *
+ *
  * ## `NaN`
  *
  * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
