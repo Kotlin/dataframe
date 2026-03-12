@@ -19,6 +19,7 @@ import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -65,6 +66,7 @@ interface Table1MySql {
     val longtextCol: String
     val enumCol: String
     val setCol: Char
+    val bigintUnsignedCol: BigInteger
 }
 
 @DataSchema
@@ -100,6 +102,7 @@ interface Table2MySql {
     val longtextCol: String?
     val enumCol: String?
     val setCol: Char?
+    val bigintUnsignedCol: BigInteger?
     val jsonCol: String?
 }
 
@@ -171,6 +174,7 @@ class MySqlTest {
                 longtextCol LONGTEXT NOT NULL,
                 enumCol ENUM('Value1', 'Value2', 'Value3') NOT NULL,
                 setCol SET('Option1', 'Option2', 'Option3') NOT NULL,
+                bigintUnsignedCol BIGINT UNSIGNED NOT NULL,
                 location GEOMETRY,
                 data JSON
                 CHECK (JSON_VALID(data))
@@ -213,6 +217,7 @@ class MySqlTest {
                 longtextCol LONGTEXT,
                 enumCol ENUM('Value1', 'Value2', 'Value3'),
                 setCol SET('Option1', 'Option2', 'Option3'),
+                bigintUnsignedCol BIGINT UNSIGNED,
                 location GEOMETRY,
                 data JSON
                 CHECK (JSON_VALID(data))
@@ -228,8 +233,8 @@ class MySqlTest {
                     bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                     integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                     timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
+                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, bigintUnsignedCol, location, data
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
                 """.trimIndent()
 
             @Language("SQL")
@@ -239,8 +244,8 @@ class MySqlTest {
                     bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                     integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                     timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
+                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, bigintUnsignedCol, location, data
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
                 """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
@@ -276,7 +281,8 @@ class MySqlTest {
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
                     st.setString(30, "Option$i")
-                    st.setString(31, "{\"key\": \"value\"}")
+                    st.setObject(31, BigInteger.valueOf((i * 1000).toLong()))
+                    st.setString(32, "{\"key\": \"value\"}")
                     st.executeUpdate()
                 }
             }
@@ -314,7 +320,8 @@ class MySqlTest {
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
                     st.setString(30, "Option$i")
-                    st.setString(31, "{\"key\": \"value\"}")
+                    st.setObject(31, BigInteger.valueOf((i * 2000).toLong()))
+                    st.setString(32, "{\"key\": \"value\"}")
                     st.executeUpdate()
                 }
             }
@@ -441,6 +448,11 @@ class MySqlTest {
 
         result5[0][1] shouldBe 100
 
+        val result5a = df1.select("bigintUnsignedCol")
+            .add("bigintUnsignedCol2") { "bigintUnsignedCol"<BigInteger>() }
+
+        result5a[0][1] shouldBe BigInteger.valueOf(1000)
+
         val result6 = df1.select("floatCol")
             .add("floatCol2") { "floatCol"<Float>() }
 
@@ -464,6 +476,7 @@ class MySqlTest {
         schema.columns["mediumintUnsignedCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["integerUnsignedCol"]!!.type shouldBe typeOf<Long>()
         schema.columns["bigintCol"]!!.type shouldBe typeOf<Long>()
+        schema.columns["bigintUnsignedCol"]!!.type shouldBe typeOf<BigInteger>()
         schema.columns["floatCol"]!!.type shouldBe typeOf<Float>()
         schema.columns["doubleCol"]!!.type shouldBe typeOf<Double>()
         schema.columns["decimalCol"]!!.type shouldBe typeOf<BigDecimal>()
