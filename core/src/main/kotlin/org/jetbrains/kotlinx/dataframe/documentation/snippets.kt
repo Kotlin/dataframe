@@ -4,12 +4,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 
 // File with KDF common KDoc-topics and -snippets.
 
-/*
- * Auto-renaming in [DataFrame] KDoc-topic.
- * Link to it with `@include [AutoRenamingLink]`.
- */
-
 /**
+ * {@comment
+ *    Auto-renaming in [DataFrame] KDoc-topic.
+ *    Link to it with `@include [AutoRenamingLink]`.
+ * }
+ *
  * ## Auto-renaming in [DataFrame]
  *
  * In some operations, multiple columns with the same name may appear
@@ -29,12 +29,12 @@ internal typealias AutoRenamingColumnsInDataFrame = Nothing
 @ExcludeFromSources
 internal typealias AutoRenamingLink = Nothing
 
-/*
- * Column Path auto creation KDoc-snippet.
- * Include it in KDoc with `@include [ColumnPathCreationSnippet]`.
- */
-
 /**
+ * {@comment
+ *    Column Path auto creation KDoc-snippet.
+ *    Include it in KDoc with `@include [ColumnPathCreationSnippet]`.
+ * }
+ *
  * If the specified path is partially or fully missing — that is, if any segment of the path
  * does not correspond to an existing column or column group — all missing parts will be created automatically.
  */
