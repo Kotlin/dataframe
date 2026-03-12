@@ -26,7 +26,7 @@ import java.util.Date
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
 
-private const val URL = "jdbc:mariadb://localhost:3307"
+private const val URL = "jdbc:mariadb://localhost:3306"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 private const val TEST_DATABASE_NAME = "testKDFdatabase"
@@ -115,7 +115,7 @@ private const val JSON_STRING =
         "     \t\"favorites\": [{\"description\": \"Pepperoni deep dish\", \"price\": 18.75}, \n" +
         "{\"description\": \"The Lou\", \"price\": 24.75}]}"
 
-@Ignore
+
 class MariadbTest {
     companion object {
         private lateinit var connection: Connection
@@ -418,7 +418,7 @@ class MariadbTest {
         result[0][1] shouldBe 1
 
         val result1 = df1.select("smallintCol")
-            .add("smallintCol2") { "smallintCol"<Int?>() }
+            .add("smallintCol2") { "smallintCol"<Short?>() }
 
         result1[0][1] shouldBe 10
 
