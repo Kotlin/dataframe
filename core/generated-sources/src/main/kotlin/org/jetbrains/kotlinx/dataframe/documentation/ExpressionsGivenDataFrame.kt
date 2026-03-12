@@ -7,27 +7,20 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression as DfDataFrameExpress
 /**
  * ## Expressions Given DataFrame
  * Expressing values using a "DataFrame Expression" can occur exclusively in a
- * {@include [DataFrameExpressionLink]}.
+ * [DataFrame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression].
  */
 internal interface ExpressionsGivenDataFrame {
-
-    @ExcludeFromSources
-    typealias OPERATION = Nothing
 
     /** Provide a new value for every selected dataframe using a [dataframe expression][DfDataFrameExpression]. */
     interface DataFrameExpression {
 
         /**
-         * @include [DataFrameExpression]
+         * Provide a new value for every selected dataframe using a [dataframe expression][org.jetbrains.kotlinx.dataframe.DataFrameExpression].
          *
          * For example:
          *
-         * {@get [OPERATION]}` { `[select][DataFrame.select]` { lastName } }`
+         * ` { `[select][DataFrame.select]` { lastName } }`
          */
         typealias WithExample = Nothing
     }
-
-    /** [DataFrame Expression][DataFrameExpression] */
-    @ExcludeFromSources
-    typealias DataFrameExpressionLink = Nothing
 }

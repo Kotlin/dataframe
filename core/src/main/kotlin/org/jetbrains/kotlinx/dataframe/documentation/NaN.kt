@@ -24,4 +24,5 @@ import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 internal typealias NaN = Nothing
 
 /** [`NaN`][NaN] */
+@ExcludeFromSources
 internal typealias NaNLink = Nothing

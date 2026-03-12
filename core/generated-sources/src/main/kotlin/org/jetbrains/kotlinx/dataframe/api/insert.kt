@@ -46,6 +46,8 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][InsertSelectingOptions].
@@ -61,11 +63,17 @@ internal interface InsertDocs {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -92,8 +100,12 @@ internal interface InsertDocs {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
-     * ([String API][`StringAPI`]).
+     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
@@ -145,6 +157,8 @@ internal interface InsertDocs {
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.InsertDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.InsertDocs.InsertSelectingOptions].
@@ -191,6 +205,8 @@ public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = 
  * Each method returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the inserted column.
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.InsertDocs.Grammar].
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *

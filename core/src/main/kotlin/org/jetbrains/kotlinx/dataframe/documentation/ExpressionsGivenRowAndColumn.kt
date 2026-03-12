@@ -11,16 +11,16 @@ import org.jetbrains.kotlinx.dataframe.RowColumnExpression as DfRowColumnExpress
  */
 internal interface ExpressionsGivenRowAndColumn {
 
-    /**
-     * {@comment
-     *    The key for a @set that will define the operation name for the examples below.
-     *    Make sure to [alias][your examples].
-     * }
+    /*
+     * The key for a @set that will define the operation name for the examples below.
+     * Make sure to [alias][your examples].
      */
+    @ExcludeFromSources
     typealias OPERATION = Nothing
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
+    @ExcludeFromSources
     typealias SetDefaultOperationArg = Nothing
 
     /** Provide a new value for every selected cell given both its row and column using a [row-column expression][DfRowColumnExpression]. */
@@ -43,5 +43,6 @@ internal interface ExpressionsGivenRowAndColumn {
     }
 
     /** [Row Column Expression][RowColumnExpression] */
+    @ExcludeFromSources
     typealias RowColumnExpressionLink = Nothing
 }

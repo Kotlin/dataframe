@@ -14,11 +14,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnExpression as DfColumnExpression
  */
 internal interface ExpressionsGivenColumn {
 
-    /**
-     * {@comment
-     *    The key for a @set that will define the operation name for the examples below.
-     *    Make sure to [alias][your examples].
-     * }
+    /*
+     * The key for a @set that will define the operation name for the examples below.
+     * Make sure to [alias][your examples].
      */
     typealias OPERATION = Nothing
 

@@ -246,6 +246,8 @@ public inline fun <reified R, T> DataFrame<T>.add(
  * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * Returns a new [DataFrame] with the new column inserted at the given [path].
+ *
+ *
  * If the specified path is partially or fully missing — that is, if any segment of the path
  * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *

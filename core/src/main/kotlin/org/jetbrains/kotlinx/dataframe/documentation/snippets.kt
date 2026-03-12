@@ -1,3 +1,5 @@
+@file:ExcludeFromSources
+
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -26,7 +28,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 internal typealias AutoRenamingColumnsInDataFrame = Nothing
 
 /** [Auto-renaming columns in DataFrame][AutoRenamingColumnsInDataFrame] */
-@ExcludeFromSources
 internal typealias AutoRenamingLink = Nothing
 
 /**
@@ -38,5 +39,4 @@ internal typealias AutoRenamingLink = Nothing
  * If the specified path is partially or fully missing — that is, if any segment of the path
  * does not correspond to an existing column or column group — all missing parts will be created automatically.
  */
-@ExcludeFromSources
 internal typealias ColumnPathCreationSnippet = Nothing

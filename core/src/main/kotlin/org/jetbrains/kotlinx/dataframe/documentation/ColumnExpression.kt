@@ -25,4 +25,5 @@ internal interface ColumnExpression {
 }
 
 /** [Column Expression][ColumnExpression] */
+@ExcludeFromSources
 internal typealias ColumnExpressionLink = Nothing

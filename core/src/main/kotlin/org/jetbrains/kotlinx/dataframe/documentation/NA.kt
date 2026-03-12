@@ -31,4 +31,5 @@ import org.jetbrains.kotlinx.dataframe.api.fillNA
 internal typealias NA = Nothing
 
 /** [`NA`][NA] */
+@ExcludeFromSources
 internal typealias NALink = Nothing

@@ -11,17 +11,18 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 
-/*
- * Selecting Columns KDoc-topic.
- * Link to it with `@include [SelectingColumnsLink]`.
- */
-
 /**
+ *
+ *
  * ## Selecting Columns
  *
  * Selecting columns for various [DataFrame] operations
  * can be done in the following ways:
  * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -48,8 +49,12 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  *
  * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
  * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+ *
+ *
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
- * ([String API][`StringAPI`]).
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
@@ -60,20 +65,11 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  */
 internal interface SelectingColumns {
 
-    /*
-     * Note about column groups and nested columns KDoc-snippet.
-     * Paste it into KDoc using `@include [ColumnGroupsAndNestedColumnsSnippet]`.
-     */
-
     // Using <code>` notation to not create double `` when including
 
-    /*
-     * Columns Selection DSL KDoc-topic.
-     * Link to it with `@include [CSDslLink]`
-     * or paste it into KDoc with `@include [`Columns Selection DSL`]`.
-     */
-
     /**
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][ColumnsSelector] lambda,
@@ -90,13 +86,11 @@ internal interface SelectingColumns {
      */
     interface ColumnsSelectionDsl {
 
-        /*
-         * Columns Selection DSL with example KDoc-topic.
-         * Link to it with `@include [CSDslWithExampleLink]`
-         * or paste it into KDoc with `@include [`Columns Selection DSL with Example`]`
-         */
-
         /**
+         *
+         *
+         *
+         *
          * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
          *
          * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -125,13 +119,9 @@ internal interface SelectingColumns {
         typealias ColumnsSelectionDslWithExample = Nothing
     }
 
-    /*
-     * Column Selection DSL KDoc-topic.
-     * Link to it with `@include [CSDslSingleLink]`
-     * or paste it into KDoc with `@include [`Column Selection DSL`]`.
-     */
-
     /**
+     *
+     *
      * Select or express a single column using the Column Selection DSL.
      * (Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
@@ -149,13 +139,11 @@ internal interface SelectingColumns {
      */
     interface ColumnSelectionDsl {
 
-        /*
-         * Column Selection DSL with example KDoc-topic.
-         * Link to it with `@include [CSDslSingleWithExampleLink]`
-         * or paste it into KDoc with `@include [`Column Selection DSL with Example`]`
-         */
-
         /**
+         *
+         *
+         *
+         *
          * Select or express a single column using the Column Selection DSL.
          * (Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
          *
@@ -185,27 +173,21 @@ internal interface SelectingColumns {
         typealias ColumnsSelectionDslWithExample = Nothing
     }
 
-    /*
-     * Column Names API KDoc-topic.
-     * Link to it with `@include [ColumnNamesLink]`
-     * or paste it into KDoc with `@include [`Column Names API`]`.
-     */
-
     /**
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
-     * ([String API][`StringAPI`]).
+     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      */
     interface ColumnNamesApi {
 
-        /*
-         * CColumn Names API with Example KDoc-topic.
-         * Link to it with `@include [ColumnNamesWithExampleLink]`
-         * or paste it into KDoc with `@include [`Column Names API with Example`]`.
-         */
-
         /**
+         *
+         *
+         *
+         *
          * Select single or multiple columns using their names as [String]s.
-         * ([String API][`StringAPI`]).
+         * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
          *
          * #### For example:
          *

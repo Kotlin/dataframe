@@ -52,6 +52,8 @@ import kotlin.reflect.typeOf
  *
  * This operation is the reverse of [pivot].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information: [See `gather` on the documentation website.](https://kotlin.github.io/dataframe/gather.html)
@@ -129,12 +131,16 @@ internal interface GatherDocs {
  *
  * This operation is the reverse of [pivot][org.jetbrains.kotlinx.dataframe.api.pivot].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information: [See `gather` on the documentation website.](https://kotlin.github.io/dataframe/gather.html)
  *
  * See [Grammar][org.jetbrains.kotlinx.dataframe.api.GatherDocs.Grammar].
  * ### This Gather Overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -199,14 +205,18 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
  *
  * This operation is the reverse of [pivot][org.jetbrains.kotlinx.dataframe.api.pivot].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information: [See `gather` on the documentation website.](https://kotlin.github.io/dataframe/gather.html)
  *
  * See [Grammar][org.jetbrains.kotlinx.dataframe.api.GatherDocs.Grammar].
  * ### This Gather Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
- * ([String API][`StringAPI`]).
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  * ### Example
  * ```kotlin
  * df.gather("resultA", "resultB").mapKeys { it.last() }.into("series", "value")

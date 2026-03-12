@@ -2,31 +2,24 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 
-/*
- * Access APIs KDoc-topic.
- * Link to here whenever you want to explain the different access APIs
- * with `@include [AccessApiLink]`.
- */
-
 /**
+ *
+ *
  * ## Access APIs
  *
  * Accessing and specifying columns is the one of the most important parts of the API,
  * used in the most of [DataFrame] operations.
  *
  * In the Kotlin DataFrame library, we provide two different ways to access columns —
- * the [String API][`StringAPI`] and the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi].
+ * the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi] and the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi].
  *
  * For more information: [See Access APIs on the documentation website.](https://kotlin.github.io/dataframe/apilevels.html)
  */
 internal interface AccessApis {
 
-    /*
-     * String API KDoc-topic.
-     * Link to it with `@include [StringApiLink]`.
-     */
-
     /**
+     *
+     *
      * ## String API
      *
      * In this [AccessApis], columns are accessed by a [String] representing their name.
@@ -40,17 +33,11 @@ internal interface AccessApis {
      *
      * For more information: [See String API on the documentation website.](https://kotlin.github.io/dataframe/stringapi.html)
      */
-    typealias StringAPI = Nothing
-
-    /** [String API][`StringAPI`] */
-    typealias StringApiLink = Nothing
-
-    /*
-     * Extension Properties API KDoc topic.
-     * Link to it with `@include [ExtensionPropertiesApiLink]`.
-     */
+    typealias StringApi = Nothing
 
     /**
+     *
+     *
      * ## Extension Properties API
      *
      * When working with a [DataFrame], the most convenient and reliable way to [access its columns][AccessApis] —
@@ -92,10 +79,4 @@ internal interface AccessApis {
      * For more information: [See Extension Properties API on the documentation website.](https://kotlin.github.io/dataframe/extensionpropertiesapi.html)
      */
     typealias ExtensionPropertiesApi = Nothing
-
-    /** [Extension Properties API][ExtensionPropertiesApi] */
-    typealias ExtensionPropertiesApiLink = Nothing
 }
-
-/** [Access APIs][AccessApis] */
-internal typealias AccessApiLink = Nothing

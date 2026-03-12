@@ -40,9 +40,10 @@ internal interface AccessApis {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
      */
-    typealias StringAPI = Nothing
+    typealias StringApi = Nothing
 
-    /** [String API][`StringAPI`] */
+    /** [String API][StringApi] */
+    @ExcludeFromSources
     typealias StringApiLink = Nothing
 
     /**
@@ -94,8 +95,10 @@ internal interface AccessApis {
     typealias ExtensionPropertiesApi = Nothing
 
     /** [Extension Properties API][ExtensionPropertiesApi] */
+    @ExcludeFromSources
     typealias ExtensionPropertiesApiLink = Nothing
 }
 
 /** [Access APIs][AccessApis] */
+@ExcludeFromSources
 internal typealias AccessApiLink = Nothing

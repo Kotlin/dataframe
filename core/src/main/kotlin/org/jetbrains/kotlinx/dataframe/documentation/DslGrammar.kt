@@ -35,4 +35,5 @@ package org.jetbrains.kotlinx.dataframe.documentation
 public typealias DslGrammar = Nothing
 
 /** [(What is this notation?)][DslGrammar] */
+@ExcludeFromSources
 internal typealias DslGrammarLink = Nothing

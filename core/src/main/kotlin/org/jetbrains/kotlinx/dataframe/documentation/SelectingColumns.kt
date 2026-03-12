@@ -44,19 +44,15 @@ internal interface SelectingColumns {
     @ExcludeFromSources
     typealias ColumnGroupsAndNestedColumnsSnippet = Nothing
 
-    /**
-     * {@comment
-     *    The key for a @set that will define the operation name for the examples below.
-     *    Make sure to [alias][your examples].
-     * }
+    /*
+     * The key for a @set that will define the operation name for the examples below.
+     * Make sure to [alias][your examples].
      */
     @ExcludeFromSources
     typealias OPERATION = Nothing
 
-    /**
-     * {@comment
-     *    Operation receiver variable name
-     * }
+    /*
+     * Operation receiver variable name
      */
     @ExcludeFromSources
     typealias RECEIVER = Nothing
@@ -74,7 +70,7 @@ internal interface SelectingColumns {
      * {@comment
      *    Columns Selection DSL KDoc-topic.
      *    Link to it with `@include [CSDslLink]`
-     *    or paste it into KDoc with `@include [`Columns Selection DSL`]`.
+     *    or paste it into KDoc with `@include [ColumnsSelectionDsl]`.
      * }
      *
      * Select or express columns using the {@include [ColumnsSelectionDslLink]}.
@@ -95,7 +91,7 @@ internal interface SelectingColumns {
          * {@comment
          *    Columns Selection DSL with example KDoc-topic.
          *    Link to it with `@include [CSDslWithExampleLink]`
-         *    or paste it into KDoc with `@include [`Columns Selection DSL with Example`]`
+         *    or paste it into KDoc with `@include [ColumnsSelectionDslWithExample]`
          * }
          *
          * {@include [ColumnsSelectionDsl]}
@@ -126,7 +122,7 @@ internal interface SelectingColumns {
      * {@comment
      *    Column Selection DSL KDoc-topic.
      *    Link to it with `@include [CSDslSingleLink]`
-     *    or paste it into KDoc with `@include [`Column Selection DSL`]`.
+     *    or paste it into KDoc with `@include [ColumnSelectionDsl]`.
      * }
      *
      * Select or express a single column using the Column Selection DSL.
@@ -148,7 +144,7 @@ internal interface SelectingColumns {
          * {@comment
          *    Column Selection DSL with example KDoc-topic.
          *    Link to it with `@include [CSDslSingleWithExampleLink]`
-         *    or paste it into KDoc with `@include [`Column Selection DSL with Example`]`
+         *    or paste it into KDoc with `@include [ColumnsSelectionDslWithExample]`
          * }
          *
          * {@include [ColumnSelectionDsl]}
