@@ -37,6 +37,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.toSnakeCase
 import org.jetbrains.kotlinx.dataframe.keywords.HardKeywords
 import org.jetbrains.kotlinx.dataframe.keywords.ModifierKeywords
+import org.jetbrains.kotlinx.dataframe.keywords.SoftKeywords
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
@@ -71,11 +72,14 @@ internal fun String.needsQuoting(): Boolean =
         isBlank() ||
             first().isDigit() ||
             contains(charsToQuote) ||
-            HardKeywords.VALUES.contains(this) ||
-            ModifierKeywords.VALUES.contains(this) ||
+            hardKeywords.contains(this) ||
+            modifierKeywordsToQuote.contains(this) ||
             all { it == '_' } ||
             any { it != '_' && it.category !in letterCategories }
     }
+
+private val hardKeywords: Set<String> = HardKeywords.VALUES.toSet()
+private val modifierKeywordsToQuote: Set<String> = ModifierKeywords.VALUES.toSet() - SoftKeywords.VALUES.toSet()
 
 public fun String.isQuoted(): Boolean = startsWith("`") && endsWith("`")
 
