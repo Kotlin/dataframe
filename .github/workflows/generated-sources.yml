@@ -39,7 +39,7 @@ jobs:
 
       - name: Run Gradle task
         timeout-minutes: 60
-        run: ./gradlew processKDocsMain korro syncExampleFolders
+        run: ./gradlew clean processKDocsMain korro syncExampleFolders
 
       - name: Check for changes in generated sources
         id: git-diff

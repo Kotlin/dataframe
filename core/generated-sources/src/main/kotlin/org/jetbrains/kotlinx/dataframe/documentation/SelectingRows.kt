@@ -28,33 +28,6 @@ import org.jetbrains.kotlinx.dataframe.index
  */
 internal interface SelectingRows {
 
-    /*
-     * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [`Selecting Rows`.RowFilterSnippet]`.
-     */
-
-    /*
-     * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [`Selecting Rows`.RowValueFilterSnippet]`.
-     */
-
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
-     */
-    typealias FIRST_OPERATION = Nothing
-
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
-     */
-    typealias SECOND_OPERATION = Nothing
-
-    typealias SetDefaultOperationArg = Nothing
-
-    /** [Entire-Row Condition][EntireRowCondition.WithExample] */
-    typealias RowConditionLink = Nothing
-
     /** Filter or find rows to operate on using a [row filter][RowFilter]. */
     interface EntireRowCondition {
 
@@ -70,9 +43,6 @@ internal interface SelectingRows {
          */
         typealias WithExample = Nothing
     }
-
-    /** [Row-Value Condition][RowValueCondition.WithExample] */
-    typealias RowValueConditionLink = Nothing
 
     /** Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
      * [row value filter][RowValueFilter].
@@ -93,6 +63,3 @@ internal interface SelectingRows {
         typealias WithExample = Nothing
     }
 }
-
-/** [Row Condition][SelectingRows] */
-internal typealias RowConditionLink = Nothing
