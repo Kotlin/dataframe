@@ -10,12 +10,11 @@ repositories {
     mavenCentral()
 }
 
-application.mainClass = "org.jetbrains.kotlinx.dataframe.examples.youtube.YoutubeKt"
+application.mainClass = "org.jetbrains.kotlinx.dataframe.examples.movies.MoviesWithDataClassKt"
 
 dependencies {
     // Add general `dataframe` dependency
     implementation(libs.dataframe)
-    implementation(libs.kotlin.datetimeJvm)
 }
 
 tasks.test {

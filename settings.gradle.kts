@@ -32,7 +32,6 @@ include("core")
 include("dataframe-compiler-plugin-core")
 
 include("examples:idea-examples:titanic")
-include("examples:idea-examples:movies")
 include("examples:idea-examples:json")
 include("examples:idea-examples:unsupported-data-sources:exposed")
 include("examples:idea-examples:unsupported-data-sources:hibernate")
