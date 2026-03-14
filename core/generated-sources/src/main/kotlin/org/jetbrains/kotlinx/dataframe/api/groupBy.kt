@@ -61,6 +61,8 @@ import kotlin.reflect.KProperty
  *
  * Check out [Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][GroupBySelectingOptions].
@@ -186,11 +188,17 @@ internal interface GroupByDocs {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -217,8 +225,12 @@ internal interface GroupByDocs {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
-     * ([String API][`StringAPI`]).
+     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
@@ -411,6 +423,8 @@ internal interface GroupByDocs {
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.GroupBySelectingOptions].
@@ -422,6 +436,10 @@ internal interface GroupByDocs {
  *
  * See also [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] vertically.
  * ### This `groupBy` Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -490,6 +508,8 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.GroupBySelectingOptions].
@@ -501,8 +521,12 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  *
  * See also [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] vertically.
  * ### This `groupBy` Overload
+ *
+ *
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
- * ([String API][`StringAPI`]).
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
@@ -558,6 +582,10 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: 
  * df.groupBy { expr("newName") { oldName.drop(5) } }
  * ```
  * ### This `groupBy` Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -629,8 +657,10 @@ public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupB
  * df.groupBy { expr("newName") { oldName.drop(5) } }
  * ```
  * ### This `groupBy` Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
- * ([String API][`StringAPI`]).
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *

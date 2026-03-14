@@ -105,6 +105,8 @@ internal typealias SeeAlsoParse = Nothing
  *
  * Check out [Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][ConvertSelectingOptions].
@@ -118,11 +120,17 @@ internal interface ConvertDocs {
 
     /**
      *
+     *
+     *
      * ## Selecting Columns
      *
      * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
      * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
      * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -149,8 +157,12 @@ internal interface ConvertDocs {
      *
      * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
      * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
      * Select single or multiple columns using their names as [String]s.
-     * ([String API][`StringAPI`]).
+     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
@@ -283,6 +295,8 @@ internal interface ConvertDocs {
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.ConvertSelectingOptions].
@@ -292,6 +306,8 @@ internal interface ConvertDocs {
  * See also [parse][org.jetbrains.kotlinx.dataframe.api.parse] — a specialized form of the [convert][org.jetbrains.kotlinx.dataframe.api.convert] operation that parses [String] columns
  * into other types without requiring explicit type specification.
  * ### This Convert Overload
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -344,6 +360,8 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T,
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.Grammar].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.ConvertSelectingOptions].
@@ -353,8 +371,10 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T,
  * See also [parse][org.jetbrains.kotlinx.dataframe.api.parse] — a specialized form of the [convert][org.jetbrains.kotlinx.dataframe.api.convert] operation that parses [String] columns
  * into other types without requiring explicit type specification.
  * ### This Convert Overload
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
- * ([String API][`StringAPI`]).
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  * ### Example:
  * ```kotlin
  * df.convert("person", "position").toStr()

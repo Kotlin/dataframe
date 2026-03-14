@@ -127,6 +127,8 @@ internal fun <A> ColumnAccessor<A>.onResolve(check: (ColumnWithPath<*>?) -> Unit
 
         override fun name(): String = this@onResolve.name()
 
+        override fun path(): ColumnPath = this@onResolve.path()
+
         override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<A>? =
             this@onResolve.resolveSingle(context).also(check)
     }

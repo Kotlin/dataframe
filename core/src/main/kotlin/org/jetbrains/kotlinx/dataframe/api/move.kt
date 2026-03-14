@@ -47,6 +47,7 @@ import kotlin.reflect.KProperty
  * destination of the selected columns using methods such as [to][MoveClause.to], [toStart][MoveClause.toStart],
  * [toEnd][MoveClause.toEnd], [into][MoveClause.into], [intoIndexed][MoveClause.intoIndexed], [toTop][MoveClause.toTop],
  * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame] with updated columns structure.
+ *
  * Check out [Grammar].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
@@ -577,12 +578,11 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
  */
 @Refine
 @Interpretable("MoveUnder0")
-public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = pathOf(column).let { path -> under { path } }
+public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = under { pathOf(column) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> =
-    column.path().let { path -> under { path } }
+public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> = under { column.path() }
 
 /**
  * Moves columns, previously selected with [move] under a new or

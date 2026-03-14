@@ -37,6 +37,8 @@ import kotlin.reflect.KProperty
  * See also [distinctBy][org.jetbrains.kotlinx.dataframe.api.distinctBy] that removes duplicated rows based on the specified columns
  * and keeps all the columns in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
@@ -59,6 +61,8 @@ public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
  *
  * See also [distinctBy][org.jetbrains.kotlinx.dataframe.api.distinctBy] that removes duplicated rows based on the specified columns
  * and keeps all the columns in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -94,6 +98,8 @@ public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T>
  *
  * See also [distinctBy][org.jetbrains.kotlinx.dataframe.api.distinctBy] that removes duplicated rows based on the specified columns
  * and keeps all the columns in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -131,6 +137,8 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<
  * (if the columns are not specified, selects all columns)
  * and keeps only distinct rows based on these selected columns.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
@@ -162,6 +170,8 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): Data
  * See also [distinct] that selects the specified columns
  * (if the columns are not specified, selects all columns)
  * and keeps only distinct rows based on these selected columns.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *

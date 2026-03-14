@@ -12,7 +12,7 @@ Set up Kotlin DataFrame in Android — configure it easily using Gradle and star
 How to use Kotlin DataFrame in your Android project with Gradle setup and compiler plugin support.
 </link-summary>
 
-> See an [Android project example](https://github.com/Kotlin/dataframe/tree/master/examples/android-example).
+> See an [Android project example](https://github.com/Kotlin/dataframe/tree/master/examples/projects/android-example).
 
 Kotlin DataFrame doesn't provide a dedicated Android artifact yet, 
 but you can add the Kotlin DataFrame JVM dependency to your Android project with minimal configuration:
@@ -140,6 +140,6 @@ to learn the basics of working with DataFrames.
 * Explore [detailed guides and real-world examples](Guides-And-Examples.md) 
 to see how Kotlin DataFrame helps in different data tasks.
 * Check out the 
-[Android project example](https://github.com/Kotlin/dataframe/tree/master/examples/android-example) 
-and more [IDEA examples on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples).
+[Android project example](https://github.com/Kotlin/dataframe/tree/master/examples/projects/android-example) 
+and more [IDEA examples on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples).
 * Learn more about the [compiler plugin](Compiler-Plugin.md).

@@ -60,7 +60,7 @@ class SeriesTests {
     }
 
     @Test
-    fun `movingAverage`() {
+    fun movingAverage() {
         val k = 3
         val withMa = typed
             .groupBy { city }

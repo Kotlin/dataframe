@@ -48,7 +48,7 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: Colum
     parseImpl(options, columns)
 
 @Refine
-@Interpretable("StringParse")
+@Interpretable("ParseString")
 public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 

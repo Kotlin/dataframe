@@ -229,13 +229,13 @@ val processKDocsMain by creatingRunKodexTask(processKDocsMainSources) {
     group = "KDocs"
     target = file(generatedSourcesFolderName)
 
-    // false, so `runKtlintFormatOverGeneratedSourcesSourceSet` can format the output
+    // false, so `ktlintGeneratedSourcesSourceSetFormat` can format the output
     outputReadOnly = false
 
     exportAsHtml {
         dir = file("../docs/StardustDocs/resources/snippets/kdocs")
     }
-    finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
+    finalizedBy(":core:ktlintGeneratedSourcesSourceSetFormat")
 }
 
 tasks.named("ktlintGeneratedSourcesSourceSetCheck") {
@@ -420,7 +420,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.test {
-    maxHeapSize = "2048m"
+    maxHeapSize = "1g"
 }
 
 // Test task for Java 16+ language-specific tests

@@ -116,7 +116,6 @@ internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol =
         is ColumnSchema.Value -> DataColumn.createValueColumn<Any?>(name, emptyList(), type)
         is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
         is ColumnSchema.Frame -> DataColumn.createFrameColumn<Any?>(name, emptyList(), lazyOf(schema))
-        else -> error("Unexpected ColumnSchema: $this")
     }
 
 /**
@@ -146,8 +145,6 @@ internal fun ColumnSchema.createNullFilledColumn(name: String, numberOfRows: Int
             groups = List(numberOfRows) { emptyDataFrame<Any?>() },
             schema = lazyOf(schema),
         )
-
-        else -> error("Cannot create null-filled column of unexpected ColumnSchema: $this")
     }
 
 internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =

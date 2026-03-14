@@ -139,6 +139,8 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
 /**
  * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
  *
+ *
+ *
  * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
  * and is expected to return a [Boolean] value.
  *
@@ -147,6 +149,8 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  * for convenient and type-safe access.
  *
  * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -180,6 +184,8 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
  * (including the case when the [DataFrame] is empty).
  *
+ *
+ *
  * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
  * and is expected to return a [Boolean] value.
  *
@@ -188,6 +194,8 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * for convenient and type-safe access.
  *
  * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -255,6 +263,8 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
  * except the grouping key.
  *
+ *
+ *
  * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
  * and is expected to return a [Boolean] value.
  *
@@ -263,6 +273,8 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * for convenient and type-safe access.
  *
  * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -314,6 +326,8 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  *
  * For more information about [Pivot] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
+ *
+ *
  * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
  * and is expected to return a [Boolean] value.
  *
@@ -322,6 +336,8 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  * for convenient and type-safe access.
  *
  * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -389,6 +405,8 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  *
  * [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
+ *
+ *
  * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
  * and is expected to return a [Boolean] value.
  *
@@ -397,6 +415,8 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * for convenient and type-safe access.
  *
  * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *

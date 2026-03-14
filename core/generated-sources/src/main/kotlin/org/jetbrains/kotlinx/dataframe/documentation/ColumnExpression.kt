@@ -2,12 +2,9 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.api.expr
 
-/*
- * Column Expression KDoc-topic.
- * Link to it with `@include [ColumnExpressionLink]`.
- */
-
 /**
+ *
+ *
  * ## Column Expression
  * In many DSLs, the lambda [`expr {}`][expr] can be used to
  * create a new column by defining an expression to fill up each row.
@@ -23,6 +20,3 @@ internal interface ColumnExpression {
      */
     typealias CommonDocs = Nothing
 }
-
-/** [Column Expression][ColumnExpression] */
-internal typealias ColumnExpressionLink = Nothing

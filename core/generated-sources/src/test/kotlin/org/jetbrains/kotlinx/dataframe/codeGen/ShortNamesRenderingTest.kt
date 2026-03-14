@@ -78,7 +78,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     }
 
     @Test
-    fun `dataframe`() {
+    fun dataframe() {
         fields.keys.asClue {
             fields["f"]!!.renderAccessorFieldType() shouldBe
                 "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"

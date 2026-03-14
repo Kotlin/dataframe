@@ -30,6 +30,8 @@ public fun <T> DataColumn<T>.any(predicate: Predicate<T>): Boolean = values.any(
 /**
  * Returns `true` if at least one row in this [DataFrame] satisfies the given [predicate].
  *
+ *
+ *
  * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
  * and is expected to return a [Boolean] value.
  *
