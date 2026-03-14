@@ -51,5 +51,4 @@ class SqliteTestCustomTypes {
         df["title"][0] shouldBe null
         df["title"][4] shouldBe "Column selectors | Sample Docs"
     }
-
 }
