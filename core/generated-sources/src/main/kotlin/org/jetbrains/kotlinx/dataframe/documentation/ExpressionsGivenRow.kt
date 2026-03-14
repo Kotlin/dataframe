@@ -39,24 +39,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  */
 internal interface ExpressionsGivenRow {
 
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
-     */
-    typealias OPERATION = Nothing
     // Using <code>` notation to not create double `` when including
-
-    typealias SetDefaultOperationArg = Nothing
-
-    /**
-     * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
-     * [convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
-     * and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow] instead of [DataRow] as the DSL's receiver type.
-     * This is an extension to [RowValueExpression][DfRowValueExpression] and
-     * [RowExpression][DfRowExpression] that provides access to
-     * the modified/generated value of the preceding row ([AddDataRow.newValue]).
-     */
-    typealias AddDataRowNote = Nothing
 
     /** Provide a new value for every selected cell given its row using a [row expression][DfRowExpression]. */
     interface RowExpression {
@@ -73,9 +56,6 @@ internal interface ExpressionsGivenRow {
          */
         typealias WithExample = Nothing
     }
-
-    /** [Row Expression][RowExpression.WithExample] */
-    typealias RowExpressionLink = Nothing
 
     /** Provide a new value for every selected cell given its row and its previous value using a
      * [row value expression][DfRowValueExpression].
@@ -95,10 +75,4 @@ internal interface ExpressionsGivenRow {
          */
         typealias WithExample = Nothing
     }
-
-    /** [Row Value Expression][RowValueExpression.WithExample] */
-    typealias RowValueExpressionLink = Nothing
 }
-
-/** [Row Expression][ExpressionsGivenRow] */
-internal typealias RowExpressionsLink = Nothing

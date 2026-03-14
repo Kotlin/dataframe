@@ -2,13 +2,13 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 
-/*
- * Access APIs KDoc-topic.
- * Link to here whenever you want to explain the different access APIs
- * with `@include [AccessApiLink]`.
- */
-
 /**
+ * {@comment
+ *    Access APIs KDoc-topic.
+ *    Link to here whenever you want to explain the different access APIs
+ *    with `@include [AccessApiLink]`.
+ * }
+ *
  * ## Access APIs
  *
  * Accessing and specifying columns is the one of the most important parts of the API,
@@ -21,12 +21,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  */
 internal interface AccessApis {
 
-    /*
-     * String API KDoc-topic.
-     * Link to it with `@include [StringApiLink]`.
-     */
-
     /**
+     * {@comment
+     *    String API KDoc-topic.
+     *    Link to it with `@include [StringApiLink]`.
+     * }
+     *
      * ## String API
      *
      * In this [AccessApis], columns are accessed by a [String] representing their name.
@@ -40,17 +40,18 @@ internal interface AccessApis {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
      */
-    typealias StringAPI = Nothing
+    typealias StringApi = Nothing
 
-    /** [String API][`StringAPI`] */
+    /** [String API][StringApi] */
+    @ExcludeFromSources
     typealias StringApiLink = Nothing
 
-    /*
-     * Extension Properties API KDoc topic.
-     * Link to it with `@include [ExtensionPropertiesApiLink]`.
-     */
-
     /**
+     * {@comment
+     *    Extension Properties API KDoc topic.
+     *    Link to it with `@include [ExtensionPropertiesApiLink]`.
+     * }
+     *
      * ## Extension Properties API
      *
      * When working with a [DataFrame], the most convenient and reliable way to [access its columns][AccessApis] —
@@ -94,8 +95,10 @@ internal interface AccessApis {
     typealias ExtensionPropertiesApi = Nothing
 
     /** [Extension Properties API][ExtensionPropertiesApi] */
+    @ExcludeFromSources
     typealias ExtensionPropertiesApiLink = Nothing
 }
 
 /** [Access APIs][AccessApis] */
+@ExcludeFromSources
 internal typealias AccessApiLink = Nothing

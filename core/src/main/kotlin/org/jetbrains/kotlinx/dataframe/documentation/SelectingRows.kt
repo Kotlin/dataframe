@@ -28,13 +28,13 @@ import org.jetbrains.kotlinx.dataframe.index
  */
 internal interface SelectingRows {
 
-    /*
-     * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [`Selecting Rows`.RowFilterSnippet]`.
-     */
-
     /**
-     * The [predicate] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and `it`
+     * {@comment
+     *    Row filter KDoc-snippet.
+     *    Include it into KDoc with `@include [SelectingRows.RowFilterSnippet]`.
+     * }
+     *
+     * The [predicate\] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and `it`
      * and is expected to return a [Boolean] value.
      *
      * It allows you to define conditions using the row's values directly,
@@ -46,13 +46,13 @@ internal interface SelectingRows {
     @ExcludeFromSources
     typealias RowFilterSnippet = Nothing
 
-    /*
-     * Row filter KDoc-snippet.
-     * Include it into KDoc with `@include [`Selecting Rows`.RowValueFilterSnippet]`.
-     */
-
     /**
-     * The [predicate] is a [RowValueFilter] — a lambda that receives each [DataRow] as `this` and
+     * {@comment
+     *    Row filter KDoc-snippet.
+     *    Include it into KDoc with `@include [SelectingRows.RowValueFilterSnippet]`.
+     * }
+     *
+     * The [predicate\] is a [RowValueFilter] — a lambda that receives each [DataRow] as `this` and
      * given value as `it`
      * and is expected to return a [Boolean] value.
      *
@@ -69,18 +69,22 @@ internal interface SelectingRows {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
+    @ExcludeFromSources
     typealias FIRST_OPERATION = Nothing
 
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
+    @ExcludeFromSources
     typealias SECOND_OPERATION = Nothing
 
     /** {@set [FIRST_OPERATION] operation}{@set [SECOND_OPERATION] where} */
+    @ExcludeFromSources
     typealias SetDefaultOperationArg = Nothing
 
     /** [Entire-Row Condition][EntireRowCondition.WithExample] */
+    @ExcludeFromSources
     typealias RowConditionLink = Nothing
 
     /** Filter or find rows to operate on using a [row filter][RowFilter]. */
@@ -100,6 +104,7 @@ internal interface SelectingRows {
     }
 
     /** [Row-Value Condition][RowValueCondition.WithExample] */
+    @ExcludeFromSources
     typealias RowValueConditionLink = Nothing
 
     /** Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
@@ -122,4 +127,5 @@ internal interface SelectingRows {
 }
 
 /** [Row Condition][SelectingRows] */
+@ExcludeFromSources
 internal typealias RowConditionLink = Nothing

@@ -38,10 +38,12 @@ internal interface ExpressionsGivenRow {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
+    @ExcludeFromSources
     typealias OPERATION = Nothing
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
+    @ExcludeFromSources
     typealias SetDefaultOperationArg = Nothing
 
     /**
@@ -52,6 +54,7 @@ internal interface ExpressionsGivenRow {
      * [RowExpression][DfRowExpression] that provides access to
      * the modified/generated value of the preceding row ([AddDataRow.newValue]).
      */
+    @ExcludeFromSources
     typealias AddDataRowNote = Nothing
 
     /** Provide a new value for every selected cell given its row using a [row expression][DfRowExpression]. */
@@ -71,6 +74,7 @@ internal interface ExpressionsGivenRow {
     }
 
     /** [Row Expression][RowExpression.WithExample] */
+    @ExcludeFromSources
     typealias RowExpressionLink = Nothing
 
     /** Provide a new value for every selected cell given its row and its previous value using a
@@ -92,8 +96,10 @@ internal interface ExpressionsGivenRow {
     }
 
     /** [Row Value Expression][RowValueExpression.WithExample] */
+    @ExcludeFromSources
     typealias RowValueExpressionLink = Nothing
 }
 
 /** [Row Expression][ExpressionsGivenRow] */
+@ExcludeFromSources
 internal typealias RowExpressionsLink = Nothing

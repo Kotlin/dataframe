@@ -26,6 +26,8 @@ import kotlin.reflect.KProperty
  *
  * Removes the specified [columns] from the original [DataFrame] and returns a new [DataFrame] without them.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][Select.SelectSelectingOptions].
@@ -39,12 +41,18 @@ internal typealias Remove = Nothing
  *
  * Removes the specified [columns][org.jetbrains.kotlinx.dataframe.columns] from the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] without them.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
  * For more information: [See `remove` on the documentation website.](https://kotlin.github.io/dataframe/remove.html)
  * ### This Remove Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -81,14 +89,20 @@ public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T>
  *
  * Removes the specified [columns][org.jetbrains.kotlinx.dataframe.columns] from the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] without them.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
  * For more information: [See `remove` on the documentation website.](https://kotlin.github.io/dataframe/remove.html)
  * ### This Remove Overload
+ *
+ *
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
- * ([String API][`StringAPI`]).
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
@@ -104,6 +118,8 @@ public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remov
  * ## The Remove Operation
  *
  * Removes the specified [columns][org.jetbrains.kotlinx.dataframe.columns] from the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] without them.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -122,6 +138,8 @@ public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFram
  * ## The Remove Operation
  *
  * Removes the specified [columns][org.jetbrains.kotlinx.dataframe.columns] from the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] without them.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *

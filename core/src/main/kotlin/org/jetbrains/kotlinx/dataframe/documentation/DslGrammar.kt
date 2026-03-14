@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-/*
- * DSL Grammar KDoc-topic.
- * Link to it with `@include [DslGrammarLink]`.
- */
-
 /**
+ * {@comment
+ *    DSL Grammar KDoc-topic.
+ *    Link to it with `@include [DslGrammarLink]`.
+ * }
+ *
  * ## DSL Grammar
  *
  * If you've come across notations like **`a(`**` (`**`b`**` | [`**`c, .. `**`] ) `**`)`**
@@ -35,4 +35,5 @@ package org.jetbrains.kotlinx.dataframe.documentation
 public typealias DslGrammar = Nothing
 
 /** [(What is this notation?)][DslGrammar] */
+@ExcludeFromSources
 internal typealias DslGrammarLink = Nothing
