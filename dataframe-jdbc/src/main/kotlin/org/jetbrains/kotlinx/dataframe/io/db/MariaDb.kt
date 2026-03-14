@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import java.math.BigInteger
 import java.sql.ResultSet
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -33,6 +34,9 @@ public object MariaDb : DbType("mariadb") {
 
         if (tableColumnMetadata.sqlTypeName == "SMALLINT" && tableColumnMetadata.javaClassName == "java.lang.Short") {
             return typeOf<Short>().withNullability(tableColumnMetadata.isNullable)
+        }
+        if (tableColumnMetadata.sqlTypeName == "BIGINT UNSIGNED") {
+            return typeOf<BigInteger>().withNullability(tableColumnMetadata.isNullable)
         }
         return super.getExpectedJdbcType(tableColumnMetadata)
     }

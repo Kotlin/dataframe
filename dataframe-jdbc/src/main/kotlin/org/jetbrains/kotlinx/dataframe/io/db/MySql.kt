@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import java.math.BigInteger
 import java.sql.ResultSet
 import java.util.Locale
 import kotlin.reflect.KType
@@ -19,6 +20,9 @@ public object MySql : DbType("mysql") {
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
             return typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
+        }
+        if (tableColumnMetadata.sqlTypeName == "BIGINT UNSIGNED") {
+            return typeOf<BigInteger>().withNullability(tableColumnMetadata.isNullable)
         }
         return super.getExpectedJdbcType(tableColumnMetadata)
     }
