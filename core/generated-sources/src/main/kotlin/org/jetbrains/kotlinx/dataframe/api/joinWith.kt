@@ -80,6 +80,8 @@ public typealias JoinExpression<A, B> = Selector<JoinedDataRow<A, B>, Boolean>
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
@@ -136,6 +138,8 @@ public fun <A, B> DataFrame<A>.joinWith(
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
@@ -187,6 +191,8 @@ public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression
  * [innerJoinWith], [rightJoinWith], [fullJoinWith], [filterJoinWith], [excludeJoinWith].
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -240,6 +246,8 @@ public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression:
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
@@ -291,6 +299,8 @@ public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression
  * [leftJoinWith], [rightJoinWith], [innerJoinWith], [filterJoinWith], [excludeJoinWith].
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -344,6 +354,8 @@ public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression:
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
  *
+ *
+ *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
@@ -395,6 +407,8 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
  * [leftJoinWith], [rightJoinWith], [fullJoinWith], [filterJoinWith], [innerJoinWith].
  *
  * See also [join], which performs a join by exact value equality in the selected columns.
+ *
+ *
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *

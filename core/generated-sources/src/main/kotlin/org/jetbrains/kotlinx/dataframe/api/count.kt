@@ -70,6 +70,8 @@ public fun <T> DataFrame<T>.count(): Int = rowsCount()
 /**
  * Counts the number of rows in this [DataFrame] that satisfy the given [predicate].
  *
+ *
+ *
  * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
  * and is expected to return a [Boolean] value.
  *
@@ -136,6 +138,8 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
 /**
  * Aggregates this [GroupBy] by counting the number of rows in each group
  * that satisfy the given [predicate].
+ *
+ *
  *
  * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
  * and is expected to return a [Boolean] value.
@@ -217,6 +221,8 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
 /**
  * Aggregates this [Pivot] by counting the number of rows in each group
  * that satisfy the given [predicate].
+ *
+ *
  *
  * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
  * and is expected to return a [Boolean] value.

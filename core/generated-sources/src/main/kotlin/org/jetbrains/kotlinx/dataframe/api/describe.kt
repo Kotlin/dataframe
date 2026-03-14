@@ -153,6 +153,10 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * ### This Describe Overload
+ *
+ *
+ *
+ *
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
  * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
@@ -221,8 +225,12 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * ### This Describe Overload
+ *
+ *
+ *
+ *
  * Select single or multiple columns using their names as [String]s.
- * ([String API][`StringAPI`]).
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *

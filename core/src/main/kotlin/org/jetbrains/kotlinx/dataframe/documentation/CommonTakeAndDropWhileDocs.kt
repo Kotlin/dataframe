@@ -44,18 +44,18 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
  */
 internal interface CommonTakeAndDropWhileDocs {
 
-    /** Title, like "Take Last" */
+    // Title, like "Take Last"
     typealias TITLE = Nothing
 
-    /** Operation, like "takeLast" */
+    // Operation, like "takeLast"
     typealias OPERATION = Nothing
 
-    /** Operation, like "take" */
+    // Operation, like "take"
     typealias NOUN = Nothing
 
-    /** like "last" */
+    // like "last"
     typealias FIRST_OR_LAST = Nothing
 
-    /** Example argument to use */
+    // Example argument to use
     typealias EXAMPLE = Nothing
 }

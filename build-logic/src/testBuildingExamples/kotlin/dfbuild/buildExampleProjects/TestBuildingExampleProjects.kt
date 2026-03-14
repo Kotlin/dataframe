@@ -86,6 +86,9 @@ abstract class TestBuildingExampleProjects {
                     mavenExecutable = folder.resolve("mvnw").also { it.setExecutable(true) }
                     pomFile = folder.resolve("pom.xml")
                     goals = listOf("clean", "compile")
+                    isNoTransferProgress = true
+                    isBatchMode = true
+                    mavenOpts = "-Xmx2g -XX:MaxMetaspaceSize=512m"
                     setLocalRepositoryDirectory(File(getGradleProperty("maven.repo.local")!!))
                 },
             ).let { result ->

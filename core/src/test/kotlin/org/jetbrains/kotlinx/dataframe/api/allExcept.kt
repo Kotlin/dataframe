@@ -43,7 +43,7 @@ class AllExceptTests : ColumnsSelectionDslTests() {
     }
 
     @Test
-    fun `exceptions`() {
+    fun exceptions() {
         shouldThrow<IllegalStateException> {
             dfGroup.select {
                 name.firstName.allColsExcept("firstName"["secondName"])

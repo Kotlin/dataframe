@@ -30,12 +30,12 @@ internal abstract class DataColumnImpl<T>(
 
             this.isPrimitiveArray ->
                 type.isPrimitiveArray &&
-                    this!!::class.qualifiedName == type.classifier?.let { (it as KClass<*>).qualifiedName }
+                    this::class.qualifiedName == type.classifier?.let { (it as KClass<*>).qualifiedName }
 
             this.isArray -> type.isArray
 
             // cannot check the precise type of array
-            else -> this!!::class.isSubclassOf(type.classifier as KClass<*>)
+            else -> this::class.isSubclassOf(type.classifier as KClass<*>)
         }
 
     init {
@@ -43,7 +43,7 @@ internal abstract class DataColumnImpl<T>(
         // This only runs with `kotlin.dataframe.debug=true` in gradle.properties.
         if (BuildConfig.DEBUG) {
             require(values.all { it matches type }) {
-                val types = values.map { if (it == null) "Nothing?" else it!!::class.simpleName }.distinct()
+                val types = values.map { if (it == null) "Nothing?" else it::class.simpleName }.distinct()
                 "Values of $kind '$name' have types '$types' which are not compatible given with column type '$type'"
             }
         }

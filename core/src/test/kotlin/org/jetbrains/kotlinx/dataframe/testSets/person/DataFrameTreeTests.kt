@@ -84,7 +84,6 @@ import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toStr
@@ -107,7 +106,6 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import java.util.stream.Collectors
 import kotlin.reflect.typeOf
-import kotlin.streams.toList
 
 class DataFrameTreeTests : BaseTest() {
 
@@ -187,7 +185,7 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `selects`() {
+    fun selects() {
         df2.select { nameAndCity.allCols() } shouldBe typed2.nameAndCity.select { all() }
         df2.select { nameAndCity.cols { !it.hasNulls() } } shouldBe typed2.select { nameAndCity.name }
         df2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
@@ -239,47 +237,47 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `slice`() {
+    fun slice() {
         val expected = typed[0..2].name
         val actual = typed2[0..2].nameAndCity.name
         actual shouldBe expected
     }
 
     @Test
-    fun `filter`() {
+    fun filter() {
         val expected = typed.filter { city == null }.select { weight }
         typed2.filter { nameAndCity.city == null }.select { weight } shouldBe expected
         df2.filter { it[nameAndCity][city] == null }.select { weight } shouldBe expected
     }
 
     @Test
-    fun `select`() {
+    fun select() {
         val expected = typed.select { name and age }
         typed2.select { nameAndCity.name and age } shouldBe expected
         df2.select { it[nameAndCity][name] and age } shouldBe expected
     }
 
     @Test
-    fun `sort`() {
+    fun sort() {
         val expected = typed.sortBy { name and age }.moveTo(1) { city }
         typed2.sortBy { nameAndCity.name and age }.ungroup { nameAndCity } shouldBe expected
     }
 
     @Test
-    fun `move`() {
+    fun move() {
         val actual = typed2.move { nameAndCity.name }.into { pathOf("name") }
         actual.columnNames() shouldBe listOf("nameAndCity", "name", "age", "weight")
         actual.getColumnGroup("nameAndCity").columnNames() shouldBe listOf("city")
     }
 
     @Test
-    fun `groupBy`() {
+    fun groupBy() {
         val expected = typed.groupBy { name }.max { age }
         typed2.groupBy { nameAndCity.name }.max { age } shouldBe expected
     }
 
     @Test
-    fun `distinct`() {
+    fun distinct() {
         val duplicated = typed2.concat(typed2)
         duplicated.rowsCount() shouldBe typed2.rowsCount() * 2
         val dist = duplicated.nameAndCity.distinct()
@@ -868,5 +866,41 @@ class DataFrameTreeTests : BaseTest() {
     fun `move under existing group`() {
         val df = typed2.move { age }.under { nameAndCity }
         df.nameAndCity.columnNames() shouldBe listOf("name", "city", "age")
+    }
+
+    @Test
+    fun `move under new group`() {
+        val df0 = typed2.move { age and weight }.under { col("newGroup") }
+        df0.getColumnGroup("newGroup").columnNames() shouldBe listOf("age", "weight")
+
+        val df1 = typed2.move { age and weight }.under { pathOf("newGroup") }
+        df1.getColumnGroup("newGroup").columnNames() shouldBe listOf("age", "weight")
+
+        val df2 = typed2.move { age and weight }.under { pathOf("newGroup", "newGroup2") }
+        df2.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("age", "weight")
+
+        val df3 = typed2.move { age and weight }.under { colGroup("newGroup").colGroup("newGroup2") }
+        df3.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("age", "weight")
+
+        val df4 = typed2.move { age and weight }.under("newGroup")
+        df4.getColumnGroup("newGroup").columnNames() shouldBe listOf("age", "weight")
+    }
+
+    @Test
+    fun `insert under new group`() {
+        val df0 = typed2.insert("newColumn") { 123 }.under { col("newGroup") }
+        df0.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
+
+        val df1 = typed2.insert("newColumn") { 123 }.under { pathOf("newGroup") }
+        df1.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
+
+        val df2 = typed2.insert("newColumn") { 123 }.under { pathOf("newGroup", "newGroup2") }
+        df2.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("newColumn")
+
+        val df3 = typed2.insert("newColumn") { 123 }.under { colGroup("newGroup").colGroup("newGroup2") }
+        df3.getColumnGroup("newGroup").getColumnGroup("newGroup2").columnNames() shouldBe listOf("newColumn")
+
+        val df4 = typed2.insert("newColumn") { 123 }.under("newGroup")
+        df4.getColumnGroup("newGroup").columnNames() shouldBe listOf("newColumn")
     }
 }
