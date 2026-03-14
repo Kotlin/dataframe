@@ -1,17 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.sqlite.SQLiteConfig
-import java.math.BigInteger
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 /**
  * Represents the Sqlite database type.
@@ -29,7 +24,8 @@ public class Sqlite(public val customTypesMap: Map<String, KType> = mapOf()) : D
         get() = "org.sqlite.JDBC"
 
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
-        customTypesMap[tableColumnMetadata.sqlTypeName] ?: super.getExpectedJdbcType(tableColumnMetadata)
+        customTypesMap[tableColumnMetadata.sqlTypeName]?.withNullability(tableColumnMetadata.isNullable)
+            ?: super.getExpectedJdbcType(tableColumnMetadata)
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean = tableMetadata.name.startsWith("sqlite_")
 
