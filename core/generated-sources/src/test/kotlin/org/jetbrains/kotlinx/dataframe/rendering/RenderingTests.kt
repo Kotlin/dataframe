@@ -194,9 +194,7 @@ class RenderingTests : TestBase() {
         val df = dataFrameOf(
             columnOf(1, null).named("a"),
             columnOf(intArrayOf(1), intArrayOf(2)).named("b"),
-            // TODO https://github.com/Kotlin/dataframe/issues/679
-            // columnOf(arrayOf(1), arrayOf(2)).named("d"),
-            DataColumn.createValueColumn("c", listOf(arrayOf(1), arrayOf(2))),
+            columnOf(arrayOf(1), arrayOf(2)).named("c"),
             columnOf(arrayOf(1, null), arrayOf(2, null)).named("d"),
         )
 
