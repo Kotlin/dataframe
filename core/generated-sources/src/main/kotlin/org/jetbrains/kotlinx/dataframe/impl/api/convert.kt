@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.ColumnTypeMismatchesColumnValu
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.path
@@ -209,12 +210,8 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 
     // catch for ColumnGroup and FrameColumn since they don't have changeType,
     // but user converters can still exist
-    if (from.isSubtypeOf(to)) {
-        try {
-            return (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
-        } catch (_: UnsupportedOperationException) {
-            //
-        }
+    if (from.isSubtypeOf(to) && this is ValueColumnImpl) {
+        return this.changeType(to.withNullability(hasNulls()))
     }
 
     return when (val converter = getConverter(from, to, parserOptions)) {
