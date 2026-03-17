@@ -25,8 +25,7 @@ internal class ValueColumnWithParent<T>(override val parent: ColumnGroup<*>, ove
 
     override fun forceResolve() = ResolvingValueColumn(this)
 
-    override fun changeType(type: KType) =
-        ValueColumnWithParent(parent, source.changeType(type))
+    override fun changeType(type: KType) = ValueColumnWithParent(parent, source.changeType(type))
 
     override fun addParent(parent: ColumnGroup<*>) = source.addParent(parent)
 }
