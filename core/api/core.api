@@ -5100,6 +5100,7 @@ public final class org/jetbrains/kotlinx/dataframe/columns/UnresolvedColumnsPoli
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/columns/ValueColumn : org/jetbrains/kotlinx/dataframe/DataColumn {
+	public abstract fun changeType (Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 	public abstract fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 	public abstract fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 	public abstract fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;

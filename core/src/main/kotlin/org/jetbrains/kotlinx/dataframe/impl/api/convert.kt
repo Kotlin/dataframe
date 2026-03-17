@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
+import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -208,9 +209,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 
     if (from == to) return this
 
-    // catch for ColumnGroup and FrameColumn since they don't have changeType,
-    // but user converters can still exist
-    if (from.isSubtypeOf(to) && this is ValueColumnImpl) {
+    if (from.isSubtypeOf(to) && this.isValueColumn()) {
         return this.changeType(to.withNullability(hasNulls()))
     }
 
