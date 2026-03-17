@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
+import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -36,6 +37,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.ColumnTypeMismatchesColumnValu
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
+import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.path
@@ -207,14 +209,8 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 
     if (from == to) return this
 
-    // catch for ColumnGroup and FrameColumn since they don't have changeType,
-    // but user converters can still exist
-    if (from.isSubtypeOf(to)) {
-        try {
-            return (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
-        } catch (_: UnsupportedOperationException) {
-            //
-        }
+    if (from.isSubtypeOf(to) && this.isValueColumn()) {
+        return this.changeType(to.withNullability(hasNulls()))
     }
 
     return when (val converter = getConverter(from, to, parserOptions)) {
