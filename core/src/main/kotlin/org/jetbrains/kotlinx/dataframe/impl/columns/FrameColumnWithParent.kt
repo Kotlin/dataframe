@@ -24,9 +24,6 @@ internal class FrameColumnWithParent<T>(override val parent: ColumnGroup<*>, ove
 
     override fun forceResolve() = ResolvingFrameColumn(this)
 
-    override fun changeType(type: KType) =
-        FrameColumnWithParent(parent, source.internal().changeType(type).asFrameColumn())
-
     override fun addParent(parent: ColumnGroup<*>) = FrameColumnWithParent(parent, source)
 
     override fun rename(newName: String) = FrameColumnWithParent(parent, source.rename(newName))

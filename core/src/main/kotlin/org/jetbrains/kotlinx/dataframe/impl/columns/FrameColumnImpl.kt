@@ -45,8 +45,6 @@ internal open class FrameColumnImpl<T> constructor(
     override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?) =
         DataColumn.createFrameColumn(name, values)
 
-    override fun changeType(type: KType) = throw UnsupportedOperationException()
-
     override fun distinct() = FrameColumnImpl(name, distinct.value.toList(), schema, distinct)
 
     override val schema: Lazy<DataFrameSchema> = columnSchema ?: lazy {

@@ -63,8 +63,6 @@ internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T
 
     override fun toString() = "$name: {${renderSchema(this)}}"
 
-    override fun changeType(type: KType) = throw UnsupportedOperationException()
-
     override fun name() = name
 
     override fun distinct() = ColumnGroupImpl(name, get(distinct.value.map { it.index() }))
