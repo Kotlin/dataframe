@@ -1,6 +1,7 @@
-# YouTube Example
+# Movies Example
 
-This is an example project for using DataFrame and the [Youtube Data API](https://developers.google.com/youtube/v3).
+This project contains examples of some basic Kotlin DataFrame
+operations on (modified) data from [movielens](https://movielens.org/).
 
 We recommend using an up-to-date IntelliJ IDEA for the best experience,
 as well as the latest Kotlin plugin version.

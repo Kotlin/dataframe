@@ -34,7 +34,7 @@ interface Movie {
 
 private val pathToCsv = File(object {}.javaClass.classLoader.getResource("movies.csv")!!.toURI()).absolutePath
 // Uncomment this line if you want to copy-paste and run the code in your project without downloading the file
-// private const val pathToCsv = "https://raw.githubusercontent.com/Kotlin/dataframe/master/examples/idea-examples/movies/src/main/resources/movies.csv"
+// private const val pathToCsv = "https://raw.githubusercontent.com/Kotlin/dataframe/master/examples/projects/movies/src/main/resources/movies.csv"
 
 fun main() {
     // This example shows how to the use extension properties API to address columns in different operations
