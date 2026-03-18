@@ -29,6 +29,10 @@ public fun AnyFrame.renderToString(
     rowIndex: Boolean = true,
 ): String {
     val sb = StringBuilder()
+    val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex)
+    val columnLengths = table.values.mapIndexed { col, vals ->
+        (vals + table.header[col]).maxOf { it.length } + 1
+    }
 
     // title
     if (title) {
@@ -36,40 +40,19 @@ public fun AnyFrame.renderToString(
         sb.appendLine()
     }
 
-    // data
-    val rowsCount = rowsLimit.coerceAtMost(nrow)
-    val cols = if (rowIndex) listOf((0 until rowsCount).toColumn()) + columns() else columns()
-    val header = cols.mapIndexed { colIndex, col ->
-        if (columnTypes && (!rowIndex || colIndex > 0)) {
-            "${col.name()}:${renderType(col)}"
-        } else {
-            col.name()
-        }
-    }
-    val values = cols.map {
-        val top = it.take(rowsLimit)
-        val precision = if (top.isNumber()) top.asNumbers().scale() else 0
-        val decimalFormat =
-            if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
-        top.values().map {
-            renderValueForStdout(it, valueLimit, decimalFormat = decimalFormat).truncatedContent
-        }
-    }
-    val columnLengths = values.mapIndexed { col, vals -> (vals + header[col]).map { it.length }.maxOrNull()!! + 1 }
-
     // top border
     if (borders) {
         sb.append("\u230C")
-        for (i in 1 until columnLengths.sum() + columnLengths.size) sb.append('-')
+        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append('-') }
         sb.append("\u230D")
         sb.appendLine()
         sb.append("|")
     }
 
     // header
-    for (col in header.indices) {
+    for (col in table.header.indices) {
         val len = columnLengths[col]
-        val str = header[col]
+        val str = table.header[col]
         val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
         sb.append(padded)
         if (borders) sb.append("|")
@@ -80,18 +63,18 @@ public fun AnyFrame.renderToString(
     if (borders) {
         sb.append("|")
         for (colLength in columnLengths) {
-            for (i in 1..colLength) sb.append('-')
+            repeat(colLength) { sb.append('-') }
             sb.append("|")
         }
         sb.appendLine()
     }
 
     // data
-    for (row in 0 until rowsCount) {
+    for (row in 0 until table.rowsCount) {
         if (borders) sb.append("|")
-        for (col in values.indices) {
+        for (col in table.values.indices) {
             val len = columnLengths[col]
-            val str = values[col][row]
+            val str = table.values[col][row]
             val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
             sb.append(padded)
             if (borders) sb.append("|")
@@ -100,15 +83,50 @@ public fun AnyFrame.renderToString(
     }
 
     // footer
-    if (nrow > rowsLimit) {
+    if (table.totalRows > rowsLimit) {
         sb.appendLine("...")
     } else if (borders) {
         sb.append("\u230E")
-        for (i in 1 until columnLengths.sum() + columnLengths.size) sb.append('-')
+        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append('-') }
         sb.append("\u230F")
         sb.appendLine()
     }
     return sb.toString()
+}
+
+private class PreparedTable(
+    val header: List<String>,
+    val values: List<List<String>>,
+    val rowsCount: Int,
+    val totalRows: Int,
+)
+
+private fun AnyFrame.prepareTable(
+    rowsLimit: Int,
+    valueLimit: Int,
+    columnTypes: Boolean,
+    rowIndex: Boolean,
+    escapeValue: (String) -> String = { it },
+): PreparedTable {
+    val rowsCount = rowsLimit.coerceAtMost(nrow)
+    val cols = if (rowIndex) listOf((0 until rowsCount).toColumn()) + columns() else columns()
+    val header = cols.mapIndexed { colIndex, col ->
+        if (columnTypes && (!rowIndex || colIndex > 0)) {
+            "${col.name()}:${renderType(col)}"
+        } else {
+            col.name()
+        }
+    }
+    val values = cols.map { col ->
+        val top = col.take(rowsLimit)
+        val precision = if (top.isNumber()) top.asNumbers().scale() else 0
+        val decimalFormat =
+            if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
+        top.values().map {
+            escapeValue(renderValueForStdout(it, valueLimit, decimalFormat = decimalFormat).truncatedContent)
+        }
+    }
+    return PreparedTable(header, values, rowsCount, nrow)
 }
 
 internal val valueToStringLimitDefault = 1000
