@@ -129,6 +129,53 @@ private fun AnyFrame.prepareTable(
     return PreparedTable(header, values, rowsCount, nrow)
 }
 
+public fun AnyFrame.renderToMarkdown(
+    rowsLimit: Int = 20,
+    valueLimit: Int = 40,
+    alignLeft: Boolean = false,
+    columnTypes: Boolean = false,
+    title: Boolean = false,
+    rowIndex: Boolean = true,
+): String {
+    val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex) { it.replace("|", "\\|") }
+
+    val sb = StringBuilder()
+    if (title) {
+        sb.appendLine("**DataFrame [${size()}]**")
+        sb.appendLine()
+    }
+
+    // header
+    sb.append("|")
+    for (col in table.header) {
+        sb.append(" ${col.replace("|", "\\|")} |")
+    }
+    sb.appendLine()
+
+    // separator
+    sb.append("|")
+    repeat(table.header.size) {
+        sb.append(if (alignLeft) ":---|" else "---:|")
+    }
+    sb.appendLine()
+
+    // data
+    for (row in 0 until table.rowsCount) {
+        sb.append("|")
+        for (col in table.values.indices) {
+            sb.append(" ${table.values[col][row]} |")
+        }
+        sb.appendLine()
+    }
+
+    // footer
+    if (table.totalRows > rowsLimit) {
+        sb.appendLine()
+        sb.appendLine("*... ${table.totalRows - rowsLimit} more rows*")
+    }
+    return sb.toString()
+}
+
 internal val valueToStringLimitDefault = 1000
 internal val valueToStringLimitForRowAsTable = 50
 
