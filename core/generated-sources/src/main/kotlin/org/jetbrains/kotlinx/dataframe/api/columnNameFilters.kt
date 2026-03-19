@@ -914,7 +914,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      * @see [nameContains]
      */
-    @Interpretable("NameEndsWith1")
+    @Interpretable("NameEndsWith")
     public fun ColumnsSelectionDsl<*>.nameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         asSingleColumn().colsNameEndsWith(suffix, ignoreCase)
 
