@@ -87,20 +87,32 @@ internal fun Project.setupGradleSyncVersionsTask(
             // however, writing it in the settings.gradle.kts file makes the IDE aware of the dependency substitution
             val relativePathToRoot = findRootDir().relativeTo(folder).path
             val generatedDevConfig =
-                """
-                // region generated-config
-                
-                // substitutes dependencies provided by the root project
-                includeBuild("$relativePathToRoot") {
-                    dependencySubstitution {
-                        substitute(module("com.jetbrains.kotlinx:dataframe-core"))
-                            .using(project(":core"))
+                if (folder.isAndroid()) {
+                    """
+                    // region generated-config
+                    
+                    // substitutes dependencies provided by the root project
+                    includeBuild("$relativePathToRoot") {
+                        dependencySubstitution {
+                            substitute(module("com.jetbrains.kotlinx:dataframe-core"))
+                                .using(project(":core"))
+                        }
                     }
+                    
+                    // endregion
+                    
+                    """.trimIndent()
+                } else {
+                    """
+                    // region generated-config
+                    
+                    // substitutes dependencies provided by the root project
+                    includeBuild("$relativePathToRoot")
+                    
+                    // endregion
+                    
+                    """.trimIndent()
                 }
-                
-                // endregion
-                
-                """.trimIndent()
 
             val regex = "// region generated-config(\\n|.)*?// endregion".toRegex()
             val settingsGradleKts = folder.resolve("settings.gradle.kts")

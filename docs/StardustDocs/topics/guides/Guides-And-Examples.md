@@ -100,7 +100,7 @@ Explore our extensive collection of practical examples and real-world analytics 
   — analyze key financial metrics for several major German companies.
 
 * [Movies Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/movies/movies.ipynb)
-  — basic Kotlin DataFrame operations on data from [movielens](https://movielens.org/).
+  — basic Kotlin DataFrame operations on (modified) data from [movielens](https://movielens.org/).
 
 * [YouTube Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/youtube/Youtube.ipynb)
   — explore YouTube videos with YouTube REST API and Kotlin DataFrame.

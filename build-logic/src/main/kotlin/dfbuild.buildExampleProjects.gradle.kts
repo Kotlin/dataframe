@@ -26,6 +26,7 @@ val versionsToSync =
         "ktlint",
         "maven-wrapper",
         "maven",
+        "kotlinDatetime",
     )
 
 val syncAllExampleFolders by tasks.registering {
