@@ -16,8 +16,16 @@ Automatically generated archives of example projects.
 
 **Download:** [kotlin-dataframe-plugin-maven-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip)
 
+### Movies
+
+**Download:** [movies.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/movies.zip)
+
+### Youtube
+
+**Download:** [youtube.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/youtube.zip)
+
 ---
 
-Last updated: 2026-03-13 10:04 UTC
+Last updated: 2026-03-19 13:02 UTC
 
-Source commit: cd40d40aef03285053f73ab2a28c3b381e113223
+Source commit: b26b6213a15421730336e7e7c8f54d8173f8b653
