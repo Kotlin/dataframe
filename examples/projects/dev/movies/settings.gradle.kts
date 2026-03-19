@@ -13,11 +13,6 @@ rootProject.name = "movies"
 // region generated-config
 
 // substitutes dependencies provided by the root project
-includeBuild("../../../..") {
-    dependencySubstitution {
-        substitute(module("com.jetbrains.kotlinx:dataframe-core"))
-            .using(project(":core"))
-    }
-}
+includeBuild("../../../..")
 
 // endregion
