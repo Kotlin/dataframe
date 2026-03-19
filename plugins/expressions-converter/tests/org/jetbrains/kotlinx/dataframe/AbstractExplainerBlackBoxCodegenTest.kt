@@ -11,14 +11,10 @@ import org.jetbrains.kotlin.test.backend.handlers.IrTreeVerifierHandler
 import org.jetbrains.kotlin.test.backend.handlers.JvmBoxRunner
 import org.jetbrains.kotlin.test.backend.ir.JvmIrBackendFacade
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
-import org.jetbrains.kotlin.test.builders.classicFrontendHandlersStep
 import org.jetbrains.kotlin.test.builders.irHandlersStep
 import org.jetbrains.kotlin.test.builders.jvmArtifactsHandlersStep
-import org.jetbrains.kotlin.test.builders.psi2IrStep
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.frontend.classic.ClassicFrontendFacade
-import org.jetbrains.kotlin.test.frontend.classic.handlers.ClassicDiagnosticsHandler
-import org.jetbrains.kotlin.test.frontend.classic.handlers.DeclarationsDumpHandler
 import org.jetbrains.kotlin.test.model.DependencyKind
 import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.model.TestModule
@@ -35,7 +31,7 @@ open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
     override fun configure(builder: TestConfigurationBuilder): Unit =
         with(builder) {
             globalDefaults {
-                frontend = FrontendKinds.ClassicAndFIR
+                frontend = FrontendKinds.FIR
                 targetPlatform = JvmPlatforms.jvm8
                 dependencyKind = DependencyKind.Binary
                 targetBackend = TargetBackend.JVM_IR
@@ -47,13 +43,6 @@ open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
             }
             facadeStep(::ClassicFrontendFacade)
             commonFirWithPluginFrontendConfiguration()
-            classicFrontendHandlersStep {
-                useHandlers(
-                    ::ClassicDiagnosticsHandler,
-                    ::DeclarationsDumpHandler,
-                )
-            }
-            psi2IrStep()
             irHandlersStep {
                 useHandlers(
                     ::IrPrettyKotlinDumpHandler,
