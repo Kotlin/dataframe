@@ -25,6 +25,7 @@ val versionsToSync =
         "ktlint-gradle",
         "ktlint",
         "maven-wrapper",
+        "maven-surefire",
         "maven",
         "kotlinDatetime",
     )
