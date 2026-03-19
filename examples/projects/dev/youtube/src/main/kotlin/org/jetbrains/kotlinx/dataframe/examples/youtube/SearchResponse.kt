@@ -27,59 +27,59 @@ fun main() {
         .print()
 }
 
-@DataSchema(isOpen = false)
-interface SearchResponse2 {
-    val kind: String
-    val videoId: String?
-}
-
-@DataSchema(isOpen = false)
-interface SearchResponse5 {
-    val height: Int
-    val url: String
-    val width: Int
-}
-
-@DataSchema(isOpen = false)
-interface SearchResponse4 {
-    val default: SearchResponse5
-    val high: SearchResponse5
-    val medium: SearchResponse5
-}
-
-@DataSchema(isOpen = false)
-interface SearchResponse3 {
-    val channelId: String
-    val channelTitle: String
-    val description: String
-    val liveBroadcastContent: String
-    val publishTime: String
-    val publishedAt: String
-    val thumbnails: SearchResponse4
-    val title: String
-}
-
-@DataSchema(isOpen = false)
-interface SearchResponse1 {
-    val etag: String
-    val id: SearchResponse2
-    val kind: String
-    val snippet: SearchResponse3
-}
-
-@DataSchema(isOpen = false)
-interface SearchResponse6 {
-    val resultsPerPage: Int
-    val totalResults: Int
-}
-
 @DataSchema
 interface SearchResponse {
     val etag: String
-    val items: List<SearchResponse1>
+    val items: List<Items>
     val kind: String
-    val nextPageToken: String?
-    val pageInfo: SearchResponse6
+    val nextPageToken: String
+    val pageInfo: PageInfo
     val prevPageToken: String?
     val regionCode: String
+
+    @DataSchema(isOpen = false)
+    interface Id {
+        val kind: String
+        val videoId: String?
+    }
+
+    @DataSchema(isOpen = false)
+    interface Default {
+        val height: Int
+        val url: String
+        val width: Int
+    }
+
+    @DataSchema(isOpen = false)
+    interface Thumbnails {
+        val default: Default
+        val high: Default
+        val medium: Default
+    }
+
+    @DataSchema(isOpen = false)
+    interface Snippet {
+        val channelId: String
+        val channelTitle: String
+        val description: String
+        val liveBroadcastContent: String
+        val publishTime: String
+        val publishedAt: String
+        val thumbnails: Thumbnails
+        val title: String
+    }
+
+    @DataSchema(isOpen = false)
+    interface Items {
+        val etag: String
+        val id: Id
+        val kind: String
+        val snippet: Snippet
+    }
+
+    @DataSchema(isOpen = false)
+    interface PageInfo {
+        val resultsPerPage: Int
+        val totalResults: Int
+    }
 }

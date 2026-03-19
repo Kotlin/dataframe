@@ -2,10 +2,10 @@ package org.jetbrains.kotlinx.dataframe.examples.youtube
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -27,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sumFor
+import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.toLong
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
@@ -63,7 +64,11 @@ fun main() {
         .dropNulls { id.videoId }
         .select { id.videoId into "id" and snippet }
         .distinct()
-        .parse()
+        .let { df ->
+            // TODO replace simply with `parse()` in Kotlin 2.4.0+
+            val fixedParsedTypes = df.convert { colsAtAnyDepth().colsOf<String>() }.to<Any>()
+            df.parse().castTo(fixedParsedTypes, verify = false)
+        }
         .convert { colsAtAnyDepth().colsOf<URL>() }.with {
             IMG(it, maxHeight = 150)
         }
@@ -82,11 +87,15 @@ fun main() {
         }.asColumnGroup()
         .items.concat()
         .select { id and statistics.allCols() }
-        .parse()
+        .let { df ->
+            // TODO replace simply with `parse()` in Kotlin 2.4.0+
+            val fixedParsedTypes = df.convert { colsAtAnyDepth().colsOf<String>() }.to<Any>()
+            df.parse().castTo(fixedParsedTypes, verify = false)
+        }
         // TODO replace with requireColumn {} when available
         // parse cannot know what type the columns will be at runtime,
         // so we need to cast the columns ourselves.
-        .cast<ParsedStats>(verify = true)
+        .convert { nameEndsWith("Count") }.toInt()
 
     val withStat = videos.join(stats) { id match right.id }
 
@@ -104,13 +113,4 @@ fun main() {
         .cumSum { viewCount }
 
     growth.print(borders = true, columnTypes = true)
-}
-
-@DataSchema
-internal interface ParsedStats {
-    val id: String
-    val commentCount: Int
-    val favoriteCount: Int
-    val likeCount: Int?
-    val viewCount: Int
 }

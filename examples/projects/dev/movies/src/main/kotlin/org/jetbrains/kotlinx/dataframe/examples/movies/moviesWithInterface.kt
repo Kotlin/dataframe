@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.examples.movies
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.by
-import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.explode
@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.read
 import java.io.File
 
@@ -38,22 +39,19 @@ private val pathToCsv = File(object {}.javaClass.classLoader.getResource("movies
 
 fun main() {
     // This example shows how to the use extension properties API to address columns in different operations
-    // https://kotlin.github.io/dataframe/apilevels.html
-
-    // Add the Gradle plugin and run `assemble`
-    // check the README https://github.com/Kotlin/dataframe?tab=readme-ov-file#setup
+    // https://kotlin.github.io/dataframe/apilevels.html#extension-properties-api
+    // check the README https://github.com/Kotlin/dataframe
     val step1 = DataFrame.read(pathToCsv)
         .convertTo<Movie>()
         .split { genres }.by("|").inplace()
-        // TODO replace with `requireColumn {}` #1715 or replace+AddDsl #1749
         .split { title }.by {
-            listOf<Any>(
+            listOf(
                 """\s*\(\d{4}\)\s*$""".toRegex().replace(title, ""),
-                "\\d{4}".toRegex().findAll(title).lastOrNull()?.value?.toIntOrNull() ?: -1,
+                "\\d{4}".toRegex().findAll(title).lastOrNull()?.value,
             )
         }.into("title", "year")
+        .convert { year }.with { it?.toIntOrNull() ?: -1 }
         .explode { genres }
-        .cast<Step1>(verify = true)
 
     step1.print(borders = true)
 
@@ -84,11 +82,3 @@ fun main() {
 //    Discover the final reshaped data in an interactive HTML table
 //    step2.toStandaloneHTML().openInBrowser()
 }
-
-@DataSchema
-internal data class Step1(
-    val movieId: String,
-    val title: String,
-    val year: Int,
-    val genres: String,
-)

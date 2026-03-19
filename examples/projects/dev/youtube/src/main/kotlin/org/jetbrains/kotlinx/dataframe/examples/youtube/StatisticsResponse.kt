@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.examples.youtube
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -15,39 +17,50 @@ import org.jetbrains.kotlinx.dataframe.api.schema
  * the compiler plugin can handle the rest.
  */
 fun main() {
-    val id = "uHKfrz65KSU"
+    val searchRequest = "example%20search"
+    val resultsPerPage = 10
+    val maxPages = 5
+
+    val searchResults = load("search?q=$searchRequest&maxResults=$resultsPerPage&part=snippet", maxPages)
+        .cast<SearchResponse>()
+
+    val id = searchResults.first()
+        .items.id.videoId
+        .dropNulls()
+        .first()
+
     val df = load("videos?part=statistics&id=$id")
     df.schema()
         .generateInterfaces("StatisticsResponse")
         .print()
 }
 
-@DataSchema(isOpen = false)
-interface StatisticsResponse2 {
-    val commentCount: String
-    val favoriteCount: String
-    val likeCount: String
-    val viewCount: String
-}
-
-@DataSchema(isOpen = false)
-interface StatisticsResponse1 {
-    val etag: String
-    val id: String
-    val kind: String
-    val statistics: StatisticsResponse2
-}
-
-@DataSchema(isOpen = false)
-interface StatisticsResponse3 {
-    val resultsPerPage: Int
-    val totalResults: Int
-}
-
 @DataSchema
 interface StatisticsResponse {
     val etag: String
-    val items: List<StatisticsResponse1>
+    val items: List<Items>
     val kind: String
-    val pageInfo: StatisticsResponse3
+    val pageInfo: PageInfo
+
+    @DataSchema(isOpen = false)
+    interface Statistics {
+        val commentCount: String
+        val favoriteCount: String
+        val likeCount: String
+        val viewCount: String
+    }
+
+    @DataSchema(isOpen = false)
+    interface Items {
+        val etag: String
+        val id: String
+        val kind: String
+        val statistics: Statistics
+    }
+
+    @DataSchema(isOpen = false)
+    interface PageInfo {
+        val resultsPerPage: Int
+        val totalResults: Int
+    }
 }
