@@ -18,6 +18,7 @@ import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.sql.Blob
 import java.sql.Connection
 import java.sql.DriverManager
@@ -64,6 +65,7 @@ interface Table1MariaDb {
     val longtextCol: String
     val enumCol: String
     val setCol: Char
+    val bigintUnsignedCol: BigInteger
     val jsonCol: String
 }
 
@@ -100,6 +102,7 @@ interface Table2MariaDb {
     val longtextCol: String?
     val enumCol: String?
     val setCol: Char?
+    val bigintUnsignedCol: BigInteger?
     val jsonCol: String?
 }
 
@@ -176,6 +179,7 @@ class MariadbTest {
                 longtextCol LONGTEXT NOT NULL,
                 enumCol ENUM('Value1', 'Value2', 'Value3') NOT NULL,
                 setCol SET('Option1', 'Option2', 'Option3') NOT NULL,
+                bigintUnsignedCol BIGINT UNSIGNED NOT NULL,
                 jsonCol JSON NOT NULL
                 CHECK (JSON_VALID(jsonCol))
             )
@@ -215,7 +219,8 @@ class MariadbTest {
                 mediumtextCol MEDIUMTEXT,
                 longtextCol LONGTEXT,
                 enumCol ENUM('Value1', 'Value2', 'Value3'),
-                setCol SET('Option1', 'Option2', 'Option3')
+                setCol SET('Option1', 'Option2', 'Option3'),
+                bigintUnsignedCol BIGINT UNSIGNED
             )
             """
             connection.createStatement().execute(createTableQuery2.trimIndent())
@@ -227,8 +232,8 @@ class MariadbTest {
                     bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                     integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                     timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, jsonCol
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, bigintUnsignedCol, jsonCol
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """.trimIndent()
 
             @Language("SQL")
@@ -238,8 +243,8 @@ class MariadbTest {
                     bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                     integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                     timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, bigintUnsignedCol
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
@@ -275,7 +280,8 @@ class MariadbTest {
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
                     st.setString(30, "Option$i")
-                    st.setString(31, JSON_STRING)
+                    st.setObject(31, BigInteger.valueOf((i * 1000).toLong()))
+                    st.setString(32, JSON_STRING)
 
                     st.executeUpdate()
                 }
@@ -314,6 +320,7 @@ class MariadbTest {
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
                     st.setString(30, "Option$i")
+                    st.setObject(31, BigInteger.valueOf((i * 2000).toLong()))
                     st.executeUpdate()
                 }
             }
@@ -396,7 +403,8 @@ class MariadbTest {
         table1Df.filter { "integerCol"<Int>() > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
         table1Df[0][26] shouldBe "textValue1"
-        table1Df[0][31] shouldBe JSON_STRING // TODO: https://github.com/Kotlin/dataframe/issues/462
+        table1Df[0][31] shouldBe BigInteger.valueOf(1000L)
+        table1Df[0][32] shouldBe JSON_STRING // TODO: https://github.com/Kotlin/dataframe/issues/462
 
         val table2Df = dataframes[1].cast<Table2MariaDb>()
 
@@ -418,7 +426,7 @@ class MariadbTest {
         result[0][1] shouldBe 1
 
         val result1 = df1.select("smallintCol")
-            .add("smallintCol2") { "smallintCol"<Int?>() }
+            .add("smallintCol2") { "smallintCol"<Short?>() }
 
         result1[0][1] shouldBe 10
 
@@ -441,6 +449,11 @@ class MariadbTest {
             .add("bigintCol2") { "bigintCol"<Long>() }
 
         result5[0][1] shouldBe 100
+
+        val result5a = df1.select("bigintUnsignedCol")
+            .add("bigintUnsignedCol2") { "bigintUnsignedCol"<BigInteger>() }
+
+        result5a[0][1] shouldBe BigInteger.valueOf(1000)
 
         val result6 = df1.select("floatCol")
             .add("floatCol2") { "floatCol"<Float>() }
@@ -465,6 +478,7 @@ class MariadbTest {
         schema.columns["mediumintUnsignedCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["integerUnsignedCol"]!!.type shouldBe typeOf<Long>()
         schema.columns["bigintCol"]!!.type shouldBe typeOf<Long>()
+        schema.columns["bigintUnsignedCol"]!!.type shouldBe typeOf<BigInteger>()
         schema.columns["floatCol"]!!.type shouldBe typeOf<Float>()
         schema.columns["doubleCol"]!!.type shouldBe typeOf<Double>()
         schema.columns["decimalCol"]!!.type shouldBe typeOf<BigDecimal>()
