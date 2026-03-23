@@ -23,6 +23,14 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
 
 - `dfbuild.ktlint`: Sets up our linter plugin. Included by default in `dfbuild.kotlinJvmCommon`.
 
+- `dfbuild.kodex`: Sets up [KoDEx](https://github.com/Jolanrensen/KoDEx) KDoc preprocessing.
+    Requires `dfbuild.kotlinJvm8` or `dfbuild.kotlinJvm11`.
+    - This plugin modifies the `Jar` tasks such that its sources contain KoDEx-preprocessed sources.
+    - Available tasks: `preprocessKDocsMain` and `kodex` (alias, does the same thing).
+    - All tasks and modifications will be skipped if the Gradle property `skipKodex` exists.
+    - The plugin may need to be configured via the `kodexConvention` extension for your needs.
+    - See also: https://github.com/Kotlin/dataframe/blob/master/KODEX_KDOC_PREPROCESSING.md
+
 - `dfbuild.buildConfig`: Generates build config compile-time constants,
    like `BuildConfig.VERSION` and `BuildConfig.DEBUG`.
    Is NOT included by default, but can be combined with `dfbuild.kotlinJvm<X>`.
