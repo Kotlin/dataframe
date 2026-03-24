@@ -29,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.asValues
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
+import org.jetbrains.kotlinx.dataframe.impl.letIf
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -436,9 +437,59 @@ public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
 public fun AnyRow.toMap(): Map<String, Any?> = df().columns().associate { it.name() to it[index] }
 
-public fun Map<String, Any?>.toDataRow(): DataRow<*> {
-    val df = mapValues { listOf(it.value) }.toDataFrame()
-    return DataRowImpl(0, df)
+/**
+ * Converts [this] key-value [Map] to a [DataRow], representing a single row of a [DataFrame].
+ *
+ * By default, nested maps are ignored, but you can increase [maxDepth] to include them.
+ * If their keys are not [String] and [convertKeysToString] is true, they are converted to strings and also converted,
+ * else, they remain [Maps][Map].
+ *
+ * ### For Example
+ *
+ * ```kotlin
+ * val map = mapOf("name" to "Alice", "age" to 30, "address" to mapOf("city" to "New York", "zip" to "10001"))
+ * val dataRow = map.toDataRow(maxDepth = 1)
+ * dataRow["name"] == "Alice"
+ * dataRow.get { "address"["city"] } == "New York"
+ * ```
+ *
+ * @param maxDepth How deep the recursion should go, converting [maps][Map] to [data rows][DataRow]. The default is 0; only top-level.
+ * @param convertKeysToString If true, non-string keys are converted to [strings][String]. Default is `true`.
+ *   If false, nested [maps][Map] with non-string keys are ignored.
+ * @see [Iterable.toDataFrame]
+ */
+@JvmOverloads
+public fun Map<*, *>.toDataRow(maxDepth: Int = 0, convertKeysToString: Boolean = true): DataRow<*> {
+    fun Map<*, *>.recurse(currentDepth: Int): DataRow<*> {
+        val mapped = this
+            .letIf(convertKeysToString) { map -> map.mapKeys { it.key.toString() } }
+            .mapValues { (_, value) ->
+                when (value) {
+                    is Map<*, *> if currentDepth < maxDepth -> {
+                        @Suppress("UNCHECKED_CAST")
+                        try {
+                            (value as Map<String, Any?>).recurse(currentDepth + 1)
+                        } catch (_: ClassCastException) {
+                            value
+                        }
+                    }
+
+                    else -> value
+                }.let(::listOf)
+            }
+
+        @Suppress("UNCHECKED_CAST")
+        val df = (mapped as Map<String, List<Any?>>).toDataFrame()
+        return DataRowImpl(0, df)
+    }
+    return try {
+        this.recurse(0)
+    } catch (e: ClassCastException) {
+        throw IllegalArgumentException(
+            "Toplevel map keys must be strings for conversion to DataRow. Set `convertKeysToString = true` to convert them automatically.",
+            e,
+        )
+    }
 }
 
 // endregion
