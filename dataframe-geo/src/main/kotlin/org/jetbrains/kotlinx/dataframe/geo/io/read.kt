@@ -86,7 +86,7 @@ public fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataF
  * Supported input formats:
  * * Path to a `.shp` file.
  * * Path to a `.shp.gz` file.
- * * Path to a directory containing a shapefile with the same name as a directory (expects `<dir>/<dir>.shp`).
+ * * Path to a directory containing a shapefile with the same name as the directory (expects `<dir>/<dir>.shp`).
  *
  * Requires `.shx` and `.dbf` files with the same name to be present in the same directory as the `.shp` file.
  */

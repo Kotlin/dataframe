@@ -17,7 +17,7 @@ import kotlin.io.path.notExists
 import kotlin.io.path.outputStream
 
 /**
- * {@comment `readGeoJson` KDoc-snippet}
+ * {@comment `writeGeoJson` KDoc-snippet}
  *
  * Writes this [GeoDataFrame] into a [GeoJSON](https://geojson.org/) file.
  *
@@ -76,7 +76,7 @@ public fun GeoDataFrame<*>.writeGeoJson(file: File) {
  * * other column values are written as feature attributes.
  *
  * The CRS is written to the schema if it is defined in this [GeoDataFrame]. Otherwise,
- * [default crs][GeoDataFrame.DEFAULT_CRS] is used.
+ * [default CRS][GeoDataFrame.DEFAULT_CRS] is used.
  *
  * If the target directory does not exist, it is created automatically.
  */
