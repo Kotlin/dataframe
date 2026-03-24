@@ -10,94 +10,117 @@ plugins {
 
 // TODO migrate to kodex {} extension syntax. #985
 
+/**
+ * These settings can be modified using `kodexConvention {}`.
+ */
 interface KodexConventionExtension {
 
     /**
-     * KoDEx pick up the Kotlin `main` and `test` SourceSets.
-     * Any modifications or additions need to be specified here.
+     * Resolved Kotlin main SourceSet to be processed by KoDEx and
+     * form the eventual jar files.
+     *
+     * By default, this contains all source directories of `kotlin.sourceSets.main`.
      */
-    val extraSourcesForKodex: ListProperty<File>
+    val kotlinMainSourcesDirectories: SetProperty<File>
 
     /**
-     * If extra sources need to be added to the jar but not processed by KoDEx,
-     * specify them here.
+     * Any additional (resolved) Kotlin SourceSets to be processed by KoDEx,
+     * but that will not be included in the eventual jar files.
+     *
+     * This can be useful if you want to use `@sample` or `@includeFile`.
+     *
+     * By default, this contains all source directories of `kotlin.sourceSets.test`.
      */
-    val extraSourcesForJar: ListProperty<File>
+    val contextualSourcesDirectories: SetProperty<File>
+
+    val generatedSourcesFolderName: Property<String>
 }
 
 val extension = project.extensions.create<KodexConventionExtension>("kodexConvention")
-    .also {
-        it.extraSourcesForKodex.convention(emptyList())
-        it.extraSourcesForJar.convention(emptyList())
+    .apply {
+        generatedSourcesFolderName.convention("generated-sources")
+
+        // this is set in afterEvaluate to any modifications to the main/test sourceSets are present
+        afterEvaluate {
+            kotlinMainSourcesDirectories.convention(
+                kotlin.sourceSets.main.get()
+                    .kotlin
+                    .sourceDirectories
+                    // important! This clones the collection
+                    .toSet(),
+            )
+
+            contextualSourcesDirectories.convention(
+                kotlin.sourceSets.test.get()
+                    .kotlin
+                    .sourceDirectories
+                    // important! This clones the collection
+                    .toSet(),
+            )
+        }
     }
-
-val generatedSourcesFolderName = "generated-sources"
-
-// Backup the kotlin source files location
-val kotlinMainSources = kotlin.sourceSets.main
-    .get()
-    .kotlin.sourceDirectories
-    .toList()
-val kotlinTestSources = kotlin.sourceSets.test
-    .get()
-    .kotlin.sourceDirectories
-    .toList()
 
 fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 
-// sourceset of the generated sources as a result of `processKDocsMain`, this will create linter tasks
-val generatedSources by kotlin.sourceSets.creating {
+// main sourceset of the generated sources as a result of `processKDocsMain`, this will create linter tasks
+// This also makes sure the contextual sources are not in the final jar
+val generatedMainSources by kotlin.sourceSets.creating {
     kotlin {
-        setSrcDirs(
-            listOf(
-                "$generatedSourcesFolderName/src/main/kotlin",
-                "$generatedSourcesFolderName/src/main/java",
-            ),
-        )
-        srcDirs(extension.extraSourcesForJar)
+        afterEvaluate {
+            this@kotlin.setSrcDirs(
+                extension.kotlinMainSourcesDirectories.get().mapTo(mutableSetOf()) {
+                    // follows the same logic as KoDEx
+                    val relativePath = projectDir.toPath().relativize(it.toPath())
+                    File(extension.generatedSourcesFolderName.get(), relativePath.toString())
+                },
+            )
+        }
     }
 }
 
 // Task to generate the processed documentation
 val processKDocsMain by tasks.registering(RunKodexTask::class) {
-
-    // Include both test and main sources for cross-referencing, plus extraSourcesForKodex
-    sources = buildSet {
-        this += kotlinMainSources
-        this += kotlinTestSources
-        this += extension.extraSourcesForKodex.get()
+    // Include both test and main sources for cross-referencing, plus contextualSourcesDirectories
+    sources = buildSet<File> {
+        this += extension.kotlinMainSourcesDirectories.get()
+        this += extension.contextualSourcesDirectories.get()
+    }.also {
+        logger.info("$name: Preprocessing sources with KoDEx: ${it.toList()}")
     }
     group = "KDocs"
-    target = file(generatedSourcesFolderName)
+    target = file(extension.generatedSourcesFolderName.get())
 
-    // false, so `ktlintGeneratedSourcesSourceSetFormat` can format the output
+    // false, so `ktlintGeneratedMainSourcesSourceSetFormat` can format the output
     outputReadOnly = false
 
     exportAsHtml {
         dir = findRootDir().absoluteFile.resolve("docs/StardustDocs/resources/snippets/kdocs")
     }
     finalizedBy(
-        tasks.findByName("runKtlintFormatOverGeneratedSourcesSourceSet")
-            ?: error("dfbuild.kodex could not find task :runKtlintFormatOverGeneratedSourcesSourceSet"),
+        tasks.findByName("runKtlintFormatOverGeneratedMainSourcesSourceSet")
+            ?: error("dfbuild.kodex could not find task :runKtlintFormatOverGeneratedMainSourcesSourceSet"),
     )
 }
 
 // Alias for processKDocsMain
-val kodex by tasks.registering { dependsOn(processKDocsMain) }
+val kodex by tasks.registering {
+    group = "KDocs"
+    dependsOn(processKDocsMain)
+}
 
-// Skips generatedSources KtLint check on "normal" KtLint runs.
+// Skips generatedMainSources KtLint check on "normal" KtLint runs.
 // The checks run automatically after `processKDocsMain`
-tasks.named("ktlintGeneratedSourcesSourceSetCheck") {
+tasks.named("ktlintGeneratedMainSourcesSourceSetCheck") {
     onlyIf { false }
 }
-tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
+tasks.named("runKtlintCheckOverGeneratedMainSourcesSourceSet") {
     onlyIf { false }
 }
 
 // Exclude the generated/processed sources from the IDE
 idea {
     module {
-        excludeDirs.add(file(generatedSourcesFolderName))
+        excludeDirs.add(file(extension.generatedSourcesFolderName.get()))
     }
 }
 
@@ -108,20 +131,33 @@ val changeJarTask by tasks.registering {
     outputs.upToDateWhen { project.hasProperty("skipKodex") }
     doFirst {
         tasks.withType<Jar> {
+
+            // Making sure additional source files are allowed to be overwritten by the KoDEx version,
+            // such as BuildConfig
+            duplicatesStrategy = DuplicatesStrategy.WARN
+
             doFirst {
-                require(generatedSources.kotlin.srcDirs.toList().isNotEmpty()) {
+                require(generatedMainSources.kotlin.srcDirs.toList().isNotEmpty()) {
                     logger.error("`processKDocsMain`'s outputs are empty, did `processKDocsMain` run before this task?")
                 }
                 kotlin.sourceSets.main {
-                    kotlin.setSrcDirs(generatedSources.kotlin.srcDirs)
+                    kotlin.setSrcDirs(generatedMainSources.kotlin.srcDirs)
                 }
-                logger.lifecycle("$this is run with modified sources: \"$generatedSourcesFolderName\"")
+                logger.lifecycle(
+                    "$this is run with KoDEx modified sources: \"${extension.generatedSourcesFolderName.get()}\"",
+                )
+                logger.info(
+                    "KoDEx modified sourceDirs: ${kotlin.sourceSets.main.get().kotlin.srcDirs.toList()}",
+                )
             }
 
             doLast {
                 kotlin.sourceSets.main {
-                    kotlin.setSrcDirs(kotlinMainSources)
+                    kotlin.setSrcDirs(extension.kotlinMainSourcesDirectories.get())
                 }
+                logger.info(
+                    "$this: KoDEx restored sourceDirs: ${kotlin.sourceSets.main.get().kotlin.srcDirs.toList()}",
+                )
             }
         }
     }

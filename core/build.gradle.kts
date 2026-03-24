@@ -33,20 +33,6 @@ kotlin.sourceSets {
     }
 }
 
-kodexConvention {
-    // we modified kotlin.sourceSets.(main|test); letting `dfbuild.kodex` know
-    // these will all be processed by KoDEx ánd end up in the final jar.
-    extraSourcesForKodex =
-        kotlin.sourceSets
-            .run { listOf(main, test) }
-            .flatMap {
-                it.get().kotlin.sourceDirectories.toList()
-            }
-    // making sure the generated keywords are part of the generatedSources SourceSet
-    // as that's the SourceSet that ends up in the final jars. These will not be preprocessed by KoDEx.
-    extraSourcesForJar = listOf(file("core/build/generatedSrc"))
-}
-
 sourceSets {
     // Gradle creates configurations and compilation task for each source set
     create("samples") {
@@ -284,6 +270,10 @@ tasks.withType<Jar> {
     mustRunAfter(tasks.generateKeywordsSrc)
 }
 
+tasks.processKDocsMain {
+    dependsOn(tasks.generateKeywordsSrc, tasks.generateBuildConfig)
+}
+
 tasks.runKtlintFormatOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
@@ -291,8 +281,7 @@ tasks.runKtlintFormatOverMainSourceSet {
 tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
-
-tasks.named("runKtlintFormatOverGeneratedSourcesSourceSet") {
+tasks.runKtlintFormatOverGeneratedMainSourcesSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
@@ -304,7 +293,7 @@ tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
+tasks.runKtlintCheckOverGeneratedMainSourcesSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
 

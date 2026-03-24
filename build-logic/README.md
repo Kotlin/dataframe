@@ -28,7 +28,7 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
     - This plugin modifies the `Jar` tasks such that its sources contain KoDEx-preprocessed sources.
     - Available tasks: `preprocessKDocsMain` and `kodex` (alias, does the same thing).
     - All tasks and modifications will be skipped if the Gradle property `skipKodex` exists.
-    - The plugin may need to be configured via the `kodexConvention` extension for your needs.
+    - The plugin can be configured via the `kodexConvention` extension for your needs.
     - See also: https://github.com/Kotlin/dataframe/blob/master/KODEX_KDOC_PREPROCESSING.md
 
 - `dfbuild.buildConfig`: Generates build config compile-time constants,
