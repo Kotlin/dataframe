@@ -1,8 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -65,4 +71,66 @@ class UnfoldTests {
     )
 
     data class Group(val id: String, val participants: List<Person>)
+
+    @Test
+    fun `unfold pair of dataframe structures`() {
+        val schema = dataFrameOf("b" to columnOf(42)).cast<SimpleDataSchema>()
+
+        val df = dataFrameOf("pairs" to columnOf(schema to schema.first()))
+            .unfold("pairs")
+
+        df.schema().asClue {
+            val pairsGroup = df.shouldHaveColumnGroup("pairs")
+            pairsGroup.shouldHaveFrameColumn("first") {
+                it[0].shouldHaveColumn<Int>("b")
+            }
+            pairsGroup.shouldHaveColumnGroup("second") {
+                it.shouldHaveColumn<Int>("b")
+            }
+        }
+    }
+
+    @DataSchema
+    data class SimpleDataSchema(val b: Int)
+
+    @Test
+    fun `unfold pair of dataschema object structures`() {
+        val element = SimpleDataSchema(42)
+        val df = dataFrameOf("pairs" to columnOf(listOf(element) to element))
+            .unfold("pairs")
+
+        df.schema().asClue {
+            val pairsGroup = df.shouldHaveColumnGroup("pairs")
+            pairsGroup.shouldHaveFrameColumn("first") {
+                it[0].shouldHaveColumn<Int>("b")
+            }
+            pairsGroup.shouldHaveColumnGroup("second") {
+                it.shouldHaveColumn<Int>("b")
+            }
+        }
+    }
+
+    fun DataFrame<*>.shouldHaveColumnGroup(
+        name: String,
+        block: (ColumnGroup<*>) -> Unit = {
+        },
+    ): ColumnGroup<*> = getColumnOrNull(name).shouldBeInstanceOf<ColumnGroup<*>>(block)
+
+    fun DataFrame<*>.shouldHaveFrameColumn(
+        name: String,
+        block: (FrameColumn<*>) -> Unit = {
+        },
+    ): FrameColumn<*> = getColumnOrNull(name).shouldBeInstanceOf<FrameColumn<*>>(block)
+
+    inline fun <reified T> DataFrame<*>.shouldHaveColumn(
+        name: String,
+        block: (DataColumn<T>) -> Unit = {
+        },
+    ): DataColumn<T> {
+        val shouldBeInstanceOf = getColumnOrNull(name).shouldBeInstanceOf<DataColumn<*>>()
+        shouldBeInstanceOf.type() shouldBe typeOf<T>()
+        val cast = shouldBeInstanceOf.cast<T>()
+        block(cast)
+        return cast
+    }
 }
