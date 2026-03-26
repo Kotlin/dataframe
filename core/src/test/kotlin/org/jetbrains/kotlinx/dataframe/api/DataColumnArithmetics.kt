@@ -464,7 +464,7 @@ class DataColumnArithmeticsTests {
         age / 0.0 shouldBe columnOf(
             Double.POSITIVE_INFINITY,
             Double.POSITIVE_INFINITY,
-            Double.POSITIVE_INFINITY
+            Double.POSITIVE_INFINITY,
         )
     }
 
@@ -487,12 +487,12 @@ class DataColumnArithmeticsTests {
         age / 0 shouldBe columnOf(
             Double.POSITIVE_INFINITY,
             Double.POSITIVE_INFINITY,
-            Double.POSITIVE_INFINITY
+            Double.POSITIVE_INFINITY,
         )
         age / 0.0 shouldBe columnOf(
             Double.POSITIVE_INFINITY,
             Double.POSITIVE_INFINITY,
-            Double.POSITIVE_INFINITY
+            Double.POSITIVE_INFINITY,
         )
     }
 

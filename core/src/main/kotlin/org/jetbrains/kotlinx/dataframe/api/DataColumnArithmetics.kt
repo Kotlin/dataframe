@@ -284,7 +284,6 @@ private interface NumberPlusColumnDocs {
     typealias NUMBER_PLUS_COLUMN_NULL_NOTE = Nothing
 }
 
-// Is it possible to refer specifically to `Int.minus(column: DataColumn<Int>)` and not to `Int.minus(other: Byte)`?
 /**
  * @include [NumberPlusColumnDocs]
  * @set [NUMBER_PLUS_COLUMN_SEE_ALSO] [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div]
