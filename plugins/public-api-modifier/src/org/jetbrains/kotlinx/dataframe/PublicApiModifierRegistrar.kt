@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.copy
 import org.jetbrains.kotlin.fir.declarations.FirDeclaration
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationStatus
-import org.jetbrains.kotlin.fir.declarations.FirSimpleFunction
+import org.jetbrains.kotlin.fir.declarations.FirNamedFunction
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter
 import org.jetbrains.kotlin.fir.extensions.FirStatusTransformerExtension
@@ -45,7 +45,7 @@ public class StatusTransformer(session: FirSession) : FirStatusTransformerExtens
 
     override fun transformStatus(
         status: FirDeclarationStatus,
-        function: FirSimpleFunction,
+        function: FirNamedFunction,
         containingClass: FirClassLikeSymbol<*>?,
         isLocal: Boolean,
     ): FirDeclarationStatus = status.copy(visibility = Visibilities.Internal)

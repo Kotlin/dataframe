@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.samples.concepts
 
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -13,13 +15,25 @@ import org.junit.Test
 
 class StringApi {
 
+    @DataSchema(isOpen = false)
+    internal interface Info {
+        val age: Int
+        val height: Double
+    }
+
+    @DataSchema
+    internal interface DfType {
+        val info: Info
+        val name: String
+    }
+
     private val df = dataFrameOf(
         "name" to columnOf("Alice", "Bob"),
         "info" to columnOf(
             "age" to columnOf(23, 27),
             "height" to columnOf(175.5, 160.2),
         ),
-    )
+    ).cast<DfType>()
 
     @Test
     fun simpleSelect() {

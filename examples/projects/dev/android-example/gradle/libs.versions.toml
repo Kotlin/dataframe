@@ -1,6 +1,6 @@
 [versions]
 agp = "9.0.0"
-kotlin = "2.3.10"
+kotlin = "2.3.20"
 dataframe = "1.0.0-Beta4"
 ktlint-gradle = "14.0.1"
 ktlint = "1.8.0"

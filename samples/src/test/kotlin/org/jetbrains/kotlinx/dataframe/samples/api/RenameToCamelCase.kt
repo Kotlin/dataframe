@@ -2,6 +2,8 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.rename
@@ -11,10 +13,19 @@ import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
 class RenameToCamelCase : DataFrameSampleHelper("rename", "api") {
-    private val df = dataFrameOf("ColumnA", "column_b", "COLUMN-C")(1, "a", true, 2, "b", false)
 
-    val ColumnA by column<String>()
-    val `COLUMN-C` by column<String>()
+    @DataSchema
+    internal interface DfType {
+        val ColumnA: Int
+        val column_b: String
+        val `COLUMN-C`: Boolean
+    }
+
+    private val df =
+        dataFrameOf("ColumnA", "column_b", "COLUMN-C")(
+            1, "a", true,
+            2, "b", false,
+        ).cast<DfType>()
 
     @Test
     fun notebook_test_rename_3() {
