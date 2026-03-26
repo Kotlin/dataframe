@@ -64,6 +64,7 @@ import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.not
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
@@ -1297,6 +1298,16 @@ class Modify : TestBase() {
             val mean = it.data.cast<Int>().mean()
             "age [mean = $mean]"
         }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun columnArithmetics_not() {
+        // SampleStart
+        !df.isHappy
+        // or
+        df.isHappy.not()
         // SampleEnd
     }
 }
