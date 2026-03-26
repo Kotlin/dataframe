@@ -111,11 +111,12 @@ Any [`DataFrame`](DataFrame.md) with `FrameColumn` can be reinterpreted as `Grou
 <!---FUN dataFrameToGroupBy-->
 
 ```kotlin
-val key by columnOf(1, 2) // create int column with name "key"
-val data by columnOf(df[0..3], df[4..6]) // create frame column with name "data"
-val df = dataFrameOf(key, data) // create dataframe with two columns
+val df = dataFrameOf(
+    "key" to columnOf(1, 2),
+    "data" to columnOf(df[0..3], df[4..6]),
+) // create dataframe with two columns
 
-df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' column as groups
+df.asGroupBy("data") // convert dataframe to GroupBy by interpreting 'data' column as groups
 ```
 
 <!---END-->
