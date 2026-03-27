@@ -33,7 +33,7 @@ public object PostgreSql : DbType("postgresql") {
      * These types need to be retrieved explicitly with [Java class][Class] in [ResultSet.getObject], else
      * their return type is unpredictable.
      */
-    private val pgObjectTypes =
+    private val pgObjectTypes by lazy {
         listOf(
             PGbox(),
             PGcircle(),
@@ -46,6 +46,7 @@ public object PostgreSql : DbType("postgresql") {
             PGInterval(),
         ).map(::PgObjectType)
             .associateBy { it.typeName }
+    }
 
     // TODO: Composite types like tableColumnMetadata.sqlTypeName = ROW("a" INTEGER, "b" CHARACTER VARYING(10))
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
