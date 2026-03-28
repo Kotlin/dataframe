@@ -173,4 +173,114 @@ class SplitTests {
             columnOf("d") named "first",
         )
     }
+
+    @Test
+    fun `split into null filled columns`() {
+        val df = dataFrameOf("a")(
+            emptyList<Int>(),
+            listOf(1, 2),
+            listOf(1)
+        )
+
+        val res = df.split { "a"<List<Int>>() }.into("a1", "a2", "a3")
+
+        res.columnNames() shouldBe listOf("a1", "a2", "a3")
+
+        res["a1"][0] shouldBe null
+        res["a2"][0] shouldBe null
+        res["a3"][0] shouldBe null
+
+        res["a1"][1] shouldBe 1
+        res["a2"][1] shouldBe 2
+        res["a3"][1] shouldBe null
+
+        res["a1"][2] shouldBe 1
+        res["a2"][2] shouldBe null
+        res["a3"][2] shouldBe null
+    }
+
+
+    @Test
+    fun `split into with exact number of elements`() {
+        val df = dataFrameOf("a")(
+            listOf(1, 2, 3),
+            listOf(4, 5, 6)
+        )
+
+        val res = df.split { "a"<List<Int>>() }.into("a1", "a2", "a3")
+
+        res.columnNames() shouldBe listOf("a1", "a2", "a3")
+
+        res["a1"][0] shouldBe 1
+        res["a2"][0] shouldBe 2
+        res["a3"][0] shouldBe 3
+
+        res["a1"][1] shouldBe 4
+        res["a2"][1] shouldBe 5
+        res["a3"][1] shouldBe 6
+    }
+
+
+    @Test
+    fun `split into with all empty lists should fill all with nulls`() {
+        val df = dataFrameOf("a")(
+            emptyList<Int>(),
+            emptyList<Int>(),
+            emptyList<Int>()
+        )
+        val res = df.split { "a"<List<Int>>() }.into("a1", "a2", "a3")
+
+        res.columnNames() shouldBe listOf("a1", "a2", "a3")
+
+        res["a1"][0] shouldBe null
+        res["a2"][0] shouldBe null
+        res["a3"][0] shouldBe null
+
+        res["a1"][1] shouldBe null
+        res["a2"][1] shouldBe null
+        res["a3"][1] shouldBe null
+
+        res["a1"][2] shouldBe null
+        res["a2"][2] shouldBe null
+        res["a3"][2] shouldBe null
+    }
+    @Test
+    fun `split into with mixed empty and partial lists`() {
+        val df = dataFrameOf("a")(
+            emptyList<Int>(),
+            listOf(1, 2, 3),
+            emptyList<Int>(),
+            listOf(4, 5),
+            emptyList<Int>(),
+            listOf(6, 7, 8)
+        )
+
+        val res = df.split { "a"<List<Int>>() }.into("a1", "a2", "a3", "a4", "a5", "a6")
+
+        res.columnNames() shouldBe listOf("a1", "a2", "a3", "a4", "a5", "a6")
+
+        res["a1"][0] shouldBe null
+        res["a2"][0] shouldBe null
+        res["a3"][0] shouldBe null
+
+        res["a1"][1] shouldBe 1
+        res["a2"][1] shouldBe 2
+        res["a3"][1] shouldBe 3
+
+        res["a1"][2] shouldBe null
+        res["a2"][2] shouldBe null
+        res["a3"][2] shouldBe null
+
+        res["a1"][3] shouldBe 4
+        res["a2"][3] shouldBe 5
+        res["a3"][3] shouldBe null
+
+        res["a1"][4] shouldBe null
+        res["a2"][4] shouldBe null
+        res["a3"][4] shouldBe null
+
+        res["a1"][5] shouldBe 6
+        res["a2"][5] shouldBe 7
+        res["a3"][5] shouldBe 8
+    }
 }
