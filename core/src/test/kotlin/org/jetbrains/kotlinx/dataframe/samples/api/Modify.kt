@@ -41,7 +41,6 @@ import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.gt
 import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.inplace
 import org.jetbrains.kotlinx.dataframe.api.insert
@@ -277,7 +276,7 @@ class Modify : TestBase() {
     fun globalParserOptions() {
         // SampleStart
         DataFrame.parser.locale = Locale.FRANCE
-        DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
+        DataFrame.parser.addJavaDateTimePattern("dd.MM.uuuu HH:mm:ss")
         // SampleEnd
         DataFrame.parser.resetToDefault()
     }
