@@ -26,7 +26,7 @@ public fun AnyFrame.renderToString(
     valueLimit: Int = 40,
     borders: Boolean = false,
     alignLeft: Boolean = false,
-    columnTypes: Boolean = false,
+    columnTypes: Boolean = true,
     title: Boolean = false,
     rowIndex: Boolean = true,
 ): String {
