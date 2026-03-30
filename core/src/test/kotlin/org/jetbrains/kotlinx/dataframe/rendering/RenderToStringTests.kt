@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import kotlin.test.Test
@@ -88,6 +90,22 @@ class RenderToStringTests {
             |
         """.trimMargin()
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun renderDoubles() {
+        val res = dataFrameOf("a" to columnOf(0.0)).add {
+            "group" {
+                "l" from { "a"<Double>() }
+                "r" from { "a"<Double>() }
+            }
+        }.renderToString()
+        val expected = """
+            |     a            group
+            | 0 0.0 { l:0.0, r:0.0 }
+            |
+        """.trimMargin()
+        assertEquals(expected, res)
     }
 
     @Test
