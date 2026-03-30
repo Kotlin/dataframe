@@ -180,6 +180,7 @@ class RenderToStringTests {
             |  Alice   30  Berlin
             |    Bob   25   Paris
             |...
+            |3 columns x 3 rows
             |
         """.trimMargin()
         assertEquals(expected, result)
