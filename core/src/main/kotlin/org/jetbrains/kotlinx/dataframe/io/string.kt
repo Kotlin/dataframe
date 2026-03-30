@@ -33,7 +33,7 @@ public fun AnyFrame.renderToString(
     val sb = StringBuilder()
     val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex)
     val columnLengths = table.values.mapIndexed { col, vals ->
-        (vals + table.header[col]).maxOf { it.length } + 1
+        (vals + table.header[col] + (table.types?.get(col) ?: "")).maxOf { it.length } + 1
     }
 
     // title
@@ -61,6 +61,18 @@ public fun AnyFrame.renderToString(
     }
     sb.appendLine()
 
+    table.types?.let { types ->
+        if (borders) sb.append(Borders.VERTICAL)
+        for (col in table.header.indices) {
+            val len = columnLengths[col]
+            val str = types[col]
+            val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
+            sb.append(padded)
+            if (borders) sb.append(Borders.VERTICAL)
+        }
+        sb.appendLine()
+    }
+
     // header splitter
     if (borders) {
         sb.append(Borders.VERTICAL)
@@ -85,7 +97,7 @@ public fun AnyFrame.renderToString(
     }
 
     // footer
-    if (table.totalRows > rowsLimit) {
+    if (table.totalRows > table.rowsCount) {
         sb.appendLine("...")
     } else if (borders) {
         sb.append(Borders.BOTTOM_LEFT)
@@ -108,6 +120,7 @@ private object Borders {
 
 private class PreparedTable(
     val header: List<String>,
+    val types: List<String>?,
     val values: List<List<String>>,
     val rowsCount: Int,
     val totalRows: Int,
@@ -124,10 +137,21 @@ private fun AnyFrame.prepareTable(
     val cols = if (rowIndex) listOf((0 until rowsCount).toColumn()) + columns() else columns()
     val header = cols.mapIndexed { colIndex, col ->
         if (columnTypes && (!rowIndex || colIndex > 0)) {
-            "${col.name()}:${renderType(col)}"
+            col.name()
         } else {
             col.name()
         }
+    }
+    val types = if (columnTypes) {
+        cols.mapIndexed { colIndex, col ->
+            if (!rowIndex || colIndex > 0) {
+                renderType(col)
+            } else {
+                ""
+            }
+        }
+    } else {
+        null
     }
     val values = cols.map { col ->
         val top = col.take(rowsLimit)
@@ -146,7 +170,7 @@ private fun AnyFrame.prepareTable(
             escapeValue(renderValueForStdout(it, valueLimit, decimalFormat = decimalFormat).truncatedContent)
         }
     }
-    return PreparedTable(header, values, rowsCount, nrow)
+    return PreparedTable(header, types, values, rowsCount, nrow)
 }
 
 public fun AnyFrame.renderToMarkdown(
@@ -167,8 +191,9 @@ public fun AnyFrame.renderToMarkdown(
 
     // header
     sb.append("|")
-    for (col in table.header) {
-        sb.append(" ${col.replace("|", "\\|")} |")
+    for ((i, col) in table.header.withIndex()) {
+        val type = table.types?.getOrNull(i)?.takeIf { it.isNotEmpty() }?.let { ":$it" } ?: ""
+        sb.append(" ${col.replace("|", "\\|")}$type |")
     }
     sb.appendLine()
 
