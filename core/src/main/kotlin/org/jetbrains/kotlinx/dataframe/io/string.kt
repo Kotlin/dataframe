@@ -186,8 +186,8 @@ public fun AnyFrame.renderToMarkdown(
     return sb.toString()
 }
 
-internal val valueToStringLimitDefault = 1000
-internal val valueToStringLimitForRowAsTable = 50
+internal const val VALUE_TO_STRING_LIMIT_DEFAULT = 1000
+internal const val VALUE_TO_STRING_LIMIT_FOR_ROW_AS_TABLE = 50
 
 internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
     fun Any?.skip(): Boolean =
@@ -238,15 +238,15 @@ internal fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedCont
         is Collection<*> -> renderCollectionName(value).let { RenderedContent.textWithLength("$it $value", it.length) }
 
         else -> if (forHtml) {
-            renderValueForHtml(value, valueToStringLimitForRowAsTable, RendererDecimalFormat.DEFAULT)
+            renderValueForHtml(value, VALUE_TO_STRING_LIMIT_FOR_ROW_AS_TABLE, RendererDecimalFormat.DEFAULT)
         } else {
-            renderValueForStdout(value, valueToStringLimitForRowAsTable)
+            renderValueForStdout(value, VALUE_TO_STRING_LIMIT_FOR_ROW_AS_TABLE)
         }
     }
 
 internal fun renderValueForStdout(
     value: Any?,
-    limit: Int = valueToStringLimitDefault,
+    limit: Int = VALUE_TO_STRING_LIMIT_DEFAULT,
     decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
 ): RenderedContent =
     renderValueToString(value, decimalFormat)
