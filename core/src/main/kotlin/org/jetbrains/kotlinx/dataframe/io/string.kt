@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
+import org.jetbrains.kotlinx.dataframe.api.getColumns
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
@@ -119,7 +121,15 @@ private fun AnyFrame.prepareTable(
     }
     val values = cols.map { col ->
         val top = col.take(rowsLimit)
-        val precision = if (top.isNumber()) top.asNumbers().scale() else 0
+        val precision = if (top.isNumber()) {
+            top.asNumbers().scale()
+        } else if (top.isColumnGroup()) {
+            top.getColumns { colsAtAnyDepth().filter { it.isNumber() } }.maxOfOrNull {
+                it.asNumbers().scale()
+            } ?: 0
+        } else {
+            0
+        }
         val decimalFormat =
             if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
         top.values().map {
@@ -190,13 +200,13 @@ internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
     return owner.columns().map { it.name() to it[index] }.filter { !it.second.skip() }
 }
 
-internal fun AnyRow.renderToString(): String {
+internal fun AnyRow.renderToString(decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT): String {
     val values = getVisibleValues()
     if (values.isEmpty()) return "{ }"
     return values.joinToString(
         prefix = "{ ",
         postfix = " }",
-    ) { "${it.first}:${renderValueForStdout(it.second).truncatedContent}" }
+    ) { "${it.first}:${renderValueForStdout(it.second, decimalFormat = decimalFormat).truncatedContent}" }
 }
 
 internal fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
@@ -256,6 +266,8 @@ internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalForm
         is List<*> -> if (value.isEmpty()) "[ ]" else value.toString()
 
         is Array<*> -> if (value.isEmpty()) "[ ]" else value.toList().toString()
+
+        is AnyRow -> value.renderToString(decimalFormat)
 
         else ->
             value?.asArrayAsListOrNull()
