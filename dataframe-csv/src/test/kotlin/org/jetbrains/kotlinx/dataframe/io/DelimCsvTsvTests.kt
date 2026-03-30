@@ -37,7 +37,6 @@ import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 import kotlin.time.Instant as StdlibInstant
-import kotlinx.datetime.Instant as DeprecatedInstant
 
 //  can be enabled for showing logs for these tests
 private const val SHOW_LOGS = false
@@ -525,7 +524,7 @@ class DelimCsvTsvTests {
             text = frenchCsv,
             delimiter = ';',
             parserOptions = ParserOptions(
-                dateTimePattern = "dd/MM/yyyy",
+                javaDateTimePattern = "dd/MM/yyyy",
                 locale = Locale.FRENCH,
             ),
         )
