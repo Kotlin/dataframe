@@ -302,13 +302,6 @@ internal object Parsers : GlobalParserOptions {
             null
         }
 
-    private fun String.toDurationOrNull(): Duration? =
-        if (Duration.canParse(this)) { // TODO, migrate to `Duration.parseOrNull()` in Kotlin 2.3.0+
-            catchSilent { Duration.parse(this) } // will likely succeed
-        } else {
-            null
-        }
-
     inline fun <reified T : Any> stringParser(
         catch: Boolean = false,
         coveredBy: Set<KType> = emptySet(),
@@ -482,9 +475,7 @@ internal object Parsers : GlobalParserOptions {
             parser
         },
         // kotlin.time.Duration
-        stringParser<Duration> {
-            it.toDurationOrNull()
-        },
+        stringParser<Duration>(body = Duration::parseOrNull),
         // java.time.Duration, will be skipped if kotlin.time.Duration is already checked
         stringParser<JavaDuration>(coveredBy = setOf(typeOf<Duration>())) {
             it.toJavaDurationOrNull()
