@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.io.StringBorderRenderingStyle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.util.PRINT
@@ -50,7 +51,8 @@ public fun <T> DataFrame<T>.print(
     columnTypes: Boolean = true,
     title: Boolean = false,
     rowIndex: Boolean = true,
-): Unit = println(renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex))
+    borderStyle: StringBorderRenderingStyle = StringBorderRenderingStyle.DottedLineWithRounderCorners,
+): Unit = println(renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex, borderStyle))
 
 // endregion
 

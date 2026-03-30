@@ -3636,13 +3636,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/PrintKt {
 	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)V
 	public static final synthetic fun print (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZ)V
 	public static final synthetic fun print (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZZ)V
-	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZZ)V
+	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZZLorg/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle;)V
 	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/DataRow;)V
 	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)V
 	public static final fun print (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;)V
 	public static synthetic fun print$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZILjava/lang/Object;)V
 	public static synthetic fun print$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZZILjava/lang/Object;)V
-	public static synthetic fun print$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZZILjava/lang/Object;)V
+	public static synthetic fun print$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZZLorg/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle;ILjava/lang/Object;)V
 	public static final fun print-XIlnkTk (Ljava/lang/String;)V
 }
 
@@ -5953,11 +5953,58 @@ public final class org/jetbrains/kotlinx/dataframe/io/RendererDecimalFormat$Comp
 	public final fun of-VVLz-gw (Ljava/lang/String;)Ljava/lang/String;
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle$Companion;
+	public abstract fun getBottomLeft ()Ljava/lang/String;
+	public abstract fun getBottomRight ()Ljava/lang/String;
+	public abstract fun getHeaderSplit ()Ljava/lang/String;
+	public abstract fun getHorizontal ()Ljava/lang/String;
+	public abstract fun getTopLeft ()Ljava/lang/String;
+	public abstract fun getTopRight ()Ljava/lang/String;
+	public abstract fun getVertical ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle$Companion {
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle$ContinuousWithRoundedCorners : org/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle$ContinuousWithRoundedCorners;
+	public fun getBottomLeft ()Ljava/lang/String;
+	public fun getBottomRight ()Ljava/lang/String;
+	public fun getHeaderSplit ()Ljava/lang/String;
+	public fun getHorizontal ()Ljava/lang/String;
+	public fun getTopLeft ()Ljava/lang/String;
+	public fun getTopRight ()Ljava/lang/String;
+	public fun getVertical ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle$ContinuousWithSquareCorners : org/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle$ContinuousWithSquareCorners;
+	public fun getBottomLeft ()Ljava/lang/String;
+	public fun getBottomRight ()Ljava/lang/String;
+	public fun getHeaderSplit ()Ljava/lang/String;
+	public fun getHorizontal ()Ljava/lang/String;
+	public fun getTopLeft ()Ljava/lang/String;
+	public fun getTopRight ()Ljava/lang/String;
+	public fun getVertical ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle$DottedLineWithRounderCorners : org/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle$DottedLineWithRounderCorners;
+	public fun getBottomLeft ()Ljava/lang/String;
+	public fun getBottomRight ()Ljava/lang/String;
+	public fun getHeaderSplit ()Ljava/lang/String;
+	public fun getHorizontal ()Ljava/lang/String;
+	public fun getTopLeft ()Ljava/lang/String;
+	public fun getTopRight ()Ljava/lang/String;
+	public fun getVertical ()Ljava/lang/String;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/StringKt {
 	public static final synthetic fun renderToString (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZZ)Ljava/lang/String;
-	public static final fun renderToString (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZZ)Ljava/lang/String;
+	public static final fun renderToString (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZZLorg/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle;)Ljava/lang/String;
 	public static synthetic fun renderToString$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;IIZZZZZILjava/lang/Object;)Ljava/lang/String;
-	public static synthetic fun renderToString$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZZILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun renderToString$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZZLorg/jetbrains/kotlinx/dataframe/io/StringBorderRenderingStyle;ILjava/lang/Object;)Ljava/lang/String;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/io/SupportedCodeGenerationFormat : org/jetbrains/kotlinx/dataframe/io/SupportedFormat {

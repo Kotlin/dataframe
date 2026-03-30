@@ -30,6 +30,7 @@ public fun AnyFrame.renderToString(
     columnTypes: Boolean = true,
     title: Boolean = false,
     rowIndex: Boolean = true,
+    borderStyle: StringBorderRenderingStyle = StringBorderRenderingStyle.DottedLineWithRounderCorners,
 ): String {
     val sb = StringBuilder()
     val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex)
@@ -45,11 +46,11 @@ public fun AnyFrame.renderToString(
 
     // top border
     if (borders) {
-        sb.append(Borders.TOP_LEFT)
-        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append('-') }
-        sb.append(Borders.TOP_RIGHT)
+        sb.append(borderStyle.topLeft)
+        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append(borderStyle.horizontal) }
+        sb.append(borderStyle.topRight)
         sb.appendLine()
-        sb.append(Borders.VERTICAL)
+        sb.append(borderStyle.vertical)
     }
 
     // header
@@ -58,41 +59,41 @@ public fun AnyFrame.renderToString(
         val str = table.header[col]
         val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
         sb.append(padded)
-        if (borders) sb.append(Borders.VERTICAL)
+        if (borders) sb.append(borderStyle.vertical)
     }
     sb.appendLine()
 
     table.types?.let { types ->
-        if (borders) sb.append(Borders.VERTICAL)
+        if (borders) sb.append(borderStyle.vertical)
         for (col in table.header.indices) {
             val len = columnLengths[col]
             val str = types[col]
             val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
             sb.append(padded)
-            if (borders) sb.append(Borders.VERTICAL)
+            if (borders) sb.append(borderStyle.vertical)
         }
         sb.appendLine()
     }
 
     // header splitter
     if (borders) {
-        sb.append(Borders.VERTICAL)
+        sb.append(borderStyle.vertical)
         for (colLength in columnLengths) {
-            repeat(colLength) { sb.append(Borders.HORIZONTAL) }
-            sb.append(Borders.HEADER_SPLIT)
+            repeat(colLength) { sb.append(borderStyle.horizontal) }
+            sb.append(borderStyle.headerSplit)
         }
         sb.appendLine()
     }
 
     // data
     for (row in 0 until table.rowsCount) {
-        if (borders) sb.append(Borders.VERTICAL)
+        if (borders) sb.append(borderStyle.vertical)
         for (col in table.values.indices) {
             val len = columnLengths[col]
             val str = table.values[col][row]
             val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
             sb.append(padded)
-            if (borders) sb.append(Borders.VERTICAL)
+            if (borders) sb.append(borderStyle.vertical)
         }
         sb.appendLine()
     }
@@ -102,9 +103,9 @@ public fun AnyFrame.renderToString(
         sb.appendLine("...")
         sb.appendLine("${size.ncol} columns x ${size.nrow} rows")
     } else if (borders) {
-        sb.append(Borders.BOTTOM_LEFT)
-        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append(Borders.HORIZONTAL) }
-        sb.append(Borders.BOTTOM_RIGHT)
+        sb.append(borderStyle.bottomLeft)
+        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append(borderStyle.horizontal) }
+        sb.append(borderStyle.bottomRight)
         sb.appendLine()
     }
     return sb.toString()
@@ -121,14 +122,46 @@ public fun AnyFrame.renderToString(
     rowIndex: Boolean = true,
 ): String = renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex)
 
-private object Borders {
-    const val TOP_LEFT = "\u230C"
-    const val TOP_RIGHT = "\u230D"
-    const val BOTTOM_LEFT = "\u230E"
-    const val BOTTOM_RIGHT = "\u230F"
-    const val HORIZONTAL = "-"
-    const val VERTICAL = "|"
-    const val HEADER_SPLIT = "|"
+public interface StringBorderRenderingStyle {
+    public val topLeft: String
+    public val topRight: String
+    public val bottomLeft: String
+    public val bottomRight: String
+    public val horizontal: String
+    public val vertical: String
+    public val headerSplit: String
+
+    public object DottedLineWithRounderCorners : StringBorderRenderingStyle {
+        public override val topLeft: String = "\u230C"
+        public override val topRight: String = "\u230D"
+        public override val bottomLeft: String = "\u230E"
+        public override val bottomRight: String = "\u230F"
+        public override val horizontal: String = "-"
+        public override val vertical: String = "|"
+        public override val headerSplit: String = "|"
+    }
+
+    public object ContinuousWithRoundedCorners : StringBorderRenderingStyle {
+        public override val topLeft: String = "╭"
+        public override val topRight: String = "╮"
+        public override val bottomLeft: String = "╰"
+        public override val bottomRight: String = "╯"
+        public override val horizontal: String = "─"
+        public override val vertical: String = "│"
+        public override val headerSplit: String = "┼"
+    }
+
+    public object ContinuousWithSquareCorners : StringBorderRenderingStyle {
+        public override val topLeft: String = "┌"
+        public override val topRight: String = "┐"
+        public override val bottomLeft: String = "└"
+        public override val bottomRight: String = "┘"
+        public override val horizontal: String = "─"
+        public override val vertical: String = "│"
+        public override val headerSplit: String = "┼"
+    }
+
+    public companion object
 }
 
 internal class PreparedTable(

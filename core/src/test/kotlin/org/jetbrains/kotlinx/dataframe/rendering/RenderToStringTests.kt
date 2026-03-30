@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.io.StringBorderRenderingStyle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import kotlin.test.Test
 import kotlin.test.assertEquals
