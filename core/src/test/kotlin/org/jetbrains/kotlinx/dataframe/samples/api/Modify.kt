@@ -41,7 +41,6 @@ import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.gt
 import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.inplace
 import org.jetbrains.kotlinx.dataframe.api.insert
@@ -64,7 +63,6 @@ import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.not
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
@@ -1298,16 +1296,6 @@ class Modify : TestBase() {
             val mean = it.data.cast<Int>().mean()
             "age [mean = $mean]"
         }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnArithmetics_not() {
-        // SampleStart
-        !df.isHappy
-        // or
-        df.isHappy.not()
         // SampleEnd
     }
 }
