@@ -2176,14 +2176,15 @@ class DataFrameTests : BaseTest() {
     fun `render to string`() {
         val expected =
             """
-                 name age   city weight
-            0   Alice  15 London     54
-            1     Bob  45  Dubai     87
-            2 Charlie  20 Moscow   null
-            3 Charlie  40  Milan   null
-            4     Bob  30  Tokyo     68
-            5   Alice  20   null     55
-            6 Charlie  30 Moscow     90
+                  name  age     city  weight
+                String  Int  String?    Int?
+            0    Alice   15   London      54
+            1      Bob   45    Dubai      87
+            2  Charlie   20   Moscow    null
+            3  Charlie   40    Milan    null
+            4      Bob   30    Tokyo      68
+            5    Alice   20     null      55
+            6  Charlie   30   Moscow      90
             """.trimIndent()
 
         typed.toString().trimIndent() shouldBe expected

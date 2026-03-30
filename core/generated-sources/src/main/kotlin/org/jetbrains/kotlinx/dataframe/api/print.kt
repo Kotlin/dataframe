@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.io.StringBorderRenderingStyle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.util.PRINT
@@ -31,15 +32,27 @@ public fun <T> DataFrame<T>.print(
     title: Boolean = false,
 ): Unit = print(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, true)
 
+@Deprecated(message = PRINT, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.print(
     rowsLimit: Int = 20,
     valueLimit: Int = 40,
     borders: Boolean = false,
     alignLeft: Boolean = false,
-    columnTypes: Boolean = false,
+    columnTypes: Boolean = true,
     title: Boolean = false,
     rowIndex: Boolean = true,
-): Unit = println(renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex))
+): Unit = print(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex)
+
+public fun <T> DataFrame<T>.print(
+    rowsLimit: Int? = 20,
+    valueLimit: Int? = 40,
+    borders: Boolean = false,
+    alignLeft: Boolean = false,
+    columnTypes: Boolean = true,
+    title: Boolean = false,
+    rowIndex: Boolean = true,
+    borderStyle: StringBorderRenderingStyle = StringBorderRenderingStyle.DottedLineWithRounderCorners,
+): Unit = println(renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex, borderStyle))
 
 // endregion
 
