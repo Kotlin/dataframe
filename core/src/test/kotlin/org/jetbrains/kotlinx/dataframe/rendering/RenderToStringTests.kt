@@ -19,7 +19,7 @@ class RenderToStringTests {
 
     @Test
     fun `default rendering`() {
-        val result = df.renderToString()
+        val result = df.renderToString(columnTypes = false)
         val expected = """
             |      name age   city
             | 0   Alice  30 Berlin
@@ -32,7 +32,7 @@ class RenderToStringTests {
 
     @Test
     fun `no index rendering`() {
-        val result = df.renderToString(rowIndex = false)
+        val result = df.renderToString(rowIndex = false, columnTypes = false)
         val expected = """
             |    name age   city
             |   Alice  30 Berlin
@@ -45,7 +45,7 @@ class RenderToStringTests {
 
     @Test
     fun `with borders`() {
-        val result = df.renderToString(borders = true, rowIndex = false)
+        val result = df.renderToString(borders = true, rowIndex = false, columnTypes = false)
         val expected = """
             |⌌---------------------⌍
             ||    name| age|   city|
@@ -61,7 +61,7 @@ class RenderToStringTests {
 
     @Test
     fun `align left`() {
-        val result = df.renderToString(alignLeft = true, rowIndex = false)
+        val result = df.renderToString(alignLeft = true, rowIndex = false, columnTypes = false)
         val expected = """
             |name    age city   
             |Alice   30  Berlin 
@@ -139,7 +139,7 @@ class RenderToStringTests {
 
     @Test
     fun `with title`() {
-        val result = df.renderToString(title = true, rowIndex = false)
+        val result = df.renderToString(title = true, rowIndex = false, columnTypes = false)
         val expected = """
             |DataFrame [3 x 3]
             |
@@ -159,7 +159,7 @@ class RenderToStringTests {
                 "l" from { "a"<Double>() }
                 "r" from { "a"<Double>() }
             }
-        }.renderToString()
+        }.renderToString(columnTypes = false)
         val expected = """
             |     a            group
             | 0 0.0 { l:0.0, r:0.0 }
@@ -170,7 +170,7 @@ class RenderToStringTests {
 
     @Test
     fun `rows limit truncates`() {
-        val result = df.renderToString(rowsLimit = 2, rowIndex = false)
+        val result = df.renderToString(rowsLimit = 2, rowIndex = false, columnTypes = false)
         val expected = """
             |  name age   city
             | Alice  30 Berlin
@@ -187,7 +187,7 @@ class RenderToStringTests {
             1, "hello",
             2, null,
         )
-        val result = nullDf.renderToString(rowIndex = false)
+        val result = nullDf.renderToString(rowIndex = false, columnTypes = false)
         val expected = """
          | a     b
          | 1 hello
