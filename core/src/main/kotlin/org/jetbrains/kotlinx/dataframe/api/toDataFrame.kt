@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
+import org.jetbrains.kotlinx.dataframe.impl.letIf
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KCallable
@@ -83,6 +84,53 @@ public fun Iterable<Map<String, Any?>>.toDataFrame(): AnyFrame {
     }
 
     return columns.toDataFrame()
+}
+
+///**
+// *
+// * @see [Map.toDataRow]
+// */
+//@JvmName("toDataFrameMapStringAnyNullable")
+//@JvmOverloads
+//public fun Iterable<Map<*, *>>.toDataFrame(
+//    maxDepth: Int = 0,
+//    convertKeysToString: Boolean = true,
+//    unfoldIterablesOfMaps: Boolean = true,
+//): AnyFrame {
+//    val list = asList()
+//    if (list.isEmpty()) return DataFrame.empty()
+//
+//    val allKeys = mutableSetOf<ColumnPath>()
+//    for (row in this) {
+//        val keys = try {
+//            row.keys
+//                .letIf(convertKeysToString) { keys -> keys.mapTo(mutableSetOf()) { it.toString() } }
+//                .map { ColumnPath(it) }
+//        } catch (e: ClassCastException) {
+//
+//        }
+//
+//        allKeys.addAll(row.keys)
+//    }
+//
+//    val columns = allKeys.map { key ->
+//        val values = ArrayList<Any?>(list.size)
+//        for (row in this) {
+//            values.add(row[key])
+//        }
+//        DataColumn.createByInference(key, values)
+//    }
+//
+//    return columns.toDataFrame()
+//}
+//
+internal fun Iterable<Map<*, *>>.toDataFrameImpl(
+    maxDepth: Int,
+    convertKeysToString: Boolean,
+    unfoldIterablesOfMaps: Boolean,
+    currentPath: ColumnPath,
+): AnyFrame {
+TODO()
 }
 
 @JvmName("toDataFrameAnyColumn")

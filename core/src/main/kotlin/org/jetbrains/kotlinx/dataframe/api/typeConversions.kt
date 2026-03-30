@@ -176,7 +176,7 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
  *
  * #### For example:
  *
- * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]`().`[asColumnGroup][SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[select][select]` { `[first][ColumnsSelectionDsl.first]`().`[asColumnGroup][SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
  *
  * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  * @param [C\] The type of the (group) column.
@@ -424,40 +424,82 @@ public fun AnyRow.toMap(): Map<String, Any?> = df().columns().associate { it.nam
  * @param maxDepth How deep the recursion should go, converting [maps][Map] to [data rows][DataRow]. The default is 0; only top-level.
  * @param convertKeysToString If true, non-string keys are converted to [strings][String]. Default is `true`.
  *   If false, nested [maps][Map] with non-string keys are ignored.
+ * @param unfoldIterablesOfMaps If true, values containing an [Iterable] of [Maps][Map]
+ *   are unfolded into [dataframes][DataFrame], forming a [FrameColumn]. Default is `true`.
  * @see [Iterable.toDataFrame]
  */
 @JvmOverloads
-public fun Map<*, *>.toDataRow(maxDepth: Int = 0, convertKeysToString: Boolean = true): DataRow<*> {
-    fun Map<*, *>.recurse(currentDepth: Int): DataRow<*> {
-        val mapped = this
-            .letIf(convertKeysToString) { map -> map.mapKeys { it.key.toString() } }
-            .mapValues { (_, value) ->
-                when (value) {
-                    is Map<*, *> if currentDepth < maxDepth -> {
-                        @Suppress("UNCHECKED_CAST")
-                        try {
-                            (value as Map<String, Any?>).recurse(currentDepth + 1)
-                        } catch (_: ClassCastException) {
-                            value
-                        }
-                    }
-
-                    else -> value
-                }.let(::listOf)
-            }
-
-        @Suppress("UNCHECKED_CAST")
-        val df = (mapped as Map<String, List<Any?>>).toDataFrame()
-        return DataRowImpl(0, df)
-    }
-    return try {
-        this.recurse(0)
+public fun Map<*, *>.toDataRow(
+    maxDepth: Int = 0,
+    convertKeysToString: Boolean = true,
+    unfoldIterablesOfMaps: Boolean = true,
+): DataRow<*> =
+    try {
+        this.toDataRowImpl(
+            maxDepth = 0,
+            convertKeysToString = convertKeysToString,
+            unfoldIterablesOfMaps = unfoldIterablesOfMaps,
+            currentPath = ColumnPath.EMPTY,
+        )
     } catch (e: ClassCastException) {
         throw IllegalArgumentException(
             "Toplevel map keys must be strings for conversion to DataRow. Set `convertKeysToString = true` to convert them automatically.",
             e,
         )
     }
+
+internal fun Map<*, *>.toDataRowImpl(
+    maxDepth: Int,
+    convertKeysToString: Boolean,
+    unfoldIterablesOfMaps: Boolean,
+    currentPath: ColumnPath,
+): DataRow<*> {
+    val currentDepth = currentPath.size
+    val mapped: Map<String, List<Any?>> = this
+        .mapKeys { (key, _) ->
+            if (convertKeysToString) {
+                currentPath + key.toString()
+            } else {
+                currentPath + (key as String)
+            }
+        }
+        .mapValues { (key, value) ->
+            when (value) {
+                is Map<*, *> if currentDepth < maxDepth -> {
+                    @Suppress("UNCHECKED_CAST")
+                    try {
+                        (value as Map<String, Any?>).toDataRowImpl(
+                            maxDepth = maxDepth,
+                            convertKeysToString = convertKeysToString,
+                            unfoldIterablesOfMaps = unfoldIterablesOfMaps,
+                            currentPath = key,
+                        )
+                    } catch (_: ClassCastException) {
+                        value
+                    }
+                }
+
+                is Iterable<*> if unfoldIterablesOfMaps && currentDepth < maxDepth -> {
+                    @Suppress("UNCHECKED_CAST")
+                    try {
+                        (value as Iterable<Map<String, Any?>>).toDataFrameImpl(
+                            maxDepth = maxDepth,
+                            convertKeysToString = convertKeysToString,
+                            unfoldIterablesOfMaps = true,
+                            currentPath = key,
+                        )
+                    } catch (_: ClassCastException) {
+                        value
+                    }
+                }
+
+                else -> value
+            }.let(::listOf)
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    val df = mapped.toDataFrame()
+    return DataRowImpl(0, df)
 }
 
 // endregion
