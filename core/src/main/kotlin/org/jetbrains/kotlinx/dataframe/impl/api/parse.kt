@@ -98,10 +98,21 @@ internal open class DelegatedStringParser<T>(
     override fun applyOptions(options: ParserOptions?): (String) -> T? = handle
 }
 
+internal typealias ParserFunction<T> = (String) -> T?
+
+/** Tiny helper function to create a correctly typed [ParserFunction]`<T>`, aka `(String) -> T?`. */
+internal fun <T> parseBy(body: ParserFunction<T>): ParserFunction<T> = body
+
+/**
+ * [ParserFunction] that aways returns `null`.
+ * Useful if a parser needs to be skipped based on the provided [ParserOptions].
+ */
+internal val SKIP_PARSER: ParserFunction<Nothing?> = parseBy { null }
+
 internal class StringParserWithFormat<T>(
     override val type: KType,
     override val coveredBy: Collection<KType>,
-    val getParser: (ParserOptions?) -> ((String) -> T?),
+    val getParser: (ParserOptions?) -> ParserFunction<T>,
 ) : StringParser<T> {
     override fun toConverter(options: ParserOptions?): TypeConverter {
         val handler = getParser(options)
@@ -305,7 +316,7 @@ internal object Parsers : GlobalParserOptions {
     inline fun <reified T : Any> stringParser(
         catch: Boolean = false,
         coveredBy: Set<KType> = emptySet(),
-        noinline body: (String) -> T?,
+        noinline body: ParserFunction<T>,
     ): StringParser<T> =
         if (catch) {
             DelegatedStringParser(typeOf<T>(), coveredBy) {
@@ -317,21 +328,19 @@ internal object Parsers : GlobalParserOptions {
 
     inline fun <reified T : Any> stringParserWithOptions(
         coveredBy: Set<KType> = emptySet(),
-        noinline body: (ParserOptions?) -> ((String) -> T?),
+        noinline body: (ParserOptions?) -> (ParserFunction<T>),
     ): StringParserWithFormat<T> = StringParserWithFormat(typeOf<T>(), coveredBy, body)
 
     private val parserToDoubleWithOptions = stringParserWithOptions { options ->
         val fastDoubleParser = FastDoubleParser(options)
-        val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
-        parser
+        fastDoubleParser::parseOrNull
     }
 
     // same as parserToDoubleWithOptions, but overrides the locale to C.UTF-8
     private val posixParserToDoubleWithOptions = stringParserWithOptions { options ->
         val parserOptions = (options ?: ParserOptions()).copy(locale = Locale.forLanguageTag("C.UTF-8"))
         val fastDoubleParser = FastDoubleParser(parserOptions)
-        val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
-        parser
+        fastDoubleParser::parseOrNull
     }
 
     // TODO rewrite using parser service later https://github.com/Kotlin/dataframe/issues/962
@@ -433,14 +442,13 @@ internal object Parsers : GlobalParserOptions {
         // kotlin.time.Instant
         stringParserWithOptions<StdlibInstant> {
             val parseExperimentalInstant = it?.parseExperimentalInstant ?: this.parseExperimentalInstant
-            val parser = { it: String ->
+            parseBy {
                 if (parseExperimentalInstant) {
                     it.toInstantOrNull()
                 } else {
                     null
                 }
             }
-            parser
         },
         // kotlinx.datetime.Instant
         stringParser<DeprecatedInstant> {
@@ -502,7 +510,7 @@ internal object Parsers : GlobalParserOptions {
         stringParser<Boolean> { it.toBooleanOrNull() },
         // Uuid
         stringParserWithOptions<Uuid> { options ->
-            val parser = { str: String ->
+            parseBy { str: String ->
                 val parseExperimentalUuid = options?.parseExperimentalUuid ?: this.parseExperimentalUuid
                 when {
                     !parseExperimentalUuid -> null
@@ -518,7 +526,6 @@ internal object Parsers : GlobalParserOptions {
                     else -> null
                 }
             }
-            parser
         },
         // BigInteger
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
