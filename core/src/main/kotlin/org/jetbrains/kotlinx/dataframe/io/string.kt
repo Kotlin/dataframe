@@ -100,6 +100,7 @@ public fun AnyFrame.renderToString(
     // footer
     if (table.totalRows > table.rowsCount) {
         sb.appendLine("...")
+        sb.appendLine("${size.ncol} columns x ${size.nrow} rows")
     } else if (borders) {
         sb.append(Borders.BOTTOM_LEFT)
         repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append(Borders.HORIZONTAL) }
