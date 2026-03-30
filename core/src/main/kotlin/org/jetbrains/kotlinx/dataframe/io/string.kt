@@ -33,7 +33,7 @@ public fun AnyFrame.renderToString(
     val sb = StringBuilder()
     val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex)
     val columnLengths = table.values.mapIndexed { col, vals ->
-        (vals + table.header[col] + (table.types?.get(col) ?: "")).maxOf { it.length } + 1
+        (vals + table.header[col] + (table.types?.get(col) ?: "")).maxOf { it.length } + 2
     }
 
     // title
