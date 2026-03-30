@@ -31,9 +31,20 @@ public fun <T> DataFrame<T>.print(
     title: Boolean = false,
 ): Unit = print(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, true)
 
+@Deprecated(message = PRINT, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.print(
     rowsLimit: Int = 20,
     valueLimit: Int = 40,
+    borders: Boolean = false,
+    alignLeft: Boolean = false,
+    columnTypes: Boolean = true,
+    title: Boolean = false,
+    rowIndex: Boolean = true,
+): Unit = print(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex)
+
+public fun <T> DataFrame<T>.print(
+    rowsLimit: Int? = 20,
+    valueLimit: Int? = 40,
     borders: Boolean = false,
     alignLeft: Boolean = false,
     columnTypes: Boolean = true,
