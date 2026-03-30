@@ -1,10 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
+import io.kotest.matchers.ints.shouldBeGreaterThan
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -196,5 +199,22 @@ class RenderToStringTests {
          |
         """.trimMargin()
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `render rows unlimited`() {
+        val result = List(500) { it }.toDataFrame {
+            "i" from { it }
+            "hash" from { it.hashCode().toString() }
+        }.renderToString(rowsLimit = null)
+
+        // header + data + empty newline
+        result.lines().size shouldBe 503
+    }
+
+    @Test
+    fun `render values unlimited`() {
+        val result = dataFrameOf("a")("abc".repeat(100)).renderToString(valueLimit = null)
+        result.lines().maxOf { it.length } shouldBeGreaterThan 300
     }
 }
