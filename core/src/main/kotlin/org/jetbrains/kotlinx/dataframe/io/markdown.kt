@@ -4,8 +4,8 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.size
 
 public fun AnyFrame.renderToMarkdown(
-    rowsLimit: Int = 20,
-    valueLimit: Int = 40,
+    rowsLimit: Int? = 20,
+    valueLimit: Int? = 40,
     alignLeft: Boolean = false,
     columnTypes: Boolean = false,
     title: Boolean = false,
@@ -44,9 +44,9 @@ public fun AnyFrame.renderToMarkdown(
     }
 
     // footer
-    if (table.totalRows > rowsLimit) {
+    if (table.totalRows > table.rowsCount) {
         sb.appendLine()
-        sb.appendLine("*... ${table.totalRows - rowsLimit} more rows*")
+        sb.appendLine("*... ${table.totalRows - table.rowsCount} more rows*")
     }
     return sb.toString()
 }

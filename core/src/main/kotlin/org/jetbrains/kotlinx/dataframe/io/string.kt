@@ -19,11 +19,12 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.util.PRINT
 import java.math.BigDecimal
 
 public fun AnyFrame.renderToString(
-    rowsLimit: Int = 20,
-    valueLimit: Int = 40,
+    rowsLimit: Int? = 20,
+    valueLimit: Int? = 40,
     borders: Boolean = false,
     alignLeft: Boolean = false,
     columnTypes: Boolean = true,
@@ -108,6 +109,17 @@ public fun AnyFrame.renderToString(
     return sb.toString()
 }
 
+@Deprecated(message = PRINT, level = DeprecationLevel.HIDDEN)
+public fun AnyFrame.renderToString(
+    rowsLimit: Int = 20,
+    valueLimit: Int = 40,
+    borders: Boolean = false,
+    alignLeft: Boolean = false,
+    columnTypes: Boolean = true,
+    title: Boolean = false,
+    rowIndex: Boolean = true,
+): String = renderToString(rowsLimit, valueLimit, borders, alignLeft, columnTypes, title, rowIndex)
+
 private object Borders {
     const val TOP_LEFT = "\u230C"
     const val TOP_RIGHT = "\u230D"
@@ -127,13 +139,13 @@ internal class PreparedTable(
 )
 
 internal fun AnyFrame.prepareTable(
-    rowsLimit: Int,
-    valueLimit: Int,
+    rowsLimit: Int?,
+    valueLimit: Int?,
     columnTypes: Boolean,
     rowIndex: Boolean,
     escapeValue: (String) -> String = { it },
 ): PreparedTable {
-    val rowsCount = rowsLimit.coerceAtMost(nrow)
+    val rowsCount = rowsLimit?.coerceAtMost(nrow) ?: rowsCount()
     val cols = if (rowIndex) listOf((0..<rowsCount).toColumn()) + columns() else columns()
     val header = cols.map { col -> col.name() }
     val types = if (columnTypes) {
@@ -148,7 +160,7 @@ internal fun AnyFrame.prepareTable(
         null
     }
     val values = cols.map { col ->
-        val top = col.take(rowsLimit)
+        val top = col.take(rowsCount)
         val precision = if (top.isNumber()) {
             top.asNumbers().scale()
         } else if (top.isColumnGroup()) {
@@ -161,7 +173,7 @@ internal fun AnyFrame.prepareTable(
         val decimalFormat =
             if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
         top.values().map {
-            escapeValue(renderValueForStdout(it, valueLimit, decimalFormat = decimalFormat).truncatedContent)
+            escapeValue(renderValueForStdout(it, valueLimit ?: -1, decimalFormat = decimalFormat).truncatedContent)
         }
     }
     return PreparedTable(header, types, values, rowsCount, nrow)
