@@ -118,7 +118,7 @@ private object Borders {
     const val HEADER_SPLIT = "|"
 }
 
-private class PreparedTable(
+internal class PreparedTable(
     val header: List<String>,
     val types: List<String>?,
     val values: List<List<String>>,
@@ -126,7 +126,7 @@ private class PreparedTable(
     val totalRows: Int,
 )
 
-private fun AnyFrame.prepareTable(
+internal fun AnyFrame.prepareTable(
     rowsLimit: Int,
     valueLimit: Int,
     columnTypes: Boolean,
@@ -134,14 +134,8 @@ private fun AnyFrame.prepareTable(
     escapeValue: (String) -> String = { it },
 ): PreparedTable {
     val rowsCount = rowsLimit.coerceAtMost(nrow)
-    val cols = if (rowIndex) listOf((0 until rowsCount).toColumn()) + columns() else columns()
-    val header = cols.mapIndexed { colIndex, col ->
-        if (columnTypes && (!rowIndex || colIndex > 0)) {
-            col.name()
-        } else {
-            col.name()
-        }
-    }
+    val cols = if (rowIndex) listOf((0..<rowsCount).toColumn()) + columns() else columns()
+    val header = cols.map { col -> col.name() }
     val types = if (columnTypes) {
         cols.mapIndexed { colIndex, col ->
             if (!rowIndex || colIndex > 0) {
@@ -171,54 +165,6 @@ private fun AnyFrame.prepareTable(
         }
     }
     return PreparedTable(header, types, values, rowsCount, nrow)
-}
-
-public fun AnyFrame.renderToMarkdown(
-    rowsLimit: Int = 20,
-    valueLimit: Int = 40,
-    alignLeft: Boolean = false,
-    columnTypes: Boolean = false,
-    title: Boolean = false,
-    rowIndex: Boolean = true,
-): String {
-    val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex) { it.replace("|", "\\|") }
-
-    val sb = StringBuilder()
-    if (title) {
-        sb.appendLine("**DataFrame [${size()}]**")
-        sb.appendLine()
-    }
-
-    // header
-    sb.append("|")
-    for ((i, col) in table.header.withIndex()) {
-        val type = table.types?.getOrNull(i)?.takeIf { it.isNotEmpty() }?.let { ":$it" } ?: ""
-        sb.append(" ${col.replace("|", "\\|")}$type |")
-    }
-    sb.appendLine()
-
-    // separator
-    sb.append("|")
-    repeat(table.header.size) {
-        sb.append(if (alignLeft) ":---|" else "---:|")
-    }
-    sb.appendLine()
-
-    // data
-    for (row in 0 until table.rowsCount) {
-        sb.append("|")
-        for (col in table.values.indices) {
-            sb.append(" ${table.values[col][row]} |")
-        }
-        sb.appendLine()
-    }
-
-    // footer
-    if (table.totalRows > rowsLimit) {
-        sb.appendLine()
-        sb.appendLine("*... ${table.totalRows - rowsLimit} more rows*")
-    }
-    return sb.toString()
 }
 
 internal const val VALUE_TO_STRING_LIMIT_DEFAULT = 1000
