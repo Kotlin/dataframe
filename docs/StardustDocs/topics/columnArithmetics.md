@@ -3,8 +3,8 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
 Kotlin DataFrame provides operators for applying simple arithmetic, logical, string, and comparison operations
-to [`DataColumn`](DataColumn.md) and `ColumnReference` values. These operations include, for example, adding a value to a column,
-multiplying a column by a value, and comparing elements in a column with a value.
+to [`DataColumn`](DataColumn.md) and `ColumnReference` values. These operations include, for example, adding a value 
+to each cell in a column, multiplying a column by a value, and comparing elements in a column with a value.
 
 ## When useful
 
@@ -17,6 +17,8 @@ For example, when building temporary plotting expressions.
 If distance is stored in meters, but you need to [`plot`](https://kotlin.github.io/kandy/welcome.html) it in kilometers, 
 you can convert it directly in the plotting expression without having to create a temporary column in your dataframe just for plotting. 
 
+<!---FUN columnArithmetics_kandy-->
+
 ```kotlin
 df.plot {
     line {
@@ -26,6 +28,8 @@ df.plot {
 }
 ```
 
+<!---END-->
+
 ## Not
 Negates Boolean values in a [`DataColumn`](DataColumn.md) (`ColumnReference`). 
 Returns a result of the same type.
@@ -33,9 +37,9 @@ Returns a result of the same type.
 <!---FUN columnArithmetics_not-->
 
 ```kotlin
-!df.isHappy
+df.select { !isHappy }
 // or
-df.isHappy.not()
+!df.isHappy
 ```
 
 <!---END-->
@@ -49,19 +53,29 @@ In all cases, a [`DataColumn`](DataColumn.md) (`ColumnReference`) is returned.
 ### Column plus value or value plus column
 Adds the value to each element of the column. The value can appear on either side of the operator.
 
+<!---FUN columnArithmetics_addition-->
+
 ```kotlin
-df.amount + 10
-5.0 + df.amount
+transactions.amount + 10
+5.0 + transactions.amount
 ```
+
+<!---END-->
 
 `null` values are not changed by this operation.
 
 ### Column plus String
 Converts each element of the column to a String and concatenates it with the value.
 
+<!---FUN columnArithmetics_concatenation-->
+
 ```kotlin
-df.amount + "€"
+weather.select { temperature + " °C" }
+// or
+weather.temperature + " °C"
 ```
+
+<!---END-->
 
 `null` values are converted to the string `"null"`.
 
@@ -70,9 +84,13 @@ df.amount + "€"
 ### Column minus value
 Subtracts the value from each element of the column.
 
+<!---FUN columnArithmetics_column_minus_value-->
+
 ```kotlin
-df.amount - 10.0
+transactions.amount - 10.0
 ```
+
+<!---END-->
 
 `null` values are not changed by this operation.
 
@@ -80,28 +98,40 @@ df.amount - 10.0
 Subtracts each element of the column from the value and returns a [`DataColumn`](DataColumn.md) (`ColumnReference`) 
 with the results of the subtractions.
 
+<!---FUN columnArithmetics_value_minus_column-->
+
 ```kotlin
-100 - df.amount
+100 - transactions.amount
 ```
+
+<!---END-->
 
 `null` values from the original column remain `null` values in the resulting column.
 
 ## Unary minus
 Flips the sign of each element in the column.
 
+<!---FUN columnArithmetics_unary_minus-->
+
 ```kotlin
--df.expenses
+-transactions.amount
 ```
+
+<!---END-->
 
 `null` values are not changed by this operation.
 
 ## Times
 Multiplies each element of the column by the value.
 
+<!---FUN columnArithmetics_times-->
+
 ```kotlin
-df.distanceKm * 1000.0
-df.price * BigDecimal("1.20")
+routes.distanceKm * 1000.0
+products.price * BigDecimal("1.20")
 ```
+
+<!---END-->
 
 `null` values are not changed by this operation.
 
@@ -111,17 +141,26 @@ Division by zero follows Kotlin semantics of the underlying type.
 ### Divide column by value
 Divides each element of the column by the value.
 
+<!---FUN columnArithmetics_column_div_value-->
+
 ```kotlin
-df.distanceMeters / 1000.0
+products.weightGrams / 1000.0
 ```
+
+<!---END-->
 
 ### Divide value by column
 Divides the value by each element of the column and returns a [`DataColumn`](DataColumn.md) (`ColumnReference`)
 with the results of the divisions.
 
+<!---FUN columnArithmetics_value_div_column-->
+
 ```kotlin
-40 / df.hoursPerTask
+40 / tasks.hoursPerTask
 ```
+
+<!---END-->
+
 If an element of the column is `null`, the corresponding value in the resulting column is also `null`.
 
 ## Compare
@@ -131,27 +170,43 @@ Each of them returns a [`DataColumn`](DataColumn.md) of `Boolean` values.
 ### eq
 Compares each element of a [`DataColumn`](DataColumn.md) with the value for equality using the `==` operator.
 
+<!---FUN columnArithmetics_eq-->
+
 ```kotlin
-df.status eq "canceled"
+orders.status eq "canceled"
 ```
+
+<!---END-->
 
 ### neq
 Compares each element of a [`DataColumn`](DataColumn.md) with the value for inequality using the `!=` operator.
 
+<!---FUN columnArithmetics_neq-->
+
 ```kotlin
-df.status neq "completed"
+orders.status neq "completed"
 ```
+
+<!---END-->
 
 ### gt
 Compares each element of a [`DataColumn`](DataColumn.md) with the value using the `>` operator.
 
+<!---FUN columnArithmetics_gt-->
+
 ```kotlin
-df.orderCost gt 1000
+orders.cost gt 1000.0
 ```
+
+<!---END-->
 
 ### lt
 Compares each element of a [`DataColumn`](DataColumn.md) with the value using the `<` operator.
 
+<!---FUN columnArithmetics_lt-->
+
 ```kotlin
-df.orderCost lt 20
+orders.cost lt 20.0
 ```
+
+<!---END-->

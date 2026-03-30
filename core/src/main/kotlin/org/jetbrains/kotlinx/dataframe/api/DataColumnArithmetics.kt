@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_COLUMN_TYPE
 import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_EXAMPLE
 import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_INT_NOTE
@@ -56,6 +55,7 @@ import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_SEE_ALSO
 import org.jetbrains.kotlinx.dataframe.api.UnaryMinusDocs.UNARY_MINUS_COLUMN_TYPE
 import org.jetbrains.kotlinx.dataframe.api.UnaryMinusDocs.UNARY_MINUS_NULL_NOTE
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -70,12 +70,15 @@ import java.math.BigInteger
  * ### Example
  * ```kotlin
  * // Given a DataFrame of financial transactions,
- * // create a column indicating which transactions failed
- * val failed = !df.isSuccessful.rename("failed")
+ * // find which transactions failed
+ * df.select { !isSuccessful }
+ * // or
+ * !df.isSuccessful
  * ```
  *
  * @return {@get [NOT_RETURN]}
  */
+@ExcludeFromSources
 private interface NotDocs {
     // type of the column accepted and returned by the function
     typealias NOT_COLUMN_TYPE = Nothing
@@ -92,8 +95,8 @@ private interface NotDocs {
 
 /**
  * @include [NotDocs]
- * {@set [NOT_DESCRIPTION] Each element in this [column][DataColumn] is transformed
- * using the logical `not` operation: `true` becomes `false`, and `false` becomes `true`.}
+ * @set [NOT_DESCRIPTION] Each element in this [column][DataColumn] is transformed
+ * using the logical `not` operation: `true` becomes `false`, and `false` becomes `true`.
  * @set [NOT_RETURN] A [DataColumn] containing the negated [Boolean] values of this [column][DataColumn].
  */
 public operator fun DataColumn<Boolean>.not(): DataColumn<Boolean> = map { !it }
@@ -101,8 +104,8 @@ public operator fun DataColumn<Boolean>.not(): DataColumn<Boolean> = map { !it }
 /**
  * @include [NotDocs]
  * @set [NOT_NULL_NOTE] Each `null` value in the original [DataColumn] is preserved.
- * {@set [NOT_DESCRIPTION] Non-null values are transformed using the logical `not` operation:
- * `true` becomes `false`, and `false` becomes `true`. `null` values remain `null`.}
+ * @set [NOT_DESCRIPTION] Non-null values are transformed using the logical `not` operation:
+ * `true` becomes `false`, and `false` becomes `true`. `null` values remain `null`.
  * @set [NOT_RETURN] A [DataColumn] containing the negated [Boolean] values of this [column][DataColumn],
  * while preserving `null` values.
  */
@@ -112,8 +115,8 @@ public operator fun DataColumn<Boolean?>.not(): DataColumn<Boolean?> = map { it?
 /**
  * @include [NotDocs]
  * @set [NOT_COLUMN_TYPE] [ColumnReference]
- * {@set [NOT_DESCRIPTION] Each value in this [reference][ColumnReference] is transformed
- * using the logical `not` operation: `true` becomes `false`, and `false` becomes `true`.}
+ * @set [NOT_DESCRIPTION] Each value in this [reference][ColumnReference] is transformed
+ * using the logical `not` operation: `true` becomes `false`, and `false` becomes `true`.
  * @set [NOT_RETURN] A [ColumnReference] containing the negated [Boolean] values of this [reference][ColumnReference].
  */
 public operator fun ColumnReference<Boolean>.not(): ColumnReference<Boolean> = map { !it }
@@ -122,10 +125,10 @@ public operator fun ColumnReference<Boolean>.not(): ColumnReference<Boolean> = m
  * @include [NotDocs]
  * @set [NOT_COLUMN_TYPE] [ColumnReference]
  * @set [NOT_NULL_NOTE] Each `null` value in the original [ColumnReference] is preserved.
- * {@set [NOT_DESCRIPTION] Non-null values are transformed using the logical `not` operation:
- * `true` becomes `false`, and `false` becomes `true`. `null` values remain `null`.}
- * {@set [NOT_RETURN] A [ColumnReference] containing the negated [Boolean] values of the original [reference][ColumnReference],
- * while preserving `null` values.}
+ * @set [NOT_DESCRIPTION] Non-null values are transformed using the logical `not` operation:
+ * `true` becomes `false`, and `false` becomes `true`. `null` values remain `null`.
+ * @set [NOT_RETURN] A [ColumnReference] containing the negated [Boolean] values
+ * of the original [reference][ColumnReference], while preserving `null` values.
  */
 @JvmName("notBooleanNullable")
 public operator fun ColumnReference<Boolean?>.not(): ColumnReference<Boolean?> = map { it?.not() }
@@ -156,6 +159,7 @@ public operator fun ColumnReference<Boolean?>.not(): ColumnReference<Boolean?> =
  * @return A {@get [COLUMN_PLUS_NUMBER_COLUMN_TYPE] [DataColumn]} containing the results of adding [\value]
  * to each element of this {@get [COLUMN_PLUS_NUMBER_COLUMN_TYPE] [DataColumn]}.
  */
+@ExcludeFromSources
 private interface ColumnPlusNumberDocs {
     // the type of the column accepted and returned by the function
     typealias COLUMN_PLUS_NUMBER_COLUMN_TYPE = Nothing
@@ -182,7 +186,8 @@ public operator fun DataColumn<Int>.plus(value: Int): DataColumn<Int> = map { it
 /**
  * @include [ColumnPlusNumberDocs]
  * @set [COLUMN_PLUS_NUMBER_COLUMN_TYPE] [ColumnReference]
- * @set [COLUMN_PLUS_NUMBER_SEE_ALSO] [minus][ColumnReference.minus], [times][ColumnReference.times], [div][ColumnReference.div]
+ * @set [COLUMN_PLUS_NUMBER_SEE_ALSO] [minus][ColumnReference.minus],
+ * [times][ColumnReference.times], [div][ColumnReference.div]
  */
 public operator fun ColumnReference<Int>.plus(value: Int): ColumnReference<Int> = map { it + value }
 
@@ -232,9 +237,9 @@ public operator fun DataColumn<BigDecimal>.plus(value: BigDecimal): DataColumn<B
 
 /**
  * @include [ColumnPlusNumberDocs]
- * {@set [COLUMN_PLUS_NUMBER_EXAMPLE] // Given a DataFrame of current disks usage in bits,
+ * @set [COLUMN_PLUS_NUMBER_EXAMPLE] // Given a DataFrame of current disks usage in bits,
  * // compute the total disks usage if the size of a file is added
- * val totalDisksUsage = df.diskUsage + BigInteger("12345678900")}
+ * val totalDisksUsage = df.diskUsage + BigInteger("12345678900")
  * @set [COLUMN_PLUS_NUMBER_SEE_ALSO] [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div]
  */
 public operator fun DataColumn<BigInteger>.plus(value: BigInteger): DataColumn<BigInteger> = map { it + value }
@@ -264,6 +269,7 @@ public operator fun DataColumn<BigInteger>.plus(value: BigInteger): DataColumn<B
  * @return A {@get [NUMBER_PLUS_COLUMN_COLUMN_TYPE] [DataColumn]} containing the results of adding
  * the corresponding element of [\column] to this {@get [NUMBER_PLUS_COLUMN_NUMBER_TYPE] [Int]}.
  */
+@ExcludeFromSources
 private interface NumberPlusColumnDocs {
     // the type of the column passed to the function and returned by the function
     typealias NUMBER_PLUS_COLUMN_COLUMN_TYPE = Nothing
@@ -300,8 +306,8 @@ public operator fun Int.plus(column: ColumnReference<Int>): ColumnReference<Int>
 
 /**
  * @include [NumberPlusColumnDocs]
- * {@set [NUMBER_PLUS_COLUMN_NULL_NOTE] `null` values from the original [column]
- * remain `null` values in the resulting [DataColumn].}
+ * @set [NUMBER_PLUS_COLUMN_NULL_NOTE] `null` values from the original [column]
+ * remain `null` values in the resulting [DataColumn].
  * @set [NUMBER_PLUS_COLUMN_SEE_ALSO] [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div]
  */
 @JvmName("plusNullable")
@@ -350,9 +356,9 @@ public operator fun BigDecimal.plus(column: DataColumn<BigDecimal>): DataColumn<
 /**
  * @include [NumberPlusColumnDocs]
  * @set [NUMBER_PLUS_COLUMN_NUMBER_TYPE] [BigInteger]
- * {@set [NUMBER_PLUS_COLUMN_EXAMPLE] // Given the current disk usage in bits,
+ * @set [NUMBER_PLUS_COLUMN_EXAMPLE] // Given the current disk usage in bits,
  * // and a DataFrame of file sizes in bits, compute the total disk usage if each file is added
- * val diskUsage = BigInteger("12345678900") + df.fileSize}
+ * val diskUsage = BigInteger("12345678900") + df.fileSize
  * @set [NUMBER_PLUS_COLUMN_SEE_ALSO] [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div]
  */
 public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<BigInteger> = column.map { this + it }
@@ -370,9 +376,10 @@ public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<
  *
  * ### Example
  * ```kotlin
- * // Given a DataFrame of expenses to display in a report,
- * // create a column with a currency symbol appended to each expense amount
- * val price = df.amount + "€"
+ * // Given a DataFrame of temperature measurements, display temperatures with units
+ * df.select { temperature + " °C" }
+ * // or
+ * df.temperature + " °C"
  * ```
  *
  * See also {@get [COLUMN_PLUS_STRING_SEE_ALSO] [plus][DataColumn.plus]}.
@@ -382,6 +389,7 @@ public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<
  * @return A {@get [COLUMN_PLUS_STRING_RETURN_TYPE] [DataColumn]} of [String] values where each element is the result
  * of concatenating the corresponding element of this {@get [COLUMN_PLUS_STRING_RECEIVER] [AnyCol]} with [\str].
  */
+@ExcludeFromSources
 private interface ColumnPlusStringDocs {
     // type of the column on which the function is applied
     typealias COLUMN_PLUS_STRING_RECEIVER = Nothing
@@ -454,7 +462,8 @@ public operator fun DataColumn<Int>.minus(value: Int): DataColumn<Int> = map { i
 /**
  * @include [ColumnMinusNumberDocs]
  * @set [COLUMN_MINUS_NUMBER_COLUMN_TYPE] [ColumnReference]
- * @set [COLUMN_MINUS_NUMBER_SEE_ALSO] [plus][ColumnReference.plus], [times][ColumnReference.times], [div][ColumnReference.div]
+ * @set [COLUMN_MINUS_NUMBER_SEE_ALSO] [plus][ColumnReference.plus],
+ * [times][ColumnReference.times], [div][ColumnReference.div]
  */
 public operator fun ColumnReference<Int>.minus(value: Int): ColumnReference<Int> = map { it - value }
 
@@ -498,9 +507,9 @@ public operator fun DataColumn<BigDecimal>.minus(value: BigDecimal): DataColumn<
 
 /**
  * @include [ColumnMinusNumberDocs]
- * {@set [COLUMN_MINUS_NUMBER_EXAMPLE] // Given a DataFrame of current disks usage in bits,
+ * @set [COLUMN_MINUS_NUMBER_EXAMPLE] // Given a DataFrame of current disks usage in bits,
  * // compute the total disks usage if a file is deleted
- * val totalDisksUsage = df.diskUsage - BigInteger("12345678900")}
+ * val totalDisksUsage = df.diskUsage - BigInteger("12345678900")
  */
 public operator fun DataColumn<BigInteger>.minus(value: BigInteger): DataColumn<BigInteger> = map { it - value }
 
@@ -605,10 +614,10 @@ public operator fun BigDecimal.minus(column: DataColumn<BigDecimal>): DataColumn
 
 /**
  * @include [NumberMinusColumnDocs]
- * {@set [NUMBER_MINUS_COLUMN_NUMBER_TYPE] [BigInteger]}
- * {@set [NUMBER_MINUS_COLUMN_EXAMPLE] // Given the current disk usage in bits,
+ * @set [NUMBER_MINUS_COLUMN_NUMBER_TYPE] [BigInteger]
+ * @set [NUMBER_MINUS_COLUMN_EXAMPLE] // Given the current disk usage in bits,
  * // and a DataFrame of file sizes in bits, compute the total disk usage if any file is deleted
- * val diskUsage = BigInteger("12345678900") - df.fileSize}
+ * val diskUsage = BigInteger("12345678900") - df.fileSize
  */
 public operator fun BigInteger.minus(column: DataColumn<BigInteger>): DataColumn<BigInteger> = column.map { this - it }
 
@@ -635,6 +644,7 @@ public operator fun BigInteger.minus(column: DataColumn<BigInteger>): DataColumn
  * @return A {@get [UNARY_MINUS_COLUMN_TYPE] [DataColumn]} containing negatives
  * of the corresponding elements of this {@get [UNARY_MINUS_COLUMN_TYPE] [DataColumn]}.
  */
+@ExcludeFromSources
 private interface UnaryMinusDocs {
     // the type of the column accepted and returned by the function
     typealias UNARY_MINUS_COLUMN_TYPE = Nothing
@@ -709,6 +719,7 @@ public operator fun DataColumn<BigInteger>.unaryMinus(): DataColumn<BigInteger> 
  * @return A {@get [TIMES_COLUMN_TYPE] [DataColumn]} containing the results
  * of multiplying each element of this {@get [TIMES_COLUMN_TYPE] [DataColumn]} by [\value].
  */
+@ExcludeFromSources
 private interface TimesDocs {
     // the type of the column accepted and returned by the function
     typealias TIMES_COLUMN_TYPE = Nothing
@@ -778,16 +789,16 @@ public operator fun DataColumn<Long>.times(value: Long): DataColumn<Long> = map 
 
 /**
  * @include [TimesDocs]
- * {@set [TIMES_EXAMPLE] // In a DataFrame of product prices, compute the price including a 20% tax
- * val priceWithTax = df.price * BigDecimal("1.20")}
+ * @set [TIMES_EXAMPLE] // In a DataFrame of product prices, compute the price including a 20% tax
+ * val priceWithTax = df.price * BigDecimal("1.20")
  * @set [TIMES_SEE_ALSO] [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus]
  */
 public operator fun DataColumn<BigDecimal>.times(value: BigDecimal): DataColumn<BigDecimal> = map { it * value }
 
 /**
  * @include [TimesDocs]
- * {@set [TIMES_EXAMPLE] // In a DataFrame of file sizes in bits, compute the total size of multiple copies of each file
- * val totalSize = df.fileSize * BigInteger("12345")}
+ * @set [TIMES_EXAMPLE] // In a DataFrame of file sizes in bits, compute the total size of multiple copies of each file
+ * val totalSize = df.fileSize * BigInteger("12345")
  * @set [TIMES_SEE_ALSO] [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus]
  */
 public operator fun DataColumn<BigInteger>.times(value: BigInteger): DataColumn<BigInteger> = map { it * value }
@@ -820,6 +831,7 @@ public operator fun DataColumn<BigInteger>.times(value: BigInteger): DataColumn<
  * @return A {@get [COLUMN_DIV_NUMBER_COLUMN_TYPE] [DataColumn]} containing the results of dividing
  * each element of this {@get [COLUMN_DIV_NUMBER_COLUMN_TYPE] [DataColumn]} by [\value].
  */
+@ExcludeFromSources
 private interface ColumnDivNumberDocs {
     // the type of the column accepted and returned by the function
     typealias COLUMN_DIV_NUMBER_COLUMN_TYPE = Nothing
@@ -843,15 +855,14 @@ private interface ColumnDivNumberDocs {
 /**
  * @include [ColumnDivNumberDocs]
  * @set [COLUMN_DIV_NUMBER_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
- *
  */
 public operator fun DataColumn<Int>.div(value: Int): DataColumn<Int> = map { it / value }
 
 /**
  * @include [ColumnDivNumberDocs]
  * @set [COLUMN_DIV_NUMBER_COLUMN_TYPE] [ColumnReference]
- * {@set [COLUMN_DIV_NUMBER_SEE_ALSO] [times][ColumnReference.times],
- * [plus][ColumnReference.plus], [minus][ColumnReference.minus]}
+ * @set [COLUMN_DIV_NUMBER_SEE_ALSO] [times][ColumnReference.times],
+ * [plus][ColumnReference.plus], [minus][ColumnReference.minus]
  */
 public operator fun ColumnReference<Int>.div(value: Int): ColumnReference<Int> = map { it / value }
 
@@ -866,8 +877,8 @@ public operator fun DataColumn<Int?>.div(value: Int): DataColumn<Int?> = map { i
 /**
  * @include [ColumnDivNumberDocs]
  * @set [COLUMN_DIV_NUMBER_INT_NOTE]
- * {@set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of distances in meters, convert them to kilometers
- * val distanceKm = df.distanceMeters / 1000.0}
+ * @set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of distances in meters, convert them to kilometers
+ * val distanceKm = df.distanceMeters / 1000.0
  * @set [COLUMN_DIV_NUMBER_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  * @set [COLUMN_DIV_NUMBER_ZERO_ERROR]
  */
@@ -877,9 +888,9 @@ public operator fun DataColumn<Int>.div(value: Double): DataColumn<Double> = map
 /**
  * @include [ColumnDivNumberDocs]
  * @set [COLUMN_DIV_NUMBER_INT_NOTE]
- * {@set [COLUMN_DIV_NUMBER_EXAMPLE]
+ * @set [COLUMN_DIV_NUMBER_EXAMPLE]
  * // In a DataFrame of hourly travel distances, compute the average distance traveled per minute
- * val distancePerMinute = df.distancePerHour / 60}
+ * val distancePerMinute = df.distancePerHour / 60
  * @set [COLUMN_DIV_NUMBER_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  * @set [COLUMN_DIV_NUMBER_ZERO_ERROR]
  */
@@ -889,8 +900,8 @@ public operator fun DataColumn<Double>.div(value: Int): DataColumn<Double> = map
 /**
  * @include [ColumnDivNumberDocs]
  * @set [COLUMN_DIV_NUMBER_INT_NOTE]
- * {@set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of distances in meters, convert them to kilometers
- * val distanceKm = df.distanceMeters / 1000.0}
+ * @set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of distances in meters, convert them to kilometers
+ * val distanceKm = df.distanceMeters / 1000.0
  * @set [COLUMN_DIV_NUMBER_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  * @set [COLUMN_DIV_NUMBER_ZERO_ERROR]
  */
@@ -898,9 +909,9 @@ public operator fun DataColumn<Double>.div(value: Double): DataColumn<Double> = 
 
 /**
  * @include [ColumnDivNumberDocs]
- * {@set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of item counts,
+ * @set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of item counts,
  * // compute how many full boxes of 10 items can be formed
- * val fullBoxes = df.itemCount / 10L}
+ * val fullBoxes = df.itemCount / 10L
  * @set [COLUMN_DIV_NUMBER_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  */
 public operator fun DataColumn<Long>.div(value: Long): DataColumn<Long> = map { it / value }
@@ -908,17 +919,17 @@ public operator fun DataColumn<Long>.div(value: Long): DataColumn<Long> = map { 
 /**
  * @include [ColumnDivNumberDocs]
  * @set [COLUMN_DIV_NUMBER_INT_NOTE]
- * {@set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of distances in miles, convert them to kilometers
- * val distanceKm = df.distanceMiles / BigDecimal("0.62137")}
+ * @set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of distances in miles, convert them to kilometers
+ * val distanceKm = df.distanceMiles / BigDecimal("0.62137")
  * @set [COLUMN_DIV_NUMBER_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  */
 public operator fun DataColumn<BigDecimal>.div(value: BigDecimal): DataColumn<BigDecimal> = map { it / value }
 
 /**
  * @include [ColumnDivNumberDocs]
- * {@set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of item counts stored as BigInteger values,
+ * @set [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of item counts stored as BigInteger values,
  * // compute how many full batches of 1,000 items can be formed
- * val batches = df.itemCount / BigInteger("1000")}
+ * val batches = df.itemCount / BigInteger("1000")
  * @set [COLUMN_DIV_NUMBER_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  */
 public operator fun DataColumn<BigInteger>.div(value: BigInteger): DataColumn<BigInteger> = map { it / value }
@@ -952,6 +963,7 @@ public operator fun DataColumn<BigInteger>.div(value: BigInteger): DataColumn<Bi
  * @return A {@get [NUMBER_DIV_COLUMN_COLUMN_TYPE] [DataColumn]} containing the results
  * of dividing this {@get [NUMBER_DIV_COLUMN_DIVIDEND_TYPE] [Int]} by each element of [\column].
  */
+@ExcludeFromSources
 private interface NumberDivColumnDocs {
     // the type of the column passed to the function and returned by the function
     typealias NUMBER_DIV_COLUMN_COLUMN_TYPE = Nothing
@@ -984,15 +996,15 @@ public operator fun Int.div(column: DataColumn<Int>): DataColumn<Int> = column.m
 /**
  * @include [NumberDivColumnDocs]
  * @set [NUMBER_DIV_COLUMN_COLUMN_TYPE] [ColumnReference]
- * {@set [NUMBER_DIV_COLUMN_SEE_ALSO] [times][ColumnReference.times],
- * [plus][ColumnReference.plus], [minus][ColumnReference.minus]}
+ * @set [NUMBER_DIV_COLUMN_SEE_ALSO] [times][ColumnReference.times],
+ * [plus][ColumnReference.plus], [minus][ColumnReference.minus]
  */
 public operator fun Int.div(column: ColumnReference<Int>): ColumnReference<Int> = column.map { this / it }
 
 /**
  * @include [NumberDivColumnDocs]
- * {@set [NUMBER_DIV_COLUMN_NULL_NOTE] If an element of [column] is `null`,
- * the corresponding value in the resulting [DataColumn] is also `null`.}
+ * @set [NUMBER_DIV_COLUMN_NULL_NOTE] If an element of [column] is `null`,
+ * the corresponding value in the resulting [DataColumn] is also `null`.
  * @set [NUMBER_DIV_COLUMN_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  */
 @JvmName("divNullable")
@@ -1002,9 +1014,9 @@ public operator fun Int.div(column: DataColumn<Int?>): DataColumn<Int?> = column
  * @include [NumberDivColumnDocs]
  * @set [NUMBER_DIV_COLUMN_DIVIDEND_TYPE] [Double]
  * @set [NUMBER_DIV_COLUMN_INT_NOTE]
- * {@set [NUMBER_DIV_COLUMN_EXAMPLE] // Given a marketing budget of 1,000 euros,
+ * @set [NUMBER_DIV_COLUMN_EXAMPLE] // Given a marketing budget of 1,000 euros,
  * // compute the cost per acquired customer for each campaign
- * val costPerCustomer = 1000.0 / df.acquiredCustomers}
+ * val costPerCustomer = 1000.0 / df.acquiredCustomers
  * @set [NUMBER_DIV_COLUMN_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  * @set [NUMBER_DIV_COLUMN_ZERO_ERROR]
  */
@@ -1014,9 +1026,9 @@ public operator fun Double.div(column: DataColumn<Int>): DataColumn<Double> = co
 /**
  * @include [NumberDivColumnDocs]
  * @set [NUMBER_DIV_COLUMN_INT_NOTE]
- * {@set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of prices of a square meter in different places,
+ * @set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of prices of a square meter in different places,
  * // compute how many square meters can be bought with a budget of 500 thousand euros
- * val squareMeters = 500_000 / df.pricePerSquareMeter}
+ * val squareMeters = 500_000 / df.pricePerSquareMeter
  * @set [NUMBER_DIV_COLUMN_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  * @set [NUMBER_DIV_COLUMN_ZERO_ERROR]
  */
@@ -1027,9 +1039,9 @@ public operator fun Int.div(column: DataColumn<Double>): DataColumn<Double> = co
  * @include [NumberDivColumnDocs]
  * @set [NUMBER_DIV_COLUMN_DIVIDEND_TYPE] [Double]
  * @set [NUMBER_DIV_COLUMN_INT_NOTE]
- * {@set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of prices of a square meter in different places,
+ * @set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of prices of a square meter in different places,
  * // compute how many square meters can be bought with a budget of 500 thousand euros
- * val squareMeters = 500_000.0 / df.pricePerSquareMeter}
+ * val squareMeters = 500_000.0 / df.pricePerSquareMeter
  * @set [NUMBER_DIV_COLUMN_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  * @set [NUMBER_DIV_COLUMN_ZERO_ERROR]
  */
@@ -1038,9 +1050,9 @@ public operator fun Double.div(column: DataColumn<Double>): DataColumn<Double> =
 /**
  * @include [NumberDivColumnDocs]
  * @set [NUMBER_DIV_COLUMN_DIVIDEND_TYPE] [Long]
- * {@set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of file sizes in bits,
+ * @set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of file sizes in bits,
  * // compute how many copies of each file can fit into the given storage capacity
- * val fileCopies = 10_000_000_000L / df.fileSize}
+ * val fileCopies = 10_000_000_000L / df.fileSize
  * @set [NUMBER_DIV_COLUMN_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  */
 public operator fun Long.div(column: DataColumn<Long>): DataColumn<Long> = column.map { this / it }
@@ -1049,9 +1061,9 @@ public operator fun Long.div(column: DataColumn<Long>): DataColumn<Long> = colum
  * @include [NumberDivColumnDocs]
  * @set [NUMBER_DIV_COLUMN_DIVIDEND_TYPE] [BigDecimal]
  * @set [NUMBER_DIV_COLUMN_INT_NOTE]
- * {@set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of prices of a product per gram,
+ * @set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of prices of a product per gram,
  * // compute the amount of product that can be bought with a budget of 3,451.76 euros
- * val productAmount = BigDecimal("3451.76") / df.pricePerGram}
+ * val productAmount = BigDecimal("3451.76") / df.pricePerGram
  * @set [NUMBER_DIV_COLUMN_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  */
 public operator fun BigDecimal.div(column: DataColumn<BigDecimal>): DataColumn<BigDecimal> = column.map { this / it }
@@ -1059,9 +1071,9 @@ public operator fun BigDecimal.div(column: DataColumn<BigDecimal>): DataColumn<B
 /**
  * @include [NumberDivColumnDocs]
  * @set [NUMBER_DIV_COLUMN_DIVIDEND_TYPE] [BigInteger]
- * {@set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of file sizes in bits,
+ * @set [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of file sizes in bits,
  * // compute how many copies of each file can fit into the given storage capacity
- * val fileCopies = BigInteger("10000000000") / df.fileSize}
+ * val fileCopies = BigInteger("10000000000") / df.fileSize
  * @set [NUMBER_DIV_COLUMN_SEE_ALSO] [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus]
  */
 public operator fun BigInteger.div(column: DataColumn<BigInteger>): DataColumn<BigInteger> = column.map { this / it }
@@ -1085,6 +1097,7 @@ public operator fun BigInteger.div(column: DataColumn<BigInteger>): DataColumn<B
  *
  * @return A [DataColumn] containing `true` for elements {@get [COMPARE_OPERATION]} [\value], and `false` otherwise.
  */
+@ExcludeFromSources
 private interface CompareDocs {
     // the description of the operation
     typealias COMPARE_DESCRIPTION = Nothing
@@ -1102,47 +1115,44 @@ private interface CompareDocs {
 /**
  * @include [CompareDocs]
  * @set [COMPARE_DESCRIPTION] for equality using the `==` operator
- * {@set [COMPARE_EXAMPLE] // Given a DataFrame of orders with statuses represented as strings,
+ * @set [COMPARE_EXAMPLE] // Given a DataFrame of orders with statuses represented as strings,
  * // create a column that indicates whether each order is canceled
- * val isCanceled = df.status eq "canceled"}
+ * val isCanceled = df.status eq "canceled"
  * @set [COMPARE_SEE_ALSO] [neq][DataColumn.neq], [gt][DataColumn.gt], [lt][DataColumn.lt]
  * @set [COMPARE_OPERATION] equal to
  */
-public infix fun <T> DataColumn<T>.eq(value: T): DataColumn<Boolean> = isMatching { it == value }
+public infix fun <T> DataColumn<T>.eq(value: T): DataColumn<Boolean> = map { it == value }
 
 /**
  * @include [CompareDocs]
  * @set [COMPARE_DESCRIPTION] for inequality using the `!=` operator
- * {@set [COMPARE_EXAMPLE] // Given a DataFrame of orders with statuses represented as strings,
+ * @set [COMPARE_EXAMPLE] // Given a DataFrame of orders with statuses represented as strings,
  * // create a column that indicates which orders are not completed
- * val isNotCompleted = df.status neq "completed"}
+ * val isNotCompleted = df.status neq "completed"
  * @set [COMPARE_SEE_ALSO] [eq][DataColumn.eq], [gt][DataColumn.gt], [lt][DataColumn.lt]
  * @set [COMPARE_OPERATION] not equal to
  */
-public infix fun <T> DataColumn<T>.neq(value: T): DataColumn<Boolean> = isMatching { it != value }
+public infix fun <T> DataColumn<T>.neq(value: T): DataColumn<Boolean> = map { it != value }
 
 /**
  * @include [CompareDocs]
  * @set [COMPARE_DESCRIPTION] using the `>` operator
- * {@set [COMPARE_EXAMPLE] // Given a DataFrame of orders,
+ * @set [COMPARE_EXAMPLE] // Given a DataFrame of orders,
  * // create a column that indicates which orders cost more than 1,000 euros
- * val isExpensive = df.orderCost gt 1000}
+ * val isExpensive = df.orderCost gt 1000
  * @set [COMPARE_SEE_ALSO] [eq][DataColumn.eq], [neq][DataColumn.neq], [lt][DataColumn.lt]
  * @set [COMPARE_OPERATION] greater than
  */
-public infix fun <T : Comparable<T>> DataColumn<T>.gt(value: T): DataColumn<Boolean> = isMatching { it > value }
+public infix fun <T : Comparable<T>> DataColumn<T>.gt(value: T): DataColumn<Boolean> = map { it > value }
 
 /**
  * @include [CompareDocs]
  * @set [COMPARE_DESCRIPTION] using the `<` operator
- * {@set [COMPARE_EXAMPLE] // Given a DataFrame of orders,
+ * @set [COMPARE_EXAMPLE] // Given a DataFrame of orders,
  * // create a column that indicates which orders cost less than 20 euros
- * val isCheap = df.orderCost lt 20}
+ * val isCheap = df.orderCost lt 20
  * @set [COMPARE_SEE_ALSO] [eq][DataColumn.eq], [neq][DataColumn.neq], [gt][DataColumn.gt]
  * @set [COMPARE_OPERATION] less than
  */
-public infix fun <T : Comparable<T>> DataColumn<T>.lt(value: T): DataColumn<Boolean> = isMatching { it < value }
-
-internal fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): DataColumn<Boolean> = map { predicate(it) }
-
+public infix fun <T : Comparable<T>> DataColumn<T>.lt(value: T): DataColumn<Boolean> = map { it < value }
 // endregion
