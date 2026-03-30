@@ -179,7 +179,7 @@ class SplitTests {
         val df = dataFrameOf("a")(
             emptyList<Int>(),
             listOf(1, 2),
-            listOf(1)
+            listOf(1),
         )
 
         val res = df.split { "a"<List<Int>>() }.into("a1", "a2", "a3")
@@ -199,12 +199,11 @@ class SplitTests {
         res["a3"][2] shouldBe null
     }
 
-
     @Test
     fun `split into with exact number of elements`() {
         val df = dataFrameOf("a")(
             listOf(1, 2, 3),
-            listOf(4, 5, 6)
+            listOf(4, 5, 6),
         )
 
         val res = df.split { "a"<List<Int>>() }.into("a1", "a2", "a3")
@@ -220,13 +219,12 @@ class SplitTests {
         res["a3"][1] shouldBe 6
     }
 
-
     @Test
     fun `split into with all empty lists should fill all with nulls`() {
         val df = dataFrameOf("a")(
             emptyList<Int>(),
             emptyList<Int>(),
-            emptyList<Int>()
+            emptyList<Int>(),
         )
         val res = df.split { "a"<List<Int>>() }.into("a1", "a2", "a3")
 
@@ -244,6 +242,7 @@ class SplitTests {
         res["a2"][2] shouldBe null
         res["a3"][2] shouldBe null
     }
+
     @Test
     fun `split into with mixed empty and partial lists`() {
         val df = dataFrameOf("a")(
@@ -252,7 +251,7 @@ class SplitTests {
             emptyList<Int>(),
             listOf(4, 5),
             emptyList<Int>(),
-            listOf(6, 7, 8)
+            listOf(6, 7, 8),
         )
 
         val res = df.split { "a"<List<Int>>() }.into("a1", "a2", "a3", "a4", "a5", "a6")
