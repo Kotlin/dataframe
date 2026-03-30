@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.rendering
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -72,9 +74,67 @@ class RenderToStringTests {
 
     @Test
     fun `with column types`() {
-        val result = df.renderToString(columnTypes = true, rowIndex = false)
-        val header = result.lines().first()
-        assertEquals(""" name:String age:Int city:String""", header)
+        val result = df.take(0).renderToString(columnTypes = true)
+        val expected =
+            """
+            |    name age   city
+            |  String Int String
+            |
+            """.trimMargin()
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `columngroup with column types`() {
+        val result = dataFrameOf("a" to columnOf(0.0)).add {
+            "group" {
+                "l" from { "a"<Double>() }
+                "r" from { "a"<Double>() }
+            }
+        }.renderToString(columnTypes = true)
+        val expected =
+            """
+            |        a                group
+            |   Double {l:Double, r:Double}
+            | 0    0.0     { l:0.0, r:0.0 }
+            |
+            """.trimMargin()
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `framecol with column types`() {
+        val result = dataFrameOf("a" to columnOf(0.0)).add {
+            "group" {
+                "l" from { "a"<Double>() }
+                "r" from { "a"<Double>() }
+            }
+        }.groupBy("a").toDataFrame().renderToString(columnTypes = true)
+        val expected =
+            """
+            |        a                                    group
+            |   Double   [a:Double, group:{l:Double, r:Double}]
+            | 0    0.0 [1 x 2] { a:0.000000, group:{ l:0.000...
+            |
+            """.trimMargin()
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `with types and borders`() {
+        val result = df.renderToString(borders = true, rowIndex = false, columnTypes = true)
+        val expected = """
+            |⌌---------------------⌍
+            ||    name| age|   city|
+            ||  String| Int| String|
+            ||--------|----|-------|
+            ||   Alice|  30| Berlin|
+            ||     Bob|  25|  Paris|
+            || Charlie|  35| London|
+            |⌎---------------------⌏
+            |
+        """.trimMargin()
+        assertEquals(expected, result)
     }
 
     @Test
@@ -94,7 +154,7 @@ class RenderToStringTests {
 
     @Test
     fun renderDoubles() {
-        val res = dataFrameOf("a" to columnOf(0.0)).add {
+        val result = dataFrameOf("a" to columnOf(0.0)).add {
             "group" {
                 "l" from { "a"<Double>() }
                 "r" from { "a"<Double>() }
@@ -105,7 +165,7 @@ class RenderToStringTests {
             | 0 0.0 { l:0.0, r:0.0 }
             |
         """.trimMargin()
-        assertEquals(expected, res)
+        assertEquals(expected, result)
     }
 
     @Test
