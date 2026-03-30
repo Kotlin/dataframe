@@ -44,11 +44,11 @@ public fun AnyFrame.renderToString(
 
     // top border
     if (borders) {
-        sb.append("\u230C")
+        sb.append(Borders.TOP_LEFT)
         repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append('-') }
-        sb.append("\u230D")
+        sb.append(Borders.TOP_RIGHT)
         sb.appendLine()
-        sb.append("|")
+        sb.append(Borders.VERTICAL)
     }
 
     // header
@@ -57,29 +57,29 @@ public fun AnyFrame.renderToString(
         val str = table.header[col]
         val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
         sb.append(padded)
-        if (borders) sb.append("|")
+        if (borders) sb.append(Borders.VERTICAL)
     }
     sb.appendLine()
 
     // header splitter
     if (borders) {
-        sb.append("|")
+        sb.append(Borders.VERTICAL)
         for (colLength in columnLengths) {
-            repeat(colLength) { sb.append('-') }
-            sb.append("|")
+            repeat(colLength) { sb.append(Borders.HORIZONTAL) }
+            sb.append(Borders.HEADER_SPLIT)
         }
         sb.appendLine()
     }
 
     // data
     for (row in 0 until table.rowsCount) {
-        if (borders) sb.append("|")
+        if (borders) sb.append(Borders.VERTICAL)
         for (col in table.values.indices) {
             val len = columnLengths[col]
             val str = table.values[col][row]
             val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
             sb.append(padded)
-            if (borders) sb.append("|")
+            if (borders) sb.append(Borders.VERTICAL)
         }
         sb.appendLine()
     }
@@ -88,12 +88,22 @@ public fun AnyFrame.renderToString(
     if (table.totalRows > rowsLimit) {
         sb.appendLine("...")
     } else if (borders) {
-        sb.append("\u230E")
-        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append('-') }
-        sb.append("\u230F")
+        sb.append(Borders.BOTTOM_LEFT)
+        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append(Borders.HORIZONTAL) }
+        sb.append(Borders.BOTTOM_RIGHT)
         sb.appendLine()
     }
     return sb.toString()
+}
+
+private object Borders {
+    const val TOP_LEFT = "\u230C"
+    const val TOP_RIGHT = "\u230D"
+    const val BOTTOM_LEFT = "\u230E"
+    const val BOTTOM_RIGHT = "\u230F"
+    const val HORIZONTAL = "-"
+    const val VERTICAL = "|"
+    const val HEADER_SPLIT = "|"
 }
 
 private class PreparedTable(
