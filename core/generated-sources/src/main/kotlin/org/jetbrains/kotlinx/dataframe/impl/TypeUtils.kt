@@ -136,7 +136,12 @@ internal fun KType.projectDownTo(subClass: KClass<*>): KType {
 internal fun KType.replace(substitution: Map<KTypeParameter, KType?>): KType =
     when (val clazz = classifier) {
         is KTypeParameter -> substitution[clazz] ?: this
-        is KClass<*> -> clazz.createType(arguments.map { KTypeProjection(it.variance, it.type?.replace(substitution)) })
+
+        is KClass<*> -> clazz.createType(
+            arguments.map { KTypeProjection(it.variance, it.type?.replace(substitution)) },
+            nullable = isMarkedNullable,
+        )
+
         else -> this
     }
 
