@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 /**
  * Column that stores values.
@@ -24,4 +25,12 @@ public interface ValueColumn<out T> : DataColumn<T> {
         super.getValue(thisRef, property) as ValueColumn<T>
 
     public override operator fun get(range: IntRange): ValueColumn<T>
+
+    /**
+     * Changes column [type][BaseColumn.type].
+     * Doesn't change column [values][BaseColumn.values].
+     *
+     * @param type New column [type][KType].
+     */
+    public fun changeType(type: KType): ValueColumn<T>
 }

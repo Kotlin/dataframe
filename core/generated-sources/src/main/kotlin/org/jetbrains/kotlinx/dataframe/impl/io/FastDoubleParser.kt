@@ -5,6 +5,7 @@ import ch.randelshofer.fastdoubleparser.NumberFormatSymbols
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import java.nio.charset.Charset
 import java.text.DecimalFormatSymbols

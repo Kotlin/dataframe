@@ -49,11 +49,11 @@ When several columns are exploded in one operation, lists in different columns w
 <!---FUN explodeSeveral-->
 
 ```kotlin
-val a by columnOf(listOf(1, 2), listOf(3, 4, 5))
-val b by columnOf(listOf(1, 2, 3), listOf(4, 5))
-
-val df = dataFrameOf(a, b)
-df.explode { a and b }
+val df = dataFrameOf(
+    "a" to columnOf(listOf(1, 2), listOf(3, 4, 5)),
+    "b" to columnOf(listOf(1, 2, 3), listOf(4, 5)),
+)
+df.explode("a", "b")
 ```
 
 <!---END-->

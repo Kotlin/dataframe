@@ -60,10 +60,14 @@ import org.jetbrains.kotlinx.dataframe.api.NullabilityException
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.api.applyNullability
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.io.File
 import java.math.BigDecimal
@@ -89,13 +93,16 @@ internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
         1 -> return dataFrames[0]
     }
 
-    val columnNames = dataFrames.first().columnNames()
+    val columnPaths = dataFrames.first()
+        .getColumnsWithPaths { colsAtAnyDepth().filter { !it.isColumnGroup() } }
+        .map { it.path }
 
-    val columns = columnNames.map { name ->
-        val values = dataFrames.flatMap { it.getColumn(name).values() }
-        DataColumn.createValueColumn(name, values, dataFrames.first().getColumn(name).type())
+    val totalRows = dataFrames.sumOf { it.count() }
+    val columns = columnPaths.map { path ->
+        val values = dataFrames.flatMapTo(ArrayList(totalRows)) { it.getColumn(path).values() }
+        path to DataColumn.createValueColumn(path.name(), values, dataFrames.first().getColumn(path).type())
     }
-    return dataFrameOf(columns).cast()
+    return columns.toDataFrameFromPairs()
 }
 
 private fun BitVector.values(range: IntRange): List<Boolean?> = range.map { getObject(it) }

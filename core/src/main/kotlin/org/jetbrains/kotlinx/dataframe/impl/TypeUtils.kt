@@ -136,7 +136,12 @@ internal fun KType.projectDownTo(subClass: KClass<*>): KType {
 internal fun KType.replace(substitution: Map<KTypeParameter, KType?>): KType =
     when (val clazz = classifier) {
         is KTypeParameter -> substitution[clazz] ?: this
-        is KClass<*> -> clazz.createType(arguments.map { KTypeProjection(it.variance, it.type?.replace(substitution)) })
+
+        is KClass<*> -> clazz.createType(
+            arguments.map { KTypeProjection(it.variance, it.type?.replace(substitution)) },
+            nullable = isMarkedNullable,
+        )
+
         else -> this
     }
 
@@ -607,14 +612,7 @@ internal val KClass<*>.isArray: Boolean
  * Use [KType.isArray] to also check for `Array<>`.
  */
 internal val KType.isPrimitiveArray: Boolean
-    get() =
-        if (arguments.isNotEmpty()) {
-            // Catching https://github.com/Kotlin/dataframe/issues/678
-            // as typeOf<Array<Int>>().classifier == IntArray::class
-            false
-        } else {
-            (classifier as? KClass<*>)?.isPrimitiveArray == true
-        }
+    get() = (classifier as? KClass<*>)?.isPrimitiveArray == true
 
 /**
  * Returns `true` if this type is of an array, either a primitive array like `XArray` or `Array<>`.

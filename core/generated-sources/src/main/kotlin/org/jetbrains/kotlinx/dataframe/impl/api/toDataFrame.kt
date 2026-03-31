@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.impl.isJavaRecord
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
 import org.jetbrains.kotlinx.dataframe.impl.recordComponentNames
+import org.jetbrains.kotlinx.dataframe.impl.replace
 import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -31,13 +32,13 @@ import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
-import kotlin.reflect.full.valueParameters
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
@@ -237,6 +238,8 @@ internal fun convertToDataFrame(
         return dataFrameOf(column)
     }
 
+    val substitution: Map<KTypeParameter, KType> = type.typeParametersSubstitution()
+
     val properties: List<KCallable<*>> = roots
         .ifEmpty {
             clazz.properties()
@@ -307,7 +310,7 @@ internal fun convertToDataFrame(
             }
         }
 
-        val returnType = property.returnType.let { type ->
+        val returnType = property.returnType.replace(substitution).let { type ->
             if (type.classifier is KClass<*>) {
                 type
             } else {
@@ -428,6 +431,13 @@ internal fun convertToDataFrame(
 }
 
 private fun KType.classifierOrAny(): KClass<*> = classifier as? KClass<*> ?: Any::class
+
+internal fun KType.typeParametersSubstitution(): Map<KTypeParameter, KType> {
+    val klass = classifier as? KClass<*> ?: return emptyMap()
+    return klass.typeParameters.zip(arguments).mapNotNull { (param, projection) ->
+        projection.type?.let { param to it }
+    }.toMap()
+}
 
 private fun KClass<*>.properties(): List<KCallable<*>> {
     // fall back to getter functions for pojo-like classes if no member properties were found

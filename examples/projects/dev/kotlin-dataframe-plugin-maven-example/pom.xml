@@ -9,13 +9,14 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <kotlin.version>2.3.10</kotlin.version>
+        <kotlin.version>2.3.20</kotlin.version>
         <dataframe.version>1.0.0-dev</dataframe.version>
         <kandy.version>0.8.3</kandy.version>
         <ktlint.version>1.8.0</ktlint.version>
 
         <junit.version>5.10.0</junit.version>
         <maven.version>3.9.11</maven.version>
+        <maven-surefire.version>3.5.5</maven-surefire.version>
         <exec.version>3.5.0</exec.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,13 +39,12 @@
     </pluginRepositories>
 
     <build>
-        <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <!--        <testSourceDirectory>src/test/kotlin</testSourceDirectory>-->
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
+                <extensions>true</extensions>
                 <configuration>
                     <compilerPlugins>
                         <plugin>kotlin-dataframe</plugin>
@@ -77,11 +77,11 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.version}</version>
+                <version>${maven-surefire.version}</version>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven.version}</version>
+                <version>${maven-surefire.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -143,11 +143,6 @@
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-            <version>${kotlin.version}</version>
         </dependency>
         <!-- DataFrame and Kandy dependencies -->
         <dependency>

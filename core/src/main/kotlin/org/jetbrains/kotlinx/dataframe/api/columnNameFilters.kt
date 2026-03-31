@@ -436,7 +436,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("-order") }`
      */
-    @Interpretable("NameEndsWith1")
+    @Interpretable("NameEndsWith")
     public fun ColumnsSelectionDsl<*>.nameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         asSingleColumn().colsNameEndsWith(suffix, ignoreCase)
 

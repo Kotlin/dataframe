@@ -1,8 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.UtcOffset
@@ -37,7 +39,9 @@ import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.junit.Assert
@@ -75,6 +79,18 @@ internal class ArrowKtTest {
         val d by columnOf("four")
         val expected = dataFrameOf(a, b, c, d)
         df shouldBe expected
+    }
+
+    @Test
+    fun testReadingMultipleBatches() {
+        val df = DataFrame.readArrowFeather(testArrowFeather("multiple_batches_concat"))
+        df.schema().print()
+        df.schema().asClue {
+            df["id"].type() shouldBe typeOf<Int>()
+            val person = df["person"].shouldBeInstanceOf<ColumnGroup<*>>()
+            person["name"].type() shouldBe typeOf<String>()
+            person["age"].type() shouldBe typeOf<Int>()
+        }
     }
 
     @Test
