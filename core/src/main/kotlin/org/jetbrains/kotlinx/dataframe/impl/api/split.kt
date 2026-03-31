@@ -53,6 +53,13 @@ internal fun <T, C, R> splitImpl(
         }
 
         val names = columnNamesGenerator(column, columnCollectors.size)
+
+        repeat(names.size - columnCollectors.size) {
+            val collector = createDataCollector(nrow)
+            repeat(nrow) { collector.add(clause.default) }
+            columnCollectors.add(collector)
+        }
+
         val sourcePath = node.pathFromRoot()
 
         columnCollectors.forEachIndexed { i, col ->
