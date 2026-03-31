@@ -9,8 +9,34 @@ to each cell in a column, multiplying a column by a value, and comparing element
 ## When useful
 
 In most transformations, these column operations are usually not the preferred approach in Kotlin DataFrame, 
-because the library provides row-based APIs such as [`add`](add.md), [`update`](update.md), [`map`](map.md), and `expr`, 
+because the library provides row-based APIs such as [`add`](add.md), [`update`](update.md), and [`map`](map.md), 
 which are usually recommended.
+
+Also, the [`expr`](ColumnSelectors.md#expr-column-expression) function 
+is particularly useful in this context, as it allows you to write row expressions 
+inside the [`Columns Selection DSL`](ColumnSelectors.md).
+In other words, [`expr`](ColumnSelectors.md#expr-column-expression) works as an adapter 
+between a column selector and a row expression.
+
+For example,
+<!---FUN columnArithmetics_groupBy_without_expr-->
+
+```kotlin
+orders.groupBy { status + " orders"  }
+```
+
+<!---END-->
+is equivalent to
+<!---FUN columnArithmetics_groupBy_with_expr-->
+
+```kotlin
+orders.groupBy { expr("status") { status + " orders" } }
+```
+
+<!---END-->
+
+but in the first case, `status` is used as a [`DataColumn`](DataColumn.md) of String values, 
+and in the second case, `status` is treated as a String.
 
 However, column arithmetics might still be useful in some cases. 
 For example, when building temporary plotting expressions. 

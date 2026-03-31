@@ -22,16 +22,14 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `not on ColumnAccessor`() {
-        val isClosed = column<Boolean>("isClosed")
         val df = dataFrameOf("isClosed")(true, false)
-        df.getColumn { !isClosed } shouldBe columnOf(false, true).named("isClosed")
+        df.getColumn { !col<Boolean>("isClosed") } shouldBe columnOf(false, true).named("isClosed")
     }
 
     @Test
     fun `not on ColumnAccessor with null`() {
-        val isClosed = column<Boolean?>("isClosed")
         val df = dataFrameOf("isClosed")(true, null)
-        df.getColumn { !isClosed } shouldBe columnOf(false, null).named("isClosed")
+        df.getColumn { !col<Boolean?>("isClosed") } shouldBe columnOf(false, null).named("isClosed")
     }
 
     // endregion
@@ -59,11 +57,10 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `plus on ColumnAccessor of Int`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(1, 2, 3)
         val expected = columnOf(2, 3, 4).named("age")
-        df.getColumn { age + 1 } shouldBe expected
-        df.getColumn { 1 + age } shouldBe expected
+        df.getColumn { col<Int>("age") + 1 } shouldBe expected
+        df.getColumn { 1 + col<Int>("age") } shouldBe expected
     }
 
     @Test
@@ -123,10 +120,9 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `plus on ColumnAccessor with String`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(1, 2, 3)
         val expected = columnOf("11", "21", "31").named("age")
-        df.getColumn { age + "1" } shouldBe expected
+        df.getColumn { col<Int>("age") + "1" } shouldBe expected
     }
 
     // endregion
@@ -142,10 +138,9 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `ColumnAccessor of Int minus Int`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(2, 3, 4)
         val expected = columnOf(1, 2, 3).named("age")
-        df.getColumn { age - 1 } shouldBe expected
+        df.getColumn { col<Int>("age") - 1 } shouldBe expected
     }
 
     @Test
@@ -210,10 +205,9 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `Int minus ColumnAccessor of Int`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(2, 3, 4)
         val expected = columnOf(8, 7, 6).named("age")
-        df.getColumn { 10 - age } shouldBe expected
+        df.getColumn { 10 - col<Int>("age") } shouldBe expected
     }
 
     @Test
@@ -278,10 +272,9 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `unary minus on ColumnAccessor of Int`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(1, 2, 3)
         val expected = columnOf(-1, -2, -3).named("age")
-        df.getColumn { -age } shouldBe expected
+        df.getColumn { -col<Int>("age") } shouldBe expected
     }
 
     @Test
@@ -332,10 +325,9 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `times on ColumnAccessor of Int`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(1, 2, 3)
         val expected = columnOf(2, 4, 6).named("age")
-        df.getColumn { age * 2 } shouldBe expected
+        df.getColumn { col<Int>("age") * 2 } shouldBe expected
     }
 
     @Test
@@ -402,10 +394,9 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `ColumnAccessor of Int div Int`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(2, 4, 6)
         val expected = columnOf(1, 2, 3).named("age")
-        df.getColumn { age / 2 } shouldBe expected
+        df.getColumn { col<Int>("age") / 2 } shouldBe expected
     }
 
     @Test
@@ -470,9 +461,8 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `ColumnAccessor of Int div zero`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(2, 4, 6)
-        shouldThrow<ArithmeticException> { df.getColumn { age / 0 } }
+        shouldThrow<ArithmeticException> { df.getColumn { col<Int>("age") / 0 } }
     }
 
     @Test
@@ -527,10 +517,9 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `Int div ColumnAccessor of Int`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(2, 4, 6)
         val expected = columnOf(6, 3, 2).named("age")
-        df.getColumn { 12 / age } shouldBe expected
+        df.getColumn { 12 / col<Int>("age") } shouldBe expected
     }
 
     @Test
@@ -590,9 +579,8 @@ class DataColumnArithmeticsTests {
 
     @Test
     fun `Int div ColumnAccessor with zero`() {
-        val age = column<Int>("age")
         val df = dataFrameOf("age")(2, 0, 6)
-        shouldThrow<ArithmeticException> { df.getColumn { 10 / age } }
+        shouldThrow<ArithmeticException> { df.getColumn { 10 / col<Int>("age") } }
     }
 
     @Test
