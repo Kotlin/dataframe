@@ -14,3 +14,4 @@ To match your knowledge with expected real-time [`DataFrame`](DataFrame.md) cont
 * [`cast`](cast.md) — change type argument of [`DataFrame`](DataFrame.md) to the expected schema without changing data in [`DataFrame`](DataFrame.md).
 * [`convertTo`](convertTo.md) — convert [`DataFrame`](DataFrame.md) contents to match the expected schema.
 
+Alternatively, use [](require.md) to incrementally add type information to compile time schema.
