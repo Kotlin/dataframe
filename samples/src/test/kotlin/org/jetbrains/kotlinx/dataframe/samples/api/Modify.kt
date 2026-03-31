@@ -7,8 +7,10 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.eq
+import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnIndex
+import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.gt
 import org.jetbrains.kotlinx.dataframe.api.linearBg
 import org.jetbrains.kotlinx.dataframe.api.lt
@@ -297,6 +299,32 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
 
         // SampleStart
         orders.cost lt 20.0
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_groupBy_without_expr() {
+        val orders = dataFrameOf(
+            "id" to columnOf("1", "2", "3"),
+            "status" to columnOf("completed", "completed", "canceled"),
+            "cost" to columnOf(10.0, 200.0, 1500.0),
+        )
+
+        // SampleStart
+        orders.groupBy { status + " orders"  }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_groupBy_with_expr() {
+        val orders = dataFrameOf(
+            "id" to columnOf("1", "2", "3"),
+            "status" to columnOf("completed", "completed", "canceled"),
+            "cost" to columnOf(10.0, 200.0, 1500.0),
+        )
+
+        // SampleStart
+        orders.groupBy { expr("status") { status + " orders" } }
         // SampleEnd
     }
 }
