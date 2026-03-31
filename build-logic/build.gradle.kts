@@ -26,4 +26,5 @@ dependencies {
     // We need to declare a dependency for each plugin used in convention plugins below
     implementation(pluginMarker(libs.plugins.ktlint.gradle))
     implementation(pluginMarker(libs.plugins.buildconfig))
+    implementation(pluginMarker(libs.plugins.kodex))
 }

@@ -1,7 +1,4 @@
 import io.github.devcrocod.korro.KorroTask
-import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
-import org.gradle.api.JavaVersion
-import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.jvm.tasks.Jar
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -10,12 +7,12 @@ plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
         alias(buildConfig)
+        alias(kodex)
     }
     with(libs.plugins) {
         alias(publisher)
         alias(serialization)
         alias(korro)
-        alias(kodex)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
 
@@ -191,90 +188,34 @@ tasks.withType<KorroTask> {
     dependsOn(copySamplesOutputs)
 }
 
-// region docPreprocessor
-
-val generatedSourcesFolderName = "generated-sources"
-
-// Backup the kotlin source files location
-val kotlinMainSources = kotlin.sourceSets.main
-    .get()
-    .kotlin.sourceDirectories
-    .toList()
-val kotlinTestSources = kotlin.sourceSets.test
-    .get()
-    .kotlin.sourceDirectories
-    .toList()
-
-fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
-
-// Include both test and main sources for cross-referencing, Exclude generated sources
-val processKDocsMainSources = (kotlinMainSources + kotlinTestSources)
-    .filterNot { pathOf("build", "generated") in it.path }
-
-// sourceset of the generated sources as a result of `processKDocsMain`, this will create linter tasks
-val generatedSources by kotlin.sourceSets.creating {
-    kotlin {
-        setSrcDirs(
-            listOf(
-                "core/build/generatedSrc",
-                "$generatedSourcesFolderName/src/main/kotlin",
-                "$generatedSourcesFolderName/src/main/java",
-            ),
-        )
+korro {
+    docs = fileTree(rootProject.rootDir) {
+        include("docs/StardustDocs/topics/*.md")
+        include("docs/StardustDocs/topics/concepts/*.md")
     }
-}
 
-// Task to generate the processed documentation
-val processKDocsMain by creatingRunKodexTask(processKDocsMainSources) {
-    group = "KDocs"
-    target = file(generatedSourcesFolderName)
-
-    // false, so `ktlintGeneratedSourcesSourceSetFormat` can format the output
-    outputReadOnly = false
-
-    exportAsHtml {
-        dir = file("../docs/StardustDocs/resources/snippets/kdocs")
+    samples = fileTree(project.projectDir) {
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
     }
-    finalizedBy(":core:ktlintGeneratedSourcesSourceSetFormat")
-}
 
-tasks.named("ktlintGeneratedSourcesSourceSetCheck") {
-    onlyIf { false }
-}
-tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
-    onlyIf { false }
-}
-
-// Exclude the generated/processed sources from the IDE
-idea {
-    module {
-        excludeDirs.add(file(generatedSourcesFolderName))
+    outputs = fileTree(project.layout.buildDirectory) {
+        include("korroOutputLines/*")
     }
-}
 
-// If `changeJarTask` is run, modify all Jar tasks such that before running the Kotlin sources are set to
-// the target of `processKdocMain`, and they are returned to normal afterward.
-// This is usually only done when publishing
-val changeJarTask by tasks.registering {
-    outputs.upToDateWhen { project.hasProperty("skipKodex") }
-    doFirst {
-        tasks.withType<Jar> {
-            doFirst {
-                require(generatedSources.kotlin.srcDirs.toList().isNotEmpty()) {
-                    logger.error("`processKDocsMain`'s outputs are empty, did `processKDocsMain` run before this task?")
-                }
-                kotlin.sourceSets.main {
-                    kotlin.setSrcDirs(generatedSources.kotlin.srcDirs)
-                }
-                logger.lifecycle("$this is run with modified sources: \"$generatedSourcesFolderName\"")
-            }
+    groupSamples {
 
-            doLast {
-                kotlin.sourceSets.main {
-                    kotlin.setSrcDirs(kotlinMainSources)
-                }
-            }
+        beforeSample = "<tab title=\"NAME\">\n"
+        afterSample = "\n</tab>"
+
+        funSuffix("_properties") {
+            replaceText("NAME", "Properties")
         }
+        funSuffix("_strings") {
+            replaceText("NAME", "Strings")
+        }
+        beforeGroup = "<tabs>\n"
+        afterGroup = "</tabs>"
     }
 }
 
@@ -325,66 +266,12 @@ tasks.processResources {
     }
 }
 
-// if `processKDocsMain` runs, the Jar tasks must run after it so the generated-sources are there
 tasks.withType<Jar> {
-    mustRunAfter(changeJarTask, tasks.generateKeywordsSrc, processKDocsMain)
+    mustRunAfter(tasks.generateKeywordsSrc)
 }
 
-// modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
-tasks.configureEach {
-    if (!project.hasProperty("skipKodex") && name.startsWith("publish")) {
-        dependsOn(processKDocsMain, changeJarTask)
-    }
-}
-
-// Exclude the generated/processed sources from the IDE
-idea {
-    module {
-        excludeDirs.add(file(generatedSourcesFolderName))
-    }
-}
-
-// If we want to use Dokka, make sure to use the preprocessed sources
-tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
-    dependsOn(processKDocsMain)
-    dokkaSourceSets {
-        all {
-            sourceRoot(processKDocsMain.target.get())
-        }
-    }
-}
-
-// endregion
-
-korro {
-    docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/*.md")
-        include("docs/StardustDocs/topics/concepts/*.md")
-    }
-
-    samples = fileTree(project.projectDir) {
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
-    }
-
-    outputs = fileTree(project.layout.buildDirectory) {
-        include("korroOutputLines/*")
-    }
-
-    groupSamples {
-
-        beforeSample = "<tab title=\"NAME\">\n"
-        afterSample = "\n</tab>"
-
-        funSuffix("_properties") {
-            replaceText("NAME", "Properties")
-        }
-        funSuffix("_strings") {
-            replaceText("NAME", "Strings")
-        }
-        beforeGroup = "<tabs>\n"
-        afterGroup = "</tabs>"
-    }
+tasks.processKDocsMain {
+    dependsOn(tasks.generateKeywordsSrc, tasks.generateBuildConfig)
 }
 
 tasks.runKtlintFormatOverMainSourceSet {
@@ -394,8 +281,7 @@ tasks.runKtlintFormatOverMainSourceSet {
 tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
-
-tasks.named("runKtlintFormatOverGeneratedSourcesSourceSet") {
+tasks.runKtlintFormatOverGeneratedMainSourcesSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
@@ -407,7 +293,7 @@ tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
+tasks.runKtlintCheckOverGeneratedMainSourcesSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
