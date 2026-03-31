@@ -4,11 +4,10 @@ import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.shouldHaveColumn
+import org.jetbrains.kotlinx.dataframe.shouldHaveColumnGroup
+import org.jetbrains.kotlinx.dataframe.shouldHaveFrameColumn
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -108,29 +107,5 @@ class UnfoldTests {
                 it.shouldHaveColumn<Int>("b")
             }
         }
-    }
-
-    fun DataFrame<*>.shouldHaveColumnGroup(
-        name: String,
-        block: (ColumnGroup<*>) -> Unit = {
-        },
-    ): ColumnGroup<*> = getColumnOrNull(name).shouldBeInstanceOf<ColumnGroup<*>>(block)
-
-    fun DataFrame<*>.shouldHaveFrameColumn(
-        name: String,
-        block: (FrameColumn<*>) -> Unit = {
-        },
-    ): FrameColumn<*> = getColumnOrNull(name).shouldBeInstanceOf<FrameColumn<*>>(block)
-
-    inline fun <reified T> DataFrame<*>.shouldHaveColumn(
-        name: String,
-        block: (DataColumn<T>) -> Unit = {
-        },
-    ): DataColumn<T> {
-        val shouldBeInstanceOf = getColumnOrNull(name).shouldBeInstanceOf<DataColumn<*>>()
-        shouldBeInstanceOf.type() shouldBe typeOf<T>()
-        val cast = shouldBeInstanceOf.cast<T>()
-        block(cast)
-        return cast
     }
 }
