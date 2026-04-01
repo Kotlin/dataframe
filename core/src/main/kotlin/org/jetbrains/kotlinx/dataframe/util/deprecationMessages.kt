@@ -5,6 +5,10 @@ package org.jetbrains.kotlinx.dataframe.util
  * After each release, all messages should be reviewed and updated.
  * Level.WARNING -> Level.ERROR
  * Level.ERROR -> Remove
+ *
+ * Please add info about all deprecations / removals to the Migration Guide
+ * (./docs/StardustDocs/topics/MigrationTo_1_0.md)
+ * in the same PR!
  */
 
 // region WARNING in 0.15, ERROR in 1.0
