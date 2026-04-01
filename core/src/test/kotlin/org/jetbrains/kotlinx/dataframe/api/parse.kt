@@ -10,6 +10,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.plus
 import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toStdlibInstant
@@ -90,6 +91,7 @@ class ParseTests {
         }
     }
 
+    @OptIn(FormatStringsInDatetimeFormats::class)
     @Test
     fun parseDateTime() {
         val currentLocale = Locale.getDefault()
@@ -99,7 +101,9 @@ class ParseTests {
             val pattern = "d MMM yyyy HH:mm:ss"
             val locale = Locale.forLanguageTag("en-US")
 
-            val parsed = dateTime.parse(ParserOptions(javaDateTimePattern = pattern, locale = locale)).cast<LocalDateTime>()
+            val parsed = dateTime.parse(
+                ParserOptions(javaDateTimePattern = pattern, locale = locale),
+            ).cast<LocalDateTime>()
 
             parsed.type() shouldBe typeOf<LocalDateTime>()
             with(parsed[0]) {
@@ -111,7 +115,7 @@ class ParseTests {
                 second shouldBe 30
             }
 
-            dateTime.convertToLocalDateTime(pattern, locale) shouldBe parsed
+            dateTime.convertToLocalDateTime(pattern) shouldBe parsed
             with(dateTime.toDataFrame()) {
                 convert { dateTime }.toLocalDateTime(pattern)[dateTime.name] shouldBe parsed
                 parse(ParserOptions(javaDateTimePattern = pattern))[dateTime.name] shouldBe parsed
@@ -120,7 +124,7 @@ class ParseTests {
             DataFrame.parser.addJavaDateTimePattern(pattern)
 
             dateTime.parse(ParserOptions(locale = locale)) shouldBe parsed
-            dateTime.convertToLocalDateTime(pattern, locale) shouldBe parsed
+            dateTime.convertToLocalDateTime(pattern) shouldBe parsed
 
             DataFrame.parser.resetToDefault()
         } finally {

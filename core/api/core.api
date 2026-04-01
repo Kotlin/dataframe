@@ -1359,10 +1359,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static synthetic fun convertToLocalDateFromIntNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalDateFromLong (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun convertToLocalDateFromLong$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToLocalDateFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToLocalDateFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToLocalDateFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToLocalDateFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalDateFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToLocalDateFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalDateFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToLocalDateFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalDateFromStringNullablePattern (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalDateFromStringPattern (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalDateFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalDateTime (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalDateTime (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -1381,10 +1383,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static synthetic fun convertToLocalDateTimeFromStdlibInstant$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalDateTimeFromStdlibInstantNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun convertToLocalDateTimeFromStdlibInstantNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToLocalDateTimeFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToLocalDateTimeFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToLocalDateTimeFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToLocalDateTimeFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalDateTimeFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToLocalDateTimeFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalDateTimeFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToLocalDateTimeFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalDateTimeFromStringNullablePattern (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalDateTimeFromStringPattern (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalDateTimeFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalTime (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalTime (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -1393,10 +1397,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static synthetic fun convertToLocalTimeFromInt$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalTimeFromLong (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun convertToLocalTimeFromLong$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToLocalTimeFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToLocalTimeFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToLocalTimeFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToLocalTimeFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalTimeFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToLocalTimeFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalTimeFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToLocalTimeFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalTimeFromStringNullablePattern (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToLocalTimeFromStringPattern (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalTimeFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToLocalTimeIntNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun convertToLocalTimeIntNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -1416,6 +1422,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static final fun convertToUrlFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun to (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun to (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun to (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun to$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBigDecimal (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBigDecimalTAny (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBigInteger (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -1445,10 +1453,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static final fun toInt (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toIntTAny (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLocalDate (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun toLocalDateFromString (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun toLocalDateFromString$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun toLocalDateFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun toLocalDateFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalDateFromString (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun toLocalDateFromString$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalDateFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun toLocalDateFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalDateFromStringNullablePattern (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalDateFromStringPattern (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLocalDateFromTInt (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun toLocalDateFromTInt$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLocalDateFromTIntNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -1458,10 +1468,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static final fun toLocalDateFromTLongNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun toLocalDateFromTLongNullable$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLocalDateTime (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun toLocalDateTimeFromString (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun toLocalDateTimeFromString$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun toLocalDateTimeFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun toLocalDateTimeFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalDateTimeFromString (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun toLocalDateTimeFromString$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalDateTimeFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun toLocalDateTimeFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalDateTimeFromStringNullablePattern (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalDateTimeFromStringPattern (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLocalDateTimeFromTDeprecatedInstant (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun toLocalDateTimeFromTDeprecatedInstant$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLocalDateTimeFromTDeprecatedInstantNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -1479,10 +1491,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static final fun toLocalDateTimeFromTStdlibInstantNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun toLocalDateTimeFromTStdlibInstantNullable$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLocalTime (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun toLocalTimeFromString (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun toLocalTimeFromString$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun toLocalTimeFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun toLocalTimeFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalTimeFromString (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun toLocalTimeFromString$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalTimeFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun toLocalTimeFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/format/DateTimeFormat;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalTimeFromStringNullablePattern (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toLocalTimeFromStringPattern (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLocalTimeFromTInt (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun toLocalTimeFromTInt$default (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toLocalTimeFromTIntNullable (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlinx/datetime/TimeZone;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -2257,9 +2271,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/GenerateCodeKt {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/GlobalParserOptions {
-	public abstract fun addDateTimePattern (Ljava/lang/String;)V
+	public abstract fun addDateTimeFormat (Lkotlinx/datetime/format/DateTimeFormat;Lkotlin/reflect/KType;)V
+	public fun addDateTimePattern (Ljava/lang/String;)V
+	public abstract fun addJavaDateTimePattern (Ljava/lang/String;Lkotlin/reflect/KType;)V
+	public static synthetic fun addJavaDateTimePattern$default (Lorg/jetbrains/kotlinx/dataframe/api/GlobalParserOptions;Ljava/lang/String;Lkotlin/reflect/KType;ILjava/lang/Object;)V
 	public abstract fun addNullString (Ljava/lang/String;)V
 	public abstract fun addSkipType (Lkotlin/reflect/KType;)V
+	public abstract fun getDateTimeLibrary ()Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;
 	public abstract fun getLocale ()Ljava/util/Locale;
 	public abstract fun getNulls ()Ljava/util/Set;
 	public abstract fun getParseExperimentalInstant ()Z
@@ -2267,6 +2285,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/GlobalParser
 	public abstract fun getSkipTypes ()Ljava/util/Set;
 	public abstract fun getUseFastDoubleParser ()Z
 	public abstract fun resetToDefault ()V
+	public abstract fun setDateTimeLibrary (Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;)V
 	public abstract fun setLocale (Ljava/util/Locale;)V
 	public abstract fun setParseExperimentalInstant (Z)V
 	public abstract fun setParseExperimentalUuid (Z)V
@@ -3373,6 +3392,14 @@ public final class org/jetbrains/kotlinx/dataframe/api/NullsKt {
 	public static final fun filterNotNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary : java/lang/Enum {
+	public static final field JAVA_TIME Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;
+	public static final field KOTLINX_DATETIME Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/api/ParseKt {
 	public static final fun getParser (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;)Lorg/jetbrains/kotlinx/dataframe/api/GlobalParserOptions;
 	public static final fun parse (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -3398,22 +3425,14 @@ public final class org/jetbrains/kotlinx/dataframe/api/ParseKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions {
-	public fun <init> ()V
-	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;)V
-	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;)V
-	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)V
-	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final synthetic fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public final synthetic fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public final fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;
+	public synthetic fun <init> (Ljava/util/Locale;Ljava/util/Set;Ljava/util/Set;Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy (Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getDateTimeFormatter ()Ljava/time/format/DateTimeFormatter;
-	public final fun getDateTimePattern ()Ljava/lang/String;
+	public final fun getDateTimeFormats ()Ljava/util/Set;
+	public final fun getDateTimeLibrary ()Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;
+	public final fun getJavaDateTimeFormatters ()Ljava/util/Set;
 	public final fun getLocale ()Ljava/util/Locale;
 	public final fun getNullStrings ()Ljava/util/Set;
 	public final fun getParseExperimentalInstant ()Ljava/lang/Boolean;
@@ -3422,6 +3441,25 @@ public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions {
 	public final fun getUseFastDoubleParser ()Ljava/lang/Boolean;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion {
+	public final fun createDefault (Ljava/util/Locale;Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun createDefault$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;Ljava/util/Locale;Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun createWithJavaTimeFormatter (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun createWithJavaTimeFormatter$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun createWithJavaTimeFormatters (Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun createWithJavaTimeFormatters$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun createWithJavaTimeFormattersByType (Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun createWithJavaTimeFormattersByType$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun createWithJavaTimePattern (Ljava/util/Locale;Ljava/lang/String;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun createWithJavaTimePattern$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;Ljava/util/Locale;Ljava/lang/String;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun createWithJavaTimePatterns (Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun createWithJavaTimePatterns$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun createWithKotlixDateTimeFormats (Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun createWithKotlixDateTimeFormats$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun createWithKotlixDateTimeFormatsByType (Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun createWithKotlixDateTimeFormatsByType$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;Ljava/util/Locale;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/PercentileKt {

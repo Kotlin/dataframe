@@ -267,7 +267,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun parseWithOptions() {
         // SampleStart
-        df.parse(options = ParserOptions(locale = Locale.CHINA, dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE))
+        df.parse(options = ParserOptions(locale = Locale.CHINA, javaDateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE))
         // SampleEnd
     }
 
