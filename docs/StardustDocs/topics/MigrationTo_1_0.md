@@ -156,7 +156,8 @@ The next functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
 | `df.filterBy(column)`                                          | `df.filter { column }`                                                       | Replaced with another function.        |
 | `FormattingDSL`                                                | `FormattingDsl`                                                              | Renamed to the correct CamelCase.      |
 | `RGBColor`                                                     | `RgbColor`                                                                   | Renamed to the correct CamelCase.      |
-| `df.insert(column).after(columnPath)`                          | `df.insert(column).after { columnPath }`                                     | Replaced with another function.        |
+| `df.insert(column).after(columnPath)`                          | `df.insert(column).after { columnPath }`                                     | Replaced with another overload.        |
+| `df.insert(column).under(columnPath)`                          | `df.insert(column).under { columnPath }`                                     | Replaced with another overload.        |
 | `CompareResult.Equals` / `CompareResult.isEqual()`             | `CompareResult.Matches` / `CompareResult.matches()`                          | Renamed to better reflect its purpose. |
 | `CompareResult.isSuperOrEqual()`                               | `CompareResult.isSuperOrMatches()`                                           | Renamed to better reflect its purpose. |
 
