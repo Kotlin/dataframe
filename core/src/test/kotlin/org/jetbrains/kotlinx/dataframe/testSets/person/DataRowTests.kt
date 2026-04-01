@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.columnNames
@@ -126,5 +127,83 @@ class DataRowTests : BaseTest() {
         val row = map.toDataRow()
         row["a"] shouldBe 1
         row["b"] shouldBe true
+    }
+
+    @Test
+    fun `toDataRow nested`() {
+        val map = mapOf(
+            "name" to "a",
+            "metadata" to
+                mapOf(
+                    "country" to "Philippines",
+                    "region" to mapOf("name" to "Caraga", "code" to "XIII"),
+                    "population" to mapOf("value" to "12345", "year" to 2020),
+                    "wrongMap" to mapOf(1 to 2, 4 to 4),
+                ),
+        )
+        map.toDataRow() shouldBe map.toDataRow(maxDepth = 0, convertKeysToString = true)
+        map.toDataRow(maxDepth = 0).let { row ->
+            row["name"] shouldBe "a"
+            row["metadata"] shouldBe mapOf(
+                "country" to "Philippines",
+                "region" to mapOf("name" to "Caraga", "code" to "XIII"),
+                "population" to mapOf("value" to "12345", "year" to 2020),
+                "wrongMap" to mapOf(1 to 2, 4 to 4),
+            )
+        }
+
+        map.toDataRow(maxDepth = 1).let { row ->
+            row["name"] shouldBe "a"
+            row.getColumnGroup("metadata").let { row ->
+                row["country"] shouldBe "Philippines"
+                row["region"] shouldBe mapOf("name" to "Caraga", "code" to "XIII")
+                row["population"] shouldBe mapOf("value" to "12345", "year" to 2020)
+                row["wrongMap"] shouldBe mapOf(1 to 2, 4 to 4)
+            }
+        }
+
+        map.toDataRow(maxDepth = 2).let { row ->
+            row["name"] shouldBe "a"
+            row.getColumnGroup("metadata").let { row ->
+                row["country"] shouldBe "Philippines"
+                row.getColumnGroup("region").let { row ->
+                    row["name"] shouldBe "Caraga"
+                    row["code"] shouldBe "XIII"
+                }
+                row.getColumnGroup("population").let { row ->
+                    row["value"] shouldBe "12345"
+                    row["year"] shouldBe 2020
+                }
+                row.getColumnGroup("wrongMap").let { row ->
+                    row["1"] shouldBe 2
+                    row["4"] shouldBe 4
+                }
+            }
+        }
+
+        map.toDataRow(maxDepth = 2, convertKeysToString = false).let { row ->
+            row["name"] shouldBe "a"
+            row.getColumnGroup("metadata").let { row ->
+                row["country"] shouldBe "Philippines"
+                row.getColumnGroup("region").let { row ->
+                    row["name"] shouldBe "Caraga"
+                    row["code"] shouldBe "XIII"
+                }
+                row.getColumnGroup("population").let { row ->
+                    row["value"] shouldBe "12345"
+                    row["year"] shouldBe 2020
+                }
+                row["wrongMap"] shouldBe mapOf(1 to 2, 4 to 4)
+            }
+        }
+
+        val otherMap = mapOf(1 to 1, "2" to 2)
+        otherMap.toDataRow().let { row ->
+            row["1"] shouldBe 1
+            row["2"] shouldBe 2
+        }
+        shouldThrow<IllegalArgumentException> {
+            otherMap.toDataRow(convertKeysToString = false)
+        }
     }
 }
