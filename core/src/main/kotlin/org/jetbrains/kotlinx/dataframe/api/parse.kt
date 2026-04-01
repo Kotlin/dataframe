@@ -8,22 +8,29 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary.JAVA_TIME
+import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary.KOTLIN_DATETIME
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.KotlinxDateTimeLocaleSnippet
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
+import org.jetbrains.kotlinx.dataframe.impl.api.guessFormatType
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.util.ADD_DATE_TIME_PATTERN
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
-import java.time.format.DateTimeFormatter
+import java.time.temporal.Temporal
 import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
 import java.time.format.DateTimeFormatter as JavaDateTimeFormatter
 
 /**
@@ -75,9 +82,6 @@ public interface GlobalParserOptions {
     /**
      * Adds a Java-based date-time pattern to the global parser options of DataFrame.
      *
-     * __NOTE__: Adding any Java-based date-time argument to DataFrame's parser options will
-     * disable the default kotlinx-datetime-based date-time parsing.
-     *
      * DataFrame will attempt to parse [Strings][String] using your provided patterns first
      * before falling back to the default (ISO) formats.
      *
@@ -85,8 +89,11 @@ public interface GlobalParserOptions {
      * ```kt
      * DataFrame.parser.addJavaDateTimePattern("MM/dd yyyy")
      * ```
+     *
+     * @param [formatType] the expected java date-time type of the [pattern].
+     *   If null, the pattern will be attempted for [JavaLocalDateTime], [JavaLocalDateTime], and [JavaLocalTime].
      */
-    public fun addJavaDateTimePattern(pattern: String)
+    public fun addJavaDateTimePattern(pattern: String, formatType: KType? = null)
 
     /**
      * __Deprecated:__
@@ -124,7 +131,7 @@ public interface GlobalParserOptions {
      * )
      * ```
      */
-    public fun addDateTimeFormat(format: DateTimeFormat<*>)
+    public fun addDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType)
 
     public fun addNullString(str: String)
 
@@ -164,6 +171,45 @@ public interface GlobalParserOptions {
      * In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
      */
     public var parseExperimentalInstant: Boolean
+
+    /**
+     * DataFrame supports parsing to either kotlinx-datetime or java.time types.
+     *
+     * We recommend using [kotlinx-datetime][KOTLIN_DATETIME] by default, however
+     * @include [KotlinxDateTimeLocaleSnippet].
+     *
+     * @see [addDateTimeFormat]
+     * @see [addJavaDateTimePattern]
+     */
+    public var dateTimeLibrary: ParseDateTimeLibrary?
+}
+
+/**
+ * DataFrame supports parsing to either kotlinx-datetime or java.time types.
+ *
+ * We recommend using [kotlinx-datetime][KOTLIN_DATETIME] by default, however
+ * @include [KotlinxDateTimeLocaleSnippet].
+ */
+public enum class ParseDateTimeLibrary {
+
+    /** https://github.com/Kotlin/kotlinx-datetime */
+    KOTLIN_DATETIME,
+
+    /** https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html */
+    JAVA_TIME,
+}
+
+/** @include [GlobalParserOptions.addDateTimeFormat] */
+public inline fun <reified T : Any> GlobalParserOptions.addDateTimeFormat(format: DateTimeFormat<out T>) {
+    addDateTimeFormat(format = format, formatType = typeOf<T>().withNullability(false))
+}
+
+/** @include [GlobalParserOptions.addJavaDateTimePattern] */
+public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimePattern(pattern: String) {
+    addJavaDateTimePattern(
+        pattern = pattern,
+        formatType = typeOf<T>(),
+    )
 }
 
 /**
@@ -181,6 +227,8 @@ public interface GlobalParserOptions {
  * #### Parsing date-time strings
  *
  * For parsing date-time strings, the kotlinx-datetime library is used by default.
+ * You can change this by specifying [dateTimeLibrary].
+ *
  * You can define your own [dateTimeFormats] to customize date-time parsing.
  *
  * For example, to always allow DataFrame to parse "12/24 2023" [Strings][String]:
@@ -193,29 +241,32 @@ public interface GlobalParserOptions {
  * ```
  *
  * If you want to use `java.time.*` based date-time parsing instead, you can
- * - skip all kotlin date types by providing:
+ * - set [dateTimeLibrary] to [JAVA_TIME];
+ * - or provide either [javaDateTimeFormatters] or [javaDateTimePatterns];
+ * - or skip some kotlin date types by providing:
  *   ```kt
  *   skipTypes = setOf(
  *       typeOf<kotlinx.datetime.LocalDate>(),
  *       typeOf<kotlinx.datetime.LocalDateTime>(),
  *       typeOf<kotlinx.datetime.LocalTime>(),
+ *       etc.
  *   )
  *   ```
- * - or provide either [javaDateTimeFormatter] or [javaDateTimePattern].
+ *   this allows mixed date-time library results.
  *
  * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
- *   If specified instead of [javaDateTimeFormatter], it will be used in combination with [javaDateTimePattern]
- *   to create a [JavaDateTimeFormatter]. Just providing [locale] will not allow you to parse
- *   locale-specific dates!
- * @param javaDateTimeFormatter a [JavaDateTimeFormatter] to use for parsing dates, if not specified, it will be created
- *   from [javaDateTimePattern] and [locale]. If neither [javaDateTimeFormatter] nor [javaDateTimePattern] are specified,
+ *   It will be used to parse Java date-time classes if [dateTimeLibrary] is [JAVA_TIME].
+ * @param javaDateTimeFormatters a [JavaDateTimeFormatter] to use for parsing dates, if not specified, it will be created
+ *   from [javaDateTimePattern] and [locale]. If neither [javaDateTimeFormatters] nor [javaDateTimePattern] are specified,
  *   [JavaDateTimeFormatter.ISO_LOCAL_DATE_TIME] will be used.
- *   Specifying [javaDateTimeFormatter] disable kotlinx-datetime based parsing.
- * @param javaDateTimePattern a pattern to use for parsing dates. If specified instead of [javaDateTimeFormatter],
+ *   Specifying [javaDateTimeFormatters] will set [dateTimeLibrary] to [JAVA_TIME].
+ * @param javaDateTimePattern a pattern to use for parsing dates. If specified instead of [javaDateTimeFormatters],
  *   it will be used to create a [JavaDateTimeFormatter].
- *   Specifying [javaDateTimePattern] disable kotlinx-datetime based parsing.
+ *   Specifying [javaDateTimePattern] will set [dateTimeLibrary] to [JAVA_TIME].
  * @param dateTimeFormats a set of custom kotlinx-datetime formats to use for parsing dates and other timestamps.
  *   If specified, these formats will be attempted before the default ISO formats.
+ *   Specifying [dateTimeFormats] will set [dateTimeLibrary] to [KOTLIN_DATETIME].
+ * @param dateTimeLibrary the library to use for parsing dates and numbers. By default, it's [KOTLIN_DATETIME].
  * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
  *   `["null", "NULL", "NA", "N/A"]`.
  * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
@@ -235,198 +286,348 @@ public interface GlobalParserOptions {
  *   In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
  */
 public class ParserOptions private constructor(
-    public val locale: Locale? = null,
-    public val javaDateTimeFormatter: JavaDateTimeFormatter? = null,
-    public val javaDateTimePattern: String? = null,
-    public val dateTimeFormats: Set<DateTimeFormat<*>>? = null,
-    public val nullStrings: Set<String>? = null,
-    public val skipTypes: Set<KType>? = null,
-    public val useFastDoubleParser: Boolean? = null,
-    public val parseExperimentalUuid: Boolean? = null,
-    public val parseExperimentalInstant: Boolean? = null,
+    public val locale: Locale?,
+    public val javaDateTimeFormatters: Set<Pair<KType?, JavaDateTimeFormatter>>?,
+    public val dateTimeFormats: Set<Pair<KType, DateTimeFormat<out Any>>>?,
+    public val dateTimeLibrary: ParseDateTimeLibrary?,
+    public val nullStrings: Set<String>?,
+    public val skipTypes: Set<KType>?,
+    public val useFastDoubleParser: Boolean?,
+    public val parseExperimentalUuid: Boolean?,
+    public val parseExperimentalInstant: Boolean?,
 ) {
 
     init {
-        require(listOf(javaDateTimeFormatter, javaDateTimePattern, dateTimeFormats).count { it != null } <= 1) {
+        require(listOf(javaDateTimeFormatters, dateTimeFormats).count { it != null } <= 1) {
             "ParserOptions can only use one of the following arguments at a time: javaDateTimeFormatter, javaDateTimePattern, dateTimeFormats"
         }
     }
 
-    /**
-     * We parse to Kotlin datetime types by default.
-     * However, if we have a [javaDateTimeFormatter] or [javaDateTimePattern], we parse to Java datetime types.
-     */
-    internal val javaDateTimeArgumentsProvided = javaDateTimeFormatter != null || javaDateTimePattern != null
+    public companion object {
+        // default constructor
+        @JvmName("createDefault")
+        public operator fun invoke(
+            locale: Locale? = null,
+            dateTimeLibrary: ParseDateTimeLibrary? = null,
+            nullStrings: Iterable<String>? = null,
+            skipTypes: Iterable<KType>? = null,
+            useFastDoubleParser: Boolean? = null,
+            parseExperimentalUuid: Boolean? = null,
+            parseExperimentalInstant: Boolean? = null,
+        ): ParserOptions =
+            ParserOptions(
+                locale = locale,
+                javaDateTimeFormatters = null,
+                dateTimeFormats = null,
+                dateTimeLibrary = dateTimeLibrary,
+                nullStrings = nullStrings?.toSet(),
+                skipTypes = skipTypes?.toSet(),
+                useFastDoubleParser = useFastDoubleParser,
+                parseExperimentalUuid = parseExperimentalUuid,
+                parseExperimentalInstant = parseExperimentalInstant,
+            )
 
-    // Kotlin datetime constructor (default)
-    public constructor(
-        locale: Locale? = null,
-        dateTimeFormats: Set<DateTimeFormat<*>>? = null,
-        nullStrings: Set<String>? = null,
-        skipTypes: Set<KType>? = null,
-        useFastDoubleParser: Boolean? = null,
-        parseExperimentalUuid: Boolean? = null,
-        parseExperimentalInstant: Boolean? = null,
-    ) : this(
-        locale = locale,
-        javaDateTimeFormatter = null,
-        javaDateTimePattern = null,
-        dateTimeFormats = dateTimeFormats,
-        nullStrings = nullStrings,
-        skipTypes = skipTypes,
-        useFastDoubleParser = useFastDoubleParser,
-        parseExperimentalUuid = parseExperimentalUuid,
-        parseExperimentalInstant = parseExperimentalInstant,
-    )
+        // kotlinx-datetime constructor 1
+        @JvmName("createWithKotlixDateTimeFormatsByType")
+        public operator fun invoke(
+            locale: Locale? = null,
+            dateTimeFormatsByType: Iterable<Pair<KType, DateTimeFormat<out Any>>>?,
+            nullStrings: Iterable<String>? = null,
+            skipTypes: Iterable<KType>? = null,
+            useFastDoubleParser: Boolean? = null,
+            parseExperimentalUuid: Boolean? = null,
+            parseExperimentalInstant: Boolean? = null,
+        ): ParserOptions =
+            ParserOptions(
+                locale = locale,
+                javaDateTimeFormatters = null,
+                dateTimeFormats = dateTimeFormatsByType?.toSet(),
+                dateTimeLibrary = KOTLIN_DATETIME,
+                nullStrings = nullStrings?.toSet(),
+                skipTypes = skipTypes?.toSet(),
+                useFastDoubleParser = useFastDoubleParser,
+                parseExperimentalUuid = parseExperimentalUuid,
+                parseExperimentalInstant = parseExperimentalInstant,
+            )
 
-    // javaDateTimeFormatter constructor
-    public constructor(
-        locale: Locale? = null,
-        javaDateTimeFormatter: JavaDateTimeFormatter?,
-        nullStrings: Set<String>? = null,
-        skipTypes: Set<KType>? = null,
-        useFastDoubleParser: Boolean? = null,
-        parseExperimentalUuid: Boolean? = null,
-        parseExperimentalInstant: Boolean? = null,
-    ) : this(
-        locale = locale,
-        javaDateTimeFormatter = javaDateTimeFormatter,
-        javaDateTimePattern = null,
-        dateTimeFormats = null,
-        nullStrings = nullStrings,
-        skipTypes = skipTypes,
-        useFastDoubleParser = useFastDoubleParser,
-        parseExperimentalUuid = parseExperimentalUuid,
-        parseExperimentalInstant = parseExperimentalInstant,
-    )
+        // kotlinx-datetime constructor 2 (simplified dateTimeFormats, guessing types)
+        @JvmName("createWithKotlixDateTimeFormats")
+        public operator fun invoke(
+            locale: Locale? = null,
+            dateTimeFormats: Iterable<DateTimeFormat<out Any>>?,
+            nullStrings: Iterable<String>? = null,
+            skipTypes: Iterable<KType>? = null,
+            useFastDoubleParser: Boolean? = null,
+            parseExperimentalUuid: Boolean? = null,
+            parseExperimentalInstant: Boolean? = null,
+        ): ParserOptions =
+            ParserOptions(
+                locale = locale,
+                javaDateTimeFormatters = null,
+                dateTimeFormats = dateTimeFormats?.let {
+                    dateTimeFormats.mapTo(mutableSetOf()) { it.guessFormatType() to it }
+                },
+                dateTimeLibrary = KOTLIN_DATETIME,
+                nullStrings = nullStrings?.toSet(),
+                skipTypes = skipTypes?.toSet(),
+                useFastDoubleParser = useFastDoubleParser,
+                parseExperimentalUuid = parseExperimentalUuid,
+                parseExperimentalInstant = parseExperimentalInstant,
+            )
 
-    // javaDateTimePattern constructor 2
-    public constructor(
-        locale: Locale? = null,
-        javaDateTimePattern: String?,
-        nullStrings: Set<String>? = null,
-        skipTypes: Set<KType>? = null,
-        useFastDoubleParser: Boolean? = null,
-        parseExperimentalUuid: Boolean? = null,
-        parseExperimentalInstant: Boolean? = null,
-    ) : this(
-        locale = locale,
-        javaDateTimeFormatter = null,
-        javaDateTimePattern = javaDateTimePattern,
-        dateTimeFormats = null,
-        nullStrings = nullStrings,
-        skipTypes = skipTypes,
-        useFastDoubleParser = useFastDoubleParser,
-        parseExperimentalUuid = parseExperimentalUuid,
-        parseExperimentalInstant = parseExperimentalInstant,
-    )
+        // kotlinx-datetime constructor 3 (simplified dateTimeFormats, guessing types)
+        @JvmName("createWithKotlixDateTimeFormat")
+        public inline operator fun <reified T : Any> invoke(
+            locale: Locale? = null,
+            dateTimeFormat: DateTimeFormat<T>?,
+            nullStrings: Iterable<String>? = null,
+            skipTypes: Iterable<KType>? = null,
+            useFastDoubleParser: Boolean? = null,
+            parseExperimentalUuid: Boolean? = null,
+            parseExperimentalInstant: Boolean? = null,
+        ): ParserOptions =
+            ParserOptions(
+                locale = locale,
+                dateTimeFormatsByType = dateTimeFormat?.let {
+                    setOf(typeOf<T>() to dateTimeFormat)
+                },
+                nullStrings = nullStrings?.toSet(),
+                skipTypes = skipTypes?.toSet(),
+                useFastDoubleParser = useFastDoubleParser,
+                parseExperimentalUuid = parseExperimentalUuid,
+                parseExperimentalInstant = parseExperimentalInstant,
+            )
 
-    // region deprecated constructors
+        // java-time constructor 1
+        @JvmName("createWithJavaTimeFormattersByType")
+        public operator fun invoke(
+            locale: Locale? = null,
+            javaDateTimeFormattersByType: Iterable<Pair<KType?, JavaDateTimeFormatter>>?,
+            nullStrings: Iterable<String>? = null,
+            skipTypes: Iterable<KType>? = null,
+            useFastDoubleParser: Boolean? = null,
+            parseExperimentalUuid: Boolean? = null,
+            parseExperimentalInstant: Boolean? = null,
+        ): ParserOptions =
+            ParserOptions(
+                locale = locale,
+                javaDateTimeFormatters = javaDateTimeFormattersByType?.toSet(),
+                dateTimeFormats = null,
+                dateTimeLibrary = JAVA_TIME,
+                nullStrings = nullStrings?.toSet(),
+                skipTypes = skipTypes?.toSet(),
+                useFastDoubleParser = useFastDoubleParser,
+                parseExperimentalUuid = parseExperimentalUuid,
+                parseExperimentalInstant = parseExperimentalInstant,
+            )
 
-    /** For binary compatibility. */
-    @Deprecated(
-        message = PARSER_OPTIONS,
-        level = DeprecationLevel.HIDDEN,
-    )
-    public constructor(
-        locale: Locale? = null,
-        dateTimeFormatter: JavaDateTimeFormatter? = null,
-        dateTimePattern: String? = null,
-        nullStrings: Set<String>? = null,
-        skipTypes: Set<KType>? = null,
-        useFastDoubleParser: Boolean? = null,
-        parseExperimentalUuid: Boolean? = null,
-        parseExperimentalInstant: Boolean? = null,
-    ) : this(
-        locale = locale,
-        javaDateTimeFormatter = dateTimeFormatter,
-        javaDateTimePattern = dateTimePattern,
-        dateTimeFormats = null,
-        nullStrings = nullStrings,
-        skipTypes = skipTypes,
-        useFastDoubleParser = useFastDoubleParser,
-        parseExperimentalUuid = parseExperimentalUuid,
-        parseExperimentalInstant = parseExperimentalInstant,
-    )
+        // java-time constructor 2
+        @JvmName("createWithJavaTimeFormatters")
+        public operator fun invoke(
+            locale: Locale? = null,
+            javaDateTimeFormatters: Iterable<JavaDateTimeFormatter>?,
+            nullStrings: Iterable<String>? = null,
+            skipTypes: Iterable<KType>? = null,
+            useFastDoubleParser: Boolean? = null,
+            parseExperimentalUuid: Boolean? = null,
+            parseExperimentalInstant: Boolean? = null,
+        ): ParserOptions =
+            ParserOptions(
+                locale = locale,
+                javaDateTimeFormatters = javaDateTimeFormatters?.let {
+                    javaDateTimeFormatters.mapTo(mutableSetOf()) { null to it }
+                },
+                dateTimeFormats = null,
+                dateTimeLibrary = JAVA_TIME,
+                nullStrings = nullStrings?.toSet(),
+                skipTypes = skipTypes?.toSet(),
+                useFastDoubleParser = useFastDoubleParser,
+                parseExperimentalUuid = parseExperimentalUuid,
+                parseExperimentalInstant = parseExperimentalInstant,
+            )
 
-    /** For binary compatibility. */
-    @Deprecated(
-        message = PARSER_OPTIONS,
-        level = DeprecationLevel.HIDDEN,
-    )
-    public constructor(
-        locale: Locale? = null,
-        dateTimeFormatter: DateTimeFormatter? = null,
-        dateTimePattern: String? = null,
-        nullStrings: Set<String>? = null,
-        skipTypes: Set<KType>? = null,
-        useFastDoubleParser: Boolean? = null,
-    ) : this(
-        locale = locale,
-        javaDateTimeFormatter = dateTimeFormatter,
-        javaDateTimePattern = dateTimePattern,
-        dateTimeFormats = null,
-        nullStrings = nullStrings,
-        skipTypes = skipTypes,
-        useFastDoubleParser = useFastDoubleParser,
-        parseExperimentalUuid = null,
-        parseExperimentalInstant = null,
-    )
+        // java-time constructor 3
+        @JvmName("createWithJavaTimeFormatter")
+        public operator fun invoke(
+            locale: Locale? = null,
+            javaDateTimeFormatter: JavaDateTimeFormatter?,
+            nullStrings: Iterable<String>? = null,
+            skipTypes: Iterable<KType>? = null,
+            useFastDoubleParser: Boolean? = null,
+            parseExperimentalUuid: Boolean? = null,
+            parseExperimentalInstant: Boolean? = null,
+        ): ParserOptions =
+            ParserOptions(
+                locale = locale,
+                javaDateTimeFormatters = javaDateTimeFormatter?.let {
+                    setOf(null to javaDateTimeFormatter)
+                },
+                dateTimeFormats = null,
+                dateTimeLibrary = JAVA_TIME,
+                nullStrings = nullStrings?.toSet(),
+                skipTypes = skipTypes?.toSet(),
+                useFastDoubleParser = useFastDoubleParser,
+                parseExperimentalUuid = parseExperimentalUuid,
+                parseExperimentalInstant = parseExperimentalInstant,
+            )
 
-    /** For binary compatibility. */
-    @Deprecated(
-        message = PARSER_OPTIONS,
-        level = DeprecationLevel.HIDDEN,
-    )
-    public constructor(
-        locale: Locale? = null,
-        dateTimeFormatter: DateTimeFormatter? = null,
-        dateTimePattern: String? = null,
-        nullStrings: Set<String>? = null,
-    ) : this(
-        locale = locale,
-        javaDateTimeFormatter = dateTimeFormatter,
-        javaDateTimePattern = dateTimePattern,
-        dateTimeFormats = null,
-        nullStrings = nullStrings,
-        skipTypes = null,
-        useFastDoubleParser = null,
-        parseExperimentalUuid = null,
-        parseExperimentalInstant = null,
-    )
+        // java-time constructor 4
+        @JvmName("createWithJavaTimePatterns")
+        public operator fun invoke(
+            locale: Locale? = null,
+            javaDateTimePatterns: Iterable<String>?,
+            nullStrings: Iterable<String>? = null,
+            skipTypes: Iterable<KType>? = null,
+            useFastDoubleParser: Boolean? = null,
+            parseExperimentalUuid: Boolean? = null,
+            parseExperimentalInstant: Boolean? = null,
+        ): ParserOptions =
+            ParserOptions(
+                locale = locale,
+                javaDateTimeFormatters = javaDateTimePatterns?.let {
+                    javaDateTimePatterns.mapTo(mutableSetOf()) { null to JavaDateTimeFormatter.ofPattern(it) }
+                },
+                dateTimeFormats = null,
+                dateTimeLibrary = JAVA_TIME,
+                nullStrings = nullStrings?.toSet(),
+                skipTypes = skipTypes?.toSet(),
+                useFastDoubleParser = useFastDoubleParser,
+                parseExperimentalUuid = parseExperimentalUuid,
+                parseExperimentalInstant = parseExperimentalInstant,
+            )
 
-    // endregion
+        // java-time constructor 5
+        @JvmName("createWithJavaTimePattern")
+        public operator fun invoke(
+            locale: Locale? = null,
+            javaDateTimePattern: String?,
+            nullStrings: Iterable<String>? = null,
+            skipTypes: Iterable<KType>? = null,
+            useFastDoubleParser: Boolean? = null,
+            parseExperimentalUuid: Boolean? = null,
+            parseExperimentalInstant: Boolean? = null,
+        ): ParserOptions =
+            ParserOptions(
+                locale = locale,
+                javaDateTimeFormatters = javaDateTimePattern?.let {
+                    setOf(null to JavaDateTimeFormatter.ofPattern(javaDateTimePattern))
+                },
+                dateTimeFormats = null,
+                dateTimeLibrary = JAVA_TIME,
+                nullStrings = nullStrings?.toSet(),
+                skipTypes = skipTypes?.toSet(),
+                useFastDoubleParser = useFastDoubleParser,
+                parseExperimentalUuid = parseExperimentalUuid,
+                parseExperimentalInstant = parseExperimentalInstant,
+            )
+    }
 
-    internal fun getJavaDateTimeFormatter(): JavaDateTimeFormatter? =
-        when {
-            javaDateTimeFormatter != null -> javaDateTimeFormatter
+//    // region deprecated constructors
+//
+//    /** For binary compatibility. */
+//    @Deprecated(
+//        message = PARSER_OPTIONS,
+//        level = DeprecationLevel.HIDDEN,
+//    )
+//    public constructor(
+//        locale: Locale? = null,
+//        dateTimeFormatter: JavaDateTimeFormatter? = null,
+//        dateTimePattern: String? = null,
+//        nullStrings: Set<String>? = null,
+//        skipTypes: Set<KType>? = null,
+//        useFastDoubleParser: Boolean? = null,
+//        parseExperimentalUuid: Boolean? = null,
+//        parseExperimentalInstant: Boolean? = null,
+//    ) : this(
+//        locale = locale,
+//        javaDateTimeFormatter = dateTimeFormatter,
+//        javaDateTimePattern = dateTimePattern,
+//        dateTimeFormats = null,
+//        nullStrings = nullStrings,
+//        skipTypes = skipTypes,
+//        useFastDoubleParser = useFastDoubleParser,
+//        parseExperimentalUuid = parseExperimentalUuid,
+//        parseExperimentalInstant = parseExperimentalInstant,
+//    )
+//
+//    /** For binary compatibility. */
+//    @Deprecated(
+//        message = PARSER_OPTIONS,
+//        level = DeprecationLevel.HIDDEN,
+//    )
+//    public constructor(
+//        locale: Locale? = null,
+//        dateTimeFormatter: DateTimeFormatter? = null,
+//        dateTimePattern: String? = null,
+//        nullStrings: Set<String>? = null,
+//        skipTypes: Set<KType>? = null,
+//        useFastDoubleParser: Boolean? = null,
+//    ) : this(
+//        locale = locale,
+//        javaDateTimeFormatter = dateTimeFormatter,
+//        javaDateTimePattern = dateTimePattern,
+//        dateTimeFormats = null,
+//        nullStrings = nullStrings,
+//        skipTypes = skipTypes,
+//        useFastDoubleParser = useFastDoubleParser,
+//        parseExperimentalUuid = null,
+//        parseExperimentalInstant = null,
+//    )
+//
+//    /** For binary compatibility. */
+//    @Deprecated(
+//        message = PARSER_OPTIONS,
+//        level = DeprecationLevel.HIDDEN,
+//    )
+//    public constructor(
+//        locale: Locale? = null,
+//        dateTimeFormatter: DateTimeFormatter? = null,
+//        dateTimePattern: String? = null,
+//        nullStrings: Set<String>? = null,
+//    ) : this(
+//        locale = locale,
+//        javaDateTimeFormatter = dateTimeFormatter,
+//        javaDateTimePattern = dateTimePattern,
+//        dateTimeFormats = null,
+//        nullStrings = nullStrings,
+//        skipTypes = null,
+//        useFastDoubleParser = null,
+//        parseExperimentalUuid = null,
+//        parseExperimentalInstant = null,
+//    )
+//
+//    // endregion
 
-            javaDateTimePattern != null && locale != null ->
-                JavaDateTimeFormatter.ofPattern(javaDateTimePattern, locale)
-
-            javaDateTimePattern != null -> JavaDateTimeFormatter.ofPattern(javaDateTimePattern)
-
-            else -> null
-        }
+//    internal fun getJavaDateTimeFormatter(): JavaDateTimeFormatter? =
+//        when {
+//            javaDateTimeFormatters != null -> javaDateTimeFormatters
+//
+//            javaDateTimePattern != null && locale != null ->
+//                JavaDateTimeFormatter.ofPattern(javaDateTimePattern, locale)
+//
+//            javaDateTimePattern != null -> JavaDateTimeFormatter.ofPattern(javaDateTimePattern)
+//
+//            else -> null
+//        }
 
     public fun copy(
         locale: Locale? = this.locale,
-        javaDateTimeFormatter: JavaDateTimeFormatter? = this.javaDateTimeFormatter,
-        javaDateTimePattern: String? = this.javaDateTimePattern,
-        dateTimeFormats: Set<DateTimeFormat<*>>? = this.dateTimeFormats,
-        nullStrings: Set<String>? = this.nullStrings,
-        skipTypes: Set<KType>? = this.skipTypes,
+        javaDateTimeFormatters: Iterable<Pair<KType?, JavaDateTimeFormatter>>? = this.javaDateTimeFormatters,
+        dateTimeFormats: Iterable<Pair<KType, DateTimeFormat<out Any>>>? = this.dateTimeFormats,
+        dateTimeLibrary: ParseDateTimeLibrary? = this.dateTimeLibrary,
+        nullStrings: Iterable<String>? = this.nullStrings,
+        skipTypes: Iterable<KType>? = this.skipTypes,
         useFastDoubleParser: Boolean? = this.useFastDoubleParser,
         parseExperimentalUuid: Boolean? = this.parseExperimentalUuid,
         parseExperimentalInstant: Boolean? = this.parseExperimentalInstant,
     ): ParserOptions =
         ParserOptions(
             locale = locale,
-            javaDateTimeFormatter = javaDateTimeFormatter,
-            javaDateTimePattern = javaDateTimePattern,
-            dateTimeFormats = dateTimeFormats,
-            nullStrings = nullStrings,
-            skipTypes = skipTypes,
+            javaDateTimeFormatters = javaDateTimeFormatters?.toSet(),
+            dateTimeFormats = dateTimeFormats?.toSet(),
+            dateTimeLibrary = dateTimeLibrary,
+            nullStrings = nullStrings?.toSet(),
+            skipTypes = skipTypes?.toSet(),
             useFastDoubleParser = useFastDoubleParser,
             parseExperimentalUuid = parseExperimentalUuid,
             parseExperimentalInstant = parseExperimentalInstant,
@@ -441,11 +642,10 @@ public class ParserOptions private constructor(
         if (useFastDoubleParser != other.useFastDoubleParser) return false
         if (parseExperimentalUuid != other.parseExperimentalUuid) return false
         if (parseExperimentalInstant != other.parseExperimentalInstant) return false
-        if (javaDateTimeArgumentsProvided != other.javaDateTimeArgumentsProvided) return false
         if (locale != other.locale) return false
-        if (javaDateTimeFormatter != other.javaDateTimeFormatter) return false
-        if (javaDateTimePattern != other.javaDateTimePattern) return false
+        if (javaDateTimeFormatters != other.javaDateTimeFormatters) return false
         if (dateTimeFormats != other.dateTimeFormats) return false
+        if (dateTimeLibrary != other.dateTimeLibrary) return false
         if (nullStrings != other.nullStrings) return false
         if (skipTypes != other.skipTypes) return false
 
@@ -456,18 +656,17 @@ public class ParserOptions private constructor(
         var result = useFastDoubleParser?.hashCode() ?: 0
         result = 31 * result + (parseExperimentalUuid?.hashCode() ?: 0)
         result = 31 * result + (parseExperimentalInstant?.hashCode() ?: 0)
-        result = 31 * result + javaDateTimeArgumentsProvided.hashCode()
         result = 31 * result + (locale?.hashCode() ?: 0)
-        result = 31 * result + (javaDateTimeFormatter?.hashCode() ?: 0)
-        result = 31 * result + (javaDateTimePattern?.hashCode() ?: 0)
+        result = 31 * result + (javaDateTimeFormatters?.hashCode() ?: 0)
         result = 31 * result + (dateTimeFormats?.hashCode() ?: 0)
+        result = 31 * result + (dateTimeLibrary?.hashCode() ?: 0)
         result = 31 * result + (nullStrings?.hashCode() ?: 0)
         result = 31 * result + (skipTypes?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String =
-        "ParserOptions(locale=$locale, javaDateTimeFormatter=$javaDateTimeFormatter, javaDateTimePattern=$javaDateTimePattern, dateTimeFormats=$dateTimeFormats, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser, parseExperimentalUuid=$parseExperimentalUuid, parseExperimentalInstant=$parseExperimentalInstant, parseToJavaDateTimes=$javaDateTimeArgumentsProvided)"
+        "ParserOptions(locale=$locale, javaDateTimeFormatters=$javaDateTimeFormatters, dateTimeFormats=$dateTimeFormats, dateTimeLibrary=$dateTimeLibrary, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser, parseExperimentalUuid=$parseExperimentalUuid, parseExperimentalInstant=$parseExperimentalInstant)"
 }
 
 /** @include [tryParseImpl] */

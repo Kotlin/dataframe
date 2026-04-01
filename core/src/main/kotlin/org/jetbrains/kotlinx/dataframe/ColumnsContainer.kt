@@ -107,7 +107,7 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     public fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>>
 
-    public fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()
+    public operator fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()
 
     // endregion
 }
