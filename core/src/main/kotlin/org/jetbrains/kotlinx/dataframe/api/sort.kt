@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -218,6 +219,16 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): Group
 public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T, G> =
     toDataFrame()
         .sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }
+        .asGroupBy(groups)
+
+public fun <T, G, C> GroupBy<T, G>.sortByKey(columns: ColumnsSelector<T, C>): GroupBy<T, G> =
+    toDataFrame()
+        .sortBy { columns.toColumnSet() }
+        .asGroupBy(groups)
+
+public fun <T, G, C> GroupBy<T, G>.sortByKeyDesc(columns: ColumnsSelector<T, C>): GroupBy<T, G> =
+    toDataFrame()
+        .sortBy { columns.toColumnSet().desc() }
         .asGroupBy(groups)
 
 // endregion
