@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
+        alias(kodex)
     }
     with(libs.plugins) {
         alias(publisher)
