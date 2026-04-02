@@ -7,7 +7,6 @@ import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -36,8 +35,8 @@ import java.util.Locale
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
+import java.time.LocalDate as JavaLocalDate
 import kotlin.time.Instant as StdlibInstant
-import kotlinx.datetime.Instant as DeprecatedInstant
 
 //  can be enabled for showing logs for these tests
 private const val SHOW_LOGS = false
@@ -525,13 +524,13 @@ class DelimCsvTsvTests {
             text = frenchCsv,
             delimiter = ';',
             parserOptions = ParserOptions(
-                dateTimePattern = "dd/MM/yyyy",
+                javaDateTimePattern = "dd/MM/yyyy",
                 locale = Locale.FRENCH,
             ),
         )
 
         frenchDf["price"].type() shouldBe typeOf<Double?>()
-        frenchDf["date"].type() shouldBe typeOf<LocalDate?>()
+        frenchDf["date"].type() shouldBe typeOf<JavaLocalDate?>()
 
         @Language("csv")
         val dutchCsv =

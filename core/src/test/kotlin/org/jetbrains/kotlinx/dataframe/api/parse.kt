@@ -10,6 +10,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.plus
 import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toStdlibInstant
@@ -64,7 +65,7 @@ class ParseTests {
             val date by columnOf("January 1, 2020")
             val pattern = "MMMM d, yyyy"
 
-            val parsed = date.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalDate>()
+            val parsed = date.parse(ParserOptions(javaDateTimePattern = pattern)).cast<LocalDate>()
 
             parsed.type() shouldBe typeOf<LocalDate>()
             with(parsed[0]) {
@@ -76,10 +77,10 @@ class ParseTests {
             date.convertToLocalDate(pattern) shouldBe parsed
             with(date.toDataFrame()) {
                 convert { date }.toLocalDate(pattern)[date.name] shouldBe parsed
-                parse(ParserOptions(dateTimePattern = pattern))[date.name] shouldBe parsed
+                parse(ParserOptions(javaDateTimePattern = pattern))[date.name] shouldBe parsed
             }
 
-            DataFrame.parser.addDateTimePattern(pattern)
+            DataFrame.parser.addJavaDateTimePattern(pattern)
 
             date.parse() shouldBe parsed
             date.convertToLocalDate() shouldBe parsed
@@ -90,6 +91,7 @@ class ParseTests {
         }
     }
 
+    @OptIn(FormatStringsInDatetimeFormats::class)
     @Test
     fun parseDateTime() {
         val currentLocale = Locale.getDefault()
@@ -99,7 +101,9 @@ class ParseTests {
             val pattern = "d MMM yyyy HH:mm:ss"
             val locale = Locale.forLanguageTag("en-US")
 
-            val parsed = dateTime.parse(ParserOptions(dateTimePattern = pattern, locale = locale)).cast<LocalDateTime>()
+            val parsed = dateTime.parse(
+                ParserOptions(javaDateTimePattern = pattern, locale = locale),
+            ).cast<LocalDateTime>()
 
             parsed.type() shouldBe typeOf<LocalDateTime>()
             with(parsed[0]) {
@@ -111,16 +115,16 @@ class ParseTests {
                 second shouldBe 30
             }
 
-            dateTime.convertToLocalDateTime(pattern, locale) shouldBe parsed
+            dateTime.convertToLocalDateTime(pattern) shouldBe parsed
             with(dateTime.toDataFrame()) {
                 convert { dateTime }.toLocalDateTime(pattern)[dateTime.name] shouldBe parsed
-                parse(ParserOptions(dateTimePattern = pattern))[dateTime.name] shouldBe parsed
+                parse(ParserOptions(javaDateTimePattern = pattern))[dateTime.name] shouldBe parsed
             }
 
-            DataFrame.parser.addDateTimePattern(pattern)
+            DataFrame.parser.addJavaDateTimePattern(pattern)
 
             dateTime.parse(ParserOptions(locale = locale)) shouldBe parsed
-            dateTime.convertToLocalDateTime(pattern, locale) shouldBe parsed
+            dateTime.convertToLocalDateTime(pattern) shouldBe parsed
 
             DataFrame.parser.resetToDefault()
         } finally {
@@ -133,7 +137,7 @@ class ParseTests {
         val time by columnOf(" 13-05-30")
         val pattern = "HH-mm-ss"
 
-        val parsed = time.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalTime>()
+        val parsed = time.parse(ParserOptions(javaDateTimePattern = pattern)).cast<LocalTime>()
 
         parsed.type() shouldBe typeOf<LocalTime>()
         with(parsed[0]) {
@@ -144,10 +148,10 @@ class ParseTests {
         time.convertToLocalTime(pattern) shouldBe parsed
         with(time.toDataFrame()) {
             convert { time }.toLocalTime(pattern)[time] shouldBe parsed
-            parse(ParserOptions(dateTimePattern = pattern))[time] shouldBe parsed
+            parse(ParserOptions(javaDateTimePattern = pattern))[time] shouldBe parsed
         }
 
-        DataFrame.parser.addDateTimePattern(pattern)
+        DataFrame.parser.addJavaDateTimePattern(pattern)
 
         time.parse() shouldBe parsed
         time.convertToLocalTime() shouldBe parsed

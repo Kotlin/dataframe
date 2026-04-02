@@ -111,7 +111,7 @@ class Read {
         // SampleStart
         val df = DataFrame.readCsv(
             file,
-            parserOptions = ParserOptions(dateTimePattern = "dd/MMM/yy h:mm a")
+            parserOptions = ParserOptions(javaDateTimePattern = "dd/MMM/yy h:mm a")
         )
         // SampleEnd
     }
@@ -122,7 +122,7 @@ class Read {
         // SampleStart
         val df = DataFrame.readCsv(
             file,
-            parserOptions = ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
+            parserOptions = ParserOptions(javaDateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
         )
         // SampleEnd
     }

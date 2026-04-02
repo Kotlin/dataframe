@@ -44,7 +44,7 @@ class ConvertTests {
     @Test
     fun `convert nullable strings to time`() {
         val time by columnOf("11?22?33", null)
-        val converted = time.toDataFrame().convert { time }.toLocalTime("HH?mm?ss")[time]
+        val converted = time.toDataFrame().convert { time }.toLocalTime("HH?mm?ss")[{ "time"<String?>() }]
         converted.hasNulls shouldBe true
         converted[0] shouldBe LocalTime(11, 22, 33)
     }
