@@ -37,8 +37,20 @@ public annotation class Interpretable(val interpreter: String)
  */
 public annotation class Refine
 
+
+/**
+ * Disables plugin transformation of calls to @Refine functions, making
+ * dataframe code compile and work in context where plugin is not supported, for example inline functions or property getters,
+ * or not needed.
+ */
 @Retention(AnnotationRetention.SOURCE)
-@Target(AnnotationTarget.FILE, AnnotationTarget.EXPRESSION)
+@Target(
+    AnnotationTarget.FILE,
+    AnnotationTarget.EXPRESSION,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.CLASS,
+    AnnotationTarget.PROPERTY,
+)
 public annotation class DisableInterpretation
 
 @Target(AnnotationTarget.PROPERTY)
