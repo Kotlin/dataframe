@@ -28,17 +28,18 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 class CreateDataFrameTests {
+    open class CreateDataFrameData {
+        private val a = 1
+        protected val b = 2
+        internal val c = 3
+
+        @Suppress("RedundantVisibilityModifier")
+        public val d = 4
+    }
 
     @Test
     fun `visibility test`() {
-        class Data {
-            private val a = 1
-            protected val b = 2
-            internal val c = 3
-            public val d = 4
-        }
-
-        listOf(Data()).toDataFrame() shouldBe dataFrameOf("d")(4)
+        listOf(CreateDataFrameData()).toDataFrame() shouldBe dataFrameOf("d")(4)
     }
 
     @Test
