@@ -71,8 +71,9 @@ class SortDataColumn {
             ),
         )
 
-        col.sortWith { df1, df2 -> df1[a] - df2[a] } shouldBe sortedCol
-        col.sortWith(compareBy { it[a] }) shouldBe sortedCol
+        col.sortWith { df1, df2 -> a.getValue(df1) - a.getValue(df2) } shouldBe sortedCol
+        col.sortWith(compareBy { a.getValue(it) }) shouldBe sortedCol
+        col.sortWith(compareBy { a.getValue(it) }) shouldBe sortedCol
     }
 
     @Test
@@ -82,8 +83,8 @@ class SortDataColumn {
             maxOf { salaryInUsd } into "salary"
             maxBy { salaryInUsd } into "extra"
         }
-        aggregate.sortBy(pathOf("L", "salary"))[0][pathOf("L", "salary")] shouldBe null
-        aggregate.sortByDesc(pathOf("L", "salary"))[0][pathOf("L", "salary")] shouldBe 600_000
+        aggregate.sortBy { pathOf("L", "salary") }[0][pathOf("L", "salary")] shouldBe null
+        aggregate.sortByDesc { pathOf("L", "salary") }[0][pathOf("L", "salary")] shouldBe 600_000
     }
 
     @Test
@@ -94,7 +95,7 @@ class SortDataColumn {
             maxBy { salaryInUsd } into "extra"
         }
         shouldThrowMessage("Can not use ColumnGroup as sort column") {
-            aggregate.sortBy(pathOf("L", "extra"))
+            aggregate.sortBy { pathOf("L", "extra") }
         }
     }
 }
