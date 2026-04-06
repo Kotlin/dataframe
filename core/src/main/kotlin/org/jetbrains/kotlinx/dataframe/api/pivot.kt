@@ -219,7 +219,8 @@ internal interface PivotDocs {
      * Each function computes a statistic across the rows of a group and returns the result as
      * a new row of computed values in the resulting [DataFrame].
      *
-     * * [count][Pivot.count] — calculate the number of rows in each group;
+     * * [count][Pivot.count] — calculate the number of rows in each group
+     *   (optionally counting only rows that satisfy the given predicate);
      * * [max][Pivot.max] / [maxOf][Pivot.maxOf] / [maxFor][Pivot.maxFor] —
      *   calculate the maximum of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;

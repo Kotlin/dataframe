@@ -188,7 +188,8 @@ internal interface GroupByDocs {
      * Each function computes a statistic across the rows of a group and returns the result as
      * a new column (or several columns) in the resulting [DataFrame].
      *
-     * * [count][Grouped.count] — calculate the number of rows in each group;
+     * * [count][Grouped.count] — calculate the number of rows in each group
+     *   (optionally counting only rows that satisfy the given predicate);
      * * [max][Grouped.max] / [maxOf][Grouped.maxOf] / [maxFor][Grouped.maxFor] —
      *   calculate the maximum of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;
