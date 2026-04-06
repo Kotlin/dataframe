@@ -41,10 +41,18 @@ public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
 
 // region GroupBy
 
+/**
+ * Concatenates all [groups] in this [GroupBy] into a single [DataFrame].
+ *
+ * Doesn't take [keys] into account.
+ * See also [concatWithKeys], which also includes all grouping key columns.
+ *
+ * @return A new [DataFrame] where all groups are combined and additional key columns are included in each row.
+ */
 public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
 
 /**
- * Concatenates all groups in this [GroupBy] into a single [DataFrame],
+ * Concatenates all [groups] in this [GroupBy] into a single [DataFrame],
  * preserving and including all grouping key columns that are not present in the group's columns.
  *
  * Doesn't affect key columns that have the same name as columns inside the groups (even if their content differs).
