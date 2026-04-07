@@ -1,0 +1,418 @@
+package org.jetbrains.kotlinx.dataframe.api
+
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.format.DateTimeFormatBuilder
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.documentation.KotlinxDateTimeLocaleSnippet
+import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
+import org.jetbrains.kotlinx.dataframe.impl.api.fromPattern
+import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
+import org.jetbrains.kotlinx.dataframe.util.ADD_DATE_TIME_PATTERN
+import java.time.format.DateTimeFormatter
+import java.time.temporal.Temporal
+import java.util.Locale
+import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
+
+/**
+ * Global counterpart of [ParserOptions].
+ * Settings changed here will affect the defaults for all parsing operations.
+ *
+ * The default values are set by [Parsers.resetToDefault].
+ */
+public interface GlobalParserOptions {
+
+    public fun addJavaDateTimeFormatter(formatter: DateTimeFormatter, formatType: KType? = null)
+
+    /**
+     * Adds a Java-based date-time pattern to the global parser options of DataFrame.
+     *
+     * DataFrame will attempt to parse [Strings][String] using your provided patterns first
+     * before falling back to the default (ISO) formats.
+     *
+     * For example, to always allow DataFrame to parse "12/24 2023" [Strings][String]:
+     * ```kt
+     * DataFrame.parser.addJavaDateTimePattern("MM/dd yyyy")
+     * ```
+     *
+     * @param [formatType] the expected java date-time type of the [pattern].
+     *   If null, the pattern will be attempted for [JavaLocalDateTime], [JavaLocalDate], and [JavaLocalTime].
+     */
+    public fun addJavaDateTimePattern(pattern: String, formatType: KType? = null)
+
+    /**
+     * __Deprecated:__
+     *
+     * We recommend using [addDateTimeFormat] instead, built on kotlinx-datetime. This
+     * provides a good DSL.
+     *
+     * For example:
+     * ```kt
+     * DataFrame.parser.addDateTimeFormat(
+     *     LocalDate.Format {
+     *         monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
+     *     }
+     * )
+     * ```
+     *
+     * We do allow parsing by pattern too, but it requires an Opt-In and the exact type this pattern belongs to:
+     * ```kt
+     * @OptIn(FormatStringsInDatetimeFormats::class)
+     * DataFrame.parser.addDateTimeUnicodePattern<LocalDate>("MM/dd yyyy")
+     * ```
+     *
+     * If you want to keep using the Java-based date-time parsing, you can use [addJavaDateTimePattern].
+     */
+    @OptIn(FormatStringsInDatetimeFormats::class)
+    @Deprecated(
+        message = ADD_DATE_TIME_PATTERN,
+        replaceWith = ReplaceWith("addDateTimeUnicodePattern<LocalDateTime>(pattern)"),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun addDateTimePattern(pattern: String): Unit = addDateTimeUnicodePattern<LocalDateTime>(pattern)
+
+    @FormatStringsInDatetimeFormats
+    public fun addDateTimeUnicodePattern(pattern: String, formatType: KType)
+
+    /**
+     * Adds [format] to the global parser options of DataFrame.
+     *
+     * DataFrame will attempt to parse [Strings][String] using your provided formats first
+     * before falling back to the default (ISO) formats.
+     *
+     * For example, to always allow DataFrame to parse "12/24 2023" [Strings][String]:
+     * ```kt
+     * DataFrame.parser.addDateTimeFormat(
+     *     LocalDate.Format {
+     *         monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
+     *     }
+     * )
+     * ```
+     */
+    public fun addDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType)
+
+    public fun addNullString(str: String)
+
+    /** This function can be called to skip some types. Parsing will be attempted for all other types. */
+    public fun addSkipType(type: KType)
+
+    /** Whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter. */
+    public var useFastDoubleParser: Boolean
+
+    public fun resetToDefault()
+
+    public var locale: Locale
+
+    public val nulls: Set<String>
+
+    public val skipTypes: Set<KType>
+
+    /**
+     * Whether to allow parsing UUIDs to the experimental [Uuid] type.
+     * By default, this is false and UUIDs are not recognized.
+     *
+     * NOTE: Interacting with a [Uuid][Uuid] in your code might require
+     * `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
+     * In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
+     */
+    public var parseExperimentalUuid: Boolean
+
+    /**
+     * Whether to allow parsing to the [kotlin.time.Instant] type.
+     * This is marked "stable" from Kotlin 2.3.0+, so, by default this is `true`.
+     *
+     * If false, instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
+     *
+     * NOTE: If you are using an older Kotlin version,
+     * interacting with an [Instant][kotlin.time.Instant] in your code might require
+     * `@`[OptIn][OptIn]`(`[ExperimentalTime][kotlin.time.ExperimentalTime]`::class)`.
+     * In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
+     */
+    public var parseExperimentalInstant: Boolean
+
+    /**
+     * DataFrame supports parsing to either kotlinx-datetime or java.time types.
+     *
+     * We recommend using [kotlinx-datetime][KOTLIN_DATETIME] by default, however
+     * @include [KotlinxDateTimeLocaleSnippet].
+     *
+     * @see [addDateTimeFormat]
+     * @see [addJavaDateTimePattern]
+     */
+    public var dateTimeLibrary: ParseDateTimeLibrary?
+}
+
+/**
+ * ### Global Parser Options
+ *
+ * These options are used to configure how [DataColumns][DataColumn] of type [String] or [String?][String]
+ * should be parsed.
+ * You can always pass a [ParserOptions] object to functions that perform parsing, like [tryParse], [parse],
+ * or even [DataFrame.readCsv][DataFrame.Companion.readCsv] to override these options.
+ */
+public val DataFrame.Companion.parser: GlobalParserOptions
+    get() = Parsers
+
+/**
+ * DataFrame supports parsing to either kotlinx-datetime or java.time types.
+ *
+ * We recommend using [kotlinx-datetime][KOTLIN_DATETIME] by default, however
+ * @include [KotlinxDateTimeLocaleSnippet].
+ */
+public enum class ParseDateTimeLibrary {
+
+    /** https://github.com/Kotlin/kotlinx-datetime */
+    KOTLIN_DATETIME,
+
+    /** https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html */
+    JAVA_TIME,
+}
+
+/** @include [GlobalParserOptions.addDateTimeFormat] */
+public inline fun <reified T : Any> GlobalParserOptions.addDateTimeFormat(format: DateTimeFormat<out T>) {
+    addDateTimeFormat(format = format, formatType = typeOf<T>())
+}
+
+/** @include [GlobalParserOptions.addDateTimeUnicodePattern] */
+@FormatStringsInDatetimeFormats
+public inline fun <reified T : Any> GlobalParserOptions.addDateTimeUnicodePattern(pattern: String) {
+    addDateTimeUnicodePattern(pattern = pattern, formatType = typeOf<T>())
+}
+
+/** [GlobalParserOptions.addJavaDateTimeFormatter] */
+public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimeFormatter(formatter: DateTimeFormatter) {
+    addJavaDateTimeFormatter(formatter = formatter, formatType = typeOf<T>())
+}
+
+/** @include [GlobalParserOptions.addJavaDateTimePattern] */
+public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimePattern(pattern: String) {
+    addJavaDateTimePattern(pattern = pattern, formatType = typeOf<T>())
+}
+
+/**
+ * ### Options for parsing [String]`?` columns
+ *
+ * These options are used to configure how [DataColumn]s of type [String] or [String?][String] should be parsed.
+ * They can be passed to [tryParse] and [parse] functions.
+ *
+ * You can also use the [DataFrame.parser][DataFrame.Companion.parser] property to access and modify
+ * the global parser configuration.
+ *
+ * If any of the arguments in [ParserOptions] are `null` (or [ParserOptions] itself is `null`),
+ * the global configuration will be queried.
+ *
+ * #### Parsing date-time strings
+ *
+ * For parsing date-time strings, the kotlinx-datetime library is used by default.
+ * You can change this by specifying [dateTimeLibrary].
+ *
+ * You can define your own [dateTimeFormats] to customize date-time parsing.
+ *
+ * For example, to always allow DataFrame to parse "12/24 2023" [Strings][String]:
+ * ```kt
+ * dateTimeFormats = setOf(
+ *     LocalDate.Format {
+ *         monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
+ *     }
+ * )
+ * ```
+ *
+ * If you want to use `java.time.*` based date-time parsing instead, you can
+ * - set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA_TIME];
+ * - or provide either [javaDateTimeFormatters] or [javaDateTimePatterns];
+ * - or skip some kotlin date types by providing:
+ *   ```kt
+ *   skipTypes = setOf(
+ *       typeOf<kotlinx.datetime.LocalDate>(),
+ *       typeOf<kotlinx.datetime.LocalDateTime>(),
+ *       typeOf<kotlinx.datetime.LocalTime>(),
+ *       etc.
+ *   )
+ *   ```
+ *   this allows mixed date-time library results.
+ *
+ * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
+ *   It will be used to parse Java date-time classes if [dateTimeLibrary] is [ParseDateTimeLibrary.JAVA_TIME].
+ * @param javaDateTimeFormatters a [DateTimeFormatter] to use for parsing dates, if not specified, it will be created
+ *   from [javaDateTimePattern] and [locale]. If neither [javaDateTimeFormatters] nor [javaDateTimePattern] are specified,
+ *   [DateTimeFormatter.ISO_LOCAL_DATE_TIME] will be used.
+ *   Specifying [javaDateTimeFormatters] will set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA_TIME].
+ * @param javaDateTimePattern a pattern to use for parsing dates. If specified instead of [javaDateTimeFormatters],
+ *   it will be used to create a [DateTimeFormatter].
+ *   Specifying [javaDateTimePattern] will set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA_TIME].
+ * @param dateTimeFormats a set of custom kotlinx-datetime formats to use for parsing dates and other timestamps.
+ *   If specified, these formats will be attempted before the default ISO formats.
+ *   Specifying [dateTimeFormats] will set [dateTimeLibrary] to [ParseDateTimeLibrary.KOTLIN_DATETIME].
+ * @param dateTimeLibrary the library to use for parsing dates and numbers. By default, it's [ParseDateTimeLibrary.KOTLIN_DATETIME].
+ * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
+ *   `["null", "NULL", "NA", "N/A"]`.
+ * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
+ *   By default, it's an empty set. To skip all types except a specified one, use [convertTo] instead.
+ * @param useFastDoubleParser whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter.
+ * @param parseExperimentalUuid whether to allow parsing UUIDs to the experimental [Uuid] type.
+ *   By default, this is false and UUIDs are not recognized.
+ *   NOTE: Interacting with a [Uuid][Uuid] in your code might require
+ *   `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
+ *   In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
+ * @param parseExperimentalInstant whether to allow parsing to the [kotlin.time.Instant] type.
+ *    This is marked "stable" from Kotlin 2.3.0+, so, by default this is `true`.
+ *    If false, instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
+ *   NOTE: If you are using an older Kotlin version,
+ *   interacting with an [Instant][kotlin.time.Instant] in your code might require
+ *   `@`[OptIn][OptIn]`(`[ExperimentalTime][kotlin.time.ExperimentalTime]`::class)`.
+ *   In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
+ */
+public class ParserOptions(
+    public val locale: Locale? = null,
+    public val dateTime: DateTimeParserOptions<*>? = null,
+    public val nullStrings: Set<String>? = null,
+    public val skipTypes: Set<KType>? = null,
+    public val useFastDoubleParser: Boolean? = null,
+    public val parseExperimentalUuid: Boolean? = null,
+    public val parseExperimentalInstant: Boolean? = null,
+) {
+    public fun copy(
+        locale: Locale? = this.locale,
+        dateTimeParserOptions: DateTimeParserOptions<*>? = this.dateTime?.copy(),
+        nullStrings: Iterable<String>? = this.nullStrings,
+        skipTypes: Iterable<KType>? = this.skipTypes,
+        useFastDoubleParser: Boolean? = this.useFastDoubleParser,
+        parseExperimentalUuid: Boolean? = this.parseExperimentalUuid,
+        parseExperimentalInstant: Boolean? = this.parseExperimentalInstant,
+    ): ParserOptions =
+        ParserOptions(
+            locale = locale,
+            dateTime = dateTimeParserOptions,
+            nullStrings = nullStrings?.toSet(),
+            skipTypes = skipTypes?.toSet(),
+            useFastDoubleParser = useFastDoubleParser,
+            parseExperimentalUuid = parseExperimentalUuid,
+            parseExperimentalInstant = parseExperimentalInstant,
+        )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ParserOptions
+
+        if (useFastDoubleParser != other.useFastDoubleParser) return false
+        if (parseExperimentalUuid != other.parseExperimentalUuid) return false
+        if (parseExperimentalInstant != other.parseExperimentalInstant) return false
+        if (locale != other.locale) return false
+        if (dateTime != other.dateTime) return false
+        if (nullStrings != other.nullStrings) return false
+        if (skipTypes != other.skipTypes) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = useFastDoubleParser?.hashCode() ?: 0
+        result = 31 * result + (parseExperimentalUuid?.hashCode() ?: 0)
+        result = 31 * result + (parseExperimentalInstant?.hashCode() ?: 0)
+        result = 31 * result + (locale?.hashCode() ?: 0)
+        result = 31 * result + (dateTime?.hashCode() ?: 0)
+        result = 31 * result + (nullStrings?.hashCode() ?: 0)
+        result = 31 * result + (skipTypes?.hashCode() ?: 0)
+        return result
+    }
+
+    override fun toString(): String =
+        "ParserOptions(locale=$locale, dateTimeParserOptions=$dateTime, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser, parseExperimentalUuid=$parseExperimentalUuid, parseExperimentalInstant=$parseExperimentalInstant)"
+}
+
+public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Set<Pair<KType?, T>>) {
+
+    public abstract fun copy(): DateTimeParserOptions<T>
+
+    public companion object {
+        public val Kotlin: KotlinDateTimeParserOptions = KotlinDateTimeParserOptions
+        public val Java: JavaDateTimeParserOptions = JavaDateTimeParserOptions
+    }
+}
+
+public val KotlinDateTime: KotlinDateTimeParserOptions = KotlinDateTimeParserOptions
+public val JavaDateTime: JavaDateTimeParserOptions = JavaDateTimeParserOptions
+
+/**
+ * Kotlin(x) variant of [DateTimeParserOptions] using [DateTimeFormat].
+ */
+public open class KotlinDateTimeParserOptions(
+    override val dateTimeFormats: Set<Pair<KType, DateTimeFormat<out Any>>> = emptySet(),
+) : DateTimeParserOptions<DateTimeFormat<out Any>>(dateTimeFormats) {
+
+    public companion object : KotlinDateTimeParserOptions()
+
+    override fun copy(): KotlinDateTimeParserOptions = KotlinDateTimeParserOptions(dateTimeFormats = dateTimeFormats)
+
+    public fun copy(
+        dateTimeFormats: Iterable<Pair<KType, DateTimeFormat<out Any>>> = this.dateTimeFormats,
+    ): KotlinDateTimeParserOptions = KotlinDateTimeParserOptions(dateTimeFormats = dateTimeFormats.toSet())
+
+    public fun withDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType): KotlinDateTimeParserOptions =
+        copy(
+            dateTimeFormats = dateTimeFormats + (formatType.withNullability(false) to format),
+        )
+
+    public inline fun <reified T : Any> withDateTimeFormat(format: DateTimeFormat<out T>): KotlinDateTimeParserOptions =
+        withDateTimeFormat(format = format, formatType = typeOf<T>())
+
+    @FormatStringsInDatetimeFormats
+    public fun withUnicodePattern(pattern: String, formatType: KType): KotlinDateTimeParserOptions =
+        withDateTimeFormat(
+            format = DateTimeFormat.fromPattern(pattern, formatType),
+            formatType = formatType,
+        )
+
+    @FormatStringsInDatetimeFormats
+    public inline fun <reified T : Any> withUnicodePattern(pattern: String): KotlinDateTimeParserOptions =
+        withUnicodePattern(pattern = pattern, formatType = typeOf<T>())
+}
+
+/**
+ * Java time variant of [DateTimeParserOptions] using [DateTimeFormatter].
+ */
+public open class JavaDateTimeParserOptions(
+    override val dateTimeFormats: Set<Pair<KType?, DateTimeFormatter>> = emptySet(),
+    // TODO add Locale here
+) : DateTimeParserOptions<DateTimeFormatter>(dateTimeFormats) {
+
+    public companion object : JavaDateTimeParserOptions()
+
+    override fun copy(): JavaDateTimeParserOptions = JavaDateTimeParserOptions(dateTimeFormats = dateTimeFormats)
+
+    public fun copy(
+        dateTimeFormats: Iterable<Pair<KType?, DateTimeFormatter>> = this.dateTimeFormats,
+    ): JavaDateTimeParserOptions = JavaDateTimeParserOptions(dateTimeFormats = dateTimeFormats.toSet())
+
+    public fun withDateTimeFormatter(
+        formatter: DateTimeFormatter,
+        formatType: KType? = null,
+    ): JavaDateTimeParserOptions = copy(dateTimeFormats = dateTimeFormats + (formatType to formatter))
+
+    public inline fun <reified T : Temporal> withDateTimeFormatter(
+        formatter: DateTimeFormatter,
+    ): JavaDateTimeParserOptions = withDateTimeFormatter(formatter = formatter, formatType = typeOf<T>())
+
+    public fun withDateTimePattern(pattern: String, formatType: KType? = null): JavaDateTimeParserOptions =
+        withDateTimeFormatter(DateTimeFormatter.ofPattern(pattern), formatType)
+
+    public inline fun <reified T : Temporal> withDateTimePattern(pattern: String): JavaDateTimeParserOptions =
+        withDateTimePattern(pattern = pattern, formatType = typeOf<T>())
+}

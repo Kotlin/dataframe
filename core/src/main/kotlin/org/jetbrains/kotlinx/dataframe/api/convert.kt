@@ -39,9 +39,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.impl.api.ParserFunction
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
-import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.locale
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToDoubleImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
