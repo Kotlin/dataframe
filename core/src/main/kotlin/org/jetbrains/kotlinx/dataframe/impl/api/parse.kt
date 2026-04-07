@@ -10,7 +10,10 @@ import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.format.DateTimeFormatBuilder
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.alternativeParsing
+import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.format.char
 import kotlinx.datetime.format.optional
 import kotlinx.datetime.toDeprecatedInstant
@@ -20,7 +23,10 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
+import org.jetbrains.kotlinx.dataframe.api.JavaDateTimeParserOptions
+import org.jetbrains.kotlinx.dataframe.api.KotlinDateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary
 import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary.JAVA_TIME
 import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary.KOTLIN_DATETIME
@@ -274,8 +280,9 @@ internal object Parsers : GlobalParserOptions {
 
     override var parseExperimentalInstant by Delegates.notNull<Boolean>()
 
-    override fun addJavaDateTimePattern(pattern: String, formatType: KType?) {
-        val formatter = JavaDateTimeFormatter.ofPattern(pattern)
+    override fun addJavaDateTimeFormatter(formatter: JavaDateTimeFormatter, formatType: KType?) {
+        val formatType = formatType?.withNullability(false)
+
         // since we don't know what type of date-time this pattern is meant for, let's add it to all types
         if (formatType == null) {
             for (types in defaultJavaFormatters.keys) {
@@ -290,12 +297,25 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
+    override fun addJavaDateTimePattern(pattern: String, formatType: KType?) {
+        addJavaDateTimeFormatter(JavaDateTimeFormatter.ofPattern(pattern), formatType)
+    }
+
     override fun addDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType) {
+        val formatType = formatType.withNullability(false)
         require(formatType in defaultDateTimeFormats.keys) {
             // requires #962
             "Format type $formatType is not supported for date-time parsing, we only support parsing to: ${defaultDateTimeFormats.keys.toList()}"
         }
         customGlobalDateTimeFormats.getOrPut(formatType) { mutableListOf() } += format
+    }
+
+    @FormatStringsInDatetimeFormats
+    override fun addDateTimeUnicodePattern(pattern: String, formatType: KType) {
+        addDateTimeFormat(
+            format = DateTimeFormat.fromPattern(pattern, formatType),
+            formatType = formatType,
+        )
     }
 
     override fun addNullString(str: String) {
@@ -581,13 +601,16 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.customDateTimeFormatNotProvided() ||
+                    options.dateTimeOptionsNotProvided() ||
                         options.shouldNotUseKotlinxDateTime() || this.shouldNotUseKotlinxDateTime()
                 },
             ) { options ->
-                val dateTimeFormats = options?.dateTimeFormats
-                    ?: error("Should not happen, but ParserOptions expected custom dateTimeFormats yet found `null`.")
-                val formats = dateTimeFormats
+                val dateTimeOptions = (options?.dateTime as? KotlinDateTimeParserOptions)
+                    ?: error(
+                        "Should not happen, but ParserOptions expected custom Kotlin dateTimeParserOptions yet found `null`.",
+                    )
+                val formats = dateTimeOptions
+                    .dateTimeFormats
                     .filter { it.first == type }
                     .map { it.second }
 
@@ -599,15 +622,16 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.customDateTimeFormatNotProvided() ||
+                    options.dateTimeOptionsNotProvided() ||
                         options.shouldNotUseJavaTime() || this.shouldNotUseJavaTime()
                 },
             ) { options ->
-                val dateTimeFormats = options?.javaDateTimeFormatters
+                val dateTimeOptions = (options?.dateTime as? JavaDateTimeParserOptions)
                     ?: error(
-                        "Should not happen, but ParserOptions expected custom javaDateTimeFormatters yet found `null`.",
+                        "Should not happen, but ParserOptions expected custom Java dateTimeParserOptions yet found `null`.",
                     )
-                val formats = dateTimeFormats
+                val formats = dateTimeOptions
+                    .dateTimeFormats
                     .filter { it.first == null || it.first == type } // if the type is `null`, also accept it
                     .map { it.second }
 
@@ -620,7 +644,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.customDateTimeFormatProvided() ||
+                    options.dateTimeOptionsProvided() ||
                         options.shouldNotUseKotlinxDateTime() || this.shouldNotUseKotlinxDateTime() ||
                         type !in this.customGlobalDateTimeFormats
                 },
@@ -634,7 +658,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.customDateTimeFormatProvided() ||
+                    options.dateTimeOptionsProvided() ||
                         options.shouldNotUseJavaTime() || this.shouldNotUseJavaTime() ||
                         type !in this.customGlobalJavaFormatters
                 },
@@ -649,7 +673,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.customDateTimeFormatProvided() ||
+                    options.dateTimeOptionsProvided() ||
                         options.shouldNotUseKotlinxDateTime() || this.shouldNotUseKotlinxDateTime()
                 },
             ) { _ ->
@@ -662,7 +686,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.customDateTimeFormatProvided() ||
+                    options.dateTimeOptionsProvided() ||
                         options.shouldNotUseJavaTime() || this.shouldNotUseJavaTime()
                 },
             ) { options ->
@@ -799,8 +823,8 @@ internal object Parsers : GlobalParserOptions {
         val parser = get<R>() ?: error("Can not convert String to $type")
         val options = ParserOptions(
             locale = locale,
-            javaDateTimeFormattersByType = pattern?.let {
-                listOf(type to JavaDateTimeFormatter.ofPattern(pattern))
+            dateTime = pattern?.let {
+                DateTimeParserOptions.Java.withDateTimePattern(pattern, type)
             },
         )
         return parser.applyOptions(options)
@@ -810,7 +834,11 @@ internal object Parsers : GlobalParserOptions {
         val type = typeOf<R>()
         val parser = get<R>() ?: error("Can not convert String to $type")
 
-        val options = ParserOptions(dateTimeFormatsByType = format?.let { listOf(type to it) })
+        val options = ParserOptions(
+            dateTime = format?.let {
+                DateTimeParserOptions.Kotlin.withDateTimeFormat(format, type)
+            },
+        )
         return parser.applyOptions(options)
     }
 
@@ -823,20 +851,17 @@ internal object Parsers : GlobalParserOptions {
             .applyOptions(ParserOptions(useFastDoubleParser = useFastDoubleParser))
 }
 
-internal fun ParserOptions?.shouldUseKotlinxDateTime(): Boolean =
-    this?.dateTimeLibrary == null || this.dateTimeLibrary == KOTLIN_DATETIME
+internal fun ParserOptions?.shouldUseKotlinxDateTime(): Boolean = this?.dateTime is KotlinDateTimeParserOptions?
 
 internal fun ParserOptions?.shouldNotUseKotlinxDateTime(): Boolean = !shouldUseKotlinxDateTime()
 
-internal fun ParserOptions?.shouldUseJavaTime(): Boolean =
-    this?.dateTimeLibrary == null || this.dateTimeLibrary == JAVA_TIME
+internal fun ParserOptions?.shouldUseJavaTime(): Boolean = this?.dateTime is JavaDateTimeParserOptions?
 
 internal fun ParserOptions?.shouldNotUseJavaTime(): Boolean = !shouldUseJavaTime()
 
-internal fun ParserOptions?.customDateTimeFormatProvided(): Boolean =
-    this?.javaDateTimeFormatters != null || this?.dateTimeFormats != null
+internal fun ParserOptions?.dateTimeOptionsProvided(): Boolean = this?.dateTime != null
 
-internal fun ParserOptions?.customDateTimeFormatNotProvided(): Boolean = !customDateTimeFormatProvided()
+internal fun ParserOptions?.dateTimeOptionsNotProvided(): Boolean = !dateTimeOptionsProvided()
 
 /**
  * This function uses reflection to extract the format type `T` from a `DateTimeFormat<T>` instance.
@@ -879,6 +904,31 @@ internal fun DateTimeFormat<*>.guessFormatType(): KType {
                 .getOrThrow()
         }
     }
+}
+
+@FormatStringsInDatetimeFormats
+internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: KType): DateTimeFormat<out Any> {
+    val formatType = formatType.withNullability(false)
+    val formatBuilder: (DateTimeFormatBuilder.() -> Unit) -> DateTimeFormat<out Any> =
+        when (formatType) {
+            typeOf<LocalDateTime>() -> LocalDateTime::Format
+
+            typeOf<LocalDate>() -> LocalDate::Format
+
+            typeOf<YearMonth>() -> YearMonth::Format
+
+            typeOf<LocalTime>() -> LocalTime::Format
+
+            typeOf<DateTimeComponents>() -> DateTimeComponents::Format
+
+            typeOf<UtcOffset>() -> UtcOffset::Format
+
+            // TODO use reflection
+            else -> throw IllegalArgumentException(
+                "Unknown DateTimeFormat type: $formatType, try calling `withDateTimeFormat()` instead",
+            )
+        }
+    return formatBuilder { byUnicodePattern(pattern) }
 }
 
 /**
