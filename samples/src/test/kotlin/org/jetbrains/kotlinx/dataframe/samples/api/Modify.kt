@@ -311,7 +311,7 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
         )
 
         // SampleStart
-        orders.groupBy { status + " orders"  }
+        orders.groupBy { status + " orders" }
         // SampleEnd
     }
 
