@@ -22,7 +22,7 @@ For example,
 <!---FUN columnArithmetics_groupBy_without_expr-->
 
 ```kotlin
-orders.groupBy { status + " orders"  }
+orders.groupBy { status + " orders" }
 ```
 
 <!---END-->
