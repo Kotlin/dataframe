@@ -335,9 +335,16 @@ public class ParserOptions(
 
     override fun toString(): String =
         "ParserOptions(locale=$locale, dateTimeParserOptions=$dateTime, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser, parseExperimentalUuid=$parseExperimentalUuid, parseExperimentalInstant=$parseExperimentalInstant)"
+
+    public companion object {
+        public val KotlinDateTime: KotlinDateTimeParserOptions
+            get() = KotlinDateTimeParserOptions
+        public val JavaDateTime: JavaDateTimeParserOptions
+            get() = JavaDateTimeParserOptions
+    }
 }
 
-public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Set<Pair<KType?, T>>) {
+public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Set<Pair<KType?, T>>?) {
 
     public abstract fun copy(): DateTimeParserOptions<T>
 
@@ -349,29 +356,36 @@ public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Se
     }
 }
 
-public val KotlinDateTime: KotlinDateTimeParserOptions
-    get() = KotlinDateTimeParserOptions
-public val JavaDateTime: JavaDateTimeParserOptions
-    get() = JavaDateTimeParserOptions
-
 /**
  * Kotlin(x) variant of [DateTimeParserOptions] using [DateTimeFormat].
  */
-public open class KotlinDateTimeParserOptions(
-    override val dateTimeFormats: Set<Pair<KType, DateTimeFormat<out Any>>> = emptySet(),
+public open class KotlinDateTimeParserOptions private constructor(
+    override val dateTimeFormats: Set<Pair<KType, DateTimeFormat<out Any>>>? = null,
 ) : DateTimeParserOptions<DateTimeFormat<out Any>>(dateTimeFormats) {
 
-    public companion object : KotlinDateTimeParserOptions()
+    public companion object : KotlinDateTimeParserOptions() {
+        public operator fun invoke(
+            dateTimeFormats: Set<Pair<KType, DateTimeFormat<out Any>>>? = null,
+        ): KotlinDateTimeParserOptions = KotlinDateTimeParserOptions(dateTimeFormats = dateTimeFormats)
+
+        public operator fun invoke(
+            dateTimeFormat: Pair<KType, DateTimeFormat<out Any>>,
+            vararg dateTimeFormats: Pair<KType, DateTimeFormat<out Any>>,
+        ): KotlinDateTimeParserOptions =
+            KotlinDateTimeParserOptions(
+                dateTimeFormats = setOf(dateTimeFormat, *dateTimeFormats),
+            )
+    }
 
     override fun copy(): KotlinDateTimeParserOptions = KotlinDateTimeParserOptions(dateTimeFormats = dateTimeFormats)
 
     public fun copy(
-        dateTimeFormats: Iterable<Pair<KType, DateTimeFormat<out Any>>> = this.dateTimeFormats,
-    ): KotlinDateTimeParserOptions = KotlinDateTimeParserOptions(dateTimeFormats = dateTimeFormats.toSet())
+        dateTimeFormats: Iterable<Pair<KType, DateTimeFormat<out Any>>>? = this.dateTimeFormats,
+    ): KotlinDateTimeParserOptions = KotlinDateTimeParserOptions(dateTimeFormats = dateTimeFormats?.toSet())
 
     public fun withDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType): KotlinDateTimeParserOptions =
         copy(
-            dateTimeFormats = dateTimeFormats + (formatType.withNullability(false) to format),
+            dateTimeFormats = dateTimeFormats.orEmpty() + (formatType.withNullability(false) to format),
         )
 
     public inline fun <reified T : Any> withDateTimeFormat(format: DateTimeFormat<out T>): KotlinDateTimeParserOptions =
@@ -392,12 +406,30 @@ public open class KotlinDateTimeParserOptions(
 /**
  * Java time variant of [DateTimeParserOptions] using [DateTimeFormatter].
  */
-public open class JavaDateTimeParserOptions(
+public open class JavaDateTimeParserOptions private constructor(
     public val locale: Locale? = null,
-    override val dateTimeFormats: Set<Pair<KType?, DateTimeFormatter>> = emptySet(),
+    override val dateTimeFormats: Set<Pair<KType?, DateTimeFormatter>>? = null,
 ) : DateTimeParserOptions<DateTimeFormatter>(dateTimeFormats) {
 
-    public companion object : JavaDateTimeParserOptions()
+    public companion object : JavaDateTimeParserOptions() {
+        public operator fun invoke(
+            locale: Locale? = null,
+            dateTimeFormats: Set<Pair<KType?, DateTimeFormatter>>? = null,
+        ): JavaDateTimeParserOptions = JavaDateTimeParserOptions(locale = locale, dateTimeFormats = dateTimeFormats)
+
+        public operator fun invoke(
+            locale: Locale?,
+            dateTimeFormat: Pair<KType?, DateTimeFormatter>,
+            vararg dateTimeFormats: Pair<KType?, DateTimeFormatter>,
+        ): JavaDateTimeParserOptions =
+            JavaDateTimeParserOptions(locale = locale, dateTimeFormats = setOf(dateTimeFormat, *dateTimeFormats))
+
+        public operator fun invoke(
+            dateTimeFormat: Pair<KType?, DateTimeFormatter>,
+            vararg dateTimeFormats: Pair<KType?, DateTimeFormatter>,
+        ): JavaDateTimeParserOptions =
+            JavaDateTimeParserOptions(dateTimeFormats = setOf(dateTimeFormat, *dateTimeFormats))
+    }
 
     override fun copy(): JavaDateTimeParserOptions =
         JavaDateTimeParserOptions(
@@ -407,11 +439,11 @@ public open class JavaDateTimeParserOptions(
 
     public fun copy(
         locale: Locale? = this.locale,
-        dateTimeFormats: Iterable<Pair<KType?, DateTimeFormatter>> = this.dateTimeFormats,
+        dateTimeFormats: Iterable<Pair<KType?, DateTimeFormatter>>? = this.dateTimeFormats,
     ): JavaDateTimeParserOptions =
         JavaDateTimeParserOptions(
             locale = locale,
-            dateTimeFormats = dateTimeFormats.toSet(),
+            dateTimeFormats = dateTimeFormats?.toSet(),
         )
 
     public fun withLocale(locale: Locale?): JavaDateTimeParserOptions = copy(locale = locale)
@@ -419,7 +451,7 @@ public open class JavaDateTimeParserOptions(
     public fun withDateTimeFormatter(
         formatter: DateTimeFormatter,
         formatType: KType? = null,
-    ): JavaDateTimeParserOptions = copy(dateTimeFormats = dateTimeFormats + (formatType to formatter))
+    ): JavaDateTimeParserOptions = copy(dateTimeFormats = dateTimeFormats.orEmpty() + (formatType to formatter))
 
     public inline fun <reified T : Temporal> withDateTimeFormatter(
         formatter: DateTimeFormatter,

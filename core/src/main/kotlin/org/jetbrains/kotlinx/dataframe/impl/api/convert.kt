@@ -4,8 +4,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.YearMonth
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.atTime
+import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toJavaLocalDate
@@ -680,6 +683,22 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Long::class -> convert<BigInteger> { it.toLong() }
                 BigDecimal::class -> convert<BigInteger> { it.toBigDecimal() }
                 Boolean::class -> convert<BigInteger> { it != BigInteger.ZERO }
+                else -> null
+            }
+
+            DateTimeComponents::class -> when (toClass) {
+                UtcOffset::class -> convert<DateTimeComponents> { it.toUtcOffset() }
+                YearMonth::class -> convert<DateTimeComponents> { it.toYearMonth() }
+                LocalDate::class -> convert<DateTimeComponents> { it.toLocalDate() }
+                LocalTime::class -> convert<DateTimeComponents> { it.toLocalTime() }
+                LocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime() }
+                JavaLocalDate::class -> convert<DateTimeComponents> { it.toLocalDate().toJavaLocalDate() }
+                JavaLocalTime::class -> convert<DateTimeComponents> { it.toLocalTime().toJavaLocalTime() }
+                JavaLocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime().toJavaLocalDateTime() }
+                StdlibInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset() }
+                DeprecatedInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toDeprecatedInstant() }
+                JavaInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toJavaInstant() }
+                Long::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toEpochMilliseconds() }
                 else -> null
             }
 

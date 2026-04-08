@@ -222,6 +222,7 @@ internal object Parsers : GlobalParserOptions {
                     UtcOffset.Formats.FOUR_DIGITS,
                 )
             },
+            // TODO also used as "fallback" mechanism
             typeOf<DateTimeComponents>() to {
                 listOf(
                     DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET,
@@ -601,7 +602,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.dateTimeOptionsNotProvided() ||
+                    options.dateTimeFormatsNotProvided() ||
                         options.shouldNotUseKotlinxDateTime() || this.shouldNotUseKotlinxDateTime()
                 },
             ) { options ->
@@ -610,7 +611,7 @@ internal object Parsers : GlobalParserOptions {
                         "Should not happen, but ParserOptions expected custom Kotlin dateTimeParserOptions yet found `null`.",
                     )
                 val formats = dateTimeOptions
-                    .dateTimeFormats
+                    .dateTimeFormats!!
                     .filter { it.first == type }
                     .map { it.second }
 
@@ -622,7 +623,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.dateTimeOptionsNotProvided() ||
+                    options.dateTimeFormatsNotProvided() ||
                         options.shouldNotUseJavaTime() || this.shouldNotUseJavaTime()
                 },
             ) { options ->
@@ -631,7 +632,7 @@ internal object Parsers : GlobalParserOptions {
                         "Should not happen, but ParserOptions expected custom Java dateTimeParserOptions yet found `null`.",
                     )
                 val formats = dateTimeOptions
-                    .dateTimeFormats
+                    .dateTimeFormats!!
                     .filter { it.first == null || it.first == type } // if the type is `null`, also accept it
                     .map { it.second }
 
@@ -645,7 +646,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.dateTimeOptionsProvided() ||
+                    options.dateTimeFormatsProvided() ||
                         options.shouldNotUseKotlinxDateTime() || this.shouldNotUseKotlinxDateTime() ||
                         type !in this.customGlobalDateTimeFormats
                 },
@@ -659,7 +660,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.dateTimeOptionsProvided() ||
+                    options.dateTimeFormatsProvided() ||
                         options.shouldNotUseJavaTime() || this.shouldNotUseJavaTime() ||
                         type !in this.customGlobalJavaFormatters
                 },
@@ -674,7 +675,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.dateTimeOptionsProvided() ||
+                    options.dateTimeFormatsProvided() ||
                         options.shouldNotUseKotlinxDateTime() || this.shouldNotUseKotlinxDateTime()
                 },
             ) { _ ->
@@ -687,7 +688,7 @@ internal object Parsers : GlobalParserOptions {
             StringParserWithOptions(
                 type = type,
                 shouldSkip = { options, _ ->
-                    options.dateTimeOptionsProvided() ||
+                    options.dateTimeFormatsProvided() ||
                         options.shouldNotUseJavaTime() || this.shouldNotUseJavaTime()
                 },
             ) { options ->
@@ -861,9 +862,9 @@ internal fun ParserOptions?.shouldUseJavaTime(): Boolean = this?.dateTime is Jav
 
 internal fun ParserOptions?.shouldNotUseJavaTime(): Boolean = !shouldUseJavaTime()
 
-internal fun ParserOptions?.dateTimeOptionsProvided(): Boolean = this?.dateTime != null
+internal fun ParserOptions?.dateTimeFormatsProvided(): Boolean = !dateTimeFormatsNotProvided()
 
-internal fun ParserOptions?.dateTimeOptionsNotProvided(): Boolean = !dateTimeOptionsProvided()
+internal fun ParserOptions?.dateTimeFormatsNotProvided(): Boolean = this?.dateTime?.dateTimeFormats == null
 
 /**
  * This function uses reflection to extract the format type `T` from a `DateTimeFormat<T>` instance.
