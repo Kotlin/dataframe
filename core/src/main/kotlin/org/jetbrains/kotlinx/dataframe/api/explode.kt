@@ -159,6 +159,8 @@ internal typealias ExplodeDataRowDocs = Nothing
  *                 If not specified, all applicable columns will be exploded.
  * @return A new [DataFrame] with exploded columns from this [DataRow].
  */
+@Refine
+@Interpretable("ExplodeColumns")
 public fun <T> DataRow<T>.explode(
     dropEmpty: Boolean = true,
     columns: ColumnsSelector<T, *> = defaultExplodeColumns,
