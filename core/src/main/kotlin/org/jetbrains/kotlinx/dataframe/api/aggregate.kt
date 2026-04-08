@@ -12,11 +12,11 @@ import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDslDocsSnippet
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDslDocsSnippet
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDslDocsSnippet
 
 // region Pivot
 
