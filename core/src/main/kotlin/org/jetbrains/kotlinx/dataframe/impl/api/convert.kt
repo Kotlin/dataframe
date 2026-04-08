@@ -150,6 +150,12 @@ internal fun DataColumn<String?>.convertToDoubleImpl(
 internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?): AnyCol {
     val from = type
 
+    if (parserOptions != null && from.withNullability(false) != typeOf<String>()) {
+        error(
+            "ParserOptions were provided for non-String column '$name' ($from). ParserOptions are only supported when converting from String columns to another type.",
+        )
+    }
+
     val nullsAreAllowed = to.isMarkedNullable
 
     var nullsFound = false
