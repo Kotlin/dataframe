@@ -10,6 +10,8 @@ import io.kotest.matchers.shouldNotBe
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.JavaDateTime
+import org.jetbrains.kotlinx.dataframe.api.JavaDateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -524,8 +526,8 @@ class DelimCsvTsvTests {
             text = frenchCsv,
             delimiter = ';',
             parserOptions = ParserOptions(
-                javaDateTimePattern = "dd/MM/yyyy",
-                locale = Locale.FRENCH,
+                dateTime = JavaDateTimeParserOptions(locale = Locale.FRENCH)
+                    .withDateTimePattern("dd/MM/yyyy"),
             ),
         )
 

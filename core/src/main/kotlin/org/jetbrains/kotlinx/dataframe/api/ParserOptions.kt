@@ -66,7 +66,7 @@ public interface GlobalParserOptions {
      * DataFrame.parser.addDateTimeFormat(
      *     LocalDate.Format {
      *         monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
-     *     }
+     *     },
      * )
      * ```
      *
@@ -100,7 +100,7 @@ public interface GlobalParserOptions {
      * DataFrame.parser.addDateTimeFormat(
      *     LocalDate.Format {
      *         monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
-     *     }
+     *     },
      * )
      * ```
      */
@@ -342,13 +342,17 @@ public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Se
     public abstract fun copy(): DateTimeParserOptions<T>
 
     public companion object {
-        public val Kotlin: KotlinDateTimeParserOptions = KotlinDateTimeParserOptions
-        public val Java: JavaDateTimeParserOptions = JavaDateTimeParserOptions
+        public val Kotlin: KotlinDateTimeParserOptions
+            get() = KotlinDateTimeParserOptions
+        public val Java: JavaDateTimeParserOptions
+            get() = JavaDateTimeParserOptions
     }
 }
 
-public val KotlinDateTime: KotlinDateTimeParserOptions = KotlinDateTimeParserOptions
-public val JavaDateTime: JavaDateTimeParserOptions = JavaDateTimeParserOptions
+public val KotlinDateTime: KotlinDateTimeParserOptions
+    get() = KotlinDateTimeParserOptions
+public val JavaDateTime: JavaDateTimeParserOptions
+    get() = JavaDateTimeParserOptions
 
 /**
  * Kotlin(x) variant of [DateTimeParserOptions] using [DateTimeFormat].
@@ -389,17 +393,28 @@ public open class KotlinDateTimeParserOptions(
  * Java time variant of [DateTimeParserOptions] using [DateTimeFormatter].
  */
 public open class JavaDateTimeParserOptions(
+    public val locale: Locale? = null,
     override val dateTimeFormats: Set<Pair<KType?, DateTimeFormatter>> = emptySet(),
-    // TODO add Locale here
 ) : DateTimeParserOptions<DateTimeFormatter>(dateTimeFormats) {
 
     public companion object : JavaDateTimeParserOptions()
 
-    override fun copy(): JavaDateTimeParserOptions = JavaDateTimeParserOptions(dateTimeFormats = dateTimeFormats)
+    override fun copy(): JavaDateTimeParserOptions =
+        JavaDateTimeParserOptions(
+            locale = locale,
+            dateTimeFormats = dateTimeFormats,
+        )
 
     public fun copy(
+        locale: Locale? = this.locale,
         dateTimeFormats: Iterable<Pair<KType?, DateTimeFormatter>> = this.dateTimeFormats,
-    ): JavaDateTimeParserOptions = JavaDateTimeParserOptions(dateTimeFormats = dateTimeFormats.toSet())
+    ): JavaDateTimeParserOptions =
+        JavaDateTimeParserOptions(
+            locale = locale,
+            dateTimeFormats = dateTimeFormats.toSet(),
+        )
+
+    public fun withLocale(locale: Locale?): JavaDateTimeParserOptions = copy(locale = locale)
 
     public fun withDateTimeFormatter(
         formatter: DateTimeFormatter,
@@ -410,9 +425,17 @@ public open class JavaDateTimeParserOptions(
         formatter: DateTimeFormatter,
     ): JavaDateTimeParserOptions = withDateTimeFormatter(formatter = formatter, formatType = typeOf<T>())
 
-    public fun withDateTimePattern(pattern: String, formatType: KType? = null): JavaDateTimeParserOptions =
+    public fun withDateTimePattern(pattern: String, formatType: KType?): JavaDateTimeParserOptions =
         withDateTimeFormatter(DateTimeFormatter.ofPattern(pattern), formatType)
 
+    public fun withDateTimePattern(pattern: String): JavaDateTimeParserOptions =
+        withDateTimePattern(
+            pattern = pattern,
+            formatType = null,
+        )
+
+    @JvmSynthetic
+    @JvmName("withDateTimePatternReified")
     public inline fun <reified T : Temporal> withDateTimePattern(pattern: String): JavaDateTimeParserOptions =
         withDateTimePattern(pattern = pattern, formatType = typeOf<T>())
 }

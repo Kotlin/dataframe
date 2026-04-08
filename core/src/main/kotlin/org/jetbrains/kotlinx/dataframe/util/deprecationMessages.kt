@@ -155,6 +155,9 @@ internal const val INSERT_UNDER = "This `ColumnPath` overload is deprecated in f
 internal const val ADD_DATE_TIME_PATTERN =
     "This function is deprecated in favor of `addDateTimeFormat` built on kotlinx-datetime. Alternatively, use `addJavaDateTimePattern` for Java-based parsing. $MESSAGE_1_0"
 
+internal const val CONVERT_TO_WITHOUT_PARSER_OPTIONS =
+    "This overload is only here for binary compatibility. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1

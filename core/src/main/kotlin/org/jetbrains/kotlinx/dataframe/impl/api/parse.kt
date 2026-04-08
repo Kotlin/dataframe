@@ -385,14 +385,14 @@ internal object Parsers : GlobalParserOptions {
         }
 
     private fun String.toInstantOrNull(): StdlibInstant? =
-        StdlibInstant.parseOrNull(this)
+        StdlibInstant.parseOrNull(this.trim())
             // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
             ?: toJavaInstantOrNull()?.toKotlinInstant()
 
     private fun String.toJavaInstantOrNull(): JavaInstant? =
         // Default format used by java.time.Instant.parse
         JavaDateTimeFormatter.ISO_INSTANT
-            .parseOrNull(this, JavaInstant::from)
+            .parseOrNull(this.trim(), JavaInstant::from)
 
     private fun String.toUrlOrNull(): URL? = if (isUrl(this)) catchSilent { URI(this).toURL() } else null
 
@@ -410,7 +410,7 @@ internal object Parsers : GlobalParserOptions {
     internal fun <T> kotlinxDateTimeParserFunction(dateTimeFormats: List<DateTimeFormat<out T>>?): ParserFunction<T> {
         if (dateTimeFormats.isNullOrEmpty()) return SKIP_PARSER
         return parseBy {
-            dateTimeFormats.firstNotNullOfOrNull { format -> format.parseOrNull(it) as T? }
+            dateTimeFormats.firstNotNullOfOrNull { format -> format.parseOrNull(it.trim()) }
         }
     }
 
@@ -434,7 +434,7 @@ internal object Parsers : GlobalParserOptions {
                     } else {
                         formatter
                     }
-                }.parseOrNull(it, queryFunction)
+                }.parseOrNull(it.trim(), queryFunction)
             }
         }
     }
@@ -626,7 +626,7 @@ internal object Parsers : GlobalParserOptions {
                         options.shouldNotUseJavaTime() || this.shouldNotUseJavaTime()
                 },
             ) { options ->
-                val dateTimeOptions = (options?.dateTime as? JavaDateTimeParserOptions)
+                val dateTimeOptions = (options!!.dateTime as? JavaDateTimeParserOptions)
                     ?: error(
                         "Should not happen, but ParserOptions expected custom Java dateTimeParserOptions yet found `null`.",
                     )
@@ -635,11 +635,12 @@ internal object Parsers : GlobalParserOptions {
                     .filter { it.first == null || it.first == type } // if the type is `null`, also accept it
                     .map { it.second }
 
-                val locale = options?.locale ?: this._locale
+                // prefer ParserOptions.dateTime.locale -> ParserOptions.locale -> GlobalParserOptions._locale
+                val locale = dateTimeOptions.locale ?: options.locale ?: this._locale
                 javaDateTimeParserFunction(type, locale, formats)
             }
         }.toTypedArray(),
-        // all custom global kotlin time (skip if parseroptions)
+        // all custom global kotlin time (skip if parseroptions.dateTime is given)
         *defaultDateTimeFormats.keys.map { type ->
             StringParserWithOptions(
                 type = type,
@@ -653,7 +654,7 @@ internal object Parsers : GlobalParserOptions {
                 kotlinxDateTimeParserFunction(formats)
             }
         }.toTypedArray(),
-        // all custom global java time (skip if parseroptions)
+        // all custom global java time (skip if parseroptions.dateTime is given)
         *defaultJavaFormatters.keys.map { type ->
             StringParserWithOptions(
                 type = type,
@@ -668,7 +669,7 @@ internal object Parsers : GlobalParserOptions {
                 javaDateTimeParserFunction(type, locale, formats)
             }
         }.toTypedArray(),
-        // default kotlin time (skip if parseroptions)
+        // default kotlin time (skip if parseroptions.dateTime is given)
         *defaultDateTimeFormats.keys.map { type ->
             StringParserWithOptions(
                 type = type,
@@ -681,7 +682,7 @@ internal object Parsers : GlobalParserOptions {
                 kotlinxDateTimeParserFunction(formats)
             }
         }.toTypedArray(),
-        // default java time (skip if parseroptions)
+        // default java time (skip if parseroptions.dateTime is given)
         *defaultJavaFormatters.keys.map { type ->
             StringParserWithOptions(
                 type = type,
@@ -822,9 +823,10 @@ internal object Parsers : GlobalParserOptions {
         val type = typeOf<R>()
         val parser = get<R>() ?: error("Can not convert String to $type")
         val options = ParserOptions(
-            locale = locale,
             dateTime = pattern?.let {
-                DateTimeParserOptions.Java.withDateTimePattern(pattern, type)
+                DateTimeParserOptions.Java
+                    .withDateTimePattern(pattern, type)
+                    .withLocale(locale)
             },
         )
         return parser.applyOptions(options)
