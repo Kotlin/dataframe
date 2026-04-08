@@ -249,28 +249,6 @@ public fun <T> DataFrame<T>.moveTo(
     columns: ColumnsSelector<T, *>,
 ): DataFrame<T> = move(columns).to(newColumnIndex, insideGroup)
 
-/**
- * Moves the specified [columns\] to a new position specified
- * by [columnIndex]. If [insideGroup] is true selected columns
- * will be moved remaining within their [ColumnGroup],
- * else they will be moved to the top level.
- *
- * @include [CommonMoveToDocs]
- * @include [SelectingColumns.ColumnNamesApi] {@include [SetMoveToOperationArg]}
- * ### Examples:
- * ```kotlin
- * df.moveTo(0, true) { length and age }
- * df.moveTo(2, false) { cols(1..5) }
- * ```
- * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
- * where the selected columns will be moved.
- * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
- * else they will be moved to the top level.
- * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
- */
-public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, insideGroup: Boolean, vararg columns: String): DataFrame<T> =
-    moveTo(newColumnIndex, insideGroup) { columns.toColumnSet() }
-
 // endregion
 
 // region moveToStart
@@ -337,16 +315,6 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = m
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
-
-/**
- * @include [CommonMoveToStartDocs]
- * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetMoveToStartOperationArg]}
- * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
- * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
- * else they will be moved to the start of the top level.
- */
-public fun <T> DataFrame<T>.moveToStart(insideGroup: Boolean, vararg columns: String): DataFrame<T> =
-    moveToStart(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
@@ -434,16 +402,6 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = 
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
-
-/**
- * @include [CommonMoveToEndDocs]
- * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetMoveToEndOperationArg]}
- * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
- * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
- * else they will be moved to the end of the top level.
- */
-public fun <T> DataFrame<T>.moveToEnd(insideGroup: Boolean, vararg columns: String): DataFrame<T> =
-    moveToEnd(insideGroup) { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
