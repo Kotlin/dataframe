@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.api.concatImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.type
@@ -47,6 +48,10 @@ public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
  * Doesn't take [keys] into account.
  * See also [concatWithKeys], which also includes all grouping key columns.
  *
+ * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
+ *
+ * For more information: {@include [DocumentationUrls.GroupBy]}
+ *
  * @return A new [DataFrame] where all groups are combined and additional key columns are included in each row.
  */
 public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
@@ -59,6 +64,10 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
  *
  * This function is especially useful when grouping by expressions or renamed columns,
  * and you want the resulting [DataFrame] to include those keys as part of the output.
+ *
+ * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
+ *
+ * For more information: {@include [DocumentationUrls.GroupBy]}
  *
  * ### Example
  *

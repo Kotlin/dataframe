@@ -1,6 +1,12 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.aggregation.AGGREGATE_DSL_OPERATING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.aggregation.AGGREGATE_DSL_RECEIVER
+import org.jetbrains.kotlinx.dataframe.aggregation.AGGREGATE_DSL_RESULT
+import org.jetbrains.kotlinx.dataframe.aggregation.AGGREGATE_DSL_TYPE
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDslDocsSnippet
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
@@ -8,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.PivotDocs
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getRows
@@ -17,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
@@ -81,6 +89,21 @@ public interface DataFrame<out T> :
 
     // endregion
 
+    /**
+     * Aggregates this [DataFrame] using the provided statistics
+     * inside the [AggregateDsl].
+     *
+     * Returns a new [DataRow] with the aggregated values.
+     *
+     * {@include [AggregateDslDocsSnippet]}
+     * {@set [AGGREGATE_DSL_TYPE] [AggregateDsl]}
+     * {@set [AGGREGATE_DSL_RECEIVER] [DataFrame]}
+     * {@set [AGGREGATE_DSL_RESULT] [DataRow]}
+     * {@set [AGGREGATE_DSL_OPERATING_COLUMNS] columns of this [DataFrame]}
+     *
+     * @param body The aggregation logic defined using [AggregateDsl].
+     * @return A new [DataFrame] with the results of the aggregation.
+     */
     @Refine
     @Interpretable("AggregateRow")
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>

@@ -77,17 +77,18 @@ import kotlin.reflect.typeOf
  *
  * For more information: {@include [DocumentationUrls.Statistics]}
  */
-internal typealias `DataFrame Aggregation Statistics` = Nothing
+internal typealias DataFrameAggregationStatistics = Nothing
 
 /**
- * [AggregateDsl] allows to compute statistics on the {@get [AGGREGATE_DSL_OPERATING_COLUMNS]}
- * and store the results as a new column using [into].
+ * {@get [AGGREGATE_DSL_TYPE]} allows to compute statistics on the {@get [AGGREGATE_DSL_OPERATING_COLUMNS]}
+ * and store the results as a new column using [into][AggregateDsl.into]. {@get [AGGREGATE_DSL_APPLY]}
+ *
  *
  * The resulting {@get [AGGREGATE_DSL_RESULT]} has the same structure as the original
  * {@get [AGGREGATE_DSL_RECEIVER]};
- * instead of the groups, there are new columns of aggregated values created with [into].
+ * instead of the groups, there are new columns of aggregated values created with [into][AggregateDsl.into].
  *
- * You can use any of [DataFrame Aggregation Statistics][`DataFrame Aggregation Statistics`]
+ * You can use any of [DataFrame Aggregation Statistics][DataFrameAggregationStatistics]
  * or any custom aggregation function.
  *
  * {@include [AggregateDslColumnKindSnippet]}
@@ -97,13 +98,19 @@ internal typealias AggregateDslDocsSnippet = Nothing
 
 /**
  * Aggregated values can be either simple values, [data rows][DataRow] or even
- * [data frames][DataFrame]. Including them into result using [into] will lead
+ * [data frames][DataFrame]. Including them in the result using [into][AggregateDsl.into] will lead
  * to creating [value column][ValueColumn],
  * [column group][ColumnGroup] or [frame column][FrameColumn] respectively
  * in the resulting {@get [AGGREGATE_DSL_RESULT]} while preserving the original structure at higher levels.
  */
 @ExcludeFromSources
 internal typealias AggregateDslColumnKindSnippet = Nothing
+
+@ExcludeFromSources
+internal typealias AGGREGATE_DSL_TYPE = Nothing
+
+@ExcludeFromSources
+internal typealias AGGREGATE_DSL_APPLY = Nothing
 
 @ExcludeFromSources
 internal typealias AGGREGATE_DSL_RECEIVER = Nothing
@@ -119,7 +126,9 @@ internal typealias AGGREGATE_DSL_OPERATING_COLUMNS = Nothing
  * [DataFrame] or `DataFrame`-like structures ([GroupBy], [Pivot] or [PivotGroupBy]).
  *
  * {@include [AggregateDslDocsSnippet]}
+ * {@set [AGGREGATE_DSL_TYPE] [AggregateDsl]}
  * {@set [AGGREGATE_DSL_RECEIVER] [DataFrame], [GroupBy], [Pivot] or [PivotGroupBy]}
+ * {@set [AGGREGATE_DSL_APPLY] The given [expression][body] is applied to each group independently.}
  * {@set [AGGREGATE_DSL_RESULT] [DataFrame] or [DataRow]}
  * {@set [AGGREGATE_DSL_OPERATING_COLUMNS] columns of the [DataFrame] or columns within groups in [GroupBy], [Pivot], or [PivotGroupBy]}
  */
