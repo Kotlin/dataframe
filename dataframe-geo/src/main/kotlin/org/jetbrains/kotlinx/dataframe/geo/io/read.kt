@@ -97,7 +97,7 @@ internal typealias ReadShapefileSnippet = Nothing
  * @include [ReadShapefileSnippet]
  *
  * ### Examples:
- * ```
+ * ```kt
  * GeoDataFrame.readShapefile("simple_points")
  * // Do the same
  * GeoDataFrame.readShapefile("simple_points/simple_points.shp")
