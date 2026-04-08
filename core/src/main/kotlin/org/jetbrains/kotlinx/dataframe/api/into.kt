@@ -9,6 +9,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.RowExpressionsLink
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -19,6 +22,24 @@ import kotlin.reflect.typeOf
 
 // region GroupBy
 
+/**
+ * Converts this [GroupBy] into a [DataFrame].
+ *
+ * Do the same as [GroupBy.toDataFrame].
+ *
+ * Each row of the resulting [DataFrame] represents a unique keys–group pair:
+ * a row from [keys] and its corresponding group of rows (as [DataFrame]).
+ *
+ * Resulting [DataFrame] contains a [FrameColumn] with [groups].
+ *
+ * Check out [groupBy Grammar][GroupByDocs.Grammar].
+ *
+ * For more information: {@include [DocumentationUrls.GroupBy]}
+ *
+ * @param column The name of the column in which to store grouped data.
+ * @return A new [DataFrame] that includes the grouping key columns together
+ * with a [FrameColumn] containing the corresponding groups.
+ */
 @Refine
 @Interpretable("GroupByInto")
 public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame(column)
@@ -31,6 +52,25 @@ public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T
 @AccessApiOverload
 public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = toDataFrame(column.columnName)
 
+/**
+ * Aggregates this [GroupBy] into a [DataFrame]
+ * by computing the values of [expression] on all rows for each group.
+ *
+ * Each row of the resulting [DataFrame] represents a unique keys–value pair:
+ * a row from [keys] and list of values, computed on all rows of the corresponding group using
+ * provided [expression].
+ *
+ * Check out [groupBy Grammar][GroupByDocs.Grammar].
+ *
+ * See {@include [RowExpressionsLink]}
+ *
+ * For more information: {@include [DocumentationUrls.GroupBy]}
+ *
+ * @param [columnName] The name of the column in which to store aggregated data.
+ * @param [expression] The expression to compute on each group row.
+ * @return A new [DataFrame] that includes the grouping key columns together
+ * with a valuess computed on all rows of correspodning groups.
+ */
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     columnName: String? = null,
     noinline expression: RowExpression<G, V>,
