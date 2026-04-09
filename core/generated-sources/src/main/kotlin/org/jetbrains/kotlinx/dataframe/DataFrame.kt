@@ -1,6 +1,12 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.aggregation.AGGREGATE_DSL_OPERATING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.aggregation.AGGREGATE_DSL_RECEIVER
+import org.jetbrains.kotlinx.dataframe.aggregation.AGGREGATE_DSL_RESULT
+import org.jetbrains.kotlinx.dataframe.aggregation.AGGREGATE_DSL_TYPE
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDslDocsSnippet
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
@@ -81,6 +87,36 @@ public interface DataFrame<out T> :
 
     // endregion
 
+    /**
+     * Aggregates this [DataFrame] using the provided statistics
+     * inside the [AggregateDsl].
+     *
+     * Returns a new [DataRow] with the aggregated values.
+     *
+     * [AggregateDsl] allows to compute statistics on the columns of this [DataFrame]
+     * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+     *
+     *
+     * The resulting [DataRow] has the same structure as the original
+     * [DataFrame];
+     * instead of the groups, there are new columns of aggregated values created with [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+     *
+     * You can use any of [DataFrame Aggregation Statistics][org.jetbrains.kotlinx.dataframe.aggregation.DataFrameAggregationStatistics]
+     * or any custom aggregation function.
+     *
+     * Aggregated values can be either simple values, [data rows][org.jetbrains.kotlinx.dataframe.DataRow] or even
+     * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
+     * to creating [value column][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
+     * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
+     * in the resulting [DataRow] while preserving the original structure at higher levels.
+     *
+     *
+     *
+     *
+     *
+     * @param body The aggregation logic defined using [AggregateDsl].
+     * @return A new [DataFrame] with the results of the aggregation.
+     */
     @Refine
     @Interpretable("AggregateRow")
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
