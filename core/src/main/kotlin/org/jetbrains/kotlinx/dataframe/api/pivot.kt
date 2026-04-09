@@ -189,7 +189,8 @@ internal interface PivotDocs {
      * * [values][Pivot.values] — creates a [DataRow] containing values collected into a single [List]
      *   from all rows of each group for the selected columns;
      * * [count][Pivot.count] — creates a [DataRow] containing the pivot key columns and an additional column
-     *   with the number of rows in each corresponding group;
+     *   with the number of rows in each corresponding group
+     *   (optionally counting only rows that satisfy the given predicate);
      * * [with][Pivot.with] — creates a [DataRow] containing values computed using a [RowExpression]
      *   across all rows of each group and collected into a single [List] for every group;
      * * [aggregate][Pivot.aggregate] — performs a set of custom aggregations using [AggregateDsl],

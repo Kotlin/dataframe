@@ -294,7 +294,8 @@ internal interface GroupByDocs {
      * * [values][Grouped.values] — creates a [DataFrame] containing values collected into a single [List]
      *   from all rows of each group for the selected columns.
      * * [count][Grouped.count] — creates a [DataFrame] containing the grouping key columns and an additional column
-     *   with the number of rows in each corresponding group;
+     *   with the number of rows in each corresponding group
+     *   (optionally counting only rows that satisfy the given predicate);
      * * [aggregate][Grouped.aggregate] — performs a set of custom aggregations using [AggregateDsl],
      *   allowing you to compute one or more derived values per group;
      * * [Various aggregation statistics][AggregationStatistics] — predefined shortcuts
