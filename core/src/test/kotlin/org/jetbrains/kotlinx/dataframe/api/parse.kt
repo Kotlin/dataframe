@@ -431,11 +431,18 @@ class ParseTests {
     }
 
     @Test
+    fun `todo`() {
+        val col = columnOf("2017-05-30T08:34:14.000Z")
+
+        col.parse().print()
+    }
+
+    @Test
     fun `parse date without formatter`() {
         val time by columnOf(" 2020-01-06", "2020-01-07 ")
         val df = dataFrameOf(time)
-        val casted = df.convert(time).toLocalDate()
-        casted[time].type() shouldBe typeOf<LocalDate>()
+        val casted = df.convert(time.name).toLocalDate()
+        casted[time.name].type() shouldBe typeOf<LocalDate>()
     }
 
     @Test
@@ -462,10 +469,11 @@ class ParseTests {
 
     @Test
     fun `can parse instants`() {
-        val deprecatedInstantParser = Parsers[typeOf<DeprecatedInstant>()]!!.applyOptions(null)
-        val stdlibInstantParser = Parsers[typeOf<StdlibInstant>()]!!
+        val deprecatedInstantParser = Parsers[typeOf<DeprecatedInstant>()].single().applyOptions(null)
+        val stdlibInstantParser = Parsers[typeOf<StdlibInstant>()].single()
             .applyOptions(ParserOptions(parseExperimentalInstant = true))
-        val javaInstantParser = Parsers[typeOf<JavaInstant>()]!!.applyOptions(null)
+        val javaInstantParser = Parsers[typeOf<JavaInstant>()].single()
+            .applyOptions(null)
 
         // from the kotlinx-datetime tests, java instants treat leap seconds etc. like this
         fun parseInstantLikeJavaDoesOrNull(input: String): StdlibInstant? =
@@ -531,8 +539,9 @@ class ParseTests {
 
     @Test
     fun `can parse duration isoStrings`() {
-        val durationParser = Parsers[typeOf<Duration>()]!!.applyOptions(null) as (String) -> Duration?
-        val javaDurationParser = Parsers[typeOf<JavaDuration>()]!!.applyOptions(null) as (String) -> JavaDuration?
+        val durationParser = Parsers[typeOf<Duration>()].single().applyOptions(null) as (String) -> Duration?
+        val javaDurationParser =
+            Parsers[typeOf<JavaDuration>()].single().applyOptions(null) as (String) -> JavaDuration?
 
         fun testSuccess(duration: Duration, vararg isoStrings: String) {
             isoStrings.first() shouldBe duration.toIsoString()
@@ -633,7 +642,7 @@ class ParseTests {
 
     @Test
     fun `can parse duration default kotlin strings`() {
-        val durationParser = Parsers[typeOf<Duration>()]!!.applyOptions(null) as (String) -> Duration?
+        val durationParser = Parsers[typeOf<Duration>()].single().applyOptions(null) as (String) -> Duration?
 
         fun testParsing(string: String, expectedDuration: Duration) {
             Duration.parse(string) shouldBe expectedDuration
