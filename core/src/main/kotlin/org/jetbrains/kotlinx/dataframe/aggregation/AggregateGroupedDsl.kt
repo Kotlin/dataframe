@@ -24,7 +24,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
  * * [pivotMatches][AggregateGroupedDsl.pivotMatches]
  *
  * Pivoting inside [aggregate][Grouped.aggregate] is useful for counting
- * cross-group statistics matrix-like statistics.
+ * cross-group matrix-like statistics.
  */
 @ExcludeFromSources
 internal typealias AggregateGroupedDslDocsSnippet = Nothing
