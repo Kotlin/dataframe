@@ -187,4 +187,7 @@ internal interface DocumentationUrls {
 
     /** [See `joinWith` on the documentation website.]({@include [Url]}/joinWith.html) */
     typealias JoinWith = Nothing
+
+    /** [See "Summary statistics" on the documentation website.]({@include [Url]}/summarystatistics.html) */
+    typealias Statistics = Nothing
 }
