@@ -41,6 +41,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.isSubtypeWithNullabilityOf
 import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
@@ -229,7 +230,11 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 internal val convertersCache = mutableMapOf<Triple<KType, KType, ParserOptions?>, TypeConverter?>()
 
 internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? =
-    convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
+    if (from == typeOf<String>() || from == typeOf<String?>()) {
+        createConverter(from, to, options)
+    } else {
+        convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
+    }
 
 internal typealias TypeConverter = (Any) -> Any?
 
@@ -275,9 +280,12 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
         }
 
         fromClass == String::class -> {
-            val parser = Parsers[to.withNullability(false)]
+            val parsers = Parsers[to.withNullability(false)]
             when {
-                parser != null -> parser.toConverter(options)
+                // turn our parsers into a converter if we have them
+                // !NOTE! Do not cache this converter.
+                // GlobalParserOptions might influence which parsers should run and which should be skipped
+                parsers.isNotEmpty() -> parsers.toConverter(options)
 
                 // convert enums by name (or by `value` if they implement DataSchemaEnum)
                 toClass.isSubclassOf(Enum::class) -> convert<String> { string ->
@@ -688,17 +696,31 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
             DateTimeComponents::class -> when (toClass) {
                 UtcOffset::class -> convert<DateTimeComponents> { it.toUtcOffset() }
+
                 YearMonth::class -> convert<DateTimeComponents> { it.toYearMonth() }
+
                 LocalDate::class -> convert<DateTimeComponents> { it.toLocalDate() }
+
                 LocalTime::class -> convert<DateTimeComponents> { it.toLocalTime() }
+
                 LocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime() }
+
                 JavaLocalDate::class -> convert<DateTimeComponents> { it.toLocalDate().toJavaLocalDate() }
+
                 JavaLocalTime::class -> convert<DateTimeComponents> { it.toLocalTime().toJavaLocalTime() }
+
                 JavaLocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime().toJavaLocalDateTime() }
+
                 StdlibInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset() }
-                DeprecatedInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toDeprecatedInstant() }
+
+                DeprecatedInstant::class -> convert<DateTimeComponents> {
+                    it.toInstantUsingOffset().toDeprecatedInstant()
+                }
+
                 JavaInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toJavaInstant() }
+
                 Long::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toEpochMilliseconds() }
+
                 else -> null
             }
 

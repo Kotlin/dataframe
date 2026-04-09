@@ -1430,8 +1430,7 @@ public fun <T> Convert<T, DateTimeComponents?>.toStdlibInstant(): DataFrame<T> =
 @Refine
 @Converter(StdlibInstant::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, DateTimeComponents>.toStdlibInstant(): DataFrame<T> =
-    asColumn { it.convertToStdlibInstant() }
+public fun <T> Convert<T, DateTimeComponents>.toStdlibInstant(): DataFrame<T> = asColumn { it.convertToStdlibInstant() }
 // endregion
 
 // region toUtcOffset
@@ -1441,8 +1440,7 @@ public fun <T> Convert<T, DateTimeComponents>.toStdlibInstant(): DataFrame<T> =
  *
  * @return A new [DataColumn] with the [UtcOffset] values.
  */
-public fun DataColumn<DateTimeComponents>.convertToUtcOffset(): DataColumn<UtcOffset> =
-    map { it.toUtcOffset() }
+public fun DataColumn<DateTimeComponents>.convertToUtcOffset(): DataColumn<UtcOffset> = map { it.toUtcOffset() }
 
 /**
  * Converts values in this [DateTimeComponents] column to [UtcOffset]. Preserves null values.
@@ -1450,8 +1448,7 @@ public fun DataColumn<DateTimeComponents>.convertToUtcOffset(): DataColumn<UtcOf
  * @return A new [DataColumn] with the [UtcOffset] nullable values.
  */
 @JvmName("convertToUtcOffsetNullable")
-public fun DataColumn<DateTimeComponents?>.convertToUtcOffset(): DataColumn<UtcOffset?> =
-    map { it?.toUtcOffset() }
+public fun DataColumn<DateTimeComponents?>.convertToUtcOffset(): DataColumn<UtcOffset?> = map { it?.toUtcOffset() }
 
 /**
  * Converts values in the [DateTimeComponents] columns previously selected with [convert] to [UtcOffset],
@@ -1491,8 +1488,7 @@ public fun <T> Convert<T, DateTimeComponents>.toUtcOffset(): DataFrame<T> = asCo
  *
  * @return A new [DataColumn] with the [YearMonth] values.
  */
-public fun DataColumn<DateTimeComponents>.convertToYearMonth(): DataColumn<YearMonth> =
-    map { it.toYearMonth() }
+public fun DataColumn<DateTimeComponents>.convertToYearMonth(): DataColumn<YearMonth> = map { it.toYearMonth() }
 
 /**
  * Converts values in this [DateTimeComponents] column to [YearMonth]. Preserves null values.
@@ -1500,8 +1496,7 @@ public fun DataColumn<DateTimeComponents>.convertToYearMonth(): DataColumn<YearM
  * @return A new [DataColumn] with the [YearMonth] nullable values.
  */
 @JvmName("convertToYearMonthNullable")
-public fun DataColumn<DateTimeComponents?>.convertToYearMonth(): DataColumn<YearMonth?> =
-    map { it?.toYearMonth() }
+public fun DataColumn<DateTimeComponents?>.convertToYearMonth(): DataColumn<YearMonth?> = map { it?.toYearMonth() }
 
 /**
  * Converts values in the [DateTimeComponents] columns previously selected with [convert] to [YearMonth],
@@ -1585,10 +1580,10 @@ public fun DataColumn<Int?>.convertToLocalDate(zone: TimeZone = defaultTimeZone)
  * @return A new [DataColumn] with the [LocalDate] values.
  */
 @JvmName("convertToLocalDateFromString")
-public fun DataColumn<String>.convertToLocalDate(format: DateTimeFormat<LocalDate>? = null): DataColumn<LocalDate> {
-    val converter = Parsers.getKotlinxDateTimeConverter(format)
-    return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalDate") }
-}
+public fun DataColumn<String>.convertToLocalDate(format: DateTimeFormat<LocalDate>? = null): DataColumn<LocalDate> =
+    convertTo<LocalDate>(
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+    )
 
 /**
  * Converts values in this [String] column to [LocalDate].
@@ -1615,10 +1610,10 @@ public fun DataColumn<String>.convertToLocalDate(pattern: String): DataColumn<Lo
  * @return A new [DataColumn] with the [LocalDate] nullable values.
  */
 @JvmName("convertToLocalDateFromStringNullable")
-public fun DataColumn<String?>.convertToLocalDate(format: DateTimeFormat<LocalDate>? = null): DataColumn<LocalDate?> {
-    val converter = Parsers.getKotlinxDateTimeConverter(format)
-    return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDate") } }
-}
+public fun DataColumn<String?>.convertToLocalDate(format: DateTimeFormat<LocalDate>? = null): DataColumn<LocalDate?> =
+    convertTo<LocalDate?>(
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+    )
 
 /**
  * Converts values in this [String] column to [LocalDate].
@@ -1641,8 +1636,7 @@ public fun DataColumn<String?>.convertToLocalDate(pattern: String): DataColumn<L
  * @return A new [DataColumn] with the [LocalDate] values.
  */
 @JvmName("convertToLocalDateFromDateTimeComponents")
-public fun DataColumn<DateTimeComponents>.convertToLocalDate(): DataColumn<LocalDate> =
-    map { it.toLocalDate() }
+public fun DataColumn<DateTimeComponents>.convertToLocalDate(): DataColumn<LocalDate> = map { it.toLocalDate() }
 
 /**
  * Converts values in this [DateTimeComponents] column to [LocalDate]. Preserves null values.
@@ -1650,8 +1644,7 @@ public fun DataColumn<DateTimeComponents>.convertToLocalDate(): DataColumn<Local
  * @return A new [DataColumn] with the [LocalDate] nullable values.
  */
 @JvmName("convertToLocalDateFromDateTimeComponentsNullable")
-public fun DataColumn<DateTimeComponents?>.convertToLocalDate(): DataColumn<LocalDate?> =
-    map { it?.toLocalDate() }
+public fun DataColumn<DateTimeComponents?>.convertToLocalDate(): DataColumn<LocalDate?> = map { it?.toLocalDate() }
 
 /**
  * Converts values in the [Long] columns previously selected with [convert] to the [LocalDate],
@@ -1939,10 +1932,10 @@ public fun DataColumn<Int?>.convertToLocalTime(zone: TimeZone = defaultTimeZone)
  * @return A new [DataColumn] with the [LocalTime] values.
  */
 @JvmName("convertToLocalTimeFromString")
-public fun DataColumn<String>.convertToLocalTime(format: DateTimeFormat<LocalTime>? = null): DataColumn<LocalTime> {
-    val converter = Parsers.getKotlinxDateTimeConverter(format)
-    return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalTime") }
-}
+public fun DataColumn<String>.convertToLocalTime(format: DateTimeFormat<LocalTime>? = null): DataColumn<LocalTime> =
+    convertTo<LocalTime>(
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+    )
 
 /**
  * Converts values in this [String] column to [LocalTime].
@@ -1969,10 +1962,10 @@ public fun DataColumn<String>.convertToLocalTime(pattern: String): DataColumn<Lo
  * @return A new [DataColumn] with the [LocalTime] nullable values.
  */
 @JvmName("convertToLocalTimeFromStringNullable")
-public fun DataColumn<String?>.convertToLocalTime(format: DateTimeFormat<LocalTime>? = null): DataColumn<LocalTime?> {
-    val converter = Parsers.getKotlinxDateTimeConverter(format)
-    return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalTime") } }
-}
+public fun DataColumn<String?>.convertToLocalTime(format: DateTimeFormat<LocalTime>? = null): DataColumn<LocalTime?> =
+    convertTo<LocalTime?>(
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+    )
 
 /**
  * Converts values in this [String] column to [LocalTime].
@@ -1995,8 +1988,7 @@ public fun DataColumn<String?>.convertToLocalTime(pattern: String): DataColumn<L
  * @return A new [DataColumn] with the [LocalTime] values.
  */
 @JvmName("convertToLocalTimeFromDateTimeComponents")
-public fun DataColumn<DateTimeComponents>.convertToLocalTime(): DataColumn<LocalTime> =
-    map { it.toLocalTime() }
+public fun DataColumn<DateTimeComponents>.convertToLocalTime(): DataColumn<LocalTime> = map { it.toLocalTime() }
 
 /**
  * Converts values in this [DateTimeComponents] column to [LocalTime]. Preserves null values.
@@ -2004,8 +1996,7 @@ public fun DataColumn<DateTimeComponents>.convertToLocalTime(): DataColumn<Local
  * @return A new [DataColumn] with the [LocalTime] nullable values.
  */
 @JvmName("convertToLocalTimeFromDateTimeComponentsNullable")
-public fun DataColumn<DateTimeComponents?>.convertToLocalTime(): DataColumn<LocalTime?> =
-    map { it?.toLocalTime() }
+public fun DataColumn<DateTimeComponents?>.convertToLocalTime(): DataColumn<LocalTime?> = map { it?.toLocalTime() }
 
 /**
  * Converts values in the [Long] columns previously selected with [convert] to the [LocalDate],
@@ -2347,10 +2338,10 @@ public fun DataColumn<Int?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZ
 @JvmName("convertToLocalDateTimeFromString")
 public fun DataColumn<String>.convertToLocalDateTime(
     format: DateTimeFormat<LocalDateTime>? = null,
-): DataColumn<LocalDateTime> {
-    val converter = Parsers.getKotlinxDateTimeConverter(format)
-    return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalDateTime") }
-}
+): DataColumn<LocalDateTime> =
+    convertTo<LocalDateTime>(
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+    )
 
 /**
  * Converts values in this [String] column to [LocalDateTime].
@@ -2379,10 +2370,10 @@ public fun DataColumn<String>.convertToLocalDateTime(pattern: String): DataColum
 @JvmName("convertToLocalDateTimeFromStringNullable")
 public fun DataColumn<String?>.convertToLocalDateTime(
     format: DateTimeFormat<LocalDateTime>? = null,
-): DataColumn<LocalDateTime?> {
-    val converter = Parsers.getKotlinxDateTimeConverter(format)
-    return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDateTime") } }
-}
+): DataColumn<LocalDateTime?> =
+    convertTo<LocalDateTime?>(
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+    )
 
 /**
  * Converts values in this [String] column to [LocalDateTime].
@@ -2717,8 +2708,7 @@ public fun <T> Convert<T, DateTimeComponents?>.toLocalDateTime(): DataFrame<T> =
 @Refine
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, DateTimeComponents>.toLocalDateTime(): DataFrame<T> =
-    asColumn { it.convertToLocalDateTime() }
+public fun <T> Convert<T, DateTimeComponents>.toLocalDateTime(): DataFrame<T> = asColumn { it.convertToLocalDateTime() }
 
 /**
  * Converts values in the columns previously selected with [convert] to the [LocalDateTime],
@@ -2754,10 +2744,10 @@ public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = asColumn { it.con
 @JvmName("convertToDateTimeComponentsFromString")
 public fun DataColumn<String>.convertToDateTimeComponents(
     format: DateTimeFormat<DateTimeComponents>? = null,
-): DataColumn<DateTimeComponents> {
-    val converter = Parsers.getKotlinxDateTimeConverter(format)
-    return map { converter(it.trim()) ?: error("Can't convert `$it` to DateTimeComponents") }
-}
+): DataColumn<DateTimeComponents> =
+    convertTo<DateTimeComponents>(
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+    )
 
 /**
  * Converts values in this [String] column to [DateTimeComponents].
@@ -2786,10 +2776,10 @@ public fun DataColumn<String>.convertToDateTimeComponents(pattern: String): Data
 @JvmName("convertToDateTimeComponentsFromStringNullable")
 public fun DataColumn<String?>.convertToDateTimeComponents(
     format: DateTimeFormat<DateTimeComponents>? = null,
-): DataColumn<DateTimeComponents?> {
-    val converter = Parsers.getKotlinxDateTimeConverter(format)
-    return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to DateTimeComponents") } }
-}
+): DataColumn<DateTimeComponents?> =
+    convertTo<DateTimeComponents?>(
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+    )
 
 /**
  * Converts values in this [String] column to [DateTimeComponents].
