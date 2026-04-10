@@ -4,27 +4,20 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.asComparable
-import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.cumSum
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.describe
-import org.jetbrains.kotlinx.dataframe.api.div
-import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.groupByOther
 import org.jetbrains.kotlinx.dataframe.api.head
 import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.max
-import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.maxByOrNull
 import org.jetbrains.kotlinx.dataframe.api.maxFor
 import org.jetbrains.kotlinx.dataframe.api.maxOf
@@ -56,7 +49,6 @@ import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.valueCounts
-import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 import kotlin.math.ln
@@ -227,7 +219,10 @@ class Analyze : TestBase() {
         // SampleStart
         df.percentile(25.0) // 25th percentile of values for every column with mutually comparable values
         df.percentile(75.0) { age and weight } // 75th percentile of all values in `age` and `weight`
-        df.percentileFor(50.0, skipNaN = true) { age and name.firstName } // 50th percentile of values per `age` and `firstName` separately
+        df.percentileFor(
+            50.0,
+            skipNaN = true
+        ) { age and name.firstName } // 50th percentile of values per `age` and `firstName` separately
         df.percentileOf(75.0) { (weight ?: 0) / age } // 75th percentile of expression evaluated for every row
         df.percentileBy(25.0) { age } // DataRow where the 25th percentile of `age` lies (index rounded using R3)
         // SampleEnd
@@ -480,192 +475,6 @@ class Analyze : TestBase() {
         df.sumOf { "weight"<Int?>()?.let { it - 50 } }
         df.meanOf { ln("age"<Int>().toDouble()) }
         df.medianOf { "city"<String?>()?.length }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupBy_properties() {
-        // SampleStart
-        df.groupBy { name }
-        df.groupBy { city and name.lastName }
-        df.groupBy { age / 10 named "ageDecade" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupBy_strings() {
-        // SampleStart
-        df.groupBy("name")
-        df.groupBy { "city" and "name"["lastName"] }
-        df.groupBy { "age"<Int>() / 10 named "ageDecade" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByExpr_properties() {
-        // SampleStart
-        df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByExpr_strings() {
-        // SampleStart
-        df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByMoveToTop() {
-        // SampleStart
-        df.groupBy(moveToTop = true) { name.lastName }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByMoveToTopFalse() {
-        // SampleStart
-        df.groupBy(moveToTop = false) { name.lastName }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun dataFrameToGroupBy() {
-        // SampleStart
-        val df = dataFrameOf(
-            "key" to columnOf(1, 2),
-            "data" to columnOf(df[0..3], df[4..6]),
-        ) // create dataframe with two columns
-
-        df.asGroupBy("data") // convert dataframe to GroupBy by interpreting 'data' column as groups
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByToFrame() {
-        // SampleStart
-        df.groupBy { city }.toDataFrame()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByAggregations_properties() {
-        // SampleStart
-        df.groupBy { city }.aggregate {
-            count() into "total"
-            count { age > 18 } into "adults"
-            median { age } into "median age"
-            min { age } into "min age"
-            maxBy { age }.name into "oldest"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByAggregations_strings() {
-        // SampleStart
-        df.groupBy("city").aggregate {
-            count() into "total"
-            count { "age"<Int>() > 18 } into "adults"
-            median("age") into "median age"
-            min("age") into "min age"
-            maxBy("age")["name"] into "oldest"
-        }
-        // or
-        df.groupBy("city").aggregate {
-            count() into "total"
-            count { "age"<Int>() > 18 } into "adults"
-            "age"<Int>().median() into "median age"
-            "age"<Int>().min() into "min age"
-            maxBy("age")["name"] into "oldest"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByAggregateWithoutInto_properties() {
-        // SampleStart
-        df.groupBy { city }.aggregate { maxBy { age }.name }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByAggregateWithoutInto_strings() {
-        // SampleStart
-        df.groupBy("city").aggregate { maxBy("age")["name"] }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByDirectAggregations_properties() {
-        // SampleStart
-        df.groupBy { city }.max() // max for every column with mutually comparable values
-        df.groupBy { city }.mean() // mean for every numeric column
-        df.groupBy { city }.max { age } // max age into column "age"
-        df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
-        df.groupBy { city }.count() // number of rows into column "count"
-        df.groupBy { city }
-            .max { name.firstName.map { it.length } and name.lastName.map { it.length } } // maximum length of firstName or lastName into column "max"
-        df.groupBy { city }
-            .medianFor { age and weight } // median age into column "age", median weight into column "weight"
-        df.groupBy { city }
-            .minFor { (age into "min age") and (weight into "min weight") } // min age into column "min age", min weight into column "min weight"
-        df.groupBy { city }.meanOf("mean ratio") { weight?.div(age) } // mean of weight/age into column "mean ratio"
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByDirectAggregations_strings() {
-        // SampleStart
-        df.groupBy("city").max() // max for every column with mutually comparable values
-        df.groupBy("city").mean() // mean for every numeric column
-        df.groupBy("city").max("age") // max age into column "age"
-        df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"
-        df.groupBy("city").count() // number of rows into column "count"
-        df.groupBy("city").max {
-            "name"["firstName"]<String>().map { it.length } and "name"["lastName"]<String>().map { it.length }
-        } // maximum length of firstName or lastName into column "max"
-        df.groupBy("city")
-            .medianFor("age", "weight") // median age into column "age", median weight into column "weight"
-        df.groupBy("city")
-            .minFor { ("age"<Int>() into "min age") and ("weight"<Int?>() into "min weight") } // min age into column "min age", min weight into column "min weight"
-        df.groupBy("city").meanOf("mean ratio") {
-            "weight"<Int?>()?.div("age"<Int>())
-        } // mean of weight/age into column "mean ratio"
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByWithoutAggregation_properties() {
-        // SampleStart
-        df.groupBy { city }.values()
-        df.groupBy { city }.values { name and age }
-        df.groupBy { city }.values { weight into "weights" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun groupByWithoutAggregation_strings() {
-        // SampleStart
-        df.groupBy("city").values()
-        df.groupBy("city").values("name", "age")
-        df.groupBy("city").values { "weight" into "weights" }
         // SampleEnd
     }
 
