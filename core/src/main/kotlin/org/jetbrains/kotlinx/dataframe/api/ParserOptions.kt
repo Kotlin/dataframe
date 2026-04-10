@@ -79,6 +79,9 @@ public interface GlobalParserOptions {
     )
     public fun addDateTimePattern(pattern: String): Unit = addDateTimeUnicodePattern<LocalDateTime>(pattern)
 
+    /**
+     * TODO
+     */
     @FormatStringsInDatetimeFormats
     public fun addDateTimeUnicodePattern(pattern: String, formatType: KType)
 
@@ -146,7 +149,7 @@ public interface GlobalParserOptions {
      * This can be adjusted to force either one.
      *
      * We recommend using Kotlin types, however
-     * @include [KotlinxDateTimeLocaleSnippet].
+     * @include [KotlinxDateTimeLocaleSnippet]
      *
      * @see [addDateTimeFormat]
      * @see [addJavaDateTimePattern]
@@ -173,7 +176,7 @@ public val DataFrame.Companion.parser: GlobalParserOptions
  * This can be adjusted to force either one.
  *
  * We recommend using Kotlin types, however
- * @include [KotlinxDateTimeLocaleSnippet].
+ * @include [KotlinxDateTimeLocaleSnippet]
  */
 public enum class ParseDateTimeLibrary {
 
