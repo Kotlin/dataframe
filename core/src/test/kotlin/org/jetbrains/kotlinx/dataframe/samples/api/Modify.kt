@@ -3,15 +3,12 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.format.DateTimeFormat
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.JavaDateTimeParserOptions
-import org.jetbrains.kotlinx.dataframe.api.KotlinDateTimeParserOptions
+import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
@@ -274,7 +271,7 @@ class Modify : TestBase() {
         df.parse(
             options = ParserOptions(
                 locale = Locale.CHINA,
-                dateTime = JavaDateTimeParserOptions.withDateTimeFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE)
+                dateTime = DateTimeParserOptions.Java.withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE)
             )
         )
         // SampleEnd

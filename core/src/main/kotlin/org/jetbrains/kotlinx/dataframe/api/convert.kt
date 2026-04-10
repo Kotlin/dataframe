@@ -42,7 +42,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToDoubleImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
@@ -1582,7 +1581,7 @@ public fun DataColumn<Int?>.convertToLocalDate(zone: TimeZone = defaultTimeZone)
 @JvmName("convertToLocalDateFromString")
 public fun DataColumn<String>.convertToLocalDate(format: DateTimeFormat<LocalDate>? = null): DataColumn<LocalDate> =
     convertTo<LocalDate>(
-        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(it)) },
     )
 
 /**
@@ -1612,7 +1611,7 @@ public fun DataColumn<String>.convertToLocalDate(pattern: String): DataColumn<Lo
 @JvmName("convertToLocalDateFromStringNullable")
 public fun DataColumn<String?>.convertToLocalDate(format: DateTimeFormat<LocalDate>? = null): DataColumn<LocalDate?> =
     convertTo<LocalDate?>(
-        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(it)) },
     )
 
 /**
@@ -1934,7 +1933,7 @@ public fun DataColumn<Int?>.convertToLocalTime(zone: TimeZone = defaultTimeZone)
 @JvmName("convertToLocalTimeFromString")
 public fun DataColumn<String>.convertToLocalTime(format: DateTimeFormat<LocalTime>? = null): DataColumn<LocalTime> =
     convertTo<LocalTime>(
-        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(it)) },
     )
 
 /**
@@ -1964,7 +1963,7 @@ public fun DataColumn<String>.convertToLocalTime(pattern: String): DataColumn<Lo
 @JvmName("convertToLocalTimeFromStringNullable")
 public fun DataColumn<String?>.convertToLocalTime(format: DateTimeFormat<LocalTime>? = null): DataColumn<LocalTime?> =
     convertTo<LocalTime?>(
-        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(it)) },
     )
 
 /**
@@ -2340,7 +2339,7 @@ public fun DataColumn<String>.convertToLocalDateTime(
     format: DateTimeFormat<LocalDateTime>? = null,
 ): DataColumn<LocalDateTime> =
     convertTo<LocalDateTime>(
-        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(it)) },
     )
 
 /**
@@ -2372,7 +2371,7 @@ public fun DataColumn<String?>.convertToLocalDateTime(
     format: DateTimeFormat<LocalDateTime>? = null,
 ): DataColumn<LocalDateTime?> =
     convertTo<LocalDateTime?>(
-        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(it)) },
     )
 
 /**
@@ -2746,7 +2745,7 @@ public fun DataColumn<String>.convertToDateTimeComponents(
     format: DateTimeFormat<DateTimeComponents>? = null,
 ): DataColumn<DateTimeComponents> =
     convertTo<DateTimeComponents>(
-        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(it)) },
     )
 
 /**
@@ -2778,7 +2777,7 @@ public fun DataColumn<String?>.convertToDateTimeComponents(
     format: DateTimeFormat<DateTimeComponents>? = null,
 ): DataColumn<DateTimeComponents?> =
     convertTo<DateTimeComponents?>(
-        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withDateTimeFormat(it)) },
+        parserOptions = format?.let { ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(it)) },
     )
 
 /**
