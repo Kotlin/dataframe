@@ -173,6 +173,7 @@ internal fun AnyFrame.toHtmlData(
         col: ColumnWithPath<*>,
         rowsLimit: Int?,
         configuration: DisplayConfiguration,
+        renderRootDf: AnyFrame = this,
     ): ColumnDataForJs {
         val values = if (rowsLimit != null) rows().take(rowsLimit) else rows()
         val scale = if (col.isNumber()) col.asNumbers().scale() else 1
@@ -208,7 +209,7 @@ internal fun AnyFrame.toHtmlData(
                 val parentCols = col.path.indices
                     .map { i -> col.path.take(i + 1) }
                     .dropLast(1)
-                    .map { ColumnWithPath(this@toHtmlData[it], it) }
+                    .map { ColumnWithPath(renderRootDf[it], it) }
                 val parentAttributes = parentCols
                     .map { formatter(FormattingDsl, row, it) }
                     .reduceOrNull(CellAttributes?::and)
@@ -248,7 +249,7 @@ internal fun AnyFrame.toHtmlData(
                 val parentCols = col.path.indices
                     .map { i -> col.path.take(i + 1) }
                     .dropLast(1)
-                    .map { ColumnWithPath(this@toHtmlData[it], it) }
+                    .map { ColumnWithPath(renderRootDf[it], it) }
                 val parentAttributes = parentCols
                     .map { hf(FormattingDsl, it) }
                     .reduceOrNull(CellAttributes?::and)
@@ -264,7 +265,7 @@ internal fun AnyFrame.toHtmlData(
         }
         val nested = if (col is ColumnGroup<*>) {
             col.columns().map {
-                col.columnToJs(it.addParentPath(col.path), rowsLimit, configuration)
+                col.columnToJs(it.addParentPath(col.path), rowsLimit, configuration, renderRootDf)
             }
         } else {
             emptyList()
@@ -284,7 +285,7 @@ internal fun AnyFrame.toHtmlData(
         val (nextDf, nextId, configuration) = queue.pop()
         val rowsLimit = if (nextId == rootId) configuration.rowsLimit else configuration.nestedRowsLimit
         val preparedColumns = nextDf.columns().map {
-            nextDf.columnToJs(it.addPath(), rowsLimit, configuration)
+            nextDf.columnToJs(it.addPath(), rowsLimit, configuration, nextDf)
         }
         val js = tableJs(preparedColumns, nextId, rootId, nextDf.nrow)
         scripts.add(js)
