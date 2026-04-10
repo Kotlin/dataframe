@@ -351,23 +351,31 @@ public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Se
             dateTimeFormats: Iterable<Pair<KType, DateTimeFormat<out Any>>>? = this.dateTimeFormats,
         ): Kotlin = Kotlin(dateTimeFormats = dateTimeFormats?.toSet())
 
-        public fun withFormat(format: DateTimeFormat<out Any>, formatType: KType): Kotlin =
-            copy(
-                dateTimeFormats = dateTimeFormats.orEmpty() + (formatType.withNullability(false) to format),
-            )
+        public fun withFormat(format: DateTimeFormat<out Any>?, formatType: KType): Kotlin =
+            if (format == null) {
+                this
+            } else {
+                copy(
+                    dateTimeFormats = dateTimeFormats.orEmpty() + (formatType.withNullability(false) to format),
+                )
+            }
 
-        public inline fun <reified T : Any> withFormat(format: DateTimeFormat<out T>): Kotlin =
+        public inline fun <reified T : Any> withFormat(format: DateTimeFormat<out T>?): Kotlin =
             withFormat(format = format, formatType = typeOf<T>())
 
         @FormatStringsInDatetimeFormats
-        public fun withPattern(pattern: String, formatType: KType): Kotlin =
-            withFormat(
-                format = DateTimeFormat.fromPattern(pattern, formatType),
-                formatType = formatType,
-            )
+        public fun withPattern(pattern: String?, formatType: KType): Kotlin =
+            if (pattern == null) {
+                this
+            } else {
+                withFormat(
+                    format = DateTimeFormat.fromPattern(pattern, formatType),
+                    formatType = formatType,
+                )
+            }
 
         @FormatStringsInDatetimeFormats
-        public inline fun <reified T : Any> withPattern(pattern: String): Kotlin =
+        public inline fun <reified T : Any> withPattern(pattern: String?): Kotlin =
             withPattern(pattern = pattern, formatType = typeOf<T>())
 
         override fun equals(other: Any?): Boolean {
@@ -462,16 +470,24 @@ public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Se
 
         public fun withLocale(locale: Locale?): Java = copy(locale = locale)
 
-        public fun withFormatter(formatter: DateTimeFormatter, formatType: KType? = null): Java =
-            copy(dateTimeFormats = dateTimeFormats.orEmpty() + (formatType to formatter))
+        public fun withFormatter(formatter: DateTimeFormatter?, formatType: KType? = null): Java =
+            if (formatter == null) {
+                this
+            } else {
+                copy(dateTimeFormats = dateTimeFormats.orEmpty() + (formatType to formatter))
+            }
 
-        public inline fun <reified T : Temporal> withFormatter(formatter: DateTimeFormatter): Java =
+        public inline fun <reified T : Temporal> withFormatter(formatter: DateTimeFormatter?): Java =
             withFormatter(formatter = formatter, formatType = typeOf<T>())
 
-        public fun withPattern(pattern: String, formatType: KType?): Java =
-            withFormatter(formatter = DateTimeFormatter.ofPattern(pattern), formatType = formatType)
+        public fun withPattern(pattern: String?, formatType: KType?): Java =
+            if (pattern == null) {
+                this
+            } else {
+                withFormatter(formatter = DateTimeFormatter.ofPattern(pattern), formatType = formatType)
+            }
 
-        public fun withPattern(pattern: String): Java =
+        public fun withPattern(pattern: String?): Java =
             withPattern(
                 pattern = pattern,
                 formatType = null,
@@ -479,7 +495,7 @@ public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Se
 
         @JvmSynthetic
         @JvmName("withDateTimePatternReified")
-        public inline fun <reified T : Temporal> withPattern(pattern: String): Java =
+        public inline fun <reified T : Temporal> withPattern(pattern: String?): Java =
             withPattern(pattern = pattern, formatType = typeOf<T>())
 
         override fun equals(other: Any?): Boolean {
