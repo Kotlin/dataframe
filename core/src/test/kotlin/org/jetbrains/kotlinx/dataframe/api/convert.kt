@@ -26,7 +26,12 @@ import kotlin.math.roundToLong
 import kotlin.random.Random
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.toKotlinDuration
+import java.time.Duration as JavaDuration
 import java.time.LocalTime as JavaLocalTime
 
 class ConvertTests {
@@ -340,6 +345,90 @@ class ConvertTests {
                 }
             }
         }
+    }
+
+    @Test
+    fun `convertToDuration from String`() {
+        val col = columnOf("1h", "30m")
+        col.convertToDuration() shouldBe columnOf(1.hours, 30.minutes)
+    }
+
+    @Test
+    fun `convertToDuration from nullable String`() {
+        val col = columnOf("1h", null)
+        col.convertToDuration() shouldBe columnOf(1.hours, null)
+    }
+
+    @Test
+    fun `convertToDuration from JavaDuration`() {
+        val javaDuration = JavaDuration.ofHours(1)
+        val col = columnOf(javaDuration)
+        col.convertToDuration() shouldBe columnOf(javaDuration.toKotlinDuration())
+    }
+
+    @Test
+    fun `convertToDuration from nullable JavaDuration`() {
+        val javaDuration = JavaDuration.ofMinutes(30)
+        val col = columnOf(javaDuration, null)
+        col.convertToDuration() shouldBe columnOf(javaDuration.toKotlinDuration(), null)
+    }
+
+    @Test
+    fun `toDuration from String column`() {
+        val duration by columnOf("1h", "30m")
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe 1.hours
+    }
+
+    @Test
+    fun `toDuration from nullable String column`() {
+        val duration by columnOf("1h", null)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"].hasNulls shouldBe true
+    }
+
+    @Test
+    fun `toDuration from JavaDuration column`() {
+        val javaDuration = JavaDuration.ofHours(2)
+        val duration by columnOf(javaDuration)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe javaDuration.toKotlinDuration()
+    }
+
+    @Test
+    fun `toDuration from nullable JavaDuration column`() {
+        val javaDuration = JavaDuration.ofMinutes(45)
+        val duration by columnOf(javaDuration, null)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe javaDuration.toKotlinDuration()
+    }
+
+    @Test
+    fun `toDuration from Long column`() {
+        val duration by columnOf(3600_000L, 1800_000L)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe 1.hours
+    }
+
+    @Test
+    fun `toDuration from Int column`() {
+        val duration by columnOf(3600_000, 1800_000)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe 1.hours
+    }
+
+    @Test
+    fun `Duration roundtrip via Long`() {
+        val col = columnOf(1.hours, 30.minutes)
+        col.convertToLong() shouldBe columnOf(3600_000L, 1800_000L)
+        col.convertToLong().convertToDuration() shouldBe col
+    }
+
+    @Test
+    fun `Duration roundtrip via Int`() {
+        val col = columnOf(1.hours, 30.minutes)
+        col.convertToInt() shouldBe columnOf(3600_000, 1800_000)
+        col.convertToInt().convertToDuration() shouldBe col
+    }
+
+    @Test
+    fun `Duration roundtrip via JavaDuration`() {
+        val col = columnOf(1.hours)
+        col.convertTo<JavaDuration>().convertToDuration() shouldBe col
     }
 
     private interface Marker

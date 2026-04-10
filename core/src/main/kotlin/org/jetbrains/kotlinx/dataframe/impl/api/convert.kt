@@ -58,9 +58,14 @@ import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.toJavaDuration
 import kotlin.time.toJavaInstant
+import kotlin.time.toKotlinDuration
 import kotlin.time.toKotlinInstant
 import kotlin.toBigDecimal
+import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
@@ -263,6 +268,24 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
     val toClass = to.jvmErasure
     return when {
         fromClass == toClass -> TypeConverterIdentity
+
+        // kotlin.time.Duration is a value class,
+        // so it must be handled before the generic toClass.isValue / fromClass.isValue branches.
+        toClass == Duration::class -> when (fromClass) {
+            String::class -> Parsers.getAsConverterOrNull(to, options)!!
+            JavaDuration::class -> convert<JavaDuration> { it.toKotlinDuration() }
+            Long::class -> convert<Long> { it.milliseconds }
+            Int::class -> convert<Int> { it.milliseconds }
+            else -> null
+        }
+
+        fromClass == Duration::class -> when (toClass) {
+            JavaDuration::class -> convert<Duration> { it.toJavaDuration() }
+            Long::class -> convert<Duration> { it.inWholeMilliseconds }
+            Int::class -> convert<Duration> { it.inWholeMilliseconds.toInt() }
+            String::class -> convert<Duration> { it.toString() }
+            else -> null
+        }
 
         toClass.isValue -> {
             val constructor =

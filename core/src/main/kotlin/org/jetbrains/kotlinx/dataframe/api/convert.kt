@@ -78,8 +78,15 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
 import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.Instant as DeprecatedInstant
+import java.time.Instant as JavaInstant
+import java.time.Duration as JavaDuration
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalTime as JavaLocalTime
+import java.time.LocalDateTime as JavaLocalDateTime
+
 
 /**
  * See also [parse] — a specialized form of the [convert] operation that parses [String] columns
@@ -2914,6 +2921,79 @@ public fun <T> Convert<T, String>.toDateTimeComponents(pattern: String): DataFra
 @Converter(DateTimeComponents::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, *>.toDateTimeComponents(): DataFrame<T> = asColumn { it.convertTo<DateTimeComponents>() }
+
+// endregion
+
+// region toDuration
+
+/**
+ * Converts values in this column to [Duration].
+ *
+ * Supported source types: [String] (parsed via [Duration.parse]),
+ * [JavaDuration], [Long] and [Int] (interpreted as milliseconds).
+ *
+ * @return A new [DataColumn] with the [Duration] values.
+ */
+@JvmName("convertToDurationFromT")
+public fun <T : Any> DataColumn<T>.convertToDuration(): DataColumn<Duration> = convertTo()
+
+/**
+ * Converts values in this column to [Duration]. Preserves null values.
+ *
+ * Supported source types: [String] (parsed via [Duration.parse]),
+ * [JavaDuration], [Long] and [Int] (interpreted as milliseconds).
+ *
+ * @return A new [DataColumn] with the [Duration] nullable values.
+ */
+public fun <T : Any> DataColumn<T?>.convertToDuration(): DataColumn<Duration?> = convertTo()
+
+/**
+ * Converts values in the columns previously selected with [convert] to [Duration],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * Supported source types: [String] (parsed via [Duration.parse]),
+ * [JavaDuration], [Long] and [Int] (interpreted as milliseconds).
+ *
+ * For more information: {@include [DocumentationUrls.Convert]}
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { duration }.toDuration()
+ * df.convert { colsOf<String>() }.toDuration()
+ * df.convert { colsOf<Long>() }.toDuration()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [Duration].
+ */
+@JvmName("toDurationTAny")
+@Refine
+@Converter(Duration::class, nullable = false)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, Any>.toDuration(): DataFrame<T> = to<Duration>()
+
+/**
+ * Converts values in the columns previously selected with [convert] to [Duration],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * Supported source types: [String] (parsed via [Duration.parse]),
+ * [JavaDuration], [Long] and [Int] (interpreted as milliseconds).
+ *
+ * For more information: {@include [DocumentationUrls.Convert]}
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { duration }.toDuration()
+ * df.convert { colsOf<String?>() }.toDuration()
+ * df.convert { colsOf<Long?>() }.toDuration()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [Duration].
+ */
+@Refine
+@Converter(Duration::class, nullable = true)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, Any?>.toDuration(): DataFrame<T> = to<Duration?>()
 
 // endregion
 
