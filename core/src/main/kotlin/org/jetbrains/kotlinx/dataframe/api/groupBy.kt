@@ -533,6 +533,10 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * Creates a new [GroupBy] by transforming each group’s [DataFrame]
      * using the provided [transform] function.
      *
+     * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
+     *
+     * For more information: {@include [DocumentationUrls.GroupBy]}
+     *
      * @param [transform] A lambda that takes each group as a [DataFrame]
      * (available both as a receiver and as a parameter) and returns a transformed [DataFrame].
      * @return A new [GroupBy] instance containing the transformed groups.
@@ -544,6 +548,10 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      *
      * The [predicate] is a [GroupedRowFilter], which behaves similarly to a [RowFilter] used in [DataFrame.filter],
      * but also provides access to the [group][GroupedDataRow.group] in the current row.
+     *
+     * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
+     *
+     * For more information: {@include [DocumentationUrls.GroupBy]}
      *
      * ### Example
      * ```kotlin
@@ -565,6 +573,10 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      *
      * If [groupedColumnName] is provided, the groups will be stored
      * in a [FrameColumn] with that name; otherwise, a default name "group" is used.
+     *
+     * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
+     *
+     * For more information: {@include [DocumentationUrls.GroupBy]}
      *
      * @param groupedColumnName The name of the column in which to store grouped data;
      * if `null`, a default name will be used.
