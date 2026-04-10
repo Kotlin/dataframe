@@ -925,6 +925,25 @@ internal object Parsers : GlobalParserOptions {
         val resolvedParsers = parsers.map { it.applyOptions(options) }
         val resolvedFallbackParsers = parsers.map { it.applyOptionsToFallbackParserForConverter(options) }
 
+        if (resolvedParsers.all { it == SKIP_PARSER }) {
+            throw TypeConversionException(
+                value = null,
+                from = typeOf<String>(),
+                to = type,
+                column = null,
+                extraInformation = buildString {
+                    append("All parsers for type $type were skipped. If this is unexpected, ")
+                    if (options != null) {
+                        append(
+                            "check your provided parser options: $options, as well as the global parser options at `DataFrame.parser`.",
+                        )
+                    } else {
+                        append("check the global parser options at `DataFrame.parser`.")
+                    }
+                },
+            )
+        }
+
         val typeConverter =
 
             fun(str: String): Any? {
