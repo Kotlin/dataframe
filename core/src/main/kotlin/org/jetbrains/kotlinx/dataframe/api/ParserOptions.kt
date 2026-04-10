@@ -219,47 +219,10 @@ public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimePatt
  *
  * #### Parsing date-time strings
  *
- * For parsing date-time strings, the kotlinx-datetime library is used by default.
- * You can change this by specifying [dateTimeLibrary].
+ * TODO
  *
- * You can define your own [dateTimeFormats] to customize date-time parsing.
- *
- * For example, to always allow DataFrame to parse "12/24 2023" [Strings][String]:
- * ```kt
- * dateTimeFormats = setOf(
- *     LocalDate.Format {
- *         monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
- *     }
- * )
- * ```
- *
- * If you want to use `java.time.*` based date-time parsing instead, you can
- * - set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA];
- * - or provide either [javaDateTimeFormatters] or [javaDateTimePatterns];
- * - or skip some kotlin date types by providing:
- *   ```kt
- *   skipTypes = setOf(
- *       typeOf<kotlinx.datetime.LocalDate>(),
- *       typeOf<kotlinx.datetime.LocalDateTime>(),
- *       typeOf<kotlinx.datetime.LocalTime>(),
- *       etc.
- *   )
- *   ```
- *   this allows mixed date-time library results.
- *
- * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
- *   It will be used to parse Java date-time classes if [dateTimeLibrary] is [ParseDateTimeLibrary.JAVA].
- * @param javaDateTimeFormatters a [DateTimeFormatter] to use for parsing dates, if not specified, it will be created
- *   from [javaDateTimePattern] and [locale]. If neither [javaDateTimeFormatters] nor [javaDateTimePattern] are specified,
- *   [DateTimeFormatter.ISO_LOCAL_DATE_TIME] will be used.
- *   Specifying [javaDateTimeFormatters] will set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA].
- * @param javaDateTimePattern a pattern to use for parsing dates. If specified instead of [javaDateTimeFormatters],
- *   it will be used to create a [DateTimeFormatter].
- *   Specifying [javaDateTimePattern] will set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA].
- * @param dateTimeFormats a set of custom kotlinx-datetime formats to use for parsing dates and other timestamps.
- *   If specified, these formats will be attempted before the default ISO formats.
- *   Specifying [dateTimeFormats] will set [dateTimeLibrary] to [ParseDateTimeLibrary.KOTLIN].
- * @param dateTimeLibrary the library to use for parsing dates and numbers. By default, it's [ParseDateTimeLibrary.KOTLIN].
+ * @param locale locale to use for numbers (and Java date-time types), defaults to the System default locale.
+ * @param dateTime TODO can be used to force kotlin/java, or setting this will override default and global
  * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
  *   `["null", "NULL", "NA", "N/A"]`.
  * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
@@ -336,139 +299,205 @@ public class ParserOptions(
 
     override fun toString(): String =
         "ParserOptions(locale=$locale, dateTimeParserOptions=$dateTime, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser, parseExperimentalUuid=$parseExperimentalUuid, parseExperimentalInstant=$parseExperimentalInstant)"
-
-    public companion object {
-        public val KotlinDateTime: KotlinDateTimeParserOptions
-            get() = KotlinDateTimeParserOptions
-        public val JavaDateTime: JavaDateTimeParserOptions
-            get() = JavaDateTimeParserOptions
-    }
 }
 
 public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Set<Pair<KType?, T>>?) {
 
     public abstract fun copy(): DateTimeParserOptions<T>
 
-    public companion object {
-        public val Kotlin: KotlinDateTimeParserOptions
-            get() = KotlinDateTimeParserOptions
-        public val Java: JavaDateTimeParserOptions
-            get() = JavaDateTimeParserOptions
-    }
-}
+    /**
+     * Kotlin(x) variant of [DateTimeParserOptions] using [DateTimeFormat].
+     *
+     * If supplied to [ParserOptions.dateTime],
+     * parsing will run in Kotlin time mode (similar to setting
+     * [DataFrame.parser.dateTimeLibrary][GlobalParserOptions.dateTimeLibrary] to [ParseDateTimeLibrary.KOTLIN]).
+     *
+     * Additionally, if [dateTimeFormats] is not `null`, a.k.a. any format or pattern is provided,
+     * parsing will use the provided formats __ONLY__. Default formats and those in the
+     * [global parser options][DataFrame.Companion.parser] will be ignored.
+     */
+    public open class Kotlin private constructor(
+        override val dateTimeFormats: Set<Pair<KType, DateTimeFormat<out Any>>>? = null,
+    ) : DateTimeParserOptions<DateTimeFormat<out Any>>(dateTimeFormats) {
 
-/**
- * Kotlin(x) variant of [DateTimeParserOptions] using [DateTimeFormat].
- */
-public open class KotlinDateTimeParserOptions private constructor(
-    override val dateTimeFormats: Set<Pair<KType, DateTimeFormat<out Any>>>? = null,
-) : DateTimeParserOptions<DateTimeFormat<out Any>>(dateTimeFormats) {
+        public companion object : Kotlin() {
+            @JvmName("fromSet")
+            public operator fun invoke(dateTimeFormats: Set<Pair<KType, DateTimeFormat<out Any>>>? = null): Kotlin =
+                Kotlin(dateTimeFormats = dateTimeFormats)
 
-    public companion object : KotlinDateTimeParserOptions() {
-        public operator fun invoke(
-            dateTimeFormats: Set<Pair<KType, DateTimeFormat<out Any>>>? = null,
-        ): KotlinDateTimeParserOptions = KotlinDateTimeParserOptions(dateTimeFormats = dateTimeFormats)
+            @JvmName("fromFormats")
+            public operator fun invoke(
+                dateTimeFormat: Pair<KType, DateTimeFormat<out Any>>,
+                vararg dateTimeFormats: Pair<KType, DateTimeFormat<out Any>>,
+            ): Kotlin = Kotlin(dateTimeFormats = setOf(dateTimeFormat, *dateTimeFormats))
 
-        public operator fun invoke(
-            dateTimeFormat: Pair<KType, DateTimeFormat<out Any>>,
-            vararg dateTimeFormats: Pair<KType, DateTimeFormat<out Any>>,
-        ): KotlinDateTimeParserOptions =
-            KotlinDateTimeParserOptions(
-                dateTimeFormats = setOf(dateTimeFormat, *dateTimeFormats),
+            @JvmName("fromPatterns")
+            @FormatStringsInDatetimeFormats
+            public operator fun invoke(
+                unicodePattern: Pair<KType, String>,
+                vararg unicodePatterns: Pair<KType, String>,
+            ): Kotlin =
+                Kotlin(
+                    dateTimeFormats = setOf(unicodePattern, *unicodePatterns)
+                        .map { (formatType, pattern) ->
+                            formatType to DateTimeFormat.fromPattern(pattern, formatType)
+                        }.toSet(),
+                )
+        }
+
+        override fun copy(): Kotlin = Kotlin(dateTimeFormats = dateTimeFormats)
+
+        public fun copy(
+            dateTimeFormats: Iterable<Pair<KType, DateTimeFormat<out Any>>>? = this.dateTimeFormats,
+        ): Kotlin = Kotlin(dateTimeFormats = dateTimeFormats?.toSet())
+
+        public fun withFormat(format: DateTimeFormat<out Any>, formatType: KType): Kotlin =
+            copy(
+                dateTimeFormats = dateTimeFormats.orEmpty() + (formatType.withNullability(false) to format),
             )
+
+        public inline fun <reified T : Any> withFormat(format: DateTimeFormat<out T>): Kotlin =
+            withFormat(format = format, formatType = typeOf<T>())
+
+        @FormatStringsInDatetimeFormats
+        public fun withPattern(pattern: String, formatType: KType): Kotlin =
+            withFormat(
+                format = DateTimeFormat.fromPattern(pattern, formatType),
+                formatType = formatType,
+            )
+
+        @FormatStringsInDatetimeFormats
+        public inline fun <reified T : Any> withPattern(pattern: String): Kotlin =
+            withPattern(pattern = pattern, formatType = typeOf<T>())
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Kotlin) return false
+
+            if (dateTimeFormats != other.dateTimeFormats) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int = dateTimeFormats?.hashCode() ?: 0
+
+        override fun toString(): String = "DateTimeParserOptions.Kotlin(dateTimeFormats=$dateTimeFormats)"
     }
 
-    override fun copy(): KotlinDateTimeParserOptions = KotlinDateTimeParserOptions(dateTimeFormats = dateTimeFormats)
+    /**
+     * Java time variant of [DateTimeParserOptions] using [DateTimeFormatter].
+     *
+     * If supplied to [ParserOptions.dateTime],
+     * parsing will run in Java time mode (similar to setting
+     * [DataFrame.parser.dateTimeLibrary][GlobalParserOptions.dateTimeLibrary] to [ParseDateTimeLibrary.JAVA]).
+     *
+     * Additionally, if [dateTimeFormats] is not `null`, a.k.a. any formatter or pattern is provided,
+     * parsing will use the provided formatters __ONLY__. Default formatters and those in the
+     * [global parser options][DataFrame.Companion.parser] will be ignored.
+     *
+     * @param locale locale for date/time parsing, falls back to [ParserOptions.locale] if `null`
+     */
+    public open class Java private constructor(
+        public val locale: Locale? = null,
+        override val dateTimeFormats: Set<Pair<KType?, DateTimeFormatter>>? = null,
+    ) : DateTimeParserOptions<DateTimeFormatter>(dateTimeFormats) {
 
-    public fun copy(
-        dateTimeFormats: Iterable<Pair<KType, DateTimeFormat<out Any>>>? = this.dateTimeFormats,
-    ): KotlinDateTimeParserOptions = KotlinDateTimeParserOptions(dateTimeFormats = dateTimeFormats?.toSet())
+        public companion object : Java() {
+            @JvmName("fromSet")
+            public operator fun invoke(
+                locale: Locale? = null,
+                dateTimeFormats: Set<Pair<KType?, DateTimeFormatter>>? = null,
+            ): Java = Java(locale = locale, dateTimeFormats = dateTimeFormats)
 
-    public fun withDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType): KotlinDateTimeParserOptions =
-        copy(
-            dateTimeFormats = dateTimeFormats.orEmpty() + (formatType.withNullability(false) to format),
-        )
+            @JvmName("fromFormats")
+            public operator fun invoke(
+                locale: Locale?,
+                dateTimeFormat: Pair<KType?, DateTimeFormatter>,
+                vararg dateTimeFormats: Pair<KType?, DateTimeFormatter>,
+            ): Java = Java(locale = locale, dateTimeFormats = setOf(dateTimeFormat, *dateTimeFormats))
 
-    public inline fun <reified T : Any> withDateTimeFormat(format: DateTimeFormat<out T>): KotlinDateTimeParserOptions =
-        withDateTimeFormat(format = format, formatType = typeOf<T>())
+            @JvmName("fromFormats")
+            public operator fun invoke(
+                dateTimeFormat: Pair<KType?, DateTimeFormatter>,
+                vararg dateTimeFormats: Pair<KType?, DateTimeFormatter>,
+            ): Java = invoke(null, dateTimeFormat, *dateTimeFormats)
 
-    @FormatStringsInDatetimeFormats
-    public fun withUnicodePattern(pattern: String, formatType: KType): KotlinDateTimeParserOptions =
-        withDateTimeFormat(
-            format = DateTimeFormat.fromPattern(pattern, formatType),
-            formatType = formatType,
-        )
+            @JvmName("fromPatterns")
+            public operator fun invoke(
+                locale: Locale? = null,
+                dateTimePattern: Pair<KType?, String>,
+                vararg dateTimePatterns: Pair<KType?, String>,
+            ): Java =
+                Java(
+                    locale = locale,
+                    dateTimeFormats = setOf(
+                        dateTimePattern,
+                        *dateTimePatterns,
+                    ).map { (formatType, pattern) ->
+                        formatType to DateTimeFormatter.ofPattern(pattern)
+                    }.toSet(),
+                )
 
-    @FormatStringsInDatetimeFormats
-    public inline fun <reified T : Any> withUnicodePattern(pattern: String): KotlinDateTimeParserOptions =
-        withUnicodePattern(pattern = pattern, formatType = typeOf<T>())
-}
+            @JvmName("fromPatterns")
+            public operator fun invoke(
+                dateTimePattern: Pair<KType?, String>,
+                vararg dateTimePatterns: Pair<KType?, String>,
+            ): Java = invoke(null, dateTimePattern, *dateTimePatterns)
+        }
 
-/**
- * Java time variant of [DateTimeParserOptions] using [DateTimeFormatter].
- */
-public open class JavaDateTimeParserOptions private constructor(
-    public val locale: Locale? = null,
-    override val dateTimeFormats: Set<Pair<KType?, DateTimeFormatter>>? = null,
-) : DateTimeParserOptions<DateTimeFormatter>(dateTimeFormats) {
+        override fun copy(): Java =
+            Java(
+                locale = locale,
+                dateTimeFormats = dateTimeFormats,
+            )
 
-    public companion object : JavaDateTimeParserOptions() {
-        public operator fun invoke(
-            locale: Locale? = null,
-            dateTimeFormats: Set<Pair<KType?, DateTimeFormatter>>? = null,
-        ): JavaDateTimeParserOptions = JavaDateTimeParserOptions(locale = locale, dateTimeFormats = dateTimeFormats)
+        public fun copy(
+            locale: Locale? = this.locale,
+            dateTimeFormats: Iterable<Pair<KType?, DateTimeFormatter>>? = this.dateTimeFormats,
+        ): Java =
+            Java(
+                locale = locale,
+                dateTimeFormats = dateTimeFormats?.toSet(),
+            )
 
-        public operator fun invoke(
-            locale: Locale?,
-            dateTimeFormat: Pair<KType?, DateTimeFormatter>,
-            vararg dateTimeFormats: Pair<KType?, DateTimeFormatter>,
-        ): JavaDateTimeParserOptions =
-            JavaDateTimeParserOptions(locale = locale, dateTimeFormats = setOf(dateTimeFormat, *dateTimeFormats))
+        public fun withLocale(locale: Locale?): Java = copy(locale = locale)
 
-        public operator fun invoke(
-            dateTimeFormat: Pair<KType?, DateTimeFormatter>,
-            vararg dateTimeFormats: Pair<KType?, DateTimeFormatter>,
-        ): JavaDateTimeParserOptions =
-            JavaDateTimeParserOptions(dateTimeFormats = setOf(dateTimeFormat, *dateTimeFormats))
+        public fun withFormatter(formatter: DateTimeFormatter, formatType: KType? = null): Java =
+            copy(dateTimeFormats = dateTimeFormats.orEmpty() + (formatType to formatter))
+
+        public inline fun <reified T : Temporal> withFormatter(formatter: DateTimeFormatter): Java =
+            withFormatter(formatter = formatter, formatType = typeOf<T>())
+
+        public fun withPattern(pattern: String, formatType: KType?): Java =
+            withFormatter(formatter = DateTimeFormatter.ofPattern(pattern), formatType = formatType)
+
+        public fun withPattern(pattern: String): Java =
+            withPattern(
+                pattern = pattern,
+                formatType = null,
+            )
+
+        @JvmSynthetic
+        @JvmName("withDateTimePatternReified")
+        public inline fun <reified T : Temporal> withPattern(pattern: String): Java =
+            withPattern(pattern = pattern, formatType = typeOf<T>())
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Java) return false
+
+            if (locale != other.locale) return false
+            if (dateTimeFormats != other.dateTimeFormats) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = locale?.hashCode() ?: 0
+            result = 31 * result + (dateTimeFormats?.hashCode() ?: 0)
+            return result
+        }
+
+        override fun toString(): String = "DateTimeParserOptions.Java(locale=$locale, dateTimeFormats=$dateTimeFormats)"
     }
-
-    override fun copy(): JavaDateTimeParserOptions =
-        JavaDateTimeParserOptions(
-            locale = locale,
-            dateTimeFormats = dateTimeFormats,
-        )
-
-    public fun copy(
-        locale: Locale? = this.locale,
-        dateTimeFormats: Iterable<Pair<KType?, DateTimeFormatter>>? = this.dateTimeFormats,
-    ): JavaDateTimeParserOptions =
-        JavaDateTimeParserOptions(
-            locale = locale,
-            dateTimeFormats = dateTimeFormats?.toSet(),
-        )
-
-    public fun withLocale(locale: Locale?): JavaDateTimeParserOptions = copy(locale = locale)
-
-    public fun withDateTimeFormatter(
-        formatter: DateTimeFormatter,
-        formatType: KType? = null,
-    ): JavaDateTimeParserOptions = copy(dateTimeFormats = dateTimeFormats.orEmpty() + (formatType to formatter))
-
-    public inline fun <reified T : Temporal> withDateTimeFormatter(
-        formatter: DateTimeFormatter,
-    ): JavaDateTimeParserOptions = withDateTimeFormatter(formatter = formatter, formatType = typeOf<T>())
-
-    public fun withDateTimePattern(pattern: String, formatType: KType?): JavaDateTimeParserOptions =
-        withDateTimeFormatter(DateTimeFormatter.ofPattern(pattern), formatType)
-
-    public fun withDateTimePattern(pattern: String): JavaDateTimeParserOptions =
-        withDateTimePattern(
-            pattern = pattern,
-            formatType = null,
-        )
-
-    @JvmSynthetic
-    @JvmName("withDateTimePatternReified")
-    public inline fun <reified T : Temporal> withDateTimePattern(pattern: String): JavaDateTimeParserOptions =
-        withDateTimePattern(pattern = pattern, formatType = typeOf<T>())
 }

@@ -13,8 +13,7 @@ import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.format.char
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.JavaDateTimeParserOptions
-import org.jetbrains.kotlinx.dataframe.api.KotlinDateTimeParserOptions
+import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.columnTypes
@@ -122,7 +121,7 @@ class Read {
         val df = DataFrame.readCsv(
             file,
             parserOptions = ParserOptions(
-                dateTime = JavaDateTimeParserOptions.withDateTimePattern("dd/MMM/yy h:mm a"),
+                dateTime = DateTimeParserOptions.Java.withPattern("dd/MMM/yy h:mm a"),
             ),
         )
         // SampleEnd
@@ -135,7 +134,7 @@ class Read {
         val df = DataFrame.readCsv(
             file,
             parserOptions = ParserOptions(
-                dateTime = KotlinDateTimeParserOptions.withDateTimeFormat(
+                dateTime = DateTimeParserOptions.Kotlin.withFormat(
                     LocalDate.Format {
                         monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
                     },

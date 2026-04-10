@@ -23,9 +23,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
-import org.jetbrains.kotlinx.dataframe.api.JavaDateTimeParserOptions
-import org.jetbrains.kotlinx.dataframe.api.KotlinDateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary
 import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary.JAVA
 import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary.KOTLIN
@@ -513,7 +512,7 @@ internal object Parsers : GlobalParserOptions {
                         options.dateTimeFormatsProvided() &&
                         options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime()
                     ) {
-                        val dateTimeOptions = (options?.dateTime as? KotlinDateTimeParserOptions)
+                        val dateTimeOptions = (options?.dateTime as? DateTimeParserOptions.Kotlin)
                             ?: error(
                                 "Should not happen, but ParserOptions expected custom Kotlin dateTimeParserOptions yet found `null`.",
                             )
@@ -546,7 +545,7 @@ internal object Parsers : GlobalParserOptions {
                         options.dateTimeFormatsProvided() &&
                         options.shouldUseJavaTime() && this.shouldUseJavaTime()
                     ) {
-                        val dateTimeOptions = (options!!.dateTime as? JavaDateTimeParserOptions)
+                        val dateTimeOptions = (options!!.dateTime as? DateTimeParserOptions.Java)
                             ?: error(
                                 "Should not happen, but ParserOptions expected custom Java dateTimeParserOptions yet found `null`.",
                             )
@@ -959,11 +958,11 @@ internal object Parsers : GlobalParserOptions {
             .applyOptions(ParserOptions(useFastDoubleParser = useFastDoubleParser))
 }
 
-internal fun ParserOptions?.shouldUseKotlinxDateTime(): Boolean = this?.dateTime is KotlinDateTimeParserOptions?
+internal fun ParserOptions?.shouldUseKotlinxDateTime(): Boolean = this?.dateTime is DateTimeParserOptions.Kotlin?
 
 internal fun ParserOptions?.shouldNotUseKotlinxDateTime(): Boolean = !shouldUseKotlinxDateTime()
 
-internal fun ParserOptions?.shouldUseJavaTime(): Boolean = this?.dateTime is JavaDateTimeParserOptions?
+internal fun ParserOptions?.shouldUseJavaTime(): Boolean = this?.dateTime is DateTimeParserOptions.Java?
 
 internal fun ParserOptions?.shouldNotUseJavaTime(): Boolean = !shouldUseJavaTime()
 
@@ -1001,8 +1000,6 @@ internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: K
  * a.k.a. that parser was able to parse all values in the column successfully. If a parser
  * fails to parse any value, the next parser is tried. If all the others fail, the final parser
  * simply returns the original string, leaving the column unchanged.
- *
- * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
  *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)

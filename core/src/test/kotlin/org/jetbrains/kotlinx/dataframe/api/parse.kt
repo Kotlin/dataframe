@@ -79,7 +79,7 @@ class ParseTests {
 
         val parsed = date.parse(
             ParserOptions(
-                dateTime = KotlinDateTimeParserOptions.withDateTimeFormat(format),
+                dateTime = DateTimeParserOptions.Kotlin.withFormat(format),
             ),
         ).cast<LocalDate>()
 
@@ -94,7 +94,7 @@ class ParseTests {
         with(date.toDataFrame()) {
             convert { date }.toLocalDate(format)[date.name] shouldBe parsed
             parse(
-                ParserOptions(dateTime = KotlinDateTimeParserOptions.withDateTimeFormat(format)),
+                ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(format)),
             )[date.name] shouldBe
                 parsed
         }
@@ -117,7 +117,7 @@ class ParseTests {
 
             val parsed = date.parse(
                 ParserOptions(
-                    dateTime = JavaDateTimeParserOptions.withDateTimePattern<JavaLocalDate>(pattern),
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDate>(pattern),
                 ),
             ).cast<JavaLocalDate>()
 
@@ -129,14 +129,14 @@ class ParseTests {
             }
 
             date.convertTo<JavaLocalDate>(
-                parserOptions = ParserOptions(dateTime = JavaDateTimeParserOptions.withDateTimePattern(pattern)),
+                parserOptions = ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)),
             ) shouldBe parsed
             with(date.toDataFrame()) {
                 convert { date }.to<JavaLocalDate>(
-                    parserOptions = ParserOptions(dateTime = JavaDateTimeParserOptions.withDateTimePattern(pattern)),
+                    parserOptions = ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)),
                 )[date.name] shouldBe parsed
                 parse(
-                    ParserOptions(dateTime = JavaDateTimeParserOptions.withDateTimePattern(pattern)),
+                    ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)),
                 )[date.name] shouldBe
                     parsed
             }
@@ -267,7 +267,7 @@ class ParseTests {
 
         val parsed = dateTime.parse(
             ParserOptions(
-                dateTime = ParserOptions.KotlinDateTime.withDateTimeFormat<LocalDateTime>(format),
+                dateTime = DateTimeParserOptions.Kotlin.withFormat<LocalDateTime>(format),
                 locale = locale,
             ),
         ).cast<LocalDateTime>()
@@ -286,7 +286,7 @@ class ParseTests {
         with(dateTime.toDataFrame()) {
             convert { dateTime }.toLocalDateTime(format)[dateTime.name] shouldBe parsed
             parse(
-                ParserOptions(dateTime = ParserOptions.KotlinDateTime.withDateTimeFormat<LocalDateTime>(format)),
+                ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat<LocalDateTime>(format)),
             )[dateTime.name] shouldBe
                 parsed
         }
@@ -310,7 +310,7 @@ class ParseTests {
 
             val parsed = dateTime.parse(
                 ParserOptions(
-                    dateTime = DateTimeParserOptions.Java.withDateTimePattern<JavaLocalDateTime>(pattern),
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
                     locale = locale,
                 ),
             ).cast<JavaLocalDateTime>()
@@ -327,18 +327,18 @@ class ParseTests {
 
             dateTime.convertTo<JavaLocalDateTime>(
                 ParserOptions(
-                    dateTime = DateTimeParserOptions.Java.withDateTimePattern<JavaLocalDateTime>(pattern),
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
                 ),
             ) shouldBe parsed
             with(dateTime.toDataFrame()) {
                 convert { dateTime }.to<JavaLocalDateTime>(
                     ParserOptions(
-                        dateTime = DateTimeParserOptions.Java.withDateTimePattern<JavaLocalDateTime>(pattern),
+                        dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
                     ),
                 )[dateTime.name] shouldBe parsed
                 parse(
                     ParserOptions(
-                        dateTime = DateTimeParserOptions.Java.withDateTimePattern<JavaLocalDateTime>(pattern),
+                        dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
                     ),
                 )[dateTime.name] shouldBe
                     parsed
@@ -349,7 +349,7 @@ class ParseTests {
             dateTime.parse(ParserOptions(locale = locale)) shouldBe parsed
             dateTime.convertTo<JavaLocalDateTime>(
                 ParserOptions(
-                    dateTime = DateTimeParserOptions.Java.withDateTimePattern<JavaLocalDateTime>(pattern),
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
                 ),
             ) shouldBe parsed
 
@@ -366,7 +366,7 @@ class ParseTests {
         val pattern = "HH-mm-ss"
 
         val parsed = time.parse(
-            ParserOptions(dateTime = ParserOptions.KotlinDateTime.withUnicodePattern<LocalTime>(pattern)),
+            ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withPattern<LocalTime>(pattern)),
         ).cast<LocalTime>()
 
         parsed.type() shouldBe typeOf<LocalTime>()
@@ -380,7 +380,7 @@ class ParseTests {
             convert { time }.toLocalTime(pattern)[time.name] shouldBe parsed
             parse(
                 options = ParserOptions(
-                    dateTime = ParserOptions.KotlinDateTime.withUnicodePattern<LocalTime>(pattern),
+                    dateTime = DateTimeParserOptions.Kotlin.withPattern<LocalTime>(pattern),
                 ),
             )[time.name] shouldBe parsed
         }
@@ -399,7 +399,7 @@ class ParseTests {
         val pattern = "HH-mm-ss"
 
         val parsed = time.parse(
-            ParserOptions(dateTime = ParserOptions.JavaDateTime.withDateTimePattern<JavaLocalTime>(pattern)),
+            ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)),
         ).cast<JavaLocalTime>()
 
         parsed.type() shouldBe typeOf<JavaLocalTime>()
@@ -409,15 +409,15 @@ class ParseTests {
             second shouldBe 30
         }
         time.convertTo<JavaLocalTime>(
-            ParserOptions(dateTime = ParserOptions.JavaDateTime.withDateTimePattern<JavaLocalTime>(pattern)),
+            ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)),
         ) shouldBe parsed
         with(time.toDataFrame()) {
             convert { time }.to<JavaLocalTime>(
-                ParserOptions(dateTime = ParserOptions.JavaDateTime.withDateTimePattern<JavaLocalTime>(pattern)),
+                ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)),
             )[time.name] shouldBe parsed
             parse(
                 options = ParserOptions(
-                    dateTime = ParserOptions.JavaDateTime.withDateTimePattern<JavaLocalTime>(pattern),
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern),
                 ),
             )[time.name] shouldBe parsed
         }
@@ -431,10 +431,32 @@ class ParseTests {
     }
 
     @Test
-    fun `todo`() {
-        val col = columnOf("2017-05-30T08:34:14.000Z")
+    fun `parse date adjusting library`() {
+        try {
+            val col = columnOf("2017-05-30 08:34:14")
+            val parsedJava = col.parse(
+                ParserOptions(dateTime = DateTimeParserOptions.Java),
+            )
+            parsedJava.type shouldBe typeOf<JavaLocalDateTime>()
 
-        col.parse().print()
+            val parsedKotlin = col.parse(
+                ParserOptions(dateTime = DateTimeParserOptions.Kotlin),
+            )
+            parsedKotlin.type shouldBe typeOf<LocalDateTime>()
+
+            val parsedDefault = col.parse()
+            parsedDefault.type shouldBe typeOf<LocalDateTime>()
+
+            DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
+            col.parse() shouldBe parsedJava
+
+            DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.KOTLIN
+            col.parse() shouldBe parsedKotlin
+
+            col.parse().print()
+        } finally {
+            DataFrame.parser.resetToDefault()
+        }
     }
 
     @Test
