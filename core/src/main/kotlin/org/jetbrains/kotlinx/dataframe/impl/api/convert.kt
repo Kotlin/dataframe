@@ -280,12 +280,12 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
         }
 
         fromClass == String::class -> {
-            val parsers = Parsers[to.withNullability(false)]
+            // turn our parsers into a converter if we have them
+            // !NOTE! Do not cache this converter.
+            // GlobalParserOptions might influence which parsers should run and which should be skipped
+            val parserConverter = Parsers.getAsConverterOrNull(to, options)
             when {
-                // turn our parsers into a converter if we have them
-                // !NOTE! Do not cache this converter.
-                // GlobalParserOptions might influence which parsers should run and which should be skipped
-                parsers.isNotEmpty() -> parsers.toConverter(options)
+                parserConverter != null -> parserConverter
 
                 // convert enums by name (or by `value` if they implement DataSchemaEnum)
                 toClass.isSubclassOf(Enum::class) -> convert<String> { string ->

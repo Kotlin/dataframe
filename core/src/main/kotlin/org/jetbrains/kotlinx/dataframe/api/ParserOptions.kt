@@ -1,15 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.UtcOffset
-import kotlinx.datetime.YearMonth
-import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.format.DateTimeFormat
-import kotlinx.datetime.format.DateTimeFormatBuilder
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
-import kotlinx.datetime.format.byUnicodePattern
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.KotlinxDateTimeLocaleSnippet
@@ -148,7 +141,11 @@ public interface GlobalParserOptions {
     /**
      * DataFrame supports parsing to either kotlinx-datetime or java.time types.
      *
-     * We recommend using [kotlinx-datetime][KOTLIN_DATETIME] by default, however
+     * By default, this is `null`, meaning we try Kotlin types first, and if that fails, we try Java types.
+     *
+     * This can be adjusted to force either one.
+     *
+     * We recommend using Kotlin types, however
      * @include [KotlinxDateTimeLocaleSnippet].
      *
      * @see [addDateTimeFormat]
@@ -171,16 +168,20 @@ public val DataFrame.Companion.parser: GlobalParserOptions
 /**
  * DataFrame supports parsing to either kotlinx-datetime or java.time types.
  *
- * We recommend using [kotlinx-datetime][KOTLIN_DATETIME] by default, however
+ * By default, this is `null`, meaning we try Kotlin types first, and if that fails, we try Java types.
+ *
+ * This can be adjusted to force either one.
+ *
+ * We recommend using Kotlin types, however
  * @include [KotlinxDateTimeLocaleSnippet].
  */
 public enum class ParseDateTimeLibrary {
 
     /** https://github.com/Kotlin/kotlinx-datetime */
-    KOTLIN_DATETIME,
+    KOTLIN,
 
     /** https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html */
-    JAVA_TIME,
+    JAVA,
 }
 
 /** @include [GlobalParserOptions.addDateTimeFormat] */
@@ -233,7 +234,7 @@ public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimePatt
  * ```
  *
  * If you want to use `java.time.*` based date-time parsing instead, you can
- * - set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA_TIME];
+ * - set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA];
  * - or provide either [javaDateTimeFormatters] or [javaDateTimePatterns];
  * - or skip some kotlin date types by providing:
  *   ```kt
@@ -247,18 +248,18 @@ public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimePatt
  *   this allows mixed date-time library results.
  *
  * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
- *   It will be used to parse Java date-time classes if [dateTimeLibrary] is [ParseDateTimeLibrary.JAVA_TIME].
+ *   It will be used to parse Java date-time classes if [dateTimeLibrary] is [ParseDateTimeLibrary.JAVA].
  * @param javaDateTimeFormatters a [DateTimeFormatter] to use for parsing dates, if not specified, it will be created
  *   from [javaDateTimePattern] and [locale]. If neither [javaDateTimeFormatters] nor [javaDateTimePattern] are specified,
  *   [DateTimeFormatter.ISO_LOCAL_DATE_TIME] will be used.
- *   Specifying [javaDateTimeFormatters] will set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA_TIME].
+ *   Specifying [javaDateTimeFormatters] will set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA].
  * @param javaDateTimePattern a pattern to use for parsing dates. If specified instead of [javaDateTimeFormatters],
  *   it will be used to create a [DateTimeFormatter].
- *   Specifying [javaDateTimePattern] will set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA_TIME].
+ *   Specifying [javaDateTimePattern] will set [dateTimeLibrary] to [ParseDateTimeLibrary.JAVA].
  * @param dateTimeFormats a set of custom kotlinx-datetime formats to use for parsing dates and other timestamps.
  *   If specified, these formats will be attempted before the default ISO formats.
- *   Specifying [dateTimeFormats] will set [dateTimeLibrary] to [ParseDateTimeLibrary.KOTLIN_DATETIME].
- * @param dateTimeLibrary the library to use for parsing dates and numbers. By default, it's [ParseDateTimeLibrary.KOTLIN_DATETIME].
+ *   Specifying [dateTimeFormats] will set [dateTimeLibrary] to [ParseDateTimeLibrary.KOTLIN].
+ * @param dateTimeLibrary the library to use for parsing dates and numbers. By default, it's [ParseDateTimeLibrary.KOTLIN].
  * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
  *   `["null", "NULL", "NA", "N/A"]`.
  * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
