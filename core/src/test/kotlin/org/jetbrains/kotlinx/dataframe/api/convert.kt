@@ -30,9 +30,19 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.toJavaDuration
 import kotlin.time.toKotlinDuration
 import java.time.Duration as JavaDuration
+import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+import java.time.format.DateTimeFormatter
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toJavaLocalTime
 
 class ConvertTests {
 
@@ -429,6 +439,166 @@ class ConvertTests {
     fun `Duration roundtrip via JavaDuration`() {
         val col = columnOf(1.hours)
         col.convertTo<JavaDuration>().convertToDuration() shouldBe col
+    }
+
+    @Test
+    fun `convertToJavaInstant from Long`() {
+        val epochMillis = 1657283006955L
+        val col = columnOf(epochMillis)
+        col.convertToJavaInstant() shouldBe columnOf(JavaInstant.ofEpochMilli(epochMillis))
+    }
+
+    @Test
+    fun `convertToJavaInstant from nullable Long`() {
+        val epochMillis = 1657283006955L
+        val col = columnOf(epochMillis, null)
+        col.convertToJavaInstant() shouldBe columnOf(JavaInstant.ofEpochMilli(epochMillis), null)
+    }
+
+    @Test
+    fun `toJavaInstant from Long column`() {
+        val epochMillis = 1657283006955L
+        val ts by columnOf(epochMillis)
+        ts.toDataFrame().convert { ts }.toJavaInstant()["ts"][0] shouldBe JavaInstant.ofEpochMilli(epochMillis)
+    }
+
+    @Test
+    fun `convertToJavaDuration from Duration`() {
+        val col = columnOf(1.hours)
+        col.convertToJavaDuration() shouldBe columnOf(1.hours.toJavaDuration())
+    }
+
+    @Test
+    fun `convertToJavaDuration from nullable Duration`() {
+        val col = columnOf(1.hours, null)
+        col.convertToJavaDuration() shouldBe columnOf(1.hours.toJavaDuration(), null)
+    }
+
+    @Test
+    fun `Duration roundtrip via JavaDuration using convertToJavaDuration`() {
+        val col = columnOf(1.hours, 30.minutes)
+        col.convertToJavaDuration().convertToDuration() shouldBe col
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from LocalDate`() {
+        val date = LocalDate(2024, 1, 15)
+        val col = columnOf(date)
+        col.convertToJavaLocalDate() shouldBe columnOf(date.toJavaLocalDate())
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from nullable LocalDate`() {
+        val date = LocalDate(2024, 1, 15)
+        val col = columnOf(date, null)
+        col.convertToJavaLocalDate() shouldBe columnOf(date.toJavaLocalDate(), null)
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from String`() {
+        val col = columnOf("2024-01-15")
+        col.convertToJavaLocalDate() shouldBe columnOf(JavaLocalDate.of(2024, 1, 15))
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from String with formatter`() {
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val col = columnOf("15/01/2024")
+        col.convertToJavaLocalDate(formatter) shouldBe columnOf(JavaLocalDate.of(2024, 1, 15))
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from String with pattern`() {
+        val col = columnOf("15/01/2024")
+        col.convertToJavaLocalDate("dd/MM/yyyy") shouldBe columnOf(JavaLocalDate.of(2024, 1, 15))
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from nullable String`() {
+        val col = columnOf("2024-01-15", null)
+        col.convertToJavaLocalDate() shouldBe columnOf(JavaLocalDate.of(2024, 1, 15), null)
+    }
+
+    @Test
+    fun `toJavaLocalDate from String column with pattern`() {
+        val date by columnOf("15/01/2024")
+        date.toDataFrame()
+            .convert { date }
+            .toJavaLocalDate("dd/MM/yyyy")["date"][0] shouldBe JavaLocalDate.of(2024, 1, 15)
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from LocalTime`() {
+        val time = LocalTime(11, 22, 33)
+        val col = columnOf(time)
+        col.convertToJavaLocalTime() shouldBe columnOf(time.toJavaLocalTime())
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from nullable LocalTime`() {
+        val time = LocalTime(11, 22, 33)
+        val col = columnOf(time, null)
+        col.convertToJavaLocalTime() shouldBe columnOf(time.toJavaLocalTime(), null)
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from String`() {
+        val col = columnOf("11:22:33")
+        col.convertToJavaLocalTime() shouldBe columnOf(JavaLocalTime.of(11, 22, 33))
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from String with pattern`() {
+        val col = columnOf("11?22?33")
+        col.convertToJavaLocalTime("HH?mm?ss") shouldBe columnOf(JavaLocalTime.of(11, 22, 33))
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from nullable String`() {
+        val col = columnOf("11:22:33", null)
+        col.convertToJavaLocalTime() shouldBe columnOf(JavaLocalTime.of(11, 22, 33), null)
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from LocalDateTime`() {
+        val dt = LocalDateTime(2024, 1, 15, 11, 22, 33)
+        val col = columnOf(dt)
+        col.convertToJavaLocalDateTime() shouldBe columnOf(dt.toJavaLocalDateTime())
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from nullable LocalDateTime`() {
+        val dt = LocalDateTime(2024, 1, 15, 11, 22, 33)
+        val col = columnOf(dt, null)
+        col.convertToJavaLocalDateTime() shouldBe columnOf(dt.toJavaLocalDateTime(), null)
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from String`() {
+        val col = columnOf("2024-01-15T11:22:33")
+        col.convertToJavaLocalDateTime() shouldBe columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33))
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from String with pattern`() {
+        val col = columnOf("15/01/2024 11:22:33")
+        col.convertToJavaLocalDateTime("dd/MM/yyyy HH:mm:ss") shouldBe
+            columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33))
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from nullable String`() {
+        val col = columnOf("2024-01-15T11:22:33", null)
+        col.convertToJavaLocalDateTime() shouldBe columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33), null)
+    }
+
+    @Test
+    fun `toJavaLocalDateTime from String column with pattern`() {
+        val dt by columnOf("15/01/2024 11:22:33")
+        dt.toDataFrame()
+            .convert { dt }
+            .toJavaLocalDateTime("dd/MM/yyyy HH:mm:ss")["dt"][0] shouldBe
+            JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33)
     }
 
     private interface Marker
