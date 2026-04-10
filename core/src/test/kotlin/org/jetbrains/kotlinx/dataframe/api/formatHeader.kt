@@ -2,10 +2,10 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
@@ -56,6 +56,15 @@ class FormatHeaderTests : TestBase() {
 
         parentOcc shouldBe 2 // group + lastName
         childOcc shouldBe 1 // firstName only
+    }
+
+    @Test
+    fun `formatHeader on groupBy result with nested column group renders correctly`() {
+        val grouped = df.groupBy { isHappy }.toDataFrame()
+        val formatted = grouped.formatHeader { isHappy }.with { textColor(red) }
+        val html = formatted.toHtml().toString()
+        // 1 occurrence in the root df + 1 per nested group frame (2 groups: true/false)
+        (html.split("color:#ff0000").size - 1) shouldBe 3
     }
 
     @Test
