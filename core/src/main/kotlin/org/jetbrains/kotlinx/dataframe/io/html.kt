@@ -285,7 +285,7 @@ internal fun AnyFrame.toHtmlData(
         val (nextDf, nextId, configuration) = queue.pop()
         val rowsLimit = if (nextId == rootId) configuration.rowsLimit else configuration.nestedRowsLimit
         val preparedColumns = nextDf.columns().map {
-            nextDf.columnToJs(it.addPath(), rowsLimit, configuration, nextDf)
+            nextDf.columnToJs(it.addPath(), rowsLimit, configuration)
         }
         val js = tableJs(preparedColumns, nextId, rootId, nextDf.nrow)
         scripts.add(js)
