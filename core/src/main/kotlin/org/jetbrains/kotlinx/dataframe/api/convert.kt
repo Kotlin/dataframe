@@ -2567,3 +2567,157 @@ public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolea
  */
 public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =
     map { it.toDataFrame(containsColumns = containsColumns) }
+
+// region deprecated
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalDate(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalDateFromStringNullable")
+public fun <T> Convert<T, String?>.toLocalDate(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalDate(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalDate()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalDate(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalDateFromString")
+public fun <T> Convert<T, String>.toLocalDate(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalDate(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalDate()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalTime(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalTimeFromStringNullable")
+public fun <T> Convert<T, String?>.toLocalTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalTime(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalTimeFromString")
+public fun <T> Convert<T, String>.toLocalTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalDateTime(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalDateTimeFromStringNullable")
+public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalDateTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalDateTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalDateTime(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalDateTimeFromString")
+public fun <T> Convert<T, String>.toLocalDateTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalDateTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalDateTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalDate(pattern, locale).convertToLocalDate()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalDateFromString")
+public fun DataColumn<String>.convertToLocalDate(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalDate> =
+    convertToJavaLocalDate(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalDate()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalDate(pattern, locale).convertToLocalDate()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalDateFromStringNullable")
+public fun DataColumn<String?>.convertToLocalDate(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalDate?> =
+    convertToJavaLocalDate(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalDate()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalTime(pattern, locale).convertToLocalTime()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalTimeFromString")
+public fun DataColumn<String>.convertToLocalTime(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalTime> =
+    convertToJavaLocalTime(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalTime(pattern, locale).convertToLocalTime()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalTimeFromStringNullable")
+public fun DataColumn<String?>.convertToLocalTime(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalTime?> =
+    convertToJavaLocalTime(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalDateTime(pattern, locale).convertToLocalDateTime()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalDateTimeFromString")
+public fun DataColumn<String>.convertToLocalDateTime(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalDateTime> =
+    convertToJavaLocalDateTime(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalDateTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalDateTime(pattern, locale).convertToLocalDateTime()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalDateTimeFromStringNullable")
+public fun DataColumn<String?>.convertToLocalDateTime(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalDateTime?> =
+    convertToJavaLocalDateTime(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalDateTime()
+
+// endregion
