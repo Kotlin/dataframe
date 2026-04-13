@@ -6,7 +6,12 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toJavaLocalTime
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -21,12 +26,22 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toBigInteger
 import org.junit.Test
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.random.Random
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.toJavaDuration
+import kotlin.time.toKotlinDuration
+import java.time.Duration as JavaDuration
+import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
 
 class ConvertTests {
@@ -44,7 +59,7 @@ class ConvertTests {
     @Test
     fun `convert nullable strings to time`() {
         val time by columnOf("11?22?33", null)
-        val converted = time.toDataFrame().convert { time }.toLocalTime("HH?mm?ss")[time]
+        val converted = time.toDataFrame().convert { time }.toLocalTime("HH?mm?ss")[{ "time"<String?>() }]
         converted.hasNulls shouldBe true
         converted[0] shouldBe LocalTime(11, 22, 33)
     }
@@ -340,6 +355,250 @@ class ConvertTests {
                 }
             }
         }
+    }
+
+    @Test
+    fun `convertToDuration from String`() {
+        val col = columnOf("1h", "30m")
+        col.convertToDuration() shouldBe columnOf(1.hours, 30.minutes)
+    }
+
+    @Test
+    fun `convertToDuration from nullable String`() {
+        val col = columnOf("1h", null)
+        col.convertToDuration() shouldBe columnOf(1.hours, null)
+    }
+
+    @Test
+    fun `convertToDuration from JavaDuration`() {
+        val javaDuration = JavaDuration.ofHours(1)
+        val col = columnOf(javaDuration)
+        col.convertToDuration() shouldBe columnOf(javaDuration.toKotlinDuration())
+    }
+
+    @Test
+    fun `convertToDuration from nullable JavaDuration`() {
+        val javaDuration = JavaDuration.ofMinutes(30)
+        val col = columnOf(javaDuration, null)
+        col.convertToDuration() shouldBe columnOf(javaDuration.toKotlinDuration(), null)
+    }
+
+    @Test
+    fun `toDuration from String column`() {
+        val duration by columnOf("1h", "30m")
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe 1.hours
+    }
+
+    @Test
+    fun `toDuration from nullable String column`() {
+        val duration by columnOf("1h", null)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"].hasNulls shouldBe true
+    }
+
+    @Test
+    fun `toDuration from JavaDuration column`() {
+        val javaDuration = JavaDuration.ofHours(2)
+        val duration by columnOf(javaDuration)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe javaDuration.toKotlinDuration()
+    }
+
+    @Test
+    fun `toDuration from nullable JavaDuration column`() {
+        val javaDuration = JavaDuration.ofMinutes(45)
+        val duration by columnOf(javaDuration, null)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe javaDuration.toKotlinDuration()
+    }
+
+    @Test
+    fun `toDuration from Long column`() {
+        val duration by columnOf(3600_000L, 1800_000L)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe 1.hours
+    }
+
+    @Test
+    fun `toDuration from Int column`() {
+        val duration by columnOf(3600_000, 1800_000)
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe 1.hours
+    }
+
+    @Test
+    fun `Duration roundtrip via Long`() {
+        val col = columnOf(1.hours, 30.minutes)
+        col.convertToLong() shouldBe columnOf(3600_000L, 1800_000L)
+        col.convertToLong().convertToDuration() shouldBe col
+    }
+
+    @Test
+    fun `Duration roundtrip via Int`() {
+        val col = columnOf(1.hours, 30.minutes)
+        col.convertToInt() shouldBe columnOf(3600_000, 1800_000)
+        col.convertToInt().convertToDuration() shouldBe col
+    }
+
+    @Test
+    fun `Duration roundtrip via JavaDuration`() {
+        val col = columnOf(1.hours)
+        col.convertTo<JavaDuration>().convertToDuration() shouldBe col
+    }
+
+    @Test
+    fun `convertToJavaInstant from Long`() {
+        val epochMillis = 1657283006955L
+        val col = columnOf(epochMillis)
+        col.convertToJavaInstant() shouldBe columnOf(JavaInstant.ofEpochMilli(epochMillis))
+    }
+
+    @Test
+    fun `convertToJavaInstant from nullable Long`() {
+        val epochMillis = 1657283006955L
+        val col = columnOf(epochMillis, null)
+        col.convertToJavaInstant() shouldBe columnOf(JavaInstant.ofEpochMilli(epochMillis), null)
+    }
+
+    @Test
+    fun `toJavaInstant from Long column`() {
+        val epochMillis = 1657283006955L
+        val ts by columnOf(epochMillis)
+        ts.toDataFrame().convert { ts }.toJavaInstant()["ts"][0] shouldBe JavaInstant.ofEpochMilli(epochMillis)
+    }
+
+    @Test
+    fun `convertToJavaDuration from Duration`() {
+        val col = columnOf(1.hours)
+        col.convertToJavaDuration() shouldBe columnOf(1.hours.toJavaDuration())
+    }
+
+    @Test
+    fun `convertToJavaDuration from nullable Duration`() {
+        val col = columnOf(1.hours, null)
+        col.convertToJavaDuration() shouldBe columnOf(1.hours.toJavaDuration(), null)
+    }
+
+    @Test
+    fun `Duration roundtrip via JavaDuration using convertToJavaDuration`() {
+        val col = columnOf(1.hours, 30.minutes)
+        col.convertToJavaDuration().convertToDuration() shouldBe col
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from LocalDate`() {
+        val date = LocalDate(2024, 1, 15)
+        val col = columnOf(date)
+        col.convertToJavaLocalDate() shouldBe columnOf(date.toJavaLocalDate())
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from nullable LocalDate`() {
+        val date = LocalDate(2024, 1, 15)
+        val col = columnOf(date, null)
+        col.convertToJavaLocalDate() shouldBe columnOf(date.toJavaLocalDate(), null)
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from String`() {
+        val col = columnOf("2024-01-15")
+        col.convertToJavaLocalDate() shouldBe columnOf(JavaLocalDate.of(2024, 1, 15))
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from String with formatter`() {
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val col = columnOf("15/01/2024")
+        col.convertToJavaLocalDate(formatter) shouldBe columnOf(JavaLocalDate.of(2024, 1, 15))
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from String with pattern`() {
+        val col = columnOf("15/01/2024")
+        col.convertToJavaLocalDate("dd/MM/yyyy") shouldBe columnOf(JavaLocalDate.of(2024, 1, 15))
+    }
+
+    @Test
+    fun `convertToJavaLocalDate from nullable String`() {
+        val col = columnOf("2024-01-15", null)
+        col.convertToJavaLocalDate() shouldBe columnOf(JavaLocalDate.of(2024, 1, 15), null)
+    }
+
+    @Test
+    fun `toJavaLocalDate from String column with pattern`() {
+        val date by columnOf("15/01/2024")
+        date.toDataFrame()
+            .convert { date }
+            .toJavaLocalDate("dd/MM/yyyy")["date"][0] shouldBe JavaLocalDate.of(2024, 1, 15)
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from LocalTime`() {
+        val time = LocalTime(11, 22, 33)
+        val col = columnOf(time)
+        col.convertToJavaLocalTime() shouldBe columnOf(time.toJavaLocalTime())
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from nullable LocalTime`() {
+        val time = LocalTime(11, 22, 33)
+        val col = columnOf(time, null)
+        col.convertToJavaLocalTime() shouldBe columnOf(time.toJavaLocalTime(), null)
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from String`() {
+        val col = columnOf("11:22:33")
+        col.convertToJavaLocalTime() shouldBe columnOf(JavaLocalTime.of(11, 22, 33))
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from String with pattern`() {
+        val col = columnOf("11?22?33")
+        col.convertToJavaLocalTime("HH?mm?ss") shouldBe columnOf(JavaLocalTime.of(11, 22, 33))
+    }
+
+    @Test
+    fun `convertToJavaLocalTime from nullable String`() {
+        val col = columnOf("11:22:33", null)
+        col.convertToJavaLocalTime() shouldBe columnOf(JavaLocalTime.of(11, 22, 33), null)
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from LocalDateTime`() {
+        val dt = LocalDateTime(2024, 1, 15, 11, 22, 33)
+        val col = columnOf(dt)
+        col.convertToJavaLocalDateTime() shouldBe columnOf(dt.toJavaLocalDateTime())
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from nullable LocalDateTime`() {
+        val dt = LocalDateTime(2024, 1, 15, 11, 22, 33)
+        val col = columnOf(dt, null)
+        col.convertToJavaLocalDateTime() shouldBe columnOf(dt.toJavaLocalDateTime(), null)
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from String`() {
+        val col = columnOf("2024-01-15T11:22:33")
+        col.convertToJavaLocalDateTime() shouldBe columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33))
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from String with pattern`() {
+        val col = columnOf("15/01/2024 11:22:33")
+        col.convertToJavaLocalDateTime("dd/MM/yyyy HH:mm:ss") shouldBe
+            columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33))
+    }
+
+    @Test
+    fun `convertToJavaLocalDateTime from nullable String`() {
+        val col = columnOf("2024-01-15T11:22:33", null)
+        col.convertToJavaLocalDateTime() shouldBe columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33), null)
+    }
+
+    @Test
+    fun `toJavaLocalDateTime from String column with pattern`() {
+        val dt by columnOf("15/01/2024 11:22:33")
+        dt.toDataFrame()
+            .convert { dt }
+            .toJavaLocalDateTime("dd/MM/yyyy HH:mm:ss")["dt"][0] shouldBe
+            JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33)
     }
 
     private interface Marker
