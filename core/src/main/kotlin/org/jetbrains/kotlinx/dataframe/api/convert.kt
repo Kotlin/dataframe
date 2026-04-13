@@ -58,6 +58,7 @@ import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_DEPRECATED_INSTANT
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_DEPRECATED_INSTANT_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_INSTANT
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_INSTANT_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_KOTLIN_DATETIME_LOCALE
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_URL
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_URL_REPLACE
@@ -1582,7 +1583,7 @@ public fun DataColumn<Int?>.convertToLocalDate(zone: TimeZone = defaultTimeZone)
  * Trims each string and attempts to parse it using the specified [format].
  * Fails with an exception if a value cannot be parsed.
  *
- * @param format An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataColumn] with the [LocalDate] values.
  */
 @JvmName("convertToLocalDateFromString")
@@ -1612,7 +1613,7 @@ public fun DataColumn<String>.convertToLocalDate(pattern: String): DataColumn<Lo
  * Trims each string and attempts to parse it using the specified [format].
  * Fails with an exception if a value cannot be parsed.
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataColumn] with the [LocalDate] nullable values.
  */
 @JvmName("convertToLocalDateFromStringNullable")
@@ -1753,7 +1754,7 @@ public fun <T> Convert<T, Int>.toLocalDate(zone: TimeZone = defaultTimeZone): Da
  * df.convert { timestamp }.toLocalDate()
  * ```
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [LocalDate].
  */
 @JvmName("toLocalDateFromStringNullable")
@@ -1803,7 +1804,7 @@ public fun <T> Convert<T, String?>.toLocalDate(pattern: String): DataFrame<T> =
  * df.convert { timestamp }.toLocalDate()
  * ```
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [LocalDate].
  */
 @JvmName("toLocalDateFromString")
@@ -1934,7 +1935,7 @@ public fun DataColumn<Int?>.convertToLocalTime(zone: TimeZone = defaultTimeZone)
  * Trims each string and attempts to parse it using the specified [format].
  * Fails with an exception if a value cannot be parsed.
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataColumn] with the [LocalTime] values.
  */
 @JvmName("convertToLocalTimeFromString")
@@ -1964,7 +1965,7 @@ public fun DataColumn<String>.convertToLocalTime(pattern: String): DataColumn<Lo
  * Trims each string and attempts to parse it using the specified [format].
  * Fails with an exception if a value cannot be parsed.
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataColumn] with the [LocalTime] nullable values.
  */
 @JvmName("convertToLocalTimeFromStringNullable")
@@ -2105,7 +2106,7 @@ public fun <T> Convert<T, Int>.toLocalTime(zone: TimeZone = defaultTimeZone): Da
  * df.convert { timestamp }.toLocalTime()
  * ```
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [LocalTime].
  */
 @JvmName("toLocalTimeFromStringNullable")
@@ -2155,7 +2156,7 @@ public fun <T> Convert<T, String?>.toLocalTime(pattern: String): DataFrame<T> =
  * df.convert { timestamp }.toLocalTime()
  * ```
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [LocalTime].
  */
 @JvmName("toLocalTimeFromString")
@@ -2338,7 +2339,7 @@ public fun DataColumn<Int?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZ
  * Trims each string and attempts to parse it using the specified [format].
  * Fails with an exception if a value cannot be parsed.
  *
- * @param format An optional date pattern to use for parsing.
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataColumn] with the [LocalDateTime] values.
  */
 @JvmName("convertToLocalDateTimeFromString")
@@ -2370,7 +2371,7 @@ public fun DataColumn<String>.convertToLocalDateTime(pattern: String): DataColum
  * Trims each string and attempts to parse it using the specified [format].
  * Fails with an exception if a value cannot be parsed.
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataColumn] with the [LocalDateTime] nullable values.
  */
 @JvmName("convertToLocalDateTimeFromStringNullable")
@@ -2601,7 +2602,7 @@ public fun <T> Convert<T, Int>.toLocalDateTime(zone: TimeZone = defaultTimeZone)
  * df.convert { timestamp }.toLocalTime()
  * ```
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [LocalDateTime].
  */
 @JvmName("toLocalDateTimeFromStringNullable")
@@ -2651,7 +2652,7 @@ public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String): DataFrame<T
  * df.convert { timestamp }.toLocalTime()
  * ```
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [LocalDateTime].
  */
 @JvmName("toLocalDateTimeFromString")
@@ -2744,7 +2745,7 @@ public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = asColumn { it.con
  * Trims each string and attempts to parse it using the specified [format].
  * Fails with an exception if a value cannot be parsed.
  *
- * @param format An optional date-time pattern to use for parsing.
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataColumn] with the [DateTimeComponents] values.
  */
 @JvmName("convertToDateTimeComponentsFromString")
@@ -2776,7 +2777,7 @@ public fun DataColumn<String>.convertToDateTimeComponents(pattern: String): Data
  * Trims each string and attempts to parse it using the specified [format].
  * Fails with an exception if a value cannot be parsed.
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataColumn] with the [DateTimeComponents] nullable values.
  */
 @JvmName("convertToDateTimeComponentsFromStringNullable")
@@ -2817,7 +2818,7 @@ public fun DataColumn<String?>.convertToDateTimeComponents(pattern: String): Dat
  * df.convert { timestamp }.toDateTimeComponents()
  * ```
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [DateTimeComponents].
  */
 @JvmName("toDateTimeComponentsFromStringNullable")
@@ -2868,7 +2869,7 @@ public fun <T> Convert<T, String?>.toDateTimeComponents(pattern: String): DataFr
  * df.convert { timestamp }.toDateTimeComponents()
  * ```
  *
- * @param format
+ * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [DateTimeComponents].
  */
 @JvmName("toDateTimeComponentsFromString")
@@ -4240,3 +4241,157 @@ public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolea
  */
 public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =
     map { it.toDataFrame(containsColumns = containsColumns) }
+
+// region deprecated
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalDate(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalDateFromStringNullable")
+public fun <T> Convert<T, String?>.toLocalDate(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalDate(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalDate()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalDate(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalDateFromString")
+public fun <T> Convert<T, String>.toLocalDate(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalDate(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalDate()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalTime(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalTimeFromStringNullable")
+public fun <T> Convert<T, String?>.toLocalTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalTime(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalTimeFromString")
+public fun <T> Convert<T, String>.toLocalTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalDateTime(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalDateTimeFromStringNullable")
+public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalDateTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalDateTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.toJavaLocalDateTime(pattern, locale)"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("toLocalDateTimeFromString")
+public fun <T> Convert<T, String>.toLocalDateTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
+    toJavaLocalDateTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
+        .convert(this.columns).toLocalDateTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalDate(pattern, locale).convertToLocalDate()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalDateFromString")
+public fun DataColumn<String>.convertToLocalDate(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalDate> =
+    convertToJavaLocalDate(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalDate()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalDate(pattern, locale).convertToLocalDate()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalDateFromStringNullable")
+public fun DataColumn<String?>.convertToLocalDate(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalDate?> =
+    convertToJavaLocalDate(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalDate()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalTime(pattern, locale).convertToLocalTime()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalTimeFromString")
+public fun DataColumn<String>.convertToLocalTime(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalTime> =
+    convertToJavaLocalTime(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalTime(pattern, locale).convertToLocalTime()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalTimeFromStringNullable")
+public fun DataColumn<String?>.convertToLocalTime(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalTime?> =
+    convertToJavaLocalTime(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalDateTime(pattern, locale).convertToLocalDateTime()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalDateTimeFromString")
+public fun DataColumn<String>.convertToLocalDateTime(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalDateTime> =
+    convertToJavaLocalDateTime(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalDateTime()
+
+@Deprecated(
+    message = CONVERT_TO_KOTLIN_DATETIME_LOCALE,
+    replaceWith = ReplaceWith("this.convertToJavaLocalDateTime(pattern, locale).convertToLocalDateTime()"),
+    level = DeprecationLevel.ERROR,
+)
+@JvmName("convertToLocalDateTimeFromStringNullable")
+public fun DataColumn<String?>.convertToLocalDateTime(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataColumn<LocalDateTime?> =
+    convertToJavaLocalDateTime(
+        formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) },
+        locale = locale,
+    ).convertToLocalDateTime()
+
+// endregion
