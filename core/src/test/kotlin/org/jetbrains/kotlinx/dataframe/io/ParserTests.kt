@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toKotlinLocalDate
@@ -32,6 +31,7 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.util.Locale
 import kotlin.reflect.typeOf
+import java.time.LocalDateTime as JavaLocalDateTime
 
 class ParserTests {
 
@@ -39,10 +39,10 @@ class ParserTests {
     fun `parse datetime with custom format`() {
         val col by columnOf("04.02.2021 -- 19:44:32")
         col.tryParse().type() shouldBe typeOf<String>()
-        DataFrame.parser.addDateTimePattern("dd.MM.uuuu -- HH:mm:ss")
+        DataFrame.parser.addJavaDateTimePattern("dd.MM.uuuu -- HH:mm:ss")
         val parsed = col.parse()
-        parsed.type() shouldBe typeOf<LocalDateTime>()
-        parsed.cast<LocalDateTime>()[0].year shouldBe 2021
+        parsed.type() shouldBe typeOf<JavaLocalDateTime>()
+        parsed.cast<JavaLocalDateTime>()[0].year shouldBe 2021
         DataFrame.parser.resetToDefault()
     }
 
