@@ -694,6 +694,36 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 else -> null
             }
 
+            DateTimeComponents::class -> when (toClass) {
+                UtcOffset::class -> convert<DateTimeComponents> { it.toUtcOffset() }
+
+                YearMonth::class -> convert<DateTimeComponents> { it.toYearMonth() }
+
+                LocalDate::class -> convert<DateTimeComponents> { it.toLocalDate() }
+
+                LocalTime::class -> convert<DateTimeComponents> { it.toLocalTime() }
+
+                LocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime() }
+
+                JavaLocalDate::class -> convert<DateTimeComponents> { it.toLocalDate().toJavaLocalDate() }
+
+                JavaLocalTime::class -> convert<DateTimeComponents> { it.toLocalTime().toJavaLocalTime() }
+
+                JavaLocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime().toJavaLocalDateTime() }
+
+                StdlibInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset() }
+
+                DeprecatedInstant::class -> convert<DateTimeComponents> {
+                    it.toInstantUsingOffset().toDeprecatedInstant()
+                }
+
+                JavaInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toJavaInstant() }
+
+                Long::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toEpochMilliseconds() }
+
+                else -> null
+            }
+
             LocalDateTime::class -> when (toClass) {
                 LocalDate::class -> convert<LocalDateTime> { it.date }
 
