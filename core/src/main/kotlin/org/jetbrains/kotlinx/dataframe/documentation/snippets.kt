@@ -3,6 +3,8 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 
 // File with KDF common KDoc-topics and -snippets.
 
@@ -40,3 +42,13 @@ internal typealias AutoRenamingLink = Nothing
  * does not correspond to an existing column or column group — all missing parts will be created automatically.
  */
 internal typealias ColumnPathCreationSnippet = Nothing
+
+/**
+ * kotlinx-datetime [lacks localization support](https://github.com/Kotlin/kotlinx-datetime/discussions/253).
+ *
+ * If you need to provide a custom [java.util.Locale], we recommend parsing
+ * to a [java.time]-based class first before converting it to [kotlinx.datetime].
+ *
+ * See also: [ParserOptions], [DataFrame.parser.dateTimeLibrary][GlobalParserOptions.dateTimeLibrary]
+ */
+internal typealias KotlinxDateTimeLocaleSnippet = Nothing
