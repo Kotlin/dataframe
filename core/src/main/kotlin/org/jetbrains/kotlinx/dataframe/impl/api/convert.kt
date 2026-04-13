@@ -235,6 +235,8 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 internal val convertersCache = mutableMapOf<Triple<KType, KType, ParserOptions?>, TypeConverter?>()
 
 internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? =
+    // GlobalParserOptions might influence which parsers should run and which should be skipped,
+    // so we should not cache String converters.
     if (from == typeOf<String>() || from == typeOf<String?>()) {
         createConverter(from, to, options)
     } else {
