@@ -360,11 +360,16 @@ public class Convert<T, out C>(
      */
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
+    @Deprecated(CONVERT_TO_WITHOUT_PARSER_OPTIONS, level = DeprecationLevel.HIDDEN)
+    @Refine
+    @Interpretable("To0")
+    public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
+
     /**
-     * Converts values in the columns previously selected with [convert] to the specified type [D],
+     * Converts the values values in the columns previously selected with [convert] to the specified [type],
      * preserving their original names and positions within the [DataFrame].
      *
-     * The target type is provided as a reified type argument.
+     * The target type is provided as reified argument.
      * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
      *
      * For more information: {@include [DocumentationUrls.Convert]}
@@ -376,14 +381,27 @@ public class Convert<T, out C>(
      *
      * // Convert all String columns to LocalDate:
      * df.convert { colsOf<String>() }.to<LocalDate>()
+     *
+     * // Convert selected columns to Double with parser options:
+     * df.convert("year", "count").to<Double>(ParserOptions(locale = Locale.GERMAN))
+     *
+     * // Converted selected column to Java LocalDate with custom date format:
+     * df.convert { dates }.to<java.time.LocalDate>(ParserOptions(dateTime = JavaDateTimeParserOptions.withPattern("yyyy-MM-dd")))
      * ```
      *
-     * @param D The target type, provided as a reified type argument, to convert values to.
-     * @return A new [DataFrame] with the values converted to type [D].
+     * @param D The target type, provided as a [KType], to convert values to.
+     * @param parserOptions The optional [ParserOptions] for parsing the [String] values.
+     *   Will throw an exception if provided for non-String columns.
+     * @return A new [DataFrame] with the values converted to [type].
      */
+    @Suppress("UNCHECKED_CAST")
     @Refine
     @Interpretable("To0")
-    public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
+    public inline fun <reified D> to(parserOptions: ParserOptions? = null): DataFrame<T> =
+        when (parserOptions) {
+            null -> to(typeOf<D>())
+            else -> (this as Convert<T, String?>).to(typeOf<D>(), parserOptions)
+        }
 
     override fun toString(): String = "Convert(df=$df, columns=$columns)"
 }
@@ -410,6 +428,30 @@ public class Convert<T, out C>(
  * @return A new [DataFrame] with the values converted to [type].
  */
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = asColumn { it.convertTo(type) }
+
+/**
+ * Converts the [String] values in the columns previously selected with [convert] to the specified [type],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * The target type is provided as a [KType].
+ * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
+ *
+ * For more information: {@include [DocumentationUrls.Convert]}
+ *
+ * ### Examples:
+ * ```kotlin
+ * // Convert selected columns to Double with parser options:
+ * df.convert("year", "count").to(typeOf<Double>(), ParserOptions(locale = Locale.GERMAN))
+ * // Converted selected column to Java LocalDate with custom date format:
+ * df.convert { dates }.to(typeOf<java.time.LocalDate>(), ParserOptions(dateTime = JavaDateTimeParserOptions.withPattern("yyyy-MM-dd")))
+ * ```
+ *
+ * @param type The target type, provided as a [KType], to convert values to.
+ * @param parserOptions The optional [ParserOptions] to use for parsing the [String] values.
+ * @return A new [DataFrame] with the values converted to [type].
+ */
+public fun <T> Convert<T, String?>.to(type: KType, parserOptions: ParserOptions? = null): DataFrame<T> =
+    asColumn { it.convertTo(type, parserOptions) }
 
 @Deprecated(CONVERT_TO, ReplaceWith(CONVERT_TO_REPLACE), DeprecationLevel.ERROR)
 public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
