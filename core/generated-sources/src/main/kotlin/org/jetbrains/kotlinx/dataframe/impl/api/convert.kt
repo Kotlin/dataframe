@@ -4,8 +4,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.YearMonth
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.atTime
+import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toJavaLocalDate
@@ -36,10 +39,9 @@ import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.ColumnTypeMismatchesColumnValuesException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
-import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
-import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.isSubtypeWithNullabilityOf
 import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
@@ -56,9 +58,14 @@ import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.toJavaDuration
 import kotlin.time.toJavaInstant
+import kotlin.time.toKotlinDuration
 import kotlin.time.toKotlinInstant
 import kotlin.toBigDecimal
+import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
@@ -152,6 +159,12 @@ internal fun DataColumn<String?>.convertToDoubleImpl(
 internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?): AnyCol {
     val from = type
 
+    if (parserOptions != null && from.withNullability(false) != typeOf<String>()) {
+        error(
+            "ParserOptions were provided for non-String column '$name' ($from). ParserOptions are only supported when converting from String columns to another type.",
+        )
+    }
+
     val nullsAreAllowed = to.isMarkedNullable
 
     var nullsFound = false
@@ -222,7 +235,13 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 internal val convertersCache = mutableMapOf<Triple<KType, KType, ParserOptions?>, TypeConverter?>()
 
 internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? =
-    convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
+    // GlobalParserOptions might influence which parsers should run and which should be skipped,
+    // so we should not cache String converters.
+    if (from == typeOf<String>() || from == typeOf<String?>()) {
+        createConverter(from, to, options)
+    } else {
+        convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
+    }
 
 internal typealias TypeConverter = (Any) -> Any?
 
@@ -252,6 +271,24 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
     return when {
         fromClass == toClass -> TypeConverterIdentity
 
+        // kotlin.time.Duration is a value class,
+        // so it must be handled before the generic toClass.isValue / fromClass.isValue branches.
+        toClass == Duration::class -> when (fromClass) {
+            String::class -> Parsers.getAsConverterOrNull(to, options)!!
+            JavaDuration::class -> convert<JavaDuration> { it.toKotlinDuration() }
+            Long::class -> convert<Long> { it.milliseconds }
+            Int::class -> convert<Int> { it.milliseconds }
+            else -> null
+        }
+
+        fromClass == Duration::class -> when (toClass) {
+            JavaDuration::class -> convert<Duration> { it.toJavaDuration() }
+            Long::class -> convert<Duration> { it.inWholeMilliseconds }
+            Int::class -> convert<Duration> { it.inWholeMilliseconds.toInt() }
+            String::class -> convert<Duration> { it.toString() }
+            else -> null
+        }
+
         toClass.isValue -> {
             val constructor =
                 toClass.primaryConstructor ?: error("Value type $toClass doesn't have primary constructor")
@@ -268,9 +305,12 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
         }
 
         fromClass == String::class -> {
-            val parser = Parsers[to.withNullability(false)]
+            // turn our parsers into a converter if we have them
+            // !NOTE! Do not cache this converter.
+            // GlobalParserOptions might influence which parsers should run and which should be skipped
+            val parserConverter = Parsers.getAsConverterOrNull(to, options)
             when {
-                parser != null -> parser.toConverter(options)
+                parserConverter != null -> parserConverter
 
                 // convert enums by name (or by `value` if they implement DataSchemaEnum)
                 toClass.isSubclassOf(Enum::class) -> convert<String> { string ->
@@ -676,6 +716,36 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Long::class -> convert<BigInteger> { it.toLong() }
                 BigDecimal::class -> convert<BigInteger> { it.toBigDecimal() }
                 Boolean::class -> convert<BigInteger> { it != BigInteger.ZERO }
+                else -> null
+            }
+
+            DateTimeComponents::class -> when (toClass) {
+                UtcOffset::class -> convert<DateTimeComponents> { it.toUtcOffset() }
+
+                YearMonth::class -> convert<DateTimeComponents> { it.toYearMonth() }
+
+                LocalDate::class -> convert<DateTimeComponents> { it.toLocalDate() }
+
+                LocalTime::class -> convert<DateTimeComponents> { it.toLocalTime() }
+
+                LocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime() }
+
+                JavaLocalDate::class -> convert<DateTimeComponents> { it.toLocalDate().toJavaLocalDate() }
+
+                JavaLocalTime::class -> convert<DateTimeComponents> { it.toLocalTime().toJavaLocalTime() }
+
+                JavaLocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime().toJavaLocalDateTime() }
+
+                StdlibInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset() }
+
+                DeprecatedInstant::class -> convert<DateTimeComponents> {
+                    it.toInstantUsingOffset().toDeprecatedInstant()
+                }
+
+                JavaInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toJavaInstant() }
+
+                Long::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toEpochMilliseconds() }
+
                 else -> null
             }
 
