@@ -302,13 +302,6 @@ internal object Parsers : GlobalParserOptions {
             null
         }
 
-    private fun String.toDurationOrNull(): Duration? =
-        if (Duration.canParse(this)) { // TODO, migrate to `Duration.parseOrNull()` in Kotlin 2.3.0+
-            catchSilent { Duration.parse(this) } // will likely succeed
-        } else {
-            null
-        }
-
     inline fun <reified T : Any> stringParser(
         catch: Boolean = false,
         coveredBy: Set<KType> = emptySet(),
@@ -429,8 +422,6 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
-    private val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
-
     @OptIn(ExperimentalUuidApi::class)
     internal val parsersOrder = listOf(
         // Int
@@ -482,8 +473,12 @@ internal object Parsers : GlobalParserOptions {
             parser
         },
         // kotlin.time.Duration
-        stringParser<Duration> {
-            it.toDurationOrNull()
+        stringParserWithOptions<Duration> { options ->
+            if (options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime()) {
+                Duration::parseOrNull
+            } else {
+                SKIP_PARSER
+            }
         },
         // java.time.Duration, will be skipped if kotlin.time.Duration is already checked
         stringParser<JavaDuration>(coveredBy = setOf(typeOf<Duration>())) {
@@ -511,23 +506,11 @@ internal object Parsers : GlobalParserOptions {
         stringParser<Boolean> { it.toBooleanOrNull() },
         // Uuid
         stringParserWithOptions<Uuid> { options ->
-            val parser = { str: String ->
-                val parseExperimentalUuid = options?.parseExperimentalUuid ?: this.parseExperimentalUuid
-                when {
-                    !parseExperimentalUuid -> null
-
-                    uuidRegex.matches(str) -> {
-                        try {
-                            Uuid.parse(str)
-                        } catch (_: IllegalArgumentException) {
-                            null
-                        }
-                    }
-
-                    else -> null
-                }
+            if (options?.parseExperimentalUuid ?: this.parseExperimentalUuid) {
+                Uuid::parseOrNull
+            } else {
+                SKIP_PARSER
             }
-            parser
         },
         // BigInteger
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
