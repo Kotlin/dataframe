@@ -152,6 +152,12 @@ internal fun DataColumn<String?>.convertToDoubleImpl(
 internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?): AnyCol {
     val from = type
 
+    if (parserOptions != null && from.withNullability(false) != typeOf<String>()) {
+        error(
+            "ParserOptions were provided for non-String column '$name' ($from). ParserOptions are only supported when converting from String columns to another type.",
+        )
+    }
+
     val nullsAreAllowed = to.isMarkedNullable
 
     var nullsFound = false
@@ -222,7 +228,13 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 internal val convertersCache = mutableMapOf<Triple<KType, KType, ParserOptions?>, TypeConverter?>()
 
 internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? =
-    convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
+    // GlobalParserOptions might influence which parsers should run and which should be skipped,
+    // so we should not cache String converters.
+    if (from == typeOf<String>() || from == typeOf<String?>()) {
+        createConverter(from, to, options)
+    } else {
+        convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
+    }
 
 internal typealias TypeConverter = (Any) -> Any?
 
@@ -268,9 +280,12 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
         }
 
         fromClass == String::class -> {
-            val parser = Parsers[to.withNullability(false)]
+            // turn our parsers into a converter if we have them
+            // !NOTE! Do not cache this converter.
+            // GlobalParserOptions might influence which parsers should run and which should be skipped
+            val parserConverter = Parsers.getAsConverterOrNull(to, options)
             when {
-                parser != null -> parser.toConverter(options)
+                parserConverter != null -> parserConverter
 
                 // convert enums by name (or by `value` if they implement DataSchemaEnum)
                 toClass.isSubclassOf(Enum::class) -> convert<String> { string ->

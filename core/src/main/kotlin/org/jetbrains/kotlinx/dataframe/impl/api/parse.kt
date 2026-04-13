@@ -83,7 +83,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
 
 private val logger = KotlinLogging.logger { }
 
-    fun toConverter(options: ParserOptions?): TypeConverter
+internal interface StringParser<out T> {
 
     /**
      * Applies [ParserOptions] and optionally supplied previously [attemptedParsers]
@@ -117,17 +117,6 @@ private val logger = KotlinLogging.logger { }
     val type: KType
 }
 
-    override fun toConverter(options: ParserOptions?): TypeConverter {
-        val nulls = options?.nullStrings ?: Parsers.nulls
-        return {
-            val str = it as String
-            if (str in nulls) {
-                null
-            } else {
-                handle(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
-            }
-        }
-    }
 internal class StringParserImpl<T>(override val type: KType, val name: String? = null, val parser: ParserFunction<T>) :
     StringParser<T> {
 
@@ -144,17 +133,6 @@ internal class StringParserImplWithOptions<T>(
     val getFallbackParserForConverter: (ParserOptions?) -> ParserFunction<T> = { SKIP_PARSER },
     val getParser: (ParserOptions?, List<KType>) -> ParserFunction<T>,
 ) : StringParser<T> {
-    override fun toConverter(options: ParserOptions?): TypeConverter {
-        val handler = getParser(options)
-        val nulls = options?.nullStrings ?: Parsers.nulls
-        return {
-            val str = it as String
-            if (str in nulls) {
-                null
-            } else {
-                handler(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
-            }
-        }
 
     override fun applyOptionsToFallbackParserForConverter(options: ParserOptions?): ParserFunction<T> {
         val handler = getFallbackParserForConverter(options)
@@ -647,30 +625,63 @@ internal object Parsers : GlobalParserOptions {
     @Suppress("UNCHECKED_CAST")
     inline fun <reified T : Any> get(): List<StringParser<T>> = get(typeOf<T>()) as List<StringParser<T>>
 
-    inline fun <reified T : Any> get(): StringParser<T>? = get(typeOf<T>()) as? StringParser<T>
+    /**
+     * Turns the parsers of given [type] into a converter.
+     *
+     * __NOTE__: Do not cache this converter.
+     * [GlobalParserOptions] might influence which parsers should run and which should be skipped.
+     */
+    @Suppress("UNCHECKED_CAST", "standard:blank-line-before-declaration")
+    fun getAsConverterOrNull(type: KType, options: ParserOptions?): TypeConverter? {
+        val parsers = get(type.withNullability(false))
+        if (parsers.isEmpty()) return null
 
-    internal fun <R : Any> getDateTimeConverter(
-        clazz: KClass<R>,
-        pattern: String? = null,
-        locale: Locale? = null,
-    ): (String) -> R? {
-        val parser = get(clazz) ?: error("Can not convert String to $clazz")
-        val formatter = pattern?.let {
-            if (locale == null) {
-                DateTimeFormatter.ofPattern(it)
-            } else {
-                DateTimeFormatter.ofPattern(it, locale)
-            }
-        }
-        val options = if (formatter != null || locale != null) {
-            ParserOptions(
-                dateTimeFormatter = formatter,
-                locale = locale,
+        val nulls = options?.nullStrings ?: Parsers.nulls
+        val indices = parsers.indices
+        val resolvedParsers = parsers.map { it.applyOptions(options) }
+        val resolvedFallbackParsers = parsers.map { it.applyOptionsToFallbackParserForConverter(options) }
+
+        if (resolvedParsers.all { it == SKIP_PARSER }) {
+            throw TypeConversionException(
+                value = null,
+                from = typeOf<String>(),
+                to = type,
+                column = null,
+                extraInformation = buildString {
+                    append("All parsers for type $type were skipped. If this is unexpected, ")
+                    if (options != null) {
+                        append(
+                            "check your provided parser options: $options, as well as the global parser options at `DataFrame.parser`.",
+                        )
+                    } else {
+                        append("check the global parser options at `DataFrame.parser`.")
+                    }
+                },
             )
-        } else {
-            null
         }
-        return parser.applyOptions(options)
+
+        val typeConverter =
+
+            fun(str: String): Any? {
+                if (str in nulls) return null
+
+                for (i in indices) {
+                    val result = resolvedParsers[i](str)
+                    if (result != null) return result
+                }
+                for (i in indices) {
+                    val result = resolvedFallbackParsers[i](str)
+                    if (result != null) return result
+                }
+                throw TypeConversionException(
+                    value = str,
+                    from = typeOf<String>(),
+                    to = parsers.first().type,
+                    column = null,
+                    extraInformation = "Conversion failed from: $this",
+                )
+            } as TypeConverter
+        return typeConverter
     }
 
     internal fun getDoubleParser(locale: Locale?, useFastDoubleParser: Boolean): (String) -> Double? =
