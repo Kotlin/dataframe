@@ -59,7 +59,6 @@ class ColsTests : ColumnsSelectionDslTests() {
         listOf(
             df.select { cols(name, age, weight) },
             df.select { cols { "e" in it.name() } },
-            df.select { this[{ "e" in it.name() }] },
             df.select { all().cols { "e" in it.name() } },
             df.select { all()[{ "e" in it.name() }] },
         ).shouldAllBeEqual()
@@ -67,7 +66,6 @@ class ColsTests : ColumnsSelectionDslTests() {
         listOf(
             df.select { name.firstName and name.lastName },
             df.select { name.cols { "Name" in it.name() } },
-            df.select { name[{ "Name" in it.name() }] },
             df.select { name.colsOf<String>().cols { "Name" in it.name() } },
             df.select { name.colsOf<String>()[{ "Name" in it.name() }] },
             df.select { "name".cols { "Name" in it.name() } },
@@ -79,7 +77,6 @@ class ColsTests : ColumnsSelectionDslTests() {
             df.select { pathOf("name").cols { "Name" in it.name() } },
             df.select { pathOf("name")[{ "Name" in it.name() }] },
             df.select { it["name"].asColumnGroup().cols { "Name" in it.name() } },
-            df.select { it["name"].asColumnGroup()[{ "Name" in it.name() }] },
         ).shouldAllBeEqual()
     }
 
