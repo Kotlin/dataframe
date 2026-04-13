@@ -4,8 +4,16 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.deephaven.csv.parsers.Parsers
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.format.char
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.columnTypes
@@ -105,13 +113,16 @@ class Read {
         // SampleEnd
     }
 
+    @OptIn(FormatStringsInDatetimeFormats::class)
     @Test
     fun readDatesWithSpecificDateTimePattern() {
         val file = testCsv("dates")
         // SampleStart
         val df = DataFrame.readCsv(
             file,
-            parserOptions = ParserOptions(dateTimePattern = "dd/MMM/yy h:mm a")
+            parserOptions = ParserOptions(
+                dateTime = DateTimeParserOptions.Java.withPattern("dd/MMM/yy h:mm a"),
+            ),
         )
         // SampleEnd
     }
@@ -122,7 +133,13 @@ class Read {
         // SampleStart
         val df = DataFrame.readCsv(
             file,
-            parserOptions = ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
+            parserOptions = ParserOptions(
+                dateTime = DateTimeParserOptions.Kotlin.withFormat(
+                    LocalDate.Format {
+                        monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
+                    },
+                ),
+            ),
         )
         // SampleEnd
     }
