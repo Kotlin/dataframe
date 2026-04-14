@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
@@ -41,7 +42,6 @@ import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.gt
 import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.inplace
 import org.jetbrains.kotlinx.dataframe.api.insert
@@ -268,7 +268,12 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun parseWithOptions() {
         // SampleStart
-        df.parse(options = ParserOptions(locale = Locale.CHINA, dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE))
+        df.parse(
+            options = ParserOptions(
+                locale = Locale.CHINA,
+                dateTime = DateTimeParserOptions.Java.withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE)
+            )
+        )
         // SampleEnd
     }
 
@@ -277,7 +282,7 @@ class Modify : TestBase() {
     fun globalParserOptions() {
         // SampleStart
         DataFrame.parser.locale = Locale.FRANCE
-        DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
+        DataFrame.parser.addJavaDateTimePattern("dd.MM.uuuu HH:mm:ss")
         // SampleEnd
         DataFrame.parser.resetToDefault()
     }
