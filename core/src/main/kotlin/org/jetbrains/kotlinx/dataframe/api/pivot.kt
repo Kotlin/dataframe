@@ -1281,7 +1281,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      *   // Compute the maximum in "age" column within each group
      *   // and store it into a new "maxAge" column
      *   // Defaults to -1 for empty groups.
-     *   max { age } into "maxAge" default -1
+     *   max { age } default -1 into "maxAge"
      * }
      * ```
      *
