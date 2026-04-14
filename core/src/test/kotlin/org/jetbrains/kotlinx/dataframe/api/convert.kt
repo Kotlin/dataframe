@@ -9,6 +9,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toJavaLocalTime
@@ -44,6 +45,7 @@ import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
 
+@OptIn(FormatStringsInDatetimeFormats::class)
 class ConvertTests {
 
     @Test
@@ -59,7 +61,7 @@ class ConvertTests {
     @Test
     fun `convert nullable strings to time`() {
         val time by columnOf("11?22?33", null)
-        val converted = time.toDataFrame().convert { time }.toLocalTime("HH?mm?ss")[{ "time"<String?>() }]
+        val converted = time.toDataFrame().convert { time }.toLocalTime("HH?mm?ss").get { "time"<String?>() }
         converted.hasNulls shouldBe true
         converted[0] shouldBe LocalTime(11, 22, 33)
     }
