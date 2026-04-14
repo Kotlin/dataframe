@@ -689,7 +689,9 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
             JavaDuration::class -> when (toClass) {
                 Long::class -> convert<JavaDuration> { it.toMillis() }
+
                 Int::class -> convert<JavaDuration> { it.toMillis().toInt() }
+
                 // Duration::class already handled above
                 else -> null
             }
