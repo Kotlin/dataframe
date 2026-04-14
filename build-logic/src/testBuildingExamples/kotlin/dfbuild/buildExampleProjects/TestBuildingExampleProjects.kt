@@ -63,7 +63,7 @@ abstract class TestBuildingExampleProjects {
             .use {
                 it.newBuild()
                     .forTasks("clean", "build")
-                    .setJvmArguments("-Xmx2g", "-XX:MaxMetaspaceSize=512m")
+                    .setJvmArguments("-Xmx2g", "-XX:MaxMetaspaceSize=1024m")
                     .withArguments(
                         buildList {
                             if (isAndroid) {
