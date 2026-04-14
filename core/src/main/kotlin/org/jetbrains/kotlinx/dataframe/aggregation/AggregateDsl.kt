@@ -80,57 +80,57 @@ import kotlin.reflect.typeOf
 internal typealias DataFrameAggregationStatistics = Nothing
 
 /**
- * {@get [AGGREGATE_DSL_TYPE]} allows to compute statistics on the {@get [AGGREGATE_DSL_OPERATING_COLUMNS]}
- * and store the results as a new column using [into][AggregateDsl.into]. {@get [AGGREGATE_DSL_APPLY]}
+ * {@get [AGGREGATE_DSL_TYPE]} allows to compute statistics on the {@get [OPERATING_COLUMNS]}
+ * and store the results as a new column using [into][AggregateDsl.into]. {@get [APPLY_NOTE]}
  *
  *
- * The resulting {@get [AGGREGATE_DSL_RESULT]} has the same structure as the original
- * {@get [AGGREGATE_DSL_RECEIVER]};
+ * The resulting {@get [RESULT_TYPE]} has the same structure as the original
+ * {@get [RECEIVER]};
  * instead of the groups, there are new columns of aggregated values created with [into][AggregateDsl.into].
  *
  * You can use any of [DataFrame Aggregation Statistics][DataFrameAggregationStatistics]
  * or any custom aggregation function.
  *
- * {@include [AggregateDslColumnKindSnippet]}
+ * {@include [ColumnKindSnippet]}
  */
-@ExcludeFromSources
-internal typealias AggregateDslDocsSnippet = Nothing
+internal interface AggregateDslDocs {
 
-/**
- * Aggregated values can be either simple values, [data rows][DataRow] or even
- * [data frames][DataFrame]. Including them in the result using [into][AggregateDsl.into] will lead
- * to creating [value column][ValueColumn],
- * [column group][ColumnGroup] or [frame column][FrameColumn] respectively
- * in the resulting {@get [AGGREGATE_DSL_RESULT]} while preserving the original structure at higher levels.
- */
-@ExcludeFromSources
-internal typealias AggregateDslColumnKindSnippet = Nothing
+    /**
+     * Aggregated values can be either simple values, [data rows][DataRow] or even
+     * [data frames][DataFrame]. Including them in the result using [into][AggregateDsl.into] will lead
+     * to creating [value column][ValueColumn],
+     * [column group][ColumnGroup] or [frame column][FrameColumn] respectively
+     * in the resulting {@get [RESULT_TYPE]} while preserving the original structure at higher levels.
+     */
+    @ExcludeFromSources
+    typealias ColumnKindSnippet = Nothing
 
-@ExcludeFromSources
-internal typealias AGGREGATE_DSL_TYPE = Nothing
+    @ExcludeFromSources
+    typealias AGGREGATE_DSL_TYPE = Nothing
 
-@ExcludeFromSources
-internal typealias AGGREGATE_DSL_APPLY = Nothing
+    @ExcludeFromSources
+    typealias APPLY_NOTE = Nothing
 
-@ExcludeFromSources
-internal typealias AGGREGATE_DSL_RECEIVER = Nothing
+    @ExcludeFromSources
+    typealias RECEIVER = Nothing
 
-@ExcludeFromSources
-internal typealias AGGREGATE_DSL_RESULT = Nothing
+    @ExcludeFromSources
+    typealias RESULT_TYPE = Nothing
 
-@ExcludeFromSources
-internal typealias AGGREGATE_DSL_OPERATING_COLUMNS = Nothing
+    @ExcludeFromSources
+    typealias OPERATING_COLUMNS = Nothing
+}
 
 /**
  * A specialized [ColumnsSelectionDsl] that allows to aggregate
  * [DataFrame] or `DataFrame`-like structures ([GroupBy], [Pivot] or [PivotGroupBy]).
  *
- * {@include [AggregateDslDocsSnippet]}
- * {@set [AGGREGATE_DSL_TYPE] [AggregateDsl]}
- * {@set [AGGREGATE_DSL_RECEIVER] [DataFrame], [GroupBy], [Pivot] or [PivotGroupBy]}
- * {@set [AGGREGATE_DSL_APPLY] The given [expression][body] is applied to each group independently.}
- * {@set [AGGREGATE_DSL_RESULT] [DataFrame] or [DataRow]}
- * {@set [AGGREGATE_DSL_OPERATING_COLUMNS] columns of the [DataFrame] or columns within groups in [GroupBy], [Pivot], or [PivotGroupBy]}
+ * @include [AggregateDslDocs]
+ * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}
+ * {@set [AggregateDslDocs.RECEIVER] [DataFrame], [GroupBy], [Pivot] or [PivotGroupBy]}
+ * {@set [AggregateDslDocs.APPLY_NOTE] The given aggregating expression is applied to each group independently.}
+ * {@set [AggregateDslDocs.RESULT_TYPE] [DataFrame] or [DataRow]}
+ * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns of the [DataFrame] or columns within groups in [GroupBy], [Pivot], or [PivotGroupBy]}
  */
 @HasSchema(schemaArg = 0)
 public abstract class AggregateDsl<out T> :
@@ -141,7 +141,7 @@ public abstract class AggregateDsl<out T> :
      * Adds the result of the aggregation operation to the resulting
      * [DataFrame] or [DataRow] as a new column.
      *
-     * {@include [AggregateDslColumnKindSnippet]} {@set [AGGREGATE_DSL_RESULT] [DataFrame] or [DataRow]}
+     * {@include [AggregateDslDocs.ColumnKindSnippet]} {@set [AggregateDslDocs.RESULT_TYPE] [DataFrame] or [DataRow]}
      *
      * @param [name] The name of the new column.
      */

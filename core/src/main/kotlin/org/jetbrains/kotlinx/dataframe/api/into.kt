@@ -25,7 +25,7 @@ import kotlin.reflect.typeOf
 /**
  * Converts this [GroupBy] into a [DataFrame].
  *
- * Do the same as [GroupBy.toDataFrame].
+ * Does the same as [GroupBy.toDataFrame].
  *
  * Each row of the resulting [DataFrame] represents a unique keys–group pair:
  * a row from [keys] and its corresponding group of rows (as [DataFrame]).
@@ -66,10 +66,19 @@ public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = t
  *
  * For more information: {@include [DocumentationUrls.GroupBy]}
  *
+ * #### Example
+ * ```kotlin
+ * // Compute list of prices within each city
+ * // by multiplying "amount" and "cost" values.
+ * df.groupBy { city }.into("prices") {
+ *    amount * cost
+ * }
+ * ```
+ *
  * @param [columnName] The name of the column in which to store aggregated data.
  * @param [expression] The expression to compute on each group row.
  * @return A new [DataFrame] that includes the grouping key columns together
- * with a valuess computed on all rows of correspodning groups.
+ * with a list of values computed on all rows of corresponding groups.
  */
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     columnName: String? = null,
