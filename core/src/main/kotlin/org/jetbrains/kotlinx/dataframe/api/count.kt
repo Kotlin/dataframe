@@ -105,7 +105,7 @@ public inline fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().
  * - the original group key columns,
  * - a new column (named [resultName], default is `"count"`) that contains the number of rows in each group.
  *
- * This is equivalent to applying `.aggregate { count() }`, but more efficient.
+ * This is equivalent to applying `.aggregate { count() into resultName }`, but more efficient.
  *
  * See also [DataFrame.groupBy] and common [aggregate][Grouped.aggregate].
  *
@@ -138,7 +138,7 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
  * - a new column (named [resultName], defaults to `"count"`)
  *   that stores the number of rows in each group matching the [predicate].
  *
- * This is equivalent to calling `.aggregate { count(predicate) }`, but more efficient.
+ * This is equivalent to calling `.aggregate { count { predicate } into resultName }`, but more efficient.
  *
  * See also [DataFrame.groupBy] and common [aggregate][Grouped.aggregate].
  *
