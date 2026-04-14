@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDslDocs
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
@@ -81,6 +83,34 @@ public interface DataFrame<out T> :
 
     // endregion
 
+    /**
+     * Aggregates this [DataFrame] using the provided statistics
+     * inside the [AggregateDsl].
+     *
+     * Returns a new [DataRow] with the aggregated values.
+     *
+     * @include [AggregateDslDocs]
+     * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}
+     * {@set [AggregateDslDocs.RECEIVER] [DataFrame]}
+     * {@set [AggregateDslDocs.RESULT_TYPE] [DataRow]}
+     * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns of this [DataFrame]}
+     *
+     * #### Example
+     * ```kotlin
+     * df.aggregate {
+     *   // Сount rows within each group and store the result
+     *   // into a new "total" column
+     *   count() into "total"
+     *
+     *   // Compute the maximum in "age" column within each group
+     *   // and store it into a new "maxAge" column
+     *   max { age } into "maxAge"
+     * }
+     * ```
+     *
+     * @param body The aggregation logic defined using [AggregateDsl].
+     * @return A new [DataRow] with the results of the aggregation.
+     */
     @Refine
     @Interpretable("AggregateRow")
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
