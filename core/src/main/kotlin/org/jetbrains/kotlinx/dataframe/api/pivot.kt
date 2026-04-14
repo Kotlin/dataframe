@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDslDocs
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
@@ -219,7 +220,8 @@ internal interface PivotDocs {
      * Each function computes a statistic across the rows of a group and returns the result as
      * a new row of computed values in the resulting [DataFrame].
      *
-     * * [count][Pivot.count] — calculate the number of rows in each group;
+     * * [count][Pivot.count] — calculate the number of rows in each group
+     *   (optionally counting only rows that satisfy the given predicate);
      * * [max][Pivot.max] / [maxOf][Pivot.maxOf] / [maxFor][Pivot.maxFor] —
      *   calculate the maximum of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;
@@ -1238,14 +1240,54 @@ internal interface PivotGroupByDocs {
      *
      * For more information: {@include [DocumentationUrls.PivotGroupBy]}
      */
+    @ExcludeFromSources
     typealias CommonDescription = Nothing
     typealias Grammar = Nothing
     typealias Reducing = Nothing
     typealias Aggregation = Nothing
 }
 
+/**
+ * {@include [PivotGroupByDocs.CommonDescription]}
+ */
 public interface PivotGroupBy<out T> : Aggregatable<T> {
 
+    /**
+     * Aggregates this [PivotGroupBy] using the provided statistics
+     * inside the [AggregateDsl].
+     *
+     * Returns a new [DataFrame] with the [groupBy] key columns
+     * and the [pivot] keys as top-level columns on top level,
+     * and the correspodning aggregated values in new nested columns.
+     *
+     * @include [AggregateDslDocs]
+     * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}
+     * {@set [AggregateDslDocs.RECEIVER] [PivotGroupBy]}
+     * {@set [AggregateDslDocs.APPLY_NOTE] The given [expression][body] is applied to each group independently.}
+     * {@set [AggregateDslDocs.RESULT_TYPE] [DataFrame]}
+     * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns within groups in [PivotGroupBy]}
+     *
+     * Check out [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar] for more information.
+     *
+     * For more information: {@include [DocumentationUrls.Pivot]}
+     *
+     * #### Example
+     * ```kotlin
+     * df.pivot { city }.groupBy { name.firstName }.aggregate {
+     *   // Сount rows within each firstName" × "city" combination group and store the result
+     *   // into a new "total" column (a new sub-column under each pivot key column)
+     *   count() into "total"
+     *
+     *   // Compute the maximum in "age" column within each group
+     *   // and store it into a new "maxAge" column
+     *   // Defaults to -1 for empty groups.
+     *   max { age } into "maxAge" default -1
+     * }
+     * ```
+     *
+     * @param body The aggregation logic defined using [AggregateDsl].
+     * @return A new [DataFrame] with the results of the aggregation applied to each group.
+     */
     public fun <R> aggregate(separate: Boolean = false, body: AggregateBody<T, R>): DataFrame<T>
 
     public fun default(value: Any?): PivotGroupBy<T>
