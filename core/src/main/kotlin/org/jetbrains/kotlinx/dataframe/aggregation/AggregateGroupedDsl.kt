@@ -11,12 +11,12 @@ import org.jetbrains.kotlinx.dataframe.api.pivotMatches
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 
 /**
- * {@include [AggregateDslDocsSnippet]}
- * {@set [AGGREGATE_DSL_TYPE] [AggregateGroupedDsl]}
- * {@set [AGGREGATE_DSL_RECEIVER] [GroupBy]}
- * {@set [AGGREGATE_DSL_APPLY] The given [expression][body] is applied to each group independently.}
- * {@set [AGGREGATE_DSL_RESULT] [DataFrame]}
- * {@set [AGGREGATE_DSL_OPERATING_COLUMNS] columns within groups in [GroupBy]}
+ * @include [AggregateDslDocs]
+ * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateGroupedDsl]}
+ * {@set [AggregateDslDocs.RECEIVER] [GroupBy]}
+ * {@set [AggregateDslDocs.APPLY_NOTE] The given aggregating expression is applied to each group independently.}
+ * {@set [AggregateDslDocs.RESULT_TYPE] [DataFrame]}
+ * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns within groups in [GroupBy]}
  *
  * It allows [pivoting][DataFrame.pivot] inside [aggregate][Grouped.aggregate] via corresponding methods:
  * * [pivot][AggregateGroupedDsl.pivot]
