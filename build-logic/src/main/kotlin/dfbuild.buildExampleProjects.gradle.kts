@@ -28,6 +28,8 @@ val versionsToSync =
         "maven-surefire",
         "maven",
         "kotlinDatetime",
+        "log4j",
+        "spark4",
     )
 
 val syncAllExampleFolders by tasks.registering {
