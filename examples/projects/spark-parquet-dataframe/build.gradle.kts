@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.dataframe)
@@ -15,7 +17,6 @@ application.mainClass = "org.jetbrains.kotlinx.dataframe.examples.spark.parquet.
 dependencies {
     implementation(libs.dataframe)
     implementation(libs.kandy)
-    implementation(libs.kotlin.datetimeJvm)
 
     // Spark SQL + MLlib (Spark 4.0.0)
     implementation(libs.spark.sql)
@@ -36,8 +37,9 @@ application {
 tasks.test {
     useJUnitPlatform()
 }
+
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
 }
 
 ktlint {

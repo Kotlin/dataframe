@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.dataframe)
@@ -35,8 +37,9 @@ application {
 tasks.test {
     useJUnitPlatform()
 }
+
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
 }
 
 ktlint {
