@@ -31,6 +31,7 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.util.Locale
 import kotlin.reflect.typeOf
+import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 
 class ParserTests {
@@ -104,16 +105,16 @@ class ParserTests {
 
         datetimeCol.shouldBe(
             columnOf(
-                java.time.LocalDateTime.of(1971, 1, 2, 0, 0, 1).toKotlinLocalDateTime(),
-                java.time.LocalDateTime.of(1971, 1, 2, 0, 1, 0).toKotlinLocalDateTime(),
-                java.time.LocalDateTime.of(1971, 1, 2, 1, 0, 0).toKotlinLocalDateTime(),
+                JavaLocalDateTime.of(1971, 1, 2, 0, 0, 1).toKotlinLocalDateTime(),
+                JavaLocalDateTime.of(1971, 1, 2, 0, 1, 0).toKotlinLocalDateTime(),
+                JavaLocalDateTime.of(1971, 1, 2, 1, 0, 0).toKotlinLocalDateTime(),
             ),
         )
         longCol.convertToLocalDate(TimeZone.UTC).shouldBe(
             columnOf(
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
             ),
         )
         longCol.convertToLocalTime(TimeZone.UTC).shouldBe(
@@ -126,9 +127,9 @@ class ParserTests {
 
         datetimeCol.convertToLocalDate().shouldBe(
             columnOf(
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
-                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                JavaLocalDate.of(1971, 1, 2).toKotlinLocalDate(),
             ),
         )
         datetimeCol.convertToLocalTime().shouldBe(

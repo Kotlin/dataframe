@@ -99,10 +99,34 @@ class ParseTests {
                 parsed
         }
 
+        // Checking the kotlin one has priority over the java one
+        DataFrame.parser.addJavaDateTimePattern("MMMM d, yyyy")
         DataFrame.parser.addDateTimeFormat(format)
 
         date.parse() shouldBe parsed
         date.convertToLocalDate() shouldBe parsed
+
+        // Unless we set the library to java-only
+        DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
+        date.parse() shouldBe parsed.convertToJavaLocalDate()
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun `Global dateTimeLibrary setting should not affect converters`() {
+        val date by columnOf("2026-04-16")
+
+        // works
+        date.convertToLocalDate().single() shouldBe LocalDate(2026, 4, 16)
+
+        DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
+
+        date.convertToLocalDate().single() shouldBe LocalDate(2026, 4, 16)
+        date.toDataFrame()
+            .convert { all() }.toLocalDate()
+            .columns()
+            .single() shouldBe LocalDate(2026, 4, 16)
 
         DataFrame.parser.resetToDefault()
     }
