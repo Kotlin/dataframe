@@ -47,7 +47,7 @@ internal typealias ColumnPathCreationSnippet = Nothing
  * kotlinx-datetime [lacks localization support](https://github.com/Kotlin/kotlinx-datetime/discussions/253).
  *
  * If you need to provide a custom [java.util.Locale], we recommend parsing
- * to a [java.time]-based class first before converting it to [kotlinx.datetime].
+ * to a [java.time]-based class first by adjusting the parser options before converting it to [kotlinx.datetime].
  *
  * See also: [ParserOptions], [DataFrame.parser.dateTimeLibrary][GlobalParserOptions.dateTimeLibrary]
  */

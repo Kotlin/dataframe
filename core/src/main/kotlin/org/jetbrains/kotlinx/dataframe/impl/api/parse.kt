@@ -280,7 +280,7 @@ internal object Parsers : GlobalParserOptions {
         } else {
             require(formatType in supportedJavaFormatterTypes) {
                 // requires #962
-                "Format type $formatType is not supported for Java date-time parsing, we only support parsing to: ${supportedJavaFormatterTypes.toList()}"
+                "Format type $formatType is not supported for Java date-time parsing yet, DataFrame only supports parsing to: ${supportedJavaFormatterTypes.toList()}"
             }
             customGlobalJavaFormatters[formatType]!! += formatter
         }
@@ -294,7 +294,7 @@ internal object Parsers : GlobalParserOptions {
         val formatType = formatType.withNullability(false)
         require(formatType in supportedDateTimeTypes) {
             // requires #962
-            "Format type $formatType is not supported for date-time parsing, we only support parsing to: ${supportedDateTimeTypes.toList()}"
+            "Format type $formatType is not supported for date-time parsing yet, DataFrame only supports parsing to: ${supportedDateTimeTypes.toList()}"
         }
         customGlobalDateTimeFormats[formatType]!! += format
     }

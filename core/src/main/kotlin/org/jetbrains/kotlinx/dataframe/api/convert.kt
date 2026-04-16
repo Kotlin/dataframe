@@ -380,15 +380,9 @@ public class Convert<T, out C>(
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
 
     /**
-     * Converts the values values in the columns previously selected with [convert] to the specified [type],
-     * preserving their original names and positions within the [DataFrame].
-     *
-     * The target type is provided as reified argument.
-     * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
-     *
-     * For more information: {@include [DocumentationUrls.Convert]}
-     *
-     * ### Examples:
+     * @include [ToSnippet]
+     * {@set [ToSnippet.PARAMS] @param [D\] The target type, provided as a [KType], to convert values to.}
+     * @set [ToSnippet.EXAMPLES]
      * ```kotlin
      * // Convert selected columns to Int:
      * df.convert("year", "count").to<Int>()
@@ -402,70 +396,63 @@ public class Convert<T, out C>(
      * // Converted selected column to Java LocalDate with custom date format:
      * df.convert { dates }.to<java.time.LocalDate>(ParserOptions(dateTime = JavaDateTimeParserOptions.withPattern("yyyy-MM-dd")))
      * ```
-     *
-     * @param D The target type, provided as a [KType], to convert values to.
-     * @param parserOptions The optional [ParserOptions] for parsing the [String] values.
-     *   Will throw an exception if provided for non-String columns.
-     * @return A new [DataFrame] with the values converted to [type].
      */
     @Suppress("UNCHECKED_CAST")
     @Refine
     @Interpretable("To0")
     public inline fun <reified D> to(parserOptions: ParserOptions? = null): DataFrame<T> =
-        when (parserOptions) {
-            null -> to(typeOf<D>())
-            else -> (this as Convert<T, String?>).to(typeOf<D>(), parserOptions)
-        }
+        to(typeOf<D>(), parserOptions)
 
     override fun toString(): String = "Convert(df=$df, columns=$columns)"
+
+    /**
+     * Converts the values in the columns previously selected with [convert] to the specified [type],
+     * preserving their original names and positions within the [DataFrame].
+     *
+     * The target type is provided as reified argument.
+     * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
+     *
+     * Converting from [String(?)][String] columns is considered "parsing".
+     * You can also provide [parserOptions\] to customize the [Locale], date-time options, etc.
+     * See [ParserOptions]. This argument is ignored for non-`String` columns.
+     *
+     * For more information: {@include [DocumentationUrls.Convert]}
+     *
+     * ### Examples:
+     * $[EXAMPLES]
+     *
+     * $[PARAMS]
+     * @param [parserOptions\] The optional [ParserOptions] for parsing the [String] values.
+     *   Will be ignored if provided for non-String columns.
+     * @return A new [DataFrame] with the values converted to [type].
+     */
+    @ExcludeFromSources
+    internal interface ToSnippet {
+        typealias EXAMPLES = Nothing
+        typealias PARAMS = Nothing
+    }
 }
 
 /**
- * Converts values in the columns previously selected with [convert] to the specified [type],
- * preserving their original names and positions within the [DataFrame].
- *
- * The target type is provided as a [KType].
- * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
+ * @include [ToSnippet]
+ * {@set [ToSnippet.PARAMS] @param [type\] The target type, provided as a [KType], to convert values to.}
+ * @set [ToSnippet.EXAMPLES]
  * ```kotlin
- * // Convert selected columns to String:
- * df.convert("year", "count").to(typeOf<String>())
- * df.convert { year and count }.to(typeOf<String>())
- * // Convert all `Int` columns to `Double`
- * df.convert { colsOf<Int>() }.to(typeOf<Double>())
- * ```
+ * // Convert selected columns to Int:
+ * df.convert("year", "count").to(typeOf<Int>())
  *
- * @param type The target type, provided as a [KType], to convert values to.
- * @return A new [DataFrame] with the values converted to [type].
- */
-public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = asColumn { it.convertTo(type) }
-
-/**
- * Converts the [String] values in the columns previously selected with [convert] to the specified [type],
- * preserving their original names and positions within the [DataFrame].
+ * // Convert all String columns to LocalDate:
+ * df.convert { colsOf<String>() }.to(typeOf<LocalDate>())
  *
- * The target type is provided as a [KType].
- * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
  * // Convert selected columns to Double with parser options:
  * df.convert("year", "count").to(typeOf<Double>(), ParserOptions(locale = Locale.GERMAN))
+ *
  * // Converted selected column to Java LocalDate with custom date format:
  * df.convert { dates }.to(typeOf<java.time.LocalDate>(), ParserOptions(dateTime = JavaDateTimeParserOptions.withPattern("yyyy-MM-dd")))
  * ```
- *
- * @param type The target type, provided as a [KType], to convert values to.
- * @param parserOptions The optional [ParserOptions] to use for parsing the [String] values.
- * @return A new [DataFrame] with the values converted to [type].
  */
-public fun <T> Convert<T, String?>.to(type: KType, parserOptions: ParserOptions? = null): DataFrame<T> =
-    asColumn { it.convertTo(type, parserOptions) }
+public fun <T> Convert<T, *>.to(type: KType, parserOptions: ParserOptions? = null): DataFrame<T> =
+    asColumn { it.convertToTypeImpl(type, parserOptions) }
 
 @Deprecated(CONVERT_TO, ReplaceWith(CONVERT_TO_REPLACE), DeprecationLevel.ERROR)
 public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
@@ -629,13 +616,7 @@ public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(type
  * @return A new [DataColumn] with the values converted to [type].
  */
 @Suppress("UNCHECKED_CAST")
-public fun AnyCol.convertTo(newType: KType): AnyCol =
-    when {
-        type().isSubtypeOf(typeOf<String?>()) ->
-            (this as DataColumn<String?>).convertTo(newType)
-
-        else -> convertToTypeImpl(newType, null)
-    }
+public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType, null)
 
 /**
  * Converts values in this `String` column to the specified type [C].
