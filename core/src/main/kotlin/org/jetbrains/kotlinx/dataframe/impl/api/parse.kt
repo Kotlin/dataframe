@@ -900,8 +900,9 @@ internal object Parsers : GlobalParserOptions {
     )
 
     // Gathers all parsers by type, combining them into one if there are multiple entries
-    private val parsersMap =
+    private val parsersMap by lazy {
         parsersOrder.groupBy { it.type }
+    }
 
     val size: Int = parsersOrder.size
 
@@ -915,6 +916,10 @@ internal object Parsers : GlobalParserOptions {
 
     @Suppress("UNCHECKED_CAST")
     inline fun <reified T : Any> get(): List<StringParser<T>> = get(typeOf<T>()) as List<StringParser<T>>
+
+    override val availableParserTypes: Set<KType> by lazy {
+        parsersOrder.mapTo(mutableSetOf()) { it.type }
+    }
 
     /**
      * Turns the parsers of given [type] into a converter.
