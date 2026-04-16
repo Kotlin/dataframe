@@ -39,6 +39,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
@@ -922,13 +923,9 @@ internal class ArrowKtTest {
         df.columnNames() shouldBe listOf("id", "orders", "note")
         df["orders"].shouldBeInstanceOf<FrameColumn<*>>()
 
-        // top-level types
-        df["id"].type() shouldBe typeOf<Int>()
-        df["note"].type() shouldBe typeOf<String>()
-
-        // top-level values
-        df["id"].values().toList() shouldBe listOf(1, 2, 3, 4)
-        df["note"].values().toList() shouldBe listOf("first", "second", null, "fourth")
+        // top-level types & values
+        df["id"] shouldBe columnOf(1, 2, 3, 4).named("id")
+        df["note"] shouldBe columnOf("first", "second", null, "fourth").named("note")
 
         // frame column sizes
         val orders = df["orders"] as FrameColumn<*>
@@ -939,6 +936,8 @@ internal class ArrowKtTest {
 
         // batch 1 — no nulls
         orders[0]["item"].values().toList() shouldBe listOf("Laptop", "Mouse")
+        // we're deliberately skipping our usual nullability narrowing for ListVector<StructVector> FrameColumns
+        orders[0]["item"].type() shouldBe typeOf<String?>()
         orders[0]["qty"].values().toList() shouldBe listOf(1, 2)
         val details0 = orders[0]["details"] as ColumnGroup<*>
         details0["price"].values().toList() shouldBe listOf(999.99, 25.5)
@@ -962,7 +961,7 @@ internal class ArrowKtTest {
                     price: Double?
                     currency: String?
             
-            note: String
+            note: String?
             """.trimIndent()
     }
 
