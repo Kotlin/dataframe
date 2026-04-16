@@ -45,6 +45,7 @@ import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.ViewVarBinaryVector
 import org.apache.arrow.vector.ViewVarCharVector
+import org.apache.arrow.vector.complex.LargeListVector
 import org.apache.arrow.vector.complex.ListVector
 import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
@@ -322,8 +323,11 @@ private fun readField(
             }
             return DataColumn.createColumnGroup(field.name, columns.toDataFrame())
         }
+        if (vector is LargeListVector) {
+            return readListVector(vector.asAccessor(), field, range, nullability)
+        }
         if (vector is ListVector) {
-            return readListVector(vector, field, range, nullability)
+            return readListVector(vector.asAccessor(), field, range, nullability)
         }
         val (list, type) = when (vector) {
             is VarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
@@ -399,17 +403,17 @@ private fun readField(
 }
 
 private fun readListVector(
-    vector: ListVector,
+    accessor: ListVectorAccessor,
     field: Field,
     range: IntRange,
     nullability: NullabilityOptions,
 ): AnyBaseCol {
-    val dataVector = vector.dataVector
+    val dataVector = accessor.dataVector
     return if (dataVector is StructVector) {
-        val structField = field.children.single() // "item" field
+        val structField = field.children.single()
         val frames = range.map { i ->
-            val start = vector.getElementStartIndex(i)
-            val end = vector.getElementEndIndex(i)
+            val start = accessor.getElementStartIndex(i)
+            val end = accessor.getElementEndIndex(i)
             val columns = structField.children.map { childField ->
                 readField(
                     dataVector.getChild(childField.name),
@@ -424,11 +428,11 @@ private fun readListVector(
     } else {
         val elementField = field.children.single()
         val fieldsData = range.map { i ->
-            if (vector.isNull(i)) {
+            if (accessor.isNull(i)) {
                 null
             } else {
-                val start = vector.getElementStartIndex(i)
-                val end = vector.getElementEndIndex(i)
+                val start = accessor.getElementStartIndex(i)
+                val end = accessor.getElementEndIndex(i)
                 readField(dataVector, elementField, nullability, start until end)
             }
         }
@@ -445,6 +449,39 @@ private fun readListVector(
         DataColumn.createValueColumn(field.name, fieldsData.map { it?.values() }, listType)
     }
 }
+
+private interface ListVectorAccessor {
+    val dataVector: FieldVector
+
+    fun getElementStartIndex(index: Int): Int
+
+    fun getElementEndIndex(index: Int): Int
+
+    fun isNull(index: Int): Boolean
+}
+
+private fun ListVector.asAccessor() =
+    object : ListVectorAccessor {
+        override val dataVector: FieldVector get() = this@asAccessor.dataVector
+
+        override fun getElementStartIndex(index: Int) = this@asAccessor.getElementStartIndex(index)
+
+        override fun getElementEndIndex(index: Int) = this@asAccessor.getElementEndIndex(index)
+
+        override fun isNull(index: Int) = this@asAccessor.isNull(index)
+    }
+
+// Arrow in Java doesn't support allocating 64-bit-indexed vectors itself
+private fun LargeListVector.asAccessor() =
+    object : ListVectorAccessor {
+        override val dataVector: FieldVector get() = this@asAccessor.dataVector
+
+        override fun getElementStartIndex(index: Int) = Math.toIntExact(this@asAccessor.getElementStartIndex(index))
+
+        override fun getElementEndIndex(index: Int) = Math.toIntExact(this@asAccessor.getElementEndIndex(index))
+
+        override fun isNull(index: Int) = this@asAccessor.isNull(index)
+    }
 
 internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
 
