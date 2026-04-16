@@ -1,19 +1,17 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import kotlin.collections.plusAssign
-
 /**
  * Map that resolves values lazily.
  */
-internal class LazyMap<K, out V>(val lazyMap: Map<K, Lazy<V>>) : Map<K, V> {
+internal class LazyMap<K, out V>(private val actualMap: Map<K, Lazy<V>>) : Map<K, V> {
 
     // Operations that traverse all values will resolve all values anyway
     private val resolvedMap = lazy {
-        lazyMap.mapValues { it.value.value }
+        actualMap.mapValues { it.value.value }
     }
 
-    override val size: Int get() = lazyMap.size
-    override val keys: Set<K> get() = lazyMap.keys
+    override val size: Int get() = actualMap.size
+    override val keys: Set<K> get() = actualMap.keys
 
     // resolves all values!
     override val values: Collection<V> get() = resolvedMap.value.values
@@ -22,9 +20,9 @@ internal class LazyMap<K, out V>(val lazyMap: Map<K, Lazy<V>>) : Map<K, V> {
     override val entries: Set<Map.Entry<K, V>>
         get() = resolvedMap.value.entries
 
-    override fun isEmpty(): Boolean = lazyMap.isEmpty()
+    override fun isEmpty(): Boolean = actualMap.isEmpty()
 
-    override fun containsKey(key: K): Boolean = lazyMap.containsKey(key)
+    override fun containsKey(key: K): Boolean = actualMap.containsKey(key)
 
     // resolves as little values as possible
     override fun containsValue(value: @UnsafeVariance V): Boolean {
@@ -41,7 +39,7 @@ internal class LazyMap<K, out V>(val lazyMap: Map<K, Lazy<V>>) : Map<K, V> {
         if (resolvedMap.isInitialized()) {
             resolvedMap.value[key]
         } else {
-            lazyMap[key]?.value
+            actualMap[key]?.value
         }
 }
 

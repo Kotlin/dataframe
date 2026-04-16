@@ -159,12 +159,6 @@ internal fun DataColumn<String?>.convertToDoubleImpl(
 internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?): AnyCol {
     val from = type
 
-    if (parserOptions != null && from.withNullability(false) != typeOf<String>()) {
-        error(
-            "ParserOptions were provided for non-String column '$name' ($from). ParserOptions are only supported when converting from String columns to another type.",
-        )
-    }
-
     val nullsAreAllowed = to.isMarkedNullable
 
     var nullsFound = false
@@ -235,9 +229,9 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
 internal val convertersCache = mutableMapOf<Triple<KType, KType, ParserOptions?>, TypeConverter?>()
 
 internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? =
-    // GlobalParserOptions might influence which parsers should run and which should be skipped,
-    // so we should not cache String converters.
     if (from == typeOf<String>() || from == typeOf<String?>()) {
+        // GlobalParserOptions might influence which parsers should run and which should be skipped,
+        // so we should not cache String converters.
         createConverter(from, to, options)
     } else {
         convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
