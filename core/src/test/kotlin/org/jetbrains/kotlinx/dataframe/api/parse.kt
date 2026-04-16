@@ -494,7 +494,7 @@ class ParseTests {
         val deprecatedInstantParser = Parsers[typeOf<DeprecatedInstant>()].single().applyOptions(null)
         val stdlibInstantParser = Parsers[typeOf<StdlibInstant>()].single()
             .applyOptions(ParserOptions(parseExperimentalInstant = true))
-        val javaInstantParser = Parsers[typeOf<JavaInstant>()].single()
+        val javaInstantParser = Parsers[typeOf<JavaInstant>()].last() // the default one
             .applyOptions(null)
 
         // from the kotlinx-datetime tests, java instants treat leap seconds etc. like this
