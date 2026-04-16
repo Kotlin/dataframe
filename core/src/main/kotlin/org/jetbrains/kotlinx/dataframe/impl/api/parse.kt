@@ -246,6 +246,7 @@ internal object Parsers : GlobalParserOptions {
             },
             typeOf<JavaLocalDate>() to { listOf(JavaDateTimeFormatter.ISO_LOCAL_DATE) },
             typeOf<JavaLocalTime>() to { listOf(JavaDateTimeFormatter.ISO_LOCAL_TIME) },
+            typeOf<JavaInstant>() to { listOf(JavaDateTimeFormatter.ISO_INSTANT) },
         )
 
     private val supportedJavaFormatterTypes = defaultJavaFormatters.keys
@@ -376,12 +377,11 @@ internal object Parsers : GlobalParserOptions {
     private fun String.toInstantOrNull(): StdlibInstant? =
         StdlibInstant.parseOrNull(this.trim())
             // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
-            ?: toJavaInstantOrNull()?.toKotlinInstant()
-
-    private fun String.toJavaInstantOrNull(): JavaInstant? =
-        // Default format used by java.time.Instant.parse
-        JavaDateTimeFormatter.ISO_INSTANT
-            .parseOrNull(this.trim(), JavaInstant::from)
+            ?: javaDateTimeParserFunction<JavaInstant>(
+                locale = null,
+                formatters = defaultJavaFormatters[typeOf<JavaInstant>()],
+            ).invoke(this.trim())
+                ?.toKotlinInstant()
 
     private fun String.toUrlOrNull(): URL? = if (isUrl(this)) catchSilent { URI(this).toURL() } else null
 
@@ -403,6 +403,17 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
+    private inline fun <reified T : Temporal> javaDateTimeParserFunction(
+        locale: Locale?,
+        formatters: List<JavaDateTimeFormatter>?,
+    ): ParserFunction<T> =
+        javaDateTimeParserFunction(
+            type = typeOf<T>(),
+            locale = locale,
+            formatters = formatters,
+        ) as ParserFunction<T>
+
     private fun javaDateTimeParserFunction(
         type: KType,
         locale: Locale?,
@@ -414,6 +425,7 @@ internal object Parsers : GlobalParserOptions {
                 typeOf<JavaLocalDateTime>() -> JavaLocalDateTime::from
                 typeOf<JavaLocalDate>() -> JavaLocalDate::from
                 typeOf<JavaLocalTime>() -> JavaLocalTime::from
+                typeOf<JavaInstant>() -> JavaInstant::from
                 else -> error("Not yet supported, will require #962")
             }
             formatters.firstNotNullOfOrNull { formatter ->
@@ -773,17 +785,6 @@ internal object Parsers : GlobalParserOptions {
         stringParserWithOptions<DeprecatedInstant> { options ->
             if (options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime()) {
                 parseBy { it.toInstantOrNull()?.toDeprecatedInstant() }
-            } else {
-                SKIP_PARSER
-            }
-        },
-        // java.time.Instant, will be skipped if kotlinx.datetime.Instant is already checked
-        stringParserWithOptionsAndAttemptedParsers<JavaInstant> { options, attemptedParsers ->
-            if (
-                options.shouldUseJavaTime() && this.shouldUseJavaTime() &&
-                typeOf<DeprecatedInstant>() !in attemptedParsers
-            ) {
-                parseBy { it.toJavaInstantOrNull() }
             } else {
                 SKIP_PARSER
             }
