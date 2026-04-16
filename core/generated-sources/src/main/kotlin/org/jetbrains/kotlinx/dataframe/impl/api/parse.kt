@@ -1,20 +1,33 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.Month
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.format.DateTimeFormatBuilder
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.alternativeParsing
+import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.format.char
+import kotlinx.datetime.format.optional
 import kotlinx.datetime.toDeprecatedInstant
-import kotlinx.datetime.toKotlinLocalDate
-import kotlinx.datetime.toKotlinLocalDateTime
-import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
+import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary
+import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary.JAVA
+import org.jetbrains.kotlinx.dataframe.api.ParseDateTimeLibrary.KOTLIN
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -25,16 +38,18 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.LazyMap
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.resetToDefault
-import org.jetbrains.kotlinx.dataframe.impl.canParse
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
+import org.jetbrains.kotlinx.dataframe.impl.lazyMapOf
 import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
@@ -43,7 +58,6 @@ import java.net.URI
 import java.net.URL
 import java.text.ParsePosition
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.Temporal
 import java.time.temporal.TemporalQuery
 import java.util.Locale
@@ -62,65 +76,87 @@ import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+import java.time.format.DateTimeFormatter as JavaDateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder as JavaDateTimeFormatterBuilder
 import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.Instant as DeprecatedInstant
 
 private val logger = KotlinLogging.logger { }
 
-internal interface StringParser<T> {
-    fun toConverter(options: ParserOptions?): TypeConverter
+internal interface StringParser<out T> {
 
-    fun applyOptions(options: ParserOptions?): (String) -> T?
+    /**
+     * Applies [ParserOptions] and optionally supplied previously [attemptedParsers]
+     * to get the actual [string parser function][ParserFunction] that
+     * can parse [String] to [T] (or `null` if unsucessful).
+     *
+     * If the returned [ParserFunction][ParserFunction]` == `[SKIP_PARSER][SKIP_PARSER], the function
+     * will always return `null` for the current [global parser options][Parsers] and given arguments
+     * and can thus be skipped.
+     */
+    fun applyOptions(options: ParserOptions?, attemptedParsers: List<KType> = emptyList()): ParserFunction<T>
 
-    /** If a parser with one of these types is run, this parser can be skipped. */
-    val coveredBy: Collection<KType>
+    /**
+     * Applies [ParserOptions] to get a [ParserFunction] that can be run in case
+     * this [StringParser] is turned into a converter (like at [Parsers.getAsConverterOrNull]) and
+     * the parser function returned by [applyOptions] fails.
+     *
+     * We have this fallback parser for converters only because we know what the expected parsed type should be.
+     * This means we can parse via intermediate types that may also be parse targets, such as:
+     *
+     * [String] -> [DateTimeComponents] -> [LocalDate]
+     *
+     * It's even okay if we lose some information in the process, meaning we can convert
+     * `"10-04-2026 13:11:42"` to [LocalDate]`(2026, 4, 10)`.
+     *
+     * This is different from if we were to just call `parse()` and be happy if any non-[String] type comes out.
+     */
+    fun applyOptionsToFallbackParserForConverter(options: ParserOptions?): ParserFunction<T>
 
+    /** [T], the target type of the parser. */
     val type: KType
 }
 
-internal open class DelegatedStringParser<T>(
-    override val type: KType,
-    override val coveredBy: Collection<KType>,
-    val handle: (String) -> T?,
-) : StringParser<T> {
-    override fun toConverter(options: ParserOptions?): TypeConverter {
-        val nulls = options?.nullStrings ?: Parsers.nulls
-        return {
-            val str = it as String
-            if (str in nulls) {
-                null
-            } else {
-                handle(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
-            }
-        }
-    }
+internal class StringParserImpl<T>(override val type: KType, val name: String? = null, val parser: ParserFunction<T>) :
+    StringParser<T> {
 
-    override fun applyOptions(options: ParserOptions?): (String) -> T? = handle
+    override fun applyOptions(options: ParserOptions?, attemptedParsers: List<KType>): ParserFunction<T> = parser
+
+    override fun applyOptionsToFallbackParserForConverter(options: ParserOptions?): ParserFunction<T> = SKIP_PARSER
+
+    override fun toString(): String = "DelegatedStringParser${name?.let { "~$it" }}(type=$type)"
 }
 
-internal class StringParserWithFormat<T>(
+internal class StringParserImplWithOptions<T>(
     override val type: KType,
-    override val coveredBy: Collection<KType>,
-    val getParser: (ParserOptions?) -> ((String) -> T?),
+    val name: String? = null,
+    val getFallbackParserForConverter: (ParserOptions?) -> ParserFunction<T> = { SKIP_PARSER },
+    val getParser: (ParserOptions?, List<KType>) -> ParserFunction<T>,
 ) : StringParser<T> {
-    override fun toConverter(options: ParserOptions?): TypeConverter {
-        val handler = getParser(options)
-        val nulls = options?.nullStrings ?: Parsers.nulls
-        return {
-            val str = it as String
-            if (str in nulls) {
-                null
-            } else {
-                handler(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
-            }
-        }
-    }
 
-    override fun applyOptions(options: ParserOptions?): (String) -> T? {
-        val handler = getParser(options)
+    override fun applyOptionsToFallbackParserForConverter(options: ParserOptions?): ParserFunction<T> {
+        val handler = getFallbackParserForConverter(options)
         return { handler(it) }
     }
+
+    override fun applyOptions(options: ParserOptions?, attemptedParsers: List<KType>): ParserFunction<T> {
+        val handler = getParser(options, attemptedParsers)
+        return { handler(it) }
+    }
+
+    override fun toString(): String = "StringParserWithOptions${name?.let { "~$it" }}(type=$type)"
 }
+
+internal typealias ParserFunction<T> = (String) -> T?
+
+/** Tiny helper function to create a correctly typed [ParserFunction]`<T>`, aka `(String) -> T?`. */
+internal fun <T> parseBy(body: ParserFunction<T>): ParserFunction<T> = body
+
+/**
+ * [ParserFunction] that aways returns `null`.
+ * Useful if a parser needs to be skipped based on the provided [ParserOptions].
+ */
+internal val SKIP_PARSER: ParserFunction<Nothing?> = parseBy { null }
 
 /**
  * Central implementation for [GlobalParserOptions].
@@ -131,7 +167,94 @@ internal class StringParserWithFormat<T>(
  */
 internal object Parsers : GlobalParserOptions {
 
-    private val formatters: MutableList<DateTimeFormatter> = mutableListOf()
+    private val defaultDateTimeFormats: LazyMap<KType, List<DateTimeFormat<out Any>>> =
+        lazyMapOf(
+            typeOf<LocalDateTime>() to {
+                listOf(
+                    LocalDateTime.Formats.ISO,
+                    LocalDateTime.Format {
+                        date(LocalDate.Formats.ISO)
+                        char(' ')
+                        time(LocalTime.Formats.ISO)
+                    },
+                )
+            },
+            typeOf<LocalDate>() to {
+                listOf(
+                    LocalDate.Formats.ISO,
+                    LocalDate.Formats.ISO_BASIC,
+                )
+            },
+            typeOf<LocalTime>() to { listOf(LocalTime.Formats.ISO) },
+            typeOf<YearMonth>() to { listOf(YearMonth.Formats.ISO) },
+            typeOf<UtcOffset>() to {
+                listOf(
+                    UtcOffset.Formats.ISO,
+                    UtcOffset.Formats.ISO_BASIC,
+                    UtcOffset.Formats.FOUR_DIGITS,
+                )
+            },
+            // also used as "fallback" mechanism for String -> kotlinx-datetime type in converters
+            // will use String -> DateTimeComponents -> kotlinx-datetime type if the first one fails
+            // this is only done in converters as we know which type we expect
+            typeOf<DateTimeComponents>() to {
+                listOf(
+                    DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET,
+                    DateTimeComponents.Formats.RFC_1123,
+                    // Comparable to [DateTimeFormatter.ISO_DATE_TIME]
+                    DateTimeComponents.Format {
+                        dateTime(LocalDateTime.Formats.ISO)
+
+                        // 3. Optional Offset (corresponds to appendOffsetId)
+                        optional {
+                            alternativeParsing(
+                                { offset(UtcOffset.Formats.ISO_BASIC) },
+                                { offset(UtcOffset.Formats.FOUR_DIGITS) },
+                            ) { offset(UtcOffset.Formats.ISO) }
+                        }
+
+                        // 4. Optional Zone ID in brackets (corresponds to appendZoneRegionId)
+                        alternativeParsing({
+                            char('[')
+                            timeZoneId()
+                            char(']')
+                        }) {}
+                    },
+                )
+            },
+        )
+
+    private val supportedDateTimeTypes = defaultDateTimeFormats.keys
+
+    private val customGlobalDateTimeFormats =
+        supportedDateTimeTypes
+            .associateWith { mutableListOf<DateTimeFormat<out Any>>() }
+            .toMap()
+
+    private val defaultJavaFormatters: LazyMap<KType, List<JavaDateTimeFormatter>> =
+        lazyMapOf(
+            typeOf<JavaLocalDateTime>() to {
+                listOf(
+                    JavaDateTimeFormatter.ISO_LOCAL_DATE_TIME,
+                    JavaDateTimeFormatterBuilder()
+                        .parseCaseInsensitive()
+                        .append(JavaDateTimeFormatter.ISO_LOCAL_DATE)
+                        .appendLiteral(' ')
+                        .append(JavaDateTimeFormatter.ISO_LOCAL_TIME)
+                        .toFormatter(),
+                )
+            },
+            typeOf<JavaLocalDate>() to { listOf(JavaDateTimeFormatter.ISO_LOCAL_DATE) },
+            typeOf<JavaLocalTime>() to { listOf(JavaDateTimeFormatter.ISO_LOCAL_TIME) },
+            typeOf<JavaInstant>() to { listOf(JavaDateTimeFormatter.ISO_INSTANT) },
+        )
+
+    private val supportedJavaFormatterTypes = defaultJavaFormatters.keys
+
+    private val customGlobalJavaFormatters =
+        supportedJavaFormatterTypes
+            .associateWith { mutableListOf<JavaDateTimeFormatter>() }
+            .toMap()
 
     private val nullStrings: MutableSet<String> = mutableSetOf()
 
@@ -147,8 +270,42 @@ internal object Parsers : GlobalParserOptions {
 
     override var parseExperimentalInstant by Delegates.notNull<Boolean>()
 
-    override fun addDateTimePattern(pattern: String) {
-        formatters.add(DateTimeFormatter.ofPattern(pattern))
+    override fun addJavaDateTimeFormatter(formatter: JavaDateTimeFormatter, formatType: KType?) {
+        val formatType = formatType?.withNullability(false)
+
+        // since we don't know what type of date-time this pattern is meant for, let's add it to all types
+        if (formatType == null) {
+            for (type in supportedJavaFormatterTypes) {
+                customGlobalJavaFormatters[type]!! += formatter
+            }
+        } else {
+            require(formatType in supportedJavaFormatterTypes) {
+                // requires #962
+                "Format type $formatType is not supported for Java date-time parsing yet, DataFrame only supports parsing to: ${supportedJavaFormatterTypes.toList()}"
+            }
+            customGlobalJavaFormatters[formatType]!! += formatter
+        }
+    }
+
+    override fun addJavaDateTimePattern(pattern: String, formatType: KType?) {
+        addJavaDateTimeFormatter(JavaDateTimeFormatter.ofPattern(pattern), formatType)
+    }
+
+    override fun addDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType) {
+        val formatType = formatType.withNullability(false)
+        require(formatType in supportedDateTimeTypes) {
+            // requires #962
+            "Format type $formatType is not supported for date-time parsing yet, DataFrame only supports parsing to: ${supportedDateTimeTypes.toList()}"
+        }
+        customGlobalDateTimeFormats[formatType]!! += format
+    }
+
+    @FormatStringsInDatetimeFormats
+    override fun addDateTimeUnicodePattern(pattern: String, formatType: KType) {
+        addDateTimeFormat(
+            format = DateTimeFormat.fromPattern(pattern, formatType),
+            formatType = formatType,
+        )
     }
 
     override fun addNullString(str: String) {
@@ -169,31 +326,61 @@ internal object Parsers : GlobalParserOptions {
             _locale = value
         }
 
+    override var dateTimeLibrary: ParseDateTimeLibrary? = null
+
     override fun resetToDefault() {
-        formatters.clear()
+        customGlobalJavaFormatters.values.forEach { it.clear() }
         nullStrings.clear()
         skipTypesSet.clear()
-        formatters.add(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        formatters.add(DateTimeFormatter.ISO_DATE_TIME)
-
-        DateTimeFormatterBuilder()
-            .parseCaseInsensitive()
-            .append(DateTimeFormatter.ISO_LOCAL_DATE)
-            .appendLiteral(' ')
-            .append(DateTimeFormatter.ISO_LOCAL_TIME)
-            .toFormatter()
-            .let { formatters.add(it) }
+        customGlobalDateTimeFormats.values.forEach { it.clear() }
 
         useFastDoubleParser = true
         parseExperimentalUuid = false
         parseExperimentalInstant = true
         _locale = null
+        dateTimeLibrary = null
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }
 
     init {
         resetToDefault()
     }
+
+    private fun ParserOptions?.shouldUseKotlinDateTime(): Boolean =
+        when (this?.dateTime) {
+            is DateTimeParserOptions.Kotlin -> true
+
+            is DateTimeParserOptions.Java -> false
+
+            null -> when (this@Parsers.dateTimeLibrary) {
+                KOTLIN -> true
+                JAVA -> false
+                null -> true
+            }
+        }
+
+    private fun ParserOptions?.shouldUseJavaDateTime(): Boolean =
+        when (this?.dateTime) {
+            is DateTimeParserOptions.Kotlin -> false
+
+            is DateTimeParserOptions.Java -> true
+
+            null -> when (this@Parsers.dateTimeLibrary) {
+                KOTLIN -> false
+                JAVA -> true
+                null -> true
+            }
+        }
+
+    private fun ParserOptions?.kotlinDateTimeFormatsProvided(): Boolean =
+        (this?.dateTime as? DateTimeParserOptions.Kotlin)
+            ?.dateTimeFormats != null
+
+    private fun ParserOptions?.javaDateTimeFormatsProvided(): Boolean =
+        (this?.dateTime as? DateTimeParserOptions.Java)
+            ?.dateTimeFormats != null
+
+    private fun ParserOptions?.dateTimeFormatsNotProvided(): Boolean = this?.dateTime?.dateTimeFormats == null
 
     /**
      * Parses a [string][str] using the given [java formatter][DateTimeFormatter] and [query]
@@ -203,7 +390,7 @@ internal object Parsers : GlobalParserOptions {
      *
      * See more about resolved and unresolved parsing in the [DateTimeFormatter] documentation.
      */
-    private fun <T : Temporal> DateTimeFormatter.parseOrNull(str: String, query: TemporalQuery<T>): T? =
+    private fun <T : Temporal> JavaDateTimeFormatter.parseOrNull(str: String, query: TemporalQuery<out T>): T? =
         catchSilent {
             // first try to parse unresolved, since it doesn't throw exceptions on invalid values
             val parsePosition = ParsePosition(0)
@@ -216,33 +403,13 @@ internal object Parsers : GlobalParserOptions {
         }
 
     private fun String.toInstantOrNull(): StdlibInstant? =
-        StdlibInstant.parseOrNull(this)
+        StdlibInstant.parseOrNull(this.trim())
             // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
-            ?: toJavaInstantOrNull()?.toKotlinInstant()
-
-    private fun String.toJavaInstantOrNull(): JavaInstant? =
-        // Default format used by java.time.Instant.parse
-        DateTimeFormatter.ISO_INSTANT
-            .parseOrNull(this, JavaInstant::from)
-
-    private fun String.toJavaLocalDateTimeOrNull(formatter: DateTimeFormatter?): JavaLocalDateTime? {
-        if (formatter != null) {
-            return formatter.parseOrNull(this, JavaLocalDateTime::from)
-        } else {
-            DateTimeFormatter.ISO_LOCAL_DATE_TIME
-                .parseOrNull(this, JavaLocalDateTime::from)
-                ?.let { return it }
-            for (format in formatters) {
-                format.parseOrNull(this, JavaLocalDateTime::from)
-                    ?.let { return it }
-            }
-        }
-        return null
-    }
-
-    private fun String.toLocalDateTimeOrNull(formatter: DateTimeFormatter?): LocalDateTime? =
-        toJavaLocalDateTimeOrNull(formatter) // since we accept a Java DateTimeFormatter
-            ?.toKotlinLocalDateTime()
+            ?: javaDateTimeParserFunction<JavaInstant>(
+                locale = null,
+                formatters = defaultJavaFormatters[typeOf<JavaInstant>()],
+            ).invoke(this.trim())
+                ?.toKotlinInstant()
 
     private fun String.toUrlOrNull(): URL? = if (isUrl(this)) catchSilent { URI(this).toURL() } else null
 
@@ -257,43 +424,49 @@ internal object Parsers : GlobalParserOptions {
             else -> null
         }
 
-    private fun String.toJavaLocalDateOrNull(formatter: DateTimeFormatter?): JavaLocalDate? {
-        if (formatter != null) {
-            return formatter.parseOrNull(this, JavaLocalDate::from)
-        } else {
-            DateTimeFormatter.ISO_LOCAL_DATE
-                .parseOrNull(this, JavaLocalDate::from)
-                ?.let { return it }
-            for (format in formatters) {
-                format.parseOrNull(this, JavaLocalDate::from)
-                    ?.let { return it }
-            }
+    private fun <T> kotlinxDateTimeParserFunction(dateTimeFormats: List<DateTimeFormat<out T>>?): ParserFunction<T> {
+        if (dateTimeFormats.isNullOrEmpty()) return SKIP_PARSER
+        return parseBy {
+            dateTimeFormats.firstNotNullOfOrNull { format -> format.parseOrNull(it.trim()) }
         }
-        return null
     }
 
-    private fun String.toLocalDateOrNull(formatter: DateTimeFormatter?): LocalDate? =
-        toJavaLocalDateOrNull(formatter) // since we accept a Java DateTimeFormatter
-            ?.toKotlinLocalDate()
+    @Suppress("UNCHECKED_CAST")
+    private inline fun <reified T : Temporal> javaDateTimeParserFunction(
+        locale: Locale?,
+        formatters: List<JavaDateTimeFormatter>?,
+    ): ParserFunction<T> =
+        javaDateTimeParserFunction(
+            type = typeOf<T>(),
+            locale = locale,
+            formatters = formatters,
+        ) as ParserFunction<T>
 
-    private fun String.toJavaLocalTimeOrNull(formatter: DateTimeFormatter?): JavaLocalTime? {
-        if (formatter != null) {
-            return formatter.parseOrNull(this, JavaLocalTime::from)
-        } else {
-            DateTimeFormatter.ISO_LOCAL_TIME
-                .parseOrNull(this, JavaLocalTime::from)
-                ?.let { return it }
-            for (format in formatters) {
-                format.parseOrNull(this, JavaLocalTime::from)
-                    ?.let { return it }
+    private fun javaDateTimeParserFunction(
+        type: KType,
+        locale: Locale?,
+        formatters: List<JavaDateTimeFormatter>?,
+    ): ParserFunction<Temporal> {
+        if (formatters.isNullOrEmpty()) return SKIP_PARSER
+        return parseBy {
+            val queryFunction = when (type) {
+                typeOf<JavaLocalDateTime>() -> JavaLocalDateTime::from
+                typeOf<JavaLocalDate>() -> JavaLocalDate::from
+                typeOf<JavaLocalTime>() -> JavaLocalTime::from
+                typeOf<JavaInstant>() -> JavaInstant::from
+                else -> error("Not yet supported, will require #962")
+            }
+            formatters.firstNotNullOfOrNull { formatter ->
+                formatter.let {
+                    if (locale != null) {
+                        formatter.withLocale(locale)
+                    } else {
+                        formatter
+                    }
+                }.parseOrNull(it.trim(), queryFunction)
             }
         }
-        return null
     }
-
-    private fun String.toLocalTimeOrNull(formatter: DateTimeFormatter?): LocalTime? =
-        toJavaLocalTimeOrNull(formatter) // since we accept a Java DateTimeFormatter
-            ?.toKotlinLocalTime()
 
     private fun String.toJavaDurationOrNull(): JavaDuration? =
         if (javaDurationCanParse(this)) {
@@ -302,44 +475,218 @@ internal object Parsers : GlobalParserOptions {
             null
         }
 
-    private fun String.toDurationOrNull(): Duration? =
-        if (Duration.canParse(this)) { // TODO, migrate to `Duration.parseOrNull()` in Kotlin 2.3.0+
-            catchSilent { Duration.parse(this) } // will likely succeed
-        } else {
-            null
-        }
-
     inline fun <reified T : Any> stringParser(
         catch: Boolean = false,
-        coveredBy: Set<KType> = emptySet(),
-        noinline body: (String) -> T?,
+        name: String? = null,
+        noinline body: ParserFunction<T>,
     ): StringParser<T> =
         if (catch) {
-            DelegatedStringParser(typeOf<T>(), coveredBy) {
+            StringParserImpl(typeOf<T>()) {
                 catchSilent { body(it) }
             }
         } else {
-            DelegatedStringParser(typeOf<T>(), coveredBy, body)
+            StringParserImpl(typeOf<T>(), name, body)
         }
 
     inline fun <reified T : Any> stringParserWithOptions(
-        coveredBy: Set<KType> = emptySet(),
-        noinline body: (ParserOptions?) -> ((String) -> T?),
-    ): StringParserWithFormat<T> = StringParserWithFormat(typeOf<T>(), coveredBy, body)
+        name: String? = null,
+        noinline getFallbackParserForConverter: (ParserOptions?) -> ParserFunction<T> = { SKIP_PARSER },
+        noinline body: (ParserOptions?) -> (ParserFunction<T>),
+    ): StringParserImplWithOptions<T> =
+        StringParserImplWithOptions(
+            type = typeOf<T>(),
+            name = name,
+            getFallbackParserForConverter = getFallbackParserForConverter,
+        ) { options, _ -> body(options) }
+
+    inline fun <reified T : Any> stringParserWithOptionsAndAttemptedParsers(
+        name: String? = null,
+        noinline getFallbackParserForConverter: (ParserOptions?) -> ParserFunction<T> = { SKIP_PARSER },
+        noinline body: (ParserOptions?, List<KType>) -> (ParserFunction<T>),
+    ): StringParserImplWithOptions<T> =
+        StringParserImplWithOptions(
+            type = typeOf<T>(),
+            name = name,
+            getFallbackParserForConverter = getFallbackParserForConverter,
+            getParser = body,
+        )
 
     private val parserToDoubleWithOptions = stringParserWithOptions { options ->
         val fastDoubleParser = FastDoubleParser(options)
-        val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
-        parser
+        fastDoubleParser::parseOrNull
     }
 
-    // same as parserToDoubleWithOptions, but overrides the locale to C.UTF-8
+    // same as parserToDoubleWithOptions, but overrides the locale to C.UTF-8,
+    // will be skipped if locale is explicitly provided
     private val posixParserToDoubleWithOptions = stringParserWithOptions { options ->
-        val parserOptions = (options ?: ParserOptions()).copy(locale = Locale.forLanguageTag("C.UTF-8"))
-        val fastDoubleParser = FastDoubleParser(parserOptions)
-        val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
-        parser
+        val localeProvided = (options?.locale ?: this._locale) != null
+        if (localeProvided) {
+            SKIP_PARSER
+        } else {
+            val parserOptions = (options ?: ParserOptions()).copy(locale = Locale.forLanguageTag("C.UTF-8"))
+            val fastDoubleParser = FastDoubleParser(parserOptions)
+            fastDoubleParser::parseOrNull
+        }
     }
+
+    // String -> DateTimeComponents -> kotlinx-datetime type fallback
+    private fun dateTimeComponentsFallbackFor(
+        currentParsers: () -> Array<StringParser<Any>>,
+        dateTimeType: KType,
+    ): (ParserOptions?) -> ParserFunction<Any> =
+        it@{ options ->
+            if (dateTimeType == typeOf<DateTimeComponents>()) return@it SKIP_PARSER
+
+            val converter = getConverter(typeOf<DateTimeComponents>(), dateTimeType)
+                ?: return@it SKIP_PARSER
+
+            val function = currentParsers()
+                .single { it.type == typeOf<DateTimeComponents>() }
+                .applyOptions(options)
+
+            return@it parseBy { function(it)?.let(converter) }
+        }
+
+    // formattable kotlinx-datetime classes if ParserOptions contains custom Kotlin formats
+    private val customParserOptionsKotlinxDateTimeParsers: Array<StringParser<Any>> =
+        supportedDateTimeTypes.map { type ->
+            StringParserImplWithOptions(
+                type = type,
+                name = ::customParserOptionsKotlinxDateTimeParsers.name,
+                getParser = { options, _ ->
+                    if (options.kotlinDateTimeFormatsProvided()) {
+                        val formats = (options!!.dateTime as DateTimeParserOptions.Kotlin)
+                            .dateTimeFormats!!
+                            .filter { it.first == type }
+                            .map { it.second }
+
+                        kotlinxDateTimeParserFunction(formats)
+                    } else {
+                        SKIP_PARSER
+                    }
+                },
+                // String -> DateTimeComponents -> kotlinx-datetime type fallback
+                getFallbackParserForConverter = dateTimeComponentsFallbackFor(
+                    currentParsers = ::customParserOptionsKotlinxDateTimeParsers,
+                    dateTimeType = type,
+                ),
+            )
+        }.toTypedArray()
+
+    // formattable java time classes if ParserOptions contains custom Java formats
+    private val customParserOptionsJavaDateTimeParsers: Array<StringParser<Any>> =
+        supportedJavaFormatterTypes.map { type ->
+            StringParserImplWithOptions(
+                type = type,
+                name = ::customParserOptionsJavaDateTimeParsers.name,
+                getParser = { options, _ ->
+                    if (options.javaDateTimeFormatsProvided()) {
+                        val dateTimeOptions = (options!!.dateTime as? DateTimeParserOptions.Java)
+                            ?: error(
+                                "Should not happen, but ParserOptions expected custom Java dateTimeParserOptions yet found `null`.",
+                            )
+                        val formats = dateTimeOptions
+                            .dateTimeFormats!!
+                            .filter { it.first == null || it.first == type } // if the type is `null`, also accept it
+                            .map { it.second }
+
+                        // prefer ParserOptions.dateTime.locale -> ParserOptions.locale -> GlobalParserOptions._locale
+                        val locale = dateTimeOptions.locale ?: options.locale ?: this._locale
+                        javaDateTimeParserFunction(type, locale, formats)
+                    } else {
+                        SKIP_PARSER
+                    }
+                },
+            )
+        }.toTypedArray()
+
+    // all custom global formattable kotlinx-datetime (skipped if ParserOptions contains custom formats)
+    private val customGlobalParserOptionsKotlinxDateTimeParsers: Array<StringParser<Any>> =
+        supportedDateTimeTypes.map { type ->
+            StringParserImplWithOptions(
+                type = type,
+                name = ::customGlobalParserOptionsKotlinxDateTimeParsers.name,
+                getParser = { options, _ ->
+                    if (
+                        options.dateTimeFormatsNotProvided() &&
+                        options.shouldUseKotlinDateTime() &&
+                        this.customGlobalDateTimeFormats[type]!!.isNotEmpty()
+                    ) {
+                        val formats = customGlobalDateTimeFormats[type]!!
+                        kotlinxDateTimeParserFunction(formats)
+                    } else {
+                        SKIP_PARSER
+                    }
+                },
+                // String -> DateTimeComponents -> kotlinx-datetime type fallback
+                getFallbackParserForConverter = dateTimeComponentsFallbackFor(
+                    currentParsers = ::customGlobalParserOptionsKotlinxDateTimeParsers,
+                    dateTimeType = type,
+                ),
+            )
+        }.toTypedArray()
+
+    // all custom global formattable java time (skipped if ParserOptions contains custom formats)
+    private val customGlobalParserOptionsJavaDateTimeParsers: Array<StringParser<Any>> =
+        supportedJavaFormatterTypes.map { type ->
+            StringParserImplWithOptions(
+                type = type,
+                name = ::supportedJavaFormatterTypes.name,
+                getParser = { options, _ ->
+                    if (
+                        options.dateTimeFormatsNotProvided() &&
+                        options.shouldUseJavaDateTime() &&
+                        this.customGlobalJavaFormatters[type]!!.isNotEmpty()
+                    ) {
+                        val formats = customGlobalJavaFormatters[type]!!
+                        val locale = options?.locale ?: this._locale
+                        javaDateTimeParserFunction(type, locale, formats)
+                    } else {
+                        SKIP_PARSER
+                    }
+                },
+            )
+        }.toTypedArray()
+
+    // default formattable kotlinx-datetime (skipped if ParserOptions contains custom formats)
+    private val defaultKotlinxDateTimeParsers: Array<StringParser<Any>> =
+        supportedDateTimeTypes.map { type ->
+            StringParserImplWithOptions(
+                type = type,
+                name = ::defaultKotlinxDateTimeParsers.name,
+                getParser = { options, _ ->
+                    if (options.dateTimeFormatsNotProvided() && options.shouldUseKotlinDateTime()) {
+                        val formats = defaultDateTimeFormats[type]
+                        kotlinxDateTimeParserFunction(formats)
+                    } else {
+                        SKIP_PARSER
+                    }
+                },
+                // String -> DateTimeComponents -> kotlinx-datetime type fallback
+                getFallbackParserForConverter = dateTimeComponentsFallbackFor(
+                    currentParsers = ::defaultKotlinxDateTimeParsers,
+                    dateTimeType = type,
+                ),
+            )
+        }.toTypedArray()
+
+    // default formattable java time (skipped if ParserOptions contains custom formats)
+    private val defaultJavaTimeParsers: Array<StringParser<Any>> =
+        supportedJavaFormatterTypes.map { type ->
+            StringParserImplWithOptions(
+                type = type,
+                name = ::defaultJavaTimeParsers.name,
+                getParser = { options, _ ->
+                    if (options.dateTimeFormatsNotProvided() && options.shouldUseJavaDateTime()) {
+                        val formats = defaultJavaFormatters[type]
+                        val locale = options?.locale ?: this._locale
+                        javaDateTimeParserFunction(type, locale, formats)
+                    } else {
+                        SKIP_PARSER
+                    }
+                },
+            )
+        }.toTypedArray()
 
     // TODO rewrite using parser service later https://github.com/Kotlin/dataframe/issues/962
     // null when dataframe-json is not present
@@ -429,8 +776,6 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
-    private val uuidRegex = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
-
     @OptIn(ExperimentalUuidApi::class)
     internal val parsersOrder = listOf(
         // Int
@@ -438,68 +783,71 @@ internal object Parsers : GlobalParserOptions {
         // Long
         stringParser<Long> { it.toLongOrNull() },
         // kotlin.time.Instant
-        stringParserWithOptions<StdlibInstant> {
-            val parseExperimentalInstant = it?.parseExperimentalInstant ?: this.parseExperimentalInstant
-            val parser = { it: String ->
-                if (parseExperimentalInstant) {
-                    it.toInstantOrNull()
-                } else {
-                    null
-                }
+        stringParserWithOptions<StdlibInstant> { options ->
+            if (
+                options.shouldUseKotlinDateTime() &&
+                (options?.parseExperimentalInstant ?: this.parseExperimentalInstant)
+            ) {
+                parseBy { it.toInstantOrNull() }
+            } else {
+                SKIP_PARSER
             }
-            parser
         },
         // kotlinx.datetime.Instant
-        stringParser<DeprecatedInstant> {
-            it.toInstantOrNull()?.toDeprecatedInstant()
+        stringParserWithOptions<DeprecatedInstant> { options ->
+            if (options.shouldUseKotlinDateTime()) {
+                parseBy { it.toInstantOrNull()?.toDeprecatedInstant() }
+            } else {
+                SKIP_PARSER
+            }
         },
-        // java.time.Instant, will be skipped if kotlinx.datetime.Instant is already checked
-        stringParser<JavaInstant>(coveredBy = setOf(typeOf<DeprecatedInstant>())) {
-            it.toJavaInstantOrNull()
-        },
-        // kotlinx.datetime.LocalDateTime
-        stringParserWithOptions<LocalDateTime> { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toLocalDateTimeOrNull(formatter) }
-            parser
-        },
-        // java.time.LocalDateTime, will be skipped if kotlinx.datetime.LocalDateTime is already checked
-        stringParserWithOptions<JavaLocalDateTime>(coveredBy = setOf(typeOf<LocalDateTime>())) { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toJavaLocalDateTimeOrNull(formatter) }
-            parser
-        },
-        // kotlinx.datetime.LocalDate
-        stringParserWithOptions<LocalDate> { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toLocalDateOrNull(formatter) }
-            parser
-        },
-        // java.time.LocalDate, will be skipped if kotlinx.datetime.LocalDate is already checked
-        stringParserWithOptions<JavaLocalDate>(coveredBy = setOf(typeOf<LocalDate>())) { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toJavaLocalDateOrNull(formatter) }
-            parser
-        },
+        // formattable kotlinx-datetime classes if ParserOptions contains custom Kotlin formats
+        *customParserOptionsKotlinxDateTimeParsers,
+        // formattable java time classes if ParserOptions contains custom Java formats
+        *customParserOptionsJavaDateTimeParsers,
+        // all custom global formattable kotlinx-datetime (skipped if ParserOptions contains custom formats)
+        *customGlobalParserOptionsKotlinxDateTimeParsers,
+        // all custom global formattable java time (skipped if ParserOptions contains custom formats)
+        *customGlobalParserOptionsJavaDateTimeParsers,
+        // default formattable kotlinx-datetime (skipped if ParserOptions contains custom formats)
+        *defaultKotlinxDateTimeParsers,
+        // default formattable java time (skipped if ParserOptions contains custom formats)
+        *defaultJavaTimeParsers,
         // kotlin.time.Duration
-        stringParser<Duration> {
-            it.toDurationOrNull()
+        stringParserWithOptions<Duration> { options ->
+            if (options.shouldUseKotlinDateTime()) {
+                Duration::parseOrNull
+            } else {
+                SKIP_PARSER
+            }
         },
         // java.time.Duration, will be skipped if kotlin.time.Duration is already checked
-        stringParser<JavaDuration>(coveredBy = setOf(typeOf<Duration>())) {
-            it.toJavaDurationOrNull()
+        stringParserWithOptionsAndAttemptedParsers<JavaDuration> { options, attemptedParsers ->
+            if (options.shouldUseJavaDateTime() && typeOf<Duration>() !in attemptedParsers) {
+                parseBy { it.toJavaDurationOrNull() }
+            } else {
+                SKIP_PARSER
+            }
         },
-        // kotlinx.datetime.LocalTime
-        stringParserWithOptions<LocalTime> { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toLocalTimeOrNull(formatter) }
-            parser
+        // kotlinx.datetime.Month
+        stringParserWithOptions<Month> { options ->
+            if (options.shouldUseKotlinDateTime()) {
+                parseBy {
+                    Month.entries.firstOrNull { month -> month.name == it.lowercase() }
+                }
+            } else {
+                SKIP_PARSER
+            }
         },
-        // java.time.LocalTime, will be skipped if kotlinx.datetime.LocalTime is already checked
-        stringParserWithOptions<JavaLocalTime>(coveredBy = setOf(typeOf<LocalTime>())) { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toJavaLocalTimeOrNull(formatter) }
-            parser
+        // kotlinx.datetime.DayOfWeek
+        stringParserWithOptions<DayOfWeek> { options ->
+            if (options.shouldUseKotlinDateTime()) {
+                parseBy {
+                    DayOfWeek.entries.firstOrNull { day -> day.name == it.lowercase() }
+                }
+            } else {
+                SKIP_PARSER
+            }
         },
         // java.net.URL
         stringParser<URL> { it.toUrlOrNull() },
@@ -511,23 +859,11 @@ internal object Parsers : GlobalParserOptions {
         stringParser<Boolean> { it.toBooleanOrNull() },
         // Uuid
         stringParserWithOptions<Uuid> { options ->
-            val parser = { str: String ->
-                val parseExperimentalUuid = options?.parseExperimentalUuid ?: this.parseExperimentalUuid
-                when {
-                    !parseExperimentalUuid -> null
-
-                    uuidRegex.matches(str) -> {
-                        try {
-                            Uuid.parse(str)
-                        } catch (_: IllegalArgumentException) {
-                            null
-                        }
-                    }
-
-                    else -> null
-                }
+            if (options?.parseExperimentalUuid ?: this.parseExperimentalUuid) {
+                Uuid::parseOrNull
+            } else {
+                SKIP_PARSER
             }
-            parser
         },
         // BigInteger
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
@@ -572,50 +908,110 @@ internal object Parsers : GlobalParserOptions {
         stringParser<String> { it },
     )
 
-    private val parsersMap = parsersOrder.associateBy { it.type }
+    // Gathers all parsers by type, combining them into one if there are multiple entries
+    private val parsersMap by lazy {
+        parsersOrder.groupBy { it.type }
+    }
 
     val size: Int = parsersOrder.size
 
     operator fun get(index: Int): StringParser<*> = parsersOrder[index]
 
-    operator fun get(type: KType): StringParser<*>? = parsersMap[type]
+    operator fun get(type: KType): List<StringParser<*>> = parsersMap[type].orEmpty()
 
-    operator fun <T : Any> get(type: KClass<T>): StringParser<T>? =
-        parsersMap[type.createStarProjectedType(false)] as? StringParser<T>
+    @Suppress("UNCHECKED_CAST")
+    operator fun <T : Any> get(type: KClass<T>): List<StringParser<T>> =
+        get(type.createStarProjectedType(false)) as List<StringParser<T>>
 
-    inline fun <reified T : Any> get(): StringParser<T>? = get(typeOf<T>()) as? StringParser<T>
+    @Suppress("UNCHECKED_CAST")
+    inline fun <reified T : Any> get(): List<StringParser<T>> = get(typeOf<T>()) as List<StringParser<T>>
 
-    internal fun <R : Any> getDateTimeConverter(
-        clazz: KClass<R>,
-        pattern: String? = null,
-        locale: Locale? = null,
-    ): (String) -> R? {
-        val parser = get(clazz) ?: error("Can not convert String to $clazz")
-        val formatter = pattern?.let {
-            if (locale == null) {
-                DateTimeFormatter.ofPattern(it)
-            } else {
-                DateTimeFormatter.ofPattern(it, locale)
-            }
-        }
-        val options = if (formatter != null || locale != null) {
-            ParserOptions(
-                dateTimeFormatter = formatter,
-                locale = locale,
-            )
-        } else {
-            null
-        }
-        return parser.applyOptions(options)
+    override val availableParserTypes: Set<KType> by lazy {
+        parsersOrder.mapTo(mutableSetOf()) { it.type }
     }
 
-    internal fun getDoubleParser(locale: Locale?, useFastDoubleParser: Boolean): (String) -> Double? =
-        parserToDoubleWithOptions
-            .applyOptions(ParserOptions(locale = locale, useFastDoubleParser = useFastDoubleParser))
+    /**
+     * Turns the parsers of given [type] into a converter.
+     *
+     * __NOTE__: Do not cache this converter.
+     * [GlobalParserOptions] might influence which parsers should run and which should be skipped.
+     */
+    @Suppress("UNCHECKED_CAST", "standard:blank-line-before-declaration")
+    fun getAsConverterOrNull(type: KType, options: ParserOptions?): TypeConverter? {
+        val parsers = get(type.withNullability(false))
+        if (parsers.isEmpty()) return null
 
-    internal fun getPosixDoubleParser(useFastDoubleParser: Boolean): (String) -> Double? =
-        posixParserToDoubleWithOptions
-            .applyOptions(ParserOptions(useFastDoubleParser = useFastDoubleParser))
+        val nulls = options?.nullStrings ?: Parsers.nulls
+        val indices = parsers.indices
+        val resolvedParsers = parsers.map { it.applyOptions(options) }
+        val resolvedFallbackParsers = parsers.map { it.applyOptionsToFallbackParserForConverter(options) }
+
+        if (resolvedParsers.all { it == SKIP_PARSER }) {
+            throw TypeConversionException(
+                value = null,
+                from = typeOf<String>(),
+                to = type,
+                column = null,
+                extraInformation = buildString {
+                    append("All parsers for type $type were skipped. If this is unexpected, ")
+                    if (options != null) {
+                        append(
+                            "check your provided parser options: $options, as well as the global parser options at `DataFrame.parser`.",
+                        )
+                    } else {
+                        append("check the global parser options at `DataFrame.parser`.")
+                    }
+                },
+            )
+        }
+
+        val typeConverter =
+
+            fun(str: String): Any? {
+                if (str in nulls) return null
+
+                for (i in indices) {
+                    val result = resolvedParsers[i](str)
+                    if (result != null) return result
+                }
+                for (i in indices) {
+                    val result = resolvedFallbackParsers[i](str)
+                    if (result != null) return result
+                }
+                throw TypeConversionException(
+                    value = str,
+                    from = typeOf<String>(),
+                    to = parsers.first().type,
+                    column = null,
+                    extraInformation = "Conversion failed from: $this",
+                )
+            } as TypeConverter
+        return typeConverter
+    }
+}
+
+@FormatStringsInDatetimeFormats
+internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: KType): DateTimeFormat<out Any> {
+    val formatType = formatType.withNullability(false)
+    val formatBuilder: (DateTimeFormatBuilder.() -> Unit) -> DateTimeFormat<out Any> =
+        when (formatType) {
+            typeOf<LocalDateTime>() -> LocalDateTime::Format
+
+            typeOf<LocalDate>() -> LocalDate::Format
+
+            typeOf<YearMonth>() -> YearMonth::Format
+
+            typeOf<LocalTime>() -> LocalTime::Format
+
+            typeOf<DateTimeComponents>() -> DateTimeComponents::Format
+
+            typeOf<UtcOffset>() -> UtcOffset::Format
+
+            else -> throw IllegalArgumentException(
+                "Unknown DateTimeFormat type: $formatType, try calling `withDateTimeFormat()` instead",
+            )
+        }
+    return formatBuilder { byUnicodePattern(pattern) }
 }
 
 /**
@@ -624,8 +1020,6 @@ internal object Parsers : GlobalParserOptions {
  * a.k.a. that parser was able to parse all values in the column successfully. If a parser
  * fails to parse any value, the next parser is tried. If all the others fail, the final parser
  * simply returns the original string, leaving the column unchanged.
- *
- * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
  *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)
@@ -642,13 +1036,13 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
     val parserTypesToSkip = options?.skipTypes ?: Parsers.skipTypesSet
     val parsersToCheck = Parsers.parsersOrder
         .filterNot { it.type in parserTypesToSkip }
-    val parserTypesToCheck = parsersToCheck.map { it.type }.toSet()
 
     var correctParser: StringParser<*>? = null
+    val attemptedParsers: MutableList<KType> = mutableListOf()
     for (parser in parsersToCheck) {
-        if (parser.coveredBy.any { it in parserTypesToCheck }) continue
+        val parserWithOptions = parser.applyOptions(options, attemptedParsers)
+        if (parserWithOptions == SKIP_PARSER) continue
 
-        val parserWithOptions = parser.applyOptions(options)
         parsedValues.clear()
         hasNulls = false
         hasNotNulls = false
@@ -680,6 +1074,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
             correctParser = parser
             break
         }
+        attemptedParsers += parser.type
     }
     check(correctParser != null) { "Valid parser not found" }
 
