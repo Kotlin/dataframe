@@ -437,15 +437,15 @@ class ParserTests {
 
             columnDot.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
             columnComma.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
-            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double>() }
+            columnMixed.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
 
             columnDot.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
             columnComma.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
-            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double?>() }
+            columnMixed.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
 
             columnDot.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
             columnComma.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
-            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleNotDefined) }
+            columnMixed.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
 
             columnDot.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(123_456.789, 987_654.321)
             shouldThrow<TypeConversionException> { columnComma.convertToDouble(parsingLocaleUsesDot) }

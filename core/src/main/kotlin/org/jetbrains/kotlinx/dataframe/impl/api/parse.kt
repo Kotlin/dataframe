@@ -476,11 +476,17 @@ internal object Parsers : GlobalParserOptions {
         fastDoubleParser::parseOrNull
     }
 
-    // same as parserToDoubleWithOptions, but overrides the locale to C.UTF-8
+    // same as parserToDoubleWithOptions, but overrides the locale to C.UTF-8,
+    // will be skipped if locale is explicitly provided
     private val posixParserToDoubleWithOptions = stringParserWithOptions { options ->
-        val parserOptions = (options ?: ParserOptions()).copy(locale = Locale.forLanguageTag("C.UTF-8"))
-        val fastDoubleParser = FastDoubleParser(parserOptions)
-        fastDoubleParser::parseOrNull
+        val localeProvided = (options?.locale ?: this._locale) != null
+        if (localeProvided) {
+            SKIP_PARSER
+        } else {
+            val parserOptions = (options ?: ParserOptions()).copy(locale = Locale.forLanguageTag("C.UTF-8"))
+            val fastDoubleParser = FastDoubleParser(parserOptions)
+            fastDoubleParser::parseOrNull
+        }
     }
 
     // String -> DateTimeComponents -> kotlinx-datetime type fallback
@@ -967,14 +973,6 @@ internal object Parsers : GlobalParserOptions {
             } as TypeConverter
         return typeConverter
     }
-
-    internal fun getDoubleParser(locale: Locale?, useFastDoubleParser: Boolean): (String) -> Double? =
-        parserToDoubleWithOptions
-            .applyOptions(ParserOptions(locale = locale, useFastDoubleParser = useFastDoubleParser))
-
-    internal fun getPosixDoubleParser(useFastDoubleParser: Boolean): (String) -> Double? =
-        posixParserToDoubleWithOptions
-            .applyOptions(ParserOptions(useFastDoubleParser = useFastDoubleParser))
 }
 
 internal fun ParserOptions?.shouldUseKotlinxDateTime(): Boolean = this?.dateTime is DateTimeParserOptions.Kotlin?
