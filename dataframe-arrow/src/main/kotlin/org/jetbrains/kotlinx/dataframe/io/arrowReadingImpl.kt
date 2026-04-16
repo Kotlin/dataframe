@@ -313,10 +313,9 @@ private fun readField(
     vector: FieldVector,
     field: Field,
     nullability: NullabilityOptions,
-    range1: IntRange? = null,
+    range: IntRange = (0 until vector.valueCount),
 ): AnyBaseCol {
     try {
-        val range = range1 ?: (0 until vector.valueCount)
         if (vector is StructVector) {
             val columns = field.children.map { childField ->
                 readField(vector.getChild(childField.name), childField, nullability, range)
@@ -324,46 +323,7 @@ private fun readField(
             return DataColumn.createColumnGroup(field.name, columns.toDataFrame())
         }
         if (vector is ListVector) {
-            val dataVector = vector.dataVector
-            return if (dataVector is StructVector) {
-                val structField = field.children.single() // "item" field
-                val frames = range.map { i ->
-                    val start = vector.getElementStartIndex(i)
-                    val end = vector.getElementEndIndex(i)
-                    val columns = structField.children.map { childField ->
-                        readField(
-                            dataVector.getChild(childField.name),
-                            childField,
-                            NullabilityOptions.Widening,
-                            start until end,
-                        )
-                    }
-                    columns.toDataFrame()
-                }
-                DataColumn.createFrameColumn(field.name, frames)
-            } else {
-                val elementField = field.children.single()
-                val fieldsData = range.map { i ->
-                    if (vector.isNull(i)) {
-                        null
-                    } else {
-                        val start = vector.getElementStartIndex(i)
-                        val end = vector.getElementEndIndex(i)
-                        readField(dataVector, elementField, nullability, start until end)
-                    }
-                }
-                val sampleColumn = fieldsData.firstOrNull { it != null }
-                val elementType = sampleColumn?.type() ?: nullableNothingType
-
-                val listNullable = nullability.applyNullability(fieldsData, field.isNullable)
-
-                val listType = List::class.createType(
-                    arguments = listOf(KTypeProjection.invariant(elementType)),
-                    nullable = listNullable,
-                )
-
-                DataColumn.createValueColumn(field.name, fieldsData.map { it?.values() }, listType)
-            }
+            return readListVector(vector, field, range, nullability)
         }
         val (list, type) = when (vector) {
             is VarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
@@ -435,6 +395,54 @@ private fun readField(
         return DataColumn.createValueColumn(field.name, list, type, Infer.None)
     } catch (unexpectedNull: NullabilityException) {
         throw IllegalArgumentException("Column `${field.name}` should be not nullable but has nulls")
+    }
+}
+
+private fun readListVector(
+    vector: ListVector,
+    field: Field,
+    range: IntRange,
+    nullability: NullabilityOptions
+): AnyBaseCol {
+    val dataVector = vector.dataVector
+    return if (dataVector is StructVector) {
+        val structField = field.children.single() // "item" field
+        val frames = range.map { i ->
+            val start = vector.getElementStartIndex(i)
+            val end = vector.getElementEndIndex(i)
+            val columns = structField.children.map { childField ->
+                readField(
+                    dataVector.getChild(childField.name),
+                    childField,
+                    NullabilityOptions.Widening,
+                    start until end,
+                )
+            }
+            columns.toDataFrame()
+        }
+        DataColumn.createFrameColumn(field.name, frames)
+    } else {
+        val elementField = field.children.single()
+        val fieldsData = range.map { i ->
+            if (vector.isNull(i)) {
+                null
+            } else {
+                val start = vector.getElementStartIndex(i)
+                val end = vector.getElementEndIndex(i)
+                readField(dataVector, elementField, nullability, start until end)
+            }
+        }
+        val sampleColumn = fieldsData.firstOrNull { it != null }
+        val elementType = sampleColumn?.type() ?: nullableNothingType
+
+        val listNullable = nullability.applyNullability(fieldsData, field.isNullable)
+
+        val listType = List::class.createType(
+            arguments = listOf(KTypeProjection.invariant(elementType)),
+            nullable = listNullable,
+        )
+
+        DataColumn.createValueColumn(field.name, fieldsData.map { it?.values() }, listType)
     }
 }
 
