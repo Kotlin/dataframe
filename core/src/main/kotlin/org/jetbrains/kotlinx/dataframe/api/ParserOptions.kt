@@ -24,6 +24,7 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
@@ -81,7 +82,8 @@ public interface GlobalParserOptions {
      *
      * @param [formatter] the Java date-time formatter to add.
      * @param [formatType] the expected java date-time type of the [formatter].
-     *   If `null`, the formatter will be attempted for [JavaLocalDateTime], [JavaLocalDate], and [JavaLocalTime].
+     *   If `null`, the formatter will be attempted for [JavaLocalDateTime], [JavaLocalDate], [JavaLocalTime],
+     *   and [JavaInstant].
      * @see [addJavaDateTimePattern]
      */
     public fun addJavaDateTimeFormatter(formatter: DateTimeFormatter, formatType: KType? = null)
@@ -104,7 +106,8 @@ public interface GlobalParserOptions {
      *
      * @param [pattern] the date-time pattern to add.
      * @param [formatType] the expected java date-time type of the [pattern].
-     *   If `null`, the pattern will be attempted for [JavaLocalDateTime], [JavaLocalDate], and [JavaLocalTime].
+     *   If `null`, the pattern will be attempted for [JavaLocalDateTime], [JavaLocalDate], [JavaLocalTime],
+     *   and [JavaInstant].
      * @see [addJavaDateTimeFormatter]
      */
     public fun addJavaDateTimePattern(pattern: String, formatType: KType? = null)
@@ -199,21 +202,55 @@ public interface GlobalParserOptions {
      */
     public fun addDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType)
 
+    /**
+     * Adds [str] to the [collection of Strings][nulls]
+     * that will be parsed to `null`.
+     */
     public fun addNullString(str: String)
 
-    /** This function can be called to skip some types. Parsing will be attempted for all other types. */
+    /**
+     * This function can be called to skip some types.
+     * Parsing will be attempted for [all other types][availableParserTypes].
+     */
     public fun addSkipType(type: KType)
 
-    /** Whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter. */
+    /**
+     * Whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter.
+     * This can be overridden by passing a custom [ParserOptions] to the parsing function call.
+     */
     public var useFastDoubleParser: Boolean
 
+    /** Resets the global parser options. */
     public fun resetToDefault()
 
+    /**
+     * The Locale to use for parsing numbers (and Java date-time types),
+     * defaults to the System default locale.
+     * This can be overridden by passing a custom [ParserOptions] to the parsing function call.
+     */
     public var locale: Locale
 
+    /**
+     * When a [String] is encountered matching any of these, it will be parsed to `null`.
+     * This can be overridden by passing a custom [ParserOptions] to the parsing function call.
+     *
+     * Defaults to `["null", "NULL", "NA", "N/A"]`.
+     * @see addNullString
+     */
     public val nulls: Set<String>
 
+    /**
+     * Types in this set will be skipped during parsing.
+     * Parsing will be attempted for [all other types][availableParserTypes].
+     * @see addSkipType
+     */
     public val skipTypes: Set<KType>
+
+    /**
+     * Provides an overview of all types DataFrame can parse to.
+     * This cannot be adjusted yet (#962).
+     */
+    public val availableParserTypes: Set<KType>
 
     /**
      * Whether to allow parsing UUIDs to the experimental [Uuid] type.

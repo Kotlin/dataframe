@@ -2469,6 +2469,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/GlobalParser
 	public static synthetic fun addJavaDateTimePattern$default (Lorg/jetbrains/kotlinx/dataframe/api/GlobalParserOptions;Ljava/lang/String;Lkotlin/reflect/KType;ILjava/lang/Object;)V
 	public abstract fun addNullString (Ljava/lang/String;)V
 	public abstract fun addSkipType (Lkotlin/reflect/KType;)V
+	public abstract fun getAvailableParserTypes ()Ljava/util/Set;
 	public abstract fun getDateTimeLibrary ()Lorg/jetbrains/kotlinx/dataframe/api/ParseDateTimeLibrary;
 	public abstract fun getLocale ()Ljava/util/Locale;
 	public abstract fun getNulls ()Ljava/util/Set;
