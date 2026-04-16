@@ -37,5 +37,5 @@ ktlint_standard_multiline-expression-wrapping = disabled
 ktlint_standard_when-entry-bracing = disabled
 ktlint_standard_expression-operand-wrapping = disabled
 
-[{*/build/**/*,**/*keywords*/**,**/*.Generated.kt,**/*$Extensions.kt}]
+[{*/build/**/*,**/*keywords*/**,**/*.Generated.kt,**/*$Extensions.kt,**/BuildConfig.kt}]
 ktlint = disabled

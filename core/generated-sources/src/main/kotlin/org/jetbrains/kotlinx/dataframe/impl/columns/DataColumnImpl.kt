@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.core.BuildConfig
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
+import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.kind
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -65,7 +66,7 @@ internal abstract class DataColumnImpl<T>(
     override fun contains(value: T): Boolean =
         if (distinct.isInitialized()) distinct.value.contains(value) else values.contains(value)
 
-    override fun toString() = dataFrameOf(this).toString() // "${name()}: $type"
+    override fun toString() = dataFrameOf(this).renderToString(columnTypes = true)
 
     override fun countDistinct() = toSet().size
 
