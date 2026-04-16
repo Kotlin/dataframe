@@ -346,13 +346,41 @@ internal object Parsers : GlobalParserOptions {
         resetToDefault()
     }
 
-    internal fun shouldUseKotlinxDateTime(): Boolean = dateTimeLibrary == null || dateTimeLibrary == KOTLIN
+    private fun ParserOptions?.shouldUseKotlinDateTime(): Boolean =
+        when (this?.dateTime) {
+            is DateTimeParserOptions.Kotlin -> true
 
-    internal fun shouldNotUseKotlinxDateTime(): Boolean = !shouldUseKotlinxDateTime()
+            is DateTimeParserOptions.Java -> false
 
-    internal fun shouldUseJavaTime(): Boolean = dateTimeLibrary == null || dateTimeLibrary == JAVA
+            null -> when (this@Parsers.dateTimeLibrary) {
+                KOTLIN -> true
+                JAVA -> false
+                null -> true
+            }
+        }
 
-    internal fun shouldNotUseJavaTime(): Boolean = !shouldUseJavaTime()
+    private fun ParserOptions?.shouldUseJavaDateTime(): Boolean =
+        when (this?.dateTime) {
+            is DateTimeParserOptions.Kotlin -> false
+
+            is DateTimeParserOptions.Java -> true
+
+            null -> when (this@Parsers.dateTimeLibrary) {
+                KOTLIN -> false
+                JAVA -> true
+                null -> true
+            }
+        }
+
+    private fun ParserOptions?.kotlinDateTimeFormatsProvided(): Boolean =
+        (this?.dateTime as? DateTimeParserOptions.Kotlin)
+            ?.dateTimeFormats != null
+
+    private fun ParserOptions?.javaDateTimeFormatsProvided(): Boolean =
+        (this?.dateTime as? DateTimeParserOptions.Java)
+            ?.dateTimeFormats != null
+
+    private fun ParserOptions?.dateTimeFormatsNotProvided(): Boolean = this?.dateTime?.dateTimeFormats == null
 
     /**
      * Parses a [string][str] using the given [java formatter][DateTimeFormatter] and [query]
@@ -526,15 +554,8 @@ internal object Parsers : GlobalParserOptions {
                 type = type,
                 name = ::customParserOptionsKotlinxDateTimeParsers.name,
                 getParser = { options, _ ->
-                    if (
-                        options.dateTimeFormatsProvided() &&
-                        options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime()
-                    ) {
-                        val dateTimeOptions = (options?.dateTime as? DateTimeParserOptions.Kotlin)
-                            ?: error(
-                                "Should not happen, but ParserOptions expected custom Kotlin dateTimeParserOptions yet found `null`.",
-                            )
-                        val formats = dateTimeOptions
+                    if (options.kotlinDateTimeFormatsProvided()) {
+                        val formats = (options!!.dateTime as DateTimeParserOptions.Kotlin)
                             .dateTimeFormats!!
                             .filter { it.first == type }
                             .map { it.second }
@@ -559,10 +580,7 @@ internal object Parsers : GlobalParserOptions {
                 type = type,
                 name = ::customParserOptionsJavaDateTimeParsers.name,
                 getParser = { options, _ ->
-                    if (
-                        options.dateTimeFormatsProvided() &&
-                        options.shouldUseJavaTime() && this.shouldUseJavaTime()
-                    ) {
+                    if (options.javaDateTimeFormatsProvided()) {
                         val dateTimeOptions = (options!!.dateTime as? DateTimeParserOptions.Java)
                             ?: error(
                                 "Should not happen, but ParserOptions expected custom Java dateTimeParserOptions yet found `null`.",
@@ -591,7 +609,7 @@ internal object Parsers : GlobalParserOptions {
                 getParser = { options, _ ->
                     if (
                         options.dateTimeFormatsNotProvided() &&
-                        options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime() &&
+                        options.shouldUseKotlinDateTime() &&
                         this.customGlobalDateTimeFormats[type]!!.isNotEmpty()
                     ) {
                         val formats = customGlobalDateTimeFormats[type]!!
@@ -617,7 +635,7 @@ internal object Parsers : GlobalParserOptions {
                 getParser = { options, _ ->
                     if (
                         options.dateTimeFormatsNotProvided() &&
-                        options.shouldUseJavaTime() && this.shouldUseJavaTime() &&
+                        options.shouldUseJavaDateTime() &&
                         this.customGlobalJavaFormatters[type]!!.isNotEmpty()
                     ) {
                         val formats = customGlobalJavaFormatters[type]!!
@@ -637,10 +655,7 @@ internal object Parsers : GlobalParserOptions {
                 type = type,
                 name = ::defaultKotlinxDateTimeParsers.name,
                 getParser = { options, _ ->
-                    if (
-                        options.dateTimeFormatsNotProvided() &&
-                        options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime()
-                    ) {
+                    if (options.dateTimeFormatsNotProvided() && options.shouldUseKotlinDateTime()) {
                         val formats = defaultDateTimeFormats[type]
                         kotlinxDateTimeParserFunction(formats)
                     } else {
@@ -662,10 +677,7 @@ internal object Parsers : GlobalParserOptions {
                 type = type,
                 name = ::defaultJavaTimeParsers.name,
                 getParser = { options, _ ->
-                    if (
-                        options.dateTimeFormatsNotProvided() &&
-                        options.shouldUseJavaTime() && this.shouldUseJavaTime()
-                    ) {
+                    if (options.dateTimeFormatsNotProvided() && options.shouldUseJavaDateTime()) {
                         val formats = defaultJavaFormatters[type]
                         val locale = options?.locale ?: this._locale
                         javaDateTimeParserFunction(type, locale, formats)
@@ -773,7 +785,7 @@ internal object Parsers : GlobalParserOptions {
         // kotlin.time.Instant
         stringParserWithOptions<StdlibInstant> { options ->
             if (
-                options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime() &&
+                options.shouldUseKotlinDateTime() &&
                 (options?.parseExperimentalInstant ?: this.parseExperimentalInstant)
             ) {
                 parseBy { it.toInstantOrNull() }
@@ -783,7 +795,7 @@ internal object Parsers : GlobalParserOptions {
         },
         // kotlinx.datetime.Instant
         stringParserWithOptions<DeprecatedInstant> { options ->
-            if (options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime()) {
+            if (options.shouldUseKotlinDateTime()) {
                 parseBy { it.toInstantOrNull()?.toDeprecatedInstant() }
             } else {
                 SKIP_PARSER
@@ -803,7 +815,7 @@ internal object Parsers : GlobalParserOptions {
         *defaultJavaTimeParsers,
         // kotlin.time.Duration
         stringParserWithOptions<Duration> { options ->
-            if (options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime()) {
+            if (options.shouldUseKotlinDateTime()) {
                 Duration::parseOrNull
             } else {
                 SKIP_PARSER
@@ -811,10 +823,7 @@ internal object Parsers : GlobalParserOptions {
         },
         // java.time.Duration, will be skipped if kotlin.time.Duration is already checked
         stringParserWithOptionsAndAttemptedParsers<JavaDuration> { options, attemptedParsers ->
-            if (
-                options.shouldUseJavaTime() && this.shouldUseJavaTime() &&
-                typeOf<Duration>() !in attemptedParsers
-            ) {
+            if (options.shouldUseJavaDateTime() && typeOf<Duration>() !in attemptedParsers) {
                 parseBy { it.toJavaDurationOrNull() }
             } else {
                 SKIP_PARSER
@@ -822,7 +831,7 @@ internal object Parsers : GlobalParserOptions {
         },
         // kotlinx.datetime.Month
         stringParserWithOptions<Month> { options ->
-            if (options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime()) {
+            if (options.shouldUseKotlinDateTime()) {
                 parseBy {
                     Month.entries.firstOrNull { month -> month.name == it.lowercase() }
                 }
@@ -832,7 +841,7 @@ internal object Parsers : GlobalParserOptions {
         },
         // kotlinx.datetime.DayOfWeek
         stringParserWithOptions<DayOfWeek> { options ->
-            if (options.shouldUseKotlinxDateTime() && this.shouldUseKotlinxDateTime()) {
+            if (options.shouldUseKotlinDateTime()) {
                 parseBy {
                     DayOfWeek.entries.firstOrNull { day -> day.name == it.lowercase() }
                 }
@@ -980,18 +989,6 @@ internal object Parsers : GlobalParserOptions {
         return typeConverter
     }
 }
-
-internal fun ParserOptions?.shouldUseKotlinxDateTime(): Boolean = this?.dateTime is DateTimeParserOptions.Kotlin?
-
-internal fun ParserOptions?.shouldNotUseKotlinxDateTime(): Boolean = !shouldUseKotlinxDateTime()
-
-internal fun ParserOptions?.shouldUseJavaTime(): Boolean = this?.dateTime is DateTimeParserOptions.Java?
-
-internal fun ParserOptions?.shouldNotUseJavaTime(): Boolean = !shouldUseJavaTime()
-
-internal fun ParserOptions?.dateTimeFormatsProvided(): Boolean = !dateTimeFormatsNotProvided()
-
-internal fun ParserOptions?.dateTimeFormatsNotProvided(): Boolean = this?.dateTime?.dateTimeFormats == null
 
 @FormatStringsInDatetimeFormats
 internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: KType): DateTimeFormat<out Any> {
