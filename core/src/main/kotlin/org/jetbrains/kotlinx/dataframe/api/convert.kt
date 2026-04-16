@@ -43,7 +43,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.convertToDoubleImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDate
@@ -78,7 +77,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
 import java.time.Duration as JavaDuration
@@ -644,16 +642,7 @@ public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: Parse
  * @return A new [DataColumn] with the values converted to [type].
  */
 public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): AnyCol =
-    when {
-        newType.isSubtypeOf(typeOf<Double?>()) ->
-            convertToDoubleImpl(
-                locale = parserOptions?.locale,
-                nullStrings = parserOptions?.nullStrings,
-                useFastDoubleParser = parserOptions?.useFastDoubleParser,
-            ).setNullable(newType.isMarkedNullable)
-
-        else -> convertToTypeImpl(newType, parserOptions)
-    }
+    convertToTypeImpl(newType, parserOptions)
 
 /**
  * Converts values in this column to [LocalDateTime].
@@ -842,10 +831,12 @@ public fun DataColumn<String?>.convertToDouble(
     nullStrings: Set<String>?,
     useFastDoubleParser: Boolean?,
 ): DataColumn<Double?> =
-    convertToDoubleImpl(
-        locale = locale,
-        nullStrings = nullStrings,
-        useFastDoubleParser = useFastDoubleParser,
+    convertTo<Double?>(
+        parserOptions = ParserOptions(
+            locale = locale,
+            nullStrings = nullStrings,
+            useFastDoubleParser = useFastDoubleParser,
+        ),
     )
 
 /**

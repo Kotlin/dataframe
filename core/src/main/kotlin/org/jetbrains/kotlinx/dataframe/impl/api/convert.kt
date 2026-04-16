@@ -98,64 +98,6 @@ internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
     rowConverter: RowColumnExpression<T, C, R>,
 ): DataFrame<T> = asColumn { col -> df.newColumn(type, col.name, infer) { rowConverter(it, col) } }
 
-/**
- * Specific implementation for [convertToTypeImpl] for [String] -> [Double] conversion
- *
- * This function exists because [convertToTypeImpl] can only retrieve a single parser
- * double has two: one with the given locale (or system default) and one POSIX parser
- */
-internal fun DataColumn<String?>.convertToDoubleImpl(
-    locale: Locale?,
-    nullStrings: Set<String>?,
-    useFastDoubleParser: Boolean?,
-): DataColumn<Double?> {
-    val nullStrings = nullStrings ?: Parsers.nulls
-    val useFastDoubleParser = useFastDoubleParser ?: Parsers.useFastDoubleParser
-
-    fun applyParser(parser: (String) -> Double?): DataColumn<Double?> {
-        var currentRow = 0
-        try {
-            return mapIndexed { row, value ->
-                currentRow = row
-                value?.let {
-                    if (it in nullStrings) return@let null
-
-                    parser(value.trim()) ?: throw TypeConversionException(
-                        value = value,
-                        from = typeOf<String>(),
-                        to = typeOf<Double>(),
-                        column = path,
-                    )
-                }
-            }
-        } catch (e: TypeConversionException) {
-            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
-        }
-    }
-
-    return if (locale != null) {
-        val explicitParser = Parsers.getDoubleParser(
-            locale = locale,
-            useFastDoubleParser = useFastDoubleParser,
-        )
-        applyParser(explicitParser)
-    } else {
-        try {
-            val defaultParser =
-                Parsers.getDoubleParser(
-                    locale = null,
-                    useFastDoubleParser = useFastDoubleParser,
-                )
-            applyParser(defaultParser)
-        } catch (_: TypeConversionException) {
-            val posixParser = Parsers.getPosixDoubleParser(
-                useFastDoubleParser = useFastDoubleParser,
-            )
-            applyParser(posixParser)
-        }
-    }
-}
-
 internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?): AnyCol {
     val from = type
 
