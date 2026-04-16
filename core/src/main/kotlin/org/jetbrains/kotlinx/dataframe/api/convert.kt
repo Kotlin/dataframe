@@ -213,6 +213,33 @@ internal interface ConvertDocs {
      * `| `__`.`__[**`toInstant`**][Convert.toInstant]`()`
      *
      * {@include [Indent]}
+     * `| `__`.`__[**`toUtcOffset`**][Convert.toUtcOffset]`()`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`toYearMonth`**][Convert.toYearMonth]`()`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`toDateTimeComponents`**][Convert.toDateTimeComponents]`()`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`toDuration`**][Convert.toDuration]`()`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`toJavaLocalDateTime`**][Convert.toJavaLocalDateTime]`()`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`toJavaLocalDate`**][Convert.toJavaLocalDate]`()`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`toJavaLocalTime`**][Convert.toJavaLocalTime]`()`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`toJavaInstant`**][Convert.toJavaInstant]`()`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`toJavaDuration`**][Convert.toJavaDuration]`()`
+     *
+     * {@include [Indent]}
      * `| `__`.`__[**`toUrl`**][Convert.toUrl]`()`
      *
      * {@include [Indent]}
