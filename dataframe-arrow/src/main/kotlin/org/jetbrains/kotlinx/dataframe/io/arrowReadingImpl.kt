@@ -45,6 +45,7 @@ import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.ViewVarBinaryVector
 import org.apache.arrow.vector.ViewVarCharVector
+import org.apache.arrow.vector.complex.ListVector
 import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowReader
@@ -59,13 +60,12 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.NullabilityException
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.api.applyNullability
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -77,6 +77,8 @@ import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
 import kotlin.reflect.KType
+import kotlin.reflect.KTypeProjection
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
@@ -100,7 +102,13 @@ internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
     val totalRows = dataFrames.sumOf { it.count() }
     val columns = columnPaths.map { path ->
         val values = dataFrames.flatMapTo(ArrayList(totalRows)) { it.getColumn(path).values() }
-        path to DataColumn.createValueColumn(path.name(), values, dataFrames.first().getColumn(path).type())
+        val hasNulls = dataFrames.any { it.getColumn(path).hasNulls() }
+        val col = dataFrames[0][path]
+        if (col.isFrameColumn()) {
+            path to DataColumn.createFrameColumn(path.name(), values as List<AnyFrame>, schema = col.schema)
+        } else {
+            path to DataColumn.createValueColumn(path.name(), values, col.type().withNullability(hasNulls))
+        }
     }
     return columns.toDataFrameFromPairs()
 }
@@ -301,14 +309,21 @@ private fun List<Nothing?>.withTypeNullable(
     return this to nothingType(nullable)
 }
 
-private fun readField(vector: FieldVector, field: Field, nullability: NullabilityOptions): AnyBaseCol {
+private fun readField(
+    vector: FieldVector,
+    field: Field,
+    nullability: NullabilityOptions,
+    range: IntRange = (0 until vector.valueCount),
+): AnyBaseCol {
     try {
-        val range = 0 until vector.valueCount
         if (vector is StructVector) {
             val columns = field.children.map { childField ->
-                readField(vector.getChild(childField.name), childField, nullability)
+                readField(vector.getChild(childField.name), childField, nullability, range)
             }
             return DataColumn.createColumnGroup(field.name, columns.toDataFrame())
+        }
+        if (vector is ListVector) {
+            return readListVector(vector, field, range, nullability)
         }
         val (list, type) = when (vector) {
             is VarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
@@ -382,6 +397,56 @@ private fun readField(vector: FieldVector, field: Field, nullability: Nullabilit
         throw IllegalArgumentException("Column `${field.name}` should be not nullable but has nulls")
     }
 }
+
+private fun readListVector(
+    vector: ListVector,
+    field: Field,
+    range: IntRange,
+    nullability: NullabilityOptions,
+): AnyBaseCol {
+    val dataVector = vector.dataVector
+    return if (dataVector is StructVector) {
+        val structField = field.children.single() // "item" field
+        val frames = range.map { i ->
+            val start = vector.getElementStartIndex(i)
+            val end = vector.getElementEndIndex(i)
+            val columns = structField.children.map { childField ->
+                readField(
+                    dataVector.getChild(childField.name),
+                    childField,
+                    NullabilityOptions.Widening,
+                    start until end,
+                )
+            }
+            columns.toDataFrame()
+        }
+        DataColumn.createFrameColumn(field.name, frames)
+    } else {
+        val elementField = field.children.single()
+        val fieldsData = range.map { i ->
+            if (vector.isNull(i)) {
+                null
+            } else {
+                val start = vector.getElementStartIndex(i)
+                val end = vector.getElementEndIndex(i)
+                readField(dataVector, elementField, nullability, start until end)
+            }
+        }
+        val sampleColumn = fieldsData.firstOrNull { it != null }
+        val elementType = sampleColumn?.type() ?: nullableNothingType
+
+        val listNullable = nullability.applyNullability(fieldsData, field.isNullable)
+
+        val listType = List::class.createType(
+            arguments = listOf(KTypeProjection.invariant(elementType)),
+            nullable = listNullable,
+        )
+
+        DataColumn.createValueColumn(field.name, fieldsData.map { it?.values() }, listType)
+    }
+}
+
+internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
 
 private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol =
     readField(root.getVector(field), field, nullability)
