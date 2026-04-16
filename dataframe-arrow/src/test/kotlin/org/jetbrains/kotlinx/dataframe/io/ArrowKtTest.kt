@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.toInstant
 import org.apache.arrow.memory.RootAllocator
@@ -38,23 +39,30 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.junit.Assert
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URL
 import java.nio.channels.Channels
 import java.sql.DriverManager
 import java.util.Locale
 import kotlin.io.path.toPath
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaInstant
 
 internal class ArrowKtTest {
@@ -825,5 +833,280 @@ internal class ArrowKtTest {
         val ipcBytes = original.saveArrowIPCToByteArray()
         val fromIpc = DataFrame.readArrowIPC(ipcBytes)
         fromIpc shouldBe original
+    }
+
+    @Test
+    fun testReadParquetWithListColumns() {
+        val resourceUrl = testResource("lists.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+
+        val df = DataFrame.readParquet(resourcePath)
+
+        df.columnNames() shouldBe listOf("id", "numbers", "strings", "nullable_list", "list_with_nulls")
+        df.rowsCount() shouldBe 3
+
+        df["id"].type() shouldBe typeOf<Long>()
+        df["numbers"].type() shouldBe typeOf<List<Long>>()
+        df["strings"].type() shouldBe typeOf<List<String>>()
+        df["nullable_list"].type() shouldBe typeOf<List<Long>?>()
+        df["list_with_nulls"].type() shouldBe typeOf<List<Long?>>()
+
+        df["id"].values().toList() shouldBe listOf(1L, 2L, 3L)
+        df["numbers"].values().toList() shouldBe listOf(listOf(1L, 2L, 3L), listOf(4L, 5L), listOf(6L))
+        df["strings"].values().toList() shouldBe listOf(listOf("a", "b"), listOf("c"), listOf("d", "e", "f"))
+        df["nullable_list"].values().toList() shouldBe listOf(listOf(1L, 2L), null, listOf(3L))
+        df["list_with_nulls"].values().toList() shouldBe listOf(listOf(1L, null, 3L), listOf(4L, 5L), listOf(null))
+    }
+
+    @Test
+    fun `read parquet with nested struct inside list`() {
+        val resourceUrl = testResource("orders_nested.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+        val df = DataFrame.readParquet(resourcePath)
+
+        // structure
+        df.rowsCount() shouldBe 3
+        df.columnNames() shouldBe listOf("id", "orders", "note")
+        df["orders"].shouldBeInstanceOf<FrameColumn<*>>()
+
+        // top-level types
+        df["id"].type() shouldBe typeOf<Int>()
+        df["note"].type() shouldBe typeOf<String?>()
+
+        // top-level values
+        df["id"].values().toList() shouldBe listOf(1, 2, 3)
+        df["note"].values().toList() shouldBe listOf("first", null, "empty")
+
+        // frame column
+        val orders = df["orders"] as FrameColumn<*>
+        orders[0].rowsCount() shouldBe 2
+        orders[1].rowsCount() shouldBe 1
+        orders[2].rowsCount() shouldBe 0
+
+        // nested values — row 0
+        orders[0]["item"].values().toList() shouldBe listOf("Laptop", "Mouse")
+        orders[0]["qty"].values().toList() shouldBe listOf(1, 2)
+        val details0 = orders[0]["details"] as ColumnGroup<*>
+        details0["price"].values().toList() shouldBe listOf(999.99, 25.5)
+        details0["currency"].values().toList() shouldBe listOf("EUR", "EUR")
+
+        // nested values — row 1
+        orders[1]["item"].values().toList() shouldBe listOf("Keyboard")
+        orders[1]["qty"].values().toList() shouldBe listOf(1)
+        val details1 = orders[1]["details"] as ColumnGroup<*>
+        details1["price"].values().toList() shouldBe listOf(75.0)
+        details1["currency"].values().toList() shouldBe listOf("USD")
+
+        // schema
+        df.schema().toString().trim() shouldBe
+            """
+            id: Int
+            orders: *
+                item: String
+                qty: Int
+                details:
+                    price: Double
+                    currency: String
+            
+            note: String?
+            """.trimIndent()
+    }
+
+    @Test
+    fun `read parquet with two batches and nulls in second batch`() {
+        val resourceUrl = testResource("orders_two_batches.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+        val df = DataFrame.readParquet(resourcePath)
+
+        // structure
+        df.rowsCount() shouldBe 4
+        df.columnNames() shouldBe listOf("id", "orders", "note")
+        df["orders"].shouldBeInstanceOf<FrameColumn<*>>()
+
+        // top-level types & values
+        df["id"] shouldBe columnOf(1, 2, 3, 4).named("id")
+        df["note"] shouldBe columnOf("first", "second", null, "fourth").named("note")
+
+        // frame column sizes
+        val orders = df["orders"] as FrameColumn<*>
+        orders[0].rowsCount() shouldBe 2
+        orders[1].rowsCount() shouldBe 1
+        orders[2].rowsCount() shouldBe 2
+        orders[3].rowsCount() shouldBe 0
+
+        // batch 1 — no nulls
+        orders[0]["item"].values().toList() shouldBe listOf("Laptop", "Mouse")
+        // we're deliberately skipping our usual nullability narrowing for ListVector<StructVector> FrameColumns
+        orders[0]["item"].type() shouldBe typeOf<String?>()
+        orders[0]["qty"].values().toList() shouldBe listOf(1, 2)
+        val details0 = orders[0]["details"] as ColumnGroup<*>
+        details0["price"].values().toList() shouldBe listOf(999.99, 25.5)
+        details0["currency"].values().toList() shouldBe listOf("EUR", "EUR")
+
+        // batch 2 — nulls at every level
+        orders[2]["item"].values().toList() shouldBe listOf(null, "Cable")
+        orders[2]["qty"].values().toList() shouldBe listOf(3, null)
+        val details2 = orders[2]["details"] as ColumnGroup<*>
+        details2["price"].values().toList() shouldBe listOf(10.0, null)
+        details2["currency"].values().toList() shouldBe listOf(null, null)
+
+        // schema — nullable types from batch 2
+        df.schema().toString().trim() shouldBe
+            """
+            id: Int
+            orders: *
+                item: String?
+                qty: Int?
+                details:
+                    price: Double?
+                    currency: String?
+            
+            note: String?
+            """.trimIndent()
+    }
+
+    @Test
+    fun `read parquet with lists of all primitive types`() {
+        val resourceUrl = testResource("lists_all_types.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+        val df = DataFrame.readParquet(resourcePath)
+
+        df.rowsCount() shouldBe 2
+
+        // === Types ===
+
+        // signed ints
+        df["list_int8"].type() shouldBe typeOf<List<Byte>>()
+        df["list_int16"].type() shouldBe typeOf<List<Short>>()
+        df["list_int32"].type() shouldBe typeOf<List<Int>>()
+        df["list_int64"].type() shouldBe typeOf<List<Long>>()
+
+        // unsigned ints (widened per toKType)
+        df["list_uint8"].type() shouldBe typeOf<List<Short>>()
+        df["list_uint16"].type() shouldBe typeOf<List<Int>>()
+        df["list_uint32"].type() shouldBe typeOf<List<Long>>()
+        df["list_uint64"].type() shouldBe typeOf<List<BigInteger>>()
+
+        // float / double
+        df["list_float"].type() shouldBe typeOf<List<Float>>()
+        df["list_double"].type() shouldBe typeOf<List<Double>>()
+
+        // decimal
+        df["list_decimal"].type() shouldBe typeOf<List<BigDecimal>>()
+
+        // string (large_string also becomes String through Parquet)
+        df["list_string"].type() shouldBe typeOf<List<String>>()
+        df["list_large_string"].type() shouldBe typeOf<List<String>>()
+
+        // bool
+        df["list_bool"].type() shouldBe typeOf<List<Boolean>>()
+
+        // binary (large_binary also becomes ByteArray through Parquet)
+        df["list_binary"].type() shouldBe typeOf<List<ByteArray>>()
+        df["list_large_binary"].type() shouldBe typeOf<List<ByteArray>>()
+
+        // date (both date32 and date64 become LocalDate in Parquet)
+        df["list_date_day"].type() shouldBe typeOf<List<LocalDate>>()
+        df["list_date_ms"].type() shouldBe typeOf<List<LocalDate>>()
+
+        // time
+        df["list_time"].type() shouldBe typeOf<List<LocalTime>>()
+
+        // timestamp
+        df["list_timestamp"].type() shouldBe typeOf<List<LocalDateTime>>()
+
+        // duration loses logical type in Parquet → falls back to Long
+        df["list_duration"].type() shouldBe typeOf<List<Duration>>()
+
+        // nullability combos
+        df["nullable_list"].type() shouldBe typeOf<List<Int>?>()
+        df["nullable_elements"].type() shouldBe typeOf<List<Int?>>()
+        df["both_nullable"].type() shouldBe typeOf<List<Int?>?>()
+
+        // === Values ===
+
+        // signed ints
+        df["list_int8"].values().toList() shouldBe listOf(
+            listOf(1.toByte(), (-1).toByte()),
+            emptyList<Byte>(),
+        )
+        df["list_int16"].values().toList() shouldBe listOf(
+            listOf(1000.toShort(), (-1000).toShort()),
+            listOf(42.toShort()),
+        )
+        df["list_int32"].values().toList() shouldBe listOf(listOf(100000, -100000), emptyList<Int>())
+        df["list_int64"].values().toList() shouldBe listOf(listOf(10000000000L, -10000000000L), listOf(0L))
+
+        // unsigned ints (widened types)
+        df["list_uint8"].values().toList() shouldBe listOf(
+            listOf(0.toShort(), 255.toShort()),
+            listOf(128.toShort()),
+        )
+        df["list_uint16"].values().toList() shouldBe listOf(listOf(0, 65535), emptyList<Int>())
+        df["list_uint32"].values().toList() shouldBe listOf(listOf(0L, 4294967295L), listOf(1L))
+        df["list_uint64"].values().toList() shouldBe listOf(
+            listOf(BigInteger.ZERO, BigInteger("9223372036854775808")),
+            emptyList<BigInteger>(),
+        )
+
+        // float / double
+        df["list_float"].values().toList() shouldBe listOf(listOf(1.5f, -1.5f), listOf(0.0f))
+        df["list_double"].values().toList() shouldBe listOf(listOf(1.5, -1.5), emptyList<Double>())
+
+        // decimal
+        df["list_decimal"].values().toList() shouldBe listOf(
+            listOf(BigDecimal("123.45"), BigDecimal("-67.89")),
+            listOf(BigDecimal("0.00")),
+        )
+
+        // string
+        df["list_string"].values().toList() shouldBe listOf(listOf("hello", "world"), emptyList<String>())
+        df["list_large_string"].values().toList() shouldBe listOf(listOf("foo", "bar"), listOf("baz"))
+
+        // bool
+        df["list_bool"].values().toList() shouldBe listOf(listOf(true, false), listOf(true))
+
+        // date
+        df["list_date_day"].values().toList() shouldBe listOf(
+            listOf(LocalDate(2024, 1, 15), LocalDate(2025, 6, 30)),
+            emptyList<LocalDate>(),
+        )
+        df["list_date_ms"].values().toList() shouldBe listOf(
+            listOf(LocalDate(2024, 1, 15), LocalDate(2025, 6, 30)),
+            listOf(LocalDate(2000, 1, 1)),
+        )
+
+        // time
+        df["list_time"].values().toList() shouldBe listOf(
+            listOf(LocalTime(9, 30, 0), LocalTime(14, 15, 30)),
+            emptyList<LocalTime>(),
+        )
+
+        // timestamp
+        df["list_timestamp"].values().toList() shouldBe listOf(
+            listOf(LocalDateTime(2024, 1, 15, 9, 30), LocalDateTime(2025, 6, 30, 14, 0)),
+            listOf(LocalDateTime(2000, 1, 1, 0, 0)),
+        )
+
+        // duration (raw microseconds as Long)
+        df["list_duration"].values().toList() shouldBe listOf(
+            listOf(1.hours, 30.minutes),
+            emptyList<Duration>(),
+        )
+
+        // null vs empty list
+        df["nullable_list"].values().toList() shouldBe listOf(listOf(10, 20), null)
+        df["nullable_elements"].values().toList() shouldBe listOf(listOf(1, null, 3), listOf(null, null))
+        df["both_nullable"].values().toList() shouldBe listOf(listOf(1, null), null)
+    }
+
+    @Test
+    fun `read LargeListVector`() {
+        val resourceUrl = testResource("large_list_sample.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+        val df = DataFrame.readParquet(resourcePath)
+        df["numbers"].type() shouldBe typeOf<List<Long>>()
+        df["tags"].type() shouldBe typeOf<List<String>?>()
+        df["numbers"].values() shouldBe listOf(listOf(10L, 20L, 30L), listOf(40L), listOf(50L, 60L))
     }
 }
