@@ -1099,4 +1099,14 @@ internal class ArrowKtTest {
         df["nullable_elements"].values().toList() shouldBe listOf(listOf(1, null, 3), listOf(null, null))
         df["both_nullable"].values().toList() shouldBe listOf(listOf(1, null), null)
     }
+
+    @Test
+    fun `read LargeListVector`() {
+        val resourceUrl = testResource("large_list_sample.parquet")
+        val resourcePath = resourceUrl.toURI().toPath()
+        val df = DataFrame.readParquet(resourcePath)
+        df["numbers"].type() shouldBe typeOf<List<Long>>()
+        df["tags"].type() shouldBe typeOf<List<String>?>()
+        df["numbers"].values() shouldBe listOf(listOf(10L, 20L, 30L), listOf(40L), listOf(50L, 60L))
+    }
 }
