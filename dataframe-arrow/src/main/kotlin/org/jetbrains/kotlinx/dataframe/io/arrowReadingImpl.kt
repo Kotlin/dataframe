@@ -102,11 +102,12 @@ internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
     val totalRows = dataFrames.sumOf { it.count() }
     val columns = columnPaths.map { path ->
         val values = dataFrames.flatMapTo(ArrayList(totalRows)) { it.getColumn(path).values() }
+        val hasNulls = dataFrames.any { it.getColumn(path).hasNulls() }
         val col = dataFrames[0][path]
         if (col.isFrameColumn()) {
             path to DataColumn.createFrameColumn(path.name(), values as List<AnyFrame>, schema = col.schema)
         } else {
-            path to DataColumn.createValueColumn(path.name(), values, col.type())
+            path to DataColumn.createValueColumn(path.name(), values, col.type().withNullability(hasNulls))
         }
     }
     return columns.toDataFrameFromPairs()
