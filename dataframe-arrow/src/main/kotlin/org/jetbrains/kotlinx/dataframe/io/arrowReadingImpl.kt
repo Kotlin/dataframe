@@ -298,7 +298,8 @@ private inline fun <reified T> List<T?>.withTypeNullable(
     nullabilityOptions: NullabilityOptions,
 ): Pair<List<T?>, KType> {
     val nullable = nullabilityOptions.applyNullability(this, expectedNulls)
-    return this to typeOf<T>().withNullability(nullable)
+    val type = if (nullable) typeOf<T?>() else typeOf<T>()
+    return this to type
 }
 
 @JvmName("withTypeNullableNothingList")
