@@ -836,6 +836,19 @@ internal class ArrowKtTest {
     }
 
     @Test
+    fun testNullVectorRoundtrip() {
+        val original = dataFrameOf("nulls" to columnOf(null, null, null))
+
+        val featherBytes = original.saveArrowFeatherToByteArray()
+        val fromFeather = DataFrame.readArrowFeather(featherBytes)
+        fromFeather shouldBe original
+
+        val ipcBytes = original.saveArrowIPCToByteArray()
+        val fromIpc = DataFrame.readArrowIPC(ipcBytes)
+        fromIpc shouldBe original
+    }
+
+    @Test
     fun testReadParquetWithListColumns() {
         val resourceUrl = testResource("lists.parquet")
         val resourcePath = resourceUrl.toURI().toPath()
