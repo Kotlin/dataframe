@@ -65,6 +65,8 @@ internal fun ColumnSchema.toArrowField(name: String, mismatchSubscriber: (Conver
 internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMismatch) -> Unit): Field {
     val nullable = isMarkedNullable
     return when {
+        this == nullableNothingType -> Field(name, FieldType(true, ArrowType.Null(), null), emptyList())
+
         isSubtypeOf(typeOf<String?>()) ->
             Field(name, FieldType(nullable, ArrowType.Utf8(), null), emptyList())
 

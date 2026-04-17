@@ -17,6 +17,7 @@ import org.apache.arrow.vector.Float4Vector
 import org.apache.arrow.vector.Float8Vector
 import org.apache.arrow.vector.IntVector
 import org.apache.arrow.vector.LargeVarCharVector
+import org.apache.arrow.vector.NullVector
 import org.apache.arrow.vector.SmallIntVector
 import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
@@ -84,6 +85,8 @@ internal class ArrowWriterImpl(
                 }
             }
 
+            is NullVector -> vector.allocateNew()
+
             else -> throw IllegalArgumentException("Can not allocate ${vector.javaClass.canonicalName}")
         }
     }
@@ -150,6 +153,8 @@ internal class ArrowWriterImpl(
             is ArrowType.Time -> column.convertToLocalTime()
 
             is ArrowType.Struct -> column
+
+            is ArrowType.Null -> column
 
             else ->
                 throw NotImplementedError(
@@ -301,6 +306,8 @@ internal class ArrowWriterImpl(
 
                 column.indices.forEach { i -> vector.setIndexDefined(i) }
             }
+
+            is NullVector -> { }
 
             else -> {
                 // TODO implement other vector types from [readField] (VarBinaryVector, UIntVector, DurationVector, StructVector) and may be others (ListVector, FixedSizeListVector etc)
