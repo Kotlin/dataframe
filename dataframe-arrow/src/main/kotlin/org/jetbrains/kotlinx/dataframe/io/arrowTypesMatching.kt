@@ -11,6 +11,7 @@ import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KType
@@ -27,15 +28,9 @@ import java.time.LocalTime as JavaLocalTime
 public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
     val column = this
     val columnType = column.type()
-    val nullable = columnType.isMarkedNullable
     return when (column) {
         is ColumnGroup<*> -> {
-            val childFields = column.columns().map { it.toArrowField(mismatchSubscriber) }
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Struct(), null),
-                childFields,
-            )
+            ColumnSchema.Group(schema(), type()).toArrowField(column.name(), mismatchSubscriber)
         }
 
         else -> columnType.toArrowField(column.name(), mismatchSubscriber)
