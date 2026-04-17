@@ -11,8 +11,10 @@ import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 import java.time.LocalDate as JavaLocalDate
@@ -26,100 +28,77 @@ import java.time.LocalTime as JavaLocalTime
 public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
     val column = this
     val columnType = column.type()
-    val nullable = columnType.isMarkedNullable
-    return when {
-        column is ColumnGroup<*> -> {
-            val childFields = column.columns().map { it.toArrowField(mismatchSubscriber) }
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Struct(), null),
-                childFields,
-            )
+    return when (column) {
+        is ColumnGroup<*> -> {
+            ColumnSchema.Group(schema(), type()).toArrowField(column.name(), mismatchSubscriber)
         }
 
-        columnType.isSubtypeOf(typeOf<String?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Utf8(), null),
-                emptyList(),
-            )
+        else -> columnType.toArrowField(column.name(), mismatchSubscriber)
+    }
+}
 
-        columnType.isSubtypeOf(typeOf<Boolean?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Bool(), null),
-                emptyList(),
-            )
+internal fun ColumnSchema.toArrowField(name: String, mismatchSubscriber: (ConvertingMismatch) -> Unit): Field =
+    when (this) {
+        is ColumnSchema.Value -> type.toArrowField(name, mismatchSubscriber)
 
-        columnType.isSubtypeOf(typeOf<Byte?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Int(8, true), null),
-                emptyList(),
-            )
+        is ColumnSchema.Group -> {
+            val childFields = schema.columns.map { (childName, childSchema) ->
+                childSchema.toArrowField(childName, mismatchSubscriber)
+            }
+            Field(name, FieldType(nullable, ArrowType.Struct(), null), childFields)
+        }
 
-        columnType.isSubtypeOf(typeOf<Short?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Int(16, true), null),
-                emptyList(),
-            )
+        is ColumnSchema.Frame -> {
+            val childFields = schema.columns.map { (childName, childSchema) ->
+                childSchema.toArrowField(childName, mismatchSubscriber)
+            }
+            val childStructField = Field("item", FieldType(true, ArrowType.Struct(), null), childFields)
+            Field(name, FieldType(nullable, ArrowType.List(), null), listOf(childStructField))
+        }
+    }
 
-        columnType.isSubtypeOf(typeOf<Int?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Int(32, true), null),
-                emptyList(),
-            )
+internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMismatch) -> Unit): Field {
+    val nullable = isMarkedNullable
+    return when {
+        this == nullableNothingType -> Field(name, FieldType(true, ArrowType.Null(), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Long?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Int(64, true), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<String?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Utf8(), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Float?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Boolean?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Bool(), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<Double?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Byte?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Int(8, true), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<JavaLocalDate?>()) ||
-            columnType.isSubtypeOf(typeOf<LocalDate?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Date(DateUnit.DAY), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Short?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Int(16, true), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<JavaLocalDateTime?>()) ||
-            columnType.isSubtypeOf(typeOf<LocalDateTime?>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Int?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Int(32, true), null), emptyList())
 
-        columnType.isSubtypeOf(typeOf<JavaLocalTime?>()) ||
-            columnType.isSubtypeOf(typeOf<LocalTime>()) ->
-            Field(
-                column.name(),
-                FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null),
-                emptyList(),
-            )
+        isSubtypeOf(typeOf<Long?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Int(64, true), null), emptyList())
+
+        isSubtypeOf(typeOf<Float?>()) ->
+            Field(name, FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null), emptyList())
+
+        isSubtypeOf(typeOf<Double?>()) ->
+            Field(name, FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null), emptyList())
+
+        isSubtypeOf(typeOf<JavaLocalDate?>()) || isSubtypeOf(typeOf<LocalDate?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Date(DateUnit.DAY), null), emptyList())
+
+        isSubtypeOf(typeOf<JavaLocalDateTime?>()) || isSubtypeOf(typeOf<LocalDateTime?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null), emptyList())
+
+        isSubtypeOf(typeOf<JavaLocalTime?>()) || isSubtypeOf(typeOf<LocalTime?>()) ->
+            Field(name, FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
 
         else -> {
-            mismatchSubscriber(ConvertingMismatch.SavedAsString(column.name(), column.typeClass.java))
-            Field(column.name(), FieldType(true, ArrowType.Utf8(), null), emptyList())
+            val clazz = (classifier as? kotlin.reflect.KClass<*>)?.java ?: Any::class.java
+            mismatchSubscriber(ConvertingMismatch.SavedAsString(name, clazz))
+            Field(name, FieldType(true, ArrowType.Utf8(), null), emptyList())
         }
     }
 }
