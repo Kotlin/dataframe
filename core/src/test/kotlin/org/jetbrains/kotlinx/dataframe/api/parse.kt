@@ -117,7 +117,6 @@ class ParseTests {
     fun `Global dateTimeLibrary setting should not affect converters`() {
         val date by columnOf("2026-04-16")
 
-        // works
         date.convertToLocalDate().single() shouldBe LocalDate(2026, 4, 16)
 
         DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
@@ -126,7 +125,13 @@ class ParseTests {
         date.toDataFrame()
             .convert { all() }.toLocalDate()
             .columns()
+            .single()
             .single() shouldBe LocalDate(2026, 4, 16)
+
+        // do fail when the user explicitly provides incorrect parser options
+        shouldThrow<IllegalStateException> {
+            date.convertTo<LocalDate>(ParserOptions(dateTime = DateTimeParserOptions.Java))
+        }
 
         DataFrame.parser.resetToDefault()
     }
