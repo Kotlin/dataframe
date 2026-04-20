@@ -228,7 +228,9 @@ There are two ways to do this:
 ```kotlin
 val df = DataFrame.readCsv(
     file,
-    parserOptions = ParserOptions(dateTimePattern = "dd/MMM/yy h:mm a")
+    parserOptions = ParserOptions(
+        dateTime = DateTimeParserOptions.Java.withPattern("dd/MMM/yy h:mm a"),
+    ),
 )
 ```
 
@@ -241,7 +243,13 @@ val df = DataFrame.readCsv(
 ```kotlin
 val df = DataFrame.readCsv(
     file,
-    parserOptions = ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
+    parserOptions = ParserOptions(
+        dateTime = DateTimeParserOptions.Kotlin.withFormat(
+            LocalDate.Format {
+                monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
+            },
+        ),
+    ),
 )
 ```
 
