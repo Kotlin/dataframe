@@ -37,22 +37,43 @@ df.parse { age and weight }
 ### Parsing Order
 
 `parse` tries to parse every `String`/`Char` column into one of the supported types in the following order:
-* `Int`
-* `Long`
-* `Instant` (`kotlin.time`) (requires `parseExperimentalInstant = true`, enabled by default in DataFrame 1.0.0-Beta5)
-* `Instant` (`kotlinx.datetime` and `java.time`) (requires `parseExperimentalInstant = false`)
-* `LocalDateTime` (`kotlinx.datetime` and `java.time`)
-* `LocalDate` (`kotlinx.datetime` and `java.time`)
-* `Duration` (`kotlin.time` and `java.time`)
-* `LocalTime` (`java.time`)
-* `URL` (`java.net`)
-* [`Double` (with optional locale settings)](#parsing-doubles)
-* `Boolean`
-* `Uuid` ([`kotlin.uuid.Uuid`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/)) (requires `parseExperimentalUuid = true`) 
-* `BigDecimal`
-* `JSON` (arrays and objects) (requires the `org.jetbrains.kotlinx:dataframe-json` dependency)
-* `Char`
-* `String`
+
+| Type                                                                                                                                                     | Notes                                                                                                                                         |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| `Int`                                                                                                                                                    |                                                                                                                                               |
+| `Long`                                                                                                                                                   |                                                                                                                                               |
+| `Instant` (`kotlin.time`)                                                                                                                                | (**K**) - Requires `parseExperimentalInstant = true`, enabled by default in DataFrame 1.0.0-Beta5.                                            |
+| `Instant` (`kotlinx.datetime`)                                                                                                                           | (**K**) - Requires `parseExperimentalInstant = false`.                                                                                        |
+| Custom Kotlin date-time types (`kotlinx.datetime`):<br/>`LocalDateTime`, `LocalDate`, `LocalTime`, `YearMonth`, `UtcOffset`, `DateTimeComponents`        | (**K**) - Where a `DateTimeFormat` is provided for in [](#parser-options).                                                                    |
+| Custom Java date-time types (`java.time`):<br/>`LocalDateTime`, `LocalDate`, `LocalTime`, `Instant`                                                      | (**J**) - Where a `DateTimeFormatter` is provided for in [](#parser-options).                                                                 |
+| Custom global Kotlin date-time types (`kotlinx.datetime`):<br/>`LocalDateTime`, `LocalDate`, `LocalTime`, `YearMonth`, `UtcOffset`, `DateTimeComponents` | (**K**, **P**) - Where a `DateTimeFormat` is provided for in [](#global-parser-options).                                                      |
+| Custom global Java date-time types (`java.time`):<br/>`LocalDateTime`, `LocalDate`, `LocalTime`, `Instant`                                               | (**J**, **P**) - Where a `DateTimeFormatter` is provided for in [](#global-parser-options).                                                   |
+| Default Kotlin date-time ISO types (`kotlinx.datetime`):<br/>`LocalDateTime`, `LocalDate`, `LocalTime`, `YearMonth`, `UtcOffset`, `DateTimeComponents`   | (**K**, **P**)                                                                                                                                |
+| Default Java date-time ISO types (`java.time`):<br/>`LocalDateTime`, `LocalDate`, `LocalTime`, `Instant`                                                 | (**J**, **P**)                                                                                                                                |
+| `Duration` (`kotlin.time`)                                                                                                                               | (**K**)                                                                                                                                       |
+| `Duration` (`java.time`)                                                                                                                                 | (**J**)                                                                                                                                       |
+| `Month` (`kotlinx.datetime`)                                                                                                                             | (**K**)                                                                                                                                       |
+| `DayOfWeek` (`kotlinx.datetime`)                                                                                                                         | (**K**)                                                                                                                                       |
+| `URL` (`java.net`)                                                                                                                                       |                                                                                                                                               |
+| [`Double` (with optional locale settings)](#parsing-doubles)                                                                                             |                                                                                                                                               |
+| `Double`                                                                                                                                                 | with "C.UTF-8" locale, used as fallback for `Double` parsing.                                                                                 |
+| `Boolean`                                                                                                                                                | "true" / "false", "t" / "f", "yes" / "no" with any capitalization.                                                                            |
+| `Uuid` ([`kotlin.uuid.Uuid`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/))                                                          | Requires `parseExperimentalUuid = true`.                                                                                                      |
+| `BigInteger` (`java.math`)                                                                                                                               |                                                                                                                                               |
+| `BigDecimal` (`java.math`)                                                                                                                               |                                                                                                                                               |
+| `JSON`                                                                                                                                                   | Requires the `org.jetbrains.kotlinx:dataframe-json` dependency.<br/>Arrays will turn into a dataframe.<br/>Objects will turn into a data row. |
+| `Char`                                                                                                                                                   |                                                                                                                                               |
+| `String`                                                                                                                                                 |                                                                                                                                               |
+
+> **K**: Kotlin date-time parsing must not be disabled for this parser to run.
+> 
+> **J**: Java date-time parsing must not be disabled for this parser to run.
+> 
+> **P**: this parser only runs when **no** custom date-time formats are provided in [](#parser-options).
+> 
+> See [](#parser-options), [](#global-parser-options), and [](#parsing-date-time-strings).
+
+You can get this list by accessing `availableParserTypes` on the [](#global-parser-options) as well.
 
 When `.parse()` is called on a single column and the input (`String`/`Char`) type is the same as the output type,
 (a.k.a., it cannot be parsed further) an `IllegalStateException` is thrown.
@@ -68,18 +89,18 @@ For each option you don't supply (or supply `null`) DataFrame will take the valu
 [Global Parser Options](#global-parser-options).
 
 Available parser options:
-* `locale: Locale` is used to [parse doubles](#parsing-doubles)
+* `locale: Locale` is used to [parse doubles](#parsing-doubles) (and Java date-time types)
   * Global default locale is `Locale.getDefault()`
-* `dateTimePattern: String` is used to parse date and time
-  * Global default supports ISO (local) date-time
-* `dateTimeFormatter: DateTimeFormatter` is used to parse date and time
-  * Is derived from `dateTimePattern` and/or `locale` if `null`
+* `dateTime: DateTimeParserOptions` can be used to force parsing to Kotlin-, or Java date-time classes, and override
+   default and custom global date-time formats. By default, it's `null`, meaning we try Kotlin types first,
+   and if that fails, we try Java types. See [](#parsing-date-time-strings).
+   This argument was added in DataFrame 1.0.0-Beta5.
 * `nullStrings: List<String>` is used to treat particular strings as `null` value
-  * Global default null strings are **"null"** and **"NULL"**
-  * When [reading from CSV](read.md), we include even more defaults, like **""**, and **"NA"**.
+  * Global default null strings are `["null", "NULL", "NA", "N/A"]`.
+  * When [reading from CSV](read.md), these are expanded to `["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]`.
   See the KDocs there for the exact details
 * `skipTypes: Set<KType>` types that should be skipped during parsing
-  * Empty set by global default; parsing can result in any supported type
+  * Empty set by global default; parsing can result in any [supported type](#parsing-order).
 * `useFastDoubleParser: Boolean` is used to enable or disable the [new fast double parser](#parsing-doubles)
   * Enabled by global default
 * `parseExperimentalUuid: Boolean` is used to enable or disable parsing to the experimental [`kotlin.uuid.Uuid` class](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/).
@@ -94,7 +115,8 @@ Available parser options:
 df.parse(
     options = ParserOptions(
         locale = Locale.CHINA,
-        dateTime = DateTimeParserOptions.Java.withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE)
+        dateTime = DateTimeParserOptions.Java
+            .withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE),
     )
 )
 ```
@@ -106,10 +128,10 @@ df.parse(
 
 As mentioned before, you can change the default global parser options that will be used by [`read`](read.md),
 [`convert`](convert.md), and other `parse` operations.
-Whenever you don't explicitly provide [parser options](#parser-options) to a function call,
-DataFrame will use these global options instead.
+Whenever you don't explicitly provide [parser options](#parser-options) to a function call or leave any of its
+arguments `null`, DataFrame will use these global options instead.
 
-For example, to change the locale to French and add a custom date-time pattern for all following DataFrame calls, do:
+For example, to change the locale to French and add a custom Java date-time pattern for all following DataFrame calls, do:
 
 <!---FUN globalParserOptions-->
 
@@ -127,6 +149,36 @@ For `locale`, this means that the one being used by the parser is defined as:
 &nbsp;&nbsp;&nbsp;&nbsp;↪ The locale set by `DataFrame.parser.locale = ...`, if it is not `null`, else
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↪ `Locale.getDefault()`, which is the system's default locale that can be changed with `Locale.setDefault()`.
+
+Global Parser Options can also be adjusted to change whether some parsers are included or excluded in a parsing call:
+- `parseExperimentalUuid`, `parseExperimentalInstant`
+- `skipTypes`
+- `dateTimeLibrary` (`JAVA`, `KOTLIN`, or `null`)
+
+These settings, however, will only affect functions that call `parse()`.
+They will not affect the behavior of [`convert`](convert.md) operations
+(with `useFastDoubleParser` being the exception).
+
+In other words:
+
+<!---FUN globalParserOptionsConvertCombination-->
+
+```kotlin
+DataFrame.parser.parseExperimentalUuid = false
+stringCol.convertTo<kotlin.uuid.Uuid>() // will still parse to `kotlin.uuid.Uuid`, as expected
+```
+
+<!---END-->
+
+Global parser options can always be reset to default by calling:
+
+<!---FUN resetGlobalParserOptions-->
+
+```kotlin
+DataFrame.parser.resetToDefault()
+```
+
+<!---END-->
 
 ### Parsing Doubles
 
@@ -158,3 +210,115 @@ If you experience any issues with the new parser, you can turn it off by setting
 `useFastDoubleParser = false`, which will use the old `NumberFormat.parse()` function instead.
 
 Please [report](https://github.com/Kotlin/dataframe/issues) any issues you encounter. 
+
+### Parsing Date-time Strings
+
+> This functionality has been changed significantly in DataFrame 1.0.0-Beta5,
+> giving you a clear choice between Kotlin stdlib/[`kotlinx-datetime`](https://github.com/Kotlin/kotlinx-datetime)
+> and [`java.time`](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html) types.
+> 
+> We recommend using types,
+> however, kotlinx-datetime [lacks localization support](https://github.com/Kotlin/kotlinx-datetime/discussions/253).
+> 
+> If you need to provide a custom `Locale`, we recommend parsing 
+> to a `java.time`-based class first by adjusting the [](#parser-options) before [converting](convert.md)
+> it to `kotlinx.datetime`.
+
+By default, DataFrame tries parsing date-time strings using
+- Custom [global](#global-parser-options) Kotlin-, and Java date-time formats, if provided;
+- Default Kotlin-, and Java ISO date-time formats.
+
+You can customize this behavior from the [](#global-parser-options) by:
+- Providing custom date-time formats/formatters and/or custom date-time patterns:
+    - For Kotlin date-time types: `addDateTimeFormat<T>(format)`, `addDateTimeUnicodePattern<T>(pattern)`
+    - For Java date-time types: `addJavaDateTimeFormatter<T>(formatter)`, `addJavaDateTimePattern<T>(pattern)`;
+- Forcing one or the other date-time format type by changing `dateTimeLibrary` to `KOTLIN` or `JAVA`
+    - (by default, `null`; both can be parsed to, but Kotlin has priority). 
+- Resetting to default formats;
+
+<!---FUN globalParserOptionsAddDateTimeFormat-->
+<tabs>
+<tab title="Java">
+
+```kotlin
+// Adding a custom DateTimeFormatter type-safely for LocalDateTime only
+DataFrame.parser.addJavaDateTimeFormatter<java.time.LocalDateTime>(DateTimeFormatter.RFC_1123_DATE_TIME)
+
+// or, adding it for all java-types: Local(Date)(Time), and Instant
+DataFrame.parser.addJavaDateTimeFormatter(DateTimeFormatter.RFC_1123_DATE_TIME)
+
+// now this will succeed!
+columnOf("Tue, 3 Jun 2008 11:05:30 GMT").parse()
+```
+
+</tab>
+<tab title="Kotlin">
+
+```kotlin
+// Adding a custom DateTimeFormat using the kotlinx-datetime Format-DSL
+DataFrame.parser.addDateTimeFormat(
+    LocalDate.Format {
+        monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
+    },
+)
+
+// now this will succeed!
+columnOf("12/24 2023").parse()
+```
+
+</tab></tabs>
+<!---END-->
+
+It is only possible to supply patterns or formats in a supported date-time type.
+For Kotlin, these are `LocalDateTime`, `LocalDate`, `LocalTime`, `YearMonth`, `UtcOffset`, and `DateTimeComponents`
+(a.k.a. all [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime) types that have a `.Format {}` builder).
+
+For Java, these are `LocalDateTime`, `LocalDate`, `LocalTime`, and `Instant`.
+We might expand these in the future. Let us know if you need any other types.
+
+**`ParserOptions.dateTime: DateTimeParserOptions`:**
+
+If a parsing function is provided with [`ParserOptions`](#parser-options) and `ParserOptions.dateTime`
+is not `null`, the global `dateTimeLibrary` parser option will be overridden.
+
+Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
+`DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
+In addition, if that `DateTimeParserOptions` has any custom formats or patterns, the custom- and default
+global formats will be ignored, allowing you to essentially override them.
+
+The two `DateTimeParserOptions` can be created from a set of type-format(ter) pairs, or using a builder-like pattern:
+
+TODO EXAMPLES
+
+Some functions, like [`convertToLocalDate()`](convert.md), take a `DateTimeFormat` or Unicode date-time pattern directly.
+This is a shortcut that behaves exactly the same as the builder-like pattern above.
+
+**Java `Locale` argument:**
+
+`DateTimeParserOptions.Java` has a `locale` argument.
+This can adjust the locale used for parsing date-time strings
+and can have a different value than the locale in [](#parser-options).
+If `null`, [`ParserOptions.locale`](#parser-options)
+will be used instead. If that is `null`, we default to [](#global-parser-options),
+and finally to the default system locale.
+
+**Kotlin `DateTimeComponents` fallback mechanism:**
+
+When using [`DataFrame.convert` or `DataColumn.convertTo`](convert.md) to
+convert from `String` to a kotlinx-datetime type, like `LocalDate`, fails to parse,
+the `DateTimeComponents` fallback-mechanism kicks in.
+Oftentimes it may namely be possible to parse the date-time string to the more flexible `DateTimeComponents`
+first and then convert that to `LocalDate` with a potential little loss of information.
+This means we can successfully call:
+
+```kotlin
+columnOf("Mon, 30 Jun 2008 11:05:30 -0300").convertTo<LocalDate>()
+```
+even though
+```kotlin
+columnOf("Mon, 30 Jun 2008 11:05:30 -0300").parse()
+```
+would produce a `DateTimeComponents` column.
+
+Take this mechanism into account when providing custom `DateTimeFormats` to the
+([global](#global-parser-options)) [ParserOptions](#parser-options).
