@@ -23,3 +23,44 @@ val df = peopleDf.requireColumn { "name"["firstName"]<String>() }
 // Use extension property after `requireColumn`
 val v: String = df.name.firstName[0]
 ```
+
+### Advanced example
+
+Let's start with a pipeline that uses only String Column Accessors and String API overloads:
+
+```kotlin
+val repos = DataFrame
+    .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+
+repos
+    .filter { "stargazers_count"<Int>() > 100 }
+    .sortByDesc("stargazers_count")
+    .select("full_name", "stargazers_count")
+```
+
+Notice how stargazers_count String is repeated three times. We can refactor this code using `requireColumn`:
+
+```kotlin
+val repos = DataFrame
+    .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+    .requireColumn { "stargazers_count"<Int>() }
+
+repos
+    .filter { stargazers_count > 100 }
+    .sortByDesc { stargazers_count }
+    .select { "full_name" and stargazers_count }
+```
+
+This way code becomes a bit more robust. For example, usages of a renamed column will become compile time errors that are easy to spot and update:
+
+```kotlin
+val repos = DataFrame
+    .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+    .requireColumn { "stargazers_count"<Int>() }
+    .rename { stargazers_count }.into("stars")
+
+repos
+    .filter { stars > 100 }
+    .sortByDesc { stars }
+    .select { "full_name" and stars }
+```
