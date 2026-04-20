@@ -91,7 +91,12 @@ Available parser options:
 <!---FUN parseWithOptions-->
 
 ```kotlin
-df.parse(options = ParserOptions(locale = Locale.CHINA, dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE))
+df.parse(
+    options = ParserOptions(
+        locale = Locale.CHINA,
+        dateTime = DateTimeParserOptions.Java.withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE)
+    )
+)
 ```
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseWithOptions.html" width="100%"/>
@@ -110,7 +115,7 @@ For example, to change the locale to French and add a custom date-time pattern f
 
 ```kotlin
 DataFrame.parser.locale = Locale.FRANCE
-DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
+DataFrame.parser.addJavaDateTimePattern("dd.MM.uuuu HH:mm:ss")
 ```
 
 <!---END-->

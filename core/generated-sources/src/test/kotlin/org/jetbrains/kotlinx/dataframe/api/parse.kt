@@ -9,7 +9,13 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.Month
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.YearMonth
 import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
 import kotlinx.datetime.plus
 import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toStdlibInstant
@@ -35,6 +41,10 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
+import java.time.Month as JavaMonth
 import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.Instant as DeprecatedInstant
 
@@ -57,32 +67,113 @@ class ParseTests {
     }
 
     @Test
-    fun parseDate() {
+    fun `parse date Kotlinx Format`() {
+        val date by columnOf("January 1, 2020")
+        // val pattern = "MMMM d, yyyy"
+        val format = LocalDate.Format {
+            monthName(MonthNames.ENGLISH_FULL)
+            day(Padding.SPACE)
+            chars(", ")
+            year()
+        }
+
+        val parsed = date.parse(
+            ParserOptions(
+                dateTime = DateTimeParserOptions.Kotlin.withFormat(format),
+            ),
+        ).cast<LocalDate>()
+
+        parsed.type() shouldBe typeOf<LocalDate>()
+        with(parsed[0]) {
+            month shouldBe Month.JANUARY
+            day shouldBe 1
+            year shouldBe 2020
+        }
+
+        date.convertToLocalDate(format) shouldBe parsed
+        with(date.toDataFrame()) {
+            convert { date }.toLocalDate(format)[date.name] shouldBe parsed
+            parse(
+                ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(format)),
+            )[date.name] shouldBe
+                parsed
+        }
+
+        // Checking the kotlin one has priority over the java one
+        DataFrame.parser.addJavaDateTimePattern("MMMM d, yyyy")
+        DataFrame.parser.addDateTimeFormat(format)
+
+        date.parse() shouldBe parsed
+        date.convertToLocalDate() shouldBe parsed
+
+        // Unless we set the library to java-only
+        DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
+        date.parse() shouldBe parsed.convertToJavaLocalDate()
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun `Global dateTimeLibrary setting should not affect converters`() {
+        val date by columnOf("2026-04-16")
+
+        date.convertToLocalDate().single() shouldBe LocalDate(2026, 4, 16)
+
+        DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
+
+        date.convertToLocalDate().single() shouldBe LocalDate(2026, 4, 16)
+        date.toDataFrame()
+            .convert { all() }.toLocalDate()
+            .columns()
+            .single()
+            .single() shouldBe LocalDate(2026, 4, 16)
+
+        // do fail when the user explicitly provides incorrect parser options
+        shouldThrow<IllegalStateException> {
+            date.convertTo<LocalDate>(ParserOptions(dateTime = DateTimeParserOptions.Java))
+        }
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun `parse date Java Pattern`() {
         val currentLocale = Locale.getDefault()
         try {
             Locale.setDefault(Locale.forLanguageTag("en-US"))
             val date by columnOf("January 1, 2020")
             val pattern = "MMMM d, yyyy"
 
-            val parsed = date.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalDate>()
+            val parsed = date.parse(
+                ParserOptions(
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDate>(pattern),
+                ),
+            ).cast<JavaLocalDate>()
 
-            parsed.type() shouldBe typeOf<LocalDate>()
+            parsed.type() shouldBe typeOf<JavaLocalDate>()
             with(parsed[0]) {
-                month shouldBe Month.JANUARY
-                day shouldBe 1
+                month shouldBe JavaMonth.JANUARY
+                dayOfMonth shouldBe 1
                 year shouldBe 2020
             }
 
-            date.convertToLocalDate(pattern) shouldBe parsed
+            date.convertTo<JavaLocalDate>(
+                parserOptions = ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)),
+            ) shouldBe parsed
             with(date.toDataFrame()) {
-                convert { date }.toLocalDate(pattern)[date.name] shouldBe parsed
-                parse(ParserOptions(dateTimePattern = pattern))[date.name] shouldBe parsed
+                convert { date }.to<JavaLocalDate>(
+                    parserOptions = ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)),
+                )[date.name] shouldBe parsed
+                parse(
+                    ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)),
+                )[date.name] shouldBe
+                    parsed
             }
 
-            DataFrame.parser.addDateTimePattern(pattern)
+            DataFrame.parser.addJavaDateTimePattern(pattern)
 
             date.parse() shouldBe parsed
-            date.convertToLocalDate() shouldBe parsed
+            date.convertTo<JavaLocalDate>() shouldBe parsed
 
             DataFrame.parser.resetToDefault()
         } finally {
@@ -91,7 +182,154 @@ class ParseTests {
     }
 
     @Test
-    fun parseDateTime() {
+    fun `parse DateTimeComponents Kotlinx Format`() {
+        val dateTime by columnOf("Mon, 30 Jun 2008 11:05:30 -0300")
+
+        val parsed = dateTime.parse().cast<DateTimeComponents>()
+        val parsedAsLocalDateTime = parsed.convertToLocalDateTime()
+
+        dateTime.parse(ParserOptions())
+            .cast<DateTimeComponents>()
+            .convertToLocalDateTime() shouldBe parsedAsLocalDateTime
+        dateTime.parse(ParserOptions(dateTime = DateTimeParserOptions.Kotlin))
+            .cast<DateTimeComponents>().convertToLocalDateTime() shouldBe parsedAsLocalDateTime
+
+        parsed.type() shouldBe typeOf<DateTimeComponents>()
+        with(parsed[0]) {
+            month shouldBe Month.JUNE
+            day shouldBe 30
+            year shouldBe 2008
+            hour shouldBe 11
+            minute shouldBe 5
+            second shouldBe 30
+            offsetIsNegative shouldBe true
+            offsetHours shouldBe 3
+            offsetMinutesOfHour shouldBe 0
+            offsetSecondsOfMinute shouldBe null
+        }
+
+        dateTime.convertToDateTimeComponents().convertToLocalDateTime() shouldBe parsedAsLocalDateTime
+        with(dateTime.toDataFrame()) {
+            convert { dateTime }.toDateTimeComponents()[dateTime.name].convertToLocalDateTime() shouldBe
+                parsedAsLocalDateTime
+            parse()[dateTime.name].convertToLocalDateTime() shouldBe parsedAsLocalDateTime
+            parse(ParserOptions(dateTime = DateTimeParserOptions.Kotlin))[dateTime.name]
+                .convertToLocalDateTime() shouldBe parsedAsLocalDateTime
+        }
+    }
+
+    @Test
+    fun `convert DateTimeComponents to supported date time targets`() {
+        val components = DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET.parse("2008-06-30T11:05:30-03:00")
+        val nullableComponents = components as DateTimeComponents?
+
+        val expectedOffset = UtcOffset(hours = -3)
+        val expectedYearMonth = YearMonth(2008, 6)
+        val expectedDate = LocalDate(2008, 6, 30)
+        val expectedTime = LocalTime(11, 5, 30)
+        val expectedDateTime = LocalDateTime(2008, 6, 30, 11, 5, 30)
+        val expectedInstant = StdlibInstant.parse("2008-06-30T14:05:30Z")
+        val expectedEpochMillis = expectedInstant.toEpochMilliseconds()
+
+        columnOf(components).convertToUtcOffset() shouldBe columnOf(expectedOffset)
+        columnOf(nullableComponents).convertToUtcOffset() shouldBe columnOf(expectedOffset)
+
+        columnOf(components).convertToYearMonth() shouldBe columnOf(expectedYearMonth)
+        columnOf(nullableComponents).convertToYearMonth() shouldBe columnOf(expectedYearMonth)
+
+        columnOf(components).convertToLocalDate() shouldBe columnOf(expectedDate)
+        columnOf(nullableComponents).convertToLocalDate() shouldBe columnOf(expectedDate)
+
+        columnOf(components).convertToLocalTime() shouldBe columnOf(expectedTime)
+        columnOf(nullableComponents).convertToLocalTime() shouldBe columnOf(expectedTime)
+
+        columnOf(components).convertToLocalDateTime() shouldBe columnOf(expectedDateTime)
+        columnOf(nullableComponents).convertToLocalDateTime() shouldBe columnOf(expectedDateTime)
+
+        columnOf(components).convertToStdlibInstant() shouldBe columnOf(expectedInstant)
+        columnOf(nullableComponents).convertToStdlibInstant() shouldBe columnOf(expectedInstant)
+
+        columnOf(components).convertToLong() shouldBe columnOf(expectedEpochMillis)
+        columnOf(nullableComponents).convertToLong() shouldBe columnOf(expectedEpochMillis)
+
+        val df = dataFrameOf("components", "nullable")(
+            components,
+            nullableComponents,
+        )
+
+        df.convert("components").cast<DateTimeComponents>().toUtcOffset()["components"][0] shouldBe expectedOffset
+        df.convert("nullable").cast<DateTimeComponents?>().toUtcOffset()["nullable"][0] shouldBe expectedOffset
+
+        df.convert("components").cast<DateTimeComponents>().toYearMonth()["components"][0] shouldBe expectedYearMonth
+        df.convert("nullable").cast<DateTimeComponents?>().toYearMonth()["nullable"][0] shouldBe expectedYearMonth
+
+        df.convert("components").cast<DateTimeComponents>().toLocalDate()["components"][0] shouldBe expectedDate
+        df.convert("nullable").cast<DateTimeComponents?>().toLocalDate()["nullable"][0] shouldBe expectedDate
+
+        df.convert("components").cast<DateTimeComponents>().toLocalTime()["components"][0] shouldBe expectedTime
+        df.convert("nullable").cast<DateTimeComponents?>().toLocalTime()["nullable"][0] shouldBe expectedTime
+
+        df.convert("components").cast<DateTimeComponents>().toLocalDateTime()["components"][0] shouldBe expectedDateTime
+        df.convert("nullable").cast<DateTimeComponents?>().toLocalDateTime()["nullable"][0] shouldBe expectedDateTime
+
+        df.convert("components").cast<DateTimeComponents>().toStdlibInstant()["components"][0] shouldBe expectedInstant
+        df.convert("nullable").cast<DateTimeComponents?>().toStdlibInstant()["nullable"][0] shouldBe expectedInstant
+
+        df.convert("components").toLong()["components"][0] shouldBe expectedEpochMillis
+        df.convert("nullable").toLong()["nullable"][0] shouldBe expectedEpochMillis
+    }
+
+    @Test
+    fun `parse date-time Kotlinx Format`() {
+        val dateTime by columnOf("3 Jun 2008 13:05:30")
+        // val pattern = "d MMM yyyy HH:mm:ss"
+        val format = LocalDateTime.Format {
+            day(Padding.NONE)
+            char(' ')
+            monthName(MonthNames.ENGLISH_ABBREVIATED)
+            char(' ')
+            year()
+            char(' ')
+            time(LocalTime.Formats.ISO)
+        }
+        val locale = Locale.forLanguageTag("en-US")
+
+        val parsed = dateTime.parse(
+            ParserOptions(
+                dateTime = DateTimeParserOptions.Kotlin.withFormat<LocalDateTime>(format),
+                locale = locale,
+            ),
+        ).cast<LocalDateTime>()
+
+        parsed.type() shouldBe typeOf<LocalDateTime>()
+        with(parsed[0]) {
+            month shouldBe Month.JUNE
+            day shouldBe 3
+            year shouldBe 2008
+            hour shouldBe 13
+            minute shouldBe 5
+            second shouldBe 30
+        }
+
+        dateTime.convertToLocalDateTime(format) shouldBe parsed
+        with(dateTime.toDataFrame()) {
+            convert { dateTime }.toLocalDateTime(format)[dateTime.name] shouldBe parsed
+            parse(
+                ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat<LocalDateTime>(format)),
+            )[dateTime.name] shouldBe
+                parsed
+        }
+
+        DataFrame.parser.addDateTimeFormat(format)
+
+        dateTime.parse(ParserOptions(locale = locale)) shouldBe parsed
+        dateTime.convertToLocalDateTime(format) shouldBe parsed
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun `parse date-time Java Pattern`() {
         val currentLocale = Locale.getDefault()
         try {
             Locale.setDefault(Locale.forLanguageTag("en-US"))
@@ -99,28 +337,50 @@ class ParseTests {
             val pattern = "d MMM yyyy HH:mm:ss"
             val locale = Locale.forLanguageTag("en-US")
 
-            val parsed = dateTime.parse(ParserOptions(dateTimePattern = pattern, locale = locale)).cast<LocalDateTime>()
+            val parsed = dateTime.parse(
+                ParserOptions(
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
+                    locale = locale,
+                ),
+            ).cast<JavaLocalDateTime>()
 
-            parsed.type() shouldBe typeOf<LocalDateTime>()
+            parsed.type() shouldBe typeOf<JavaLocalDateTime>()
             with(parsed[0]) {
-                month shouldBe Month.JUNE
-                day shouldBe 3
+                month shouldBe JavaMonth.JUNE
+                dayOfMonth shouldBe 3
                 year shouldBe 2008
                 hour shouldBe 13
                 minute shouldBe 5
                 second shouldBe 30
             }
 
-            dateTime.convertToLocalDateTime(pattern, locale) shouldBe parsed
+            dateTime.convertTo<JavaLocalDateTime>(
+                ParserOptions(
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
+                ),
+            ) shouldBe parsed
             with(dateTime.toDataFrame()) {
-                convert { dateTime }.toLocalDateTime(pattern)[dateTime.name] shouldBe parsed
-                parse(ParserOptions(dateTimePattern = pattern))[dateTime.name] shouldBe parsed
+                convert { dateTime }.to<JavaLocalDateTime>(
+                    ParserOptions(
+                        dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
+                    ),
+                )[dateTime.name] shouldBe parsed
+                parse(
+                    ParserOptions(
+                        dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
+                    ),
+                )[dateTime.name] shouldBe
+                    parsed
             }
 
-            DataFrame.parser.addDateTimePattern(pattern)
+            DataFrame.parser.addJavaDateTimePattern(pattern)
 
             dateTime.parse(ParserOptions(locale = locale)) shouldBe parsed
-            dateTime.convertToLocalDateTime(pattern, locale) shouldBe parsed
+            dateTime.convertTo<JavaLocalDateTime>(
+                ParserOptions(
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
+                ),
+            ) shouldBe parsed
 
             DataFrame.parser.resetToDefault()
         } finally {
@@ -128,12 +388,15 @@ class ParseTests {
         }
     }
 
+    @OptIn(FormatStringsInDatetimeFormats::class)
     @Test
-    fun parseTime() {
+    fun `parse time Kotlinx Pattern`() {
         val time by columnOf(" 13-05-30")
         val pattern = "HH-mm-ss"
 
-        val parsed = time.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalTime>()
+        val parsed = time.parse(
+            ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withPattern<LocalTime>(pattern)),
+        ).cast<LocalTime>()
 
         parsed.type() shouldBe typeOf<LocalTime>()
         with(parsed[0]) {
@@ -143,11 +406,15 @@ class ParseTests {
         }
         time.convertToLocalTime(pattern) shouldBe parsed
         with(time.toDataFrame()) {
-            convert { time }.toLocalTime(pattern)[time] shouldBe parsed
-            parse(ParserOptions(dateTimePattern = pattern))[time] shouldBe parsed
+            convert { time }.toLocalTime(pattern)[time.name] shouldBe parsed
+            parse(
+                options = ParserOptions(
+                    dateTime = DateTimeParserOptions.Kotlin.withPattern<LocalTime>(pattern),
+                ),
+            )[time.name] shouldBe parsed
         }
 
-        DataFrame.parser.addDateTimePattern(pattern)
+        DataFrame.parser.addDateTimeUnicodePattern<LocalTime>(pattern)
 
         time.parse() shouldBe parsed
         time.convertToLocalTime() shouldBe parsed
@@ -156,11 +423,77 @@ class ParseTests {
     }
 
     @Test
+    fun `parse time Java Pattern`() {
+        val time by columnOf(" 13-05-30")
+        val pattern = "HH-mm-ss"
+
+        val parsed = time.parse(
+            ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)),
+        ).cast<JavaLocalTime>()
+
+        parsed.type() shouldBe typeOf<JavaLocalTime>()
+        with(parsed[0]) {
+            hour shouldBe 13
+            minute shouldBe 5
+            second shouldBe 30
+        }
+        time.convertTo<JavaLocalTime>(
+            ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)),
+        ) shouldBe parsed
+        with(time.toDataFrame()) {
+            convert { time }.to<JavaLocalTime>(
+                ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)),
+            )[time.name] shouldBe parsed
+            parse(
+                options = ParserOptions(
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern),
+                ),
+            )[time.name] shouldBe parsed
+        }
+
+        DataFrame.parser.addJavaDateTimePattern<JavaLocalTime>(pattern)
+
+        time.parse() shouldBe parsed
+        time.convertTo<JavaLocalTime>() shouldBe parsed
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun `parse date adjusting library`() {
+        try {
+            val col = columnOf("2017-05-30 08:34:14")
+            val parsedJava = col.parse(
+                ParserOptions(dateTime = DateTimeParserOptions.Java),
+            )
+            parsedJava.type shouldBe typeOf<JavaLocalDateTime>()
+
+            val parsedKotlin = col.parse(
+                ParserOptions(dateTime = DateTimeParserOptions.Kotlin),
+            )
+            parsedKotlin.type shouldBe typeOf<LocalDateTime>()
+
+            val parsedDefault = col.parse()
+            parsedDefault.type shouldBe typeOf<LocalDateTime>()
+
+            DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
+            col.parse() shouldBe parsedJava
+
+            DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.KOTLIN
+            col.parse() shouldBe parsedKotlin
+
+            col.parse().print()
+        } finally {
+            DataFrame.parser.resetToDefault()
+        }
+    }
+
+    @Test
     fun `parse date without formatter`() {
         val time by columnOf(" 2020-01-06", "2020-01-07 ")
         val df = dataFrameOf(time)
-        val casted = df.convert(time).toLocalDate()
-        casted[time].type() shouldBe typeOf<LocalDate>()
+        val casted = df.convert(time.name).toLocalDate()
+        casted[time.name].type() shouldBe typeOf<LocalDate>()
     }
 
     @Test
@@ -187,10 +520,11 @@ class ParseTests {
 
     @Test
     fun `can parse instants`() {
-        val deprecatedInstantParser = Parsers[typeOf<DeprecatedInstant>()]!!.applyOptions(null)
-        val stdlibInstantParser = Parsers[typeOf<StdlibInstant>()]!!
+        val deprecatedInstantParser = Parsers[typeOf<DeprecatedInstant>()].single().applyOptions(null)
+        val stdlibInstantParser = Parsers[typeOf<StdlibInstant>()].single()
             .applyOptions(ParserOptions(parseExperimentalInstant = true))
-        val javaInstantParser = Parsers[typeOf<JavaInstant>()]!!.applyOptions(null)
+        val javaInstantParser = Parsers[typeOf<JavaInstant>()].last() // the default one
+            .applyOptions(null)
 
         // from the kotlinx-datetime tests, java instants treat leap seconds etc. like this
         fun parseInstantLikeJavaDoesOrNull(input: String): StdlibInstant? =
@@ -256,8 +590,9 @@ class ParseTests {
 
     @Test
     fun `can parse duration isoStrings`() {
-        val durationParser = Parsers[typeOf<Duration>()]!!.applyOptions(null) as (String) -> Duration?
-        val javaDurationParser = Parsers[typeOf<JavaDuration>()]!!.applyOptions(null) as (String) -> JavaDuration?
+        val durationParser = Parsers[typeOf<Duration>()].single().applyOptions(null) as (String) -> Duration?
+        val javaDurationParser =
+            Parsers[typeOf<JavaDuration>()].single().applyOptions(null) as (String) -> JavaDuration?
 
         fun testSuccess(duration: Duration, vararg isoStrings: String) {
             isoStrings.first() shouldBe duration.toIsoString()
@@ -358,7 +693,7 @@ class ParseTests {
 
     @Test
     fun `can parse duration default kotlin strings`() {
-        val durationParser = Parsers[typeOf<Duration>()]!!.applyOptions(null) as (String) -> Duration?
+        val durationParser = Parsers[typeOf<Duration>()].single().applyOptions(null) as (String) -> Duration?
 
         fun testParsing(string: String, expectedDuration: Duration) {
             Duration.parse(string) shouldBe expectedDuration
