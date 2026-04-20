@@ -3,17 +3,35 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
 import org.jetbrains.kotlinx.dataframe.api.and
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.div
+import org.jetbrains.kotlinx.dataframe.api.eq
+import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnIndex
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.gt
 import org.jetbrains.kotlinx.dataframe.api.linearBg
+import org.jetbrains.kotlinx.dataframe.api.lt
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.min
+import org.jetbrains.kotlinx.dataframe.api.minus
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.neq
+import org.jetbrains.kotlinx.dataframe.api.not
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
+import org.jetbrains.kotlinx.dataframe.api.plus
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.times
+import org.jetbrains.kotlinx.dataframe.api.unaryMinus
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
+import org.jetbrains.kotlinx.kandy.dsl.plot
+import org.jetbrains.kotlinx.kandy.letsplot.layers.line
 import org.junit.Test
+import java.math.BigDecimal
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class Modify : DataFrameSampleHelper("operations", "modify") {
@@ -97,5 +115,216 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
         }
             // SampleEnd
             .saveDfHtmlSample()
+    }
+
+    @Test
+    fun columnArithmetics_kandy() {
+        val df = dataFrameOf(
+            "day" to columnOf("Monday", "Tuesday", "Wednesday"),
+            "distanceMeters" to columnOf(1000, 2000, 3000),
+        )
+        // SampleStart
+        df.plot {
+            line {
+                x(day)
+                y((distanceMeters / 1000.0) named "distanceKm")
+            }
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_not() {
+        // SampleStart
+        df.select { !isHappy }
+        // or
+        !df.isHappy
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_addition() {
+        val transactions = dataFrameOf(
+            "id" to columnOf(1, 2, 3),
+            "amount" to columnOf(10, 20, 30),
+            "isSuccess" to columnOf(true, false, true),
+        )
+
+        // SampleStart
+        transactions.amount + 10
+        5.0 + transactions.amount
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_concatenation() {
+        val weather = dataFrameOf(
+            "day" to columnOf(1, 2, 3),
+            "temperature" to columnOf(10, 20, 30),
+        )
+
+        // SampleStart
+        weather.select { temperature + " °C" }
+        // or
+        weather.temperature + " °C"
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_column_minus_value() {
+        val transactions = dataFrameOf(
+            "id" to columnOf(1, 2, 3),
+            "amount" to columnOf(10, 20, 30),
+            "isSuccess" to columnOf(true, false, true),
+        )
+
+        // SampleStart
+        transactions.amount - 10.0
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_value_minus_column() {
+        val transactions = dataFrameOf(
+            "id" to columnOf(1, 2, 3),
+            "amount" to columnOf(10, 20, 30),
+            "isSuccess" to columnOf(true, false, true),
+        )
+
+        // SampleStart
+        100 - transactions.amount
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_unary_minus() {
+        val transactions = dataFrameOf(
+            "id" to columnOf(1, 2, 3),
+            "amount" to columnOf(10, 20, 30),
+            "isSuccess" to columnOf(true, false, true),
+        )
+
+        // SampleStart
+        -transactions.amount
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_times() {
+        val routes = dataFrameOf(
+            "route" to columnOf("A", "B", "C"),
+            "distanceKm" to columnOf(1.2, 3.5, 0.8),
+        )
+        val products = dataFrameOf(
+            "product" to columnOf("A", "B", "C"),
+            "price" to columnOf(BigDecimal("10.0"), BigDecimal("20.0"), BigDecimal("30.0")),
+            "weightGrams" to columnOf(100, 200, 300),
+        )
+
+        // SampleStart
+        routes.distanceKm * 1000.0
+        products.price * BigDecimal("1.20")
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_column_div_value() {
+        val products = dataFrameOf(
+            "product" to columnOf("A", "B", "C"),
+            "price" to columnOf(10.0, 20.0, 30.0),
+            "weightGrams" to columnOf(100, 200, 300),
+        )
+
+        // SampleStart
+        products.weightGrams / 1000.0
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_value_div_column() {
+        val tasks = dataFrameOf(
+            "task" to columnOf("A", "B", "C"),
+            "hoursPerTask" to columnOf(1.0, 2.0, 3.0),
+        )
+
+        // SampleStart
+        40 / tasks.hoursPerTask
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_eq() {
+        val orders = dataFrameOf(
+            "id" to columnOf("1", "2", "3"),
+            "status" to columnOf("completed", "completed", "canceled"),
+        )
+
+        // SampleStart
+        orders.status eq "canceled"
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_neq() {
+        val orders = dataFrameOf(
+            "id" to columnOf("1", "2", "3"),
+            "status" to columnOf("completed", "completed", "canceled"),
+        )
+
+        // SampleStart
+        orders.status neq "completed"
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_gt() {
+        val orders = dataFrameOf(
+            "id" to columnOf("1", "2", "3"),
+            "status" to columnOf("completed", "completed", "canceled"),
+            "cost" to columnOf(10.0, 200.0, 1500.0),
+        )
+
+        // SampleStart
+        orders.cost gt 1000.0
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_lt() {
+        val orders = dataFrameOf(
+            "id" to columnOf("1", "2", "3"),
+            "status" to columnOf("completed", "completed", "canceled"),
+            "cost" to columnOf(10.0, 200.0, 1500.0),
+        )
+
+        // SampleStart
+        orders.cost lt 20.0
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_groupBy_without_expr() {
+        val orders = dataFrameOf(
+            "id" to columnOf("1", "2", "3"),
+            "status" to columnOf("completed", "completed", "canceled"),
+            "cost" to columnOf(10.0, 200.0, 1500.0),
+        )
+
+        // SampleStart
+        orders.groupBy { status + " orders" }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnArithmetics_groupBy_with_expr() {
+        val orders = dataFrameOf(
+            "id" to columnOf("1", "2", "3"),
+            "status" to columnOf("completed", "completed", "canceled"),
+            "cost" to columnOf(10.0, 200.0, 1500.0),
+        )
+
+        // SampleStart
+        orders.groupBy { expr("status") { status + " orders" } }
+        // SampleEnd
     }
 }
