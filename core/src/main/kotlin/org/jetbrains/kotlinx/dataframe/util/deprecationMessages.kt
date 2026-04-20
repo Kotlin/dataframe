@@ -156,6 +156,17 @@ internal const val COMPARE_RESULT_EQUALS =
 
 internal const val INSERT_UNDER = "This `ColumnPath` overload is deprecated in favor of `.under { path }`. $MESSAGE_1_0"
 
+internal const val ADD_DATE_TIME_PATTERN =
+    "This function is deprecated in favor of `addDateTimeFormat` built on kotlinx-datetime. Alternatively, use `addJavaDateTimePattern` for Java-based parsing. $MESSAGE_1_0"
+
+internal const val CONVERT_TO_WITHOUT_PARSER_OPTIONS =
+    "This overload is only here for binary compatibility. $MESSAGE_1_0"
+
+internal const val CONVERT_TO_KOTLIN_DATETIME_LOCALE =
+    "We no longer accept `Locale` in String -> Kotlin date-time conversion functions, " +
+        "as we now directly parse to Kotlin. " +
+        "If you need to specify a locale to make it work, convert to Java-based types first. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
