@@ -75,7 +75,7 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
     }
 
     override fun visitBlockBody(body: IrBlockBody, data: ContainingDeclarations): IrBody {
-        for (i in 0 until body.statements.size) {
+        for (i in body.statements.indices) {
             @Suppress("UNCHECKED_CAST")
             body.statements.set(
                 index = i,
@@ -178,8 +178,9 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
         receiver: IrExpression?,
         data: ContainingDeclarations,
     ): IrCall {
-        val alsoReference = pluginContext
-            .referenceFunctions(
+        val declarationFinder = pluginContext.finderForBuiltins()
+        val alsoReference = declarationFinder
+            .findFunctions(
                 CallableId(FqName("kotlin"), Name.identifier("also")),
             ).single()
 
@@ -271,7 +272,7 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
                             FqName("PluginCallbackProxy"),
                             Name.identifier("doAction"),
                         )
-                        val doAction = pluginContext.referenceFunctions(callableId).single()
+                        val doAction = declarationFinder.findFunctions(callableId).single()
                         statements += IrCallImplWithShape(
                             startOffset = -1,
                             endOffset = -1,
@@ -284,7 +285,7 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
                             hasExtensionReceiver = false,
                         ).apply {
                             val clazz = ClassId(explainerPackage, Name.identifier("PluginCallbackProxy"))
-                            val plugin = pluginContext.referenceClass(clazz)!!
+                            val plugin = declarationFinder.findClass(clazz)!!
                             val pluginType = plugin.owner.defaultType
                             dispatchReceiver = IrGetObjectValueImpl(-1, -1, pluginType, plugin)
                             val firstValueArgumentIndex = 1 // skipping dispatch receiver
