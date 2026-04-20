@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:no-unused-imports")
-
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlin.backend.common.FileLoweringPass
@@ -58,6 +56,31 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
     public lateinit var file: IrFile
     public lateinit var source: String
 
+    internal val declarationFinder = pluginContext.finderForBuiltins()
+
+    public val explainerPackage: FqName = FqName("org.jetbrains.kotlinx.dataframe.explainer")
+
+    internal val doAction by lazy {
+        val callableId = CallableId(
+            explainerPackage,
+            FqName("PluginCallbackProxy"),
+            Name.identifier("doAction"),
+        )
+        declarationFinder.findFunctions(callableId).single()
+    }
+
+    internal val alsoReference by lazy {
+        declarationFinder
+            .findFunctions(
+                CallableId(FqName("kotlin"), Name.identifier("also")),
+            ).single()
+    }
+
+    internal val plugin by lazy {
+        val clazz = ClassId(explainerPackage, Name.identifier("PluginCallbackProxy"))
+        declarationFinder.findClass(clazz)!!
+    }
+
     override fun lower(irFile: IrFile) {
         var file: File
         file = File("testData/box/${irFile.path}")
@@ -113,25 +136,6 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
 
     override fun visitExpressionBody(body: IrExpressionBody, data: ContainingDeclarations): IrBody = body
 
-    public val dataFrameLike: Set<FqName> = setOf(
-        FqName("org.jetbrains.kotlinx.dataframe.api.Pivot"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivot"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.PivotGroupBy"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.SplitWithTransform"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.Merge"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.Split"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.Gather"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.Update"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.Convert"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.FormattedFrame"),
-        FqName("org.jetbrains.kotlinx.dataframe.api.GroupBy"),
-        FqName("org.jetbrains.kotlinx.dataframe.DataFrame"),
-        FqName("org.jetbrains.kotlinx.dataframe.DataRow"),
-    )
-
-    public val explainerPackage: FqName = FqName("org.jetbrains.kotlinx.dataframe.explainer")
-
     override fun visitGetValue(expression: IrGetValue, data: ContainingDeclarations): IrExpression {
         if (expression.startOffset < 0) return expression
         if (expression.type.classFqName in dataFrameLike) {
@@ -161,7 +165,12 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
                 expression.dispatchReceiver = transformedExtensionReceiver
             }
             val builder = pluginContext.irBuiltIns.createIrBuilder(expression.symbol)
-            return builder.transformDataFrameExpression(expression, expression.symbol.owner.name, receiver = receiver, data)
+            return builder.transformDataFrameExpression(
+                expression,
+                expression.symbol.owner.name,
+                receiver = receiver,
+                data,
+            )
         }
         return super.visitExpression(expression, data)
     }
@@ -172,12 +181,6 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
         receiver: IrExpression?,
         data: ContainingDeclarations,
     ): IrCall {
-        val declarationFinder = pluginContext.finderForBuiltins()
-        val alsoReference = declarationFinder
-            .findFunctions(
-                CallableId(FqName("kotlin"), Name.identifier("also")),
-            ).single()
-
         val result = irCall(alsoReference).also {
             it.typeArguments[0] = expression.type
             it.arguments[0] = expression
@@ -207,15 +210,7 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
                     add(irInt(data.statementIndex)) // statementIndex: Int
                 }
                 body = irBlockBody {
-                    val callableId = CallableId(
-                        explainerPackage,
-                        FqName("PluginCallbackProxy"),
-                        Name.identifier("doAction"),
-                    )
-                    val doAction = declarationFinder.findFunctions(callableId).single()
                     +irCall(doAction).apply {
-                        val clazz = ClassId(explainerPackage, Name.identifier("PluginCallbackProxy"))
-                        val plugin = declarationFinder.findClass(clazz)!!
                         dispatchReceiver = irGetObject(plugin)
                         val firstValueArgumentIndex = 1 // skipping dispatch receiver
                         valueArguments.forEachIndexed { i, argument ->
@@ -258,3 +253,20 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
 
 internal fun <D> IrStatement.transformStatement(transformer: IrTransformer<D>, data: D): IrStatement =
     transform(transformer, data) as IrStatement
+
+internal val dataFrameLike: Set<FqName> = setOf(
+    FqName("org.jetbrains.kotlinx.dataframe.api.Pivot"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivot"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.PivotGroupBy"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.SplitWithTransform"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.Merge"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.Split"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.Gather"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.Update"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.Convert"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.FormattedFrame"),
+    FqName("org.jetbrains.kotlinx.dataframe.api.GroupBy"),
+    FqName("org.jetbrains.kotlinx.dataframe.DataFrame"),
+    FqName("org.jetbrains.kotlinx.dataframe.DataRow"),
+)
