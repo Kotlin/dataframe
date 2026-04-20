@@ -1,34 +1,42 @@
 package org.jetbrains.kotlinx.dataframe.examples.spark.parquet
 
+import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.PipelineStage
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.regression.LinearRegressionModel
+import org.apache.spark.sql.RowFactory
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.col
+import org.apache.spark.sql.types.DataTypes
+import org.apache.spark.sql.types.Metadata
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StructType
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.head
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.head
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.readParquet
 import org.jetbrains.kotlinx.kandy.dsl.plot
-import org.jetbrains.kotlinx.kandy.letsplot.layers.points
-import org.jetbrains.kotlinx.kandy.letsplot.layers.abLine
 import org.jetbrains.kotlinx.kandy.letsplot.export.save
+import org.jetbrains.kotlinx.kandy.letsplot.layers.abLine
+import org.jetbrains.kotlinx.kandy.letsplot.layers.points
 import org.jetbrains.kotlinx.kandy.util.color.Color
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
-import java.util.stream.Collectors
-import kotlin.io.path.exists
+import kotlin.io.path.Path
+import kotlin.io.path.createDirectories
+import kotlin.io.path.createTempDirectory
 import kotlin.io.path.isDirectory
+import kotlin.io.path.isRegularFile
+import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.notExists
-import kotlin.jvm.java
+import kotlin.io.path.toPath
 
 /**
  * Demonstrates reading CSV with Apache Spark, writing Parquet, and reading Parquet with Kotlin DataFrame via Arrow.
@@ -51,11 +59,11 @@ fun main() {
         .config("spark.hadoop.io.native.lib.available", false)
         .config(
             "spark.driver.extraJavaOptions",
-            "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+            "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED",
         )
         .config(
             "spark.executor.extraJavaOptions",
-            "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED"
+            "--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED",
         )
         .getOrCreate()
 
@@ -65,7 +73,7 @@ fun main() {
     // 2) Read housing.csv (from a repo path) with Spark
     val csvResource = object {}::class.java.getResource("/housing.csv")
         ?: throw IllegalStateException("housing.csv not found in classpath resources")
-    val csvPath = Paths.get(csvResource.toURI()).toAbsolutePath().toString()
+    val csvPath = csvResource.toURI().toPath().toAbsolutePath().toString()
 
     val sdf = spark.read()
         .option("header", "true")
@@ -76,7 +84,7 @@ fun main() {
     println("Spark DataFrame (head):")
     sdf.show(10, false)
 
-    val parquetDir: Path = Files.createTempDirectory("housing_spark_parquet_")
+    val parquetDir: Path = createTempDirectory("housing_spark_parquet_")
     val parquetPath = parquetDir.toString()
     sdf.write().mode("overwrite").parquet(parquetPath)
     println("Saved Spark Parquet to: $parquetPath")
@@ -94,8 +102,14 @@ fun main() {
     // Use numeric features only, drop the categorical 'ocean_proximity'
     val labelCol = "median_house_value"
     val candidateFeatureCols = listOf(
-        "longitude", "latitude", "housing_median_age", "total_rooms", "total_bedrooms",
-        "population", "households", "median_income"
+        "longitude",
+        "latitude",
+        "housing_median_age",
+        "total_rooms",
+        "total_bedrooms",
+        "population",
+        "households",
+        "median_income",
     )
 
     val colsArray = (candidateFeatureCols + labelCol).map { col(it) }.toTypedArray()
@@ -114,7 +128,7 @@ fun main() {
         .setElasticNetParam(0.5)
         .setMaxIter(10)
 
-    val fullPipeline = org.apache.spark.ml.Pipeline().setStages(arrayOf<PipelineStage>(assembler, lr))
+    val fullPipeline = Pipeline().setStages(arrayOf<PipelineStage>(assembler, lr))
 
     val fullPipelineModel = fullPipeline.fit(sdfNumeric)
     val lrModel = fullPipelineModel.stages()[1] as LinearRegressionModel
@@ -126,24 +140,24 @@ fun main() {
     // 7) Export model information to Parquet (coefficients per feature + intercept row)
     val coeffs = lrModel.coefficients().toArray()
     val rows =
-        candidateFeatureCols.mapIndexed { idx, name -> org.apache.spark.sql.RowFactory.create(name, coeffs[idx]) } +
-            listOf(org.apache.spark.sql.RowFactory.create("intercept", lrModel.intercept()))
+        candidateFeatureCols.mapIndexed { idx, name -> RowFactory.create(name, coeffs[idx]) } +
+            listOf(RowFactory.create("intercept", lrModel.intercept()))
 
-    val schema = org.apache.spark.sql.types.StructType(
+    val schema = StructType(
         arrayOf(
-            org.apache.spark.sql.types.StructField(
+            StructField(
                 "term",
-                org.apache.spark.sql.types.DataTypes.StringType,
+                DataTypes.StringType,
                 false,
-                org.apache.spark.sql.types.Metadata.empty()
+                Metadata.empty(),
             ),
-            org.apache.spark.sql.types.StructField(
+            StructField(
                 "coefficient",
-                org.apache.spark.sql.types.DataTypes.DoubleType,
+                DataTypes.DoubleType,
                 false,
-                org.apache.spark.sql.types.Metadata.empty()
-            )
-        )
+                Metadata.empty(),
+            ),
+        ),
     )
 
     val modelDf = spark.createDataFrame(rows, schema)
@@ -177,7 +191,7 @@ fun main() {
     //   $pipelinePath/stages/0_*/metadata/, $pipelinePath/stages/0_*/data/
     //   $pipelinePath/stages/1_*/metadata/, $pipelinePath/stages/1_*/data/
 
-    val pipelineRoot = Paths.get(pipelinePath)
+    val pipelineRoot = Path(pipelinePath)
     val stagesDir = pipelineRoot.resolve("stages")
     val stage0Dir = findStageDir(stagesDir, "0_")
     val stage1Dir = findStageDir(stagesDir, "1_")
@@ -286,15 +300,14 @@ fun main() {
         }
     }
 
-    val targetDir = Paths.get("").normalize()
-    Files.createDirectories(targetDir)
+    val targetDir = Path("").normalize()
+    targetDir.createDirectories()
     val plotPath = targetDir.resolve("linear_model_plot.jpg").toAbsolutePath().toString()
 
     plot.save(plotPath)
     println("Step 10: Saved plot to: $plotPath")
 
     spark.stop()
-
 }
 
 /**
@@ -303,11 +316,8 @@ fun main() {
  */
 private fun listParquetFilesIfAny(dir: Path): Array<Path> {
     if (dir.notExists() || !dir.isDirectory()) return emptyArray()
-    val files: List<Path> = Files.list(dir).use { stream ->
-        stream
-            .filter { Files.isRegularFile(it) && it.fileName.toString().endsWith(".parquet", ignoreCase = true) }
-            .collect(Collectors.toList())
-    }
+    val files = dir.listDirectoryEntries()
+        .filter { it.isRegularFile() && it.fileName.toString().endsWith(".parquet", ignoreCase = true) }
     return files.toTypedArray()
 }
 
@@ -315,19 +325,14 @@ private fun listParquetFilesIfAny(dir: Path): Array<Path> {
  * Finds a stage directory inside 'stagesDir' by prefix (e.g., "0_", "1_").
  * No extra checks: assumes such a directory exists.
  */
-private fun findStageDir(stagesDir: Path, prefix: String): Path {
-    return Files.list(stagesDir).use { s ->
-        s.filter { Files.isDirectory(it) && it.fileName.toString().startsWith(prefix) }
-            .findFirst().get()
-    }
-}
+private fun findStageDir(stagesDir: Path, prefix: String): Path =
+    stagesDir.listDirectoryEntries()
+        .first { it.isDirectory() && it.fileName.toString().startsWith(prefix) }
 
-private fun listTextOrJsonFiles(dir: Path): List<Path> {
-    return Files.list(dir).use { s ->
-        s.filter {
-            Files.isRegularFile(it) &&
-                (it.fileName.toString().endsWith(".json", ignoreCase = true) ||
-                    it.fileName.toString().endsWith(".txt", ignoreCase = true))
-        }.collect(Collectors.toList())
-    }
-}
+private fun listTextOrJsonFiles(dir: Path): List<Path> =
+    dir.listDirectoryEntries()
+        .filter {
+            it.isRegularFile() && it.fileName.toString().let {
+                it.endsWith(".json", ignoreCase = true) || it.endsWith(".txt", ignoreCase = true)
+            }
+        }

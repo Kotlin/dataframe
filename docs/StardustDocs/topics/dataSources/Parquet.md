@@ -118,7 +118,7 @@ val df = DataFrame.readParquet(
 
 
 If you want to see a complete, realistic data‑engineering example using Spark and Parquet with Kotlin DataFrame,
-check out the [example project](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/spark-parquet-dataframe).
+check out the [example project](https://github.com/Kotlin/dataframe/tree/master/examples/projects/spark-parquet-dataframe).
 
 ### Multiple Files
 
@@ -155,5 +155,5 @@ val df = DataFrame.readParquet(file, file1, file2)
 
 - [](ApacheArrow.md) — reading/writing Arrow IPC formats.
 - [Parquet official site](https://parquet.apache.org/).
-- Example: [Spark + Parquet + Kotlin DataFrame](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/spark-parquet-dataframe)
+- Example: [Spark + Parquet + Kotlin DataFrame](https://github.com/Kotlin/dataframe/tree/master/examples/projects/spark-parquet-dataframe)
 - [](Data-Sources.md) — Overview of all supported formats
