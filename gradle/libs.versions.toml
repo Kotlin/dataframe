@@ -76,7 +76,8 @@ hibernate = "6.5.2.Final"
 
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
-spark = "3.3.2"
+spark3 = "3.3.2"
+spark4 = "4.0.0"
 
 multik = "0.2.3"
 
@@ -193,7 +194,7 @@ hibernate-hikaricp = { group = "org.hibernate.orm", name = "hibernate-hikaricp",
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 
 kotlin-spark = { group = "org.jetbrains.kotlinx.spark", name = "kotlin-spark-api_3.3.2_2.13", version.ref = "kotlin-spark" }
-spark = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark" }
+spark = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark3" }
 log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
 log4j-api = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j" }
 
