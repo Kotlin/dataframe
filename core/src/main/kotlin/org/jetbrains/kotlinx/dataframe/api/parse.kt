@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
-import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -53,8 +52,6 @@ public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataCol
  * fails to parse any value, the next parser is tried. If all the others fail, the final parser
  * returns strings.
  *
- * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
- *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)
  * @return a new column with parsed values
@@ -72,8 +69,6 @@ public fun DataColumn<Char?>.tryParse(options: ParserOptions? = null): DataColum
  * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
  * use [tryParse] instead.
  *
- * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
- *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found
  * @return a new column with parsed values
@@ -89,8 +84,6 @@ public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn
  *
  * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
  * use [tryParse] instead.
- *
- * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
  *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @return a new column with parsed values
