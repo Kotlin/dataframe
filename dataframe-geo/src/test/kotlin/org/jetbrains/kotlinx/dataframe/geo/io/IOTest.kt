@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.geo.io
 
 import org.geotools.referencing.CRS
+import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.toGeo
@@ -27,6 +28,13 @@ class IOTest {
     private val simplePointsGeoDf = simplePointsDf.toGeo(GeoDataFrame.DEFAULT_CRS)
     private val classLoader = (this::class as Any).javaClass.classLoader
 
+
+    private val citiesShapefileDirectoryLink =
+        "https://github.com/AndreiKingsley/datasets/raw/refs/heads/main/ne_10m_populated_places_simple"
+
+    private val citiesShapefileLink =
+        "$citiesShapefileDirectoryLink/ne_10m_populated_places_simple.shp"
+
     @Test
     fun readGeoJson() {
         val jsonURL = classLoader.getResource("./simple_points.geojson")!!
@@ -45,7 +53,6 @@ class IOTest {
         assertEquals(simplePointsGeoDf.df, loadedGeoDataFrame.df)
         // TODO: Doesn't work because of how equality between CRS is checked by geotools
         // assertEquals(simplePointsGeoDf, loadedGeoDataFrame)
-
         tempFile.deleteOnExit()
     }
 
@@ -75,6 +82,20 @@ class IOTest {
 
         assertEquals(simplePointsDf, geodf.df)
         assert(geodf.crs == null)
+    }
+
+    @Test
+    fun readShapefileRemoteUrl() {
+        val geodf = GeoDataFrame.readShapefile(citiesShapefileLink)
+
+        assertEquals(geodf.df.count(), 7342)
+    }
+
+    @Test
+    fun readShapefileDirectoryRemoteUrl() {
+        val geodf = GeoDataFrame.readShapefile(citiesShapefileDirectoryLink)
+
+        assertEquals(geodf.df.count(), 7342)
     }
 
     @Test
