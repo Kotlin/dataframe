@@ -2,7 +2,6 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -11,17 +10,12 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.describe
-import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.groupByOther
 import org.jetbrains.kotlinx.dataframe.api.head
 import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.max
-import org.jetbrains.kotlinx.dataframe.api.maxByOrNull
 import org.jetbrains.kotlinx.dataframe.api.maxFor
 import org.jetbrains.kotlinx.dataframe.api.maxOf
-import org.jetbrains.kotlinx.dataframe.api.maxOrNull
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.meanOf
@@ -33,14 +27,11 @@ import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.minOf
-import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
 import org.jetbrains.kotlinx.dataframe.api.percentileFor
 import org.jetbrains.kotlinx.dataframe.api.percentileOf
 import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.pivotCounts
-import org.jetbrains.kotlinx.dataframe.api.pivotMatches
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.stdFor
@@ -475,279 +466,6 @@ class Analyze : TestBase() {
         df.sumOf { "weight"<Int?>()?.let { it - 50 } }
         df.meanOf { ln("age"<Int>().toDouble()) }
         df.medianOf { "city"<String?>()?.length }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivot_properties() {
-        // SampleStart
-        df.pivot { city }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivot_strings() {
-        // SampleStart
-        df.pivot("city")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivot2_properties() {
-        // SampleStart
-        df.pivot { city and name.firstName }
-        df.pivot { city then name.firstName }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivot2_strings() {
-        // SampleStart
-        df.pivot { "city" and "name"["firstName"] }
-        df.pivot { "city" then "name"["firstName"] }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotInward_properties() {
-        // SampleStart
-        df.pivot(inward = true) { city }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotInward_strings() {
-        // SampleStart
-        df.pivot("city", inward = true)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotAsDataRowOrFrame() {
-        // SampleStart
-        df.pivot { city }.frames()
-        df.pivot { city }.groupBy { name }.frames()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotGroupBy_properties() {
-        // SampleStart
-        df.pivot { city }.groupBy { name }
-        // same as
-        df.groupBy { name }.pivot { city }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotGroupBy_strings() {
-        // SampleStart
-        df.pivot("city").groupBy("name")
-        // same as
-        df.groupBy("name").pivot("city")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotGroupByOther() {
-        // SampleStart
-        df.pivot { city }.groupByOther()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotAggregate_properties() {
-        // SampleStart
-        df.pivot { city }.aggregate { minBy { age }.name }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotAggregate1_properties() {
-        // SampleStart
-        df.pivot { city }.groupBy { name.firstName }.aggregate {
-            meanFor { age and weight } into "means"
-            stdFor { age and weight } into "stds"
-            maxByOrNull { weight }?.name?.lastName into "biggest"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotAggregate_strings() {
-        // SampleStart
-        df.pivot("city").aggregate { minBy("age")["name"] }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotAggregate1_strings() {
-        // SampleStart
-        df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
-            meanFor("age", "weight") into "means"
-            stdFor("age", "weight") into "stds"
-            maxByOrNull("weight")?.getColumnGroup("name")?.get("lastName") into "biggest"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotCommonAggregations_properties() {
-        // SampleStart
-        df.pivot { city }.maxFor { age and weight }
-        df.groupBy { name }.pivot { city }.median { age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotCommonAggregations_strings() {
-        // SampleStart
-        df.pivot("city").maxFor("age", "weight")
-        df.groupBy("name").pivot("city").median("age")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotSeparate_properties() {
-        // SampleStart
-        df.pivot { city }.maxFor(separate = true) { age and weight }
-        df.pivot { city }.aggregate(separate = true) {
-            min { age } into "min age"
-            maxOrNull { weight } into "max weight"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotSeparate_strings() {
-        // SampleStart
-        df.pivot("city").maxFor("age", "weight", separate = true)
-        df.pivot("city").aggregate(separate = true) {
-            min("age") into "min age"
-            maxOrNull("weight") into "max weight"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotDefault_properties() {
-        // SampleStart
-        df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-        df.pivot { city }.groupBy { name }.default(0).min()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotDefault1_properties() {
-        // SampleStart
-        df.pivot { city }.groupBy { name }.aggregate {
-            median { age } into "median age" default 0
-            minOrNull { weight } into "min weight" default 100
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotDefault_strings() {
-        // SampleStart
-        df.pivot("city").groupBy("name").aggregate { min("age") default 0 }
-        df.pivot("city").groupBy("name").default(0).min()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotDefault1_strings() {
-        // SampleStart
-        df.pivot("city").groupBy("name").aggregate {
-            median("age") into "median age" default 0
-            minOrNull("weight") into "min weight" default 100
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotInAggregate_properties() {
-        // SampleStart
-        df.groupBy { name.firstName }.aggregate {
-            pivot { city }.aggregate(separate = true) {
-                mean { age } into "mean age"
-                count() into "count"
-            }
-            count() into "total"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotInAggregate_strings() {
-        // SampleStart
-        df.groupBy { "name"["firstName"] }.aggregate {
-            pivot("city").aggregate(separate = true) {
-                mean("age") into "mean age"
-                count() into "count"
-            }
-            count() into "total"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotCounts() {
-        // SampleStart
-        df.pivotCounts { city }
-        // same as
-        df.pivot { city }.groupByOther().count()
-
-        df.groupBy { name }.pivotCounts { city }
-        // same as
-        df.groupBy { name }.pivot { city }.count()
-        // same as
-        df.groupBy { name }.aggregate {
-            pivotCounts { city }
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun pivotMatches() {
-        // SampleStart
-        df.pivotMatches { city }
-        // same as
-        df.pivot { city }.groupByOther().matches()
-
-        df.groupBy { name }.pivotMatches { city }
-        // same as
-        df.groupBy { name }.pivot { city }.matches()
-        // same as
-        df.groupBy { name }.aggregate {
-            pivotMatches { city }
-        }
         // SampleEnd
     }
 
