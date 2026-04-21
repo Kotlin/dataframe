@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import kotlin.reflect.KType
 
 internal open class FrameColumnImpl<T> constructor(
     name: String,

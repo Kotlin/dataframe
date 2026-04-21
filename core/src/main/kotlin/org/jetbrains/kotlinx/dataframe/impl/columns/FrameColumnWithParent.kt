@@ -1,11 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import kotlin.reflect.KType
 
 internal class FrameColumnWithParent<T>(override val parent: ColumnGroup<*>, override val source: FrameColumn<T>) :
     ColumnWithParent<DataFrame<T>>,

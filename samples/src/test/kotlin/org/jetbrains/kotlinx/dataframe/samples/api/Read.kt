@@ -5,11 +5,8 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.deephaven.csv.parsers.Parsers
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.format.DateTimeFormat
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.Padding
-import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.format.char
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -28,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Ignore
 import org.junit.Test
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.typeOf
 

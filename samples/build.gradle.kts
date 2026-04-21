@@ -1,21 +1,4 @@
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.exclude
-import org.gradle.kotlin.dsl.implementation
-import org.gradle.kotlin.dsl.invoke
-import org.gradle.kotlin.dsl.java
-import org.gradle.kotlin.dsl.korro
-import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.libs
-import org.gradle.kotlin.dsl.main
-import org.gradle.kotlin.dsl.projects
-import org.gradle.kotlin.dsl.repositories
-import org.gradle.kotlin.dsl.runKtlintCheckOverMainSourceSet
-import org.gradle.kotlin.dsl.runKtlintCheckOverTestSourceSet
-import org.gradle.kotlin.dsl.runKtlintFormatOverMainSourceSet
-import org.gradle.kotlin.dsl.runKtlintFormatOverTestSourceSet
-import org.gradle.kotlin.dsl.sourceSets
-import org.gradle.kotlin.dsl.test
-import org.gradle.kotlin.dsl.testImplementation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {

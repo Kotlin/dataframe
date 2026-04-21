@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.multik.api.mk
 import org.jetbrains.kotlinx.multik.api.rand
-import org.jetbrains.kotlinx.multik.ndarray.data.get
 
 /**
  * Let's explore some ways we can combine Multik with Kotlin DataFrame.

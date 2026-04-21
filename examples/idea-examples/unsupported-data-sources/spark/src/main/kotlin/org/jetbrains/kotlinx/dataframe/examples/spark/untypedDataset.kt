@@ -15,9 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.std
-import org.jetbrains.kotlinx.dataframe.examples.spark.convertToDataFrame
-import org.jetbrains.kotlinx.dataframe.examples.spark.convertToDataFrameByInference
-import org.jetbrains.kotlinx.dataframe.examples.spark.convertToSpark
 import org.jetbrains.kotlinx.spark.api.col
 import org.jetbrains.kotlinx.spark.api.gt
 

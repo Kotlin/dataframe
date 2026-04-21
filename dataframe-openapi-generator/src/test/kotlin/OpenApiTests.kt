@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 import java.io.File
 import java.io.File.separatorChar
-import java.io.InputStream
 
 class OpenApiTests : JupyterReplTestCase() {
 
