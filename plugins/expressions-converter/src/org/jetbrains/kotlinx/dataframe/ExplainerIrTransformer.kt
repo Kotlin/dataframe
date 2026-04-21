@@ -166,10 +166,10 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
             }
             val builder = pluginContext.irBuiltIns.createIrBuilder(expression.symbol)
             return builder.transformDataFrameExpression(
-                expression,
-                expression.symbol.owner.name,
+                expression = expression,
+                ownerName = expression.symbol.owner.name,
                 receiver = receiver,
-                data,
+                data = data,
             )
         }
         return super.visitExpression(expression, data)
