@@ -43,8 +43,8 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
-import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.Instant as DeprecatedInstant
+import kotlin.time.Instant as StdlibInstant
 
 // non-standard value types (not supertypes, but exact types)
 private val valueTypes = setOf(
