@@ -111,7 +111,10 @@ df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLe
 <tab title="Strings">
 
 ```kotlin
-df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
+df.groupBy {
+    expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named
+        "nameLength"
+}
 ```
 
 </tab></tabs>
@@ -906,7 +909,11 @@ df.groupBy("city").max("age") // max age into column "age"
 
 ```kotlin
 df.groupBy { city }
-    .max { name.firstName.map { it.length } and name.lastName.map { it.length } } // maximum length of firstName or lastName into column "max"
+    .max {
+        name.firstName.map {
+            it.length
+        } and name.lastName.map { it.length }
+    } // maximum length of firstName or lastName into column "max"
 ```
 
 </tab>
@@ -1032,7 +1039,9 @@ df.groupBy("city")
 
 ```kotlin
 df.groupBy { city }
-    .minFor { (age into "minAge") and (weight into "minWeight") } // min age into column "min age", min weight into column "min weight"
+    .minFor {
+        (age into "minAge") and (weight into "minWeight")
+    } // min age into column "min age", min weight into column "min weight"
 ```
 
 </tab>
@@ -1040,7 +1049,9 @@ df.groupBy { city }
 
 ```kotlin
 df.groupBy("city")
-    .minFor { ("age"<Int>() into "minAge") and ("weight"<Int?>() into "minWeight") } // min age into column "min age", min weight into column "min weight"
+    .minFor {
+        ("age"<Int>() into "minAge") and ("weight"<Int?>() into "minWeight")
+    } // min age into column "min age", min weight into column "min weight"
 ```
 
 </tab></tabs>
