@@ -2,8 +2,6 @@ package org.jetbrains.kotlinx.dataframe.exceptions
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.type
 
 /**
  * Extension properties are generated according to [DataColumn.type] property

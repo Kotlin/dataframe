@@ -7,8 +7,6 @@ import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
-import java.lang.ClassCastException
-import java.lang.IllegalArgumentException
 
 class GetTests {
 

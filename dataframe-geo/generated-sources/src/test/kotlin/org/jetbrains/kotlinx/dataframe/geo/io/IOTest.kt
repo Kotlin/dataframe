@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.geo.io
 
-import org.geotools.referencing.CRS
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.toGeo
