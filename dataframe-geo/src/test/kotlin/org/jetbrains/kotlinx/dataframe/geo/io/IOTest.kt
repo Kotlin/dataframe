@@ -28,7 +28,6 @@ class IOTest {
     private val simplePointsGeoDf = simplePointsDf.toGeo(GeoDataFrame.DEFAULT_CRS)
     private val classLoader = (this::class as Any).javaClass.classLoader
 
-
     private val citiesShapefileDirectoryLink =
         "https://github.com/AndreiKingsley/datasets/raw/refs/heads/main/ne_10m_populated_places_simple"
 
