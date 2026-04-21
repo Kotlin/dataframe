@@ -4,7 +4,7 @@ dataframe = "1.0.0-Beta4"
 ktlint-gradle = "14.0.1"
 ktlint = "1.8.0"
 kandy = "0.8.3"
-log4j = "2.25.2"
+log4j = "2.25.4"
 spark4 = "4.0.0"
 
 
