@@ -71,7 +71,6 @@ import kotlin.time.Duration
 import kotlin.time.toKotlinInstant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import kotlinx.datetime.Instant as DeprecatedInstant
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
@@ -80,6 +79,7 @@ import java.time.LocalTime as JavaLocalTime
 import java.time.format.DateTimeFormatter as JavaDateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder as JavaDateTimeFormatterBuilder
 import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 private val logger = KotlinLogging.logger { }
 

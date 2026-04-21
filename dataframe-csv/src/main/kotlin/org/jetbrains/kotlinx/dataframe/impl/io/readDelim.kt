@@ -68,8 +68,8 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
-import kotlinx.datetime.Instant as DeprecatedInstant
 import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * Implementation to read delimiter-separated data from an [InputStream] based on the Deephaven CSV library.

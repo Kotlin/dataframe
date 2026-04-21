@@ -39,7 +39,6 @@ import kotlin.time.toJavaInstant
 import kotlin.time.toKotlinInstant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import kotlinx.datetime.Instant as DeprecatedInstant
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
@@ -47,6 +46,7 @@ import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
 import java.time.Month as JavaMonth
 import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 class ParseTests {
 
