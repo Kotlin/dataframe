@@ -207,10 +207,16 @@
 <resource src="maxOnGroupBy_properties.html"></resource>
 <resource src="maxSelectedOnGroupBy_properties.html"></resource>
 <resource src="maxOnGroupByNameLength_properties.html"></resource>
+<resource src="maxForOnGroupBy_properties.html"></resource>
+<resource src="maxOfOnGroupBy_properties.html"></resource>
 <resource src="meanOnGroupBy_properties.html"></resource>
 <resource src="meanOfOnGroupBy_properties.html"></resource>
+<resource src="stdOnGroupBy_properties.html"></resource>
 <resource src="sumOnGroupBy_properties.html"></resource>
+<resource src="medianOnGroupBy_properties.html"></resource>
 <resource src="medianForOnGroupBy_properties.html"></resource>
+<resource src="percentileOnGroupBy_properties.html"></resource>
+<resource src="minOnGroupBy_properties.html"></resource>
 <resource src="minForOnGroupBy_properties.html"></resource>
 <resource src="pivotOnGroupBy_properties.html"></resource>
 <resource src="sortByOnGroupBy_properties.html"></resource>
