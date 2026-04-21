@@ -34,7 +34,6 @@ To parse only particular columns, use a [column selector](ColumnSelectors.md):
 ```kotlin
 df.parse { date and value }
 ```
-<inline-frame src="./resources/parseSome.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
@@ -122,7 +121,7 @@ df.parse(
     options = ParserOptions(
         locale = Locale.GERMAN,
         dateTime = DateTimeParserOptions.Java
-            .withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE),
+            .withFormatter<java.time.LocalDate>(formatter = DateTimeFormatter.ISO_WEEK_DATE),
     ),
 )
 ```
