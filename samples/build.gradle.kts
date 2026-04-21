@@ -106,6 +106,7 @@ korro {
         include("docs/StardustDocs/topics/info/*.md")
         include("docs/StardustDocs/topics/columnArithmetics.md")
         include("docs/StardustDocs/topics/groupBy.md")
+        include("docs/StardustDocs/topics/pivot.md")
     }
 
     samples = fileTree(project.projectDir) {
