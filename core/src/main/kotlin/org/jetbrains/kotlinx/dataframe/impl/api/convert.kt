@@ -30,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.isValueColumn
+import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
@@ -40,11 +41,13 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.isSubtypeWithNullabilityOf
 import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
+import java.util.Locale
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.reflect.KType
@@ -62,7 +65,6 @@ import kotlin.time.toJavaInstant
 import kotlin.time.toKotlinDuration
 import kotlin.time.toKotlinInstant
 import kotlin.toBigDecimal
-import kotlinx.datetime.Instant as DeprecatedInstant
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
@@ -71,6 +73,7 @@ import java.time.LocalTime as JavaLocalTime
 import kotlin.time.Instant as StdlibInstant
 import kotlin.toBigDecimal as toBigDecimalKotlin
 import kotlin.toBigInteger as toBigIntegerKotlin
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(

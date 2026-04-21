@@ -1,3 +1,4 @@
+import org.jetbrains.dataframe.gradle.DataSchemaVisibility
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {

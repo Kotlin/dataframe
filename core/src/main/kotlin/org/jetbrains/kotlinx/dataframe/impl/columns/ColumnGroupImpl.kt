@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.renderSchema
 import org.jetbrains.kotlinx.dataframe.nrow
+import kotlin.reflect.KType
 
 internal val anyRowType = createTypeWithArgument<AnyRow>()
 

@@ -30,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 import org.jetbrains.kotlinx.dataframe.path
+import kotlin.collections.first
 
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
     val removeResult = df.removeImpl(columns = columns)

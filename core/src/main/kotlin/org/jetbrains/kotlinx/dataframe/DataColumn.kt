@@ -1,10 +1,5 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.kotlinx.dataframe.DataColumn.Companion.createByInference
-import org.jetbrains.kotlinx.dataframe.DataColumn.Companion.createColumnGroup
-import org.jetbrains.kotlinx.dataframe.DataColumn.Companion.createFrameColumn
-import org.jetbrains.kotlinx.dataframe.DataColumn.Companion.createValueColumn
-import org.jetbrains.kotlinx.dataframe.DataColumn.Companion.emptyOf
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast

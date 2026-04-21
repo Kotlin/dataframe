@@ -8,8 +8,10 @@ import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
+import org.jetbrains.kotlinx.dataframe.path
 
 internal class SingleAttribute(val key: String, val value: String) : CellAttributes {
     override fun attributes() = listOf(key to value)

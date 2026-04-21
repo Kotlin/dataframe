@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
+import java.lang.IllegalArgumentException
 
 class CastTests {
 

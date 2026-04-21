@@ -1,7 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
+import kotlin.reflect.KType
 
 /**
  * Represents the MSSQL database type.

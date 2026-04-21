@@ -3,6 +3,7 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.io.db.JdbcTypesTest.MySqlDBTypes.BIGINT_UNSIGNED
 import org.junit.Test
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith

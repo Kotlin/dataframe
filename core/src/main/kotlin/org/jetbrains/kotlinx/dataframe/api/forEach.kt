@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.columns.values
 
 // region DataColumn
 

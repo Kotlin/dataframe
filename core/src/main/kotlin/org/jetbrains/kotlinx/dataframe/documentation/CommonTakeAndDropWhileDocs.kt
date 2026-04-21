@@ -3,7 +3,9 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind

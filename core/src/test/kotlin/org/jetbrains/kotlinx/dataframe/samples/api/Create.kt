@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.preserve
 import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame

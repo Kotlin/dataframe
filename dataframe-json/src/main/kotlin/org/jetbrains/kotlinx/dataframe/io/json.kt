@@ -23,8 +23,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.encodeDataFrameWithMetadata
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeRow
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
-import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.GZIP_ON
-import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import java.io.File

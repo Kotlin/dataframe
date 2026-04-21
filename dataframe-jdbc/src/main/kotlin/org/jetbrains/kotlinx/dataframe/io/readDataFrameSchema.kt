@@ -4,12 +4,16 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.sql.Connection
+import java.sql.DatabaseMetaData
 import java.sql.DriverManager
 import java.sql.ResultSet
+import java.sql.ResultSetMetaData
+import java.sql.SQLException
 import javax.sql.DataSource
 import kotlin.reflect.typeOf
 

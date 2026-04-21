@@ -1,6 +1,10 @@
 package `org`.`jetbrains`.`kotlinx`.`dataframe`.`samples`.`api`
 
+import org.jetbrains.kotlinx.dataframe.ColumnsScope
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast

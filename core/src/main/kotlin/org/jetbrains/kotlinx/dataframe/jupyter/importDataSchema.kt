@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import org.intellij.lang.annotations.Language
 import java.io.File
 import java.net.URI
 import java.net.URL

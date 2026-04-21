@@ -28,7 +28,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Converter
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.Convert.ToSnippet
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -80,13 +79,13 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
-import kotlinx.datetime.Instant as DeprecatedInstant
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
 import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * See also [parse] — a specialized form of the [convert] operation that parses [String] columns

@@ -33,7 +33,9 @@ import kotlin.math.roundToLong
 import kotlin.random.Random
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 import kotlin.time.toKotlinDuration

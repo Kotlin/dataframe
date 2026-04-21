@@ -27,6 +27,7 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.valueParameters
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
