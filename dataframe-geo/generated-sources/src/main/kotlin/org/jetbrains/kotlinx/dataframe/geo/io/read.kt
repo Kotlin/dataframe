@@ -10,7 +10,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.geotools.toGeoDataFrame
 import org.jetbrains.kotlinx.dataframe.io.asUrl
+import org.jetbrains.kotlinx.dataframe.io.isUrl
 import java.io.File
+import java.net.URI
 import java.net.URL
 
 /**
@@ -187,7 +189,7 @@ internal typealias ReadShapefileSnippet = Nothing
  * @return a new [GeoDataFrame] with the data from the Shapefile
  */
 public fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {
-    val url = resolveShapefileUrl(path)
+    val url = if (isUrl(path)) resolveRemoteShapefileUrl(URI(path).toURL()) else resolveShapefileUrl(path)
     return readShapeFileImpl(url)
 }
 
@@ -217,7 +219,7 @@ public fun GeoDataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> {
     val resolvedUrl = if (url.protocol == "file") {
         resolveShapefileUrl(url.path)
     } else {
-        url
+        resolveRemoteShapefileUrl(url)
     }
     return readShapeFileImpl(resolvedUrl)
 }
@@ -228,6 +230,16 @@ private fun readShapeFileImpl(url: URL): GeoDataFrame<*> {
         return dataStore.featureSource.features.toGeoDataFrame()
     } finally {
         dataStore.dispose()
+    }
+}
+
+private fun resolveRemoteShapefileUrl(url: URL): URL {
+    val urlPath = url.path.trimEnd('/')
+    return if (urlPath.endsWith(".shp") || urlPath.endsWith(".shp.gz")) {
+        url
+    } else {
+        val dirName = urlPath.substringAfterLast('/')
+        URI("${url.toString().trimEnd('/')}/$dirName.shp").toURL()
     }
 }
 
