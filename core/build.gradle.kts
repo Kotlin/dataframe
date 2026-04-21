@@ -214,6 +214,13 @@ korro {
         funSuffix("_strings") {
             replaceText("NAME", "Strings")
         }
+        funSuffix("_kotlin") {
+            replaceText("NAME", "Kotlin")
+        }
+        funSuffix("_java") {
+            replaceText("NAME", "Java")
+        }
+
         beforeGroup = "<tabs>\n"
         afterGroup = "</tabs>"
     }
