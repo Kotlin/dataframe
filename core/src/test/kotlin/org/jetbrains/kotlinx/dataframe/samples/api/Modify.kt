@@ -3,6 +3,9 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -12,6 +15,8 @@ import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
+import org.jetbrains.kotlinx.dataframe.api.addDateTimeFormat
+import org.jetbrains.kotlinx.dataframe.api.addJavaDateTimeFormatter
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asFrame
@@ -271,7 +276,8 @@ class Modify : TestBase() {
         df.parse(
             options = ParserOptions(
                 locale = Locale.CHINA,
-                dateTime = DateTimeParserOptions.Java.withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE)
+                dateTime = DateTimeParserOptions.Java
+                    .withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE),
             )
         )
         // SampleEnd
@@ -283,6 +289,54 @@ class Modify : TestBase() {
         // SampleStart
         DataFrame.parser.locale = Locale.FRANCE
         DataFrame.parser.addJavaDateTimePattern("dd.MM.uuuu HH:mm:ss")
+        // SampleEnd
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun globalParserOptionsConvertCombination() {
+        val stringCol by columnOf("550e8400-e29b-41d4-a716-446655440000")
+        // SampleStart
+        DataFrame.parser.parseExperimentalUuid = false
+        stringCol.convertTo<kotlin.uuid.Uuid>() // will still parse to `kotlin.uuid.Uuid`, as expected
+        // SampleEnd
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun resetGlobalParserOptions() {
+        // SampleStart
+        DataFrame.parser.resetToDefault()
+        // SampleEnd
+    }
+
+    @Test
+    fun globalParserOptionsAddDateTimeFormat_kotlin() {
+        // SampleStart
+        // Adding a custom DateTimeFormat using the kotlinx-datetime Format-DSL
+        DataFrame.parser.addDateTimeFormat(
+            LocalDate.Format {
+                monthNumber(padding = Padding.SPACE); char('/'); day(); char(' '); year()
+            },
+        )
+
+        // now this will succeed!
+        columnOf("12/24 2023").parse()
+        // SampleEnd
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun globalParserOptionsAddDateTimeFormat_java() {
+        // SampleStart
+        // Adding a custom DateTimeFormatter type-safely for LocalDateTime only
+        DataFrame.parser.addJavaDateTimeFormatter<java.time.LocalDateTime>(DateTimeFormatter.RFC_1123_DATE_TIME)
+
+        // or, adding it for all java-types: Local(Date)(Time), and Instant
+        DataFrame.parser.addJavaDateTimeFormatter(DateTimeFormatter.RFC_1123_DATE_TIME)
+
+        // now this will succeed!
+        columnOf("Tue, 3 Jun 2008 11:05:30 GMT").parse()
         // SampleEnd
         DataFrame.parser.resetToDefault()
     }
