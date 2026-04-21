@@ -34,7 +34,6 @@ To parse only particular columns, use a [column selector](ColumnSelectors.md):
 ```kotlin
 df.parse { date and value }
 ```
-<inline-frame src="./resources/parseSome.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
