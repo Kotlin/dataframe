@@ -25,6 +25,8 @@ import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
+import org.jetbrains.kotlinx.dataframe.api.maxFor
+import org.jetbrains.kotlinx.dataframe.api.maxOf
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanOf
 import org.jetbrains.kotlinx.dataframe.api.median
@@ -34,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
+import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.sortBy
@@ -41,6 +44,7 @@ import org.jetbrains.kotlinx.dataframe.api.sortByCount
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortByGroup
 import org.jetbrains.kotlinx.dataframe.api.sortByKey
+import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.values
@@ -79,6 +83,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         }
     }
 
+    // region df and groupBy
+
     @Test
     fun groupByDf() {
         // SampleStart
@@ -116,6 +122,236 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         df.groupBy("isHappy")
         // SampleEnd
     }
+
+    @Test
+    fun groupByTwoColumns_properties() {
+        // SampleStart
+        df.groupBy { name.firstName and isHappy }
+            // SampleEnd
+            .toDataFrame()
+            .defaultHeaderFormatting { firstName and isHappy }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun groupByTwoColumns_strings() {
+        // SampleStart
+        df.groupBy { "name"["firstName"]<String>() and "isHappy" }
+        // SampleEnd
+    }
+
+    @Test
+    fun groupByNewColumn_properties() {
+        // SampleStart
+        df.groupBy { age / 10 named "ageDecade" }
+            // SampleEnd
+            .toDataFrame()
+            .defaultHeaderFormatting { "ageDecade"<Int>() }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun groupByNewColumn_strings() {
+        // SampleStart
+        df.groupBy { "age"<Int>() / 10 named "ageDecade" }
+        // SampleEnd
+    }
+
+    @Test
+    fun groupByExpr_properties() {
+        // SampleStart
+        df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
+            // SampleEnd
+            .toDataFrame()
+            .defaultHeaderFormatting { nameLength }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun groupByExpr_strings() {
+        // SampleStart
+        df.groupBy {
+            expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named
+                "nameLength"
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun groupByMoveToTop_properties() {
+        // SampleStart
+        df.groupBy(moveToTop = true) { name.firstName }
+            // SampleEnd
+            .toDataFrame()
+            .defaultHeaderFormatting { firstName }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun groupByMoveToTop_strings() {
+        // SampleStart
+        df.groupBy(moveToTop = true) { "name"["firstName"]<String>() }
+        // SampleEnd
+    }
+
+    @Test
+    fun groupByMoveToTopFalse_properties() {
+        // SampleStart
+        df.groupBy(moveToTop = false) { name.firstName }
+            // SampleEnd
+            .toDataFrame()
+            .defaultHeaderFormatting { name.firstName }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun groupByMoveToTopFalse_strings() {
+        // SampleStart
+        df.groupBy(moveToTop = false) { "name"["firstName"]<String>() }
+        // SampleEnd
+    }
+
+    @Test
+    fun dataFrameToGroupBy_properties() {
+        // SampleStart
+        val df = dataFrameOf(
+            "key" to columnOf(1, 2),
+            "data" to columnOf(df[0..3], df[4..6]),
+        ) // create dataframe with two columns
+
+        df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' column as groups
+        // SampleEnd
+    }
+
+    @Test
+    fun dataFrameToGroupBy_strings() {
+        // SampleStart
+        val df = dataFrameOf(
+            "key" to columnOf(1, 2),
+            "data" to columnOf(df[0..3], df[4..6]),
+        ) // create dataframe with two columns
+
+        df.asGroupBy("data") // convert dataframe to GroupBy by interpreting 'data' column as groups
+        // SampleEnd
+    }
+
+    // endregion
+
+    // region transformation
+
+    @Test
+    fun sortByOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.sortBy { age }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun sortByOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("isHappy").sortBy("age")
+        // SampleEnd
+    }
+
+    @Test
+    fun sortByGroupOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.sortByGroup { mean { age } }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun sortByGroupOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("isHappy").sortByGroup { mean("age") }
+        // SampleEnd
+    }
+
+    @Test
+    fun sortByCountOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { age }.sortByCount()
+            // SampleEnd
+            .toDataFrame()
+            .defaultHeaderFormatting { group }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun sortByCountOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("age").sortByCount()
+        // SampleEnd
+    }
+
+    @Test
+    fun sortByKeyOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { age }.sortByKey()
+            // SampleEnd
+            .toDataFrame()
+            .defaultHeaderFormatting { age }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun sortByKeyOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy { age }.sortByKey()
+        // SampleEnd
+    }
+
+    @Test
+    fun updateGroupsOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.updateGroups { sortByDesc { age }.take(2) }
+            // SampleEnd
+            .toDataFrame()
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun updateGroupsOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("isHappy").updateGroups { sortByDesc("age").take(2) }
+        // SampleEnd
+    }
+
+    @Test
+    fun filterOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.filter { group.median { age } > 20 }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun filterOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("isHappy").filter { group.median { "age"<Int>() } > 20 }
+        // SampleEnd
+    }
+
+    @Test
+    fun addOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.add("isAdult") { age >= 18 }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun addOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("isHappy").add("isAdult") { "age"<Int>() >= 18 }
+        // SampleEnd
+    }
+
+    // endregion
+
+    // region reducing (step 1)
 
     @Test
     fun groupByDfGroupedReducing_properties() {
@@ -249,6 +485,10 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleEnd
     }
 
+    // endregion
+
+    // region reducing (step 2)
+
     @Test
     fun groupByConcat_properties() {
         // SampleStart
@@ -261,8 +501,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun groupByConcat_strings() {
         // SampleStart
         df.groupBy("isHappy").minBy("age").concat()
-            // SampleEnd
-            .saveDfHtmlSample()
+        // SampleEnd
     }
 
     @Test
@@ -277,8 +516,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun groupByValues_strings() {
         // SampleStart
         df.groupBy("isHappy").minBy("age").values("name", "age", "city")
-            // SampleEnd
-            .saveDfHtmlSample()
+        // SampleEnd
     }
 
     @Test
@@ -289,14 +527,16 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
             .saveDfHtmlSample()
     }
 
-    // Is it correct? If I do `this["name"]`, `youngest` becomes a FrameColumn instead of a ColumnGroup
     @Test
     fun groupByInto_strings() {
         // SampleStart
         df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
-            // SampleEnd
-            .saveDfHtmlSample()
+        // SampleEnd
     }
+
+    // endregion
+
+    // region aggregation
 
     @Test
     fun concatOnGroupBy_properties() {
@@ -471,6 +711,10 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleEnd
     }
 
+    // endregion
+
+    // region aggregation statistics
+
     @Test
     fun maxOnGroupBy_properties() {
         // SampleStart
@@ -489,15 +733,47 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun maxSelectedOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { city }.max { age } // max age into column "age"
+        df.groupBy { isHappy }.max { age and weight }
             // SampleEnd
+            .defaultHeaderFormatting { "max"<Int>() }
             .saveDfHtmlSample()
     }
 
     @Test
     fun maxSelectedOnGroupBy_strings() {
         // SampleStart
-        df.groupBy("city").max("age") // max age into column "age"
+        df.groupBy("city").max("age", "weight")
+        // SampleEnd
+    }
+
+    @Test
+    fun maxForOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.maxFor { age and weight }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun maxForOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("isHappy").maxFor("age", "weight")
+        // SampleEnd
+    }
+
+    @Test
+    fun maxOfOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.maxOf { if (age < 30) weight else null }
+            // SampleEnd
+            .defaultHeaderFormatting { max }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun maxOfOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("isHappy").maxOf { if ("age"<Int>() < 30) "weight"<Int>() else null }
         // SampleEnd
     }
 
@@ -521,6 +797,60 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         df.groupBy("city").max {
             "name"["firstName"]<String>().map { it.length } and "name"["lastName"]<String>().map { it.length }
         } // maximum length of firstName or lastName into column "max"
+        // SampleEnd
+    }
+
+    @Test
+    fun minOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.min { age }
+            // SampleEnd
+            .defaultHeaderFormatting { "age"<Int>() }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun minOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("isHappy").min("age")
+        // SampleEnd
+    }
+
+    @Test
+    fun minForOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { city }
+            .minFor {
+                (age into "minAge") and (weight into "minWeight")
+            } // min age into column "min age", min weight into column "min weight"
+            // SampleEnd
+            .defaultHeaderFormatting { minAge and minWeight }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun minForOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("city")
+            .minFor {
+                ("age"<Int>() into "minAge") and ("weight"<Int?>() into "minWeight")
+            } // min age into column "min age", min weight into column "min weight"
+        // SampleEnd
+    }
+
+    @Test
+    fun sumOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { city }.sum("totalWeight") { weight } // sum of weights into column "total weight"
+            // SampleEnd
+            .defaultHeaderFormatting { "totalWeight"<Int?>() }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun sumOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("city").sum("weight", name = "totalWeight") // sum of weights into column "total weight"
         // SampleEnd
     }
 
@@ -558,18 +888,34 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     }
 
     @Test
-    fun sumOnGroupBy_properties() {
+    fun stdOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { city }.sum("totalWeight") { weight } // sum of weights into column "total weight"
+        df.groupBy { isHappy }.std { age }
             // SampleEnd
-            .defaultHeaderFormatting { "totalWeight"<Int?>() }
+            .defaultHeaderFormatting { "age"() }
             .saveDfHtmlSample()
     }
 
     @Test
-    fun sumOnGroupBy_strings() {
+    fun stdOnGroupBy_strings() {
         // SampleStart
-        df.groupBy("city").sum("weight", name = "totalWeight") // sum of weights into column "total weight"
+        df.groupBy("isHappy").std("age")
+        // SampleEnd
+    }
+
+    @Test
+    fun medianOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { isHappy }.median { age }
+            // SampleEnd
+            .defaultHeaderFormatting { "age"() }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun medianOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("isHappy").median("age")
         // SampleEnd
     }
 
@@ -591,26 +937,24 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     }
 
     @Test
-    fun minForOnGroupBy_properties() {
+    fun percentileOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { city }
-            .minFor {
-                (age into "minAge") and (weight into "minWeight")
-            } // min age into column "min age", min weight into column "min weight"
+        df.groupBy { isHappy }.percentile(25.0) { age }
             // SampleEnd
-            .defaultHeaderFormatting { minAge and minWeight }
+            .defaultHeaderFormatting { "age"() }
             .saveDfHtmlSample()
     }
 
     @Test
-    fun minForOnGroupBy_strings() {
+    fun percentileOnGroupBy_strings() {
         // SampleStart
-        df.groupBy("city")
-            .minFor {
-                ("age"<Int>() into "minAge") and ("weight"<Int?>() into "minWeight")
-            } // min age into column "min age", min weight into column "min weight"
+        df.groupBy("isHappy").percentile(25.0) { "age"<Int>() }
         // SampleEnd
     }
+
+    // endregion
+
+    // region pivot + groupBy
 
     @Test
     fun pivotOnGroupBy_properties() {
@@ -628,225 +972,5 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleEnd
     }
 
-    @Test
-    fun sortByOnGroupBy_properties() {
-        // SampleStart
-        df.groupBy { isHappy }.sortBy { age }
-            // SampleEnd
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun sortByOnGroupBy_strings() {
-        // SampleStart
-        df.groupBy("isHappy").sortBy("age")
-        // SampleEnd
-    }
-
-    @Test
-    fun sortByGroupOnGroupBy_properties() {
-        // SampleStart
-        df.groupBy { isHappy }.sortByGroup { mean { age } }
-            // SampleEnd
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun sortByGroupOnGroupBy_strings() {
-        // SampleStart
-        df.groupBy("isHappy").sortByGroup { mean("age") }
-        // SampleEnd
-    }
-
-    @Test
-    fun sortByCountOnGroupBy_properties() {
-        // SampleStart
-        df.groupBy { age }.sortByCount()
-            // SampleEnd
-            .toDataFrame()
-            .defaultHeaderFormatting { group }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun sortByCountOnGroupBy_strings() {
-        // SampleStart
-        df.groupBy("age").sortByCount()
-        // SampleEnd
-    }
-
-    @Test
-    fun sortByKeyOnGroupBy_properties() {
-        // SampleStart
-        df.groupBy { age }.sortByKey()
-            // SampleEnd
-            .toDataFrame()
-            .defaultHeaderFormatting { age }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun sortByKeyOnGroupBy_strings() {
-        // SampleStart
-        df.groupBy { age }.sortByKey()
-        // SampleEnd
-    }
-
-    @Test
-    fun updateGroupsOnGroupBy_properties() {
-        // SampleStart
-        df.groupBy { isHappy }.updateGroups { sortByDesc { age }.take(2) }
-            // SampleEnd
-            .toDataFrame()
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun updateGroupsOnGroupBy_strings() {
-        // SampleStart
-        df.groupBy("isHappy").updateGroups { sortByDesc("age").take(2) }
-        // SampleEnd
-    }
-
-    @Test
-    fun filterOnGroupBy_properties() {
-        // SampleStart
-        df.groupBy { isHappy }.filter { group.median { age } > 20 }
-            // SampleEnd
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun filterOnGroupBy_strings() {
-        // SampleStart
-        df.groupBy("isHappy").filter { group.median { "age"<Int>() } > 20 }
-        // SampleEnd
-    }
-
-    @Test
-    fun addOnGroupBy_properties() {
-        // SampleStart
-        df.groupBy { isHappy }.add("isAdult") { age >= 18 }
-            // SampleEnd
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun addOnGroupBy_strings() {
-        // SampleStart
-        df.groupBy("isHappy").add("isAdult") { "age"<Int>() >= 18 }
-        // SampleEnd
-    }
-
-    @Test
-    fun groupByTwoColumns_properties() {
-        // SampleStart
-        df.groupBy { name.firstName and isHappy }
-            // SampleEnd
-            .toDataFrame()
-            .defaultHeaderFormatting { firstName and isHappy }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun groupByTwoColumns_strings() {
-        // SampleStart
-        df.groupBy { "name"["firstName"]<String>() and "isHappy" }
-        // SampleEnd
-    }
-
-    @Test
-    fun groupByNewColumn_properties() {
-        // SampleStart
-        df.groupBy { age / 10 named "ageDecade" }
-            // SampleEnd
-            .toDataFrame()
-            .defaultHeaderFormatting { "ageDecade"<Int>() }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun groupByNewColumn_strings() {
-        // SampleStart
-        df.groupBy { "age"<Int>() / 10 named "ageDecade" }
-        // SampleEnd
-    }
-
-    @Test
-    fun groupByExpr_properties() {
-        // SampleStart
-        df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
-            // SampleEnd
-            .toDataFrame()
-            .defaultHeaderFormatting { nameLength }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun groupByExpr_strings() {
-        // SampleStart
-        df.groupBy {
-            expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named
-                "nameLength"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    fun groupByMoveToTop_properties() {
-        // SampleStart
-        df.groupBy(moveToTop = true) { name.firstName }
-            // SampleEnd
-            .toDataFrame()
-            .defaultHeaderFormatting { firstName }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun groupByMoveToTop_strings() {
-        // SampleStart
-        df.groupBy(moveToTop = true) { "name"["firstName"]<String>() }
-        // SampleEnd
-    }
-
-    @Test
-    fun groupByMoveToTopFalse_properties() {
-        // SampleStart
-        df.groupBy(moveToTop = false) { name.firstName }
-            // SampleEnd
-            .toDataFrame()
-            .defaultHeaderFormatting { name.firstName }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun groupByMoveToTopFalse_strings() {
-        // SampleStart
-        df.groupBy(moveToTop = false) { "name"["firstName"]<String>() }
-        // SampleEnd
-    }
-
-    @Test
-    fun dataFrameToGroupBy_properties() {
-        // SampleStart
-        val df = dataFrameOf(
-            "key" to columnOf(1, 2),
-            "data" to columnOf(df[0..3], df[4..6]),
-        ) // create dataframe with two columns
-
-        df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' column as groups
-        // SampleEnd
-    }
-
-    @Test
-    fun dataFrameToGroupBy_strings() {
-        // SampleStart
-        val df = dataFrameOf(
-            "key" to columnOf(1, 2),
-            "data" to columnOf(df[0..3], df[4..6]),
-        ) // create dataframe with two columns
-
-        df.asGroupBy("data") // convert dataframe to GroupBy by interpreting 'data' column as groups
-        // SampleEnd
-    }
+    // endregion
 }
