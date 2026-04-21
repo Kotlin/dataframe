@@ -1,8 +1,6 @@
 [//]: # (title: groupBy)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples-->
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
 Splits the rows of [`DataFrame`](DataFrame.md) into groups using one or several columns as grouping keys.
 
@@ -111,7 +109,10 @@ df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLe
 <tab title="Strings">
 
 ```kotlin
-df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
+df.groupBy {
+    expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named
+        "nameLength"
+}
 ```
 
 </tab></tabs>
@@ -119,7 +120,7 @@ df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<St
 <inline-frame src="./resources/groupByExpr_properties.html" width="100%" height="500px"></inline-frame>
 
 
-With optional `moveToTop` parameter you can choose whether to make a selected *nested column* a top-level column:  
+With the optional ` moveToTop ` parameter, you can choose whether to make a selected *nested column* a top-level column:  
 
 <!---FUN groupByMoveToTop-->
 <tabs>
@@ -361,7 +362,8 @@ This mechanism includes two steps.
 
 ### Step 1: use a reducing function to make a single row from each group
 To perform a reducing operation, use the following functions:
-* [`first`](first.md) / [`last`](last.md) – to get the first / last [row](DataRow.md) of each group.
+* [`first`](first.md) / [`last`](last.md) – to get the first / last [row](DataRow.md) 
+(optionally, the first or last one that satisfies a predicate) of each group.
 
 * [`minBy`](minBy.md) / [`maxBy`](maxBy.md) – to get from each group the first row that has the smallest / largest value in the given column.
 
@@ -812,7 +814,7 @@ df.groupBy("city").aggregate {
 <!---END-->
 <inline-frame src="resources/aggregateOnGroupBy_properties.html" width="100%"/>
 
-If only one aggregation function is used, column name can be omitted:
+If only one aggregation function is used, the column name can be omitted:
 
 <!---FUN aggregateOnGroupByWithoutInto-->
 <tabs>
@@ -886,19 +888,57 @@ df.groupBy("city").max() // max for every column with mutually comparable values
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { city }.max { age } // max age into column "age"
+df.groupBy { isHappy }.max { age and weight }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("city").max("age") // max age into column "age"
+df.groupBy("city").max("age", "weight")
 ```
 
 </tab></tabs>
 <!---END-->
 <inline-frame src="resources/maxSelectedOnGroupBy_properties.html" width="100%"/>
+
+<!---FUN maxForOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.maxFor { age and weight }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").maxFor("age", "weight")
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/maxForOnGroupBy_properties.html" width="100%"/>
+
+<!---FUN maxOfOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.maxOf { if (age < 30) weight else null }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").maxOf { if ("age"<Int>() < 30) "weight"<Int>() else null }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/maxOfOnGroupBy_properties.html" width="100%"/>
 
 <!---FUN maxOnGroupByNameLength-->
 <tabs>
@@ -906,7 +946,11 @@ df.groupBy("city").max("age") // max age into column "age"
 
 ```kotlin
 df.groupBy { city }
-    .max { name.firstName.map { it.length } and name.lastName.map { it.length } } // maximum length of firstName or lastName into column "max"
+    .max {
+        name.firstName.map {
+            it.length
+        } and name.lastName.map { it.length }
+    } // maximum length of firstName or lastName into column "max"
 ```
 
 </tab>
@@ -921,6 +965,71 @@ df.groupBy("city").max {
 </tab></tabs>
 <!---END-->
 <inline-frame src="resources/maxOnGroupByNameLength_properties.html" width="100%"/>
+
+###### min {collapsible="true"}
+<!---FUN minOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.min { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").min("age")
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/minOnGroupBy_properties.html" width="100%"/>
+
+<!---FUN minForOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }
+    .minFor {
+        (age into "minAge") and (weight into "minWeight")
+    } // min age into column "min age", min weight into column "min weight"
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city")
+    .minFor {
+        ("age"<Int>() into "minAge") and ("weight"<Int?>() into "minWeight")
+    } // min age into column "min age", min weight into column "min weight"
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/minForOnGroupBy_properties.html" width="100%"/>
+
+###### sum {collapsible="true"}
+<!---FUN sumOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.sum("totalWeight") { weight } // sum of weights into column "total weight"
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").sum("weight", name = "totalWeight") // sum of weights into column "total weight"
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/sumOnGroupBy_properties.html" width="100%"/>
 
 ###### mean {collapsible="true"}
 <!---FUN meanOnGroupBy-->
@@ -963,47 +1072,46 @@ df.groupBy("city").meanOf("meanRatio") {
 <!---END-->
 <inline-frame src="resources/meanOfOnGroupBy_properties.html" width="100%"/>
 
-###### sum {collapsible="true"}
-<!---FUN sumOnGroupBy-->
+###### std {collapsible="true"}
+<!---FUN stdOnGroupBy-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { city }.sum("totalWeight") { weight } // sum of weights into column "total weight"
+df.groupBy { isHappy }.std { age }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("city").sum("weight", name = "totalWeight") // sum of weights into column "total weight"
+df.groupBy("isHappy").std("age")
 ```
 
 </tab></tabs>
 <!---END-->
-<inline-frame src="resources/sumOnGroupBy_properties.html" width="100%"/>
-
-###### count {collapsible="true"}
-<!---FUN countOnGroupBy-->
-<tabs>
-<tab title="Properties">
-
-```kotlin
-df.groupBy { city }.count()
-```
-
-</tab>
-<tab title="Strings">
-
-```kotlin
-df.groupBy("city").count()
-```
-
-</tab></tabs>
-<!---END-->
-<inline-frame src="resources/countOnGroupBy_properties.html" width="100%"/>
+<inline-frame src="resources/stdOnGroupBy_properties.html" width="100%"/>
 
 ###### median {collapsible="true"}
+<!---FUN medianOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.median { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").median("age")
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/medianOnGroupBy_properties.html" width="100%"/>
+
 <!---FUN medianForOnGroupBy-->
 <tabs>
 <tab title="Properties">
@@ -1025,27 +1133,25 @@ df.groupBy("city")
 <!---END-->
 <inline-frame src="resources/medianForOnGroupBy_properties.html" width="100%"/>
 
-###### min {collapsible="true"}
-<!---FUN minForOnGroupBy-->
+###### percentile {collapsible="true"}
+<!---FUN percentileOnGroupBy-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { city }
-    .minFor { (age into "minAge") and (weight into "minWeight") } // min age into column "min age", min weight into column "min weight"
+df.groupBy { isHappy }.percentile(25.0) { age }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("city")
-    .minFor { ("age"<Int>() into "minAge") and ("weight"<Int?>() into "minWeight") } // min age into column "min age", min weight into column "min weight"
+df.groupBy("isHappy").percentile(25.0) { "age"<Int>() }
 ```
 
 </tab></tabs>
 <!---END-->
-<inline-frame src="resources/minForOnGroupBy_properties.html" width="100%"/>
+<inline-frame src="resources/percentileOnGroupBy_properties.html" width="100%"/>
 
 ## Pivot + GroupBy
 `GroupBy` can be pivoted with [`pivot`](pivot.md#pivot-groupby) method. It will produce a `PivotGroupBy`.
