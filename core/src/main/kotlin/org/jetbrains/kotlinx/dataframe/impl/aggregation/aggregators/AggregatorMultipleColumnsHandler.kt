@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import kotlin.reflect.KType
 
 /**

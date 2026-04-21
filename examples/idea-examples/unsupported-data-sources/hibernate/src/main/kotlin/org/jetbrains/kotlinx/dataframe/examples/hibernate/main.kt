@@ -1,10 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.examples.hibernate
 
-import jakarta.persistence.Tuple
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaDelete
 import jakarta.persistence.criteria.CriteriaQuery
-import jakarta.persistence.criteria.Expression
 import jakarta.persistence.criteria.Root
 import org.hibernate.FlushMode
 import org.hibernate.SessionFactory

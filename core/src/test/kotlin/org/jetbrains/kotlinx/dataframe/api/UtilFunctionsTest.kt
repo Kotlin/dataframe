@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.size
 import org.junit.Test
-import kotlin.collections.map
 import kotlin.random.Random
 
 @Suppress("UNCHECKED_CAST")

@@ -41,7 +41,6 @@ import org.jetbrains.kotlinx.dataframe.keywords.SoftKeywords
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
-import kotlin.text.replace
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
