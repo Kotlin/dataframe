@@ -122,12 +122,13 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             generatedMarkers[it.name] = it
         }
 
-        val optIns = buildString {
-            if (schema.hasExperimentalInstant()) appendLine("@file:OptIn(kotlin.time.ExperimentalTime::class)")
-            if (schema.hasExperimentalUuid()) appendLine("@file:OptIn(kotlin.uuid.ExperimentalUuidApi::class)")
-        }
+        val optIns = buildList {
+            if (schema.hasExperimentalInstant()) add("kotlin.time.ExperimentalTime::class")
+            if (schema.hasExperimentalUuid()) add("kotlin.uuid.ExperimentalUuidApi::class")
+        }.takeIf { it.isNotEmpty() }
+            ?.joinToString(prefix = "@file:OptIn(", separator = ", ", postfix = ")")
 
-        return if (optIns.isNotEmpty()) {
+        return if (optIns != null) {
             result.code.copy(
                 declarations = optIns + "\n" + result.code.declarations,
             )
