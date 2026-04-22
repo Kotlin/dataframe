@@ -3,6 +3,10 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -12,6 +16,10 @@ import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
+import org.jetbrains.kotlinx.dataframe.api.addDateTimeFormat
+import org.jetbrains.kotlinx.dataframe.api.addDateTimeUnicodePattern
+import org.jetbrains.kotlinx.dataframe.api.addJavaDateTimeFormatter
+import org.jetbrains.kotlinx.dataframe.api.addJavaDateTimePattern
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asFrame
@@ -114,6 +122,8 @@ import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
 import java.util.Locale
 import java.util.Random
 import java.util.stream.Collectors
@@ -246,45 +256,6 @@ class Modify : TestBase() {
             col.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn()
         }
         // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun parseAll() {
-        // SampleStart
-        df.parse()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun parseSome() {
-        // SampleStart
-        df.parse { age and weight }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun parseWithOptions() {
-        // SampleStart
-        df.parse(
-            options = ParserOptions(
-                locale = Locale.CHINA,
-                dateTime = DateTimeParserOptions.Java.withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE)
-            )
-        )
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun globalParserOptions() {
-        // SampleStart
-        DataFrame.parser.locale = Locale.FRANCE
-        DataFrame.parser.addJavaDateTimePattern("dd.MM.uuuu HH:mm:ss")
-        // SampleEnd
-        DataFrame.parser.resetToDefault()
     }
 
     @Test

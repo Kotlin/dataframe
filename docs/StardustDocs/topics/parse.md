@@ -34,7 +34,6 @@ To parse only particular columns, use a [column selector](ColumnSelectors.md):
 ```kotlin
 df.parse { date and value }
 ```
-<inline-frame src="./resources/parseSome.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
@@ -122,7 +121,7 @@ df.parse(
     options = ParserOptions(
         locale = Locale.GERMAN,
         dateTime = DateTimeParserOptions.Java
-            .withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE),
+            .withFormatter<java.time.LocalDate>(formatter = DateTimeFormatter.ISO_WEEK_DATE),
     ),
 )
 ```
@@ -263,8 +262,6 @@ DataFrame.parser.addDateTimeFormat(format)
 columnOf("12/24 2023").parse()
 ```
 
-<inline-frame src="./resources/globalParserOptionsAddDateTimeFormat_kotlin.html" width="100%" height="500px"></inline-frame>
-
 </tab>
 <tab title="Java">
 
@@ -290,8 +287,6 @@ DataFrame.parser.locale = Locale.US
 columnOf("12/24 2023").parse()
 ```
 
-<inline-frame src="./resources/globalParserOptionsAddDateTimeFormat_java.html" width="100%" height="500px"></inline-frame>
-
 </tab></tabs>
 <!---END-->
 
@@ -311,8 +306,6 @@ DataFrame.parser.addDateTimeUnicodePattern<LocalDate>("MM/dd yyyy")
 columnOf("12/24 2023").parse()
 ```
 
-<inline-frame src="./resources/globalParserOptionsAddPattern_kotlin.html" width="100%" height="500px"></inline-frame>
-
 </tab>
 <tab title="Java">
 
@@ -329,8 +322,6 @@ DataFrame.parser.locale = Locale.US
 // now this will succeed!
 columnOf("12/24 2023").parse()
 ```
-
-<inline-frame src="./resources/globalParserOptionsAddPattern_java.html" width="100%" height="500px"></inline-frame>
 
 </tab></tabs>
 <!---END-->
@@ -379,8 +370,6 @@ columnOf("12/24 2023")
     )
 ```
 
-<inline-frame src="./resources/parserOptionsWithDateTimeFormat_kotlin.html" width="100%" height="500px"></inline-frame>
-
 </tab>
 <tab title="Java">
 
@@ -413,8 +402,6 @@ columnOf("12/24 2023").parse(
 )
 ```
 
-<inline-frame src="./resources/parserOptionsWithDateTimeFormat_java.html" width="100%" height="500px"></inline-frame>
-
 </tab></tabs>
 <!---END-->
 
@@ -437,8 +424,6 @@ columnOf("12/24 2023")
     )
 ```
 
-<inline-frame src="./resources/parserOptionsWithPattern_kotlin.html" width="100%" height="500px"></inline-frame>
-
 </tab>
 <tab title="Java">
 
@@ -457,8 +442,6 @@ columnOf("12/24 2023")
         ),
     )
 ```
-
-<inline-frame src="./resources/parserOptionsWithPattern_java.html" width="100%" height="500px"></inline-frame>
 
 </tab></tabs>
 <!---END-->
