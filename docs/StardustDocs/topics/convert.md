@@ -13,7 +13,12 @@ colExpression = DataFrame.(DataColumn) -> DataColumn
 frameExpression: DataFrame.(DataFrame) -> DataFrame
 ```
 
-**Related operations**: [](updateConvert.md)
+**Related operations**: [](updateConvert.md), [](convertTo.md)
+
+> This page is for the `DataFrame<*>.convert {}` operation and
+> the `DataColumn<*>.convertTo<ValueType>()` family of functions.
+>
+> If you were looking for [`DataFrame<*>.convertTo<Schema>()`](convertTo.md), see [](convertTo.md).
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation and
 [row expressions](DataRow.md#row-expressions) for how to provide new values.
