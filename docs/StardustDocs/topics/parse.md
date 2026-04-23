@@ -264,7 +264,6 @@ DataFrame.parser.addDateTimeFormat(format)
 columnOf("12/24 2023").parse()
 ```
 
-
 </tab>
 <tab title="Java">
 
@@ -289,7 +288,6 @@ DataFrame.parser.locale = Locale.US
 // now this will succeed!
 columnOf("12/24 2023").parse()
 ```
-
 
 </tab></tabs>
 <!---END-->
@@ -316,7 +314,6 @@ DataFrame.parser.addDateTimeUnicodePattern<LocalDate>("MM/dd yyyy")
 columnOf("12/24 2023").parse()
 ```
 
-
 </tab>
 <tab title="Java">
 
@@ -333,7 +330,6 @@ DataFrame.parser.locale = Locale.US
 // now this will succeed!
 columnOf("12/24 2023").parse()
 ```
-
 
 </tab></tabs>
 <!---END-->
@@ -388,7 +384,6 @@ columnOf("12/24 2023")
     )
 ```
 
-
 </tab>
 <tab title="Java">
 
@@ -421,7 +416,6 @@ columnOf("12/24 2023").parse(
 )
 ```
 
-
 </tab></tabs>
 <!---END-->
 
@@ -450,7 +444,6 @@ columnOf("12/24 2023")
     )
 ```
 
-
 </tab>
 <tab title="Java">
 
@@ -469,7 +462,6 @@ columnOf("12/24 2023")
         ),
     )
 ```
-
 
 </tab></tabs>
 <!---END-->
