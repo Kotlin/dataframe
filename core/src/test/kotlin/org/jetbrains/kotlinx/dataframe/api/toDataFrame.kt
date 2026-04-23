@@ -246,16 +246,16 @@ class CreateDataFrameTests {
         childCol.kind() shouldBe ColumnKind.Value
     }
 
+    class Child2(val s: String)
+
+    @DataSchema
+    class Child1(val child: Child2)
+
+    @DataSchema
+    class Entry(val a: Int, val child: Child1)
+
     @Test
     fun `convert child schemas`() {
-        class Child2(val s: String)
-
-        @DataSchema
-        class Child1(val child: Child2)
-
-        @DataSchema
-        class Entry(val a: Int, val child: Child1)
-
         val df = listOf(Entry(1, Child1(Child2("s")))).toDataFrame()
         df.rowsCount() shouldBe 1
 

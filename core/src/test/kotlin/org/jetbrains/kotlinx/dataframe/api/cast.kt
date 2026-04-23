@@ -8,11 +8,11 @@ import java.lang.IllegalArgumentException
 
 class CastTests {
 
+    @DataSchema
+    data class Data(val a: Int, val b: String)
+
     @Test
     fun safeUnsafeCast() {
-        @DataSchema
-        data class Data(val a: Int, val b: String)
-
         val df = dataFrameOf("a", "b", "c")(1, "s", 2)
         df.cast<Data>(verify = true) shouldBe df
 
