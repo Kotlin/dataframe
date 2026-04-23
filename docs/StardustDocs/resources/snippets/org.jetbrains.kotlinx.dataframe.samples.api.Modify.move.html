@@ -258,7 +258,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.into { pathOf(&quot;fullName&quot;, it.name().dropLast(4)...</summary>
+                                <summary>df.into { pathOf(&quot;fullName&quot;, it.name().dropLast(4)) }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_10"></table>
@@ -274,7 +274,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>dataFrameOf(&quot;a|b|c&quot;, &quot;a|d|e&quot;)(0, 0).into { it.name...</summary>
+                                <summary>dataFrameOf(&quot;a|b|c&quot;, &quot;a|d|e&quot;)(0, 0).into { it.name().split(&quot;|&quot;).toPath...</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 1, columnsCount = 2</summary>
                                  <table class="dataframe" id="df_12"></table>
