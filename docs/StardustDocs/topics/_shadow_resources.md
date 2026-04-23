@@ -217,4 +217,8 @@
 <resource src="parserOptionsWithPattern_java.html"></resource>
 <resource src="parserOptionsWithPattern_kotlin.html"></resource>
 <resource src="parseWithOptions.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotSeparate.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addCalculated.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherWithMapping.html"></resource>
 

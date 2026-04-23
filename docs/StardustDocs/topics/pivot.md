@@ -214,6 +214,7 @@ df.pivot("city").aggregate(separate = true) {
 ```
 
 </tab></tabs>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotSeparate.html" width="100%"/>
 <!---END-->
 
 By default, any aggregation function will result in `null` value for those matrix cells, where intersection of column and row keys produced an empty data group.
