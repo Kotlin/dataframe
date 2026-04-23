@@ -35,11 +35,13 @@ internal inline fun <C, reified R> ColumnReference<C>.map(
 
 // region DataColumn
 
+@Interpretable("DataColumnMap")
 public inline fun <T, reified R> DataColumn<T>.map(infer: Infer = Infer.Nulls, transform: (T) -> R): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
 }
 
+@Interpretable("DataColumnMapKType")
 public inline fun <T, R> DataColumn<T>.map(
     type: KType,
     infer: Infer = Infer.Nulls,
@@ -49,6 +51,7 @@ public inline fun <T, R> DataColumn<T>.map(
     return DataColumn.createByType(name(), values, type, infer).cast()
 }
 
+@Interpretable("DataColumnMapIndexed")
 public inline fun <T, reified R> DataColumn<T>.mapIndexed(
     infer: Infer = Infer.Nulls,
     transform: (Int, T) -> R,
@@ -57,6 +60,7 @@ public inline fun <T, reified R> DataColumn<T>.mapIndexed(
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
 }
 
+@Interpretable("DataColumnMapIndexedKType")
 public inline fun <T, R> DataColumn<T>.mapIndexed(
     type: KType,
     infer: Infer = Infer.Nulls,
