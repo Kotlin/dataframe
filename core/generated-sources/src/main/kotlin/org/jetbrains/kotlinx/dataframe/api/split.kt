@@ -50,14 +50,17 @@ public class Split<T, C>(
     override fun toString(): String = "Split(df=$df, columns=$columns)"
 }
 
-public data class SplitWithTransform<T, C, R>(
+public class SplitWithTransform<T, C, R>(
     internal val df: DataFrame<T>,
     internal val columns: ColumnsSelector<T, C?>,
     internal val inward: Boolean,
     internal val tartypeOf: KType,
     internal val default: R? = null,
     internal val transform: DataRow<T>.(C) -> Iterable<R>,
-)
+) {
+    override fun toString(): String =
+        "SplitWithTransform(df=$df, columns=$columns, inward=$inward, tartypeOf=$tartypeOf, default=$default, transform=$transform)"
+}
 
 public typealias ColumnNamesGenerator<C> = ColumnWithPath<C>.(extraColumnIndex: Int) -> String
 
@@ -72,7 +75,8 @@ public fun <T> Split<T, String>.default(value: String?): SplitWithTransform<T, S
     by { it.splitDefault() }.default(value)
 
 @Interpretable("SplitWithTransformDefault")
-public fun <T, C, R> SplitWithTransform<T, C, R>.default(value: R?): SplitWithTransform<T, C, R> = copy(default = value)
+public fun <T, C, R> SplitWithTransform<T, C, R>.default(value: R?): SplitWithTransform<T, C, R> =
+    SplitWithTransform(df, columns, inward, tartypeOf, default = value, transform)
 
 // endregion
 
@@ -272,7 +276,15 @@ public fun <T> Split<T, String>.into(
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     names: Iterable<String>,
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
-): DataFrame<T> = copy(inward = true).into(names.toList(), extraNamesGenerator)
+): DataFrame<T> =
+    SplitWithTransform(
+        df,
+        columns,
+        inward = true,
+        tartypeOf,
+        default,
+        transform,
+    ).into(names.toList(), extraNamesGenerator)
 
 @Refine
 @Interpretable("SplitWithTransformInward0")
