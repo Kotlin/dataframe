@@ -50,10 +50,11 @@ pivoted.gather { "London".."Tokyo" }.into("city", "population")
 ```kotlin
 pivoted.gather { "London".."Tokyo" }
     .cast<Int>()
-    .where { it > 10 }
+    .where { it == 1 }
     .mapKeys { it.lowercase() }
     .mapValues { 1.0 / it }
     .into("city", "density")
 ```
 
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherWithMapping.html" width="100%"/>
 <!---END-->
