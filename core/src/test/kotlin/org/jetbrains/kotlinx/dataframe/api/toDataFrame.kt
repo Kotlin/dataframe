@@ -242,7 +242,7 @@ class CreateDataFrameTests {
         val df = listOf(Entry(1, Child())).toDataFrame(maxDepth = 100)
         df.rowsCount() shouldBe 1
 
-        val childCol = df[Entry::child]
+        val childCol = df["child"]
         childCol.kind() shouldBe ColumnKind.Value
     }
 
@@ -259,10 +259,10 @@ class CreateDataFrameTests {
         val df = listOf(Entry(1, Child1(Child2("s")))).toDataFrame()
         df.rowsCount() shouldBe 1
 
-        val child1 = df[Entry::child]
+        val child1 = df["child"]
         child1.kind shouldBe ColumnKind.Group
 
-        val child2 = child1.asColumnGroup()[Child1::child]
+        val child2 = child1.asColumnGroup()["child"]
         child2.kind shouldBe ColumnKind.Value
     }
 
@@ -297,9 +297,9 @@ class CreateDataFrameTests {
 
         val df = functions.toDataFrame(maxDepth = 2)
 
-        val col = df.getColumnGroup(DeserializedContainerSource::incompatibility)
-        col[IncompatibleVersionErrorData<*>::actual].type() shouldBe typeOf<Any>()
-        col[IncompatibleVersionErrorData<*>::expected].type() shouldBe typeOf<Any>()
+        val col = df.getColumnGroup("incompatibility")
+        col["actual"].type() shouldBe typeOf<Any>()
+        col["expected"].type() shouldBe typeOf<Any>()
     }
 
     interface Named {
