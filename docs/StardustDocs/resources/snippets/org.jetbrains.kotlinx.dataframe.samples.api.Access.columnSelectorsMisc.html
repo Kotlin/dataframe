@@ -194,7 +194,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { cols { it.name().startsWith(&quot;year&quot;) } ...</summary>
+                                <summary>df.select { cols { it.name().startsWith(&quot;year&quot;) } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                  <table class="dataframe" id="df_2"></table>
@@ -242,7 +242,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsOf&lt;String?&gt; { it.countDistinct() &gt;...</summary>
+                                <summary>df.select { colsOf&lt;String?&gt; { it.countDistinct() &gt; 5 } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                  <table class="dataframe" id="df_8"></table>
@@ -355,7 +355,7 @@ summary {
                                 <br>
                                 <details>
                                 <summary>df.select {
-            colGroup(&quot;name&quot;).lastCol {...</summary>
+            colGroup(&quot;name&quot;).lastCol { it.name().endsWith(...</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                  <table class="dataframe" id="df_22"></table>
@@ -371,7 +371,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth().filter { !it.isColumn...</summary>
+                                <summary>df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                  <table class="dataframe" id="df_24"></table>
@@ -403,7 +403,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.select { colsAtAnyDepth().filter { it.name().co...</summary>
+                                <summary>df.select { colsAtAnyDepth().filter { it.name().contains(&quot;:&quot;) } }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 6</summary>
                                  <table class="dataframe" id="df_28"></table>

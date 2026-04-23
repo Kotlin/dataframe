@@ -97,8 +97,8 @@ object PluginCallbackProxy : PluginCallback {
                                 <details>
                                 <summary>${
                                     expressions.joinToString(".") { it.source }.let {
-                                        if (it.length > 50) {
-                                            it.take(50) + "..."
+                                        if (it.length > 70) {
+                                            it.take(70) + "..."
                                         } else {
                                             it
                                         }

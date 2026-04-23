@@ -288,7 +288,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.groupBy { city }.max { name.firstName.map { it....</summary>
+                                <summary>df.groupBy { city }.max { name.firstName.map { it.length } and name.la...</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_45"></table>
@@ -332,7 +332,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.groupBy { city }.minFor { (age into &quot;min age&quot;) ...</summary>
+                                <summary>df.groupBy { city }.minFor { (age into &quot;min age&quot;) and (weight into &quot;mi...</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_63"></table>
@@ -354,7 +354,7 @@ summary {
                                 </details>
                                 <br>
                                 <details>
-                                <summary>df.groupBy { city }.meanOf(&quot;mean ratio&quot;) { weight?...</summary>
+                                <summary>df.groupBy { city }.meanOf(&quot;mean ratio&quot;) { weight?.div(age) }</summary>
                                                                 <details>
                                 <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
                                  <table class="dataframe" id="df_72"></table>
