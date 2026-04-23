@@ -4,9 +4,6 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.format.FormatStringsInDatetimeFormats
-import kotlinx.datetime.format.Padding
-import kotlinx.datetime.format.char
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -16,10 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
-import org.jetbrains.kotlinx.dataframe.api.addDateTimeFormat
-import org.jetbrains.kotlinx.dataframe.api.addDateTimeUnicodePattern
-import org.jetbrains.kotlinx.dataframe.api.addJavaDateTimeFormatter
-import org.jetbrains.kotlinx.dataframe.api.addJavaDateTimePattern
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asFrame
@@ -35,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
@@ -73,7 +67,6 @@ import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
-import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.perCol
@@ -97,6 +90,7 @@ import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
+import org.jetbrains.kotlinx.dataframe.api.toLocalDate
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.toStart
@@ -121,9 +115,6 @@ import org.jetbrains.kotlinx.dataframe.types.UtilTests
 import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.time.temporal.ChronoField
 import java.util.Locale
 import java.util.Random
 import java.util.stream.Collectors
@@ -198,6 +189,39 @@ class Modify : TestBase() {
         // SampleStart
         df.convert { age }.with { it.toDouble() }
         df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
+        // SampleEnd
+    }
+
+    @Test
+    fun convertColumnTo() {
+        // SampleStart
+        df.weight.convertTo<Float?>()
+        df.age.convertToDouble()
+        // SampleEnd
+    }
+
+    val stringDf = dataFrameOf(
+        "date" to columnOf("2025-11-22", "2025-11-23", "2025-11-24"),
+        "value" to columnOf("1,0", "200.000,0", "-"),
+    ).cast<ParseDf>()
+
+    @Test
+    @TransformDataFrameExpressions
+    fun convertStringTo() {
+        // SampleStart
+        // String -> Double? conversion
+        stringDf.convert { value }.to<Double?>(
+            parserOptions = ParserOptions(locale = Locale.GERMAN, nullStrings = setOf("-")),
+        )
+
+        // String -> LocalDate conversion
+        stringDf.convert { date }.to<LocalDate>(
+            parserOptions = ParserOptions(
+                dateTime = DateTimeParserOptions.Kotlin.withFormat(LocalDate.Formats.ISO),
+            ),
+        )
+        // shortcut for String -> LocalDate conversion
+        stringDf.convert { date }.toLocalDate(LocalDate.Formats.ISO)
         // SampleEnd
     }
 

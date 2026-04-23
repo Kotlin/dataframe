@@ -68,6 +68,7 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctColumns.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertTo.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertStringTo.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhile.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNulls.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"></resource>
@@ -220,5 +221,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotSeparate.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addCalculated.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertStringTo.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherWithMapping.html"></resource>
 
