@@ -3,7 +3,7 @@ import org.gradle.kotlin.dsl.withType
 
 plugins {
     with(convention.plugins) {
-        alias(kotlinJvm11)
+        alias(kotlinJvm8)
     }
     with(libs.plugins) {
         alias(shadow)
