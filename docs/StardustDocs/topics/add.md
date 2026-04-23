@@ -150,6 +150,7 @@ val personWithCityInfo = df.add {
 ```
 
 </tab></tabs>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addCalculated.html" width="100%"/>
 <!---END-->
 
 ## Add existing column to [`DataFrame`](DataFrame.md)

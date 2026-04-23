@@ -3,6 +3,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDate
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -27,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
@@ -65,7 +67,6 @@ import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
-import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.perCol
@@ -89,6 +90,7 @@ import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
+import org.jetbrains.kotlinx.dataframe.api.toLocalDate
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.toStart
@@ -113,7 +115,6 @@ import org.jetbrains.kotlinx.dataframe.types.UtilTests
 import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.Random
 import java.util.stream.Collectors
@@ -192,6 +193,39 @@ class Modify : TestBase() {
     }
 
     @Test
+    fun convertColumnTo() {
+        // SampleStart
+        df.weight.convertTo<Float?>()
+        df.age.convertToDouble()
+        // SampleEnd
+    }
+
+    val stringDf = dataFrameOf(
+        "date" to columnOf("2025-11-22", "2025-11-23", "2025-11-24"),
+        "value" to columnOf("1,0", "200.000,0", "-"),
+    ).cast<ParseDf>()
+
+    @Test
+    @TransformDataFrameExpressions
+    fun convertStringTo() {
+        // SampleStart
+        // String -> Double? conversion
+        stringDf.convert { value }.to<Double?>(
+            parserOptions = ParserOptions(locale = Locale.GERMAN, nullStrings = setOf("-")),
+        )
+
+        // String -> LocalDate conversion
+        stringDf.convert { date }.to<LocalDate>(
+            parserOptions = ParserOptions(
+                dateTime = DateTimeParserOptions.Kotlin.withFormat(LocalDate.Formats.ISO),
+            ),
+        )
+        // shortcut for String -> LocalDate conversion
+        stringDf.convert { date }.toLocalDate(LocalDate.Formats.ISO)
+        // SampleEnd
+    }
+
+    @Test
     @TransformDataFrameExpressions
     fun convertTo() {
         // SampleStart
@@ -246,45 +280,6 @@ class Modify : TestBase() {
             col.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn()
         }
         // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun parseAll() {
-        // SampleStart
-        df.parse()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun parseSome() {
-        // SampleStart
-        df.parse { age and weight }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun parseWithOptions() {
-        // SampleStart
-        df.parse(
-            options = ParserOptions(
-                locale = Locale.CHINA,
-                dateTime = DateTimeParserOptions.Java.withFormatter<java.time.LocalDateTime>(formatter = DateTimeFormatter.ISO_WEEK_DATE)
-            )
-        )
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun globalParserOptions() {
-        // SampleStart
-        DataFrame.parser.locale = Locale.FRANCE
-        DataFrame.parser.addJavaDateTimePattern("dd.MM.uuuu HH:mm:ss")
-        // SampleEnd
-        DataFrame.parser.resetToDefault()
     }
 
     @Test
@@ -692,10 +687,11 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
+
     @Test
     @TransformDataFrameExpressions
     fun gatherNames() {
-        val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
         pivoted.gather { "London".."Tokyo" }.cast<Int>()
             .where { it > 0 }.keysInto("city")
@@ -705,7 +701,6 @@ class Modify : TestBase() {
     @Test
     @TransformDataFrameExpressions
     fun gather() {
-        val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
         pivoted.gather { "London".."Tokyo" }.into("city", "population")
         // SampleEnd
@@ -714,11 +709,10 @@ class Modify : TestBase() {
     @Test
     @TransformDataFrameExpressions
     fun gatherWithMapping() {
-        val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
         pivoted.gather { "London".."Tokyo" }
             .cast<Int>()
-            .where { it > 10 }
+            .where { it == 1 }
             .mapKeys { it.lowercase() }
             .mapValues { 1.0 / it }
             .into("city", "density")

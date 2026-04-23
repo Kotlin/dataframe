@@ -9,6 +9,10 @@ convertTo<Schema>(excessiveColumns = ExcessiveColumns.Keep)
 
 **Related operations**: [](adjustSchema.md), [](convert.md)
 
+> This page is for the `DataFrame<*>.convertTo<Schema>()` operation.
+>
+> If you were looking for [`DataColumn<*>.convertTo<ValueType>()`](convert.md), see [](convert.md).
+
 Conversion to match the target schema is done mostly automatically;
 DataFrame knows how to convert between many types (see [](convert.md) for details and the supported types).
 
