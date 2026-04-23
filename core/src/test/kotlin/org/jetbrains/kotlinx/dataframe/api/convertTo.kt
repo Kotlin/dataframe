@@ -17,16 +17,16 @@ import kotlin.reflect.typeOf
 @Suppress("ktlint:standard:argument-list-wrapping")
 class ConvertToTests {
 
+    @DataSchema
+    data class GroupSchema(val a: Int)
+
+    @DataSchema
+    data class DataFrameSchema(val groups: DataFrame<GroupSchema>)
+
     @Test
     fun `convert frame column with empty frames`() {
         val groups by columnOf(dataFrameOf("a")("1"), DataFrame.empty())
         val df = dataFrameOf(groups)
-
-        @DataSchema
-        data class GroupSchema(val a: Int)
-
-        @DataSchema
-        data class DataFrameSchema(val groups: DataFrame<GroupSchema>)
 
         val converted = df.convertTo<DataFrameSchema>()
 
@@ -304,14 +304,14 @@ class ConvertToTests {
         converted shouldBe df
     }
 
+    @DataSchema
+    data class NullableColumnResult(val a: Int, val b: Int?)
+
     @Test
     fun `convert with missing nullable column`() {
-        @DataSchema
-        data class Result(val a: Int, val b: Int?)
-
         val df = dataFrameOf("a")(1, 2)
-        val converted = df.convertTo<Result>()
-        converted shouldBe listOf(Result(1, null), Result(2, null)).toDataFrame()
+        val converted = df.convertTo<NullableColumnResult>()
+        converted shouldBe listOf(NullableColumnResult(1, null), NullableColumnResult(2, null)).toDataFrame()
     }
 
     @Test
@@ -331,58 +331,58 @@ class ConvertToTests {
         converted shouldBe locations.update { gps.longitude }.with { gps.latitude }
     }
 
+    @DataSchema
+    data class Entry1(val v: Int)
+
+    @DataSchema
+    data class FrameColumnResult1(val d: DataFrame<Entry1>)
+
     @Test
     fun `convert column of empty lists into FrameColumn`() {
-        @DataSchema
-        data class Entry(val v: Int)
-
-        @DataSchema
-        data class Result(val d: DataFrame<Entry>)
-
         dataFrameOf("d")(emptyList<Any>(), emptyList<Any>())
-            .convertTo<Result>() shouldBe
-            dataFrameOf("d")(DataFrame.emptyOf<Entry>(), DataFrame.emptyOf<Entry>())
+            .convertTo<FrameColumnResult1>() shouldBe
+            dataFrameOf("d")(DataFrame.emptyOf<Entry1>(), DataFrame.emptyOf<Entry1>())
     }
+
+    @DataSchema
+    data class Entry2(val v: Int)
+
+    @DataSchema
+    data class FrameColumnResult2(val d: DataFrame<Entry2>)
 
     @Test
     fun `convert ColumnGroup into FrameColumn`() {
-        @DataSchema
-        data class Entry(val v: Int)
-
-        @DataSchema
-        data class Result(val d: DataFrame<Entry>)
-
         val columnGroup = DataColumn.createColumnGroup("d", dataFrameOf("v")(1, 2))
         columnGroup.kind() shouldBe ColumnKind.Group
-        val res = dataFrameOf(columnGroup).convertTo<Result>()
+        val res = dataFrameOf(columnGroup).convertTo<FrameColumnResult2>()
         val frameColumn = res.getFrameColumn("d")
         frameColumn.kind shouldBe ColumnKind.Frame
         frameColumn.values() shouldBe listOf(dataFrameOf("v")(1), dataFrameOf("v")(2))
     }
 
+    @DataSchema
+    data class Entry3(val v: Int)
+
+    @DataSchema
+    data class FrameColumnResult3(val d: DataFrame<Entry3>)
+
     @Test
     fun `convert ValueColumn of lists, nulls and frames into FrameColumn`() {
-        @DataSchema
-        data class Entry(val v: Int)
-
-        @DataSchema
-        data class Result(val d: DataFrame<Entry>)
-
         val emptyList: List<Any?> = emptyList()
         val listOfRows: List<AnyRow> = dataFrameOf("v")(1, 2).rows().toList()
-        val frame: DataFrame<Entry> = listOf(Entry(3), Entry(4)).toDataFrame()
+        val frame: DataFrame<Entry3> = listOf(Entry3(3), Entry3(4)).toDataFrame()
 
         val src = DataColumn.createValueColumn("d", listOf(emptyList, listOfRows, frame, null)).toDataFrame()
         src["d"].kind shouldBe ColumnKind.Value
 
-        val df = src.convertTo<Result>()
+        val df = src.convertTo<FrameColumnResult3>()
         val frameColumn = df.getFrameColumn("d")
         frameColumn.kind shouldBe ColumnKind.Frame
         frameColumn.toList() shouldBe listOf(
-            DataFrame.emptyOf<Entry>(),
+            DataFrame.emptyOf<Entry3>(),
             dataFrameOf("v")(1, 2),
             dataFrameOf("v")(3, 4),
-            DataFrame.emptyOf<Entry>(),
+            DataFrame.emptyOf<Entry3>(),
         )
     }
 
