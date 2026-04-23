@@ -111,7 +111,9 @@ internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typ
  *
  * See [Grammar][CorrDocs.Grammar] for more details.
  */
-public data class Corr<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>)
+public class Corr<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
+    override fun toString(): String = "Corr(df=$df, columns=$columns)"
+}
 
 /**
  * Computes the pearson correlation between all suitable columns in this [DataFrame],

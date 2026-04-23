@@ -1692,10 +1692,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/CopyKt {
 
 public final class org/jetbrains/kotlinx/dataframe/api/Corr {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)V
-	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/Corr;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/Corr;Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/Corr;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
