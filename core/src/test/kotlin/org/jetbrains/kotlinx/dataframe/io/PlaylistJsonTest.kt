@@ -194,7 +194,7 @@ class PlaylistJsonTest {
 
     @Test
     fun union() {
-        val merged = item.concat(item)
+        val merged = listOf(item, item).concat()
         merged.rowsCount() shouldBe item.rowsCount() * 2
         val group = merged.snippet
         group.rowsCount() shouldBe item.snippet.rowsCount() * 2
