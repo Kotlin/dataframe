@@ -278,7 +278,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun distinct() {
-        val duplicated = typed2.concat(typed2)
+        val duplicated = listOf(typed2, typed2).concat()
         duplicated.rowsCount() shouldBe typed2.rowsCount() * 2
         val dist = duplicated.nameAndCity.distinct()
         dist shouldBe typed2.nameAndCity.distinct()
