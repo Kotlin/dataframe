@@ -1,10 +1,3 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
@@ -13,6 +6,7 @@ plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
         alias(buildExampleProjects)
+        alias(dependencyUpdates)
     }
 
     with(libs.plugins) {
@@ -20,15 +14,11 @@ plugins {
         alias(serialization) apply false
         alias(dokka)
 
-        // TODO cannot define korro and kodex here due to leaking them kotlin-compiler-embeddable into the build classpath
-        // alias(korro) apply false
-        // alias(kodex) apply false
-
         alias(simpleGit) apply false
-        alias(dependencyVersions)
 
-        // dependence on our own plugin
-        alias(dataframe) apply false
+        // dependence on our own obsolete KSP plugin
+        // TODO remove when no examples need it anymore
+        alias(dataframe.ksp) apply false
     }
 }
 
@@ -50,73 +40,6 @@ dependencies {
 
     // experimental, so not included by default:
     // api(projects.dataframeOpenapi)
-}
-
-enum class Version : Comparable<Version> {
-    SNAPSHOT,
-    DEV,
-    ALPHA,
-    BETA,
-    RC,
-    STABLE,
-}
-
-fun String.findVersion(): Version {
-    val version = this.lowercase()
-    return when {
-        "snapshot" in version -> Version.SNAPSHOT
-        "dev" in version -> Version.DEV
-        "alpha" in version -> Version.ALPHA
-        "beta" in version -> Version.BETA
-        "rc" in version -> Version.RC
-        else -> Version.STABLE
-    }
-}
-
-// these names of outdated dependencies will not show up in the table output
-val dependencyUpdateExclusions = listOf(
-    // Directly dependent on the Gradle version
-    "org.gradle.kotlin.kotlin-dsl",
-    // need to revise our tests to update
-    libs.android.gradle.api.get().group,
-)
-
-// run `./gradlew dependencyUpdates` to check for updates
-tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
-    checkForGradleUpdate = true
-    outputFormatter = "json,html"
-    revision = "milestone"
-
-    rejectVersionIf {
-        val current = currentVersion.findVersion()
-        val candidate = candidate.version.findVersion()
-        candidate < current
-    }
-
-    doLast {
-        val outputFile = layout.buildDirectory
-            .file("../$outputDir/$reportfileName.json")
-            .get().asFile
-        when (val outDatedDependencies = DataFrame.readJson(outputFile)["outdated"]["dependencies"][0]) {
-            is AnyFrame -> {
-                val df = outDatedDependencies.select {
-                    cols("group", "name", "version") and {
-                        "available"["milestone"] named "newVersion"
-                    }
-                }.filter { "name"() !in dependencyUpdateExclusions && "group"() !in dependencyUpdateExclusions }
-                logger.warn("Outdated dependencies found:")
-                df.print(
-                    rowsLimit = Int.MAX_VALUE,
-                    valueLimit = Int.MAX_VALUE,
-                    borders = true,
-                    title = true,
-                    alignLeft = true,
-                )
-            }
-
-            else -> logger.info("No outdated dependencies found")
-        }
-    }
 }
 
 group = "org.jetbrains.kotlinx"

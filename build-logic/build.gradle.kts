@@ -23,8 +23,13 @@ dependencies {
     implementation(libs.kotlin.gradle.plugin)
     implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:$expectedKotlinDslPluginsVersion")
 
+    // So we can create pretty tables in gradle task outputs, parse json, and rename to camelCase
+    implementation(libs.dataframe.release.core)
+    implementation(libs.dataframe.release.json)
+
     // We need to declare a dependency for each plugin used in convention plugins below
     implementation(pluginMarker(libs.plugins.ktlint.gradle))
     implementation(pluginMarker(libs.plugins.buildconfig))
     implementation(pluginMarker(libs.plugins.kodex))
+    implementation(pluginMarker(libs.plugins.dependencyVersions))
 }

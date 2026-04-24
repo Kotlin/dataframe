@@ -4,10 +4,10 @@ import dfbuild.buildExampleProjects.generateTestCase
 import dfbuild.buildExampleProjects.isAndroid
 import dfbuild.buildExampleProjects.setupGradleSyncVersionsTask
 import dfbuild.buildExampleProjects.setupMavenSyncVersionsTask
-import dfbuild.toCamelCaseByDelimiters
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 
 plugins {
     alias(convention.plugins.kotlinJvmCommon)

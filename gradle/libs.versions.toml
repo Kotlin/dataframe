@@ -16,6 +16,9 @@ libsPublisher = "2.2.0-rc3-dev-59"
 
 # Latest release version of DataFrame, used in examples
 dataframe = "1.0.0-Beta4"
+
+# Latest version of DataFrame that still has the KSP plugin. To be removed
+dataframe-ksp = "1.0.0-Beta4"
 korro = "0.1.7"
 
 gradlePlugin-gradle-foojayToolchains = "1.0.0"
@@ -179,6 +182,8 @@ kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annota
 kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlinJupyter" }
 kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "benchmark" }
 dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
+dataframe-release-core = { group = "org.jetbrains.kotlinx", name = "dataframe-core", version.ref = "dataframe" }
+dataframe-release-json = { group = "org.jetbrains.kotlinx", name = "dataframe-json", version.ref = "dataframe" }
 
 hikari = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref = "duckdb" }
@@ -211,7 +216,7 @@ keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }
 publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "libsPublisher" }
 korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
 ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
-dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
+dataframe-ksp = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe-ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kodex = { id = "nl.jolanrensen.kodex", version.ref = "kodex" }
 simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit" }

@@ -1,10 +1,10 @@
 package dfbuild.buildExampleProjects
 
-import dfbuild.toCamelCaseByDelimiters
 import org.apache.maven.shared.invoker.DefaultInvocationRequest
 import org.apache.maven.shared.invoker.DefaultInvoker
 import org.gradle.tooling.BuildException
 import org.gradle.tooling.GradleConnector
+import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.junit.AssumptionViolatedException
 import java.io.File
 
