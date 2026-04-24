@@ -25,9 +25,13 @@ or explore the [example project](https://github.com/zaleslaw/KotlinDataFrame-SQL
 
 The `.read()` function automatically detects the input format based on a file extension and content:
 
+<!---FUN read-->
+
 ```kotlin
 DataFrame.read("input.csv")
 ```
+
+<!---END-->
 
 The input string can be a file path or URL.
 
@@ -51,25 +55,31 @@ It is faster and more flexible than the old one, now being based on
 
 To read a CSV file from a file:
 
-```kotlin
-import java.io.File
+<!---FUN readCsvFromFile-->
 
+```kotlin
 DataFrame.readCsv("input.csv")
 // Alternatively
 DataFrame.readCsv(File("input.csv"))
 ```
 
+<!---END-->
+
 To read a CSV file from a URL:
 
-```kotlin
-import java.net.URI
+<!---FUN readCsvFromUrl-->
 
+```kotlin
 DataFrame.readCsv(URI("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv").toURL())
 ```
+
+<!---END-->
 
 Zip and GZip files are supported as well.
 
 To read CSV from `String`:
+
+<!---FUN readCsvFromString-->
 
 ```kotlin
 val csv = """
@@ -81,6 +91,8 @@ val csv = """
 
 DataFrame.readCsvStr(csv)
 ```
+
+<!---END-->
 
 ### Specify delimiter
 
@@ -335,9 +347,13 @@ val df = DataFrame.readJson(file)
 
 To read a JSON file from a URL:
 
+<!---FUN readJsonFromUrl-->
+
 ```kotlin
 DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
 ```
+
+<!---END-->
 
 ### Column type inference from JSON
 
@@ -377,11 +393,15 @@ Let's take a look at the following JSON:
 ]
 ```
 
-We can read it from file:
+We can read it from the file:
+
+<!---FUN readJson-->
 
 ```kotlin
 val df = DataFrame.readJson(file)
 ```
+
+<!---END-->
 
 The corresponding [`DataFrame`](DataFrame.md) schema is:
 
@@ -523,6 +543,8 @@ among other reasons.)
 
 To specify the paths, you can use the `JsonPath` class:
 
+<!---FUN readJsonFromString-->
+
 ```kotlin
 DataFrame.readJsonStr(
     text = myJson,
@@ -532,6 +554,8 @@ DataFrame.readJsonStr(
     ),
 )
 ```
+
+<!---END-->
 
 Note: For the KSP plugin, the `JsonPath` class is not available, so you will have to use the `String` version of the
 paths instead. For example: `jsonOptions = JsonOptions(keyValuePaths = ["""$""", """$[*]["versions"]"""])`.
@@ -554,15 +578,23 @@ Excel spreadsheet formats are: xls, xlsx.
 
 To read an Excel spreadsheet from a file:
 
+<!---FUN readExcelFromFile-->
+
 ```kotlin
 val df = DataFrame.readExcel(file)
 ```
 
+<!---END-->
+
 To read an Excel spreadsheet from a URL:
+
+<!---FUN readExcelFromUrl-->
 
 ```kotlin
 DataFrame.readExcel("https://example.com/data.xlsx")
 ```
+
+<!---END-->
 
 ### Cell type inference from Excel
 

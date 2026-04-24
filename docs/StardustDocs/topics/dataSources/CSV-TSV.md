@@ -12,6 +12,7 @@ Seamlessly load and write CSV or TSV files in Kotlin — perfect for common tabu
 Kotlin DataFrame support for reading and writing CSV and TSV files with simple, type-safe APIs.
 </link-summary>
 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.io.CsvTsv-->
 
 Kotlin DataFrame supports reading from and writing to CSV and TSV files.
 
@@ -24,21 +25,33 @@ artifact and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataf
 You can read a [`DataFrame`](DataFrame.md) from a CSV or TSV file (via a file path or URL) 
 using the [`readCsv()`](read.md#read-from-csv) or `readTsv()` methods:
 
+<!---FUN readCsv-->
+
 ```kotlin
 val df = DataFrame.readCsv("example.csv")
 ```
+
+<!---END-->
+
+<!---FUN readCsvViaUrl-->
 
 ```kotlin
 val df = DataFrame.readCsv("https://kotlin.github.io/dataframe/resources/example.csv")
 ```
 
+<!---END-->
+
 ## Write
 
 You can write a [`DataFrame`](DataFrame.md) to a CSV file using the [`writeCsv()`](write.md#writing-to-csv) method:
 
+<!---FUN writeCsv-->
+
 ```kotlin
 df.writeCsv("example.csv")
 ```
+
+<!---END-->
 
 ## Deephaven CSV
 
