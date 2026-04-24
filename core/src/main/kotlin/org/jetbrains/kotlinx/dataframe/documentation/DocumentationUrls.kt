@@ -190,4 +190,7 @@ internal interface DocumentationUrls {
 
     /** [See "Summary statistics" on the documentation website.]({@include [Url]}/summarystatistics.html) */
     typealias Statistics = Nothing
+
+    /** [See `concat` on the documentation website.]({@include [Url]}/concat.html) */
+    typealias Concat = Nothing
 }
