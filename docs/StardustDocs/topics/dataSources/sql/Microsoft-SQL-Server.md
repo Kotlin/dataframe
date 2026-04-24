@@ -12,8 +12,9 @@ Use Kotlin DataFrame to read from Microsoft SQL Server — run queries or load e
 Fetch data from Microsoft SQL Server into Kotlin DataFrame using JDBC configuration.
 </link-summary>
 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.io.MicrosoftSQLServer-->
 
-Kotlin DataFrame supports reading from [Microsoft SQL Server (MS SQL)](https://www.microsoft.com/en-us/sql-server) 
+Kotlin DataFrame supports reading from a [Microsoft SQL Server (MS SQL)](https://www.microsoft.com/en-us/sql-server) 
 database using JDBC.
 
 Requires the [`dataframe-jdbc` module](Modules.md#dataframe-jdbc),
@@ -50,18 +51,17 @@ The actual Maven Central driver version could be found
 
 ## Read
 
-[`DataFrame`](DataFrame.md) can be loaded from a database in several ways:  
-a user can read data from a SQL table by given name ([`readSqlTable`](readSqlDatabases.md)),  
-as a result of a user-defined SQL query ([`readSqlQuery`](readSqlDatabases.md)),  
-or from a given `ResultSet` ([`readResultSet`](readSqlDatabases.md)).  
+A [`DataFrame`](DataFrame.md) can be loaded from a database in several ways:  
+* a user can read data from a SQL table by given name ([`readSqlTable`](readSqlDatabases.md)),
+* as a result of a user-defined SQL query ([`readSqlQuery`](readSqlDatabases.md)), or 
+* from a given `ResultSet` ([`readResultSet`](readSqlDatabases.md)).
 It is also possible to load all data from non-system tables, each into a separate `DataFrame` ([`readAllSqlTables`](readSqlDatabases.md)).
 
 See [](readSqlDatabases.md) for more details.
 
-```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.api.*
+<!---FUN readSqlTable-->
 
+```kotlin
 val url = "jdbc:sqlserver://localhost:1433;databaseName=testDatabase"
 val username = "sa"
 val password = "password"
@@ -72,3 +72,5 @@ val tableName = "Customer"
 
 val df = DataFrame.readSqlTable(dbConfig, tableName)
 ```
+
+<!---END-->

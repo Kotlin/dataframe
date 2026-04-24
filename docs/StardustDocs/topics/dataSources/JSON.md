@@ -12,6 +12,8 @@ Easily handle JSON data in Kotlin — read from files or URLs, and export your d
 Kotlin DataFrame support for reading and writing JSON files in a structured and type-safe way.
 </link-summary>
 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.io.Json-->
+
 Kotlin DataFrame supports reading from and writing to JSON files.
 
 Requires the [`dataframe-json` module](Modules.md#dataframe-json), 
@@ -30,18 +32,30 @@ for Kotlin Notebook.
 You can read a [`DataFrame`](DataFrame.md) or [`DataRow`](DataRow.md) 
 from a JSON file (via a file path or URL) using the [`readJson()`](read.md#read-from-json) method:
 
+<!---FUN readJson-->
+
 ```kotlin
 val df = DataFrame.readJson("example.json")
 ```
+
+<!---END-->
+
+<!---FUN readJsonViaUrl-->
 
 ```kotlin
 val df = DataFrame.readJson("https://kotlin.github.io/dataframe/resources/example.json")
 ```
 
+<!---END-->
+
 ## Write
 
 You can write a [`DataFrame`](DataFrame.md) to a JSON file using the [`writeJson()`](write.md#writing-to-json) method:
 
+<!---FUN writeJson-->
+
 ```kotlin
 df.writeJson("example.json")
 ```
+
+<!---END-->

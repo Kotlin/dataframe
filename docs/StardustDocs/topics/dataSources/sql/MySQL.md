@@ -12,8 +12,9 @@ Use Kotlin DataFrame with MySQL — easily read tables and queries over JDBC int
 Read data from MySQL into Kotlin DataFrame using JDBC configuration.
 </link-summary>
 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.io.MySQL-->
 
-Kotlin DataFrame supports reading from [MySQL](https://www.mysql.com) database using JDBC.
+Kotlin DataFrame supports reading from a [MySQL](https://www.mysql.com) database using JDBC.
 
 Requires the [`dataframe-jdbc` module](Modules.md#dataframe-jdbc),
 which is included by default in the general [`dataframe` artifact](Modules.md#dataframe-general)
@@ -48,18 +49,17 @@ The actual Maven Central driver version could be found
 
 ## Read
 
-[`DataFrame`](DataFrame.md) can be loaded from a database in several ways:  
-a user can read data from a SQL table by given name ([`readSqlTable`](readSqlDatabases.md)),  
-as a result of a user-defined SQL query ([`readSqlQuery`](readSqlDatabases.md)),  
-or from a given `ResultSet` ([`readResultSet`](readSqlDatabases.md)).  
+A [`DataFrame`](DataFrame.md) can be loaded from a database in several ways:  
+* a user can read data from a SQL table by given name ([`readSqlTable`](readSqlDatabases.md)),
+* as a result of a user-defined SQL query ([`readSqlQuery`](readSqlDatabases.md)), or 
+* from a given `ResultSet` ([`readResultSet`](readSqlDatabases.md)).
 It is also possible to load all data from non-system tables, each into a separate `DataFrame` ([`readAllSqlTables`](readSqlDatabases.md)).
 
 See [](readSqlDatabases.md) for more details.
 
-```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.api.*
+<!---FUN readSqlTable-->
 
+```kotlin
 val url = "jdbc:mysql://localhost:3306/testDatabase"
 val username = "root"
 val password = "password"
@@ -70,3 +70,5 @@ val tableName = "Customer"
 
 val df = DataFrame.readSqlTable(dbConfig, tableName)
 ```
+
+<!---END-->

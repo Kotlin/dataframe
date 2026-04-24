@@ -71,6 +71,7 @@ dependencies {
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
+    testImplementation(libs.hikaricp)
 }
 
 korro {
@@ -102,6 +103,7 @@ korro {
                 include("collectionsInterop/*.md")
                 include("dataSources/*.md")
                 include("dataSources/sql/*.md")
+                include("readSqlDatabases.md")
                 include("info/*.md")
                 include("columnArithmetics.md")
                 include("groupBy.md")

@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE", "unused", "SqlNoDataSourceInspection")
+
 package org.jetbrains.kotlinx.dataframe.samples.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
