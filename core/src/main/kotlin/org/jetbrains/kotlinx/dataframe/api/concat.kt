@@ -31,7 +31,24 @@ public fun <T> DataRow<T>.concat(vararg rows: DataRow<T>): DataFrame<T> = (listO
 
 public fun <T> DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + frames)
 
-public infix fun <T> DataFrame<T>.concat(frame: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + frame)
+/**
+ * Vertically concat rows from two DataFrames with different schemas.
+ * Use [Iterable.concat] to concatenate DataFrames with identical schemas.
+ *
+ * #### Schema unification
+ * If input DataFrame objects have different schemas, every column in the resulting DataFrame will get the lowest common type of the original columns with the same name.
+ *
+ * Rows of columns missing in either DataFrame will be filled with `null` values.
+ *
+ * Example: `[A: Int, B: String]` concat `[A: Double, C: Float]` yields `[A: Number, B: String?, C: Float?]`.
+ *
+ * For more information: {@include [DocumentationUrls.Concat]}
+ *
+ */
+@Refine
+@Interpretable("DataFrameConcat")
+public infix fun <T, T1> DataFrame<T>.concat(frame: DataFrame<T1>): DataFrame<Any> =
+    concatImpl(listOf(this) + frame).cast()
 
 @JvmName("concatT")
 public fun <T> DataFrame<T>.concat(rows: Iterable<DataRow<T>>): DataFrame<T> = (rows() + rows).concat()

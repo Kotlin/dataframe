@@ -413,6 +413,8 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    @Refine
+    @Interpretable("DataFrameBuilderFillValue")
     public inline fun <reified C> fill(nrow: Int, value: C): DataFrame<*> =
         withColumns { name ->
             DataColumn.createValueColumn(
@@ -431,8 +433,12 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    @Refine
+    @Interpretable("DataFrameBuilderNulls")
     public inline fun <reified C> nulls(nrow: Int): DataFrame<*> = fill<C?>(nrow, null)
 
+    @Refine
+    @Interpretable("DataFrameBuilderFillIndexed")
     public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): DataFrame<*> =
         withColumns { name ->
             DataColumn.createByInference(
@@ -441,6 +447,8 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    @Refine
+    @Interpretable("DataFrameBuilderFill")
     public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): DataFrame<*> =
         withColumns { name ->
             DataColumn.createByInference(
@@ -458,22 +466,38 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    @Refine
+    @Interpretable("DataFrameBuilderRandomInt")
     public fun randomInt(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextInt() }
 
+    @Refine
+    @Interpretable("DataFrameBuilderRandomIntRange")
     public fun randomInt(nrow: Int, range: IntRange): DataFrame<*> = fillNotNull(nrow) { Random.nextInt(range) }
 
+    @Refine
+    @Interpretable("DataFrameBuilderRandomDouble")
     public fun randomDouble(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextDouble() }
 
+    @Refine
+    @Interpretable("DataFrameBuilderRandomDoubleRange")
     public fun randomDouble(nrow: Int, range: ClosedRange<Double>): DataFrame<*> =
         fillNotNull(nrow) { Random.nextDouble(range.start, range.endInclusive) }
 
+    @Refine
+    @Interpretable("DataFrameBuilderRandomFloat")
     public fun randomFloat(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextFloat() }
 
+    @Refine
+    @Interpretable("DataFrameBuilderRandomLong")
     public fun randomLong(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextLong() }
 
+    @Refine
+    @Interpretable("DataFrameBuilderRandomLongRange")
     public fun randomLong(nrow: Int, range: ClosedRange<Long>): DataFrame<*> =
         fillNotNull(nrow) { Random.nextLong(range.start, range.endInclusive) }
 
+    @Refine
+    @Interpretable("DataFrameBuilderRandomBoolean")
     public fun randomBoolean(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextBoolean() }
 }
 
