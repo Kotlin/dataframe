@@ -225,8 +225,8 @@ Use the following functions to collapse each group in a [`Pivot`](pivot.md) into
 These functions return an instance of `ReducedPivot`, which is a class serving as a transitional step between performing a reduction on [`Pivot`](pivot.md) groups 
 and specifying how the resulting reduced rows should be represented in a resulting [`DataRow`](DataRow.md).
 
-#### Examples of reducing {collapsible="true"}
-##### df.pivot {collapsible="true"}
+#### Examples of reducing
+##### df.pivot
 <!---FUN pivotReducing-->
 <tabs>
 <tab title="Properties">
@@ -419,7 +419,7 @@ To perform this transformation, use one of the following functions:
 Each of these functions returns a new [`DataRow`](DataRow.md) with [`Pivot`](pivot.md) keys as top-level columns (or as [`column groups`](DataColumn.md#columngroup)) 
 and values composed of the reduced results from each group.
 
-#### Examples of transforming {collapsible="true"}
+#### Examples of transforming
 ##### values {collapsible="true"}
 <!---FUN pivotValues-->
 <tabs>
@@ -483,7 +483,7 @@ The following aggregation methods are available:
 Each of these methods returns a new [`DataRow`](DataRow.md) with `Pivot` keys as top-level columns 
 (or as [`column groups`](DataColumn.md#columngroup)) and values representing the aggregated results of each group.
 
-### Examples of aggregation {collapsible="true"}
+### Examples of aggregation
 #### frames {collapsible="true"}
 <!---FUN pivotFrames-->
 <tabs>
@@ -645,15 +645,15 @@ in the resulting [`DataFrame`](DataFrame.md) (for `PivotGroupBy`).
 
 The following aggregation statistics are available:
 * [`count`](count.md);
-* [`max`](minmax.md) / maxOf / maxFor;
-* [`min`](minmax.md) / minOf / minFor;
-* [`sum`](sum.md) / sumOf / sumFor;
-* [`mean`](mean.md) / meanOf / meanFor;
-* [`std`](std.md) / stdOf / stdFor;
-* [`median`](median.md) / medianOf / medianFor;
-* [`percentile`](percentile.md) / percentileOf / percentileFor.
+* [`max / maxOf / maxFor`](minmax.md);
+* [`min / minOf / minFor`](minmax.md);
+* [`sum / sumOf / sumFor`](sum.md);
+* [`mean / meanOf / meanFor`](mean.md);
+* [`std / stdOf / stdFor`](std.md);
+* [`median / medianOf / medianFor`](median.md);
+* [`percentile / percentileOf / percentileFor`](percentile.md).
 
-To compute one or several [`statistics`](summaryStatistics.md) per every pivot group, use the [`aggregate`](pivot.md#aggregation) function.
+To compute one or several [`statistics`](summaryStatistics.md) per every pivot group, use the [`aggregate`](pivot.md#aggregate) function.
 
 The functions `max`, `maxOf`, and `maxFor` differ as follows. They all calculate the maximum of values, but:
 * `max` computes it on the selected columns. If more than one column is selected, for each group it computes one maximum value among all selected columns.
@@ -672,7 +672,7 @@ and the computed statistic as values.
 When applied to a `PivotGroupBy`, the result is a [`DataFrame`](DataFrame.md) where rows correspond to the grouping keys
 and columns correspond to the pivot keys, with computed statistics as cell values.
 
-##### Examples of direct aggregations {collapsible="true"}
+##### Examples of direct aggregations
 ###### max {collapsible="true"}
 <!---FUN pivotMax-->
 <tabs>

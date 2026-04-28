@@ -54,10 +54,7 @@ In the future we might add an option to change the quantile estimation method.
 ```kotlin
 df.percentile(25.0) // 25th percentile of values for every column with mutually comparable values
 df.percentile(75.0) { age and weight } // 75th percentile of all values in `age` and `weight`
-df.percentileFor(
-    50.0,
-    skipNaN = true
-) { age and name.firstName } // 50th percentile of values per `age` and `firstName` separately
+df.percentileFor(50.0, skipNaN = true) { age and name.firstName } // 50th percentile of values per `age` and `firstName` separately
 df.percentileOf(75.0) { (weight ?: 0) / age } // 75th percentile of expression evaluated for every row
 df.percentileBy(25.0) { age } // DataRow where the 25th percentile of `age` lies (index rounded using R3)
 ```

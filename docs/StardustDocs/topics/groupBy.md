@@ -17,11 +17,11 @@ transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression 
 reducer = .minBy { column } | .maxBy { column } | .medianBy { rowExpression } | .percentileBy(percentile) { rowExpression } | .first [ { rowCondition } ] | .last [ { rowCondition } ] 
           .concat() | .into([column]) [{ rowExpression }] | .values { valueColumns } 
 
-aggregator = .count() | .concat() | .concatWithKeys() | toDataFrame() | .into([column]) [{ rowExpression }] | .values { valueColumns } | .aggregate { aggregations } | .<stat> [ { columns } ]
+aggregator = .count() | .concat() | .concatWithKeys() | .toDataFrame() | .into([column]) [{ rowExpression }] | .values { valueColumns } | .aggregate { aggregations } | .<stat> [ { columns } ]
 
 pivot = .pivot { columns }
       [ .default(defaultValue) ]
-         pivotReducer | pivotAggregator  
+         pivotReducer | pivotAggregator
 ```
 
 See [`column selectors`](ColumnSelectors.md) for how to select the columns for this operation,
@@ -209,7 +209,7 @@ df.asGroupBy("data") // convert dataframe to GroupBy by interpreting 'data' colu
 </tab></tabs>
 <!---END-->
 
-### Examples of transformation {collapsible="true"}
+### Examples of transformation
 #### sortByGroup {collapsible="true"}
 <!---FUN sortByGroupOnGroupBy-->
 <tabs>
@@ -365,16 +365,16 @@ To perform a reducing operation, use the following functions:
 * [`first`](first.md) / [`last`](last.md) – to get the first / last [row](DataRow.md) 
 (optionally, the first or last one that satisfies a predicate) of each group.
 
-* [`minBy`](minBy.md) / [`maxBy`](maxBy.md) – to get from each group the first row that has the smallest / largest value in the given column.
+* [`minBy`](minBy.md) / [`maxBy`](maxBy.md) – to get from each group the row with the smallest / largest result of the `RowExpression` supplied to the function.
 
-* [`medianBy`](median.md) / [`percentileBy`](percentile.md) – to get the row with the median or specific percentile value of the given `RowExpression` calculated on rows within each group.
+* [`medianBy`](median.md) / [`percentileBy`](percentile.md) – to get the row with the value closest to the estimated median/percentile index of the `RowExpression`'s results calculated on rows within each group.
 
 These functions return an instance of `ReducedGroupBy`, which is a class serving as a transitional step
 between performing a reduction on groups and specifying how the resulting reduced rows (either original or transformed)
 should be represented in a new [`DataFrame`](DataFrame.md).
 
-#### Examples of reducing {collapsible="true"}
-##### df.groupBy {collapsible="true"}
+#### Examples of reducing
+##### df.groupBy
 <!---FUN groupByDfGroupedReducing-->
 <tabs>
 <tab title="Properties">
@@ -523,7 +523,7 @@ A `ReducedGroupBy` can be transformed into a [`DataFrame`](DataFrame.md) using t
 Each method returns a new [`DataFrame`](DataFrame.md) that includes the grouping key columns, containing all unique grouping key values 
 (or value combinations for multiple keys) along with their corresponding reduced rows.
 
-#### Examples of transforming ReducedGroupBy to DataFrame {collapsible="true"}
+#### Examples of transforming ReducedGroupBy to DataFrame
 ##### concat {collapsible="true"}
 
 <!---FUN groupByConcat-->
@@ -596,21 +596,21 @@ Aggregation is a generalization of [`reducing`](groupBy.md#reducing).
 
 The following aggregation methods are available:
 * [`concat`](concat.md) — concatenates all [`rows`](DataRow.md) from all groups into a single [`DataFrame`](DataFrame.md), without preserving grouping keys.
-* [`toDataFrame`](createDataFrame.md#todataframe) — returns this `GroupBy` as [`DataFrame`](DataFrame.md) with the grouping keys and corresponding groups in [FrameColumn](DataColumn.md#framecolumn).
+* [`toDataFrame`](createDataFrame.md#todataframe) — returns this `GroupBy` as a [`DataFrame`](DataFrame.md) with the grouping keys and corresponding groups in [FrameColumn](DataColumn.md#framecolumn).
 * `concatWithKeys` — a variant of [`concat`](concat.md) that also includes grouping keys that were not present in the original [`DataFrame`](DataFrame.md).
 * `into` — creates a new [`column`](DataColumn.md) containing a list of values computed with a `RowExpression` for each group, or a new [FrameColumn](DataColumn.md#framecolumn) containing the groups themselves.
-* [`values`](values.md) — collects all column values for every group without aggregation. for [ValueColumn](DataColumn.md#valuecolumn) of type `T` it will gather group values into lists of type `List<T>`.
-For [ColumnGroup](DataColumn.md#columngroup) it will gather group values into [`DataFrame`](DataFrame.md) and convert [ColumnGroup](DataColumn.md#columngroup) into [FrameColumn](DataColumn.md#framecolumn).
+* [`values`](values.md) — collects all column values for every group without aggregation. For a [ValueColumn](DataColumn.md#valuecolumn) of type `T` it will gather group values into lists of type `List<T>`.
+For a [ColumnGroup](DataColumn.md#columngroup) it will gather group values into a [`DataFrame`](DataFrame.md) and convert that [ColumnGroup](DataColumn.md#columngroup) into a [FrameColumn](DataColumn.md#framecolumn).
 * [`count`](count.md) — creates a [`DataFrame`](DataFrame.md) containing the grouping key columns and an additional [`column`](DataColumn.md) with the number of rows in each corresponding group.
 * `aggregate` — performs a set of custom aggregations using `AggregateDsl`, allowing you to compute one or more [statistics](summaryStatistics.md) per every group of `GroupBy`. 
-The body if this function will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) that represents current data group being aggregated. 
-To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name of new column to infix function `into`.
+The body if this function will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) that represents the current data group being aggregated. 
+To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name of the new column to infix function `into`.
 
 Each of these methods returns a new DataFrame that includes the grouping key columns (except for [`concat`](concat.md)) along with the columns of values aggregated from the corresponding groups.
 
-### Examples of aggregation {collapsible="true"}
+### Examples of aggregation
 #### concat on GroupBy {collapsible="true"}
-[`concat`](concat.md) can be used to union all data groups of `GroupBy` into original [`DataFrame`](DataFrame.md) preserving new order of rows produced by grouping:
+[`concat`](concat.md) can be used to union all data groups of `GroupBy` into the original [`DataFrame`](DataFrame.md) preserving the new order of rows produced by grouping:
 
 <!---FUN concatOnGroupBy-->
 <tabs>
@@ -842,15 +842,15 @@ Each function computes a statistic across the [`rows`](DataRow.md) of a group an
 
 The following aggregation statistics are available:
 * [`count`](count.md);
-* [`max`](minmax.md) / maxOf / maxFor; 
-* [`min`](minmax.md) / minOf / minFor; 
-* [`sum`](sum.md) / sumOf / sumFor; 
-* [`mean`](mean.md) / meanOf / meanFor; 
-* [`std`](std.md) / stdOf / stdFor; 
-* [`median`](median.md) / medianOf / medianFor; 
-* [`percentile`](percentile.md) / percentileOf / percentileFor.
+* [`max / maxOf / maxFor`](minmax.md); 
+* [`min / minOf / minFor`](minmax.md); 
+* [`sum / sumOf / sumFor`](sum.md); 
+* [`mean / meanOf / meanFor`](mean.md); 
+* [`std / stdOf / stdFor`](std.md); 
+* [`median / medianOf / medianFor`](median.md); 
+* [`percentile / percentileOf / percentileFor`](percentile.md).
 
-To compute one or several [`statistics`](summaryStatistics.md) per every group of `GroupBy`, use the [`aggregate`](groupBy.md#aggregation) function.
+To compute one or several [`statistics`](summaryStatistics.md) per every group of `GroupBy`, use the [`aggregate`](groupBy.md#aggregate-on-groupby) function.
 
 The functions `max`, `maxOf`, and `maxFor` differ as follows. They all calculate the maximum of values, but:
 * `max` computes it on the selected columns. If more than one column is selected, for each group it computes one maximum value among all selected columns.
@@ -862,7 +862,7 @@ Similar logic applies to other statistics.
 #### Direct aggregations
 Most common aggregation functions can be computed directly at [`GroupBy DataFrame`](groupBy.md#transformation).
 
-##### Examples of direct aggregations {collapsible="true"}
+##### Examples of direct aggregations
 ###### max {collapsible="true"}
 <!---FUN maxOnGroupBy-->
 <tabs>
