@@ -33,7 +33,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.join.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate1.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseAll.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.meanAggregationsSkipNA.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html"></resource>
@@ -62,7 +61,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.valueCounts.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNA.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convert.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseWithOptions.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnsByName.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.insertColumn.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.implode.html"></resource>
@@ -70,6 +68,7 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctColumns.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertTo.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertStringTo.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhile.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNulls.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"></resource>
@@ -100,7 +99,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.drop.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorder.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.shuffle.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseSome.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTopFalse.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addMany.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex.html"></resource>
@@ -207,3 +205,22 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromObject.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObject.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObjectWithExclude.html"></resource>
+<resource src="dfParse.html"></resource>
+<resource src="dfParseWithOptions.html"></resource>
+<resource src="globalParserOptionsAddDateTimeFormat_java.html"></resource>
+<resource src="globalParserOptionsAddDateTimeFormat_kotlin.html"></resource>
+<resource src="globalParserOptionsAddPattern_java.html"></resource>
+<resource src="globalParserOptionsAddPattern_kotlin.html"></resource>
+<resource src="parseAll.html"></resource>
+<resource src="parseSome.html"></resource>
+<resource src="parserOptionsWithDateTimeFormat_java.html"></resource>
+<resource src="parserOptionsWithDateTimeFormat_kotlin.html"></resource>
+<resource src="parserOptionsWithPattern_java.html"></resource>
+<resource src="parserOptionsWithPattern_kotlin.html"></resource>
+<resource src="parseWithOptions.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotSeparate.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addCalculated.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertStringTo.html"></resource>
+<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherWithMapping.html"></resource>
+

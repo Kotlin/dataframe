@@ -252,6 +252,7 @@ df.groupBy("city").meanOf("mean ratio") {
 ```
 
 </tab></tabs>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html" width="100%"/>
 <!---END-->
 
 To get all column values for every group without aggregation use `values` function:
