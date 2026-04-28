@@ -96,6 +96,7 @@ korro {
         include("docs/StardustDocs/topics/write.md")
         include("docs/StardustDocs/topics/rename.md")
         include("docs/StardustDocs/topics/format.md")
+        include("docs/StardustDocs/topics/parse.md")
         include("docs/StardustDocs/topics/toHTML.md")
         include("docs/StardustDocs/topics/guides/*.md")
         include("docs/StardustDocs/topics/concepts/*.md")
@@ -136,6 +137,13 @@ korro {
         funSuffix("_strings") {
             replaceText("NAME", "Strings")
         }
+        funSuffix("_kotlin") {
+            replaceText("NAME", "Kotlin")
+        }
+        funSuffix("_java") {
+            replaceText("NAME", "Java")
+        }
+
         beforeGroup = "<tabs>\n"
         afterGroup = "</tabs>"
     }

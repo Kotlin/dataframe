@@ -214,6 +214,7 @@ korro {
         funSuffix("_strings") {
             replaceText("NAME", "Strings")
         }
+
         beforeGroup = "<tabs>\n"
         afterGroup = "</tabs>"
     }
