@@ -880,7 +880,6 @@ df.groupBy("city").max() // max for every column with mutually comparable values
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html" width="100%"/>
 <!---END-->
 <inline-frame src="resources/maxOnGroupBy_properties.html" width="100%"/>
 
