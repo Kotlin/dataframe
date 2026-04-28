@@ -938,7 +938,6 @@ df.pivot("isHappy").aggregate(separate = true) {
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotSeparate.html" width="100%"/>
 <!---END-->
 <inline-frame src="./resources/pivotAggregateSeparate_properties.html" width="100%" height="500px"></inline-frame>
 
