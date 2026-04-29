@@ -255,6 +255,7 @@ ParserOptions(dateTimeFormatter = myFormatter)
 ```
 </td>
 <td>
+Kotlin:
 
 ```kotlin
 ParserOptions(
@@ -267,6 +268,7 @@ ParserOptions(
 </tr>
 <tr>
 <td>
+Java:
 
 ```kotlin
 ParserOptions(
@@ -306,6 +308,7 @@ ParserOptions(dateTimePattern = "MM/dd yyyy")
 ```
 </td>
 <td>
+Kotlin:
 
 ```kotlin
 @OptIn(FormatStringsInDatetimeFormats::class)
@@ -319,6 +322,7 @@ ParserOptions(
 </tr>
 <tr>
 <td>
+Java:
 
 ```kotlin
 ParserOptions(
@@ -336,6 +340,7 @@ DataFrame.parser.addDateTimePattern("MM/dd yyyy")
 ```
 </td>
 <td>
+Kotlin:
 
 ```kotlin
 @OptIn(FormatStringsInDatetimeFormats::class)
@@ -347,6 +352,7 @@ DataFrame.parser
 </tr>
 <tr>
 <td>
+Java:
 
 ```kotlin
 DataFrame.parser
@@ -362,6 +368,7 @@ convert { stringCols }.toLocalDate(pattern = "MM/dd yyyy")
 ```
 </td>
 <td>
+Kotlin:
 
 ```kotlin
 @OptIn(FormatStringsInDatetimeFormats::class)
@@ -372,6 +379,7 @@ convert { stringCols }.toLocalDate(pattern = "MM/dd yyyy")
 </tr>
 <tr>
 <td>
+Java:
 
 ```kotlin
 convert { stringCols }.toJavaLocalDate(pattern = "MM/dd yyyy")
