@@ -7,8 +7,8 @@ This section provides a complete overview of all API changes to help you migrate
 
 ### Renamed functions and classes to the correct CamelCase spelling { id="camelCase" }
 
-All functions and classes in Kotlin DataFrame 
-have been renamed to 
+All functions and classes in Kotlin DataFrame
+have been renamed to
 [the correct CamelCase spelling](https://developer.android.com/kotlin/style-guide#camel_case).
 
 See below for a complete list of the renamed functions and classes.
@@ -28,7 +28,6 @@ Functions were also renamed to [the correct CamelCase spelling](#camelCase).
 All new functions keep the same arguments as before and additionally introduce new ones.
 Also, [there are new arguments that expose Deephaven CSV features](read.md#unlocking-deephaven-csv-features).
 
-
 See [](read.md#read-from-csv).
 
 > All outdated CSV IO functions raise `WARNING` in 1.0 and will raise `ERROR` in 1.1.
@@ -44,13 +43,15 @@ See [](read.md#read-from-csv).
 ### Migration to Standard Library `Instant`
 
 Since Kotlin 2.1.20,
-[`Instant` is now part of the standard library](https://kotlinlang.org/docs/whatsnew2120.html#new-time-tracking-functionality)  
+[
+`Instant` is now part of the standard library](https://kotlinlang.org/docs/whatsnew2120.html#new-time-tracking-functionality)  
 (as `kotlin.time.Instant`).
-You can still use the old (deprecated) `kotlinx.datetime.Instant` type, but its support will be removed in Kotlin DataFrame 1.1.
+You can still use the old (deprecated) `kotlinx.datetime.Instant` type, but its support will be removed in Kotlin
+DataFrame 1.1.
 
 > New `Instant` in the Kotlin Standard Library becomes stable in 2.3.0.
 > In earlier versions, all related operations should be marked with the `@OptIn(ExperimentalTime::class)` annotation.
-{style="note"}
+> {style="note"}
 
 For now, each `Instant`-related operation has been split into two new ones —
 one for the new stdlib `kotlin.time.Instant` and one for the old deprecated `kotlinx.datetime.Instant`.
@@ -104,7 +105,7 @@ For example:
 ```kotlin
 DataFrame.readCsv(
     ...,
-    parserOptions = ParserOptions(parseExperimentalInstant = false)
+parserOptions = ParserOptions(parseExperimentalInstant = false)
 )
 ```
 
@@ -128,8 +129,6 @@ Use `.filter(predicate)` for filtering instead.
 | `df.select { single { predicate } }`             | `df.select { cols().filter { predicate }.single() }`             |
 | `df.select { colGroup.singleCol { predicate } }` | `df.select { colGroup.allCols().filter { predicate }.single() }` |
 | `df.select { colSet.single { predicate } }`      | `df.select { colSet.filter { predicate }.single() }`             |
-
-
 
 ### Removed functions and classes
 
@@ -176,6 +175,237 @@ The next functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `row.getRow(index)` /  `row.getRowOrNull(index)` / `row.getRows(indices)`                                | `row.df().getRow(index)` /  `row.df().getRowOrNull(index)` / `row.df().getRows(indices)`                                      | Removed a shortcut to clarify the behaviour;                            |
 | `df.copy()`                                                                                              | `df.columns().toDataFrame().cast()`                                                                                           | Removed a shortcut to clarify the behaviour;                            |
 | `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                       |
+
+## Parsing and Converting Date-Time
+
+In 0.15 and up to 1.0-Beta4 we did support the [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
+types; however, they were still treated second-level in DataFrame. [`ParserOptions`](parse.md#parser-options)
+were still built around the Java `DataTimeFormatter`-paradigm.
+Starting from 1.0-Beta5, [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime) types now become first-class
+citizens,
+while still allowing you to use Java types if you need them.
+
+<table>
+<tr>
+<th>0.15</th>
+<th>1.0</th>
+<th>Reason</th>
+</tr>
+<tr>
+<td>
+
+```kotlin
+df.parse()
+```
+</td>
+<td>
+
+```kotlin
+df.parse()
+```
+</td>
+<td>Default parsing behavior remains largely unchanged.</td>
+</tr>
+<tr>
+<td>
+
+```kotlin
+df.parse(
+    ParserOptions(
+        skipTypes = setOf(
+            typeOf<kotlinx.datetime.LocalDate>(), 
+            ...,
+        ),
+    ),
+)
+```
+</td>
+<td>
+
+```kotlin
+df.parse(
+    ParserOptions(dateTime = DateTimeParserOptions.Java),
+)
+```
+</td>
+<td>If you want to force parsing to Java date-time types, you no longer have use skipTypes, you can simply change the `dateTime` argument.</td>
+</tr>
+<tr>
+<td>
+
+```kotlin
+DataFrame.parser.addSkipType(
+    typeOf<kotlinx.datetime.LocalDate>(),
+)
+```
+</td>
+<td>
+
+```kotlin
+DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
+```
+</td>
+<td>The same logic applies for the <a href="parse.md#global-parser-options">global parser options</a>.</td>
+</tr>
+<tr>
+<td rowspan="2">
+
+```kotlin
+ParserOptions(dateTimeFormatter = myFormatter)
+```
+</td>
+<td>
+Kotlin:
+
+```kotlin
+ParserOptions(
+    dateTime = DateTimeParserOptions.Kotlin
+        .withFormat<_>(myKotlinFormat),
+)
+```
+</td>
+<td rowspan="2">You now need to explicitly specify you expect Java or Kotlin date-time types via `DateTimeParserOptions.X`. Then you can specify the relevant options, like a `kotlinx.datetime.format.DateTimeFormat` or `java.time.DateTimeFormatter`. These are typed now too, optionally for Java.</td>
+</tr>
+<tr>
+<td>
+Java:
+
+```kotlin
+ParserOptions(
+    dateTime = DateTimeParserOptions.Java
+        .withFormatter<java.time.LocalDateTime>(myJavaFormatter),
+)
+```
+</td>
+</tr>
+<tr>
+<td>
+
+```kotlin
+ParserOptions(
+    locale = myLocale,
+    dateTimeFormatter = myFormatter,
+)
+```
+</td>
+<td>
+
+```kotlin
+ParserOptions(
+    dateTime = DateTimeParserOptions.Java
+        .withLocale(myLocale)
+        .withFormatter<java.time.LocalDateTime>(myFormatter),
+)
+```
+</td>
+<td>Locale for date-time only works for Java types. If you need Kotlin types ánd a locale use <a href="convert.md">convert</a> to convert to Kotlin types afterwards.</td>
+</tr>
+<tr>
+<td rowspan="2">
+
+```kotlin
+ParserOptions(dateTimePattern = "MM/dd yyyy")
+```
+</td>
+<td>
+Kotlin:
+
+```kotlin
+@OptIn(FormatStringsInDatetimeFormats::class)
+ParserOptions(
+    dateTime = DateTimeParserOptions.Kotlin
+        .withPattern<kotlinx.datetime.LocalDate>("MM/dd yyyy"),
+)
+```
+</td>
+<td rowspan="2">Again, you now need to specify the target date-time library and the expected type for your pattern (optionally for Java). In Kotlin you also need to opt-in, because using `DateTimeFormat` instead is <a href="https://github.com/Kotlin/kotlinx-datetime#using-unicode-format-strings-like-yyyy-mm-dd">recommended</a>.</td>
+</tr>
+<tr>
+<td>
+Java:
+
+```kotlin
+ParserOptions(
+    dateTime = DateTimeParserOptions.Java
+        .withPattern<java.time.LocalDate>("MM/dd yyyy"),
+)
+```
+</td>
+</tr>
+<tr>
+<td rowspan="2">
+
+```kotlin
+DataFrame.parser.addDateTimePattern("MM/dd yyyy")
+```
+</td>
+<td>
+Kotlin:
+
+```kotlin
+@OptIn(FormatStringsInDatetimeFormats::class)
+DataFrame.parser
+    .addDateTimeUnicodePattern<kotlinx.datetime.LocalDate>("MM/dd yyyy")
+```
+</td>
+<td rowspan="2">Same idea. Though you can now also use `...addDateTimeFormat()` / `...addJavaDateTimeFormatter()`, which we would recommend more.</td>
+</tr>
+<tr>
+<td>
+Java:
+
+```kotlin
+DataFrame.parser
+    .addJavaDateTimePattern<java.time.LocalDate>("MM/dd yyyy")
+```
+</td>
+</tr>
+<tr>
+<td rowspan="2">
+
+```kotlin
+convert { stringCols }.toLocalDate(pattern = "MM/dd yyyy")
+```
+</td>
+<td>
+Kotlin:
+
+```kotlin
+@OptIn(FormatStringsInDatetimeFormats::class)
+convert { stringCols }.toLocalDate(pattern = "MM/dd yyyy")
+```
+</td>
+<td rowspan="2">Same logic applies to convert: you need to opt-in to use patterns for Kotlin types and specify "Java" for Java types.</td>
+</tr>
+<tr>
+<td>
+Java:
+
+```kotlin
+convert { stringCols }.toJavaLocalDate(pattern = "MM/dd yyyy")
+```
+</td>
+</tr>
+<tr>
+<td>
+
+```kotlin
+stringCol.convertToLocalDate(locale = Locale.GERMAN)
+```
+</td>
+<td>
+
+```kotlin
+stringCol
+    .convertToJavaLocalDate(locale = Locale.GERMAN)
+    .convertToLocalDate()
+```
+</td>
+<td>If you need to supply a locale to be able to parse date-time types, parse to Java types first, then convert to Kotlin ones.</td>
+</tr>
+</table>
+
+For more information, check out [](parse.md#parsing-date-time-strings).
 
 <!--TODO (https://github.com/Kotlin/dataframe/issues/1630)
 
