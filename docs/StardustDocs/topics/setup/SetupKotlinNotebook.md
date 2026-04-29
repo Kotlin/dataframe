@@ -65,7 +65,7 @@ You can explicitly define the version you want:
 
 
 ```
-%use dataframe(1.0.0-Beta4n)
+%use dataframe(1.0.0-Beta5n)
 ```
 
 Or use the latest stable version of Kotlin DataFrame
@@ -76,7 +76,7 @@ Or use the latest stable version of Kotlin DataFrame
 %use dataframe
 ```
 
-> For version `1.0.0-Beta4`, in notebooks use version `1.0.0-Beta4n` instead.
+> For version `1.0.0-Beta5`, in notebooks use version `1.0.0-Beta5n` instead.
 > The regular version [does not work with statistical functions](https://github.com/Kotlin/dataframe/issues/1116). 
 > The `n` version includes a [patch](https://github.com/Kotlin/dataframe/pull/1435) that resolves this issue.
 > 
@@ -88,7 +88,7 @@ Or use the latest stable version of Kotlin DataFrame
 > %useLatestDescriptors
 > %use dataframe, kandy
 > // or
-> %use dataframe(1.0.0-Beta4n), kandy(0.8.3)
+> %use dataframe(1.0.0-Beta5n), kandy(0.8.4)
 > ```
 > {style="warning"}
 

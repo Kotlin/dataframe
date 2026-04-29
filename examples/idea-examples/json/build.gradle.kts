@@ -5,7 +5,7 @@ plugins {
     application
     kotlin("jvm")
 
-    id("org.jetbrains.kotlinx.dataframe")
+    id("org.jetbrains.kotlinx.dataframe") version "1.0.0-Beta4"
 
     // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
     id("com.google.devtools.ksp")

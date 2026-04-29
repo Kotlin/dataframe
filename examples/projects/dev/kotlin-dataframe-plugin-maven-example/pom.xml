@@ -11,7 +11,7 @@
     <properties>
         <kotlin.version>2.3.20</kotlin.version>
         <dataframe.version>1.0.0-dev</dataframe.version>
-        <kandy.version>0.8.3</kandy.version>
+        <kandy.version>0.8.4</kandy.version>
         <ktlint.version>1.8.0</ktlint.version>
 
         <junit.version>5.10.0</junit.version>
