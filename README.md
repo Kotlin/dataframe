@@ -63,7 +63,7 @@ You could find the following articles there:
 
 ### What's new
 
-1.0.0-Beta4: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-Beta4)
+1.0.0-Beta5: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-Beta5)
 
 Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
@@ -97,15 +97,15 @@ to get the latest stable version without updating the Kotlin kernel:
 Or manually specify the version:
 
 ```
-%use dataframe(1.0.0-Beta4n)
+%use dataframe(1.0.0-Beta5n)
 ```
 
 > [!WARNING]  
 > Please, use `0.16.0-736` Kotlin Jupyter kernel version or higher for descriptor compatibility
 > 
-> Use specified `1.0.0-Beta4n` version in Kotlin Notebook. 
+> Use specified `1.0.0-Beta5n` version in Kotlin Notebook. 
 > Due to [an known issue](https://github.com/Kotlin/dataframe/issues/1116), 
-> common `dataframe:1.0.0-Beta4` version works incorrectly in Notebook.
+> common `dataframe:1.0.0-Beta5` version works incorrectly in Notebook.
 >
 > If you use [`kandy`](https://github.com/Kotlin/kandy) in your notebook, add it after the `dataframe`:
 > ```kotlin
@@ -123,7 +123,7 @@ Add dependencies in the `build.gradle.kts` script:
 
 ```kotlin
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta4")
+    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta5")
 }
 ```
 
@@ -156,7 +156,7 @@ Add dependencies in the `pom.xml` configuration file:
 <dependency>
     <groupId>org.jetbrains.kotlinx</groupId>
     <artifactId>dataframe</artifactId>
-    <version>1.0.0-Beta4</version>
+    <version>1.0.0-Beta5</version>
 </dependency>
 ```
 
@@ -251,6 +251,8 @@ other recommended versions.
 | 1.0.0-Beta3              | 8 / 11               | 2.2.20         | 0.15.0-587             | 18.3.0               | 2.2.20 / IDEA 2025.2+   | 0.8.1                    |
 | 1.0.0-Beta4n (notebooks) | 8 / 11               | 2.2.21         | 0.16.0-736             | 18.3.0               | -                       | 0.8.3                    |
 | 1.0.0-Beta4              | 8 / 11               | 2.2.21         | 0.16.0-736             | 18.3.0               | 2.2.21 / IDEA 2025.2+   | 0.8.3                    |
+| 1.0.0-Beta5n (notebooks) | 8 / 11               | 2.3.20         | 0.16.0-736             | 19.0.0               | -                       | 0.8.4                    |
+| 1.0.0-Beta5              | 8 / 11               | 2.3.20         | 0.16.0-736             | 19.0.0               | 2.3.20 / IDEA 2026.1+   | 0.8.4                    |
 
 ## Code of Conduct
 
