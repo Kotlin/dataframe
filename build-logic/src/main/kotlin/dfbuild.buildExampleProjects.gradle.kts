@@ -30,6 +30,7 @@ val versionsToSync =
         "kotlinDatetime",
         "log4j",
         "spark4",
+        "kotlin-dl",
     )
 
 val syncAllExampleFolders by tasks.registering {
