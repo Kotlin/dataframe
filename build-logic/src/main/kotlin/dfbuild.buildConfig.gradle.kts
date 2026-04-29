@@ -1,7 +1,8 @@
-@file:OptIn(ExperimentalBuildToolsApi::class)
+@file:OptIn(ExperimentalBuildToolsApi::class, ExperimentalKotlinGradlePluginApi::class)
 
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(convention.plugins.kotlinJvmCommon)
@@ -21,14 +22,14 @@ buildConfig {
 val buildConfigSources by kotlin.sourceSets.creating {
     kotlin.srcDir("build/generated/sources/buildConfig/main")
 }
-tasks.generateBuildConfig {
+tasks.generateBuildConfigClasses {
     finalizedBy(
         "runKtlintFormatOver${buildConfigSources.name.uppercaseFirstChar()}SourceSet",
     )
 }
 tasks.named { "Ktlint" in it && "Check" in it }.configureEach {
     dependsOn(
-        tasks.generateBuildConfig,
+        tasks.generateBuildConfigClasses,
         "runKtlintFormatOver${buildConfigSources.name.uppercaseFirstChar()}SourceSet",
     )
 }

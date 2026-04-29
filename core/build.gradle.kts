@@ -272,7 +272,7 @@ tasks.withType<Jar> {
 }
 
 tasks.processKDocsMain {
-    dependsOn(tasks.generateKeywordsSrc, tasks.generateBuildConfig)
+    dependsOn(tasks.generateKeywordsSrc, tasks.generateBuildConfigClasses)
 }
 
 tasks.runKtlintFormatOverMainSourceSet {

@@ -22,7 +22,7 @@ dataframe-ksp = "1.0.0-Beta4"
 korro = "0.1.7"
 
 gradlePlugin-gradle-foojayToolchains = "1.0.0"
-typesafe-conventions = "0.10.0"
+typesafe-conventions = "0.10.1"
 maven-invoker = "3.3.0"
 maven-wrapper = "3.3.4"
 maven = "3.9.11"
@@ -65,7 +65,7 @@ ktor = "3.4.2"
 kotlin-compile-testing = "0.7.1"
 hikari = "7.0.2"
 duckdb = "1.4.2.0"
-buildconfig = "5.6.7"
+buildconfig = "6.0.9"
 benchmark = "0.4.16"
 
 geotools = "33.5" # 34.x and higher versions are not compatible with Java 11
@@ -167,7 +167,7 @@ sl4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "sl4j" }
 sl4jsimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
 android-gradle-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "android-gradle-api" }
 android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-api" }
-kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin" }
 kotlin-gradle-plugin-api = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin-api" }
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 kotlin-compile-testing = { group = "dev.zacsweers.kctfork", name = "core", version.ref = "kotlin-compile-testing" }

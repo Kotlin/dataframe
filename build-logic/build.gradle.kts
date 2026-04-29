@@ -21,7 +21,7 @@ ktlint {
 dependencies {
     // Add a dependency on the Kotlin Gradle plugin so that convention plugins can apply it.
     implementation(libs.kotlin.gradle.plugin)
-    implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:$expectedKotlinDslPluginsVersion")
+    compileOnly("org.gradle.kotlin:gradle-kotlin-dsl-plugins:$expectedKotlinDslPluginsVersion")
 
     // So we can create pretty tables in gradle task outputs, parse json, and rename to camelCase
     implementation(libs.dataframe.release.core)

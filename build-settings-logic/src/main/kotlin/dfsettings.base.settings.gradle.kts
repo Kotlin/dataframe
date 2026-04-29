@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 val jupyterApiTCRepo: String? by settings
 
 dependencyResolutionManagement {
