@@ -2,7 +2,27 @@ package org.jetbrains.kotlinx.dataframe.examples.titanic.ml
 
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.annotations.DisableInterpretation
+import org.jetbrains.kotlinx.dataframe.api.by
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.fillNulls
+import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.merge
+import org.jetbrains.kotlinx.dataframe.api.perCol
+import org.jetbrains.kotlinx.dataframe.api.pivotMatches
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.shuffle
+import org.jetbrains.kotlinx.dataframe.api.toFloat
+import org.jetbrains.kotlinx.dataframe.api.toFloatArray
+import org.jetbrains.kotlinx.dataframe.api.toTypedArray
+import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dl.api.core.Sequential
 import org.jetbrains.kotlinx.dl.api.core.activation.Activations
 import org.jetbrains.kotlinx.dl.api.core.initializer.HeNormal
@@ -24,15 +44,17 @@ private val model = Sequential.of(
     Input(9),
     Dense(50, Activations.Relu, kernelInitializer = HeNormal(SEED), biasInitializer = Zeros()),
     Dense(50, Activations.Relu, kernelInitializer = HeNormal(SEED), biasInitializer = Zeros()),
-    Dense(2, Activations.Linear, kernelInitializer = HeNormal(SEED), biasInitializer = Zeros())
+    Dense(2, Activations.Linear, kernelInitializer = HeNormal(SEED), biasInitializer = Zeros()),
 )
 
 fun main() {
-
     // Set Locale for correct number parsing
     Locale.setDefault(Locale.FRANCE)
 
-    val df = Passenger.readCsv()
+    val df = DataFrame.readCsv(
+        url = object {}::class.java.getResource("/titanic.csv")!!,
+        delimiter = ';',
+    ).cast<Passenger>(verify = true)
 
     // Calculating imputing values
     val (train, test) = df
@@ -50,7 +72,7 @@ fun main() {
         it.compile(
             optimizer = Adam(),
             loss = Losses.SOFT_MAX_CROSS_ENTROPY_WITH_LOGITS,
-            metric = Metrics.ACCURACY
+            metric = Metrics.ACCURACY,
         )
 
         it.summary()
@@ -79,12 +101,20 @@ private fun <T> OnHeapDataset.Companion.create(
     dataframe: DataFrame<T>,
     yColumn: ColumnSelector<T, Number>,
 ): OnHeapDataset {
-
+    // NOTE: we use @DisableInterpretation because the compiler plugin cannot (yet)
+    // handle DataFrames with generic types.
+    // TODO from Kotlin 2.4.0 we can annotate just `extractX()`, not each individual call.
     fun extractX(): Array<FloatArray> =
-        dataframe.remove(yColumn)
-            .convert { colsAtAnyDepth().filter { !it.isColumnGroup() } }.toFloat()
-            .merge { colsAtAnyDepth().colsOf<Float>() }.by { it.toFloatArray() }.into("X")
-            .getColumn("X").cast<FloatArray>().toTypedArray()
+        dataframe.let {
+            @DisableInterpretation
+            it.remove(yColumn)
+        }.let {
+            @DisableInterpretation
+            it.convert { colsAtAnyDepth().filter { !it.isColumnGroup() } }.toFloat()
+        }.let {
+            @DisableInterpretation
+            it.merge { colsAtAnyDepth().colsOf<Float>() }.by { it.toFloatArray() }.into("X")
+        }.getColumn("X").cast<FloatArray>().toTypedArray()
 
     fun extractY(): FloatArray = dataframe.get(yColumn).toFloatArray()
 
