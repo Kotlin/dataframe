@@ -84,6 +84,7 @@ import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toStr
@@ -546,7 +547,7 @@ class DataFrameTreeTests : BaseTest() {
             colsAtAnyDepth().filter { !it.isColumnGroup() }
         }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
-        val expected = typed2.rename { nameAndCity.allCols() }.into { it.path.joinToString(".") }
+        val expected = typed2.rename { nameAndCity.allCols() }.to({ it.path.joinToString(".") })
         grouped shouldBe expected
     }
 
@@ -559,7 +560,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun rename() {
-        val res = typed2.rename { nameAndCity.allCols() }.into { it.name().capitalize() }
+        val res = typed2.rename { nameAndCity.allCols() }.to { it.name().capitalize() }
         res.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames().map { it.capitalize() }
     }
 

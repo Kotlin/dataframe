@@ -54,7 +54,7 @@ val df = initialData.unfold("response")
 
 ```kotlin
 df.move { response.data }.toTop()
-df.rename { response.data }.into("description")
+df.rename { response.data }.to("description")
 ```
 
 <!---END-->

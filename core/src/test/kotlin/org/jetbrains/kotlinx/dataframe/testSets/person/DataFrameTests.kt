@@ -1042,13 +1042,13 @@ class DataFrameTests : BaseTest() {
             this.getColumnOrNull("age") shouldBe null
         }
         typed.rename("name" to "name2", "age" to "age2").check()
-        typed.rename { name and age }.into("name2", "age2").check()
-        typed.rename { name and age }.into { it.name + "2" }.check()
+        typed.rename { name and age }.to("name2", "age2").check()
+        typed.rename { name and age }.to { it.name + "2" }.check()
     }
 
     @Test
     fun `select with rename`() {
-        val expected = typed.select { name and age }.rename { all() }.into { it.name + 2 }
+        val expected = typed.select { name and age }.rename { all() }.to { it.name + 2 }
         typed.select { name into "name2" and age.into("age2") } shouldBe expected
     }
 
@@ -1613,7 +1613,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `replace with rename`() {
         val res = typed.replace { age }.with { it.rename("age2") }
-        res shouldBe typed.rename { age }.into("age2")
+        res shouldBe typed.rename { age }.to("age2")
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -1633,7 +1633,7 @@ class DataFrameTests : BaseTest() {
         val res = typed.replace { age }.with { 2021 - age named "year" }
         val expected = typed
             .convert { age }.with { 2021 - age }
-            .rename { age }.into("year")
+            .rename { age }.to("year")
         res shouldBe expected
     }
 

@@ -1067,7 +1067,7 @@ class Modify : TestBase() {
             .filter { isHappy && age > 100 }
             .move { name.firstName and name.lastName }.after { isHappy }
             .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
-            .rename { isHappy }.into("isOK")
+            .rename { isHappy }.to("isOK")
         // SampleEnd
     }
 
@@ -1183,11 +1183,11 @@ class Modify : TestBase() {
 
         // SampleStart
         df.move { response.data }.toTop()
-        df.rename { response.data }.into("description")
+        df.rename { response.data }.to("description")
         // SampleEnd
 
         df.move { response.data }.toTop().alsoDebug()
-        df.rename { response.data }.into("description").alsoDebug()
+        df.rename { response.data }.to("description").alsoDebug()
     }
 
     @Ignore
@@ -1265,7 +1265,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun rename_properties() {
         // SampleStart
-        df.rename { name }.into("fullName")
+        df.rename { name }.to("fullName")
         // SampleEnd
     }
 
@@ -1273,7 +1273,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun rename_strings() {
         // SampleStart
-        df.rename("name").into("fullName")
+        df.rename("name").to("fullName")
         // SampleEnd
     }
 
@@ -1281,7 +1281,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun renameExpression_properties() {
         // SampleStart
-        df.rename { age }.into {
+        df.rename { age }.to {
             val mean = it.data.mean()
             "age [mean = $mean]"
         }
@@ -1292,7 +1292,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun renameExpression_strings() {
         // SampleStart
-        df.rename("age").into {
+        df.rename("age").to {
             val mean = it.data.cast<Int>().mean()
             "age [mean = $mean]"
         }

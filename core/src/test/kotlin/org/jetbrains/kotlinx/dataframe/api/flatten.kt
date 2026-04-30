@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.junit.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -72,7 +73,7 @@ class FlattenTests {
         val grouped = df
             .group("a", "b").into("e")
             .group("e", "c").into("f")
-            .rename { "f"["e"] }.into("a")
+            .rename { "f"["e"] }.to("a")
         val flattened = grouped.flatten { "f"["a"] }
         flattened.getColumnGroup("f").columnNames() shouldBe listOf("a", "b", "c")
         flattened.ungroup("f") shouldBe df
