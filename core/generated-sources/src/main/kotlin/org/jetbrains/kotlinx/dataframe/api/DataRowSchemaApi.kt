@@ -8,4 +8,4 @@ public inline fun <reified T : DataRowSchema> dataFrameOf(vararg rows: T): DataF
     rows.asIterable().toDataFrame()
 
 public inline fun <reified T : DataRowSchema> DataFrame<T>.append(vararg rows: T): DataFrame<T> =
-    concat(dataFrameOf(*rows))
+    listOf(this, rows.asIterable().toDataFrame()).concat()
