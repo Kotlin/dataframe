@@ -10,9 +10,9 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
 import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
@@ -96,7 +96,7 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
         df.cast<Customer>()
             .add("ordersTotal") { orders.sumOf { it.amount } }
             .filter { user.startsWith("A") }
-            .rename { user }.into("customer")
+            .rename { user }.to("customer")
         // SampleEnd
         //   .saveDfHtmlSample()
     }

@@ -18,7 +18,7 @@ class AllExceptTests : ColumnsSelectionDslTests() {
 
     @Test
     fun `issue 761`() {
-        val renamed = df.rename { colsAtAnyDepth() except name.firstName }.into { it.name.uppercase() }
+        val renamed = df.rename { colsAtAnyDepth() except name.firstName }.to { it.name.uppercase() }
         renamed.columnNames() shouldBe listOf("NAME", "AGE", "CITY", "WEIGHT", "ISHAPPY")
         renamed.getColumnGroup("NAME").columnNames() shouldBe listOf("firstName", "LASTNAME")
 

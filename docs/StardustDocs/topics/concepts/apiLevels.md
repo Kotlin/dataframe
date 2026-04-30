@@ -30,8 +30,8 @@ to any other library working with dataframes:
 // Get the "fullName" column
 df["fullName"]
 
-// Rename the "fullName" column into "name"
-df.rename("fullName").into("name")
+// Rename the "fullName" column to "name"
+df.rename("fullName").to("name")
 ```
 
 <!---END-->
@@ -84,8 +84,8 @@ and completely name- and typesafe:
 // Get "fullName" column
 df.fullName
 
-// Rename "fullName" column into "name"
-df.rename { fullName }.into("name")
+// Rename "fullName" column to "name"
+df.rename { fullName }.to("name")
 
 // Select the "firstName" column from the "fullName" column group
 // and the "age" column

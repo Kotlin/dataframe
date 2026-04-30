@@ -304,7 +304,7 @@ class ConstructorsTests {
 
                 else -> error("Unexpected column name: $it")
             }
-        }.rename { all() }.into { names[it.name.toInt() - 1] }
+        }.rename { all() }.to { names[it.name.toInt() - 1] }
 
         val df4 = dataFrameOf(names).invoke {
             when (it) {

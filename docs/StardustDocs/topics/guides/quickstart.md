@@ -145,10 +145,10 @@ Rename "full_name" and "stargazers_count" columns:
 <!---FUN notebook_test_quickstart_7-->
 
 ```kotlin
-// Rename "full_name" column into "name"
-val dfRenamed = dfFiltered.rename { full_name }.into("name")
-    // And "stargazers_count" into "starsCount"
-    .rename { stargazers_count }.into("starsCount")
+// Rename "full_name" column to "name"
+val dfRenamed = dfFiltered.rename { full_name }.to("name")
+    // And "stargazers_count" to "starsCount"
+    .rename { stargazers_count }.to("starsCount")
 dfRenamed
 ```
 

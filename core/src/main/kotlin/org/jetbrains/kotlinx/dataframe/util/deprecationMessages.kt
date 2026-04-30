@@ -304,4 +304,8 @@ internal const val ALL_COLS_EXCEPT_REPLACE = "this.allColsExcept { other }"
 internal const val ALL_COLS_EXCEPT_REPLACE_VARARG = "this.allColsExcept { others.toColumnSet() }"
 internal const val EXCEPT_REPLACE = "this.except { other }"
 internal const val EXCEPT_REPLACE_VARARG = "this.except { others.toColumnSet() }"
+
+internal const val RENAME_INTO =
+    "'into' has been replaced with 'to', because 'rename to' is more common in English. You can keep using 'into', but we advise using 'to'."
+
 // endregion
