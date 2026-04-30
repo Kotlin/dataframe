@@ -12,6 +12,7 @@ Work with Arrow files in Kotlin for fast I/O — supports both streaming and ran
 Kotlin DataFrame provides full support for reading and writing Apache Arrow files in high-performance workflows.
 </link-summary>
 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.io.ApacheArrow-->
 
 Kotlin DataFrame supports reading from and writing to Apache Arrow files.
 
@@ -37,13 +38,21 @@ and the [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html
 You can read a `DataFrame` from Apache Arrow data sources 
 (via a file path, URL, or stream) using the [`readArrowFeather()`](read.md#read-apache-arrow-formats) method:
 
+<!---FUN readArrowFeather-->
+
 ```kotlin
 val df = DataFrame.readArrowFeather("example.feather")
 ```
 
+<!---END-->
+
+<!---FUN readArrowFeatherViaUrl-->
+
 ```kotlin
 val df = DataFrame.readArrowFeather("https://kotlin.github.io/dataframe/resources/example.feather")
 ```
+
+<!---END-->
 
 ## Write
 

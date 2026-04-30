@@ -12,6 +12,8 @@ Use Kotlin DataFrame to read Parquet datasets using Apache Arrow for fast, typed
 Kotlin DataFrame can read Parquet files through Apache Arrow’s Dataset API. Learn how and when to use it.
 </link-summary>
 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.io.Parquet-->
+
 Kotlin DataFrame supports reading [Apache Parquet](https://parquet.apache.org/) files through the Apache Arrow integration.
 
 Requires the [`dataframe-arrow` module](Modules.md#dataframe-arrow), which is included by default in the general [`dataframe`](Modules.md#dataframe-general) artifact and in and when using `%use dataframe` for Kotlin Notebook.
@@ -30,6 +32,8 @@ Requires the [`dataframe-arrow` module](Modules.md#dataframe-arrow), which is in
 
 Kotlin DataFrame provides four `readParquet()` methods that can read from different source types.
 All overloads accept optional `nullability` inference settings and `batchSize` for Arrow scanning.
+
+<!---FUN ReadParquetOverloads-->
 
 ```kotlin
 // 1) URLs
@@ -61,21 +65,25 @@ public fun DataFrame.Companion.readParquet(
 ): AnyFrame
 ```
 
+<!---END-->
+
 These overloads are defined in the `dataframe-arrow` module and internally use `FileFormat.PARQUET` from Apache Arrow’s
 Dataset API to scan the data and materialize it as a Kotlin `DataFrame`.
 
 ### Examples
+
+<!---FUN readParquet-->
 
 ```kotlin
 // Read from file paths (as strings)
 val df = DataFrame.readParquet("data/sales.parquet")
 ```
 
+<!---END-->
+
 <!---FUN readParquetFilePath-->
 
 ```kotlin
-// Read from Path objects
-val path = Paths.get("data/sales.parquet")
 val df = DataFrame.readParquet(path)
 ```
 
@@ -94,7 +102,6 @@ val df = DataFrame.readParquet(url)
 
 ```kotlin
 // Read from File objects
-val file = File("data/sales.parquet")
 val df = DataFrame.readParquet(file)
 ```
 
@@ -104,13 +111,10 @@ val df = DataFrame.readParquet(file)
 <!---FUN readParquetFileWithParameters-->
 
 ```kotlin
-// Read from File objects
-val file = File("data/sales.parquet")
-
 val df = DataFrame.readParquet(
     file,
     nullability = NullabilityOptions.Infer,
-    batchSize = 64L * 1024
+    batchSize = 64L * 1024,
 )
 ```
 
@@ -127,10 +131,6 @@ It's possible to read multiple Parquet files:
 <!---FUN readMultipleParquetFiles-->
 
 ```kotlin
-val file = File("data/sales.parquet")
-val file1 = File("data/sales1.parquet")
-val file2 = File("data/sales2.parquet")
-
 val df = DataFrame.readParquet(file, file1, file2)
 ```
 

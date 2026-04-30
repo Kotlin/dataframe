@@ -86,6 +86,7 @@ dependencies {
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
+    testImplementation(libs.hikaricp)
 }
 
 korro {
@@ -105,6 +106,12 @@ korro {
         include("docs/StardustDocs/topics/operations/column/*.md")
         include("docs/StardustDocs/topics/collectionsInterop/*.md")
         include("docs/StardustDocs/topics/dataSources/sql/*.md")
+        include("docs/StardustDocs/topics/dataSources/ApacheArrow.md")
+        include("docs/StardustDocs/topics/dataSources/CSV-TSV.md")
+        include("docs/StardustDocs/topics/dataSources/Excel.md")
+        include("docs/StardustDocs/topics/dataSources/JSON.md")
+        include("docs/StardustDocs/topics/dataSources/Parquet.md")
+        include("docs/StardustDocs/topics/readSqlDatabases.md")
         include("docs/StardustDocs/topics/info/*.md")
         include("docs/StardustDocs/topics/columnArithmetics.md")
     }
