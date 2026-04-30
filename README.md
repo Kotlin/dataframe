@@ -24,12 +24,16 @@ Automatically generated archives of example projects.
 
 **Download:** [spark-parquet-dataframe.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/spark-parquet-dataframe.zip)
 
+### Titanic
+
+**Download:** [titanic.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/titanic.zip)
+
 ### Youtube
 
 **Download:** [youtube.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/youtube.zip)
 
 ---
 
-Last updated: 2026-04-30 11:18 UTC
+Last updated: 2026-04-30 12:56 UTC
 
-Source commit: 38956ba2535eef4715c01d09dd71bea69284584b
+Source commit: d44a2ec23e8111d5b289fd974d491fd20a4bd2e8
