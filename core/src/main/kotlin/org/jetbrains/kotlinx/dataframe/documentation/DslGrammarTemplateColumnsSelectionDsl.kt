@@ -1,5 +1,3 @@
-@file:ExcludeFromSources
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
@@ -62,30 +60,38 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         // region parts
 
         // Can be set to nothing to disable the definitions part
+        @ExcludeFromSources
         public typealias DEFINITIONS_PART = Nothing
 
         // Can be set to nothing to disable the plain dsl part
+        @ExcludeFromSources
         public typealias PLAIN_DSL_PART = Nothing
 
         // Can be set to nothing to disable the column set part
+        @ExcludeFromSources
         public typealias COLUMN_SET_PART = Nothing
 
         // Can be set to nothing to disable the column group part
+        @ExcludeFromSources
         public typealias COLUMN_GROUP_PART = Nothing
         // endregion
 
         // region Template arguments
 
         // What to put in definitions part aside from the default part.
+        @ExcludeFromSources
         public typealias DEFINITIONS = Nothing
 
         // What to put in the plain dsl part. Does not need indents.
+        @ExcludeFromSources
         public typealias PLAIN_DSL_FUNCTIONS = Nothing
 
         // What to put in the column set part. Needs indents.
+        @ExcludeFromSources
         public typealias COLUMN_SET_FUNCTIONS = Nothing
 
         // What to put in the column group part. Needs indents.
+        @ExcludeFromSources
         public typealias COLUMN_GROUP_FUNCTIONS = Nothing
         // endregion
 
@@ -172,72 +178,95 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         // region References to the definitions
 
         /** [`columnGroupReference`][ColumnGroupNoSingleColumnDef] */
+        @ExcludeFromSources
         public typealias ColumnGroupNoSingleColumnRef = Nothing
 
         /** [`colSelector`][ColumnSelectorDef] */
+        @ExcludeFromSources
         public typealias ColumnSelectorRef = Nothing
 
         /** [`colsSelector`][ColumnsSelectorDef] */
+        @ExcludeFromSources
         public typealias ColumnsSelectorRef = Nothing
 
         /** [`column`][ColumnDef] */
+        @ExcludeFromSources
         public typealias ColumnRef = Nothing
 
         /** [`columnGroup`][ColumnGroupDef] */
+        @ExcludeFromSources
         public typealias ColumnGroupRef = Nothing
 
         /** [`columnNoAccessor`][ColumnNoAccessorDef] */
+        @ExcludeFromSources
         public typealias ColumnNoAccessorRef = Nothing
 
         /** [`columnOrSet`][ColumnOrColumnSetDef] */
+        @ExcludeFromSources
         public typealias ColumnOrColumnSetRef = Nothing
 
         /** [`columnSet`][ColumnSetDef] */
+        @ExcludeFromSources
         public typealias ColumnSetRef = Nothing
 
         /** [`columnsResolver`][ColumnsResolverDef] */
+        @ExcludeFromSources
         public typealias ColumnsResolverRef = Nothing
 
         /** [`condition`][ConditionDef] */
+        @ExcludeFromSources
         public typealias ConditionRef = Nothing
 
         /** [`expression`][ColumnExpressionDef] */
+        @ExcludeFromSources
         public typealias ColumnExpressionRef = Nothing
 
         /** [`ignoreCase`][IgnoreCaseDef] */
+        @ExcludeFromSources
         public typealias IgnoreCaseRef = Nothing
 
         /** [`index`][IndexDef] */
+        @ExcludeFromSources
         public typealias IndexRef = Nothing
 
         /** [`indexRange`][IndexRangeDef] */
+        @ExcludeFromSources
         public typealias IndexRangeRef = Nothing
 
         /** [`infer`][InferDef] */
+        @ExcludeFromSources
         public typealias InferRef = Nothing
 
         /** [`kind`][ColumnKindDef] */
+        @ExcludeFromSources
         public typealias ColumnKindRef = Nothing
 
         /** [`kType`][KTypeDef] */
+        @ExcludeFromSources
         public typealias KTypeRef = Nothing
 
         /** [`name`][NameDef] */
+        @ExcludeFromSources
         public typealias NameRef = Nothing
 
         /** [`number`][NumberDef] */
+        @ExcludeFromSources
         public typealias NumberRef = Nothing
 
         /** [`regex`][RegexDef] */
+        @ExcludeFromSources
         public typealias RegexRef = Nothing
 
         /** [`singleColumn`][SingleColumnDef] */
+        @ExcludeFromSources
         public typealias SingleColumnRef = Nothing
 
         /** [`T`][ColumnTypeDef] */
+        @ExcludeFromSources
         public typealias ColumnTypeRef = Nothing
 
         /** [`text`][TextDef] */
+        @ExcludeFromSources
         public typealias TextRef = Nothing
         // endregion
     }
@@ -275,6 +304,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      * {@comment Our example function has no Plain DSL part, so we set it to nothing. No need to set PlainDslFunctionsArg.}
      * {@set [DslGrammarTemplate.PLAIN_DSL_PART]}
      */
+    @ExcludeFromSources
     public interface UsageTemplateExample {
 
         /** __`.`__[**`example`**][ColumnsSelectionDsl.first] */
