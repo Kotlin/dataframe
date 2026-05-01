@@ -2950,30 +2950,6 @@ public fun <T : Any> DataColumn<T?>.convertToDuration(): DataColumn<Duration?> =
 /**
  * Converts values in the columns previously selected with [convert] to [Duration],
  * preserving their original names and positions within the [DataFrame].
- *
- * Supported source types: [String] (parsed via [Duration.parse]),
- * [JavaDuration], [Long] and [Int] (interpreted as milliseconds).
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { duration }.toDuration()
- * df.convert { colsOf<String>() }.toDuration()
- * df.convert { colsOf<Long>() }.toDuration()
- * ```
- *
- * @return A new [DataFrame] with the values converted to [Duration].
- */
-@JvmName("toDurationTAny")
-@Refine
-@Converter(Duration::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toDuration(): DataFrame<T> = to<Duration>()
-
-/**
- * Converts values in the columns previously selected with [convert] to [Duration],
- * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
  * Supported source types: [String] (parsed via [Duration.parse]),
@@ -3023,29 +2999,6 @@ public fun <T : Any> DataColumn<T?>.convertToJavaInstant(): DataColumn<JavaInsta
 /**
  * Converts values in the columns previously selected with [convert] to [JavaInstant],
  * preserving their original names and positions within the [DataFrame].
- *
- * Supported source types: [String] (parsed), [Long] and [Int] (epoch milliseconds),
- * [StdlibInstant], [DeprecatedInstant], [LocalDateTime], [JavaLocalDateTime].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { timestamp }.toJavaInstant()
- * df.convert { colsOf<Long>() }.toJavaInstant()
- * ```
- *
- * @return A new [DataFrame] with the values converted to [JavaInstant].
- */
-@JvmName("toJavaInstantTAny")
-@Refine
-@Converter(JavaInstant::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toJavaInstant(): DataFrame<T> = to<JavaInstant>()
-
-/**
- * Converts values in the columns previously selected with [convert] to [JavaInstant],
- * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
  * Supported source types: [String] (parsed), [Long] and [Int] (epoch milliseconds),
@@ -3088,28 +3041,6 @@ public fun <T : Any> DataColumn<T>.convertToJavaDuration(): DataColumn<JavaDurat
  * @return A new [DataColumn] with the [JavaDuration] nullable values.
  */
 public fun <T : Any> DataColumn<T?>.convertToJavaDuration(): DataColumn<JavaDuration?> = convertTo()
-
-/**
- * Converts values in the columns previously selected with [convert] to [JavaDuration],
- * preserving their original names and positions within the [DataFrame].
- *
- * Supported source types: [String] (parsed), [Duration].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { duration }.toJavaDuration()
- * df.convert { colsOf<Duration>() }.toJavaDuration()
- * ```
- *
- * @return A new [DataFrame] with the values converted to [JavaDuration].
- */
-@JvmName("toJavaDurationTAny")
-@Refine
-@Converter(JavaDuration::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toJavaDuration(): DataFrame<T> = to<JavaDuration>()
 
 /**
  * Converts values in the columns previously selected with [convert] to [JavaDuration],
@@ -3249,29 +3180,6 @@ public fun DataColumn<String?>.convertToJavaLocalDate(
                 .withLocale(locale),
         ),
     )
-
-/**
- * Converts values in the columns previously selected with [convert] to [JavaLocalDate],
- * preserving their original names and positions within the [DataFrame].
- *
- * Supported source types: [String] (parsed), [Long] and [Int] (epoch milliseconds),
- * [LocalDate], [LocalDateTime], [JavaLocalDateTime], [StdlibInstant], [DeprecatedInstant], [JavaInstant].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { date }.toJavaLocalDate()
- * df.convert { colsOf<LocalDate>() }.toJavaLocalDate()
- * ```
- *
- * @return A new [DataFrame] with the values converted to [JavaLocalDate].
- */
-@JvmName("toJavaLocalDateTAny")
-@Refine
-@Converter(JavaLocalDate::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toJavaLocalDate(): DataFrame<T> = to<JavaLocalDate>()
 
 /**
  * Converts values in the columns previously selected with [convert] to [JavaLocalDate],
@@ -3502,29 +3410,6 @@ public fun DataColumn<String?>.convertToJavaLocalTime(
 /**
  * Converts values in the columns previously selected with [convert] to [JavaLocalTime],
  * preserving their original names and positions within the [DataFrame].
- *
- * Supported source types: [String] (parsed), [Long] and [Int] (epoch milliseconds),
- * [LocalTime], [LocalDateTime], [JavaLocalDateTime], [StdlibInstant], [JavaInstant].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { time }.toJavaLocalTime()
- * df.convert { colsOf<LocalTime>() }.toJavaLocalTime()
- * ```
- *
- * @return A new [DataFrame] with the values converted to [JavaLocalTime].
- */
-@JvmName("toJavaLocalTimeTAny")
-@Refine
-@Converter(JavaLocalTime::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toJavaLocalTime(): DataFrame<T> = to<JavaLocalTime>()
-
-/**
- * Converts values in the columns previously selected with [convert] to [JavaLocalTime],
- * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
  * Supported source types: [String] (parsed), [Long] and [Int] (epoch milliseconds),
@@ -3751,29 +3636,6 @@ public fun DataColumn<String?>.convertToJavaLocalDateTime(
 /**
  * Converts values in the columns previously selected with [convert] to [JavaLocalDateTime],
  * preserving their original names and positions within the [DataFrame].
- *
- * Supported source types: [String] (parsed), [Long] and [Int] (epoch milliseconds),
- * [LocalDateTime], [LocalDate], [JavaLocalDate], [StdlibInstant], [DeprecatedInstant], [JavaInstant].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { dateTime }.toJavaLocalDateTime()
- * df.convert { colsOf<LocalDateTime>() }.toJavaLocalDateTime()
- * ```
- *
- * @return A new [DataFrame] with the values converted to [JavaLocalDateTime].
- */
-@JvmName("toJavaLocalDateTimeTAny")
-@Refine
-@Converter(JavaLocalDateTime::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toJavaLocalDateTime(): DataFrame<T> = to<JavaLocalDateTime>()
-
-/**
- * Converts values in the columns previously selected with [convert] to [JavaLocalDateTime],
- * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
  * Supported source types: [String] (parsed), [Long] and [Int] (epoch milliseconds),
@@ -3885,26 +3747,6 @@ public fun <T> Convert<T, String?>.toJavaLocalDateTime(pattern: String, locale: 
 /**
  * Converts values in the columns previously selected with [convert] to the [Int],
  * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { age and year }.toInt()
- * df.convert { colsOf<Double>() }.toInt()
- * ```
- *
- *  @return A new [DataFrame] with the values converted to [Int].
- */
-@JvmName("toIntTAny")
-@Refine
-@Converter(Int::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toInt(): DataFrame<T> = to<Int>()
-
-/**
- * Converts values in the columns previously selected with [convert] to the [Int],
- * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -3921,26 +3763,6 @@ public fun <T> Convert<T, Any>.toInt(): DataFrame<T> = to<Int>()
 @Converter(Int::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toInt(): DataFrame<T> = to<Int?>()
-
-/**
- * Converts values in the columns previously selected with [convert] to the [Long],
- * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { age and year }.toLong()
- * df.convert { colsOf<Double>() }.toLong()
- * ```
- *
- *  @return A new [DataFrame] with the values converted to [Long].
- */
-@JvmName("toLongTAny")
-@Refine
-@Converter(Long::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toLong(): DataFrame<T> = to<Long>()
 
 /**
  * Converts values in the columns previously selected with [convert] to the [Long],
@@ -3965,26 +3787,6 @@ public fun <T> Convert<T, Any?>.toLong(): DataFrame<T> = to<Long?>()
 /**
  * Converts values in the columns previously selected with [convert] to the [String],
  * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { age and year }.toStr()
- * df.convert { colsOf<Double>() }.toStr()
- * ```
- *
- *  @return A new [DataFrame] with the values converted to [String].
- */
-@JvmName("toStrTAny")
-@Refine
-@Converter(String::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toStr(): DataFrame<T> = to<String>()
-
-/**
- * Converts values in the columns previously selected with [convert] to the [String],
- * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -4001,26 +3803,6 @@ public fun <T> Convert<T, Any>.toStr(): DataFrame<T> = to<String>()
 @Converter(String::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toStr(): DataFrame<T> = to<String?>()
-
-/**
- * Converts values in the columns previously selected with [convert] to the [Double],
- * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { age and year }.toDouble()
- * df.convert { colsOf<Int>() }.toDouble()
- * ```
- *
- *  @return A new [DataFrame] with the values converted to [Double].
- */
-@JvmName("toDoubleTAny")
-@Refine
-@Converter(Double::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toDouble(): DataFrame<T> = to<Double>()
 
 /**
  * Converts values in the columns previously selected with [convert] to the [Double],
@@ -4045,26 +3827,6 @@ public fun <T> Convert<T, Any?>.toDouble(): DataFrame<T> = to<Double?>()
 /**
  * Converts values in the columns previously selected with [convert] to the [Float],
  * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { age and year }.toFloat()
- * df.convert { colsOf<Double>() }.toFloat()
- * ```
- *
- *  @return A new [DataFrame] with the values converted to [Float].
- */
-@JvmName("toFloatTAny")
-@Refine
-@Converter(Float::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toFloat(): DataFrame<T> = to<Float>()
-
-/**
- * Converts values in the columns previously selected with [convert] to the [Float],
- * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -4081,26 +3843,6 @@ public fun <T> Convert<T, Any>.toFloat(): DataFrame<T> = to<Float>()
 @Converter(Float::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toFloat(): DataFrame<T> = to<Float?>()
-
-/**
- * Converts values in the columns previously selected with [convert] to the [BigDecimal],
- * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { age and year }.toBigDecimal()
- * df.convert { colsOf<Double>() }.toBigDecimal()
- * ```
- *
- *  @return A new [DataFrame] with the values converted to [BigDecimal].
- */
-@JvmName("toBigDecimalTAny")
-@Refine
-@Converter(BigDecimal::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toBigDecimal(): DataFrame<T> = to<BigDecimal>()
 
 /**
  * Converts values in the columns previously selected with [convert] to the [BigDecimal],
@@ -4125,26 +3867,6 @@ public fun <T> Convert<T, Any?>.toBigDecimal(): DataFrame<T> = to<BigDecimal?>()
 /**
  * Converts values in the columns previously selected with [convert] to the [BigInteger],
  * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { age and year }.toBigInteger()
- * df.convert { colsOf<Double>() }.toBigInteger()
- * ```
- *
- *  @return A new [DataFrame] with the values converted to [BigInteger].
- */
-@JvmName("toBigIntegerTAny")
-@Refine
-@Converter(BigInteger::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toBigInteger(): DataFrame<T> = to<BigInteger>()
-
-/**
- * Converts values in the columns previously selected with [convert] to the [BigInteger],
- * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -4161,26 +3883,6 @@ public fun <T> Convert<T, Any>.toBigInteger(): DataFrame<T> = to<BigInteger>()
 @Converter(BigInteger::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toBigInteger(): DataFrame<T> = to<BigInteger?>()
-
-/**
- * Converts values in the columns previously selected with [convert] to the [Boolean],
- * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { isMarked and isFinished }.toBoolean()
- * df.convert { colsOf<String> { it.name.startsWith("it") } }.toBoolean()
- * ```
- *
- *  @return A new [DataFrame] with the values converted to [Boolean].
- */
-@JvmName("toBooleanTAny")
-@Refine
-@Converter(Boolean::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, Any>.toBoolean(): DataFrame<T> = to<Boolean>()
 
 /**
  * Converts values in the columns previously selected with [convert] to the [Boolean],
