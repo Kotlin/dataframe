@@ -172,7 +172,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
         /**
          * {@include [DslGrammarTemplate.ColumnRef]}` `{@include [ColumnRangeColumnsSelectionDsl.Grammar.PlainDslName]}` `{@include [DslGrammarTemplate.ColumnRef]}
          *
-         * `| `**`this`**`/`**`it`**[**`\[`**\][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`\]`**\][cols]
+         * `| `**`this`**`/`**`it`**[**`\[`**\][cols]<code></code>{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`\]`**\][cols]
          *
          * `| `**`this`**`/`**`it`**[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
          *
@@ -232,9 +232,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
         public typealias PlainDslPartOfGrammar = Nothing
 
         /**
-         * {@include [Indent]}\[**`\[`**\][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}\[**`\]`**\][ColumnsSelectionDsl.col]
+         * {@include [Indent]}\[**`\[`**\][ColumnsSelectionDsl.col]<code></code>{@include [DslGrammarTemplate.IndexRef]}\[**`\]`**\][ColumnsSelectionDsl.col]
          *
-         * {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]
+         * {@include [Indent]}`| `[**`[`**][cols]<code></code>{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]
          *
          * {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
          *
@@ -301,7 +301,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
         }
 
         /**
-         * {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
+         * {@include [Indent]}`| `[**`[`**][cols]<code></code>{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
          *
          * {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
          *
