@@ -956,32 +956,6 @@ public fun <T> Convert<T, URL?>.toIFrame(
 ): DataFrame<T> = asColumn { it.map { url -> url?.let { IFRAME(url.toString(), border, width, height) } } }
 
 /**
- * Converts values in an [URL] columns previously selected with [convert] to an [IFRAME],
- * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { imgUrl }.toIFrame()
- * ```
- *
- * @param border Whether the iframe should have a border. Defaults to `false`.
- * @param width Optional width of the iframe in pixels.
- * @param height Optional height of the iframe in pixels.
- * @return A new [DataFrame] with the values converted to an [IFRAME].
- */
-@JvmName("toIframeFromUrl")
-@Refine
-@Converter(IFRAME::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, URL>.toIFrame(
-    border: Boolean = false,
-    width: Int? = null,
-    height: Int? = null,
-): DataFrame<T> = asColumn { it.map { IFRAME(it.toString(), border, width, height) } }
-
-/**
  * Converts values in an [URL] columns previously selected with [convert] to an [IMG],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
@@ -1003,28 +977,6 @@ public fun <T> Convert<T, URL>.toIFrame(
 @Interpretable("ToSpecificType")
 public fun <T, R : URL?> Convert<T, URL?>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
     asColumn { it.map { url -> url?.let { IMG(url.toString(), width, height) } } }
-
-/**
- * Converts values in an [URL] columns previously selected with [convert] to an [IMG],
- * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { avatarUrl }.toImg()
- * ```
- *
- * @param width Optional width of the image in pixels.
- * @param height Optional height of the image in pixels.
- * @return A new [DataFrame] with the values converted to an [IMG].
- */
-@JvmName("toImgFromUrl")
-@Refine
-@Converter(IMG::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T, R : URL?> Convert<T, URL>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
-    asColumn { it.map { IMG(it.toString(), width, height) } }
 
 // endregion
 
@@ -1051,7 +1003,7 @@ public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = convertToUrl()
  */
 @JvmName("convertToUrlFromStringNullable")
 public fun DataColumn<String?>.convertToUrl(): DataColumn<URL?> = map { it?.let { URI(it).toURL() } }
-
+// TODO: This function creates a name conflict with toUrl() with the same signature
 @Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE), DeprecationLevel.ERROR)
 @JvmName("toURLFromStringNullable")
 @Refine
@@ -1078,32 +1030,6 @@ public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convert
 @Converter(URL::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, String?>.toUrl(): DataFrame<T> = asColumn { it.convertToUrl() }
-
-@Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE), DeprecationLevel.ERROR)
-@JvmName("toURLFromString")
-@Refine
-@Converter(URL::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, String>.toURL(): DataFrame<T> = toUrl()
-
-/**
- * Converts values in the [String] columns previously selected with [convert] to an [URL],
- * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { webAddress }.toUrl()
- * ```
- *
- * @return A new [DataFrame] with the values converted to an [URL].
- */
-@JvmName("toUrlFromString")
-@Refine
-@Converter(URL::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, String>.toUrl(): DataFrame<T> = asColumn { it.convertToUrl() }
 
 // endregion
 
@@ -1246,20 +1172,6 @@ public fun DataColumn<DateTimeComponents?>.convertToStdlibInstant(): DataColumn<
 public fun <T> Convert<T, String?>.toInstant(): DataFrame<T> = asColumn { it.convertToDeprecatedInstant() }
 
 /**
- * __Deprecated__:
- *
- * [kotlinx.datetime.Instant] is deprecated in favor of [kotlin.time.Instant].
- * Either migrate to [kotlin.time.Instant] and use [toStdlibInstant] or use [toDeprecatedInstant].
- * This function will be migrated to [kotlin.time.Instant] in 1.1.
- */
-@JvmName("toInstantFromString")
-@Refine
-@Converter(DeprecatedInstant::class, nullable = false)
-@Interpretable("ToSpecificType")
-@Deprecated(message = TO_INSTANT, replaceWith = ReplaceWith(TO_INSTANT_REPLACE), level = DeprecationLevel.ERROR)
-public fun <T> Convert<T, String>.toInstant(): DataFrame<T> = asColumn { it.convertToDeprecatedInstant() }
-
-/**
  * Converts values in the [String] columns previously selected with [convert] to [kotlinx.datetime.Instant],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
@@ -1287,32 +1199,6 @@ public fun <T> Convert<T, String>.toInstant(): DataFrame<T> = asColumn { it.conv
 public fun <T> Convert<T, String?>.toDeprecatedInstant(): DataFrame<T> = asColumn { it.convertToDeprecatedInstant() }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to [kotlinx.datetime.Instant],
- * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { timestamp }.toDeprecatedInstant()
- * ```
- *
- * Migrate to [kotlin.time.Instant] and use [convertToStdlibInstant] at your own pace.
- *
- * @return A new [DataFrame] with the values converted to [kotlinx.datetime.Instant].
- */
-@JvmName("toDeprecatedInstantFromString")
-@Refine
-@Converter(DeprecatedInstant::class, nullable = false)
-@Interpretable("ToSpecificType")
-@Deprecated(
-    message = TO_DEPRECATED_INSTANT,
-    replaceWith = ReplaceWith(TO_DEPRECATED_INSTANT_REPLACE),
-    level = DeprecationLevel.WARNING,
-)
-public fun <T> Convert<T, String>.toDeprecatedInstant(): DataFrame<T> = asColumn { it.convertToDeprecatedInstant() }
-
-/**
  * Converts values in the [String] columns previously selected with [convert] to [kotlin.time.Instant],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
@@ -1333,27 +1219,6 @@ public fun <T> Convert<T, String>.toDeprecatedInstant(): DataFrame<T> = asColumn
 @Converter(StdlibInstant::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, String?>.toStdlibInstant(): DataFrame<T> = asColumn { it.convertToStdlibInstant() }
-
-/**
- * Converts values in the [String] columns previously selected with [convert] to [kotlin.time.Instant],
- * preserving their original names and positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ### Examples:
- * ```kotlin
- * df.convert { timestamp }.toStdlibInstant()
- * ```
- *
- * This function will be renamed to `.toInstant()` in 1.1.
- *
- * @return A new [DataFrame] with the values converted to [kotlin.time.Instant].
- */
-@JvmName("toStdlibInstantFromString")
-@Refine
-@Converter(StdlibInstant::class, nullable = false)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, String>.toStdlibInstant(): DataFrame<T> = asColumn { it.convertToStdlibInstant() }
 
 /**
  * Converts values in the [kotlinx.datetime.Instant] columns previously selected with [convert] to [kotlin.time.Instant],
@@ -3655,48 +3520,6 @@ public fun DataColumn<String?>.convertToJavaLocalDateTime(
 @Converter(JavaLocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toJavaLocalDateTime(): DataFrame<T> = to<JavaLocalDateTime?>()
-
-/**
- * Converts values in the [String] columns previously selected with [convert] to [JavaLocalDateTime],
- * preserving their original names and positions within the [DataFrame].
- *
- * Trims each string and attempts to parse it using the specified [formatter] and [locale].
- * Fails with an exception if a value cannot be parsed.
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * @param formatter An optional [DateTimeFormatter] to use for parsing. If `null`, default parsers are used.
- * @param locale An optional [Locale] for parsing. If `null`, the default locale is used.
- * @return A new [DataFrame] with the values converted to [JavaLocalDateTime].
- */
-@JvmName("toJavaLocalDateTimeFromString")
-@Refine
-@Converter(JavaLocalDateTime::class, nullable = false)
-@Interpretable("ToSpecificTypePattern")
-public fun <T> Convert<T, String>.toJavaLocalDateTime(
-    formatter: DateTimeFormatter? = null,
-    locale: Locale? = null,
-): DataFrame<T> = asColumn { it.convertToJavaLocalDateTime(formatter, locale) }
-
-/**
- * Converts values in the [String] columns previously selected with [convert] to [JavaLocalDateTime],
- * preserving their original names and positions within the [DataFrame].
- *
- * Trims each string and attempts to parse it using the specified [pattern] and [locale].
- * Fails with an exception if a value cannot be parsed.
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * @param pattern A date-time pattern to use for parsing (e.g., `"yyyy-MM-dd HH:mm:ss"`).
- * @param locale An optional [Locale] for parsing. If `null`, the default locale is used.
- * @return A new [DataFrame] with the values converted to [JavaLocalDateTime].
- */
-@JvmName("toJavaLocalDateTimeFromStringPattern")
-@Refine
-@Converter(JavaLocalDateTime::class, nullable = false)
-@Interpretable("ToSpecificTypePattern")
-public fun <T> Convert<T, String>.toJavaLocalDateTime(pattern: String, locale: Locale? = null): DataFrame<T> =
-    asColumn { it.convertToJavaLocalDateTime(pattern, locale) }
 
 /**
  * Converts values in the nullable [String] columns previously selected with [convert] to [JavaLocalDateTime],

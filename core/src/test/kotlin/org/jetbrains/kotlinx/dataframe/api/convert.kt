@@ -33,6 +33,7 @@ import kotlin.math.roundToLong
 import kotlin.random.Random
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
+import kotlin.test.assertEquals
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -612,5 +613,13 @@ class ConvertTests {
         shouldThrow<ColumnTypeMismatchesColumnValuesException> {
             dataFrameOf("a")(1, 2, 3).cast<Marker>().convert { a }.with { it }
         }
+    }
+
+    @Test
+    fun `convert to Double preserves nullability of the column type`() {
+        val df = dataFrameOf("a" to columnOf(123, 322), "b" to columnOf(1.0, null))
+        val converted = df.convert { "a"<Int>() and "b"<Double?>() }.toDouble()
+        converted["a"].type() shouldBe typeOf<Double>()
+        converted["b"].type() shouldBe typeOf<Double?>()
     }
 }
