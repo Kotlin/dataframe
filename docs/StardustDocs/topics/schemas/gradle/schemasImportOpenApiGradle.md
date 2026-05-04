@@ -2,10 +2,10 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated in future releases.
+> The current Gradle plugin is **deprecated**. Its latest release is 1.0.0-Beta4 and will not have future releases.
 >
-> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugin.
-{style="warning"}
+> At the moment, OpenAPI code generation can be done **[via dedicated methods](OpenAPI.md)** instead of relying on the plugin.
+> {style="warning"}
 
 <warning>
 OpenAPI 3.0.0 schema support is marked as experimental. It might change or be removed in the future.
