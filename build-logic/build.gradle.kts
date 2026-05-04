@@ -32,4 +32,5 @@ dependencies {
     implementation(pluginMarker(libs.plugins.buildconfig))
     implementation(pluginMarker(libs.plugins.kodex))
     implementation(pluginMarker(libs.plugins.dependencyVersions))
+    implementation(pluginMarker(libs.plugins.dokka))
 }

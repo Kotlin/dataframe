@@ -5,6 +5,7 @@ plugins {
     alias(convention.plugins.kotlinJvmCommon)
 
     alias(libs.plugins.kodex)
+    alias(libs.plugins.dokka)
     idea
 }
 
@@ -172,5 +173,26 @@ tasks.withType<Jar> {
 tasks.configureEach {
     if (!project.hasProperty("skipKodex") && name.startsWith("publish")) {
         dependsOn(processKDocsMain, changeJarTask)
+    }
+}
+
+dokka {
+    dokkaSourceSets {
+        // Suppress all source sets except main; redirect main's source roots to
+        // the KoDEx-generated directory (generatedMainSources is not a Dokka-known
+        // source set since it isn't part of a compilation).
+        configureEach {
+            if (name != "main") suppress.set(true)
+        }
+        named("main") {
+            sourceRoots.setFrom(
+                provider {
+                    extension.kotlinMainSourcesDirectories.get().map { dir ->
+                        val relativePath = projectDir.toPath().relativize(dir.toPath())
+                        file(File(extension.generatedSourcesFolderName.get(), relativePath.toString()))
+                    }
+                },
+            )
+        }
     }
 }
