@@ -201,7 +201,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      *  [`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**`..`**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
-     * `| `**`this`**`/`**`it`**[**`[`**][cols][`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. `[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * `| `**`this`**`/`**`it`**[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]<code></code>[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. `[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
      * `| `**`this`**`/`**`it`**[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
@@ -269,9 +269,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;[**`[`**][ColumnsSelectionDsl.col][`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef][**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]<code></code>[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef][**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef][**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]<code></code>[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef][**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
@@ -337,7 +337,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]<code></code>[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
