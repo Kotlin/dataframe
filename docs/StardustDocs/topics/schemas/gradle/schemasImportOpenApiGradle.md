@@ -7,9 +7,11 @@
 > At the moment, OpenAPI code generation can be done **[via dedicated methods](OpenAPI.md)** instead of relying on the plugin.
 > {style="warning"}
 
-<warning>
-OpenAPI 3.0.0 schema support is marked as experimental. It might change or be removed in the future.
-</warning>
+> **Experimental**: Support for OpenAPI 3.0 schemas is demoted to experimental
+> and may change or be removed in future releases. This is because OpenAPI 3.1 (and 3.2) have
+> introduced significant changes that require specialized handling.
+> Follow [Issue #897](https://github.com/Kotlin/dataframe/issues/897) for updates and please leave your feedback.
+> {style="warning"}
 
 JSON schema inference is great, but it's not perfect. However, more and more APIs offer
 [OpenAPI (Swagger)](https://swagger.io/) specifications. 

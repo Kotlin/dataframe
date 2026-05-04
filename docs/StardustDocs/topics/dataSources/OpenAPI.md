@@ -13,8 +13,10 @@ Learn how to use OpenAPI 3.0 JSON schemas with Kotlin DataFrame to load and mani
 </link-summary>
 
 
-> **Experimental**: Support for OpenAPI 3.0.0 schemas is currently experimental 
-> and may change or be removed in future releases.  
+> **Experimental**: Support for OpenAPI 3.0.0 schemas is demoted to experimental
+> and may change or be removed in future releases. This is because OpenAPI 3.1 (and 3.2) have
+> introduced significant changes that require specialized handling.
+> Follow https://github.com/Kotlin/dataframe/issues/897 for updates and please leave your feedback.
 > {style="warning"}
 
 Kotlin DataFrame provides support for reading and writing JSON data
