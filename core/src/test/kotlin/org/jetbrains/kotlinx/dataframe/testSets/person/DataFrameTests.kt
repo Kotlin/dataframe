@@ -62,6 +62,7 @@ import org.jetbrains.kotlinx.dataframe.api.fill
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
@@ -94,14 +95,17 @@ import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
+import org.jetbrains.kotlinx.dataframe.api.maxByOrNull
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.meanOf
 import org.jetbrains.kotlinx.dataframe.api.median
+import org.jetbrains.kotlinx.dataframe.api.medianOrNull
 import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minOf
+import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
@@ -700,6 +704,37 @@ class DataFrameTests : BaseTest() {
     fun `get column by accessor`() {
         val res = df[0..1][name]
         res.size() shouldBe 2
+    }
+
+    // Issue #1531
+    @Test
+    fun `groupBy empty df should generate empty aggregation cols`() {
+        val empty = typed.take(0)
+        val resDf = empty.groupBy { name }.aggregate {
+            count() into "n"
+            count { age > 25 } into "old count"
+            medianOrNull { age } into "median age"
+            minOrNull { age } into "min age"
+            all { weight != null } into "all with weights"
+            maxByOrNull { age }?.city into "oldest origin"
+            sortBy { age }.firstOrNull()?.city into "youngest origin"
+            pivot { city.map { "from $it" } }.count()
+            age.toList() into "ages"
+        }
+
+        resDf.columnNames() shouldBe listOf(
+            "name",
+            "n",
+            "old count",
+            "median age",
+            "min age",
+            "all with weights",
+            "oldest origin",
+            "youngest origin",
+            "ages",
+        )
+
+        resDf.alsoDebug()
     }
 
     @Test
