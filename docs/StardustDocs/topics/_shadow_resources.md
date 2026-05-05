@@ -299,3 +299,4 @@
 <resource src="pivotInward_properties.html"></resource>
 <resource src="pivotGroupByFrames_properties.html"></resource>
 <resource src="pivotGroupByAggregation_properties.html"></resource>
+<resource src="usingResult.html"></resource>
