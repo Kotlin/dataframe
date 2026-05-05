@@ -1,9 +1,10 @@
 [//]: # (title: Gradle Plugin (deprecated))
 
-> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated in future releases.
+> The current Gradle plugin is **deprecated**. Its latest release is 1.0.0-Beta4 and will not have future releases.
 >
 > At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugin.
-{style="warning"}
+> Our plans for the next iteration of this feature can be found in [Issue #1844](https://github.com/Kotlin/dataframe/issues/1844).
+> {style="warning"}
 
 This page describes the Gradle plugin that generates `@DataSchema` from data samples.
 ```Kotlin
