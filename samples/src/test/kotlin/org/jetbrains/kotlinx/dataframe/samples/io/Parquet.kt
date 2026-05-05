@@ -77,6 +77,7 @@ class Parquet {
         val url = testParquet("sales")
         val path = Paths.get(url.toURI())
         // SampleStart
+        // Read from Path objects
         val df = DataFrame.readParquet(path)
         // SampleEnd
         df.rowsCount() shouldBe 300

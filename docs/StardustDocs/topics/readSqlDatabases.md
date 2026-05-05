@@ -149,7 +149,7 @@ You can find a full example project [here](https://github.com/zaleslaw/KotlinDat
 
 ## Getting Started with Notebooks
 
-To use the latest version of the `Kotlin DataFrame` library 
+To use the latest version of the Kotlin DataFrame library 
 and a specific version of the JDBC driver for your database (`MariaDB` is used as an example below) in your Notebook,
 run the following two cells.
 
@@ -160,7 +160,7 @@ USE {
     dependencies("org.mariadb.jdbc:mariadb-java-client:$version")
 }
 ```
-Next, import the `Kotlin DataFrame` library in the cell below.
+Next, import the Kotlin DataFrame library in the cell below.
 
 ```
 %use dataframe

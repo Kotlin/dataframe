@@ -84,6 +84,7 @@ val df = DataFrame.readParquet("data/sales.parquet")
 <!---FUN readParquetFilePath-->
 
 ```kotlin
+// Read from Path objects
 val df = DataFrame.readParquet(path)
 ```
 
