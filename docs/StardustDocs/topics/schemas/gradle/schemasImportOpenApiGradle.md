@@ -5,6 +5,7 @@
 > The current Gradle plugin is **deprecated**. Its latest release is 1.0.0-Beta4 and will not have future releases.
 >
 > At the moment, OpenAPI code generation can be done **[via dedicated methods](OpenAPI.md)** instead of relying on the plugin.
+> Our plans for the next iteration of this feature can be found in [Issue #1844](https://github.com/Kotlin/dataframe/issues/1844).
 > {style="warning"}
 
 > **Experimental**: Support for OpenAPI 3.0 schemas is demoted to experimental
