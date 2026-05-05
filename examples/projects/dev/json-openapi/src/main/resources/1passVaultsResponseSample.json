@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ytrfte14kw1uex5txaore1emkz",
+    "name": "Demo",
+    "attributeVersion": 1,
+    "contentVersion": 72,
+    "items": 7,
+    "type": "USER_CREATED",
+    "createdAt": "2021-04-10T17:34:26Z",
+    "updatedAt": "2021-04-13T14:33:50Z"
+  },
+  {
+    "id": "ftz4pm2xxwmwrsd7rjqn7grzfz",
+    "name": "Work",
+    "attributeVersion": 2,
+    "contentVersion": 134,
+    "items": 23,
+    "type": "USER_CREATED",
+    "createdAt": "2022-01-05T09:12:00Z",
+    "updatedAt": "2023-11-18T16:45:22Z"
+  },
+  {
+    "id": "h8nkqv3ppzytcwe6slma5rbxdj",
+    "name": "Shared Team Secrets",
+    "attributeVersion": 1,
+    "contentVersion": 58,
+    "items": 12,
+    "type": "EVERYONE",
+    "createdAt": "2022-03-20T11:00:00Z",
+    "updatedAt": "2024-02-14T08:30:05Z"
+  }
+]

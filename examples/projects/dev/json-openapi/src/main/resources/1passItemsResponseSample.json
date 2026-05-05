@@ -1,0 +1,249 @@
+[
+  {
+    "id": "2fcbqwe9ndg175zg2dzwftvkpa",
+    "title": "Secrets Automation Item",
+    "tags": [
+      "connect",
+      "\ud83d\udc27"
+    ],
+    "vault": {
+      "id": "ftz4pm2xxwmwrsd7rjqn7grzfz"
+    },
+    "category": "LOGIN",
+    "sections": [
+      {
+        "id": "95cdbc3b-7742-47ec-9056-44d6af82d562",
+        "label": "Security Questions"
+      }
+    ],
+    "fields": [
+      {
+        "id": "username",
+        "type": "STRING",
+        "purpose": "USERNAME",
+        "label": "username",
+        "value": "wendy"
+      },
+      {
+        "id": "password",
+        "type": "CONCEALED",
+        "purpose": "PASSWORD",
+        "label": "password",
+        "value": "mjXehR*uCj!aoe!iktt9KMtWb",
+        "entropy": 148.0838165283203,
+        "passwordDetails": {
+          "entropy": 148,
+          "generated": true,
+          "strength": "FANTASTIC",
+          "history": [
+            "U-Trxf98hT_GTgNmA.a!pQp3U",
+            "_ciCJpYuCB*E7@oRTto4JB4.3"
+          ]
+        }
+      },
+      {
+        "id": "notesPlain",
+        "type": "STRING",
+        "purpose": "NOTES",
+        "label": "notesPlain"
+      },
+      {
+        "id": "a6cvmeqakbxoflkgmor4haji7y",
+        "type": "URL",
+        "label": "Example",
+        "value": "https://example.com"
+      },
+      {
+        "id": "boot3vsxwhuht6g7cmcx4m6rcm",
+        "section": {
+          "id": "95cdbc3b-7742-47ec-9056-44d6af82d562"
+        },
+        "type": "CONCEALED",
+        "label": "Recovery Key",
+        "value": "s=^J@GhHP_isYP>LCq?vv8u7T:*wBP.c"
+      },
+      {
+        "id": "axwtgyjrvwfp5ij7mtkw2zvijy",
+        "section": {
+          "id": "95cdbc3b-7742-47ec-9056-44d6af82d562"
+        },
+        "type": "STRING",
+        "label": "Random Text",
+        "value": "R)D~KZdV!8?51QoCibDUse7=n@wKR_}]"
+      }
+    ],
+    "files": [
+      {
+        "id": "6r65pjq33banznomn7q22sj44e",
+        "name": "testfile.txt",
+        "size": 35,
+        "content_path": "v1/vaults/ftz4pm2xxwmwrsd7rjqn7grzfz/items/2fcbqwe9ndg175zg2dzwftvkpa/files/6r65pjq33banznomn7q22sj44e/content"
+      },
+      {
+        "id": "oyez5gf6xjfptlhc3o4n6o6hvm",
+        "name": "samplefile.png",
+        "size": 296639,
+        "content_path": "v1/vaults/ftz4pm2xxwmwrsd7rjqn7grzfz/items/2fcbqwe9ndg175zg2dzwftvkpa/files/oyez5gf6xjfptlhc3o4n6o6hvm/content"
+      }
+    ],
+    "createdAt": "2021-04-10T17:20:05.98944527Z",
+    "updatedAt": "2021-04-13T17:20:05.989445411Z"
+  },
+  {
+    "id": "7hkzprt3mce284aw9qxnb6ylso",
+    "title": "Work Email Account",
+    "tags": [
+      "work",
+      "email"
+    ],
+    "vault": {
+      "id": "ftz4pm2xxwmwrsd7rjqn7grzfz"
+    },
+    "category": "LOGIN",
+    "sections": [
+      {
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "label": "Recovery Options"
+      }
+    ],
+    "fields": [
+      {
+        "id": "username",
+        "type": "STRING",
+        "purpose": "USERNAME",
+        "label": "username",
+        "value": "alice@company.com"
+      },
+      {
+        "id": "password",
+        "type": "CONCEALED",
+        "purpose": "PASSWORD",
+        "label": "password",
+        "value": "Xk9#mP2@vLqR!nWs",
+        "entropy": 132.4512634277344,
+        "passwordDetails": {
+          "entropy": 132,
+          "generated": true,
+          "strength": "FANTASTIC",
+          "history": [
+            "oldPass1!Abc@2023",
+            "TempPass#99xYz!"
+          ]
+        }
+      },
+      {
+        "id": "notesPlain",
+        "type": "STRING",
+        "purpose": "NOTES",
+        "label": "notesPlain",
+        "value": "Corporate email. Use VPN when accessing remotely."
+      },
+      {
+        "id": "b7dvnerakbxoflkgmor4haji8z",
+        "type": "URL",
+        "label": "Webmail",
+        "value": "https://mail.company.com"
+      },
+      {
+        "id": "coot4wsxwhuht6g7cmcx4m6rdn",
+        "section": {
+          "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        },
+        "type": "STRING",
+        "label": "Recovery Email",
+        "value": "alice.backup@personal.com"
+      }
+    ],
+    "files": [
+      {
+        "id": "3m87qkv44canznomn7q22sj55f",
+        "name": "vpn-config.ovpn",
+        "size": 1842,
+        "content_path": "v1/vaults/ftz4pm2xxwmwrsd7rjqn7grzfz/items/7hkzprt3mce284aw9qxnb6ylso/files/3m87qkv44canznomn7q22sj55f/content"
+      }
+    ],
+    "createdAt": "2022-08-15T09:34:12.123456789Z",
+    "updatedAt": "2023-02-20T14:55:30.987654321Z"
+  },
+  {
+    "id": "9xmbnqf5rth317bv8kywc2epui",
+    "title": "Home Router",
+    "tags": [
+      "home",
+      "network"
+    ],
+    "vault": {
+      "id": "ftz4pm2xxwmwrsd7rjqn7grzfz"
+    },
+    "category": "WIRELESS_ROUTER",
+    "sections": [
+      {
+        "id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+        "label": "Wi-Fi Credentials"
+      },
+      {
+        "id": "11223344-5566-7788-99aa-bbccddeeff00",
+        "label": "Admin Access"
+      }
+    ],
+    "fields": [
+      {
+        "id": "hostname",
+        "type": "STRING",
+        "label": "hostname",
+        "value": "192.168.1.1"
+      },
+      {
+        "id": "password",
+        "type": "CONCEALED",
+        "purpose": "PASSWORD",
+        "label": "password",
+        "value": "Rt7$nKpL@2mVxQ!w",
+        "entropy": 119.8823547363281,
+        "passwordDetails": {
+          "entropy": 119,
+          "generated": false,
+          "strength": "EXCELLENT",
+          "history": []
+        }
+      },
+      {
+        "id": "notesPlain",
+        "type": "STRING",
+        "purpose": "NOTES",
+        "label": "notesPlain",
+        "value": "Router is in the living room cabinet. Reboot monthly."
+      },
+      {
+        "id": "d8ewofrakbxoflkgmor4haji9a",
+        "section": {
+          "id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210"
+        },
+        "type": "STRING",
+        "label": "Network Name (2.4 GHz)",
+        "value": "HomeNetwork_2G"
+      },
+      {
+        "id": "e9fxpgsbkbyoflkgmor4haji0b",
+        "section": {
+          "id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210"
+        },
+        "type": "CONCEALED",
+        "label": "Wi-Fi Password",
+        "value": "Sunshine&Roses42!"
+      },
+      {
+        "id": "fpuy5wtxwhuht6g7cmcx4m6reo",
+        "section": {
+          "id": "11223344-5566-7788-99aa-bbccddeeff00"
+        },
+        "type": "STRING",
+        "label": "Admin Username",
+        "value": "admin"
+      }
+    ],
+    "files": [],
+    "createdAt": "2020-11-03T18:00:00.000000000Z",
+    "updatedAt": "2024-01-07T08:22:45.112233445Z"
+  }
+]
