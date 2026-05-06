@@ -78,43 +78,46 @@ korro {
     }
 
     docs {
-        from(fileTree(rootProject.file("docs/StardustDocs/topics")) {
-            include("DataSchema-Data-Classes-Generation.md")
-            include("read.md")
-            include("readSqlFromCustomDatabase.md")
-            include("write.md")
-            include("rename.md")
-            include("format.md")
-            include("parse.md")
-            include("toHTML.md")
-            include("guides/*.md")
-            include("concepts/*.md")
-            include("operations/utils/*.md")
-            include("operations/multiple/*.md")
-            include("operations/column/*.md")
-            include("collectionsInterop/*.md")
-            include("dataSources/sql/*.md")
-            include("info/*.md")
-            include("columnArithmetics.md")
-
-        })
+        from(
+            fileTree(rootProject.file("docs/StardustDocs/topics")) {
+                include("DataSchema-Data-Classes-Generation.md")
+                include("read.md")
+                include("readSqlFromCustomDatabase.md")
+                include("write.md")
+                include("rename.md")
+                include("format.md")
+                include("parse.md")
+                include("toHTML.md")
+                include("guides/*.md")
+                include("concepts/*.md")
+                include("operations/utils/*.md")
+                include("operations/multiple/*.md")
+                include("operations/column/*.md")
+                include("collectionsInterop/*.md")
+                include("dataSources/sql/*.md")
+                include("info/*.md")
+                include("columnArithmetics.md")
+            },
+        )
         baseDir = rootProject.rootDir
     }
 
     samples {
-        from(fileTree(project.projectDir) {
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/multiple/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/render/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
-        })
+        from(
+            fileTree(project.projectDir) {
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/multiple/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/render/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
+            },
+        )
     }
 
     groupSamples {

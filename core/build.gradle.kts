@@ -209,21 +209,27 @@ korro {
         ignoreMissing = true
     }
     docs {
-        from(fileTree(rootProject.file("docs/StardustDocs")) {
-            include("topics/*.md")
-            include("topics/concepts/*.md")
-        })
+        from(
+            fileTree(rootProject.file("docs/StardustDocs")) {
+                include("topics/*.md")
+                include("topics/concepts/*.md")
+            },
+        )
         baseDir = rootProject.rootDir
     }
 
     samples {
-        from(fileTree(project.projectDir) {
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
-            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
-        })
-        outputs.from(fileTree(project.layout.buildDirectory) {
-            include("korroOutputLines/*")
-        })
+        from(
+            fileTree(project.projectDir) {
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+            },
+        )
+        outputs.from(
+            fileTree(project.layout.buildDirectory) {
+                include("korroOutputLines/*")
+            },
+        )
     }
 
     groupSamples {
