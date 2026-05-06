@@ -1,21 +1,4 @@
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.exclude
-import org.gradle.kotlin.dsl.implementation
-import org.gradle.kotlin.dsl.invoke
-import org.gradle.kotlin.dsl.java
-import org.gradle.kotlin.dsl.korro
-import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.libs
-import org.gradle.kotlin.dsl.main
-import org.gradle.kotlin.dsl.projects
-import org.gradle.kotlin.dsl.repositories
-import org.gradle.kotlin.dsl.runKtlintCheckOverMainSourceSet
-import org.gradle.kotlin.dsl.runKtlintCheckOverTestSourceSet
-import org.gradle.kotlin.dsl.runKtlintFormatOverMainSourceSet
-import org.gradle.kotlin.dsl.runKtlintFormatOverTestSourceSet
-import org.gradle.kotlin.dsl.sourceSets
-import org.gradle.kotlin.dsl.test
-import org.gradle.kotlin.dsl.testImplementation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -89,38 +72,49 @@ dependencies {
 }
 
 korro {
-    docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/DataSchema-Data-Classes-Generation.md")
-        include("docs/StardustDocs/topics/read.md")
-        include("docs/StardustDocs/topics/readSqlFromCustomDatabase.md")
-        include("docs/StardustDocs/topics/write.md")
-        include("docs/StardustDocs/topics/rename.md")
-        include("docs/StardustDocs/topics/format.md")
-        include("docs/StardustDocs/topics/parse.md")
-        include("docs/StardustDocs/topics/toHTML.md")
-        include("docs/StardustDocs/topics/guides/*.md")
-        include("docs/StardustDocs/topics/concepts/*.md")
-        include("docs/StardustDocs/topics/operations/utils/*.md")
-        include("docs/StardustDocs/topics/operations/multiple/*.md")
-        include("docs/StardustDocs/topics/operations/column/*.md")
-        include("docs/StardustDocs/topics/collectionsInterop/*.md")
-        include("docs/StardustDocs/topics/dataSources/sql/*.md")
-        include("docs/StardustDocs/topics/info/*.md")
-        include("docs/StardustDocs/topics/columnArithmetics.md")
+
+    behavior {
+        ignoreMissing = true
     }
 
-    samples = fileTree(project.projectDir) {
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/multiple/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/render/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
+    docs {
+        from(fileTree(rootProject.file("docs/StardustDocs/topics")) {
+            include("DataSchema-Data-Classes-Generation.md")
+            include("read.md")
+            include("readSqlFromCustomDatabase.md")
+            include("write.md")
+            include("rename.md")
+            include("format.md")
+            include("parse.md")
+            include("toHTML.md")
+            include("guides/*.md")
+            include("concepts/*.md")
+            include("operations/utils/*.md")
+            include("operations/multiple/*.md")
+            include("operations/column/*.md")
+            include("collectionsInterop/*.md")
+            include("dataSources/sql/*.md")
+            include("info/*.md")
+            include("columnArithmetics.md")
+
+        })
+        baseDir = rootProject.rootDir
+    }
+
+    samples {
+        from(fileTree(project.projectDir) {
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/multiple/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/render/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
+        })
     }
 
     groupSamples {

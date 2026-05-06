@@ -1,3 +1,4 @@
+import io.github.devcrocod.korro.KorroGenerateTask
 import io.github.devcrocod.korro.KorroTask
 import org.gradle.jvm.tasks.Jar
 import org.intellij.lang.annotations.Language
@@ -184,23 +185,45 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     classpath = sourceSets.test.get().runtimeClasspath
 }
 
+tasks.withType<KorroGenerateTask> {
+    dependsOn(copySamplesOutputs)
+    mustRunAfter(":samples:korroGenerate")
+}
+
 tasks.withType<KorroTask> {
     dependsOn(copySamplesOutputs)
+    mustRunAfter(":samples:korro")
+}
+
+tasks.configureEach {
+    mustRunAfter(":samples:korro")
+}
+
+tasks.matching { it.name.startsWith("runKtlint") }.configureEach {
+    mustRunAfter(tasks.withType<KorroTask>())
+    mustRunAfter(tasks.withType<KorroGenerateTask>())
 }
 
 korro {
-    docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/*.md")
-        include("docs/StardustDocs/topics/concepts/*.md")
+    behavior {
+        ignoreMissing = true
+    }
+    docs {
+        from(fileTree(rootProject.file("docs/StardustDocs")) {
+            include("topics/*.md")
+            include("topics/concepts/*.md")
+        })
+        baseDir = rootProject.rootDir
     }
 
-    samples = fileTree(project.projectDir) {
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
-    }
-
-    outputs = fileTree(project.layout.buildDirectory) {
-        include("korroOutputLines/*")
+    samples {
+        from(fileTree(project.projectDir) {
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
+            include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+        })
+        outputs.from(fileTree(project.layout.buildDirectory) {
+            include("korroOutputLines/*")
+        })
     }
 
     groupSamples {

@@ -101,11 +101,21 @@ which is a [**column group**](DataColumn.md#columngroup) containing two nested
 [Get](getColumn.md) a single "height" subcolumn from the "info" column group
 
 <!---FUN getColumn-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
-df.getColumn { colGroup("info").col("height") }
+df.getColumn { age }
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.getColumn("age")
+```
+
+</tab></tabs>
 <!---END-->
 
 [Select](select.md) the "age" subcolumn from the "info" column group and the "name" column
