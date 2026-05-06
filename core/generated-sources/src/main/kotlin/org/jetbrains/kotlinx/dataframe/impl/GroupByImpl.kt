@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
@@ -63,7 +64,7 @@ internal class GroupByImpl<T, G>(
         if (groupedColumnName == null || groupedColumnName == groups.name()) {
             df
         } else {
-            df.rename(groups).into(groupedColumnName)
+            df.rename(groups).to(groupedColumnName)
         }
 }
 
