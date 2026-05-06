@@ -8,10 +8,10 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.junit.Ignore
 import org.junit.Test
@@ -44,8 +44,8 @@ class AccessApis {
         // Get the "fullName" column
         df["fullName"]
 
-        // Rename the "fullName" column into "name"
-        df.rename("fullName").into("name")
+        // Rename the "fullName" column to "name"
+        df.rename("fullName").to("name")
         // SampleEnd
     }
 
@@ -71,8 +71,8 @@ class AccessApis {
         // Get "fullName" column
         df.fullName
 
-        // Rename "fullName" column into "name"
-        df.rename { fullName }.into("name")
+        // Rename "fullName" column to "name"
+        df.rename { fullName }.to("name")
 
         // Select the "firstName" column from the "fullName" column group
         // and the "age" column

@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
@@ -55,7 +56,7 @@ class Join : TestBase() {
     @Test
     @TransformDataFrameExpressions
     fun joinWithMatch_properties() {
-        val other = other.rename { name }.into("fullName").cast<Right>()
+        val other = other.rename { name }.to("fullName").cast<Right>()
         val joined =
             // SampleStart
             df.join(other) { name match right.fullName }

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.junit.Test
@@ -27,8 +28,8 @@ class RenameTests : ColumnsSelectionDslTests() {
             4, 5, 6,
         )
 
-        simpleDf.rename { all() }.into { it.name + "_renamed" } shouldBe renamedDf
-        simpleDf.rename { all() }.into("a_renamed", "b_renamed", "c_renamed") shouldBe renamedDf
+        simpleDf.rename { all() }.to { it.name + "_renamed" } shouldBe renamedDf
+        simpleDf.rename { all() }.to("a_renamed", "b_renamed", "c_renamed") shouldBe renamedDf
     }
 
     @Test
@@ -54,7 +55,7 @@ class RenameTests : ColumnsSelectionDslTests() {
 
         groupedDf
             .rename { "group" and "group"["a"] }
-            .into { it.name + "_renamed" } shouldBe renamedDf
+            .to { it.name + "_renamed" } shouldBe renamedDf
     }
 
     @Test
@@ -66,7 +67,7 @@ class RenameTests : ColumnsSelectionDslTests() {
 
         groupedDf
             .rename { colsAtAnyDepth() }
-            .into { it.name + "_renamed" } shouldBe renamedDf
+            .to { it.name + "_renamed" } shouldBe renamedDf
     }
 
     @Test
@@ -80,7 +81,7 @@ class RenameTests : ColumnsSelectionDslTests() {
 
         doubleGroupedDf
             .rename { colsAtAnyDepth() }
-            .into { it.name + "_renamed" } shouldBe renamedDf
+            .to { it.name + "_renamed" } shouldBe renamedDf
     }
 
     interface Person2 {
