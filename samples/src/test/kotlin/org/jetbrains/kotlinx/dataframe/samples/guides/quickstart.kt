@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.readCsv
@@ -54,9 +55,9 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     private fun getDfRenamed() =
         getDfFiltered()
-            .rename { full_name }.into("name")
-            // And "stargazers_count" into "starsCount"
-            .rename { stargazers_count }.into("starsCount")
+            .rename { full_name }.to("name")
+            // And "stargazers_count" to "starsCount"
+            .rename { stargazers_count }.to("starsCount")
 
     private fun getDfUpdated() =
         getDfRenamed()
@@ -130,10 +131,10 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     fun notebook_test_quickstart_7() {
         val dfFiltered = getDfFiltered()
         // SampleStart
-        // Rename "full_name" column into "name"
-        val dfRenamed = dfFiltered.rename { full_name }.into("name")
-            // And "stargazers_count" into "starsCount"
-            .rename { stargazers_count }.into("starsCount")
+        // Rename "full_name" column to "name"
+        val dfRenamed = dfFiltered.rename { full_name }.to("name")
+            // And "stargazers_count" to "starsCount"
+            .rename { stargazers_count }.to("starsCount")
         dfRenamed
             // SampleEnd
             .saveDfHtmlSample()

@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.renameToCamelCase
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.writeCsv
@@ -72,7 +73,7 @@ fun main() {
         // new names corresponding to the column names.
         .renameToCamelCase()
         // Rename "stargazersCount" column to "stars".
-        .rename { stargazersCount }.into("stars")
+        .rename { stargazersCount }.to("stars")
         // And we can immediately use the updated name in the filtering.
         .filter { stars > 50 }
         // Convert values in the "topic" column (which were `String` initially)

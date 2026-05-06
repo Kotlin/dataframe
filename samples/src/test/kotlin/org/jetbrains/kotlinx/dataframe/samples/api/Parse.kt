@@ -15,11 +15,11 @@ import org.jetbrains.kotlinx.dataframe.api.addJavaDateTimePattern
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.dataframe.util.renderType
@@ -39,7 +39,7 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
 
     private fun AnyFrame.withTypes() =
         this
-            .rename { colsAtAnyDepth() }.into { "${it.name()}: ${renderType(it.type())}" }
+            .rename { colsAtAnyDepth() }.to { "${it.name()}: ${renderType(it.type())}" }
 
     @Test
     fun dfParse() {
