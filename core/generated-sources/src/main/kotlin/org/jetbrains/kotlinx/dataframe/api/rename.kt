@@ -27,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.renamedColumn
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.RENAME_INTO
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -38,8 +39,8 @@ import kotlin.reflect.KProperty
  * returns a [RenameClause],
  * which serves as an intermediate step.
  * The [RenameClause] object provides methods to rename selected columns using:
- * - [into(name)][RenameClause.into] - renames selected columns to the specified names.
- * - [into { nameExpression }][RenameClause.into] - renames selected columns using a provided
+ * - [to(name)][RenameClause.to] - renames selected columns to the specified names.
+ * - [to { nameExpression }][RenameClause.to] - renames selected columns using a provided
  * expression assuming column with its path and returning a new name.
  * - [toCamelCase()][RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
@@ -127,10 +128,10 @@ internal interface RenameDocs {
      * [**`rename`**][rename]**`  { `**`columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  `**`}`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`into`**][RenameClause.into]**`(`**`name: `[`String`][String]**`)`**
+     * `| `__`.`__[**`to`**][RenameClause.to]**`(`**`newNames: `[`String`][String]**`, ..)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`into`**][RenameClause.into]**`  { `**`nameExpression: (`[`ColumnWithPath`][ColumnWithPath]`) -> `[String]` `**`}`**
+     * `| `__`.`__[**`to`**][RenameClause.to]**`  { `**`nameExpression: (`[`ColumnWithPath`][ColumnWithPath]`) -> `[String]` `**`}`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`toCamelCase`**][RenameClause.toCamelCase]**`()`**
@@ -159,7 +160,7 @@ internal interface RenameDocs {
 @Interpretable("RenameMapping")
 public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataFrame<T> =
     rename { mappings.map { it.first.toColumnAccessor() }.toColumnSet() }
-        .into(*mappings.map { it.second }.toTypedArray())
+        .to(*mappings.map { it.second }.toTypedArray())
 
 /**
  * Renames the specified [columns] keeping their original values and location within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -168,8 +169,8 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
  * returns a [RenameClause][org.jetbrains.kotlinx.dataframe.api.RenameClause],
  * which serves as an intermediate step.
  * The [RenameClause][org.jetbrains.kotlinx.dataframe.api.RenameClause] object provides methods to rename selected columns using:
- * - [into(name)][org.jetbrains.kotlinx.dataframe.api.RenameClause.into] - renames selected columns to the specified names.
- * - [into { nameExpression }][org.jetbrains.kotlinx.dataframe.api.RenameClause.into] - renames selected columns using a provided
+ * - [to(name)][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns to the specified names.
+ * - [to { nameExpression }][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns using a provided
  * expression assuming column with its path and returning a new name.
  * - [toCamelCase()][org.jetbrains.kotlinx.dataframe.api.RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
@@ -205,10 +206,10 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
  * ### Examples:
  * ```kotlin
  * // Rename "col1" to "width" and "col2" to "length"
- * df.rename { col1 and col2 }.into("width", "length")
+ * df.rename { col1 and col2 }.to("width", "length")
  *
  * // Rename all columns using their full path, delimited by "->"
- * df.rename { colsAtAnyDepth() }.into { it.path.joinToString("->") }
+ * df.rename { colsAtAnyDepth() }.to { it.path.joinToString("->") }
  *
  * // Renames all numeric columns to "camelCase"
  * df.rename { colsOf<Number>() }.toCamelCase()
@@ -234,8 +235,8 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  * returns a [RenameClause][org.jetbrains.kotlinx.dataframe.api.RenameClause],
  * which serves as an intermediate step.
  * The [RenameClause][org.jetbrains.kotlinx.dataframe.api.RenameClause] object provides methods to rename selected columns using:
- * - [into(name)][org.jetbrains.kotlinx.dataframe.api.RenameClause.into] - renames selected columns to the specified names.
- * - [into { nameExpression }][org.jetbrains.kotlinx.dataframe.api.RenameClause.into] - renames selected columns using a provided
+ * - [to(name)][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns to the specified names.
+ * - [to { nameExpression }][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns using a provided
  * expression assuming column with its path and returning a new name.
  * - [toCamelCase()][org.jetbrains.kotlinx.dataframe.api.RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
@@ -260,7 +261,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  * ### Examples:
  * ```kotlin
  * // Rename "col1" to "width" and "col2" to "length"
- * df.rename("col1", "col2").into("width", "length")
+ * df.rename("col1", "col2").to("width", "length")
  *
  * // Renames "arrival_date" and "passport-ID" columns to "camelCase"
  * df.rename("arrival_date", "passport-ID").toCamelCase()
@@ -281,8 +282,8 @@ public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> =
  * in the [DataFrame], but their names will be changed.
  *
  * Use the following methods to perform the conversion:
- * - [into(name)][RenameClause.into] — renames selected columns to the specified names.
- * - [into { nameExpression }][RenameClause.into] — renames selected columns using a custom expression,
+ * - [to(name)][RenameClause.to] — renames selected columns to the specified names.
+ * - [to { nameExpression }][RenameClause.to] — renames selected columns using a custom expression,
  *   which takes the column and its path and returns a new name.
  * - [toCamelCase()][RenameClause.toCamelCase] — renames all selected columns to `camelCase`.
  *
@@ -335,9 +336,12 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> =
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
-    into(*newColumns.map { it.name() }.toTypedArray())
+    to(*newColumns.map { it.name() }.toTypedArray())
 
 /**
+ * __NOTE:__ While you can keep using 'into', we recommend using [to][RenameClause.to] for
+ *  * better readability and more natural English.
+ *
  * Renames the columns selected with [rename] to the specified [newNames],
  * preserving their values and positions within the [DataFrame].
  *
@@ -363,14 +367,46 @@ public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>)
  */
 @Refine
 @Interpretable("RenameInto")
+@Deprecated(message = RENAME_INTO, replaceWith = ReplaceWith("to(*newNames)"))
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
+
+/**
+ * Renames the columns selected with [rename] to the specified [newNames],
+ * preserving their values and positions within the [DataFrame].
+ *
+ * The mapping is positional: [newNames] are applied in the order
+ * the columns were selected — the first selected column is renamed to the first name,
+ * the second to the second, and so on.
+ *
+ * For more information: [See `rename` on the documentation website.](https://kotlin.github.io/dataframe/rename.html)
+ *
+ * Check out [Grammar][RenameDocs.Grammar].
+ *
+ * ### Examples:
+ * ```kotlin
+ * // Rename "col1" to "width" and "col2" to "length"
+ * df.rename("col1", "col2").to("width", "length")
+ *
+ * // Rename "col1" to "width" and "col2" to "length"
+ * df.rename { col1 and col2 }.to("width", "length")
+ * ```
+ *
+ * @param newNames The new names for the selected columns, applied in order of selecting.
+ * @return A new [DataFrame] with the columns renamed.
+ */
+@Refine
+@Interpretable("RenameInto")
+public fun <T, C> RenameClause<T, C>.to(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFrame<T> =
-    into(*newNames.map { it.name }.toTypedArray())
+    to(*newNames.map { it.name }.toTypedArray())
 
 /**
+ * __NOTE:__ While you can keep using 'into', we recommend using [to][RenameClause.to] for
+ * better readability and more natural English.
+ *
  * Renames the columns selected with [rename] by applying the [transform] expression
  * to each of them. This expression receives the column together with its full path
  * (as [ColumnWithPath]) and must return the new name for that column.
@@ -395,8 +431,36 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFr
  */
 @Refine
 @Interpretable("RenameIntoLambda")
+@Deprecated(message = RENAME_INTO, replaceWith = ReplaceWith("to(transform)"))
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> =
     renameImpl(transform)
+
+/**
+ * Renames the columns selected with [rename] by applying the [transform] expression
+ * to each of them. This expression receives the column together with its full path
+ * (as [ColumnWithPath]) and must return the new name for that column.
+ * The operation preserves the original columns’ values and their positions within the [DataFrame].
+ *
+ * For more information: [See `rename` on the documentation website.](https://kotlin.github.io/dataframe/rename.html)
+ *
+ * Check out [Grammar][RenameDocs.Grammar] for more details.
+ *
+ * ### Examples:
+ * ```kotlin
+ * // Rename all columns using their full path, delimited by "->"
+ * df.rename { colsAtAnyDepth() }.to { it.path.joinToString("->") }
+ *
+ * // Rename all `String` columns with uppercase
+ * df.rename { colsOf<String>() }.to { it.name.uppercase() }
+ * ```
+ *
+ * @param transform A function that takes a [ColumnWithPath] for each selected column
+ * and returns the new column name.
+ * @return A new [DataFrame] with the columns renamed.
+ */
+@Refine
+@Interpretable("RenameIntoLambda")
+public fun <T, C> RenameClause<T, C>.to(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = renameImpl(transform)
 
 /**
  * Renames the columns, previously selected with [rename] to "camelCase" format.
@@ -430,7 +494,7 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  */
 @Refine
 @Interpretable("RenameToCamelCaseClause")
-public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into { it.renameToCamelCase().name() }
+public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = to { it.renameToCamelCase().name() }
 
 // endregion
 
