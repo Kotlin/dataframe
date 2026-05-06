@@ -7,25 +7,23 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.convertToUrl
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toStdlibInstant
-import org.jetbrains.kotlinx.dataframe.api.toUrl
 import org.jetbrains.kotlinx.dataframe.io.readJson
+import org.jetbrains.kotlinx.dataframe.io.readOpenApi
 
 /**
  * Here we will use the generated data schemas for our JSON file using the generated
  * [ApisGuru] data schema.
  *
  * We will need to read it in the same way as when generating the data schema, so using `keyValuePaths`.
+ *
+ * See also: [our documentation](https://kotlin.github.io/dataframe/read.html#read-from-json).
  */
 fun main() {
     val apiGuruList = object {}::class.java.getResource("/apis_guru_list.json")!!
@@ -56,40 +54,41 @@ fun main() {
     val newApis = df.convert { value.added }.toStdlibInstant()
         .filter { value.added >= startOf2021 }
 
-    // and find the youtube-analytics API
-    val youtubeAnalytics = newApis
-        .first { "youtubeAnalytics" in name }
+    // and find the 1Password Connect API
+    val onePasswordConnect = newApis
+        .first { "1password" in name && "connect" in name }
         .value
 
     // It has multiple versions but states its preferred version, so let's find that one
-    val preferredVersion = youtubeAnalytics
+    val preferredVersion = onePasswordConnect
         .versions
-        .first { name == youtubeAnalytics.preferred }
+        .first { name == onePasswordConnect.preferred }
         .value
 
-    // now, let's gather and print the data we need to start using the YouTube Analytics API.
+    // now, let's gather and print the data we need to start using the 1Password Connect API.
     val info = preferredVersion.toDataFrame().select {
         cols(
             info.title,
             info.version,
             swaggerYamlUrl,
             openapiVer,
-            // we need to point to this column manually; not every nested dataframe has it,
-            // so we won't have column accessors for it
-            "externalDocs"["url"]<String>(),
         )
     }
-
     info.print(valueLimit = Int.MAX_VALUE)
-    //                   title version                                                                 swaggerYamlUrl openapiVer                                             url
-    // 0 YouTube Analytics API      v1 https://api.apis.guru/v2/specs/googleapis.com/youtubeAnalytics/v1/openapi.yaml      3.0.0 https://developers.google.com/youtube/analytics
+    //               title version                                                            swaggerYamlUrl openapiVer
+    // 0 1Password Connect   1.3.0 https://api.apis.guru/v2/specs/1password.local/connect/1.3.0/openapi.yaml      3.0.2
 
-    // ERROR:
-    // val DataRow<X-origin_731>.url: String:
-    //  Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
-    // val DataRow<X-origin_731>.url: String
-    info.url
-
-//    val fullOpenApiSpec = info.swaggerYamlUrl.convertToUrl().single().readText()
-//    println(fullOpenApiSpec)
+    // We could now go full-circle and fetch the OpenAPI spec, to use it inside DataFrame!
+    runCatching {
+        readOpenApi(
+            uri = info.swaggerYamlUrl.single(),
+            name = "1Password",
+            extensionProperties = false,
+            generateHelperCompanionObject = false,
+        )
+    }
+    // Unfortunately, our APIs Guru database seems to be a bit out of date,
+    // so the URL does not seem live anymore.
+    // We did cache it on our GitHub, so take a look at the openApi directory to continue
+    // this example!
 }
