@@ -3,6 +3,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -20,6 +22,7 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 public fun AnyCol.isColumnGroup(): Boolean {
@@ -31,6 +34,9 @@ public fun AnyCol.isFrameColumn(): Boolean {
     contract { returns(true) implies (this@isFrameColumn is FrameColumn<*>) }
     return kind() == ColumnKind.Frame
 }
+
+public fun AnyCol.isFrameColumnOrValueColumnOfDataFrame(): Boolean =
+    isFrameColumn() || (isValueColumn() && type().isSubtypeOf(typeOf<AnyFrame>().withNullability(true)))
 
 public fun AnyCol.isValueColumn(): Boolean {
     contract { returns(true) implies (this@isValueColumn is ValueColumn<*>) }
