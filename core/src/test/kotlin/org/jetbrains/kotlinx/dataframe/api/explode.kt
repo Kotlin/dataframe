@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.junit.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -131,5 +134,40 @@ class ExplodeTests {
         ).asColumnGroup("col")
 
         exploded shouldBe expected
+    }
+
+    @Test
+    fun `explode column group throws`() {
+        val df = dataFrameOf("a", "b")(1, 2).group { all() }.into("g")
+        shouldThrow<IllegalArgumentException> { df.explode { it["g"] } }
+    }
+
+    @Test
+    fun `explode non-list value column throws`() {
+        val df = dataFrameOf("a")(1)
+        shouldThrow<IllegalArgumentException> { df.explode { it["a"] } }
+    }
+
+    @Test
+    fun `explode value column of DataFrame`() {
+        val df = dataFrameOf("a", "b", "c")(
+            1, 2, 3,
+            1, 4, 5,
+            2, 3, 4,
+            3, 6, 7,
+        )
+        val res = df
+            .groupBy("a").updateGroups { it.remove("a") }.into("g")
+            .update("g").at(1).with { DataFrame.empty() }
+            .update("g").at(2).withNull()
+            .explode { "g"<AnyFrame>() }
+
+        res shouldBe dataFrameOf(
+            "a" to columnOf(1, 1, 3),
+            "g" to columnOf(
+                "b" to columnOf(2, 4, null),
+                "c" to columnOf(3, 5, null),
+            ),
+        )
     }
 }
