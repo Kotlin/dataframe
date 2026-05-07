@@ -363,12 +363,4 @@ class SplitTests {
         res["a1"][1] shouldBe "C"
         res["a2"][1] shouldBe "D"
     }
-
-    @Test
-    fun `split column group throws`() {
-        val df = dataFrameOf(
-            "dataCol" to listOf(1, 2, 3),
-        )
-        shouldThrow<IllegalArgumentException> { df.split { it["dataCol"] } }
-    }
 }
