@@ -73,6 +73,8 @@ public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixe
 
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 
+public fun AnyCol.isPair(): Boolean = typeClass == Pair::class
+
 public fun AnyCol.isString(): Boolean = typeClass == String::class
 
 /** @include [valuesAreComparable] */
