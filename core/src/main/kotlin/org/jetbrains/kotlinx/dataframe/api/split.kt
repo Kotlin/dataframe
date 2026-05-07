@@ -27,7 +27,15 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 @Interpretable("Split0")
-public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, C> = Split(this, columns)
+public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, C> {
+    getColumnsWithPaths(columns).forEach { col ->
+        require(col.isFrameColumnOrValueColumnOfDataFrame() || col.isColumnGroup() || col.isList() || col.isString()) {
+            "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn, " +
+                "a ColumnGroup or a ValueColumn of DataFrame, List or String types, but got ${col.kind()} of type ${col.type()}"
+        }
+    }
+    return Split(this, columns)
+}
 
 public fun <T> DataFrame<T>.split(vararg columns: String): Split<T, Any> = split { columns.toColumnSet() }
 

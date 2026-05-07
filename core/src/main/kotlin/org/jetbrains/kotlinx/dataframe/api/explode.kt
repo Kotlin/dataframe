@@ -78,7 +78,15 @@ internal typealias ExplodeDocs = Nothing
 public fun <T> DataFrame<T>.explode(
     dropEmpty: Boolean = true,
     selector: ColumnsSelector<T, *> = defaultExplodeColumns,
-): DataFrame<T> = explodeImpl(dropEmpty, selector)
+): DataFrame<T> {
+    getColumnsWithPaths(selector).forEach { col ->
+        require(col.isFrameColumnOrValueColumnOfDataFrame() || col.isList()) {
+            "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
+                "a ValueColumn of DataFrame or List types, but got ${col.kind()} of type ${col.type()}"
+        }
+    }
+    return explodeImpl(dropEmpty, selector)
+}
 
 /**
  * {@include [ExplodeDocs]}

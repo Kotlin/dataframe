@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -51,7 +52,7 @@ class SplitTests {
     }
 
     @Test
-    fun `split into columns`() {
+    fun `split value column of DataFrame into columns`() {
         val df = dataFrameOf("a", "b", "c")(
             1, 2, 3,
             1, 4, 5,
@@ -361,5 +362,13 @@ class SplitTests {
 
         res["a1"][1] shouldBe "C"
         res["a2"][1] shouldBe "D"
+    }
+
+    @Test
+    fun `split column group throws`() {
+        val df = dataFrameOf(
+            "dataCol" to listOf(1, 2, 3),
+        )
+        shouldThrow<IllegalArgumentException> { df.split { it["dataCol"] } }
     }
 }

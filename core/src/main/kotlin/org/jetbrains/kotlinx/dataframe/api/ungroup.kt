@@ -68,7 +68,7 @@ private typealias CommonUngroupDocs = Nothing
 public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> {
     getColumnsWithPaths(columns).forEach { col ->
         require(col.isColumnGroup()) {
-            "Column '${col.path.joinToString()}' is not a ColumnGroup, but a ${col.kind()}."
+            "Column '${col.path.joinToString()}' cannot be ungrouped: expected a ColumnGroup but got ${col.kind()}."
         }
     }
     return move { columns.toColumnSet().colsInGroups() }
