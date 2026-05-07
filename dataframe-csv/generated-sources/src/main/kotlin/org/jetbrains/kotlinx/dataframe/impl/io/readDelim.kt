@@ -220,16 +220,24 @@ internal fun readDelimImpl(
                 /* sinkFactory = */ ListSink.SINK_FACTORY,
             )
         } catch (e: CsvReaderException) {
-            // catch case when the file is empty and header needs to be inferred from it.
-            if (e.message ==
-                "Can't proceed because hasHeaderRow is set but input file is empty or shorter than skipHeaderRows"
-            ) {
-                return@readDelimImpl DataFrame.empty()
+            when {
+                // catch case when the file is empty and header needs to be inferred from it.
+                e.message == FILE_EMPTY_EXCEPTION_MESSAGE ->
+                    return@readDelimImpl DataFrame.empty()
+
+                // provide extra information when an incorrect parser type is supplied
+                INCORRECT_PARSER_TYPE_EXCEPTION_MESSAGE in e.cause?.message.orEmpty() && colTypes.isNotEmpty() ->
+                    throw IllegalStateException(
+                        "Could not read delimiter-separated data. Check `colTypes`, you may have supplied the wrong type for a column. Cause: ${e.cause?.message}",
+                        e,
+                    )
+
+                else ->
+                    throw IllegalStateException(
+                        "Could not read delimiter-separated data: CsvReaderException: ${e.message}: ${e.cause?.message ?: ""}",
+                        e,
+                    )
             }
-            throw IllegalStateException(
-                "Could not read delimiter-separated data: CsvReaderException: ${e.message}: ${e.cause?.message ?: ""}",
-                e,
-            )
         }
     }
 
@@ -245,6 +253,12 @@ internal fun readDelimImpl(
 
     return dataFrameOf(cols)
 }
+
+private const val FILE_EMPTY_EXCEPTION_MESSAGE =
+    "Can't proceed because hasHeaderRow is set but input file is empty or shorter than skipHeaderRows"
+
+private const val INCORRECT_PARSER_TYPE_EXCEPTION_MESSAGE =
+    "Parsing failed on input, with nothing left to fall back to."
 
 @Suppress("UNCHECKED_CAST")
 private fun CsvReader.ResultColumn.toDataColumn(
