@@ -51,6 +51,13 @@ class MoveTests {
     }
 
     @Test
+    fun `ungroup non-group column throws IllegalArgumentException`() {
+        shouldThrow<IllegalArgumentException> {
+            grouped.ungroup { it["q"] }
+        }
+    }
+
+    @Test
     fun `flatten one`() {
         val flattened = grouped.flatten { it["a"] }
         flattened.columnNames() shouldBe listOf("q", "b1", "d", "b", "w", "e", "r")
