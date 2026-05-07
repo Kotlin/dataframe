@@ -47,37 +47,27 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
  *
  * ### This `explode` overload
  */
+@ExcludeFromSources
 internal interface ExplodeDocs {
     /**
      * @param [dropEmpty] If `true`, removes rows with empty [List]s or [DataFrame]s.
      *                  If `false`, such rows will be exploded into `null` values.
      */
-    @ExcludeFromSources
     typealias DropEmptySnippet = Nothing
-
-    /**
-     * @param [verify] If `true`, checks that all selected columns are of type [List] or [DataFrame].
-     */
-    @ExcludeFromSources
-    typealias VerifySnippet = Nothing
 
     /**
      * If not specified, all applicable columns (i.e., of type [List] or [DataFrame]) will be exploded.
      */
-    @ExcludeFromSources
     typealias DefaultExplodeColumnsSnippet = Nothing
 
     /**
      * @return A new [DataFrame] with exploded columns.
      */
-    @ExcludeFromSources
     typealias ReturnSnippet = Nothing
 
     /**
-     * @throws IllegalArgumentException if the [verify] is `true`
-     * and specified columns are not of type [List] or [DataFrame].
+     * @throws IllegalArgumentException if the specified columns are not of type [List] or [DataFrame].
      */
-    @ExcludeFromSources
     typealias ThrowsSnippet = Nothing
 }
 
@@ -98,26 +88,22 @@ internal interface ExplodeDocs {
  * df.explode { colsOf<List<Double>>() }
  * ```
  *
- * {@include [ExplodeDocs.DropEmptySnippet]}
- * {@include [ExplodeDocs.VerifySnippet]}
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @param selector The [ColumnsSelector] used to select columns to explode.
- * {@include [ExplodeDocs.DefaultExplodeColumnsSnippet]}
- * {@include [ExplodeDocs.ReturnSnippet]}
- * {@include [ExplodeDocs.ThrowsSnippet]}
+ * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
+ * @include [ExplodeDocs.ReturnSnippet]
+ * @include [ExplodeDocs.ThrowsSnippet]
  */
 @Refine
 @Interpretable("Explode0")
 public fun <T> DataFrame<T>.explode(
     dropEmpty: Boolean = true,
-    verify: Boolean = true,
     selector: ColumnsSelector<T, *> = defaultExplodeColumns,
 ): DataFrame<T> {
-    if (verify) {
-        getColumnsWithPaths(selector).forEach { col ->
-            require(col.isFrameColumnOrValueColumnOfDataFrame() || col.isList()) {
-                "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
-                    "a ValueColumn of DataFrame or List types, but got ${col.kind()} of type ${col.type()}"
-            }
+    getColumnsWithPaths(selector).forEach { col ->
+        require(col.isFrameColumnOrValueColumnOfDataFrame() || col.isList()) {
+            "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
+                "a ValueColumn of DataFrame or List types, but got ${col.kind()} of type ${col.type()}"
         }
     }
     return explodeImpl(dropEmpty, selector)
@@ -135,34 +121,24 @@ public fun <T> DataFrame<T>.explode(
  * val exploded = df.explode("tags", "scores")
  * ```
  *
- * {@include [ExplodeDocs.DropEmptySnippet]}
- * {@include [ExplodeDocs.VerifySnippet]}
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @param columns The [column names][String] used to select columns to explode.
- * {@include [ExplodeDocs.DefaultExplodeColumnsSnippet]}
- * {@include [ExplodeDocs.ReturnSnippet]}
- * {@include [ExplodeDocs.ThrowsSnippet]}
+ * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
+ * @include [ExplodeDocs.ReturnSnippet]
+ * @include [ExplodeDocs.ThrowsSnippet]
  */
-public fun <T> DataFrame<T>.explode(
-    vararg columns: String,
-    verify: Boolean = true,
-    dropEmpty: Boolean = true,
-): DataFrame<T> = explode(dropEmpty, verify) { columns.toColumnSet() }
+public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
+    explode(dropEmpty) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataFrame<T>.explode(
-    vararg columns: ColumnReference<C>,
-    verify: Boolean = true,
-    dropEmpty: Boolean = true,
-): DataFrame<T> = explode(dropEmpty, verify) { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
+    explode(dropEmpty) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataFrame<T>.explode(
-    vararg columns: KProperty<C>,
-    verify: Boolean = true,
-    dropEmpty: Boolean = true,
-): DataFrame<T> = explode(dropEmpty, verify) { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
+    explode(dropEmpty) { columns.toColumnSet() }
 
 // endregion
 
@@ -191,12 +167,12 @@ public fun <T, C> DataFrame<T>.explode(
  *
  * ### This `explode` overload
  */
+@ExcludeFromSources
 internal interface ExplodeDataRowDocs {
 
     /**
      * @return A new [DataFrame] with exploded columns from this [DataRow].
      */
-    @ExcludeFromSources
     typealias ReturnSnippet = Nothing
 }
 
@@ -212,20 +188,18 @@ internal interface ExplodeDataRowDocs {
  * row.explode { hobbies and scores }
  * ```
  *
- * {@include [ExplodeDocs.DropEmptySnippet]}
- * {@include [ExplodeDocs.VerifySnippet]}
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @param columns The [ColumnsSelector] used to select columns to explode.
- * {@include [ExplodeDocs.DefaultExplodeColumnsSnippet]}
- * {@include [ExplodeDataRowDocs.ReturnSnippet]}
- * {@include [ExplodeDocs.ThrowsSnippet]}
+ * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
+ * @include [ExplodeDataRowDocs.ReturnSnippet]
+ * @include [ExplodeDocs.ThrowsSnippet]
  */
 @Refine
 @Interpretable("ExplodeColumns")
 public fun <T> DataRow<T>.explode(
     dropEmpty: Boolean = true,
-    verify: Boolean = true,
     columns: ColumnsSelector<T, *> = defaultExplodeColumns,
-): DataFrame<T> = toDataFrame().explode(dropEmpty, verify, columns)
+): DataFrame<T> = toDataFrame().explode(dropEmpty, columns)
 
 /**
  * {@include [ExplodeDataRowDocs]}
@@ -239,34 +213,24 @@ public fun <T> DataRow<T>.explode(
  * row.explode("hobbies", "scores")
  * ```
  *
- * {@include [ExplodeDocs.DropEmptySnippet]}
- * {@include [ExplodeDocs.VerifySnippet]}
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @param columns The [column names][String] used to select columns to explode.
- * {@include [ExplodeDocs.DefaultExplodeColumnsSnippet]}
- * {@include [ExplodeDataRowDocs.ReturnSnippet]}
- * {@include [ExplodeDocs.ThrowsSnippet]}
+ * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
+ * @include [ExplodeDataRowDocs.ReturnSnippet]
+ * @include [ExplodeDocs.ThrowsSnippet]
  */
-public fun <T> DataRow<T>.explode(
-    vararg columns: String,
-    verify: Boolean = true,
-    dropEmpty: Boolean = true,
-): DataFrame<T> = explode(dropEmpty, verify) { columns.toColumnSet() }
+public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
+    explode(dropEmpty) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataRow<T>.explode(
-    vararg columns: ColumnReference<C>,
-    verify: Boolean = true,
-    dropEmpty: Boolean = true,
-): DataFrame<T> = explode(dropEmpty, verify) { columns.toColumnSet() }
+public fun <T, C> DataRow<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
+    explode(dropEmpty) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataRow<T>.explode(
-    vararg columns: KProperty<C>,
-    verify: Boolean = true,
-    dropEmpty: Boolean = true,
-): DataFrame<T> = explode(dropEmpty, verify) { columns.toColumnSet() }
+public fun <T, C> DataRow<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
+    explode(dropEmpty) { columns.toColumnSet() }
 
 // endregion
 
