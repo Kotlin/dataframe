@@ -486,8 +486,6 @@ val df = DataFrame.readJsonStr(text, typeClashTactic = JSON.TypeClashTactic.ANY_
 <!---END-->
 <inline-frame src="./resources/readJsonTypeClashTactic.html" width="100%" height="500px"></inline-frame>
 
-This option is also possible to set in the Gradle- and KSP plugin by providing `jsonOptions`.
-
 #### Specify Key/Value Paths
 
 If you have a JSON like:
@@ -553,10 +551,6 @@ DataFrame.readJsonStr(
 To specify the paths, you can use the `JsonPath` class.
 (The results are wrapped in a [`FrameColumn`](DataColumn.md#framecolumn) instead of a `ColumnGroup` since lengths between "cats" and "dogs" can vary,
 among other reasons.)
-
-Note: For the KSP plugin, the `JsonPath` class is not available, so you will have to use the `String` version of the
-paths instead. For example: `jsonOptions = JsonOptions(keyValuePaths = ["""$""", """$[*]["versions"]"""])`.
-Only the bracket notation of json path is supported, as well as just double quotes, arrays, and wildcards.
 
 For more examples, see the "examples/json" module.
 
