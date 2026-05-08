@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.kind
 import org.junit.Test
+import kotlin.properties.Delegates
 import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -366,6 +367,19 @@ class ConvertToTests {
             dataFrameOf("v")(3, 4),
             DataFrame.emptyOf<Entry>(),
         )
+    }
+
+    @Test
+    fun `convertTo ignores computed properties`() {
+        @DataSchema
+        data class SchemaWithComputedProperty(val first: Int, val second: Int) {
+            val total: Int get() = first + second
+        }
+
+        val df = dataFrameOf("first", "second")(1, 2, 3, 4).convertTo<SchemaWithComputedProperty>()
+        df["first"].type() shouldBe typeOf<Int>()
+        df["second"].type() shouldBe typeOf<Int>()
+        df.columnNames() shouldBe listOf("first", "second")
     }
 
     enum class SimpleEnum { A, B }

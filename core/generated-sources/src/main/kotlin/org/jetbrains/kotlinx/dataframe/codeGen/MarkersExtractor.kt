@@ -16,6 +16,7 @@ import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
@@ -99,7 +100,11 @@ internal object MarkersExtractor {
 
     private fun getFields(markerClass: KClass<*>, nullableProperties: Boolean): List<GeneratedField> {
         val order = getPropertyOrderFromPrimaryConstructor(markerClass) ?: emptyMap()
-        val structuralProperties = markerClass.memberProperties.filter { !it.hasAnnotation<ScopeProperty>() }
+        val structuralProperties = markerClass.memberProperties.filter {
+            !it.hasAnnotation<ScopeProperty>() &&
+                // Ignore computed properties = ignore class properties with no backing field
+                (markerClass.java.isInterface || it.javaField != null)
+        }
         return structuralProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.map {
             val fieldName = ValidFieldName.of(it.name)
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
