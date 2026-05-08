@@ -169,9 +169,10 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
         .plus("Test")
 
     val isAndroid = folder.isAndroid()
-    val buildSystem = folder.detectBuildSystem() ?: error(
-        "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
-    )
+    val buildSystem = folder.detectBuildSystem()
+        ?: return logger.warn(
+            "Could not detect build system in example project folder '$folder'. We only support ${BuildSystem.entries.toList()}.",
+        )
 
     val generateTask = tasks.register("generate$testClassName") {
         group = buildExampleProjectsGroup
