@@ -5,8 +5,10 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -863,6 +865,19 @@ class DelimCsvTsvTests {
             '{"firstName":"Jane","lastName":"Doe"}'
             
             """.trimIndent()
+    }
+
+    @Test
+    fun `incorrect colTypes exception`() {
+        shouldThrow<IllegalStateException> {
+            DataFrame.readCsvStr(
+                """
+                a
+                abc
+                """.trimIndent(),
+                colTypes = mapOf("a" to ColType.Int),
+            )
+        }.message!!.shouldContain("Check `colTypes`")
     }
 
     companion object {
