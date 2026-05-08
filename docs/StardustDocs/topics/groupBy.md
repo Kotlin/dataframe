@@ -4,6 +4,12 @@
 
 Splits the rows of [`DataFrame`](DataFrame.md) into groups using one or several columns as grouping keys.
 
+The `groupBy` function returns a `GroupBy` object. 
+A `GroupBy` is a dataframe-like structure that contains one or more key columns and a `group` [`FrameColumn`](DataColumn.md#framecolumn).
+Key columns contain all unique combinations of key values, and the `group` [`FrameColumn`](DataColumn.md#framecolumn) 
+contains the corresponding groups of rows (each represented as a [`DataFrame`](DataFrame.md)).
+Each row in a `GroupBy` corresponds to a keys/group combination.
+
 ```text
 groupBy(moveToTop = true) { columns }
       [ transformations ]
@@ -167,8 +173,6 @@ Returns `GroupBy` object.
 
 ## Transformation
 
-The `groupBy` function returns a `GroupBy` object. A `GroupBy` is a [`DataFrame`](DataFrame.md) with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
-
 A `GroupBy` can be transformed into a new `GroupBy` using one of the following methods:
 
 * `sortByGroup` / `sortByGroupDesc` — sorts the order of groups (and their corresponding keys) by values computed with a `DataFrameExpression` applied to each group;
@@ -179,7 +183,7 @@ A `GroupBy` can be transformed into a new `GroupBy` using one of the following m
 * [`filter`](filter.md) — filters group rows by the given predicate;
 * [`add`](add.md) — adds a new column to each group.
 
-Any [`DataFrame`](DataFrame.md) with [FrameColumn](DataColumn.md#framecolumn) can be reinterpreted as `GroupBy DataFrame`:
+Any [`DataFrame`](DataFrame.md) with [FrameColumn](DataColumn.md#framecolumn) can be reinterpreted as a `GroupBy`:
 
 <!---FUN dataFrameToGroupBy-->
 <tabs>
@@ -352,8 +356,8 @@ df.groupBy("isHappy").add("isAdult") { "age"<Int>() >= 18 }
 
  ## Reducing
 
-A `GroupBy DataFrame` can be reduced to a [`DataFrame`](DataFrame.md). 
-It means that each group in this [`GroupBy DataFrame`](groupBy.md#transformation) is collapsed into a single representative row,
+A `GroupBy` can be reduced into a [`DataFrame`](DataFrame.md). 
+It means that each group in this `GroupBy` is collapsed into a single representative row,
 and these rows are concatenated into a new [`DataFrame`](DataFrame.md).
 
 Reducing is a specific case of aggregation.
@@ -365,9 +369,11 @@ To perform a reducing operation, use the following functions:
 * [`first`](first.md) / [`last`](last.md) – to get the first / last [row](DataRow.md) 
 (optionally, the first or last one that satisfies a predicate) of each group.
 
-* [`minBy`](minBy.md) / [`maxBy`](maxBy.md) – to get from each group the row with the smallest / largest result of the `RowExpression` supplied to the function.
+* [`minBy`](minBy.md) / [`maxBy`](maxBy.md) – to get from each group the row with the smallest / largest result 
+of the [`row expression`](DataRow.md#row-expressions) supplied to the function.
 
-* [`medianBy`](median.md) / [`percentileBy`](percentile.md) – to get the row with the value closest to the estimated median/percentile index of the `RowExpression`'s results calculated on rows within each group.
+* [`medianBy`](median.md) / [`percentileBy`](percentile.md) – to get the row with the value closest to the estimated 
+median/percentile index of the [`row expression`](DataRow.md#row-expressions)'s results calculated on rows within each group.
 
 These functions return an instance of `ReducedGroupBy`, which is a class serving as a transitional step
 between performing a reduction on groups and specifying how the resulting reduced rows (either original or transformed)
@@ -518,12 +524,13 @@ df.groupBy("isHappy").percentileBy(25.0, "weight")
 A `ReducedGroupBy` can be transformed into a [`DataFrame`](DataFrame.md) using the following functions:
 * [`concat`](concat.md) – to concatenate all reduced rows into a single [`DataFrame`](DataFrame.md).
 * [`values`](values.md) – to create a [`DataFrame`](DataFrame.md) that contains the values from the reduced rows in the selected columns. 
-* `into` – to add a new [`column`](DataColumn.md) to the resulting [`DataFrame`](DataFrame.md) with values computed with `RowExpression` on each row, or a new [`column group`](DataColumn.md) containing each group reduced to a single row.
+* `into` – to add a new [`column`](DataColumn.md) to the resulting [`DataFrame`](DataFrame.md) with values computed with 
+a [`row expression`](DataRow.md#row-expressions) on each row, or a new [`column group`](DataColumn.md) containing each group reduced to a single row.
 
 Each method returns a new [`DataFrame`](DataFrame.md) that includes the grouping key columns, containing all unique grouping key values 
 (or value combinations for multiple keys) along with their corresponding reduced rows.
 
-#### Examples of transforming ReducedGroupBy to DataFrame
+#### Examples of transforming
 ##### concat {collapsible="true"}
 
 <!---FUN groupByConcat-->
@@ -590,7 +597,7 @@ df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
 
 ## Aggregation
 
-A `GroupBy DataFrame` can be directly transformed into a new [`DataFrame`](DataFrame.md) by applying one or more aggregation operations to its groups.
+A `GroupBy` can be directly transformed into a new [`DataFrame`](DataFrame.md) by applying one or more aggregation operations to its groups.
 
 Aggregation is a generalization of [`reducing`](groupBy.md#reducing).
 
@@ -632,7 +639,7 @@ df.groupBy("isHappy").concat()
 <inline-frame src="resources/concatOnGroupBy_properties.html" width="100%"/>
 
 #### toDataFrame on GroupBy {collapsible="true"}
-Any [`GroupBy DataFrame`](groupBy.md#transformation) can be reinterpreted as [`DataFrame`](DataFrame.md) with [FrameColumn](DataColumn.md#framecolumn):
+Any `GroupBy` can be reinterpreted as [`DataFrame`](DataFrame.md) with [FrameColumn](DataColumn.md#framecolumn):
 
 <!---FUN toDfOnGroupBy-->
 <tabs>
@@ -854,13 +861,13 @@ To compute one or several [`statistics`](summaryStatistics.md) per every group o
 
 The functions `max`, `maxOf`, and `maxFor` differ as follows. They all calculate the maximum of values, but:
 * `max` computes it on the selected columns. If more than one column is selected, for each group it computes one maximum value among all selected columns.
-* `maxOf` computes it by a `row expression`: the expression is calculated for each row of the group and the maximum value is returned.
+* `maxOf` computes it by a [`row expression`](DataRow.md#row-expressions): the expression is calculated for each row of the group and the maximum value is returned.
 * `maxFor` computes it for each of the selected columns within each group. If more than one column is selected, for each group it computes the maximum value for each selected column separately.
 
 Similar logic applies to other statistics.
 
 #### Direct aggregations
-Most common aggregation functions can be computed directly at [`GroupBy DataFrame`](groupBy.md#transformation).
+Most common aggregation functions can be computed directly on a `GroupBy`.
 
 ##### Examples of direct aggregations
 ###### max {collapsible="true"}
@@ -1154,7 +1161,8 @@ df.groupBy("isHappy").percentile(25.0) { "age"<Int>() }
 <inline-frame src="resources/percentileOnGroupBy_properties.html" width="100%"/>
 
 ## Pivot + GroupBy
-`GroupBy` can be pivoted with [`pivot`](pivot.md#pivot-groupby) method. It will produce a `PivotGroupBy`.
+A `GroupBy` can be pivoted with the [`pivot`](pivot.md#pivot-groupby) method. It produces a `PivotGroupBy`
+that combines vertical and horizontal grouping, enabling computation of cross-group, matrix-like statistics.
 
 <!---FUN pivotOnGroupBy-->
 <tabs>

@@ -209,7 +209,7 @@ df.pivot("isHappy").groupBy { "name"["firstName"] }.frames()
 <inline-frame src="./resources/pivotGroupByFrames_properties.html" width="100%" height="500px"></inline-frame>
 
 ## Reducing
-A [`Pivot`](pivot.md) can be reduced to a [`DataRow`](DataRow.md). 
+A [`Pivot`](pivot.md) can be reduced into a [`DataRow`](DataRow.md). 
 It means that each `Pivot` group is collapsed into a single row, 
 and then these rows are concatenated into a single [`DataRow`](DataRow.md) 
 with `Pivot` keys as top-level columns or as [`column groups`](DataColumn.md#columngroup).
@@ -657,7 +657,7 @@ To compute one or several [`statistics`](summaryStatistics.md) per every pivot g
 
 The functions `max`, `maxOf`, and `maxFor` differ as follows. They all calculate the maximum of values, but:
 * `max` computes it on the selected columns. If more than one column is selected, for each group it computes one maximum value among all selected columns.
-* `maxOf` computes it by a `row expression`: the expression is calculated for each row of the group and the maximum value is returned.
+* `maxOf` computes it by a [`row expression`](DataRow.md#row-expressions): the expression is calculated for each row of the group and the maximum value is returned.
 * `maxFor` computes it for each of the selected columns within each group. If more than one column is selected, for each group it computes the maximum value for each selected column separately.
 
 Similar logic applies to other statistics.
@@ -1048,8 +1048,8 @@ df.groupBy { "name"["firstName"] }.aggregate {
 
 ### pivotCounts
 
-Pivots one or several columns with [`count`](count.md) aggregation, preserving all other columns of [`DataFrame`](DataFrame.md) 
-or [`GroupBy DataFrame`](groupBy.md#transformation).
+Pivots one or several columns with [`count`](count.md) aggregation, preserving all other columns of a [`DataFrame`](DataFrame.md) 
+or a `GroupBy`.
 
 <!---FUN pivotCountsOnDf-->
 <tabs>
