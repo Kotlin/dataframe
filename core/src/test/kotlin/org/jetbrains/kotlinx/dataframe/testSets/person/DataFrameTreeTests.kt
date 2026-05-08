@@ -44,6 +44,7 @@ import org.jetbrains.kotlinx.dataframe.api.duplicateRows
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.expr
+import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
@@ -629,7 +630,13 @@ class DataFrameTreeTests : BaseTest() {
             .update { groupCol }.at(1).withNull()
             .update { groupCol }.at(2).with { emptyDataFrame() }
             .update { groupCol }.at(3).with { it.filter { false } }
-        val res = plain.explode(dropEmpty = false) { groupCol }
+
+        // Should cast DataColumn<AnyFrame?> to FrameColumn first
+        shouldThrow<IllegalArgumentException> { plain.explode(dropEmpty = false) { groupCol } }
+
+        val res = plain
+            .fillNulls { groupCol }.with { emptyDataFrame() }
+            .explode(dropEmpty = false) { groupCol }
         val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.rowsCount() ?: 0, 1) }
         res.rowsCount() shouldBe expected
     }
