@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
 import java.lang.IllegalArgumentException
+import kotlin.reflect.typeOf
 
 class CastTests {
 
@@ -40,5 +41,18 @@ class CastTests {
                 "score" to columnOf(1f),
             ),
         ).cast<Container>(verify = true)
+    }
+
+    @Test
+    fun `cast with verify ignores computed properties`() {
+        @DataSchema
+        data class SchemaWithComputedProperties(val first: Int, val second: Int) {
+            val total: Int get() = first + second
+        }
+
+        val df = dataFrameOf("first", "second")(1, 2, 3, 4).cast<SchemaWithComputedProperties>(verify = true)
+        df["first"].type() shouldBe typeOf<Int>()
+        df["second"].type() shouldBe typeOf<Int>()
+        df.columnNames() shouldBe listOf("first", "second")
     }
 }
