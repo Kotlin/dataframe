@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 private val defaultExplodeColumns: ColumnsSelector<*, *> = {
-    colsAtAnyDepth().filter { it.isList() || it.isFrameColumnOrValueColumnOfDataFrame() }
+    colsAtAnyDepth().filter { it.isList() || it.isFrameColumn() }
 }
 
 // region explode DataFrame
@@ -91,9 +91,9 @@ public fun <T> DataFrame<T>.explode(
     selector: ColumnsSelector<T, *> = defaultExplodeColumns,
 ): DataFrame<T> {
     getColumnsWithPaths(selector).forEach { col ->
-        require(col.isFrameColumnOrValueColumnOfDataFrame() || col.isList()) {
+        require(col.isFrameColumn() || col.isList()) {
             "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
-                "a ValueColumn of DataFrame or List types, but got ${col.kind()} of type ${col.type()}"
+                "a ValueColumn of List, but got ${col.kind()} of type ${col.type()}"
         }
     }
     return explodeImpl(dropEmpty, selector)
