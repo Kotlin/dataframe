@@ -167,6 +167,8 @@ public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): Lis
 public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
     select { (listOf(first) + other).toColumnSet() }
 
+@Refine
+@Interpretable("DataFrameGetColumns")
 public operator fun <T> DataFrame<T>.get(first: String, vararg other: String): DataFrame<T> =
     select { (listOf(first) + other).toColumnSet() }
 
