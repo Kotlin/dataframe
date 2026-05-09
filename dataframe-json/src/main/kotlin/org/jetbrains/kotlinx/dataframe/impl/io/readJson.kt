@@ -718,11 +718,11 @@ private class UnnamedColumn(val col: DataColumn<Any?>) : DataColumn<Any?> by col
 // region friend module error suppression
 
 @Suppress("INVISIBLE_REFERENCE")
-private fun createDataCollector(initCapacity: Int = 0) =
+private fun createDataCollector(initCapacity: Int = 0): DataCollector<Any?> =
     org.jetbrains.kotlinx.dataframe.impl.createDataCollector(initCapacity)
 
 @Suppress("INVISIBLE_REFERENCE")
-private fun <T> createDataCollector(initCapacity: Int = 0, type: KType) =
+private fun <T> createDataCollector(initCapacity: Int = 0, type: KType): DataCollector<T?> =
     org.jetbrains.kotlinx.dataframe.impl.createDataCollector<T>(initCapacity, type)
 
 @Suppress("INVISIBLE_REFERENCE")
