@@ -50,4 +50,15 @@ class DataColumns {
             values = listOf(dataFrameOf("a")(1), null),
         ).kind() shouldBe ColumnKind.Value
     }
+
+    @Test
+    fun `allow no non-null dataframe value columns`() {
+        // ordinarily this is a type-check only, in DEBUG mode, it's an instance check
+        shouldThrow<IllegalArgumentException> {
+            DataColumn.createValueColumn(
+                name = "",
+                values = listOf(dataFrameOf("a")(1), dataFrameOf("a")(2)),
+            )
+        }
+    }
 }
