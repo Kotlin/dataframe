@@ -103,7 +103,7 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
                 df = df
                     .split { nameAndValuePairs }
                     .into(keysColumn.name(), valuesColumn.name())
-                    .explodeImpl { valuesColumn }
+                    .explode(valuesColumn)
             }
 
             keysColumn != null -> {
