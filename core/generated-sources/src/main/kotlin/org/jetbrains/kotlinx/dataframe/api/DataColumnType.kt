@@ -35,9 +35,6 @@ public fun AnyCol.isFrameColumn(): Boolean {
     return kind() == ColumnKind.Frame
 }
 
-public fun AnyCol.isFrameColumnOrValueColumnOfDataFrame(): Boolean =
-    isFrameColumn() || (isValueColumn() && type().isSubtypeOf(typeOf<AnyFrame>().withNullability(true)))
-
 public fun AnyCol.isValueColumn(): Boolean {
     contract { returns(true) implies (this@isValueColumn is ValueColumn<*>) }
     return kind() == ColumnKind.Value
