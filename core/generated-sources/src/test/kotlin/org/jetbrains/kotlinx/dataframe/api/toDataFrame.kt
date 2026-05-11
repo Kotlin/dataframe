@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -157,17 +159,23 @@ class CreateDataFrameTests {
         df.a[0].v shouldBe 7
 
         val df2 = data.toDataFrame {
-            preserve(B::row)
             properties {
-                preserve(DataFrame::class)
+                preserve(B::row)
             }
         }
-        df2.frame.kind shouldBe ColumnKind.Value
-        df2.frame.type shouldBe typeOf<DataFrame<A>>()
+
         df2["row"].kind shouldBe ColumnKind.Value
         df2["row"].type shouldBe typeOf<DataRow<A>>()
         df2.list.kind shouldBe ColumnKind.Frame
         df2.a.kind() shouldBe ColumnKind.Group
+
+        shouldThrow<IllegalArgumentException> {
+            data.toDataFrame {
+                properties {
+                    preserve(DataFrame::class)
+                }
+            }
+        }.message!! shouldContain "If you used `preserve(DataFrame::class)`, please remove it"
     }
 
     class ExcludeTestData(val s: String, val data: NestedData)
