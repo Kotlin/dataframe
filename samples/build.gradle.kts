@@ -37,6 +37,8 @@ val dependentProjects = with(projects) {
         dataframeJdbc,
         dataframeCsv,
         dataframeJson,
+        dataframeOpenapi,
+        dataframeOpenapiGenerator,
     )
 }.map { project(it.path) }
 
@@ -105,6 +107,7 @@ korro {
         include("docs/StardustDocs/topics/operations/column/*.md")
         include("docs/StardustDocs/topics/collectionsInterop/*.md")
         include("docs/StardustDocs/topics/dataSources/sql/*.md")
+        include("docs/StardustDocs/topics/dataSources/OpenAPI.md")
         include("docs/StardustDocs/topics/info/*.md")
         include("docs/StardustDocs/topics/columnArithmetics.md")
         include("docs/StardustDocs/topics/groupBy.md")
