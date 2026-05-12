@@ -36,7 +36,7 @@ About the [`dataframe-openapi`](Modules.md#dataframe-openapi)/
 - You do need to include [`dataframe-openapi` module](Modules.md#dataframe-openapi) in your artifact, as it contains
   some small helper functions that are used when reading JSON using the generated `DataSchema` interfaces.
 
-These are **is not included** in the general [`dataframe`](Modules.md#dataframe-general) artifact due to their
+These are **not included** in the general [`dataframe`](Modules.md#dataframe-general) artifact due to their
 _experimental_ status.
 
 ### HTTP API calls
