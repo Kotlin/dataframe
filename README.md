@@ -8,6 +8,10 @@ Automatically generated archives of example projects.
 
 **Download:** [android-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/android-example.zip)
 
+### Json Openapi
+
+**Download:** [json-openapi.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/json-openapi.zip)
+
 ### Kotlin Dataframe Plugin Gradle Example
 
 **Download:** [kotlin-dataframe-plugin-gradle-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip)
@@ -34,6 +38,6 @@ Automatically generated archives of example projects.
 
 ---
 
-Last updated: 2026-04-30 12:56 UTC
+Last updated: 2026-05-12 19:02 UTC
 
-Source commit: d44a2ec23e8111d5b289fd974d491fd20a4bd2e8
+Source commit: 2ace010dd582aacbc83e9d0ed361976d0fd0ab68
