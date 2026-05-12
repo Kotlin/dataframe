@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideFooter
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideStyle
-import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
 import org.junit.Test
 import java.io.File
@@ -18,7 +18,7 @@ class OtherSamples : TestBase() {
 
     @Test
     fun example() {
-        val df = DataFrame.read("../data/movies.csv").take(5)
+        val df = DataFrame.readCsv("../data/movies.csv").take(5)
         // writeTable(df, "exampleName")
     }
 
