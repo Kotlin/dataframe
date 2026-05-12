@@ -12,9 +12,7 @@ import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.toStdlibInstant
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -480,7 +478,7 @@ public fun <T> Convert<T, *>.to(type: KType, parserOptions: ParserOptions? = nul
     asColumn { it.convertToTypeImpl(type, parserOptions) }
 
 @Deprecated(CONVERT_TO, ReplaceWith(CONVERT_TO_REPLACE), DeprecationLevel.ERROR)
-public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
+public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> BaseColumn<*>): DataFrame<T> =
     df.replace(columns).with { columnConverter(df, it) }
 
 /** [Convert per row col][Convert.perRowCol] to provide a new value for every selected cell giving its column. */
@@ -4238,7 +4236,7 @@ public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolea
  *                        Defaults to `false`.
  *  @return A new [DataColumn] with the values converted to [DataFrame].
  */
-public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =
+public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<DataFrame<*>> =
     map { it.toDataFrame(containsColumns = containsColumns) }
 
 // region deprecated

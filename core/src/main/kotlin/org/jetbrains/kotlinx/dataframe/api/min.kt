@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -60,15 +59,15 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOfOrNul
 // region DataRow
 
 @Deprecated(ROW_MIN_OR_NULL, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMinOrNull(): Nothing? = error(ROW_MIN_OR_NULL)
+public fun DataRow<*>.rowMinOrNull(): Nothing? = error(ROW_MIN_OR_NULL)
 
 @Deprecated(ROW_MIN, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMin(): Nothing = error(ROW_MIN)
+public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowMinOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
     Aggregators.min<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowMinOf(skipNaN: Boolean = skipNaNDefault): T =
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boolean = skipNaNDefault): T =
     rowMinOfOrNull<T>(skipNaN).suggestIfNull("rowMinOf")
 
 // endregion
@@ -489,10 +488,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOfOrNul
     minOfOrNull(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Comparable<T>> AnyRow.rowMinOfOrNull(): T? = rowMinOfOrNull<T>(skipNaN = skipNaNDefault)
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(): T? =
+    rowMinOfOrNull<T>(skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMinOf(): T & Any = rowMinOf(skipNaN = skipNaNDefault)
+public inline fun <reified T : Comparable<T & Any>?> DataRow<*>.rowMinOf(): T & Any = rowMinOf(skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.min(): DataRow<T> = min(skipNaN = skipNaNDefault)

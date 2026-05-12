@@ -2,7 +2,6 @@
 
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -108,24 +107,24 @@ public inline fun <T, reified R> DataColumn<T>.medianOfOrNull(
 // region DataRow
 
 @Deprecated(ROW_MEDIAN_OR_NULL, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMedianOrNull(): Nothing? = error(ROW_MEDIAN_OR_NULL)
+public fun DataRow<*>.rowMedianOrNull(): Nothing? = error(ROW_MEDIAN_OR_NULL)
 
 @Deprecated(ROW_MEDIAN, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMedian(): Nothing = error(ROW_MEDIAN)
+public fun DataRow<*>.rowMedian(): Nothing = error(ROW_MEDIAN)
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOfOrNull(): T? =
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMedianOfOrNull(): T? =
     Aggregators.medianComparables<T>().aggregateOfRow(this) { colsOf<T?>() }
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOf(): T =
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMedianOf(): T =
     rowMedianOfOrNull<T>().suggestIfNull("rowMedianOf")
 
-public inline fun <reified T> AnyRow.rowMedianOfOrNull(
+public inline fun <reified T> DataRow<*>.rowMedianOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
     where T : Comparable<T>, T : Number =
     Aggregators.medianNumbers<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 
-public inline fun <reified T> AnyRow.rowMedianOf(
+public inline fun <reified T> DataRow<*>.rowMedianOf(
     skipNaN: Boolean = skipNaNDefault,
 ): Double
     where T : Comparable<T>, T : Number = rowMedianOfOrNull<T>(skipNaN).suggestIfNull("rowMedianOf")

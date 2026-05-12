@@ -1,8 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
@@ -46,11 +45,11 @@ public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T> = toDataFrame(column.name())
+public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<DataFrame<*>>): DataFrame<T> = toDataFrame(column.name())
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = toDataFrame(column.columnName)
+public fun <T> GroupBy<T, *>.into(column: KProperty<DataFrame<*>>): DataFrame<T> = toDataFrame(column.columnName)
 
 /**
  * Aggregates this [GroupBy] into a [DataFrame]
@@ -154,10 +153,10 @@ public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = 
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<AnyRow>): DataFrame<G> = into(column) { this }
+public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<DataRow<*>>): DataFrame<G> = into(column) { this }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<AnyRow>): DataFrame<G> = into(column) { this }
+public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<DataRow<*>>): DataFrame<G> = into(column) { this }
 
 // endregion

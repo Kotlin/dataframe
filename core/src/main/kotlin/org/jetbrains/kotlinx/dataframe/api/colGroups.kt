@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
@@ -109,7 +108,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ColGroups0")
-    public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroupsInternal(filter)
 
     /**
@@ -121,7 +120,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ColGroups1")
-    public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         asSingleColumn().columnGroupsInternal(filter)
 
     /**
@@ -133,7 +132,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ColGroups2")
-    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         this.ensureIsColumnGroup().columnGroupsInternal(filter)
 
     /**
@@ -144,7 +143,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[colGroups][String.colGroups]`() }`
      */
-    public fun String.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun String.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroup(this).colGroups(filter)
 
     /**
@@ -155,7 +154,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[colGroups][KProperty.colGroups]`() }`
      */
-    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroup(this).colGroups(filter)
 
     /**
@@ -164,7 +163,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][ColumnPath.colGroups]`() }`
      */
-    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroup(this).colGroups(filter)
 }
 
@@ -177,6 +176,6 @@ public interface ColGroupsColumnsSelectionDsl {
 @Suppress("UNCHECKED_CAST")
 internal inline fun ColumnsResolver<*>.columnGroupsInternal(
     crossinline filter: (ColumnGroup<*>) -> Boolean,
-): ColumnSet<AnyRow> = colsInternal { it.isColumnGroup() && filter(it) }.cast()
+): ColumnSet<DataRow<*>> = colsInternal { it.isColumnGroup() && filter(it) }.cast()
 
 // endregion
