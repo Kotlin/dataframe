@@ -110,7 +110,7 @@ public fun <T> DataFrame<T>.explode(
     selector: ColumnsSelector<T, *> = defaultExplodeColumns,
 ): DataFrame<T> {
     getColumnsWithPaths(selector).forEach { col ->
-        if(!col.canBeExploded()) {
+        if (!col.canBeExploded()) {
             throw ExplodeWrongColumnKindException(col)
         }
     }

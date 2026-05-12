@@ -73,7 +73,7 @@ private typealias CommonUngroupDocs = Nothing
 @Interpretable("Ungroup0")
 public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> {
     getColumnsWithPaths(columns).forEach { col ->
-        if(!col.isColumnGroup()) {
+        if (!col.isColumnGroup()) {
             throw UngroupWrongColumnKindException(col)
         }
     }
