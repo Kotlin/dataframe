@@ -52,7 +52,7 @@ class MoveTests {
 
     @Test
     fun `ungroup non-group column throws IllegalArgumentException`() {
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<UngroupWrongColumnKindException> {
             grouped.ungroup { it["q"] }
         }
     }

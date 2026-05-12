@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -15,6 +16,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
+
+public class UngroupWrongColumnKindException(col: ColumnWithPath<*>) : IllegalArgumentException() {
+    override val message: String =
+        "Column '${col.path.joinToString()}' cannot be ungrouped: expected a ColumnGroup but got ${col.kind()}."
+}
 
 // region DataFrame
 
@@ -67,8 +73,8 @@ private typealias CommonUngroupDocs = Nothing
 @Interpretable("Ungroup0")
 public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> {
     getColumnsWithPaths(columns).forEach { col ->
-        require(col.isColumnGroup()) {
-            "Column '${col.path.joinToString()}' cannot be ungrouped: expected a ColumnGroup but got ${col.kind()}."
+        if(!col.isColumnGroup()) {
+            throw UngroupWrongColumnKindException(col)
         }
     }
     return move { columns.toColumnSet().colsInGroups() }

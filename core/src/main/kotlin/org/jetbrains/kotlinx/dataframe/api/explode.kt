@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -17,8 +18,16 @@ import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
+public class ExplodeWrongColumnKindException(col: ColumnWithPath<*>) : IllegalArgumentException() {
+    override val message: String =
+        "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
+            "a ValueColumn of List, but got ${col.kind()} of type ${col.type()}"
+}
+
+private fun ColumnWithPath<*>.canBeExploded() = isList() || isFrameColumn()
+
 private val defaultExplodeColumns: ColumnsSelector<*, *> = {
-    colsAtAnyDepth().filter { it.isList() || it.isFrameColumn() }
+    colsAtAnyDepth().filter { it.canBeExploded() }
 }
 
 // region explode DataFrame
@@ -101,9 +110,8 @@ public fun <T> DataFrame<T>.explode(
     selector: ColumnsSelector<T, *> = defaultExplodeColumns,
 ): DataFrame<T> {
     getColumnsWithPaths(selector).forEach { col ->
-        require(col.isFrameColumn() || col.isList()) {
-            "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
-                "a ValueColumn of List, but got ${col.kind()} of type ${col.type()}"
+        if(!col.canBeExploded()) {
+            throw ExplodeWrongColumnKindException(col)
         }
     }
     return explodeImpl(dropEmpty, selector)

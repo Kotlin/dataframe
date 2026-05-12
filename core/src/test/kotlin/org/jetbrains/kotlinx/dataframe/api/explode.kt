@@ -139,12 +139,12 @@ class ExplodeTests {
     @Test
     fun `explode column group throws`() {
         val df = dataFrameOf("a", "b")(1, 2).group { all() }.into("g")
-        shouldThrow<IllegalArgumentException> { df.explode { it["g"] } }
+        shouldThrow<ExplodeWrongColumnKindException> { df.explode { it["g"] } }
     }
 
     @Test
     fun `explode non-list value column throws`() {
         val df = dataFrameOf("a")(1)
-        shouldThrow<IllegalArgumentException> { df.explode { it["a"] } }
+        shouldThrow<ExplodeWrongColumnKindException> { df.explode { it["a"] } }
     }
 }
