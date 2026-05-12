@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -17,8 +18,16 @@ import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
+public class ExplodeWrongColumnKindException(col: ColumnWithPath<*>) : IllegalArgumentException() {
+    override val message: String =
+        "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
+            "a ValueColumn of List, but got ${col.kind()} of type ${col.type()}"
+}
+
+private fun ColumnWithPath<*>.canBeExploded() = isList() || isFrameColumn()
+
 private val defaultExplodeColumns: ColumnsSelector<*, *> = {
-    colsAtAnyDepth().filter { it.isList() || it.isFrameColumn() }
+    colsAtAnyDepth().filter { it.canBeExploded() }
 }
 
 // region explode DataFrame
@@ -48,7 +57,28 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
  * ### This `explode` overload
  */
 @ExcludeFromSources
-internal typealias ExplodeDocs = Nothing
+internal interface ExplodeDocs {
+    /**
+     * @param [dropEmpty] If `true`, removes rows with empty [List]s or [DataFrame]s.
+     *                  If `false`, such rows will be exploded into `null` values.
+     */
+    typealias DropEmptySnippet = Nothing
+
+    /**
+     * If not specified, all applicable columns (i.e., of type [List] or [DataFrame]) will be exploded.
+     */
+    typealias DefaultExplodeColumnsSnippet = Nothing
+
+    /**
+     * @return A new [DataFrame] with exploded columns.
+     */
+    typealias ReturnSnippet = Nothing
+
+    /**
+     * @throws IllegalArgumentException if the specified columns are not of type [List] or [DataFrame].
+     */
+    typealias ThrowsSnippet = Nothing
+}
 
 /**
  * {@include [ExplodeDocs]}
@@ -67,18 +97,25 @@ internal typealias ExplodeDocs = Nothing
  * df.explode { colsOf<List<Double>>() }
  * ```
  *
- * @param dropEmpty If `true`, removes rows with empty lists or DataFrames.
- *                  If `false`, such rows will be exploded into `null` values.
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @param selector The [ColumnsSelector] used to select columns to explode.
- *                If not specified, all applicable columns will be exploded.
- * @return A new [DataFrame] with exploded columns.
+ * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
+ * @include [ExplodeDocs.ReturnSnippet]
+ * @include [ExplodeDocs.ThrowsSnippet]
  */
 @Refine
 @Interpretable("Explode0")
 public fun <T> DataFrame<T>.explode(
     dropEmpty: Boolean = true,
     selector: ColumnsSelector<T, *> = defaultExplodeColumns,
-): DataFrame<T> = explodeImpl(dropEmpty, selector)
+): DataFrame<T> {
+    getColumnsWithPaths(selector).forEach { col ->
+        if (!col.canBeExploded()) {
+            throw ExplodeWrongColumnKindException(col)
+        }
+    }
+    return explodeImpl(dropEmpty, selector)
+}
 
 /**
  * {@include [ExplodeDocs]}
@@ -92,11 +129,11 @@ public fun <T> DataFrame<T>.explode(
  * val exploded = df.explode("tags", "scores")
  * ```
  *
- * @param dropEmpty If `true`, removes rows with empty lists or DataFrames.
- *                  If `false`, such rows will be exploded into `null` values.
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @param columns The [column names][String] used to select columns to explode.
- *                If not specified, all applicable columns will be exploded.
- * @return A new [DataFrame] with exploded columns.
+ * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
+ * @include [ExplodeDocs.ReturnSnippet]
+ * @include [ExplodeDocs.ThrowsSnippet]
  */
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
@@ -139,7 +176,13 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
  * ### This `explode` overload
  */
 @ExcludeFromSources
-internal typealias ExplodeDataRowDocs = Nothing
+internal interface ExplodeDataRowDocs {
+
+    /**
+     * @return A new [DataFrame] with exploded columns from this [DataRow].
+     */
+    typealias ReturnSnippet = Nothing
+}
 
 /**
  * {@include [ExplodeDataRowDocs]}
@@ -153,11 +196,11 @@ internal typealias ExplodeDataRowDocs = Nothing
  * row.explode { hobbies and scores }
  * ```
  *
- * @param dropEmpty If `true`, removes rows with empty lists or DataFrames.
- *                  If `false`, such rows will be exploded into `null` values.
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @param columns The [ColumnsSelector] used to select columns to explode.
- *                 If not specified, all applicable columns will be exploded.
- * @return A new [DataFrame] with exploded columns from this [DataRow].
+ * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
+ * @include [ExplodeDataRowDocs.ReturnSnippet]
+ * @include [ExplodeDocs.ThrowsSnippet]
  */
 @Refine
 @Interpretable("ExplodeColumns")
@@ -178,11 +221,11 @@ public fun <T> DataRow<T>.explode(
  * row.explode("hobbies", "scores")
  * ```
  *
- * @param dropEmpty If `true`, removes rows with empty lists or DataFrames.
- *                  If `false`, such rows will be exploded into `null` values.
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @param columns The [column names][String] used to select columns to explode.
- *                 If not specified, all applicable columns will be exploded.
- * @return A new [DataFrame] with exploded columns from this [DataRow].
+ * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
+ * @include [ExplodeDataRowDocs.ReturnSnippet]
+ * @include [ExplodeDocs.ThrowsSnippet]
  */
 public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
