@@ -1,14 +1,3 @@
-public final class org/jetbrains/kotlinx/dataframe/io/ArrowFeather : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
-	public fun <init> ()V
-	public fun acceptsExtension (Ljava/lang/String;)Z
-	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
-	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
-	public fun getTestOrder ()I
-	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-}
-
 public final class org/jetbrains/kotlinx/dataframe/io/ArrowReadingKt {
 	public static final fun readArrow (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/arrow/vector/ipc/ArrowReader;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readArrow$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/arrow/vector/ipc/ArrowReader;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;

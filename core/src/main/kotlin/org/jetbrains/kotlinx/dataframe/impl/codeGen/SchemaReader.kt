@@ -1,51 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
-import org.jetbrains.kotlinx.dataframe.io.SupportedDataFrameFormat
-import org.jetbrains.kotlinx.dataframe.io.SupportedFormat
 import org.jetbrains.kotlinx.dataframe.io.guessFormat
-import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readCodeForGeneration
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.net.URL
-
-/**
- * Reader that can read a dataframe from a URL. It tries to guess the format based on the given [formats] and returns
- * [DfReadResult.Success], or returns [DfReadResult.Error] if it fails.
- */
-public val CodeGenerator.Companion.urlDfReader: (url: URL, formats: List<SupportedFormat>) -> DfReadResult
-    get() = { url, formats ->
-        try {
-            val (format, df) = url.openStream().use {
-                DataFrame.read(
-                    stream = it,
-                    format = guessFormat(url, formats) as? SupportedDataFrameFormat?,
-                    formats = formats.filterIsInstance<SupportedDataFrameFormat>(),
-                )
-            }
-            DfReadResult.Success(df, format)
-        } catch (e: Throwable) {
-            DfReadResult.Error(e)
-        }
-    }
-
-public sealed interface DfReadResult {
-
-    public class Success(private val df: AnyFrame, public val format: SupportedDataFrameFormat) : DfReadResult {
-        public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod =
-            format.createDefaultReadMethod(pathRepresentation)
-
-        public val schema: DataFrameSchema = df.schema()
-    }
-
-    public class Error(public val reason: Throwable) : DfReadResult
-}
 
 /**
  * Reader that can read data from a URL and generate code (type schema representations) for it.
@@ -55,7 +16,7 @@ public sealed interface DfReadResult {
 public val CodeGenerator.Companion.urlCodeGenReader: (
     url: URL,
     name: String,
-    formats: List<SupportedFormat>,
+    formats: List<SupportedCodeGenerationFormat>,
     generateHelperCompanionObject: Boolean,
 ) -> CodeGenerationReadResult
     get() = { url, name, formats, generateHelperCompanionObject ->

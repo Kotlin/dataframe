@@ -1,16 +1,3 @@
-public final class org/jetbrains/kotlinx/dataframe/io/CsvDeephaven : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
-	public fun <init> ()V
-	public fun <init> (C)V
-	public synthetic fun <init> (CILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun acceptsExtension (Ljava/lang/String;)Z
-	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
-	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
-	public fun getTestOrder ()I
-	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-}
-
 public final class org/jetbrains/kotlinx/dataframe/io/QuoteMode : java/lang/Enum {
 	public static final field ALL Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
 	public static final field ALL_NON_NULL Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
@@ -119,19 +106,6 @@ public final class org/jetbrains/kotlinx/dataframe/io/ToDelimStrKt {
 public final class org/jetbrains/kotlinx/dataframe/io/ToTsvStrKt {
 	public static final fun toTsvStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZCLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
 	public static synthetic fun toTsvStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZCLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/TsvDeephaven : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
-	public fun <init> ()V
-	public fun <init> (C)V
-	public synthetic fun <init> (CILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun acceptsExtension (Ljava/lang/String;)Z
-	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
-	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
-	public fun getTestOrder ()I
-	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/UtilKt {
