@@ -4,13 +4,14 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.junit.Test
 
 class SortGroupedDataframeTests {
 
     @Test
     fun `Sorted grouped iris dataset`() {
-        val irisData = DataFrame.read("src/test/resources/irisDataset.csv")
+        val irisData = DataFrame.readCsv("src/test/resources/irisDataset.csv")
         irisData.alsoDebug()
 
         irisData.groupBy("variety").let {

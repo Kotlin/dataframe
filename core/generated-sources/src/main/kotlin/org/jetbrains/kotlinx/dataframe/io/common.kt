@@ -35,7 +35,7 @@ public fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFram
             val response = connection.responseMessage
             try {
                 // attempt to read error response as dataframe
-                return DataFrame.read(connection.errorStream).df
+                return body(connection.errorStream)
             } catch (_: Exception) {
                 throw RuntimeException("Server returned HTTP response code: $code. Response: $response")
             }

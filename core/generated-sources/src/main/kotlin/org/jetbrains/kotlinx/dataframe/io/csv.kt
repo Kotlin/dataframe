@@ -11,8 +11,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
 import org.jetbrains.kotlinx.dataframe.util.APACHE_CSV
@@ -57,7 +55,6 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
 import java.nio.charset.Charset
-import java.nio.file.Path
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -65,30 +62,6 @@ import kotlin.reflect.typeOf
 import kotlin.time.Duration
 import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.Instant as DeprecatedInstant
-
-@Deprecated(message = APACHE_CSV, level = DeprecationLevel.WARNING)
-public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readCSV(stream = stream, delimiter = delimiter, header = header)
-
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
-        DataFrame.readCSV(file = file, delimiter = delimiter, header = header)
-
-    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
-        // core CSV impl is deprecated, delegate via File to preserve module boundaries
-        DataFrame.readCSV(file = path.toFile(), delimiter = delimiter, header = header)
-
-    override fun acceptsExtension(ext: String): Boolean = ext == "csv"
-
-    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
-
-    override val testOrder: Int = 20_001
-
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
-        val arguments = MethodArguments().add("delimiter", typeOf<Char>(), "'%L'", delimiter)
-        return DefaultReadCsvMethod(pathRepresentation, arguments)
-    }
-}
 
 @Deprecated(
     message = APACHE_CSV,
