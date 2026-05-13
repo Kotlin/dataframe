@@ -2174,7 +2174,9 @@ public final class org/jetbrains/kotlinx/dataframe/api/ExplodeKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ExplodeWrongColumnKindException : java/lang/IllegalArgumentException {
-	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;)V
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;)V
+	public final fun getCol ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;
+	public final fun getDf ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun getMessage ()Ljava/lang/String;
 }
 
@@ -4559,7 +4561,9 @@ public final class org/jetbrains/kotlinx/dataframe/api/UngroupKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/UngroupWrongColumnKindException : java/lang/IllegalArgumentException {
-	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;)V
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;)V
+	public final fun getCol ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;
+	public final fun getDf ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun getMessage ()Ljava/lang/String;
 }
 

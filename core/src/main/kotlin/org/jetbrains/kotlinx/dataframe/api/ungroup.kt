@@ -17,7 +17,8 @@ import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
-public class UngroupWrongColumnKindException(col: ColumnWithPath<*>) : IllegalArgumentException() {
+public class UngroupWrongColumnKindException(public val df: DataFrame<*>, public val col: ColumnWithPath<*>) :
+    IllegalArgumentException() {
     override val message: String =
         "Column '${col.path.joinToString()}' cannot be ungrouped: expected a ColumnGroup but got ${col.kind()}."
 }
@@ -74,7 +75,7 @@ private typealias CommonUngroupDocs = Nothing
 public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> {
     getColumnsWithPaths(columns).forEach { col ->
         if (!col.isColumnGroup()) {
-            throw UngroupWrongColumnKindException(col)
+            throw UngroupWrongColumnKindException(this, col)
         }
     }
     return move { columns.toColumnSet().colsInGroups() }

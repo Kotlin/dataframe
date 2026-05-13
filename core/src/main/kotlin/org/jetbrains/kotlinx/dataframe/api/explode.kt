@@ -18,7 +18,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
-public class ExplodeWrongColumnKindException(col: ColumnWithPath<*>) : IllegalArgumentException() {
+public class ExplodeWrongColumnKindException(public val df: DataFrame<*>, public val col: ColumnWithPath<*>) :
+    IllegalArgumentException() {
     override val message: String =
         "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
             "a ValueColumn of List, but got ${col.kind()} of type ${col.type()}"
@@ -111,7 +112,7 @@ public fun <T> DataFrame<T>.explode(
 ): DataFrame<T> {
     getColumnsWithPaths(selector).forEach { col ->
         if (!col.canBeExploded()) {
-            throw ExplodeWrongColumnKindException(col)
+            throw ExplodeWrongColumnKindException(this, col)
         }
     }
     return explodeImpl(dropEmpty, selector)
