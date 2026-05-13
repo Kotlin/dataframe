@@ -128,18 +128,12 @@ object PluginCallbackProxy : PluginCallback {
         }
 
         val group = name.substringBefore("_")
-        val content =
+        File(korro, group).writeText(
             """
-
+            
             <inline-frame src="resources/$group.html" width="100%"/>
-            """.trimIndent()
-        File(korro, group).writeText(content)
-
-        // Korro bug - doesn't find by FQN
-        val shortGroup = group.substringAfterLast(".")
-        if (shortGroup != group) {
-            File(korro, shortGroup).writeText(content)
-        }
+            """.trimIndent(),
+        )
     }
 
     private fun List<Expression>.joinToSource(): String = joinToString(".") { it.source }

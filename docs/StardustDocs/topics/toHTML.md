@@ -116,7 +116,16 @@ This dataframe is used in the following examples
 <!---FUN df-->
 
 ```kotlin
-
+val df = dataFrameOf(
+    "name" to columnOf(
+        "firstName" to columnOf("Alice", "Bob", "Charlie", "Charlie", "Bob", "Alice", "Charlie"),
+        "lastName" to columnOf("Cooper", "Dylan", "Daniels", "Chaplin", "Marley", "Wolf", "Byrd"),
+    ),
+    "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
+    "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
+    "weight" to columnOf(54, 87, null, null, 68, 55, 90),
+    "isHappy" to columnOf(true, true, false, true, true, false, true),
+)
 ```
 
 <!---END-->
