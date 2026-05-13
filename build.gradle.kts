@@ -73,7 +73,8 @@ subprojects {
     this.version = rootProject.version
 
     tasks.matching {
-        it.name == "processResources" || it.name == "processKDocsMain" || it.name.contains("runKtlint") || it.name.startsWith("compile")
+        it.name == "processResources" || it.name == "processKDocsMain" || it.name.contains("runKtlint") ||
+            it.name.startsWith("compile")
     }.configureEach {
         mustRunAfter(":samples:korro")
         mustRunAfter(":samples:korroGenerate")
