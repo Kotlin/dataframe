@@ -119,24 +119,27 @@ You can do it quickly with [`generate..()` methods](DataSchemaGenerationMethods.
 Define schemas:
 
 ```kotlin
+// Data schema of the "info" column group
 @DataSchema
-data class PersonInfo(
-    val age: Int,
+interface Info {
+    val age: Int
     val height: Float
-)
+}
 
+// Data schema of the entire DataFrame
 @DataSchema
-data class Person(
-    val info: PersonInfo,
+interface Person {
+    val info: Info
     val name: String
-)
+}
+```
 ```
 
 Read the [`DataFrame`](DataFrame.md) from the CSV file and specify the schema with 
 [`.convertTo()`](convertTo.md) or [`cast()`](cast.md):
 
 ```kotlin
-val df = DataFrame.readCsv("example.csv").convertTo<Person>()
+val df = DataFrame.readCsv("example.csv").cast<Person>()
 ```
 
 Extensions for this `DataFrame` will be generated automatically by the plugin, 
