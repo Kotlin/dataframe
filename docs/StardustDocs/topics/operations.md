@@ -26,7 +26,7 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
     .filter { isHappy && age > 100 }
     .move { name.firstName and name.lastName }.after { isHappy }
     .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
-    .rename { isHappy }.into("isOK")
+    .rename { isHappy }.to("isOK")
 ```
 
 <!---END-->

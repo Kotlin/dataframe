@@ -162,19 +162,20 @@ The next functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
 
 The next functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 
-| 0.15                                                                                                     | 1.0                                                                                                                           | Reason                                                                  |
-|----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
-| `df.split { columns }.default(..)` / `df.split { columns }.into(..)` / `df.split { columns }.inward(..)` | `df.split { columns }.by(..).default(..)` / `df.split { columns }.by(..).into(..)` / `df.split { columns }.by(..).inward(..)` | Removed a shortcut to clarify the behaviour; Only for `String` columns. |
-| `dataFrameOf(header, values)`                                                                            | `dataFrameOf(header).withValues(values)`                                                                                      | Replaced with another function.                                         |
-| `df.generateCode(..)`                                                                                    | `df.generateInterfaces(..)`                                                                                                   | Replaced with another function.                                         |
-| `df.select { mapToColumn(name, infer) { body } }`                                                        | `df.select { expr(name, infer) { body } }`                                                                                    | Removed duplicated functionality.                                       |
-| `stringCol.length()`                                                                                     | `stringCol.map { it?.length ?: 0 }`                                                                                           | Removed a shortcut to clarify the behaviour; Only for `String` columns. |
-| `stringCol.lowercase()` / `stringCol.uppercase()`                                                        | `stringCol.map { it?.lowercase() }` / `stringCol.map { it?.uppercase() }`                                                     | Removed a shortcut to clarify the behaviour; Only for `String` columns. |
-| `df.add(columns)` / `df.add(dataframes)`                                                                 | `df.addAll(columns)` / `df.addAll(dataframes)`                                                                                | Renamed to to improve completion.                                       |
-| `row.isEmpty()` / `row.isNotEmpty()`                                                                     | `row.values().all { it == null }` / `row.values().all { it == null }`                                                         | Removed a shortcut to clarify the behaviour;                            |
-| `row.getRow(index)` /  `row.getRowOrNull(index)` / `row.getRows(indices)`                                | `row.df().getRow(index)` /  `row.df().getRowOrNull(index)` / `row.df().getRows(indices)`                                      | Removed a shortcut to clarify the behaviour;                            |
-| `df.copy()`                                                                                              | `df.columns().toDataFrame().cast()`                                                                                           | Removed a shortcut to clarify the behaviour;                            |
-| `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                       |
+| 0.15                                                                                                     | 1.0                                                                                                                           | Reason                                                                       |
+|----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| `df.split { columns }.default(..)` / `df.split { columns }.into(..)` / `df.split { columns }.inward(..)` | `df.split { columns }.by(..).default(..)` / `df.split { columns }.by(..).into(..)` / `df.split { columns }.by(..).inward(..)` | Removed a shortcut to clarify the behaviour; Only for `String` columns.      |
+| `dataFrameOf(header, values)`                                                                            | `dataFrameOf(header).withValues(values)`                                                                                      | Replaced with another function.                                              |
+| `df.generateCode(..)`                                                                                    | `df.generateInterfaces(..)`                                                                                                   | Replaced with another function.                                              |
+| `df.select { mapToColumn(name, infer) { body } }`                                                        | `df.select { expr(name, infer) { body } }`                                                                                    | Removed duplicated functionality.                                            |
+| `stringCol.length()`                                                                                     | `stringCol.map { it?.length ?: 0 }`                                                                                           | Removed a shortcut to clarify the behaviour; Only for `String` columns.      |
+| `stringCol.lowercase()` / `stringCol.uppercase()`                                                        | `stringCol.map { it?.lowercase() }` / `stringCol.map { it?.uppercase() }`                                                     | Removed a shortcut to clarify the behaviour; Only for `String` columns.      |
+| `df.add(columns)` / `df.add(dataframes)`                                                                 | `df.addAll(columns)` / `df.addAll(dataframes)`                                                                                | Renamed to to improve completion.                                            |
+| `row.isEmpty()` / `row.isNotEmpty()`                                                                     | `row.values().all { it == null }` / `row.values().all { it == null }`                                                         | Removed a shortcut to clarify the behaviour;                                 |
+| `row.getRow(index)` /  `row.getRowOrNull(index)` / `row.getRows(indices)`                                | `row.df().getRow(index)` /  `row.df().getRowOrNull(index)` / `row.df().getRows(indices)`                                      | Removed a shortcut to clarify the behaviour;                                 |
+| `df.copy()`                                                                                              | `df.columns().toDataFrame().cast()`                                                                                           | Removed a shortcut to clarify the behaviour;                                 |
+| `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
+| `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
 
 ## Parsing and Converting Date-Time
 
@@ -197,12 +198,14 @@ while still allowing you to use Java types if you need them.
 ```kotlin
 df.parse()
 ```
+
 </td>
 <td>
 
 ```kotlin
 df.parse()
 ```
+
 </td>
 <td>Default parsing behavior remains largely unchanged.</td>
 </tr>
@@ -213,12 +216,13 @@ df.parse()
 df.parse(
     ParserOptions(
         skipTypes = setOf(
-            typeOf<kotlinx.datetime.LocalDate>(), 
+            typeOf<kotlinx.datetime.LocalDate>(),
             ...,
-        ),
     ),
+),
 )
 ```
+
 </td>
 <td>
 
@@ -227,6 +231,7 @@ df.parse(
     ParserOptions(dateTime = DateTimeParserOptions.Java),
 )
 ```
+
 </td>
 <td>If you want to force parsing to Java date-time types, you no longer have use skipTypes, you can simply change the `dateTime` argument.</td>
 </tr>
@@ -238,12 +243,14 @@ DataFrame.parser.addSkipType(
     typeOf<kotlinx.datetime.LocalDate>(),
 )
 ```
+
 </td>
 <td>
 
 ```kotlin
 DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
 ```
+
 </td>
 <td>The same logic applies for the <a href="parse.md#global-parser-options">global parser options</a>.</td>
 </tr>
@@ -253,6 +260,7 @@ DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
 ```kotlin
 ParserOptions(dateTimeFormatter = myFormatter)
 ```
+
 </td>
 <td>
 Kotlin:
@@ -263,6 +271,7 @@ ParserOptions(
         .withFormat<_>(myKotlinFormat),
 )
 ```
+
 </td>
 <td rowspan="2">You now need to explicitly specify you expect Java or Kotlin date-time types via `DateTimeParserOptions.X`. Then you can specify the relevant options, like a `kotlinx.datetime.format.DateTimeFormat` or `java.time.DateTimeFormatter`. These are typed now too, optionally for Java.</td>
 </tr>
@@ -276,6 +285,7 @@ ParserOptions(
         .withFormatter<java.time.LocalDateTime>(myJavaFormatter),
 )
 ```
+
 </td>
 </tr>
 <tr>
@@ -287,6 +297,7 @@ ParserOptions(
     dateTimeFormatter = myFormatter,
 )
 ```
+
 </td>
 <td>
 
@@ -297,6 +308,7 @@ ParserOptions(
         .withFormatter<java.time.LocalDateTime>(myFormatter),
 )
 ```
+
 </td>
 <td>Locale for date-time only works for Java types. If you need Kotlin types ánd a locale use <a href="convert.md">convert</a> to convert to Kotlin types afterwards.</td>
 </tr>
@@ -306,6 +318,7 @@ ParserOptions(
 ```kotlin
 ParserOptions(dateTimePattern = "MM/dd yyyy")
 ```
+
 </td>
 <td>
 Kotlin:
@@ -317,6 +330,7 @@ ParserOptions(
         .withPattern<kotlinx.datetime.LocalDate>("MM/dd yyyy"),
 )
 ```
+
 </td>
 <td rowspan="2">Again, you now need to specify the target date-time library and the expected type for your pattern (optionally for Java). In Kotlin you also need to opt-in, because using `DateTimeFormat` instead is <a href="https://github.com/Kotlin/kotlinx-datetime#using-unicode-format-strings-like-yyyy-mm-dd">recommended</a>.</td>
 </tr>
@@ -330,6 +344,7 @@ ParserOptions(
         .withPattern<java.time.LocalDate>("MM/dd yyyy"),
 )
 ```
+
 </td>
 </tr>
 <tr>
@@ -338,6 +353,7 @@ ParserOptions(
 ```kotlin
 DataFrame.parser.addDateTimePattern("MM/dd yyyy")
 ```
+
 </td>
 <td>
 Kotlin:
@@ -347,6 +363,7 @@ Kotlin:
 DataFrame.parser
     .addDateTimeUnicodePattern<kotlinx.datetime.LocalDate>("MM/dd yyyy")
 ```
+
 </td>
 <td rowspan="2">Same idea. Though you can now also use `...addDateTimeFormat()` / `...addJavaDateTimeFormatter()`, which we would recommend more.</td>
 </tr>
@@ -358,6 +375,7 @@ Java:
 DataFrame.parser
     .addJavaDateTimePattern<java.time.LocalDate>("MM/dd yyyy")
 ```
+
 </td>
 </tr>
 <tr>
@@ -366,6 +384,7 @@ DataFrame.parser
 ```kotlin
 convert { stringCols }.toLocalDate(pattern = "MM/dd yyyy")
 ```
+
 </td>
 <td>
 Kotlin:
@@ -374,6 +393,7 @@ Kotlin:
 @OptIn(FormatStringsInDatetimeFormats::class)
 convert { stringCols }.toLocalDate(pattern = "MM/dd yyyy")
 ```
+
 </td>
 <td rowspan="2">Same logic applies to convert: you need to opt-in to use patterns for Kotlin types and specify "Java" for Java types.</td>
 </tr>
@@ -384,6 +404,7 @@ Java:
 ```kotlin
 convert { stringCols }.toJavaLocalDate(pattern = "MM/dd yyyy")
 ```
+
 </td>
 </tr>
 <tr>
@@ -392,6 +413,7 @@ convert { stringCols }.toJavaLocalDate(pattern = "MM/dd yyyy")
 ```kotlin
 stringCol.convertToLocalDate(locale = Locale.GERMAN)
 ```
+
 </td>
 <td>
 
@@ -400,6 +422,7 @@ stringCol
     .convertToJavaLocalDate(locale = Locale.GERMAN)
     .convertToLocalDate()
 ```
+
 </td>
 <td>If you need to supply a locale to be able to parse date-time types, parse to Java types first, then convert to Kotlin ones.</td>
 </tr>

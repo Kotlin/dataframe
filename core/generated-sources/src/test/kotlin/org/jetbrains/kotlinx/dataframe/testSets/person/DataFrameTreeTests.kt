@@ -44,6 +44,7 @@ import org.jetbrains.kotlinx.dataframe.api.duplicateRows
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.expr
+import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
@@ -84,6 +85,7 @@ import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toStr
@@ -546,7 +548,7 @@ class DataFrameTreeTests : BaseTest() {
             colsAtAnyDepth().filter { !it.isColumnGroup() }
         }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
-        val expected = typed2.rename { nameAndCity.allCols() }.into { it.path.joinToString(".") }
+        val expected = typed2.rename { nameAndCity.allCols() }.to({ it.path.joinToString(".") })
         grouped shouldBe expected
     }
 
@@ -559,7 +561,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun rename() {
-        val res = typed2.rename { nameAndCity.allCols() }.into { it.name().capitalize() }
+        val res = typed2.rename { nameAndCity.allCols() }.to { it.name().capitalize() }
         res.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames().map { it.capitalize() }
     }
 
@@ -628,7 +630,13 @@ class DataFrameTreeTests : BaseTest() {
             .update { groupCol }.at(1).withNull()
             .update { groupCol }.at(2).with { emptyDataFrame() }
             .update { groupCol }.at(3).with { it.filter { false } }
-        val res = plain.explode(dropEmpty = false) { groupCol }
+
+        // Should cast DataColumn<AnyFrame?> to FrameColumn first
+        shouldThrow<IllegalArgumentException> { plain.explode(dropEmpty = false) { groupCol } }
+
+        val res = plain
+            .fillNulls { groupCol }.with { emptyDataFrame() }
+            .explode(dropEmpty = false) { groupCol }
         val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.rowsCount() ?: 0, 1) }
         res.rowsCount() shouldBe expected
     }

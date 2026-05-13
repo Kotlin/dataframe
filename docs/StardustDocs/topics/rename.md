@@ -5,8 +5,8 @@
 Renames one or several columns without changing its location in [`DataFrame`](DataFrame.md).
 
 ```kotlin
-df.rename { columns }.into(name)
-df.rename { columns }.into { nameExpression }
+df.rename { columns }.to(name)
+df.rename { columns }.to { nameExpression }
 
 nameExpression = (DataColumn) -> String
 ```
@@ -20,14 +20,14 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 <tab title="Properties">
 
 ```kotlin
-df.rename { name }.into("fullName")
+df.rename { name }.to("fullName")
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.rename("name").into("fullName")
+df.rename("name").to("fullName")
 ```
 
 </tab></tabs>
@@ -40,7 +40,7 @@ df.rename("name").into("fullName")
 <tab title="Properties">
 
 ```kotlin
-df.rename { age }.into {
+df.rename { age }.to {
     val mean = it.data.mean()
     "age [mean = $mean]"
 }
@@ -50,7 +50,7 @@ df.rename { age }.into {
 <tab title="Strings">
 
 ```kotlin
-df.rename("age").into {
+df.rename("age").to {
     val mean = it.data.cast<Int>().mean()
     "age [mean = $mean]"
 }

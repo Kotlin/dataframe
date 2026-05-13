@@ -20,6 +20,8 @@ val dependentProjects = with(projects) {
         dataframeJdbc,
         dataframeCsv,
         dataframeJson,
+        dataframeOpenapi,
+        dataframeOpenapiGenerator,
     )
 }.map { project(it.path) }
 
