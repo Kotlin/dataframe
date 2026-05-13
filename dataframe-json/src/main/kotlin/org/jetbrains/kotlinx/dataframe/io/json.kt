@@ -23,6 +23,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.encodeDataFrameWithMetadata
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeRow
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
+import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.GZIP_ON
+import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import java.io.File
@@ -30,7 +32,103 @@ import java.io.InputStream
 import java.net.URL
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+
+public class Json : DataFrameReadSource {
+
+    public data class Options(
+        val header: List<String> = emptyList(),
+        val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+        val keyValuePaths: List<JsonPath> = emptyList(),
+        val unifyNumbers: Boolean = true,
+    ) : DataFrameReadOptions
+
+    public companion object {
+        public val supportedReferenceTypes: Set<KType> =
+            setOf(typeOf<String>(), typeOf<URL>(), typeOf<Path>(), typeOf<File>())
+        public val supportedInMemoryTypes: Set<KType> =
+            setOf(typeOf<String>(), typeOf<InputStream>(), typeOf<JsonElement>())
+    }
+
+    override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
+        if (options != null && options !is Options) return false
+        if (sourceInfo.extension?.lowercase()?.equals("json") == false) return false
+        if (sourceInfo.mimeType?.lowercase()?.equals("application/json") == false) return false
+
+        val kType = sourceInfo.type.kType
+        return when (sourceInfo.type) {
+            is DataSourceType.Reference ->
+                supportedReferenceTypes.any { kType.isSubtypeOf(it) }
+
+            is DataSourceType.InMemory ->
+                supportedInMemoryTypes.any { kType.isSubtypeOf(it) }
+        }
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    override fun readDataFrameOrNull(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ): DataFrame<*>? {
+        val options = (options ?: Options()) as Options
+        val kType = sourceInfo.type.kType
+        return when (sourceInfo.type) {
+            is DataSourceType.Reference -> {
+                val url = when {
+                    kType.isSubTypeOf<String>() -> (source as? String)?.let(::asUrl)
+                    kType.isSubTypeOf<URL>() -> source as? URL
+                    kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+                    kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+                    else -> null
+                } ?: return null
+
+                DataFrame.readJson(
+                    url = url,
+                    header = options.header,
+                    typeClashTactic = options.typeClashTactic,
+                    keyValuePaths = options.keyValuePaths,
+                    unifyNumbers = options.unifyNumbers,
+                )
+            }
+
+            is DataSourceType.InMemory -> {
+                val element = when {
+                    kType.isSubTypeOf<InputStream>() ->
+                        (source as? InputStream)?.let {
+                            Json.decodeFromStream<JsonElement>(it)
+                        }
+
+                    kType.isSubTypeOf<String>() ->
+                        (source as? String)?.let {
+                            Json.decodeFromString<JsonElement>(it)
+                        }
+
+                    kType.isSubTypeOf<JsonElement>() ->
+                        source as? JsonElement
+
+                    else -> null
+                } ?: return null
+
+                readJsonImpl(
+                    parsed = element,
+                    header = options.header,
+                    typeClashTactic = options.typeClashTactic,
+                    keyValuePaths = options.keyValuePaths,
+                    unifyNumbers = options.unifyNumbers,
+                )
+            }
+        }
+    }
+
+    override val testOrder: Int = 10_000
+
+    override fun toString(): String = "Json"
+}
+
+private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 
 public class JSON(
     private val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,

@@ -76,7 +76,6 @@ dependencies {
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
-    testImplementation(projects.dataframeJson)
     testImplementation(libs.serialization.core)
     testImplementation(libs.serialization.json)
 
@@ -85,6 +84,11 @@ dependencies {
 
     // for samples.api
     testImplementation(projects.dataframeCsv)
+    testImplementation(projects.dataframeJson)
+    testImplementation(projects.dataframeArrow)
+    testImplementation(projects.dataframeExcel)
+//    testImplementation(projects.dataframeGeo)
+    testImplementation(projects.dataframeJdbc)
 }
 
 // Configure testJava16 dependencies to extend from test
