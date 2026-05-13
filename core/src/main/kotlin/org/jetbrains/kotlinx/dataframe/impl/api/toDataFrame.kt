@@ -334,6 +334,11 @@ internal fun convertToDataFrame(
         val shouldCreateFrameCol = kClass == DataFrame::class && !nullable
         val shouldCreateColumnGroup = kClass == DataRow::class
 
+        if (shouldCreateFrameCol && shouldCreateValueCol) {
+            throw IllegalArgumentException(
+                "You cannot create a `ValueColumn<DataFrame<*>>`, a `FrameColumn` should be used instead. If you used `preserve(DataFrame::class)`, please remove it.",
+            )
+        }
         when {
             hasExceptions -> DataColumn.createByInference(it.columnName, values, nullable = nullable)
 
