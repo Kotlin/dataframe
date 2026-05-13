@@ -73,6 +73,9 @@ dependencies {
 
 korro {
 
+    // TODO(#898)
+    // Should work without "missing" errors
+    // after migration all test sample to :samples module
     behavior {
         ignoreMissing = true
     }

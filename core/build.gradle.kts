@@ -123,6 +123,10 @@ benchmark {
     }
 }
 
+// TODO(#898)
+// All korro/samples related tasks should be removed
+// after migration all test sample to :samples module
+
 val samplesImplementation by configurations.getting {
     extendsFrom(configurations.testImplementation.get())
 }
