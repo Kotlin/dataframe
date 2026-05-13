@@ -99,9 +99,12 @@ korro {
                 include("operations/multiple/*.md")
                 include("operations/column/*.md")
                 include("collectionsInterop/*.md")
+                include("dataSources/*.md")
                 include("dataSources/sql/*.md")
                 include("info/*.md")
                 include("columnArithmetics.md")
+                include("groupBy.md")
+                include("pivot.md")
             },
         )
         baseDir = rootProject.rootDir
