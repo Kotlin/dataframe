@@ -1,20 +1,36 @@
 [//]: # (title: Data Schemas)
 
+<web-summary>
+Define, generate, and use typed data schemas in Kotlin DataFrame with `@DataSchema`, 
+compiler plugin support, and extension property generation for safer dataframe operations.
+</web-summary>
+
+<card-summary>
+Learn about data schemas, which provide typed access to dataframe columns through generated extension 
+properties, including support for hierarchical and nested dataframe structures.
+</card-summary>
+
+<link-summary>
+Typed dataframe schemas in Kotlin DataFrame — define schemas with `@DataSchema`, 
+generate extension properties, and work safely with structured and nested data.
+</link-summary>
+
 The Kotlin DataFrame library provides typed data access via
 [generation of extension properties](extensionPropertiesApi.md) for the type
-[`DataFrame<T>`](DataFrame.md) (as well as for [`DataRow<T>`](DataRow.md)), where
+[`DataFrame<T>`](DataFrame.md) (as well as for [`DataRow<T>`](DataRow.md) 
+and [`ColumnGroup<T>`](DataColumn.md#columngroup)), where
 `T` is a marker class representing the `DataSchema` of the [`DataFrame`](DataFrame.md).
 
 A *schema* of a [`DataFrame`](DataFrame.md) is a mapping from column names to column types.  
-This data schema can be expressed as a Kotlin class or interface.  
-If the DataFrame is hierarchical — contains a [column group](DataColumn.md#columngroup) or a
+This data schema can be expressed as a Kotlin interface or data class by annotating it with `@DataSchema`.  
+If the dataframe is hierarchical — contains a [column group](DataColumn.md#columngroup) or a
 [column of dataframes](DataColumn.md#framecolumn) — the data schema reflects this structure,
 with a separate class representing the schema of each column group or nested `DataFrame`.
 
-For example, consider a simple hierarchical DataFrame from
+For example, consider a simple hierarchical dataframe from
 <resource src="example.csv"></resource>.
 
-This DataFrame consists of two columns:
+This dataframe consists of two columns:
 - `name`, which is a `String` column
 - `info`, which is a [column group](DataColumn.md#columngroup) containing two nested [value columns](DataColumn.md#valuecolumn):
     - `age` of type `Int`
@@ -46,22 +62,22 @@ This DataFrame consists of two columns:
   </tbody>
 </table>
 
-The data schema corresponding to this DataFrame can be represented as:
+The data schema corresponding to this `DataFrame` can be represented as:
 
 ```kotlin
 // Data schema of the "info" column group
 @DataSchema
-data class Info(
-    val age: Int,
+interface Info {
+    val age: Int
     val height: Float
-)
+}
 
 // Data schema of the entire DataFrame
 @DataSchema
-data class Person(
-    val info: Info,
+interface Person {
+    val info: Info
     val name: String
-)
+}
 ```
 
 [Extension properties](extensionPropertiesApi.md) for `DataFrame<Person>`  
@@ -83,8 +99,31 @@ df.filter { age >= 18 }
 
 See [](extensionPropertiesApi.md) for more information.
 
+## `@DataSchema` annotation
 
-## Schema Retrieving
+`@DataSchema` is a Kotlin annotation that marks a data class or interface as a data schema.
+Compiler plugin generates [extension properties](extensionPropertiesApi.md) for the `DataFrame` 
+(or `DataRow`, `ColumnGroup`, etc.)
+with a type parameter annotated with `@DataSchema`.
+
+Each property of an annotated class or interface corresponds to a column in the `DataFrame` 
+(or `DataRow`, `ColumnGroup`, etc.).
+The property name is the column name, and the property type is the column type.
+
+> While you can annotate any Kotlin class or object with a `@DataSchema`,
+> we highly recommend using it only on interfaces and data classes specially made
+> for representing the data schema of a `DataFrame`.
+> 
+> Use only trivial properties, avoiding computed, `lateinit` or delegated properties.
+> In data classes, provide only constructor properties.
+> 
+> In all other cases, the behavior may be undefined. 
+> If you do need to use `@DataSchema` on a “complex” class, please let us know via 
+> the [issues](https://github.com/Kotlin/dataframe/issues).
+{style="warning"}
+
+
+## Data Schema Retrieving
 
 Defining a data schema manually can be difficult, especially for dataframes with many columns or deeply nested 
 structures, and may lead to mistakes in column names or types. 
@@ -107,11 +146,8 @@ It will also **automatically update** the schema during operations that modify t
 
 ### Plugins
 
-> The current Gradle plugin is **under consideration for deprecation** and 
-> may be officially marked as deprecated in future releases.
-> 
-> The KSP plugin is **not compatible with [KSP2](https://github.com/google/ksp?tab=readme-ov-file#ksp2-is-here)**
-> and may **not work properly with Kotlin 2.1 or newer**.
+> The current Gradle and KSP plugins are **deprecated**. 
+> Their latest release is 1.0.0-Beta4 and will not have future releases.
 >
 > At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugins.  
 {style="warning"}
@@ -121,6 +157,14 @@ It will also **automatically update** the schema during operations that modify t
 * The KSP plugin allows generating a data schema automatically using 
 [Kotlin Symbol Processing](https://kotlinlang.org/docs/ksp-overview.html) by specifying 
 a source file path in your code file.
+
+## Specifying Data Schema 
+
+To bring the `DataFrame` into the desired schema, you can use one of two operations:
+
+* Specify the schema using [`cast`](cast.md).
+* Convert the `DataFrame` to the target schema using [`convertTo`](convertTo.md).
+
 
 ## Extension Properties Generation
 
