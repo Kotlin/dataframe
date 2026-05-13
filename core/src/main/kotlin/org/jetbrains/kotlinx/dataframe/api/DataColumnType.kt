@@ -3,6 +3,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -79,7 +80,7 @@ public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
  * Returns `true` if [this] column is intra-comparable (mutually comparable), i.e.,
  * its values can be compared with each other and thus ordered.
  *
- * If true, operations like [`min()`][AnyCol.min], [`max()`][AnyCol.max], [`median()`][AnyCol.median], etc.
+ * If true, operations like [`min()`][DataColumn.min], [`max()`][DataColumn.max], [`median()`][DataColumn.median], etc.
  * will work.
  *
  * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)`
