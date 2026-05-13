@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.junit.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -131,5 +134,17 @@ class ExplodeTests {
         ).asColumnGroup("col")
 
         exploded shouldBe expected
+    }
+
+    @Test
+    fun `explode column group throws`() {
+        val df = dataFrameOf("a", "b")(1, 2).group { all() }.into("g")
+        shouldThrow<ExplodeWrongColumnKindException> { df.explode { it["g"] } }
+    }
+
+    @Test
+    fun `explode non-list value column throws`() {
+        val df = dataFrameOf("a")(1)
+        shouldThrow<ExplodeWrongColumnKindException> { df.explode { it["a"] } }
     }
 }

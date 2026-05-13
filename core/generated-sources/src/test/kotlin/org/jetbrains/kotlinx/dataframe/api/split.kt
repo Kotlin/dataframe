@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -51,7 +52,7 @@ class SplitTests {
     }
 
     @Test
-    fun `split into columns`() {
+    fun `split value column of DataFrame into columns`() {
         val df = dataFrameOf("a", "b", "c")(
             1, 2, 3,
             1, 4, 5,
