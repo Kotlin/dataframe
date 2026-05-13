@@ -2,19 +2,20 @@
 
 The Kotlin DataFrame library provides typed data access via
 [generation of extension properties](extensionPropertiesApi.md) for the type
-[`DataFrame<T>`](DataFrame.md) (as well as for [`DataRow<T>`](DataRow.md)), where
+[`DataFrame<T>`](DataFrame.md) (as well as for [`DataRow<T>`](DataRow.md) 
+and [`ColumnGroup<T>`](DataColumn.md#columngroup)), where
 `T` is a marker class representing the `DataSchema` of the [`DataFrame`](DataFrame.md).
 
 A *schema* of a [`DataFrame`](DataFrame.md) is a mapping from column names to column types.  
-This data schema can be expressed as a Kotlin class or interface.  
-If the DataFrame is hierarchical — contains a [column group](DataColumn.md#columngroup) or a
+This data schema can be expressed as a Kotlin class or interface by annotating it with `@DataSchema`.  
+If the dataframe is hierarchical — contains a [column group](DataColumn.md#columngroup) or a
 [column of dataframes](DataColumn.md#framecolumn) — the data schema reflects this structure,
 with a separate class representing the schema of each column group or nested `DataFrame`.
 
-For example, consider a simple hierarchical DataFrame from
+For example, consider a simple hierarchical dataframe from
 <resource src="example.csv"></resource>.
 
-This DataFrame consists of two columns:
+This dataframe consists of two columns:
 - `name`, which is a `String` column
 - `info`, which is a [column group](DataColumn.md#columngroup) containing two nested [value columns](DataColumn.md#valuecolumn):
     - `age` of type `Int`
@@ -46,7 +47,7 @@ This DataFrame consists of two columns:
   </tbody>
 </table>
 
-The data schema corresponding to this DataFrame can be represented as:
+The data schema corresponding to this `DataFrame` can be represented as:
 
 ```kotlin
 // Data schema of the "info" column group
