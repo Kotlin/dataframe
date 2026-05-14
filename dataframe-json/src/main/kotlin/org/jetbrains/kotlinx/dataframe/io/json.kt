@@ -46,25 +46,22 @@ public class Json : DataFrameReadSource {
     ) : DataFrameReadOptions
 
     public companion object {
-        public val supportedReferenceTypes: Set<KType> =
-            setOf(typeOf<String>(), typeOf<URL>(), typeOf<Path>(), typeOf<File>())
-        public val supportedInMemoryTypes: Set<KType> =
-            setOf(typeOf<String>(), typeOf<InputStream>(), typeOf<JsonElement>())
+        public val supportedTypes: Set<KType> =
+            setOf(
+                typeOf<URL>(),
+                typeOf<Path>(),
+                typeOf<File>(),
+                typeOf<String>(),
+                typeOf<InputStream>(),
+                typeOf<JsonElement>(),
+            )
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals("json") == false) return false
         if (sourceInfo.mimeType?.lowercase()?.equals("application/json") == false) return false
-
-        val kType = sourceInfo.type.kType
-        return when (sourceInfo.type) {
-            is DataSourceType.Reference ->
-                supportedReferenceTypes.any { kType.isSubtypeOf(it) }
-
-            is DataSourceType.InMemory ->
-                supportedInMemoryTypes.any { kType.isSubtypeOf(it) }
-        }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -73,55 +70,45 @@ public class Json : DataFrameReadSource {
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
     ): DataFrame<*>? {
-        val options = (options ?: Options()) as Options
-        val kType = sourceInfo.type.kType
-        return when (sourceInfo.type) {
-            is DataSourceType.Reference -> {
-                val url = when {
-                    kType.isSubTypeOf<String>() -> (source as? String)?.let(::asUrl)
-                    kType.isSubTypeOf<URL>() -> source as? URL
-                    kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-                    kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
-                    else -> null
-                } ?: return null
+        val opts = (options ?: Options()) as Options
+        val kType = sourceInfo.kType
 
-                DataFrame.readJson(
-                    url = url,
-                    header = options.header,
-                    typeClashTactic = options.typeClashTactic,
-                    keyValuePaths = options.keyValuePaths,
-                    unifyNumbers = options.unifyNumbers,
-                )
-            }
-
-            is DataSourceType.InMemory -> {
-                val element = when {
-                    kType.isSubTypeOf<InputStream>() ->
-                        (source as? InputStream)?.let {
-                            runCatching { it.reset() }
-                            Json.decodeFromStream<JsonElement>(it)
-                        }
-
-                    kType.isSubTypeOf<String>() ->
-                        (source as? String)?.let {
-                            Json.decodeFromString<JsonElement>(it)
-                        }
-
-                    kType.isSubTypeOf<JsonElement>() ->
-                        source as? JsonElement
-
-                    else -> null
-                } ?: return null
-
-                readJsonImpl(
-                    parsed = element,
-                    header = options.header,
-                    typeClashTactic = options.typeClashTactic,
-                    keyValuePaths = options.keyValuePaths,
-                    unifyNumbers = options.unifyNumbers,
-                )
-            }
+        val url: URL? = when {
+            kType.isSubTypeOf<URL>() -> source as? URL
+            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+            else -> null
         }
+        if (url != null) {
+            return DataFrame.readJson(
+                url = url,
+                header = opts.header,
+                typeClashTactic = opts.typeClashTactic,
+                keyValuePaths = opts.keyValuePaths,
+                unifyNumbers = opts.unifyNumbers,
+            )
+        }
+
+        val element: JsonElement? = when {
+            kType.isSubTypeOf<InputStream>() ->
+                (source as? InputStream)?.let { Json.decodeFromStream<JsonElement>(it) }
+
+            kType.isSubTypeOf<String>() ->
+                (source as? String)?.let { Json.decodeFromString<JsonElement>(it) }
+
+            kType.isSubTypeOf<JsonElement>() ->
+                source as? JsonElement
+
+            else -> null
+        } ?: return null
+
+        return readJsonImpl(
+            parsed = element,
+            header = opts.header,
+            typeClashTactic = opts.typeClashTactic,
+            keyValuePaths = opts.keyValuePaths,
+            unifyNumbers = opts.unifyNumbers,
+        )
     }
 
     override val testOrder: Int = 10_000

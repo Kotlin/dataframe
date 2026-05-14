@@ -81,10 +81,16 @@ public class ExcelNEW : DataFrameReadSource {
     ) : DataFrameReadOptions
 
     public companion object {
-        public val supportedReferenceTypes: Set<KType> =
-            setOf(typeOf<String>(), typeOf<URL>(), typeOf<Path>(), typeOf<File>())
-        public val supportedInMemoryTypes: Set<KType> =
-            setOf(typeOf<InputStream>(), typeOf<Workbook>(), typeOf<Sheet>())
+        public val supportedTypes: Set<KType> =
+            setOf(
+                typeOf<URL>(),
+                typeOf<Path>(),
+                typeOf<File>(),
+                typeOf<String>(),
+                typeOf<InputStream>(),
+                typeOf<Workbook>(),
+                typeOf<Sheet>(),
+            )
 
         internal val EXTENSIONS: Set<String> = setOf("xls", "xlsx")
         internal val MIME_TYPES: Set<String> = setOf(
@@ -99,15 +105,7 @@ public class ExcelNEW : DataFrameReadSource {
         if (ext != null && ext !in EXTENSIONS) return false
         val mime = sourceInfo.mimeType?.lowercase()
         if (mime != null && mime !in MIME_TYPES) return false
-
-        val kType = sourceInfo.type.kType
-        return when (sourceInfo.type) {
-            is DataSourceType.Reference ->
-                supportedReferenceTypes.any { kType.isSubtypeOf(it) }
-
-            is DataSourceType.InMemory ->
-                supportedInMemoryTypes.any { kType.isSubtypeOf(it) }
-        }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(
@@ -116,79 +114,75 @@ public class ExcelNEW : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): DataFrame<*>? {
         val opts = (options ?: Options()) as Options
-        val kType = sourceInfo.type.kType
-        return when (sourceInfo.type) {
-            is DataSourceType.Reference -> {
-                val url = when {
-                    kType.isSubTypeOf<String>() -> (source as? String)?.let(::asUrl)
-                    kType.isSubTypeOf<URL>() -> source as? URL
-                    kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-                    kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
-                    else -> null
-                } ?: return null
+        val kType = sourceInfo.kType
 
-                DataFrame.readExcel(
-                    url = url,
-                    sheetName = opts.sheetName,
-                    skipRows = opts.skipRows,
-                    columns = opts.columns,
-                    stringColumns = opts.stringColumns,
-                    rowsCount = opts.rowsCount,
-                    nameRepairStrategy = opts.nameRepairStrategy,
-                    firstRowIsHeader = opts.firstRowIsHeader,
-                    parseEmptyAsNull = opts.parseEmptyAsNull,
-                )
-            }
+        val url: URL? = when {
+            kType.isSubTypeOf<URL>() -> source as? URL
+            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+            else -> null
+        }
+        if (url != null) {
+            return DataFrame.readExcel(
+                url = url,
+                sheetName = opts.sheetName,
+                skipRows = opts.skipRows,
+                columns = opts.columns,
+                stringColumns = opts.stringColumns,
+                rowsCount = opts.rowsCount,
+                nameRepairStrategy = opts.nameRepairStrategy,
+                firstRowIsHeader = opts.firstRowIsHeader,
+                parseEmptyAsNull = opts.parseEmptyAsNull,
+            )
+        }
 
-            is DataSourceType.InMemory -> when {
-                kType.isSubTypeOf<InputStream>() ->
-                    (source as? InputStream)?.let { stream ->
-                        runCatching { stream.reset() }
-                        DataFrame.readExcel(
-                            inputStream = stream,
-                            sheetName = opts.sheetName,
-                            skipRows = opts.skipRows,
-                            columns = opts.columns,
-                            stringColumns = opts.stringColumns,
-                            rowsCount = opts.rowsCount,
-                            nameRepairStrategy = opts.nameRepairStrategy,
-                            firstRowIsHeader = opts.firstRowIsHeader,
-                            parseEmptyAsNull = opts.parseEmptyAsNull,
-                        )
-                    }
+        return when {
+            kType.isSubTypeOf<InputStream>() ->
+                (source as? InputStream)?.let { stream ->
+                    DataFrame.readExcel(
+                        inputStream = stream,
+                        sheetName = opts.sheetName,
+                        skipRows = opts.skipRows,
+                        columns = opts.columns,
+                        stringColumns = opts.stringColumns,
+                        rowsCount = opts.rowsCount,
+                        nameRepairStrategy = opts.nameRepairStrategy,
+                        firstRowIsHeader = opts.firstRowIsHeader,
+                        parseEmptyAsNull = opts.parseEmptyAsNull,
+                    )
+                }
 
-                kType.isSubTypeOf<Workbook>() ->
-                    (source as? Workbook)?.let { wb ->
-                        DataFrame.readExcel(
-                            wb = wb,
-                            sheetName = opts.sheetName,
-                            skipRows = opts.skipRows,
-                            columns = opts.columns,
-                            formattingOptions = opts.stringColumns?.toFormattingOptions(),
-                            rowsCount = opts.rowsCount,
-                            nameRepairStrategy = opts.nameRepairStrategy,
-                            firstRowIsHeader = opts.firstRowIsHeader,
-                            parseEmptyAsNull = opts.parseEmptyAsNull,
-                        )
-                    }
+            kType.isSubTypeOf<Workbook>() ->
+                (source as? Workbook)?.let { wb ->
+                    DataFrame.readExcel(
+                        wb = wb,
+                        sheetName = opts.sheetName,
+                        skipRows = opts.skipRows,
+                        columns = opts.columns,
+                        formattingOptions = opts.stringColumns?.toFormattingOptions(),
+                        rowsCount = opts.rowsCount,
+                        nameRepairStrategy = opts.nameRepairStrategy,
+                        firstRowIsHeader = opts.firstRowIsHeader,
+                        parseEmptyAsNull = opts.parseEmptyAsNull,
+                    )
+                }
 
-                kType.isSubTypeOf<Sheet>() ->
-                    (source as? Sheet)?.let { sheet ->
-                        // readExcel(Sheet) has no sheetName parameter — the sheet is already selected.
-                        DataFrame.readExcel(
-                            sheet = sheet,
-                            columns = opts.columns,
-                            formattingOptions = opts.stringColumns?.toFormattingOptions(),
-                            skipRows = opts.skipRows,
-                            rowsCount = opts.rowsCount,
-                            nameRepairStrategy = opts.nameRepairStrategy,
-                            firstRowIsHeader = opts.firstRowIsHeader,
-                            parseEmptyAsNull = opts.parseEmptyAsNull,
-                        )
-                    }
+            kType.isSubTypeOf<Sheet>() ->
+                (source as? Sheet)?.let { sheet ->
+                    // readExcel(Sheet) has no sheetName parameter — the sheet is already selected.
+                    DataFrame.readExcel(
+                        sheet = sheet,
+                        columns = opts.columns,
+                        formattingOptions = opts.stringColumns?.toFormattingOptions(),
+                        skipRows = opts.skipRows,
+                        rowsCount = opts.rowsCount,
+                        nameRepairStrategy = opts.nameRepairStrategy,
+                        firstRowIsHeader = opts.firstRowIsHeader,
+                        parseEmptyAsNull = opts.parseEmptyAsNull,
+                    )
+                }
 
-                else -> null
-            }
+            else -> null
         }
     }
 

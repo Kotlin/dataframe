@@ -2,10 +2,12 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.io.readSource
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
+import java.net.URI
 import java.net.URL
 import java.nio.file.Path
 import java.util.ServiceLoader
@@ -31,30 +33,22 @@ public interface DataFrameReadSource {
     public val testOrder: Int
 }
 
+/**
+ * Description of a source passed to [DataFrameReadSource]. Carries the static [kType] of the value and
+ * optional [extension]/[mimeType] hints, both of which may be `null` when the source is in-memory content
+ * with no reasonable file-extension/MIME interpretation (e.g., a raw [String], [InputStream], [java.sql.Connection],
+ * etc.).
+ */
 public data class DataSourceInfo(
-    public val type: DataSourceType,
+    public val kType: KType,
     public val extension: String? = null,
     // TODO, Apache Tika?
     public val mimeType: String? = null,
 )
 
-public sealed class DataSourceType(public open val kType: KType) {
-    /** Like a path, file, or URL. */
-    public data class Reference(override val kType: KType) : DataSourceType(kType)
-
-    /** Actual data, like a String, ByteArray, InputStream */
-    public data class InMemory(override val kType: KType) : DataSourceType(kType)
-
-    public companion object {
-        public inline fun <reified T> reference(): Reference = Reference(kType = typeOf<T>())
-
-        public inline fun <reified T> inMemory(): InMemory = InMemory(kType = typeOf<T>())
-    }
-}
-
 /**
  * NOTE: Needs to have fully qualified name in
- * resources/META-INF/services/org.jetbrains.kotlinx.dataframe.io.NewSupportedDataFrameFormat
+ * resources/META-INF/services/org.jetbrains.kotlinx.dataframe.io.DataFrameReadSource
  * to be detected here.
  */
 internal val newSupportedFormats: List<DataFrameReadSource> by lazy {
@@ -70,6 +64,20 @@ internal fun readDataFrameImpl(
     options: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = newSupportedFormats,
 ): AnyFrame {
+    if (source is String) {
+        val url = asUrlOrNull(source)
+        if (url != null) {
+            return readDataFrameImpl(
+                source = url,
+                sourceInfo = sourceInfo.copy(
+                    kType = typeOf<URL>(),
+                ),
+                options = options,
+                formats = formats,
+            )
+        }
+    }
+
     // Some sources can only be read once, like InputStreams, so we need to buffer them
     var bufferedSource: Any? = null
 
@@ -98,30 +106,33 @@ internal fun readDataFrameImpl(
     throw IllegalArgumentException("Unknown DataFrame source $source, $sourceInfo; Tried $tries")
 }
 
-public fun DataFrame.Companion.readReference(
-    reference: Any,
-    type: KType,
-    options: DataFrameReadOptions? = null,
-): AnyFrame =
+/**
+ * Unified entry point for the [DataFrameReadSource] framework: passes [source] through every registered
+ * format until one reads it.
+ *
+ * For a [String] that points to an existing file or a recognized URL (`http://`, `https://`, `ftp://`),
+ * the source is normalized to a [URL] so the file-extension hint can be used to disambiguate formats. Any
+ * other [String] is treated as in-memory content (raw JSON/CSV/etc.).
+ *
+ * Named [readSource] rather than `read` to avoid shadowing the legacy `DataFrame.read(File/URL/Path/String, header)`
+ * entries in `guess.kt` that use the older [SupportedDataFrameFormat] system. Once the legacy entries are
+ * retired, this can be renamed to `read`.
+ */
+public fun DataFrame.Companion.readSource(source: Any, type: KType, options: DataFrameReadOptions? = null): AnyFrame =
     readDataFrameImpl(
-        source = reference,
+        source = source,
         sourceInfo = DataSourceInfo(
-            type = DataSourceType.Reference(type.withNullability(false)),
-            extension = reference.extensionOrNull(),
+            kType = type.withNullability(false),
+            extension = source.extensionOrNull(),
             mimeType = null, // TODO, Apache Tika?
         ),
         options = options,
     )
 
-public inline fun <reified R : Any> DataFrame.Companion.readReference(
-    reference: R,
+public inline fun <reified R : Any> DataFrame.Companion.readSource(
+    source: R,
     options: DataFrameReadOptions? = null,
-): AnyFrame =
-    readReference(
-        reference = reference,
-        type = typeOf<R>(),
-        options = options,
-    )
+): AnyFrame = readSource(source = source, type = typeOf<R>(), options = options)
 
 internal fun Any.extensionOrNull(): String? =
     when (this) {
@@ -140,22 +151,29 @@ internal fun Any.extensionOrNull(): String? =
         else -> null
     }
 
-public fun DataFrame.Companion.readFromData(data: Any, type: KType, options: DataFrameReadOptions? = null): AnyFrame =
-    readDataFrameImpl(
-        source = data,
-        sourceInfo = DataSourceInfo(
-            type = DataSourceType.InMemory(type.withNullability(false)),
-            mimeType = null, // TODO, Apache Tika?
-        ),
-        options = options,
-    )
+/**
+ * Non-throwing variant of [asUrl]: returns the [URL] iff [string] is a recognized URL (`http`/`https`/`ftp`)
+ * or an existing file path. Used by [readSource] to decide whether a [String] should be treated as a reference
+ * or as raw content.
+ */
+internal fun asUrlOrNull(string: String): URL? =
+    when {
+        isUrl(string) -> try {
+            URI(string).toURL()
+        } catch (_: Exception) {
+            null
+        }
 
-public inline fun <reified R : Any> DataFrame.Companion.readFromData(
-    data: R,
-    options: DataFrameReadOptions? = null,
-): AnyFrame =
-    readFromData(
-        data = data,
-        type = typeOf<R>(),
-        options = options,
-    )
+        else -> {
+            val file = try {
+                File(string)
+            } catch (_: Exception) {
+                null
+            }
+            if (file != null && file.exists() && file.isFile) {
+                file.toURI().toURL()
+            } else {
+                null
+            }
+        }
+    }

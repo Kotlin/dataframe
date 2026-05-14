@@ -20,10 +20,10 @@ class Guess2 {
     fun `read JSON reference`() {
         val expected = DataFrame.readJson("../data/participants.json")
 
-        DataFrame.readReference("../data/participants.json") shouldBe expected
-        DataFrame.readReference(Path("../data/participants.json")) shouldBe expected
-        DataFrame.readReference(File("../data/participants.json")) shouldBe expected
-        DataFrame.readReference(
+        DataFrame.readSource("../data/participants.json") shouldBe expected
+        DataFrame.readSource(Path("../data/participants.json")) shouldBe expected
+        DataFrame.readSource(File("../data/participants.json")) shouldBe expected
+        DataFrame.readSource(
             Path("../data/participants.json").absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
@@ -31,10 +31,10 @@ class Guess2 {
             typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS,
         )
 
-        DataFrame.readReference("../data/participants.json", options) shouldBe expected
-        DataFrame.readReference(Path("../data/participants.json"), options) shouldBe expected
-        DataFrame.readReference(File("../data/participants.json"), options) shouldBe expected
-        DataFrame.readReference(
+        DataFrame.readSource("../data/participants.json", options) shouldBe expected
+        DataFrame.readSource(Path("../data/participants.json"), options) shouldBe expected
+        DataFrame.readSource(File("../data/participants.json"), options) shouldBe expected
+        DataFrame.readSource(
             Path("../data/participants.json").absolute().normalize().toUri().toURL(),
             options,
         ) shouldBe expected
@@ -46,17 +46,17 @@ class Guess2 {
 
         val file = File("../data/participants.json")
 
-        DataFrame.readFromData(file.readText()) shouldBe expected
-        DataFrame.readFromData(file.inputStream()) shouldBe expected
-        DataFrame.readFromData(Json.decodeFromString<JsonElement>(file.readText())) shouldBe expected
+        DataFrame.readSource(file.readText()) shouldBe expected
+        DataFrame.readSource(file.inputStream()) shouldBe expected
+        DataFrame.readSource(Json.decodeFromString<JsonElement>(file.readText())) shouldBe expected
 
         val options = org.jetbrains.kotlinx.dataframe.io.Json.Options(
             typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS,
         )
 
-        DataFrame.readFromData(file.readText(), options) shouldBe expected
-        DataFrame.readFromData(file.inputStream(), options) shouldBe expected
-        DataFrame.readFromData(Json.decodeFromString<JsonElement>(file.readText()), options) shouldBe expected
+        DataFrame.readSource(file.readText(), options) shouldBe expected
+        DataFrame.readSource(file.inputStream(), options) shouldBe expected
+        DataFrame.readSource(Json.decodeFromString<JsonElement>(file.readText()), options) shouldBe expected
     }
 
     @Test
@@ -64,19 +64,19 @@ class Guess2 {
         val csvPath = "../data/movies.csv"
         val expected = DataFrame.readCsv(csvPath)
 
-        DataFrame.readReference(csvPath) shouldBe expected
-        DataFrame.readReference(Path(csvPath)) shouldBe expected
-        DataFrame.readReference(File(csvPath)) shouldBe expected
-        DataFrame.readReference(
+        DataFrame.readSource(csvPath) shouldBe expected
+        DataFrame.readSource(Path(csvPath)) shouldBe expected
+        DataFrame.readSource(File(csvPath)) shouldBe expected
+        DataFrame.readSource(
             Path(csvPath).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
         val options = Csv.Options(delimiter = ',')
 
-        DataFrame.readReference(csvPath, options) shouldBe expected
-        DataFrame.readReference(Path(csvPath), options) shouldBe expected
-        DataFrame.readReference(File(csvPath), options) shouldBe expected
-        DataFrame.readReference(
+        DataFrame.readSource(csvPath, options) shouldBe expected
+        DataFrame.readSource(Path(csvPath), options) shouldBe expected
+        DataFrame.readSource(File(csvPath), options) shouldBe expected
+        DataFrame.readSource(
             Path(csvPath).absolute().normalize().toUri().toURL(),
             options,
         ) shouldBe expected
@@ -90,8 +90,8 @@ class Guess2 {
         // String content has no extension hint, so we pin the format via options.
         val options = Csv.Options(delimiter = ',')
 
-        DataFrame.readFromData(file.readText(), options) shouldBe expected
-        DataFrame.readFromData(file.inputStream(), options) shouldBe expected
+        DataFrame.readSource(file.readText(), options) shouldBe expected
+        DataFrame.readSource(file.inputStream(), options) shouldBe expected
     }
 
     @Test
@@ -99,19 +99,19 @@ class Guess2 {
         val tsvFile = File("src/test/resources/abc.tsv")
         val expected = DataFrame.readTsv(tsvFile)
 
-        DataFrame.readReference(tsvFile.path) shouldBe expected
-        DataFrame.readReference(Path(tsvFile.path)) shouldBe expected
-        DataFrame.readReference(tsvFile) shouldBe expected
-        DataFrame.readReference(
+        DataFrame.readSource(tsvFile.path) shouldBe expected
+        DataFrame.readSource(Path(tsvFile.path)) shouldBe expected
+        DataFrame.readSource(tsvFile) shouldBe expected
+        DataFrame.readSource(
             Path(tsvFile.path).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
         val options = Tsv.Options(delimiter = '\t')
 
-        DataFrame.readReference(tsvFile.path, options) shouldBe expected
-        DataFrame.readReference(Path(tsvFile.path), options) shouldBe expected
-        DataFrame.readReference(tsvFile, options) shouldBe expected
-        DataFrame.readReference(
+        DataFrame.readSource(tsvFile.path, options) shouldBe expected
+        DataFrame.readSource(Path(tsvFile.path), options) shouldBe expected
+        DataFrame.readSource(tsvFile, options) shouldBe expected
+        DataFrame.readSource(
             Path(tsvFile.path).absolute().normalize().toUri().toURL(),
             options,
         ) shouldBe expected
@@ -124,8 +124,8 @@ class Guess2 {
         val options = Tsv.Options(delimiter = '\t')
 
         // Binary/text without extension — options pin Tsv over Csv/Json/Xlsx.
-        DataFrame.readFromData(tsvFile.readText(), options) shouldBe expected
-        DataFrame.readFromData(tsvFile.inputStream(), options) shouldBe expected
+        DataFrame.readSource(tsvFile.readText(), options) shouldBe expected
+        DataFrame.readSource(tsvFile.inputStream(), options) shouldBe expected
     }
 
     @Test
@@ -133,19 +133,19 @@ class Guess2 {
         val xlsxFile = File("src/test/resources/sample2.xlsx")
         val expected = DataFrame.readExcel(xlsxFile)
 
-        DataFrame.readReference(xlsxFile.path) shouldBe expected
-        DataFrame.readReference(Path(xlsxFile.path)) shouldBe expected
-        DataFrame.readReference(xlsxFile) shouldBe expected
-        DataFrame.readReference(
+        DataFrame.readSource(xlsxFile.path) shouldBe expected
+        DataFrame.readSource(Path(xlsxFile.path)) shouldBe expected
+        DataFrame.readSource(xlsxFile) shouldBe expected
+        DataFrame.readSource(
             Path(xlsxFile.path).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
         val options = ExcelNEW.Options(sheetName = "Sheet1")
 
-        DataFrame.readReference(xlsxFile.path, options) shouldBe expected
-        DataFrame.readReference(Path(xlsxFile.path), options) shouldBe expected
-        DataFrame.readReference(xlsxFile, options) shouldBe expected
-        DataFrame.readReference(
+        DataFrame.readSource(xlsxFile.path, options) shouldBe expected
+        DataFrame.readSource(Path(xlsxFile.path), options) shouldBe expected
+        DataFrame.readSource(xlsxFile, options) shouldBe expected
+        DataFrame.readSource(
             Path(xlsxFile.path).absolute().normalize().toUri().toURL(),
             options,
         ) shouldBe expected
@@ -156,10 +156,10 @@ class Guess2 {
         val xlsFile = File("src/test/resources/sample.xls")
         val expected = DataFrame.readExcel(xlsFile)
 
-        DataFrame.readReference(xlsFile.path) shouldBe expected
-        DataFrame.readReference(Path(xlsFile.path)) shouldBe expected
-        DataFrame.readReference(xlsFile) shouldBe expected
-        DataFrame.readReference(
+        DataFrame.readSource(xlsFile.path) shouldBe expected
+        DataFrame.readSource(Path(xlsFile.path)) shouldBe expected
+        DataFrame.readSource(xlsFile) shouldBe expected
+        DataFrame.readSource(
             Path(xlsFile.path).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
     }
@@ -171,19 +171,19 @@ class Guess2 {
 
         // Workbook and Sheet are exclusive to ExcelNEW, so type-based dispatch works without options.
         WorkbookFactory.create(xlsxFile.inputStream()).use { wb ->
-            DataFrame.readFromData(wb) shouldBe expected
-            DataFrame.readFromData(wb.getSheetAt(0)) shouldBe expected
+            DataFrame.readSource(wb) shouldBe expected
+            DataFrame.readSource(wb.getSheetAt(0)) shouldBe expected
         }
 
         val options = ExcelNEW.Options()
 
         // Binary streams have no extension and are accepted by every format,
         // so options are needed to pin ExcelNEW for the InputStream variant.
-        DataFrame.readFromData(xlsxFile.inputStream(), options) shouldBe expected
+        DataFrame.readSource(xlsxFile.inputStream(), options) shouldBe expected
 
         WorkbookFactory.create(xlsxFile.inputStream()).use { wb ->
-            DataFrame.readFromData(wb, options) shouldBe expected
-            DataFrame.readFromData(wb.getSheetAt(0), options) shouldBe expected
+            DataFrame.readSource(wb, options) shouldBe expected
+            DataFrame.readSource(wb.getSheetAt(0), options) shouldBe expected
         }
     }
 
@@ -193,11 +193,11 @@ class Guess2 {
         val expected = DataFrame.readExcel(xlsFile)
 
         WorkbookFactory.create(xlsFile.inputStream()).use { wb ->
-            DataFrame.readFromData(wb) shouldBe expected
+            DataFrame.readSource(wb) shouldBe expected
         }
-        DataFrame.readFromData(xlsFile.inputStream()) shouldBe expected
+        DataFrame.readSource(xlsFile.inputStream()) shouldBe expected
         WorkbookFactory.create(xlsFile.inputStream()).use { wb ->
-            DataFrame.readFromData(wb) shouldBe expected
+            DataFrame.readSource(wb) shouldBe expected
         }
     }
 
@@ -221,13 +221,13 @@ class Guess2 {
             val queryOpts = Jdbc2.Options(sqlQueryOrTableName = "SELECT * FROM Customer")
 
             // Connection — exclusive type, but query/table name must come from options.
-            DataFrame.readFromData(conn, tableOpts) shouldBe expected
-            DataFrame.readFromData(conn, queryOpts) shouldBe expected
+            DataFrame.readSource(conn, tableOpts) shouldBe expected
+            DataFrame.readSource(conn, queryOpts) shouldBe expected
 
             // DbConnectionConfig as InMemory.
             val config = DbConnectionConfig(url = url)
-            DataFrame.readFromData(config, tableOpts) shouldBe expected
-            DataFrame.readFromData(config, queryOpts) shouldBe expected
+            DataFrame.readSource(config, tableOpts) shouldBe expected
+            DataFrame.readSource(config, queryOpts) shouldBe expected
 
             // DataSource — opens a fresh connection each call (DataSource.readDataFrame closes it via `use`).
             val dataSource = object : DataSource {
@@ -241,12 +241,12 @@ class Guess2 {
                 override fun <T : Any?> unwrap(iface: Class<T>?): T = throw UnsupportedOperationException()
                 override fun isWrapperFor(iface: Class<*>?) = false
             }
-            DataFrame.readFromData(dataSource, tableOpts) shouldBe expected
+            DataFrame.readSource(dataSource, tableOpts) shouldBe expected
 
             // ResultSet — no sqlQueryOrTableName needed; just dbType (or a Connection to derive it).
             conn.prepareStatement("SELECT * FROM Customer").use { ps ->
                 ps.executeQuery().use { rs ->
-                    DataFrame.readFromData(
+                    DataFrame.readSource(
                         rs,
                         Jdbc2.Options(dbType = H2()),
                     ) shouldBe expected
@@ -254,13 +254,35 @@ class Guess2 {
             }
             conn.prepareStatement("SELECT * FROM Customer").use { ps ->
                 ps.executeQuery().use { rs ->
-                    DataFrame.readFromData(
+                    DataFrame.readSource(
                         rs,
                         Jdbc2.Options(resultSetConnection = conn),
                     ) shouldBe expected
                 }
             }
         }
+    }
+
+    @Test
+    fun `unified readSource auto-detects references vs content`() {
+        // String that points to an existing file → routed through URL → JSON wins on extension
+        val jsonExpected = DataFrame.readJson("../data/participants.json")
+        DataFrame.readSource("../data/participants.json") shouldBe jsonExpected
+
+        // Same idea for CSV/XLSX
+        val csvExpected = DataFrame.readCsv("../data/movies.csv")
+        DataFrame.readSource("../data/movies.csv") shouldBe csvExpected
+
+        val xlsxExpected = DataFrame.readExcel(File("src/test/resources/sample2.xlsx"))
+        DataFrame.readSource("src/test/resources/sample2.xlsx") shouldBe xlsxExpected
+
+        // String that doesn't resolve to a file → treated as raw content (JSON content here)
+        val file = File("../data/participants.json")
+        DataFrame.readSource(file.readText()) shouldBe jsonExpected
+
+        // Non-String types: still work, no special handling needed
+        DataFrame.readSource(file) shouldBe jsonExpected
+        DataFrame.readSource(Path("../data/participants.json")) shouldBe jsonExpected
     }
 
     @Test
@@ -272,7 +294,7 @@ class Guess2 {
         val expected = DataFrame.readSqlTable(config, "Customer")
         val tableOpts = Jdbc2.Options(sqlQueryOrTableName = "Customer")
 
-        DataFrame.readReference(config, tableOpts) shouldBe expected
-        DataFrame.readReference(config, Jdbc2.Options(sqlQueryOrTableName = "SELECT * FROM Customer")) shouldBe expected
+        DataFrame.readSource(config, tableOpts) shouldBe expected
+        DataFrame.readSource(config, Jdbc2.Options(sqlQueryOrTableName = "SELECT * FROM Customer")) shouldBe expected
     }
 }

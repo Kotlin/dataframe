@@ -58,10 +58,8 @@ public class Csv : DataFrameReadSource {
     ) : DataFrameReadOptions
 
     public companion object {
-        public val supportedReferenceTypes: Set<KType> =
-            setOf(typeOf<String>(), typeOf<URL>(), typeOf<Path>(), typeOf<File>())
-        public val supportedInMemoryTypes: Set<KType> =
-            setOf(typeOf<String>(), typeOf<InputStream>())
+        public val supportedTypes: Set<KType> =
+            setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
 
         internal const val EXTENSION: String = "csv"
         internal const val MIME_TYPE: String = "text/csv"
@@ -71,15 +69,7 @@ public class Csv : DataFrameReadSource {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
         if (sourceInfo.mimeType?.lowercase()?.equals(MIME_TYPE) == false) return false
-
-        val kType = sourceInfo.type.kType
-        return when (sourceInfo.type) {
-            is DataSourceType.Reference ->
-                supportedReferenceTypes.any { kType.isSubtypeOf(it) }
-
-            is DataSourceType.InMemory ->
-                supportedInMemoryTypes.any { kType.isSubtypeOf(it) }
-        }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(
@@ -88,81 +78,77 @@ public class Csv : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): DataFrame<*>? {
         val opts = (options ?: Options()) as Options
-        val kType = sourceInfo.type.kType
-        return when (sourceInfo.type) {
-            is DataSourceType.Reference -> {
-                val url = when {
-                    kType.isSubTypeOf<String>() -> (source as? String)?.let(::asUrl)
-                    kType.isSubTypeOf<URL>() -> source as? URL
-                    kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-                    kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
-                    else -> null
-                } ?: return null
+        val kType = sourceInfo.kType
 
-                DataFrame.readCsv(
-                    url = url,
-                    delimiter = opts.delimiter,
-                    header = opts.header,
-                    charset = opts.charset,
-                    colTypes = opts.colTypes,
-                    skipLines = opts.skipLines,
-                    readLines = opts.readLines,
-                    parserOptions = opts.parserOptions,
-                    ignoreEmptyLines = opts.ignoreEmptyLines,
-                    allowMissingColumns = opts.allowMissingColumns,
-                    ignoreExcessColumns = opts.ignoreExcessColumns,
-                    quote = opts.quote,
-                    ignoreSurroundingSpaces = opts.ignoreSurroundingSpaces,
-                    trimInsideQuoted = opts.trimInsideQuoted,
-                    parseParallel = opts.parseParallel,
-                )
-            }
+        val url: URL? = when {
+            kType.isSubTypeOf<URL>() -> source as? URL
+            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+            else -> null
+        }
+        if (url != null) {
+            return DataFrame.readCsv(
+                url = url,
+                delimiter = opts.delimiter,
+                header = opts.header,
+                charset = opts.charset,
+                colTypes = opts.colTypes,
+                skipLines = opts.skipLines,
+                readLines = opts.readLines,
+                parserOptions = opts.parserOptions,
+                ignoreEmptyLines = opts.ignoreEmptyLines,
+                allowMissingColumns = opts.allowMissingColumns,
+                ignoreExcessColumns = opts.ignoreExcessColumns,
+                quote = opts.quote,
+                ignoreSurroundingSpaces = opts.ignoreSurroundingSpaces,
+                trimInsideQuoted = opts.trimInsideQuoted,
+                parseParallel = opts.parseParallel,
+            )
+        }
 
-            is DataSourceType.InMemory -> when {
-                kType.isSubTypeOf<InputStream>() ->
-                    (source as? InputStream)?.let { stream ->
-                        runCatching { stream.reset() }
-                        DataFrame.readCsv(
-                            inputStream = stream,
-                            delimiter = opts.delimiter,
-                            header = opts.header,
-                            charset = opts.charset,
-                            colTypes = opts.colTypes,
-                            skipLines = opts.skipLines,
-                            readLines = opts.readLines,
-                            parserOptions = opts.parserOptions,
-                            ignoreEmptyLines = opts.ignoreEmptyLines,
-                            allowMissingColumns = opts.allowMissingColumns,
-                            ignoreExcessColumns = opts.ignoreExcessColumns,
-                            quote = opts.quote,
-                            ignoreSurroundingSpaces = opts.ignoreSurroundingSpaces,
-                            trimInsideQuoted = opts.trimInsideQuoted,
-                            parseParallel = opts.parseParallel,
-                        )
-                    }
+        return when {
+            kType.isSubTypeOf<InputStream>() ->
+                (source as? InputStream)?.let { stream ->
+                    DataFrame.readCsv(
+                        inputStream = stream,
+                        delimiter = opts.delimiter,
+                        header = opts.header,
+                        charset = opts.charset,
+                        colTypes = opts.colTypes,
+                        skipLines = opts.skipLines,
+                        readLines = opts.readLines,
+                        parserOptions = opts.parserOptions,
+                        ignoreEmptyLines = opts.ignoreEmptyLines,
+                        allowMissingColumns = opts.allowMissingColumns,
+                        ignoreExcessColumns = opts.ignoreExcessColumns,
+                        quote = opts.quote,
+                        ignoreSurroundingSpaces = opts.ignoreSurroundingSpaces,
+                        trimInsideQuoted = opts.trimInsideQuoted,
+                        parseParallel = opts.parseParallel,
+                    )
+                }
 
-                kType.isSubTypeOf<String>() ->
-                    (source as? String)?.let { text ->
-                        DataFrame.readCsvStr(
-                            text = text,
-                            delimiter = opts.delimiter,
-                            header = opts.header,
-                            colTypes = opts.colTypes,
-                            skipLines = opts.skipLines,
-                            readLines = opts.readLines,
-                            parserOptions = opts.parserOptions,
-                            ignoreEmptyLines = opts.ignoreEmptyLines,
-                            allowMissingColumns = opts.allowMissingColumns,
-                            ignoreExcessColumns = opts.ignoreExcessColumns,
-                            quote = opts.quote,
-                            ignoreSurroundingSpaces = opts.ignoreSurroundingSpaces,
-                            trimInsideQuoted = opts.trimInsideQuoted,
-                            parseParallel = opts.parseParallel,
-                        )
-                    }
+            kType.isSubTypeOf<String>() ->
+                (source as? String)?.let { text ->
+                    DataFrame.readCsvStr(
+                        text = text,
+                        delimiter = opts.delimiter,
+                        header = opts.header,
+                        colTypes = opts.colTypes,
+                        skipLines = opts.skipLines,
+                        readLines = opts.readLines,
+                        parserOptions = opts.parserOptions,
+                        ignoreEmptyLines = opts.ignoreEmptyLines,
+                        allowMissingColumns = opts.allowMissingColumns,
+                        ignoreExcessColumns = opts.ignoreExcessColumns,
+                        quote = opts.quote,
+                        ignoreSurroundingSpaces = opts.ignoreSurroundingSpaces,
+                        trimInsideQuoted = opts.trimInsideQuoted,
+                        parseParallel = opts.parseParallel,
+                    )
+                }
 
-                else -> null
-            }
+            else -> null
         }
     }
 

@@ -51,13 +51,10 @@ public class Jdbc :
  * carry that instruction. Provide it via [Options.sqlQueryOrTableName]. The only exception is [ResultSet],
  * which is already an executed query.
  *
- * Supports the following sources:
- *  - [Reference][DataSourceType.Reference]: [DbConnectionConfig]
- *  - [InMemory][DataSourceType.InMemory]: [Connection], [DataSource], [DbConnectionConfig], [ResultSet]
+ * Supported source types: [Connection], [DataSource], [DbConnectionConfig], [ResultSet].
  *
- * Note: [DbConnectionConfig] is accepted as both reference and in-memory deliberately, to compare which
- * feels more natural in practice. Other read-paths in this module — notably `readAllSqlTables` returning a
- * `Map<String, AnyFrame>` — don't fit the single-DataFrame contract and are unchanged.
+ * `readAllSqlTables` returns a `Map<String, AnyFrame>` and doesn't fit the single-DataFrame contract; it
+ * remains as a direct API call.
  */
 public class Jdbc2 : DataFrameReadSource {
 
@@ -82,8 +79,7 @@ public class Jdbc2 : DataFrameReadSource {
     ) : DataFrameReadOptions
 
     public companion object {
-        public val supportedReferenceTypes: Set<KType> = setOf(typeOf<DbConnectionConfig>())
-        public val supportedInMemoryTypes: Set<KType> =
+        public val supportedTypes: Set<KType> =
             setOf(
                 typeOf<Connection>(),
                 typeOf<DataSource>(),
@@ -94,14 +90,7 @@ public class Jdbc2 : DataFrameReadSource {
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
-        val kType = sourceInfo.type.kType
-        return when (sourceInfo.type) {
-            is DataSourceType.Reference ->
-                supportedReferenceTypes.any { kType.isSubtypeOf(it) }
-
-            is DataSourceType.InMemory ->
-                supportedInMemoryTypes.any { kType.isSubtypeOf(it) }
-        }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(
