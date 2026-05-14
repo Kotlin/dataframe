@@ -5,7 +5,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.db.H2
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
 import java.io.File
 import java.sql.Connection
@@ -296,5 +298,74 @@ class Guess2 {
 
         DataFrame.readSource(config, tableOpts) shouldBe expected
         DataFrame.readSource(config, Jdbc2.Options(sqlQueryOrTableName = "SELECT * FROM Customer")) shouldBe expected
+    }
+
+    @Test
+    fun `read schema via default fallback (file-based formats)`() {
+        // JSON
+        val jsonExpected = DataFrame.readJson("../data/participants.json").schema()
+        DataFrameSchema.readSource(
+            File("../data/participants.json"),
+        ) shouldBe jsonExpected
+        DataFrameSchema.readSource(
+            "../data/participants.json",
+        ) shouldBe jsonExpected
+
+        // CSV
+        val csvExpected = DataFrame.readCsv("../data/movies.csv").schema()
+        DataFrameSchema.readSource(
+            File("../data/movies.csv"),
+        ) shouldBe csvExpected
+
+        // TSV
+        val tsvFile = File("src/test/resources/abc.tsv")
+        val tsvExpected = DataFrame.readTsv(tsvFile).schema()
+        DataFrameSchema.readSource(tsvFile) shouldBe tsvExpected
+
+        // XLSX
+        val xlsxFile = File("src/test/resources/sample2.xlsx")
+        val xlsxExpected = DataFrame.readExcel(xlsxFile).schema()
+        DataFrameSchema.readSource(xlsxFile) shouldBe xlsxExpected
+    }
+
+    @Test
+    fun `read JDBC schema via override`() {
+        val url = h2Url("guess2_schema")
+        DriverManager.getConnection(url).use { conn ->
+            seed(conn)
+            val expected = DataFrameSchema.readSqlTable(conn, "Customer")
+            val tableOpts = Jdbc2.Options(sqlQueryOrTableName = "Customer")
+            val queryOpts = Jdbc2.Options(sqlQueryOrTableName = "SELECT * FROM Customer")
+
+            DataFrameSchema.readSource(conn, tableOpts) shouldBe expected
+            DataFrameSchema.readSource(conn, queryOpts) shouldBe expected
+
+            val config = DbConnectionConfig(url = url)
+            DataFrameSchema.readSource(config, tableOpts) shouldBe expected
+        }
+    }
+
+    @Test
+    fun `read JDBC schema from ResultSet does not advance cursor`() {
+        val url = h2Url("guess2_rs_schema")
+        DriverManager.getConnection(url).use { conn ->
+            seed(conn)
+
+            conn.prepareStatement("SELECT * FROM Customer").use { ps ->
+                ps.executeQuery().use { rs ->
+                    // Schema-from-ResultSet uses JDBC metadata only — no rows are fetched, so the
+                    // cursor stays at "before first row". (And nullability comes from the column metadata,
+                    // which is conservatively nullable for columns without NOT NULL constraints; this is
+                    // why we don't compare against the data-inferred schema directly.)
+                    val expected = DataFrameSchema.readResultSet(
+                        conn.prepareStatement("SELECT * FROM Customer").executeQuery(),
+                        H2(),
+                    )
+                    val schema = DataFrameSchema.readSource(rs, Jdbc2.Options(dbType = H2()))
+                    schema shouldBe expected
+                    rs.isBeforeFirst shouldBe true
+                }
+            }
+        }
     }
 }

@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Path
@@ -147,6 +149,40 @@ public class Jdbc2 : DataFrameReadSource {
                     strictValidation = opts.strictValidation,
                     configureStatement = opts.configureStatement,
                 )
+            }
+
+            else -> null
+        }
+    }
+
+    override fun readDataFrameSchemaOrNull(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ): DataFrameSchema? {
+        val opts = (options ?: Options()) as Options
+        return when (source) {
+            // ResultSet has a true zero-row metadata-only path.
+            is ResultSet -> when {
+                opts.dbType != null ->
+                    DataFrameSchema.readResultSet(source, opts.dbType)
+
+                opts.resultSetConnection != null ->
+                    DataFrameSchema.readResultSet(source, extractDBTypeFromConnection(opts.resultSetConnection))
+
+                else -> null
+            }
+
+            is Connection -> opts.sqlQueryOrTableName?.let {
+                source.readDataFrameSchema(sqlQueryOrTableName = it, dbType = opts.dbType)
+            }
+
+            is DataSource -> opts.sqlQueryOrTableName?.let {
+                source.readDataFrameSchema(sqlQueryOrTableName = it, dbType = opts.dbType)
+            }
+
+            is DbConnectionConfig -> opts.sqlQueryOrTableName?.let {
+                source.readDataFrameSchema(sqlQueryOrTableName = it, dbType = opts.dbType)
             }
 
             else -> null

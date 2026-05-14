@@ -2,7 +2,8 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.io.readSource
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileNotFoundException
@@ -25,6 +26,19 @@ public interface DataFrameReadSource {
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions? = null,
     ): DataFrame<*>?
+
+    /**
+     * Read just the [DataFrameSchema] for [source].
+     *
+     * The default implementation reads the full DataFrame and calls [DataFrame.schema]. Override when the
+     * source format can introspect types without materializing rows (e.g., JDBC metadata queries, Parquet/Arrow
+     * file footers, OpenAPI specs).
+     */
+    public fun readDataFrameSchemaOrNull(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions? = null,
+    ): DataFrameSchema? = readDataFrameOrNull(source, sourceInfo, options)?.schema()
 
     public fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean
 
@@ -58,22 +72,36 @@ internal val newSupportedFormats: List<DataFrameReadSource> by lazy {
         .sortedBy { it.testOrder }
 }
 
-internal fun readDataFrameImpl(
+/**
+ * Shared dispatch loop for [readDataFrameImpl] and [readDataFrameSchemaImpl]: handles String→URL
+ * normalization, InputStream buffering, sorted iteration, and error aggregation. The per-format read
+ * operation is supplied as [readOrNull]; [resultKind] is used only in the "unknown source" error message.
+ *
+ * @param [readOrNull] [DataFrameReadSource.readDataFrameOrNull] or [DataFrameReadSource.readDataFrameSchemaOrNull]
+ *   Potentially, this could also return another type, like a GeoDataFrame.
+ */
+internal fun <T : Any> readSourceImpl(
     source: Any,
     sourceInfo: DataSourceInfo,
-    options: DataFrameReadOptions? = null,
-    formats: List<DataFrameReadSource> = newSupportedFormats,
-): AnyFrame {
+    options: DataFrameReadOptions?,
+    formats: List<DataFrameReadSource>,
+    resultKind: String,
+    readOrNull: DataFrameReadSource.(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ) -> T?,
+): T {
     if (source is String) {
         val url = asUrlOrNull(source)
         if (url != null) {
-            return readDataFrameImpl(
+            return readSourceImpl(
                 source = url,
-                sourceInfo = sourceInfo.copy(
-                    kType = typeOf<URL>(),
-                ),
+                sourceInfo = sourceInfo.copy(kType = typeOf<URL>()),
                 options = options,
                 formats = formats,
+                resultKind = resultKind,
+                readOrNull = readOrNull,
             )
         }
     }
@@ -95,15 +123,15 @@ internal fun readDataFrameImpl(
     formats.sortedBy { it.testOrder }.forEach {
         if (!it.acceptsSource(sourceInfo, options)) return@forEach
         try {
-            val df = it.readDataFrameOrNull(getSource(), sourceInfo, options)
-            if (df != null) return df
+            val result = it.readOrNull(getSource(), sourceInfo, options)
+            if (result != null) return result
         } catch (e: FileNotFoundException) {
             throw e
         } catch (e: Exception) {
             tries[it::class.simpleName!!] = e
         }
     }
-    throw IllegalArgumentException("Unknown DataFrame source $source, $sourceInfo; Tried $tries")
+    throw IllegalArgumentException("Unknown $resultKind source $source, $sourceInfo; Tried $tries")
 }
 
 /**
@@ -119,7 +147,7 @@ internal fun readDataFrameImpl(
  * retired, this can be renamed to `read`.
  */
 public fun DataFrame.Companion.readSource(source: Any, type: KType, options: DataFrameReadOptions? = null): AnyFrame =
-    readDataFrameImpl(
+    readSourceImpl(
         source = source,
         sourceInfo = DataSourceInfo(
             kType = type.withNullability(false),
@@ -127,12 +155,59 @@ public fun DataFrame.Companion.readSource(source: Any, type: KType, options: Dat
             mimeType = null, // TODO, Apache Tika?
         ),
         options = options,
+        formats = newSupportedFormats,
+        resultKind = "DataFrame",
+        readOrNull = DataFrameReadSource::readDataFrameOrNull,
     )
 
 public inline fun <reified R : Any> DataFrame.Companion.readSource(
     source: R,
     options: DataFrameReadOptions? = null,
 ): AnyFrame = readSource(source = source, type = typeOf<R>(), options = options)
+
+/**
+ * Schema-only counterpart of [DataFrame.Companion.readSource]: dispatches through every registered
+ * [DataFrameReadSource] and returns the resulting [DataFrameSchema] without materializing rows when the
+ * format supports it (e.g., JDBC). Formats with no fast schema path fall back to reading the full DataFrame
+ * and calling [DataFrame.schema].
+ */
+public fun DataFrameSchema.Companion.readSource(
+    source: Any,
+    type: KType,
+    options: DataFrameReadOptions? = null,
+): DataFrameSchema =
+    readSourceImpl(
+        source = source,
+        sourceInfo = DataSourceInfo(
+            kType = type.withNullability(false),
+            extension = source.extensionOrNull(),
+            mimeType = null, // TODO, Apache Tika?
+        ),
+        options = options,
+        formats = newSupportedFormats,
+        resultKind = "DataFrameSchema",
+        readOrNull = DataFrameReadSource::readDataFrameSchemaOrNull,
+    )
+
+internal fun readDataFrameSchemaImpl(
+    source: Any,
+    sourceInfo: DataSourceInfo,
+    options: DataFrameReadOptions? = null,
+    formats: List<DataFrameReadSource> = newSupportedFormats,
+): DataFrameSchema =
+    readSourceImpl(
+        source = source,
+        sourceInfo = sourceInfo,
+        options = options,
+        formats = formats,
+        resultKind = "DataFrameSchema",
+        readOrNull = DataFrameReadSource::readDataFrameSchemaOrNull,
+    )
+
+public inline fun <reified R : Any> DataFrameSchema.Companion.readSource(
+    source: R,
+    options: DataFrameReadOptions? = null,
+): DataFrameSchema = readSource(source = source, type = typeOf<R>(), options = options)
 
 internal fun Any.extensionOrNull(): String? =
     when (this) {
