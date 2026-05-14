@@ -5,9 +5,17 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Path
+import java.sql.Connection
+import java.sql.PreparedStatement
+import java.sql.ResultSet
+import javax.sql.DataSource
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 
 // TODO: https://github.com/Kotlin/dataframe/issues/450
 public class Jdbc :
@@ -34,6 +42,131 @@ public class Jdbc :
 
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
         DefaultReadJdbcMethod(pathRepresentation)
+}
+
+/**
+ * [DataFrameReadSource] for JDBC.
+ *
+ * Reading from JDBC always needs a "what" (a SQL query or table name) — unlike a file, a [Connection] doesn't
+ * carry that instruction. Provide it via [Options.sqlQueryOrTableName]. The only exception is [ResultSet],
+ * which is already an executed query.
+ *
+ * Supports the following sources:
+ *  - [Reference][DataSourceType.Reference]: [DbConnectionConfig]
+ *  - [InMemory][DataSourceType.InMemory]: [Connection], [DataSource], [DbConnectionConfig], [ResultSet]
+ *
+ * Note: [DbConnectionConfig] is accepted as both reference and in-memory deliberately, to compare which
+ * feels more natural in practice. Other read-paths in this module — notably `readAllSqlTables` returning a
+ * `Map<String, AnyFrame>` — don't fit the single-DataFrame contract and are unchanged.
+ */
+public class Jdbc2 : DataFrameReadSource {
+
+    public data class Options(
+        /**
+         * SQL query (e.g. `"SELECT * FROM users"`) or table name (e.g. `"users"`).
+         * Required for [Connection], [DataSource], and [DbConnectionConfig] sources.
+         * Ignored for [ResultSet] (it's already an executed query).
+         */
+        val sqlQueryOrTableName: String? = null,
+        val limit: Int? = null,
+        val inferNullability: Boolean = true,
+        /** Optional, auto-detected from the source when `null`. */
+        val dbType: DbType? = null,
+        val strictValidation: Boolean = true,
+        val configureStatement: (PreparedStatement) -> Unit = {},
+        /**
+         * Only used when the source is a [ResultSet] and [dbType] is `null`; provides a [Connection]
+         * to auto-detect the database type. Ignored otherwise.
+         */
+        val resultSetConnection: Connection? = null,
+    ) : DataFrameReadOptions
+
+    public companion object {
+        public val supportedReferenceTypes: Set<KType> = setOf(typeOf<DbConnectionConfig>())
+        public val supportedInMemoryTypes: Set<KType> =
+            setOf(
+                typeOf<Connection>(),
+                typeOf<DataSource>(),
+                typeOf<DbConnectionConfig>(),
+                typeOf<ResultSet>(),
+            )
+    }
+
+    override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
+        if (options != null && options !is Options) return false
+        val kType = sourceInfo.type.kType
+        return when (sourceInfo.type) {
+            is DataSourceType.Reference ->
+                supportedReferenceTypes.any { kType.isSubtypeOf(it) }
+
+            is DataSourceType.InMemory ->
+                supportedInMemoryTypes.any { kType.isSubtypeOf(it) }
+        }
+    }
+
+    override fun readDataFrameOrNull(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ): DataFrame<*>? {
+        val opts = (options ?: Options()) as Options
+        return when (source) {
+            is ResultSet -> when {
+                opts.dbType != null ->
+                    DataFrame.readResultSet(source, opts.dbType, opts.limit, opts.inferNullability)
+
+                opts.resultSetConnection != null ->
+                    DataFrame.readResultSet(
+                        source,
+                        opts.resultSetConnection,
+                        opts.limit,
+                        opts.inferNullability,
+                    )
+
+                // Without dbType or a connection we can't read a ResultSet — fall through.
+                else -> null
+            }
+
+            is Connection -> opts.sqlQueryOrTableName?.let {
+                source.readDataFrame(
+                    sqlQueryOrTableName = it,
+                    limit = opts.limit,
+                    inferNullability = opts.inferNullability,
+                    dbType = opts.dbType,
+                    strictValidation = opts.strictValidation,
+                    configureStatement = opts.configureStatement,
+                )
+            }
+
+            is DataSource -> opts.sqlQueryOrTableName?.let {
+                source.readDataFrame(
+                    sqlQueryOrTableName = it,
+                    limit = opts.limit,
+                    inferNullability = opts.inferNullability,
+                    dbType = opts.dbType,
+                    strictValidation = opts.strictValidation,
+                    configureStatement = opts.configureStatement,
+                )
+            }
+
+            is DbConnectionConfig -> opts.sqlQueryOrTableName?.let {
+                source.readDataFrame(
+                    sqlQueryOrTableName = it,
+                    limit = opts.limit,
+                    inferNullability = opts.inferNullability,
+                    dbType = opts.dbType,
+                    strictValidation = opts.strictValidation,
+                    configureStatement = opts.configureStatement,
+                )
+            }
+
+            else -> null
+        }
+    }
+
+    override val testOrder: Int = 50_000
+
+    override fun toString(): String = "Jdbc"
 }
 
 private fun DataFrame.Companion.readJDBC(stream: File): DataFrame<*> {

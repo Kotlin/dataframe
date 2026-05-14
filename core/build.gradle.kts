@@ -89,6 +89,7 @@ dependencies {
     testImplementation(projects.dataframeExcel)
 //    testImplementation(projects.dataframeGeo)
     testImplementation(projects.dataframeJdbc)
+    testImplementation(libs.h2db)
 }
 
 // Configure testJava16 dependencies to extend from test
