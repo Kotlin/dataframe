@@ -89,12 +89,15 @@ public class Json : DataFrameReadSource {
             )
         }
 
-        val element: JsonElement? = when {
+        val element: JsonElement = when {
             kType.isSubTypeOf<InputStream>() ->
                 (source as? InputStream)?.let { Json.decodeFromStream<JsonElement>(it) }
 
             kType.isSubTypeOf<String>() ->
-                (source as? String)?.let { Json.decodeFromString<JsonElement>(it) }
+                (source as? String)?.let {
+                    if (it.isNotJson()) return null
+                    Json.decodeFromString<JsonElement>(it)
+                }
 
             kType.isSubTypeOf<JsonElement>() ->
                 source as? JsonElement
@@ -114,6 +117,16 @@ public class Json : DataFrameReadSource {
     override val testOrder: Int = 10_000
 
     override fun toString(): String = "Json"
+
+    // early-exit check for String to see if it's definitely not json
+    private fun String.isNotJson(): Boolean =
+        trim().let {
+            it.isEmpty() ||
+                !(
+                    it.startsWith('{') && it.endsWith('}') ||
+                        it.startsWith('[') && it.endsWith(']')
+                )
+        }
 }
 
 private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
