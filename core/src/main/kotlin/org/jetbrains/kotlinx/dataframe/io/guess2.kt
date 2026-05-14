@@ -2,8 +2,10 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.InputStream
 import java.net.URL
 import java.nio.file.Path
 import java.util.ServiceLoader
@@ -68,11 +70,24 @@ internal fun readDataFrameImpl(
     options: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = newSupportedFormats,
 ): AnyFrame {
+    // Some sources can only be read once, like InputStreams, so we need to buffer them
+    var bufferedSource: Any? = null
+
+    fun getSource(): Any =
+        when (source) {
+            is InputStream -> {
+                if (bufferedSource == null) bufferedSource = source.readBytes()
+                ByteArrayInputStream(bufferedSource as ByteArray)
+            }
+
+            else -> source
+        }
+
     val tries = mutableMapOf<String, Throwable>()
     formats.sortedBy { it.testOrder }.forEach {
         if (!it.acceptsSource(sourceInfo, options)) return@forEach
         try {
-            val df = it.readDataFrameOrNull(source, sourceInfo, options)
+            val df = it.readDataFrameOrNull(getSource(), sourceInfo, options)
             if (df != null) return df
         } catch (e: FileNotFoundException) {
             throw e

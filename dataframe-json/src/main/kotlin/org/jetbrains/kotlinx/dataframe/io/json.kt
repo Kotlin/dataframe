@@ -98,6 +98,7 @@ public class Json : DataFrameReadSource {
                 val element = when {
                     kType.isSubTypeOf<InputStream>() ->
                         (source as? InputStream)?.let {
+                            runCatching { it.reset() }
                             Json.decodeFromStream<JsonElement>(it)
                         }
 
