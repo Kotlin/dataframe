@@ -107,7 +107,7 @@ korro {
                 include("pivot.md")
             },
         )
-        baseDir = rootProject.rootDir
+        baseDir = rootProject.file("docs/StardustDocs/topics")
     }
 
     samples {

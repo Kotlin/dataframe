@@ -191,6 +191,9 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
 
 tasks.withType<KorroGenerateTask> {
     dependsOn(copySamplesOutputs)
+    if (name == "korroGenerate") {
+        mustRunAfter(":samples:korro")
+    }
 }
 
 tasks.withType<KorroTask> {
@@ -208,7 +211,7 @@ korro {
                 include("topics/concepts/*.md")
             },
         )
-        baseDir = rootProject.rootDir
+        baseDir = rootProject.file("docs/StardustDocs")
     }
 
     samples {
