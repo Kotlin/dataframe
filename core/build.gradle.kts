@@ -1,3 +1,4 @@
+import io.github.devcrocod.korro.KorroGenerateTask
 import io.github.devcrocod.korro.KorroTask
 import org.gradle.jvm.tasks.Jar
 import org.intellij.lang.annotations.Language
@@ -122,6 +123,10 @@ benchmark {
     }
 }
 
+// TODO(#898)
+// All korro/samples related tasks should be removed
+// after migration all test sample to :samples module
+
 val samplesImplementation by configurations.getting {
     extendsFrom(configurations.testImplementation.get())
 }
@@ -184,23 +189,43 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     classpath = sourceSets.test.get().runtimeClasspath
 }
 
+tasks.withType<KorroGenerateTask> {
+    dependsOn(copySamplesOutputs)
+    if (name == "korroGenerate") {
+        mustRunAfter(":samples:korro")
+    }
+}
+
 tasks.withType<KorroTask> {
     dependsOn(copySamplesOutputs)
 }
 
 korro {
-    docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/*.md")
-        include("docs/StardustDocs/topics/concepts/*.md")
+    behavior {
+        ignoreMissing = true
+    }
+    docs {
+        from(
+            fileTree(rootProject.file("docs/StardustDocs")) {
+                include("topics/*.md")
+                include("topics/concepts/*.md")
+            },
+        )
+        baseDir = rootProject.file("docs/StardustDocs")
     }
 
-    samples = fileTree(project.projectDir) {
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
-    }
-
-    outputs = fileTree(project.layout.buildDirectory) {
-        include("korroOutputLines/*")
+    samples {
+        from(
+            fileTree(project.projectDir) {
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
+            },
+        )
+        outputs.from(
+            fileTree(project.layout.buildDirectory) {
+                include("korroOutputLines/*")
+            },
+        )
     }
 
     groupSamples {

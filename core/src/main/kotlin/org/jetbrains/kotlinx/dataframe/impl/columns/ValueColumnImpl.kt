@@ -1,12 +1,17 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.core.BuildConfig
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 @JvmInline
 internal value class StatisticResult(val value: Any?)
@@ -47,6 +52,22 @@ internal open class ValueColumnImpl<T>(
 ) : DataColumnImpl<T>(values, name, type, distinct),
     ValueColumn<T>,
     ValueColumnInternal<T> {
+
+    init {
+        // This only runs with `kotlin.dataframe.debug=true` in gradle.properties.
+        if (BuildConfig.DEBUG) {
+            // check if not all values are non-nullable AnyFrame; a FrameColumn should be created in that case
+            if (values.isNotEmpty() && values.all { it is AnyFrame }) {
+                throw IllegalArgumentException(
+                    "ValueColumnImpl cannot just contain AnyFrame values. A FrameColumn should be created instead.",
+                )
+            }
+        }
+        // check if the type is not non-nullable AnyFrame; a FrameColumn should be created in that case
+        if (type.isSubtypeOf(typeOf<AnyFrame>()) && type != nothingType) {
+            throw IllegalArgumentException("ValueColumnImpl cannot contain AnyFrame values. Use FrameColumn instead.")
+        }
+    }
 
     override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, distinct)
 
