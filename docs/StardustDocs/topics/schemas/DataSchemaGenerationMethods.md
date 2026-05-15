@@ -192,7 +192,7 @@ Use [`cast`](cast.md) to apply the generated schema to a `DataFrame`:
 <!---FUN notebook_test_generate_docs_3-->
 
 ```kotlin
-df.cast<_DataFrameType1>().filter { orders.all { orderId >= 102 } }
+df.filter { orders.all { orderId >= 102 } }
 ```
 
 <!---END-->

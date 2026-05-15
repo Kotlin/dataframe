@@ -95,6 +95,7 @@ korro {
                 include("toHTML.md")
                 include("guides/*.md")
                 include("concepts/*.md")
+                include("schemas/*.md")
                 include("operations/utils/*.md")
                 include("operations/multiple/*.md")
                 include("operations/column/*.md")
@@ -124,6 +125,12 @@ korro {
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
+            },
+        )
+
+        outputs.from(
+            fileTree(project.layout.buildDirectory) {
+                include("korroOutputLines/*")
             },
         )
     }
