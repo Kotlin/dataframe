@@ -191,21 +191,10 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
 
 tasks.withType<KorroGenerateTask> {
     dependsOn(copySamplesOutputs)
-    mustRunAfter(":samples:korroGenerate")
 }
 
 tasks.withType<KorroTask> {
     dependsOn(copySamplesOutputs)
-    mustRunAfter(":samples:korro")
-}
-
-tasks.configureEach {
-    mustRunAfter(":samples:korro")
-}
-
-tasks.matching { it.name.startsWith("runKtlint") }.configureEach {
-    mustRunAfter(tasks.withType<KorroTask>())
-    mustRunAfter(tasks.withType<KorroGenerateTask>())
 }
 
 korro {
