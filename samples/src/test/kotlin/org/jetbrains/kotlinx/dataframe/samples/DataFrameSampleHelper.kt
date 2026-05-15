@@ -18,12 +18,10 @@ abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "sa
 
     fun fqnTestName(): String = "${this::class.java.name}.${testName.methodName}"
 
-    private val korroOutputLinesDir: File
-        get() = File(System.getProperty("dataframe.samples.korroOutputLinesDir", "build/korroOutputLines"))
+    private val korroOutputLinesDir: File = File("build/korroOutputLines")
 
     fun String.saveSample(addOutputLine: Boolean = true) {
         val fqnName = fqnTestName().replace("_dataframe", "")
-        val shortName = testName.methodName.replace("_dataframe", "")
         val text = if (addOutputLine) {
             "\nOutput:\n\n$this\n"
         } else {
@@ -31,13 +29,16 @@ abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "sa
         }
 
         korroOutputLinesDir.mkdirs()
-        listOf(fqnName, shortName).distinct().forEach { name ->
-            File(korroOutputLinesDir, name).writeText(text)
-        }
+        File(korroOutputLinesDir, fqnName).writeText(text)
     }
 
-    fun CodeString.saveSample(addOutputLine: Boolean = true) {
-        "```kotlin\n$value\n```".saveSample(addOutputLine)
+    fun CodeString.saveSample(addOutputLine: Boolean = true, addCodeBlock: Boolean = true) {
+        val text = if (addCodeBlock) {
+            "```kotlin\n$value\n```"
+        } else {
+            value
+        }
+        text.saveSample(addOutputLine)
     }
 
     fun DataColumn<*>.saveDfHtmlSample() {
