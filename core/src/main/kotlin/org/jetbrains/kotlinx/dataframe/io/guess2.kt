@@ -1,10 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.CodeString
 import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -179,6 +182,27 @@ public fun DataFrame.Companion.readSource(source: Any, type: KType, options: Dat
         formats = newSupportedFormats,
         resultKind = "DataFrame",
         readOrNull = DataFrameReadSource::readDataFrameOrNull,
+    )
+
+public inline fun <reified R : Any> DataRow.Companion.readSource(
+    source: R,
+    options: DataFrameReadOptions? = null,
+): AnyRow = readSource(source = source, type = typeOf<R>(), options = options)
+
+public fun DataRow.Companion.readSource(source: Any, type: KType, options: DataFrameReadOptions? = null): AnyRow =
+    readSourceImpl(
+        source = source,
+        sourceInfo = DataSourceInfo(
+            kType = type.withNullability(false),
+            extension = source.extensionOrNull(),
+            mimeType = null, // TODO, Apache Tika?
+        ),
+        options = options,
+        formats = newSupportedFormats,
+        resultKind = "DataRow",
+        readOrNull = { source, sourceInfo, options ->
+            readDataFrameOrNull(source, sourceInfo, options)?.single()
+        },
     )
 
 public inline fun <reified R : Any> DataFrame.Companion.readSource(

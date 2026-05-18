@@ -6,8 +6,10 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.CodeString
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
@@ -477,4 +479,62 @@ class Guess2 {
         // The output is non-empty and includes the marker name.
         schemaCode.value shouldContain "Participants"
     }
+
+    // region DataRow.readSource — single-row inputs across formats
+
+    @Test
+    fun `read DataRow from CSV string`() {
+        val csvText = "a,b,c\n1,2,3"
+        val expected = DataFrame.readCsvStr(csvText).single()
+        DataRow.readSource(csvText, Csv.Options()) shouldBe expected
+    }
+
+    @Test
+    fun `read DataRow from TSV string`() {
+        val tsvText = "a\tb\tc\n1\t2\t3"
+        val expected = DataFrame.readTsvStr(tsvText).single()
+        DataRow.readSource(tsvText, Tsv.Options()) shouldBe expected
+    }
+
+    @Test
+    fun `read DataRow from JSON string`() {
+        // A single-element JSON array yields a one-row DataFrame.
+        val jsonText = """[{"a": 1, "b": 2}]"""
+        val expected = DataFrame.readJsonStr(jsonText).single()
+        DataRow.readSource(jsonText) shouldBe expected
+    }
+
+    @Test
+    fun `read DataRow from single-row XLSX file`() {
+        // sample2.xlsx has exactly one data row.
+        val xlsxFile = File("src/test/resources/sample2.xlsx")
+        val expected = DataFrame.readExcel(xlsxFile).single()
+        DataRow.readSource(xlsxFile) shouldBe expected
+    }
+
+    @Test
+    fun `read DataRow from JDBC with single-row query`() {
+        val url = h2Url("guess2_datarow")
+        DriverManager.getConnection(url).use { conn ->
+            seed(conn)
+            val query = "SELECT * FROM Customer WHERE id = 1"
+            val expected = DataFrame.readSqlQuery(conn, query).single()
+            DataRow.readSource(conn, Jdbc2.Options(sqlQueryOrTableName = query)) shouldBe expected
+        }
+    }
+
+    @Test
+    fun `read DataRow throws when source has multiple rows`() {
+        // movies.csv has many rows — DataRow.single() should fail, surfaced as the framework's
+        // "Unknown DataRow source" since the exception is caught and converted.
+        val movies = File("../data/movies.csv")
+        try {
+            DataRow.readSource(movies)
+            error("Expected DataRow.readSource to fail on a multi-row CSV")
+        } catch (_: IllegalArgumentException) {
+            // expected
+        }
+    }
+
+    // endregion
 }
