@@ -2,7 +2,6 @@
 
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -119,25 +118,25 @@ public inline fun <T, reified R> DataColumn<T>.percentileOfOrNull(
 // region DataRow
 
 @Deprecated(ROW_PERCENTILE_OR_NULL, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowPercentileOrNull(): Nothing? = error(ROW_PERCENTILE_OR_NULL)
+public fun DataRow<*>.rowPercentileOrNull(): Nothing? = error(ROW_PERCENTILE_OR_NULL)
 
 @Deprecated(ROW_PERCENTILE, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowPercentile(): Nothing = error(ROW_PERCENTILE)
+public fun DataRow<*>.rowPercentile(): Nothing = error(ROW_PERCENTILE)
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowPercentileOfOrNull(percentile: Double): T? =
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowPercentileOfOrNull(percentile: Double): T? =
     Aggregators.percentileComparables<T>(percentile).aggregateOfRow(this) { colsOf<T?>() }
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowPercentileOf(percentile: Double): T =
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowPercentileOf(percentile: Double): T =
     rowPercentileOfOrNull<T>(percentile).suggestIfNull("rowPercentileOf")
 
-public inline fun <reified T> AnyRow.rowPercentileOfOrNull(
+public inline fun <reified T> DataRow<*>.rowPercentileOfOrNull(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
     where T : Comparable<T>, T : Number =
     Aggregators.percentileNumbers<T>(percentile, skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 
-public inline fun <reified T> AnyRow.rowPercentileOf(
+public inline fun <reified T> DataRow<*>.rowPercentileOf(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
 ): Double

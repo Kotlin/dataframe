@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -550,7 +549,7 @@ public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
  */
 @Refine
 @Interpretable("UpdatePerColRow")
-public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
+public fun <T, C> Update<T, C>.perCol(values: DataRow<*>): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
 
 /**
  * ## Per Col

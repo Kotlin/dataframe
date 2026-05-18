@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -48,10 +47,10 @@ public inline fun <T, reified R : Number?> DataColumn<T>.meanOf(
 
 // region DataRow
 
-public fun AnyRow.rowMean(skipNaN: Boolean = skipNaNDefault): Double =
+public fun DataRow<*>.rowMean(skipNaN: Boolean = skipNaNDefault): Double =
     Aggregators.mean(skipNaN).aggregateOfRow(this, primitiveOrMixedNumberColumns())
 
-public inline fun <reified T : Number> AnyRow.rowMeanOf(skipNaN: Boolean = skipNaNDefault): Double {
+public inline fun <reified T : Number> DataRow<*>.rowMeanOf(skipNaN: Boolean = skipNaNDefault): Double {
     require(typeOf<T>().isPrimitiveOrMixedNumber()) {
         "Type ${T::class.simpleName} is not a primitive number type. Mean only supports primitive number types."
     }
@@ -306,10 +305,10 @@ public inline fun <T, reified R : Number?> DataColumn<T>.meanOf(crossinline expr
     meanOf(skipNaN = skipNaNDefault, expression = expression)
 
 @Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun AnyRow.rowMean(): Double = rowMean(skipNaN = skipNaNDefault)
+public fun DataRow<*>.rowMean(): Double = rowMean(skipNaN = skipNaNDefault)
 
 @Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Number> AnyRow.rowMeanOf(): Double = rowMeanOf<T>(skipNaN = skipNaNDefault)
+public inline fun <reified T : Number> DataRow<*>.rowMeanOf(): Double = rowMeanOf<T>(skipNaN = skipNaNDefault)
 
 @Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.mean(): DataRow<T> = mean(skipNaN = skipNaNDefault)
