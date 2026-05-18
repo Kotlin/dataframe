@@ -45,23 +45,21 @@ public class Json : DataFrameReadSource {
         val unifyNumbers: Boolean = true,
     ) : DataFrameReadOptions
 
-    public companion object {
-        public val SUPPORTED_TYPES: Set<KType> =
-            setOf(
-                typeOf<URL>(),
-                typeOf<Path>(),
-                typeOf<File>(),
-                typeOf<String>(),
-                typeOf<InputStream>(),
-                typeOf<JsonElement>(),
-            )
-    }
+    override val supportedTypes: Set<KType> =
+        setOf(
+            typeOf<URL>(),
+            typeOf<Path>(),
+            typeOf<File>(),
+            typeOf<String>(),
+            typeOf<InputStream>(),
+            typeOf<JsonElement>(),
+        )
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals("json") == false) return false
         if (sourceInfo.mimeType?.lowercase()?.equals("application/json") == false) return false
-        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     @OptIn(ExperimentalSerializationApi::class)

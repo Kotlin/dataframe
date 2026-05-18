@@ -53,25 +53,25 @@ public class ArrowFeatherNEW : DataFrameReadSource {
 
     public data class Options(val nullability: NullabilityOptions = NullabilityOptions.Infer) : DataFrameReadOptions
 
-    public companion object {
-        public val SUPPORTED_TYPES: Set<KType> =
-            setOf(
-                typeOf<URL>(),
-                typeOf<Path>(),
-                typeOf<File>(),
-                typeOf<SeekableByteChannel>(),
-                typeOf<ByteArray>(),
-                typeOf<InputStream>(),
-                typeOf<ArrowReader>(),
-            )
+    override val supportedTypes: Set<KType> =
+        setOf(
+            typeOf<URL>(),
+            typeOf<Path>(),
+            typeOf<File>(),
+            typeOf<SeekableByteChannel>(),
+            typeOf<ByteArray>(),
+            typeOf<InputStream>(),
+            typeOf<ArrowReader>(),
+        )
 
+    public companion object {
         internal const val EXTENSION: String = "feather"
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
-        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(
@@ -83,14 +83,14 @@ public class ArrowFeatherNEW : DataFrameReadSource {
         val kType = sourceInfo.kType
 
         // ArrowReader is exclusive; check before more general types.
-        if (kType.isArrowSubTypeOf<ArrowReader>()) {
+        if (kType.isSubTypeOf<ArrowReader>()) {
             return (source as? ArrowReader)?.let { DataFrame.readArrow(it, opts.nullability) }
         }
 
         val url: URL? = when {
-            kType.isArrowSubTypeOf<URL>() -> source as? URL
-            kType.isArrowSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-            kType.isArrowSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+            kType.isSubTypeOf<URL>() -> source as? URL
+            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
             else -> null
         }
         if (url != null) {
@@ -98,15 +98,15 @@ public class ArrowFeatherNEW : DataFrameReadSource {
         }
 
         return when {
-            kType.isArrowSubTypeOf<SeekableByteChannel>() ->
+            kType.isSubTypeOf<SeekableByteChannel>() ->
                 (source as? SeekableByteChannel)?.let {
                     DataFrame.readArrowFeather(it, nullability = opts.nullability)
                 }
 
-            kType.isArrowSubTypeOf<ByteArray>() ->
+            kType.isSubTypeOf<ByteArray>() ->
                 (source as? ByteArray)?.let { DataFrame.readArrowFeather(it, opts.nullability) }
 
-            kType.isArrowSubTypeOf<InputStream>() ->
+            kType.isSubTypeOf<InputStream>() ->
                 (source as? InputStream)?.let { DataFrame.readArrowFeather(it, opts.nullability) }
 
             else -> null
@@ -138,25 +138,25 @@ public class ArrowIPC : DataFrameReadSource {
         val nullability: NullabilityOptions = NullabilityOptions.Infer,
     ) : DataFrameReadOptions
 
-    public companion object {
-        public val SUPPORTED_TYPES: Set<KType> =
-            setOf(
-                typeOf<URL>(),
-                typeOf<Path>(),
-                typeOf<File>(),
-                typeOf<InputStream>(),
-                typeOf<ByteArray>(),
-                typeOf<ReadableByteChannel>(),
-                typeOf<ArrowReader>(),
-            )
+    override val supportedTypes: Set<KType> =
+        setOf(
+            typeOf<URL>(),
+            typeOf<Path>(),
+            typeOf<File>(),
+            typeOf<InputStream>(),
+            typeOf<ByteArray>(),
+            typeOf<ReadableByteChannel>(),
+            typeOf<ArrowReader>(),
+        )
 
+    public companion object {
         internal const val EXTENSION: String = "arrow"
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
-        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(
@@ -167,14 +167,14 @@ public class ArrowIPC : DataFrameReadSource {
         val opts = (options ?: Options()) as Options
         val kType = sourceInfo.kType
 
-        if (kType.isArrowSubTypeOf<ArrowReader>()) {
+        if (kType.isSubTypeOf<ArrowReader>()) {
             return (source as? ArrowReader)?.let { DataFrame.readArrow(it, opts.nullability) }
         }
 
         val url: URL? = when {
-            kType.isArrowSubTypeOf<URL>() -> source as? URL
-            kType.isArrowSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-            kType.isArrowSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+            kType.isSubTypeOf<URL>() -> source as? URL
+            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
             else -> null
         }
         if (url != null) {
@@ -182,15 +182,15 @@ public class ArrowIPC : DataFrameReadSource {
         }
 
         return when {
-            kType.isArrowSubTypeOf<ReadableByteChannel>() ->
+            kType.isSubTypeOf<ReadableByteChannel>() ->
                 (source as? ReadableByteChannel)?.let {
                     DataFrame.readArrowIPC(it, allocator = opts.allocator, nullability = opts.nullability)
                 }
 
-            kType.isArrowSubTypeOf<ByteArray>() ->
+            kType.isSubTypeOf<ByteArray>() ->
                 (source as? ByteArray)?.let { DataFrame.readArrowIPC(it, opts.nullability) }
 
-            kType.isArrowSubTypeOf<InputStream>() ->
+            kType.isSubTypeOf<InputStream>() ->
                 (source as? InputStream)?.let { DataFrame.readArrowIPC(it, opts.nullability) }
 
             else -> null
@@ -221,17 +221,17 @@ public class Parquet : DataFrameReadSource {
         val batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
     ) : DataFrameReadOptions
 
-    public companion object {
-        public val SUPPORTED_TYPES: Set<KType> =
-            setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>())
+    override val supportedTypes: Set<KType> =
+        setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>())
 
+    public companion object {
         internal const val EXTENSION: String = "parquet"
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
-        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(
@@ -242,7 +242,7 @@ public class Parquet : DataFrameReadSource {
         val opts = (options ?: Options()) as Options
         val kType = sourceInfo.kType
         return when {
-            kType.isArrowSubTypeOf<URL>() ->
+            kType.isSubTypeOf<URL>() ->
                 (source as? URL)?.let {
                     DataFrame.readParquet(
                         it,
@@ -251,7 +251,7 @@ public class Parquet : DataFrameReadSource {
                     )
                 }
 
-            kType.isArrowSubTypeOf<Path>() ->
+            kType.isSubTypeOf<Path>() ->
                 (source as? Path)?.let {
                     DataFrame.readParquet(
                         it,
@@ -260,7 +260,7 @@ public class Parquet : DataFrameReadSource {
                     )
                 }
 
-            kType.isArrowSubTypeOf<File>() ->
+            kType.isSubTypeOf<File>() ->
                 (source as? File)?.let {
                     DataFrame.readParquet(
                         it,
@@ -278,7 +278,7 @@ public class Parquet : DataFrameReadSource {
     override fun toString(): String = "Parquet"
 }
 
-private inline fun <reified T> KType.isArrowSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
+private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 
 private const val READ_ARROW_FEATHER = "readArrowFeather"
 

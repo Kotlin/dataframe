@@ -57,10 +57,10 @@ public class Csv : DataFrameReadSource {
         val parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
     ) : DataFrameReadOptions
 
-    public companion object {
-        public val SUPPORTED_TYPES: Set<KType> =
-            setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
+    override val supportedTypes: Set<KType> =
+        setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
 
+    public companion object {
         internal const val EXTENSION: String = "csv"
         internal const val MIME_TYPE: String = "text/csv"
     }
@@ -69,7 +69,7 @@ public class Csv : DataFrameReadSource {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
         if (sourceInfo.mimeType?.lowercase()?.equals(MIME_TYPE) == false) return false
-        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(

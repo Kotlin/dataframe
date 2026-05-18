@@ -80,17 +80,19 @@ public class ExcelNEW : DataFrameReadSource {
         val parseEmptyAsNull: Boolean = true,
     ) : DataFrameReadOptions
 
-    public companion object {
-        public val SUPPORTED_TYPES: Set<KType> =
-            setOf(
-                typeOf<URL>(),
-                typeOf<Path>(),
-                typeOf<File>(),
-                typeOf<InputStream>(),
-                typeOf<Workbook>(),
-                typeOf<Sheet>(),
-            )
+    // String reference paths are normalized to URL by readSourceImpl, so no String entry here;
+    // Excel is binary, so raw String content isn't a meaningful input either.
+    override val supportedTypes: Set<KType> =
+        setOf(
+            typeOf<URL>(),
+            typeOf<Path>(),
+            typeOf<File>(),
+            typeOf<InputStream>(),
+            typeOf<Workbook>(),
+            typeOf<Sheet>(),
+        )
 
+    public companion object {
         internal val EXTENSIONS: Set<String> = setOf("xls", "xlsx")
         internal val MIME_TYPES: Set<String> = setOf(
             "application/vnd.ms-excel",
@@ -104,7 +106,7 @@ public class ExcelNEW : DataFrameReadSource {
         if (ext != null && ext !in EXTENSIONS) return false
         val mime = sourceInfo.mimeType?.lowercase()
         if (mime != null && mime !in MIME_TYPES) return false
-        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(

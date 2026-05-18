@@ -21,6 +21,17 @@ import kotlin.reflect.typeOf
 public interface DataFrameReadOptions
 
 public interface DataFrameReadSource {
+    /**
+     * The set of source [KType]s this format knows how to read. The framework uses this in the default
+     * [acceptsSource] implementation, and overriding `acceptsSource` implementations should still consult it
+     * so that adding a new supported type only requires updating this set.
+     *
+     * Note: a `String` *reference* (path/URL) is normalized to a [URL] by `readSourceImpl` before any format
+     * is invoked, so only include `String` here when raw text content is a legitimate input (e.g., JSON/CSV
+     * text). For binary formats, leave `String` out.
+     */
+    public val supportedTypes: Set<KType>
+
     public fun readDataFrameOrNull(
         source: Any,
         sourceInfo: DataSourceInfo,

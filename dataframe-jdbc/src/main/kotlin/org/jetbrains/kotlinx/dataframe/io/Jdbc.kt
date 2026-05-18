@@ -80,19 +80,17 @@ public class Jdbc2 : DataFrameReadSource {
         val resultSetConnection: Connection? = null,
     ) : DataFrameReadOptions
 
-    public companion object {
-        public val SUPPORTED_TYPES: Set<KType> =
-            setOf(
-                typeOf<Connection>(),
-                typeOf<DataSource>(),
-                typeOf<DbConnectionConfig>(),
-                typeOf<ResultSet>(),
-            )
-    }
+    override val supportedTypes: Set<KType> =
+        setOf(
+            typeOf<Connection>(),
+            typeOf<DataSource>(),
+            typeOf<DbConnectionConfig>(),
+            typeOf<ResultSet>(),
+        )
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
-        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(
