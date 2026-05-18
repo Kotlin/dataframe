@@ -58,7 +58,9 @@ in cases where the schema cannot be inferred automatically from the source.
 ### Returns {id="generateInterfaces-returns"}
 
 * `CodeString` – A value class wrapper for `String`, containing  
-  the generated Kotlin code of `@DataSchema` interfaces without [extension properties](extensionPropertiesApi.md).
+  the generated Kotlin code of `@DataSchema` interfaces. 
+  It also contains generated [extension properties](extensionPropertiesApi.md)
+  for `extensionProperties=true`.
 
 ### Examples {id="generateInterfaces-examples"}
 
@@ -75,42 +77,41 @@ df
 <!---FUN notebook_test_generate_docs_2-->
 
 ```kotlin
-df.generateInterfaces()
+df.generateInterfaces(markerName = "Customer")
 ```
-
-<!---END-->
 
 Output:
 
 ```kotlin
-@DataSchema(isOpen = false)
-interface _DataFrameType11 {
-    val amount: kotlin.Double
-    val orderId: kotlin.Int
-}
-
 @DataSchema
-interface _DataFrameType1 {
-    val orders: List<_DataFrameType11>
-    val user: kotlin.String
+interface Customer {
+    val orders: List<Orders>
+    val user: String
+
+    @DataSchema(isOpen = false)
+    interface Orders {
+        val amount: Double
+        val orderId: Int
+    }
 }
-```
-
-By adding these interfaces to your project with the [compiler plugin](Compiler-Plugin.md) enabled,  
-you'll gain full support for the [extension properties API](extensionPropertiesApi.md) and type-safe operations.
-
-Use [`cast`](cast.md) to apply the generated schema to a `DataFrame`:
-
-<!---FUN notebook_test_generate_docs_3-->
-
-```kotlin
-df.cast<_DataFrameType1>().filter { orders.all { orderId >= 102 } }
 ```
 
 <!---END-->
 
-<!--inline-frame src="./resources/notebook_test_generate_docs_3.html" width="100%" height="500px"></inline-frame>-->
+By adding these interfaces to your project with the [compiler plugin](Compiler-Plugin.md) enabled,  
+you'll gain full support for the [extension properties API](extensionPropertiesApi.md) and type-safe operations.
 
+Use [`cast`](cast.md) to apply the generated schema to a `DataFrame`.
+Right after that, you can use [extension properties](extensionPropertiesApi.md)
+in the following operations:
+
+<!---FUN notebook_test_generate_docs_3-->
+
+```kotlin
+df.cast<Customer>().filter { orders.all { orderId >= 102 } }
+```
+
+<!---END-->
 
 ## generateDataClasses
 
@@ -161,8 +162,10 @@ Useful when you want to:
 
 ### Returns {id="generateDataClasses-returns"}
 
-* `CodeString` — A value class wrapper for `String`, containing  
-  the generated Kotlin code of `data class` declarations and optionally [extension properties](extensionPropertiesApi.md).
+* `CodeString` – A value class wrapper for `String`, containing  
+  the generated Kotlin code of `@DataSchema` data classes.
+  It also contains generated [extension properties](extensionPropertiesApi.md)
+  for `extensionProperties=true`.
 
 ### Examples {id="generateDataClasses-examples"}
 
@@ -172,25 +175,40 @@ Useful when you want to:
 df.generateDataClasses("Customer")
 ```
 
-<!---END-->
-
 Output:
 
 ```kotlin
 @DataSchema
-data class Customer1(
-    val amount: Double,
-    val orderId: Int
-)
-
-@DataSchema
 data class Customer(
-    val orders: List<Customer1>,
+    val orders: List<Orders>,
     val user: String
-)
+) {
+    @DataSchema
+    data class Orders(
+        val amount: Double,
+        val orderId: Int
+    )
+}
 ```
 
-Add these classes to your project and convert the DataFrame to a list of typed objects:
+<!---END-->
+
+By adding these interfaces to your project with the [compiler plugin](Compiler-Plugin.md) enabled,  
+you'll gain full support for the [extension properties API](extensionPropertiesApi.md) and type-safe operations.
+
+Use [`cast`](cast.md) to apply the generated schema to a `DataFrame`.
+Right after that, you can use [extension properties](extensionPropertiesApi.md)
+in the following operations:
+
+<!---FUN notebook_test_generate_docs_3-->
+
+```kotlin
+df.cast<Customer>().filter { orders.all { orderId >= 102 } }
+```
+
+<!---END-->
+
+You can use these classes for the `DataFrame` conversion to a list of typed objects:
 
 <!---FUN notebook_test_generate_docs_5-->
 
