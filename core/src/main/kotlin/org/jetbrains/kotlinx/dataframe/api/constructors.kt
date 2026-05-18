@@ -1,9 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -12,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -128,17 +126,17 @@ public fun <T> ColumnGroupReference.valueColumn(property: KProperty<T>): ColumnA
 
 // region columnGroup
 
-public fun columnGroup(): ColumnDelegate<AnyRow> = column()
+public fun columnGroup(): ColumnDelegate<DataRow<*>> = column()
 
 @JvmName("columnGroupTyped")
 public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
 
-public fun columnGroup(name: String): ColumnAccessor<AnyRow> = column(name)
+public fun columnGroup(name: String): ColumnAccessor<DataRow<*>> = column(name)
 
 @JvmName("columnGroupTyped")
 public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
 
-public fun columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = column(path)
+public fun columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = column(path)
 
 @JvmName("columnGroupTyped")
 public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
@@ -152,18 +150,19 @@ public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<Data
 @AccessApiOverload
 public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> = column(property.name)
 
-public fun ColumnGroupReference.columnGroup(): ColumnDelegate<AnyRow> = ColumnDelegate(this)
+public fun ColumnGroupReference.columnGroup(): ColumnDelegate<DataRow<*>> = ColumnDelegate(this)
 
 @JvmName("columnGroupTyped")
 public fun <T> ColumnGroupReference.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
 
-public fun ColumnGroupReference.columnGroup(name: String): ColumnAccessor<AnyRow> = ColumnAccessorImpl(path() + name)
+public fun ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<*>> =
+    ColumnAccessorImpl(path() + name)
 
 @JvmName("columnGroupTyped")
 public fun <T> ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(path() + name)
 
-public fun ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> =
+public fun ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("columnGroupTyped")
@@ -185,17 +184,17 @@ public fun <T> ColumnGroupReference.columnGroup(property: KProperty<T>): ColumnA
 
 // region frameColumn
 
-public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
+public fun frameColumn(): ColumnDelegate<DataFrame<*>> = column()
 
 @JvmName("frameColumnTyped")
 public fun <T> frameColumn(): ColumnDelegate<DataFrame<T>> = column()
 
-public fun frameColumn(name: String): ColumnAccessor<AnyFrame> = column(name)
+public fun frameColumn(name: String): ColumnAccessor<DataFrame<*>> = column(name)
 
 @JvmName("frameColumnTyped")
 public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
 
-public fun frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = column(path)
+public fun frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> = column(path)
 
 @JvmName("frameColumnTyped")
 public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
@@ -209,18 +208,19 @@ public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<Da
 @AccessApiOverload
 public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
 
-public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = ColumnDelegate(this)
+public fun ColumnGroupReference.frameColumn(): ColumnDelegate<DataFrame<*>> = ColumnDelegate(this)
 
 @JvmName("frameColumnTyped")
 public fun <T> ColumnGroupReference.frameColumn(): ColumnDelegate<DataFrame<T>> = ColumnDelegate(this)
 
-public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(path() + name)
+public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<DataFrame<*>> =
+    ColumnAccessorImpl(path() + name)
 
 @JvmName("frameColumnTyped")
 public fun <T> ColumnGroupReference.frameColumn(name: String): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(path() + name)
 
-public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> =
+public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("frameColumnTyped")
@@ -259,7 +259,7 @@ public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
         allColsMakesColGroup = true,
     ).forceResolve()
 
-public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
+public fun columnOf(vararg values: BaseColumn<*>): DataColumn<DataRow<*>> = columnOf(values.asIterable()).forceResolve()
 
 /**
  * Example:
@@ -272,7 +272,7 @@ public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(va
  */
 @Refine
 @Interpretable("ColumnOfPairs")
-public fun columnOf(vararg columns: Pair<String, AnyBaseCol>): ColumnGroup<*> =
+public fun columnOf(vararg columns: Pair<String, BaseColumn<*>>): ColumnGroup<*> =
     dataFrameOf(
         columns.map { (name, col) ->
             col.rename(name)
@@ -281,7 +281,7 @@ public fun columnOf(vararg columns: Pair<String, AnyBaseCol>): ColumnGroup<*> =
 
 public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
-public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> =
+public fun columnOf(columns: Iterable<BaseColumn<*>>): DataColumn<DataRow<*>> =
     DataColumn.createColumnGroup(
         name = "",
         df = dataFrameOf(columns),
@@ -317,7 +317,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
  * @throws [UnequalColumnSizesException] if column size are not equal
  * @param columns columns for [DataFrame]
  */
-public fun dataFrameOf(columns: Iterable<AnyBaseCol>): DataFrame<*> {
+public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
     val cols = columns.map { it.unbox() }
     val nrow = if (cols.isEmpty()) 0 else cols[0].size
     return DataFrameImpl<Unit>(cols, nrow)
@@ -338,12 +338,12 @@ public fun dataFrameOf(columns: Iterable<AnyBaseCol>): DataFrame<*> {
 @Refine
 @JvmName("dataFrameOfColumns")
 @Interpretable("DataFrameOfPairs")
-public fun dataFrameOf(vararg columns: Pair<String, AnyBaseCol>): DataFrame<*> =
+public fun dataFrameOf(vararg columns: Pair<String, BaseColumn<*>>): DataFrame<*> =
     dataFrameOf(columns.map { (name, col) -> col.rename(name) })
 
 public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })
 
-public fun dataFrameOf(vararg columns: AnyBaseCol): DataFrame<*> = dataFrameOf(columns.asIterable())
+public fun dataFrameOf(vararg columns: BaseColumn<*>): DataFrame<*> = dataFrameOf(columns.asIterable())
 
 @Interpretable("DataFrameOf0")
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
@@ -424,7 +424,7 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
-    public fun fill(nrow: Int, dataFrame: AnyFrame): DataFrame<*> =
+    public fun fill(nrow: Int, dataFrame: DataFrame<*>): DataFrame<*> =
         withColumns { name ->
             DataColumn.createFrameColumn(
                 name = name,
