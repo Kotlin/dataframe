@@ -74,8 +74,6 @@ val df = DataFrame.readParquet("data/sales.parquet")
 <!---FUN readParquetFilePath-->
 
 ```kotlin
-// Read from Path objects
-val path = Paths.get("data/sales.parquet")
 val df = DataFrame.readParquet(path)
 ```
 
@@ -94,7 +92,6 @@ val df = DataFrame.readParquet(url)
 
 ```kotlin
 // Read from File objects
-val file = File("data/sales.parquet")
 val df = DataFrame.readParquet(file)
 ```
 
@@ -104,13 +101,10 @@ val df = DataFrame.readParquet(file)
 <!---FUN readParquetFileWithParameters-->
 
 ```kotlin
-// Read from File objects
-val file = File("data/sales.parquet")
-
 val df = DataFrame.readParquet(
     file,
     nullability = NullabilityOptions.Infer,
-    batchSize = 64L * 1024
+    batchSize = 64L * 1024,
 )
 ```
 
@@ -127,10 +121,6 @@ It's possible to read multiple Parquet files:
 <!---FUN readMultipleParquetFiles-->
 
 ```kotlin
-val file = File("data/sales.parquet")
-val file1 = File("data/sales1.parquet")
-val file2 = File("data/sales2.parquet")
-
 val df = DataFrame.readParquet(file, file1, file2)
 ```
 
