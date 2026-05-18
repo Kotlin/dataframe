@@ -77,7 +77,6 @@ dependencies {
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
-    testImplementation(projects.dataframeJson)
     testImplementation(libs.serialization.core)
     testImplementation(libs.serialization.json)
 
@@ -86,6 +85,13 @@ dependencies {
 
     // for samples.api
     testImplementation(projects.dataframeCsv)
+    testImplementation(projects.dataframeJson)
+    testImplementation(projects.dataframeArrow)
+    testImplementation(projects.dataframeExcel)
+//    testImplementation(projects.dataframeGeo)
+    testImplementation(projects.dataframeJdbc)
+    testImplementation(libs.h2db)
+    testImplementation(projects.dataframeOpenapiGenerator)
 }
 
 // Configure testJava16 dependencies to extend from test
@@ -333,6 +339,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "1g"
+    // Arrow's off-heap allocator needs deep reflection into java.nio.
+    jvmArgs("--add-opens", "java.base/java.nio=ALL-UNNAMED")
 }
 
 // Test task for Java 16+ language-specific tests

@@ -45,6 +45,9 @@ import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.util.Date as JavaDate
@@ -63,6 +66,133 @@ public class Excel : SupportedDataFrameFormat {
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
         DefaultReadExcelMethod(pathRepresentation)
 }
+
+public class ExcelNEW : DataFrameReadSource {
+
+    public data class Options(
+        val sheetName: String? = null,
+        val skipRows: Int = 0,
+        val columns: String? = null,
+        val stringColumns: StringColumns? = null,
+        val rowsCount: Int? = null,
+        val nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+        val firstRowIsHeader: Boolean = true,
+        val parseEmptyAsNull: Boolean = true,
+    ) : DataFrameReadOptions
+
+    // String reference paths are normalized to URL by readSourceImpl, so no String entry here;
+    // Excel is binary, so raw String content isn't a meaningful input either.
+    override val supportedTypes: Set<KType> =
+        setOf(
+            typeOf<URL>(),
+            typeOf<Path>(),
+            typeOf<File>(),
+            typeOf<InputStream>(),
+            typeOf<Workbook>(),
+            typeOf<Sheet>(),
+        )
+
+    public companion object {
+        internal val EXTENSIONS: Set<String> = setOf("xls", "xlsx")
+        internal val MIME_TYPES: Set<String> = setOf(
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+    }
+
+    override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
+        if (options != null && options !is Options) return false
+        val ext = sourceInfo.extension?.lowercase()
+        if (ext != null && ext !in EXTENSIONS) return false
+        val mime = sourceInfo.mimeType?.lowercase()
+        if (mime != null && mime !in MIME_TYPES) return false
+        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+    }
+
+    override fun readDataFrameOrNull(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ): DataFrame<*>? {
+        val opts = (options ?: Options()) as Options
+        val kType = sourceInfo.kType
+
+        val url: URL? = when {
+            kType.isSubTypeOf<URL>() -> source as? URL
+            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+            else -> null
+        }
+        if (url != null) {
+            return DataFrame.readExcel(
+                url = url,
+                sheetName = opts.sheetName,
+                skipRows = opts.skipRows,
+                columns = opts.columns,
+                stringColumns = opts.stringColumns,
+                rowsCount = opts.rowsCount,
+                nameRepairStrategy = opts.nameRepairStrategy,
+                firstRowIsHeader = opts.firstRowIsHeader,
+                parseEmptyAsNull = opts.parseEmptyAsNull,
+            )
+        }
+
+        return when {
+            kType.isSubTypeOf<InputStream>() ->
+                (source as? InputStream)?.let { stream ->
+                    DataFrame.readExcel(
+                        inputStream = stream,
+                        sheetName = opts.sheetName,
+                        skipRows = opts.skipRows,
+                        columns = opts.columns,
+                        stringColumns = opts.stringColumns,
+                        rowsCount = opts.rowsCount,
+                        nameRepairStrategy = opts.nameRepairStrategy,
+                        firstRowIsHeader = opts.firstRowIsHeader,
+                        parseEmptyAsNull = opts.parseEmptyAsNull,
+                    )
+                }
+
+            kType.isSubTypeOf<Workbook>() ->
+                (source as? Workbook)?.let { wb ->
+                    DataFrame.readExcel(
+                        wb = wb,
+                        sheetName = opts.sheetName,
+                        skipRows = opts.skipRows,
+                        columns = opts.columns,
+                        formattingOptions = opts.stringColumns?.toFormattingOptions(),
+                        rowsCount = opts.rowsCount,
+                        nameRepairStrategy = opts.nameRepairStrategy,
+                        firstRowIsHeader = opts.firstRowIsHeader,
+                        parseEmptyAsNull = opts.parseEmptyAsNull,
+                    )
+                }
+
+            kType.isSubTypeOf<Sheet>() ->
+                (source as? Sheet)?.let { sheet ->
+                    // readExcel(Sheet) has no sheetName parameter — the sheet is already selected.
+                    DataFrame.readExcel(
+                        sheet = sheet,
+                        columns = opts.columns,
+                        formattingOptions = opts.stringColumns?.toFormattingOptions(),
+                        skipRows = opts.skipRows,
+                        rowsCount = opts.rowsCount,
+                        nameRepairStrategy = opts.nameRepairStrategy,
+                        firstRowIsHeader = opts.firstRowIsHeader,
+                        parseEmptyAsNull = opts.parseEmptyAsNull,
+                    )
+                }
+
+            else -> null
+        }
+    }
+
+    override val testOrder: Int = 40_000
+
+    override fun toString(): String = "Xlsx"
+}
+
+private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 
 private const val MESSAGE_REMOVE_1_1 = "Will be removed in 1.1."
 internal const val READ_EXCEL_OLD = "This function is only here for binary compatibility. $MESSAGE_REMOVE_1_1"
