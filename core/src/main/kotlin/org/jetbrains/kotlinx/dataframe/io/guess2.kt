@@ -2,6 +2,8 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.CodeString
+import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.ByteArrayInputStream
@@ -12,7 +14,6 @@ import java.net.URI
 import java.net.URL
 import java.nio.file.Path
 import java.util.ServiceLoader
-import kotlin.io.extension
 import kotlin.io.path.extension
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -50,6 +51,15 @@ public interface DataFrameReadSource {
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions? = null,
     ): DataFrameSchema? = readDataFrameOrNull(source, sourceInfo, options)?.schema()
+
+    public fun readDataSchemaCodeOrNull(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        name: String,
+        options: DataFrameReadOptions? = null,
+    ): CodeString? =
+        readDataFrameSchemaOrNull(source, sourceInfo, options)
+            ?.generateInterfaces(name)
 
     public fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean
 
@@ -219,6 +229,44 @@ public inline fun <reified R : Any> DataFrameSchema.Companion.readSource(
     source: R,
     options: DataFrameReadOptions? = null,
 ): DataFrameSchema = readSource(source = source, type = typeOf<R>(), options = options)
+
+/**
+ * Code-generation counterpart of [DataFrame.Companion.readSource]: dispatches through every registered
+ * [DataFrameReadSource] and returns a [CodeString] containing the generated `@DataSchema` interface
+ * declarations (plus enums/typealiases for formats like OpenAPI). The [name] is the marker name used for
+ * the top-level generated interface.
+ *
+ * The default implementation in [DataFrameReadSource.readDataSchemaCodeOrNull] runs
+ * [DataFrameSchema.generateInterfaces] on the format's [DataFrameReadSource.readDataFrameSchemaOrNull]
+ * result; formats that produce richer code (OpenAPI markers, enums, typealiases) override the method
+ * directly.
+ */
+public fun CodeString.Companion.readSource(
+    source: Any,
+    type: KType,
+    name: String,
+    options: DataFrameReadOptions? = null,
+): CodeString =
+    readSourceImpl(
+        source = source,
+        sourceInfo = DataSourceInfo(
+            kType = type.withNullability(false),
+            extension = source.extensionOrNull(),
+            mimeType = null, // TODO, Apache Tika?
+        ),
+        options = options,
+        formats = newSupportedFormats,
+        resultKind = "CodeString",
+        readOrNull = { src, info, opts ->
+            readDataSchemaCodeOrNull(src, info, name, opts)
+        },
+    )
+
+public inline fun <reified R : Any> CodeString.Companion.readSource(
+    source: R,
+    name: String,
+    options: DataFrameReadOptions? = null,
+): CodeString = readSource(source = source, type = typeOf<R>(), name = name, options = options)
 
 internal fun Any.extensionOrNull(): String? =
     when (this) {

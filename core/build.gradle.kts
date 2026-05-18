@@ -90,6 +90,7 @@ dependencies {
 //    testImplementation(projects.dataframeGeo)
     testImplementation(projects.dataframeJdbc)
     testImplementation(libs.h2db)
+    testImplementation(projects.dataframeOpenapiGenerator)
 }
 
 // Configure testJava16 dependencies to extend from test

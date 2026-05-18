@@ -1,10 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.CodeString
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
@@ -431,5 +433,48 @@ class Guess2 {
 
         val options = Parquet.Options()
         DataFrame.readSource(parquetFile, options) shouldBe expected
+    }
+
+    @Test
+    fun `read OpenAPI yaml as code`() {
+        val openApiFile = File("src/test/resources/petstore.yaml")
+
+        // The reference call from the existing helper, used as the ground truth.
+        val expected = readOpenApiAsString(
+            openApiAsString = openApiFile.readText(),
+            name = "Petstore",
+            extensionProperties = false,
+            generateHelperCompanionObject = false,
+        )
+
+        // String path / File / Path / URL all route through readSourceImpl to OpenApi2.
+        CodeString.readSource(openApiFile.path, name = "Petstore").value shouldBe expected
+        CodeString.readSource(openApiFile, name = "Petstore").value shouldBe expected
+        CodeString.readSource(Path(openApiFile.path), name = "Petstore").value shouldBe expected
+        CodeString.readSource(
+            Path(openApiFile.path).absolute().normalize().toUri().toURL(),
+            name = "Petstore",
+        ).value shouldBe expected
+
+        // String content path (raw spec text) also works.
+        CodeString.readSource(openApiFile.readText(), name = "Petstore").value shouldBe expected
+    }
+
+    @Test
+    fun `OpenAPI does not steal plain JSON DataFrame reads`() {
+        // A regular JSON file (not an OpenAPI spec) still goes to Json, even though OpenApi2 runs first.
+        // OpenApi2.readDataSchemaCodeOrNull returns null for non-OpenAPI content, but more importantly
+        // OpenApi2.readDataFrameOrNull is the interface default (null), so DataFrame reads fall through.
+        val expected = DataFrame.readJson("../data/participants.json")
+        DataFrame.readSource(File("../data/participants.json")) shouldBe expected
+    }
+
+    @Test
+    fun `default DataSchema code generation works for JSON via interface default`() {
+        // The interface default reads the schema and calls generateInterfaces — exercise it on a JSON file.
+        val jsonFile = File("../data/participants.json")
+        val schemaCode = CodeString.readSource(jsonFile, name = "Participants")
+        // The output is non-empty and includes the marker name.
+        schemaCode.value shouldContain "Participants"
     }
 }
