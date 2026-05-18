@@ -8,8 +8,13 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.CodeString
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.single
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
@@ -534,6 +539,97 @@ class Guess2 {
         } catch (_: IllegalArgumentException) {
             // expected
         }
+    }
+
+    // endregion
+
+    // region convert API integration — convert { col }.to<DataFrame/DataRow/DataFrameSchema>()
+    //
+    // Frame columns are typed by their schema, so each column being converted must contain sources of the
+    // same shape. Mixing, say, a CSV-shaped source and a JSON-shaped source in the same column would yield
+    // a FrameColumn with no coherent single schema — these tests keep each column homogeneous and put
+    // differently-shaped sources into separate columns.
+
+    @Test
+    fun `convert column of CSV files to DataFrame`() {
+        // Two cells, both pointing at the same CSV → uniform shape in the resulting FrameColumn.
+        val csvFile = File("../data/movies.csv")
+        val df = dataFrameOf("source")(csvFile, csvFile)
+
+        val converted = df.convert("source").to<DataFrame<*>>()
+
+        val expected = DataFrame.readCsv(csvFile)
+        converted["source"][0] shouldBe expected
+        converted["source"][1] shouldBe expected
+    }
+
+    @Test
+    fun `convert column of CSV files to DataFrameSchema`() {
+        val csvFile = File("../data/movies.csv")
+        val df = dataFrameOf("source")(csvFile, csvFile)
+
+        val converted = df.convert("source").to<DataFrameSchema>()
+
+        val expected = DataFrame.readCsv(csvFile).schema()
+        converted["source"][0] shouldBe expected
+        converted["source"][1] shouldBe expected
+    }
+
+    @Test
+    fun `convert column of single-row XLSX files to DataRow`() {
+        // sample2.xlsx has exactly one data row, so .to<DataRow<*>>() works for each cell.
+        val xlsxFile = File("src/test/resources/sample2.xlsx")
+        val df = dataFrameOf("source")(xlsxFile, xlsxFile)
+
+        val converted = df.convert("source").to<DataRow<*>>()
+
+        val expected = DataFrame.readExcel(xlsxFile).single()
+        converted["source"][0] shouldBe expected
+        converted["source"][1] shouldBe expected
+    }
+
+    @Test
+    fun `convert column of String content to DataFrame`() {
+        // Multiple parallel JSON content strings (same shape) → uniform FrameColumn.
+        val text = """[{"a": 1, "b": 2}]"""
+        val df = dataFrameOf("source")(text, text)
+
+        val converted = df.convert("source").to<DataFrame<*>>()
+
+        val expected = DataFrame.readJsonStr(text)
+        converted["source"][0] shouldBe expected
+        converted["source"][1] shouldBe expected
+    }
+
+    @Test
+    fun `convert two homogeneous source columns at once`() {
+        // Each column is internally uniform: csvCol has CSV-shaped cells, jsonCol has JSON-shaped cells.
+        // The result is two FrameColumns, each with its own coherent schema.
+        val csvFile = File("../data/movies.csv")
+        val jsonFile = File("../data/participants.json")
+        val df = dataFrameOf("csvCol", "jsonCol")(csvFile, jsonFile, csvFile, jsonFile)
+
+        val converted = df.convert("csvCol", "jsonCol").to<DataFrame<*>>()
+
+        val expectedCsv = DataFrame.readCsv(csvFile)
+        val expectedJson = DataFrame.readJson(jsonFile)
+        converted["csvCol"][0] shouldBe expectedCsv
+        converted["csvCol"][1] shouldBe expectedCsv
+        converted["jsonCol"][0] shouldBe expectedJson
+        converted["jsonCol"][1] shouldBe expectedJson
+    }
+
+    @Test
+    fun `convert column of URLs to DataFrame`() {
+        // Two URLs pointing at the same JSON file → uniform schema in the FrameColumn.
+        val jsonUrl = File("../data/participants.json").toURI().toURL()
+        val urls = columnOf(jsonUrl, jsonUrl) named "source"
+        val df = urls.toDataFrame()
+
+        val converted = df.convert("source").to<DataFrame<*>>()
+        val expected = DataFrame.readJson(jsonUrl)
+        converted["source"][0] shouldBe expected
+        converted["source"][1] shouldBe expected
     }
 
     // endregion

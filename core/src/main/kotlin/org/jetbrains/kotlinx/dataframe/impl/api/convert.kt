@@ -22,6 +22,7 @@ import kotlinx.datetime.toStdlibInstant
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.api.Convert
@@ -30,7 +31,6 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.isValueColumn
-import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
@@ -41,13 +41,14 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
-import org.jetbrains.kotlinx.dataframe.impl.isSubtypeWithNullabilityOf
+import org.jetbrains.kotlinx.dataframe.io.dataFrameReadSourceByType
+import org.jetbrains.kotlinx.dataframe.io.readSource
 import org.jetbrains.kotlinx.dataframe.path
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
-import java.util.Locale
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.reflect.KType
@@ -65,6 +66,7 @@ import kotlin.time.toJavaInstant
 import kotlin.time.toKotlinDuration
 import kotlin.time.toKotlinInstant
 import kotlin.toBigDecimal
+import kotlinx.datetime.Instant as DeprecatedInstant
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
@@ -73,7 +75,6 @@ import java.time.LocalTime as JavaLocalTime
 import kotlin.time.Instant as StdlibInstant
 import kotlin.toBigDecimal as toBigDecimalKotlin
 import kotlin.toBigInteger as toBigIntegerKotlin
-import kotlinx.datetime.Instant as DeprecatedInstant
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
@@ -195,16 +196,61 @@ internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConvert
 
 private enum class DummyEnum
 
+private val dataFrameReadSourceSupportedClasses by lazy {
+    dataFrameReadSourceByType.keys.map { it.jvmErasure }.toSet()
+}
+
 @Suppress("UNCHECKED_CAST")
 internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
-    if (from.arguments.isNotEmpty() || to.arguments.isNotEmpty()) return null
     if (from.isMarkedNullable) {
         val res = createConverter(from.withNullability(false), to, options) ?: return null
         return { res(it) }
     }
     val fromClass = from.jvmErasure
     val toClass = to.jvmErasure
+
+    // readSource-backed conversions handle target types with type arguments (e.g. `DataFrame<*>`,
+    // `DataRow<*>`), so they must run before the generic-arguments early-exit below.
+    if (dataFrameReadSourceByType.any { from.isSubtypeOf(it.key) }) {
+        val readSources = dataFrameReadSourceByType.entries
+            .first { from.isSubtypeOf(it.key) }.value
+
+        when (toClass) {
+            DataFrame::class ->
+                return convert<Any> { source ->
+                    DataFrame.readSource(
+                        source = source,
+                        type = from,
+                        options = null,
+                        formats = readSources,
+                    )
+                }
+
+            DataRow::class ->
+                return convert<Any> { source ->
+                    DataRow.readSource(
+                        source = source,
+                        type = from,
+                        options = null,
+                        formats = readSources,
+                    )
+                }
+
+            DataFrameSchema::class ->
+                return convert<Any> { source ->
+                    DataFrameSchema.readSource(
+                        source = source,
+                        type = from,
+                        options = null,
+                        formats = readSources,
+                    )
+                }
+        }
+    }
+
     return when {
+        from.arguments.isNotEmpty() || to.arguments.isNotEmpty() -> null
+
         fromClass == toClass -> TypeConverterIdentity
 
         // kotlin.time.Duration is a value class,

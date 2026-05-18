@@ -89,11 +89,34 @@ public data class DataSourceInfo(
  * resources/META-INF/services/org.jetbrains.kotlinx.dataframe.io.DataFrameReadSource
  * to be detected here.
  */
+@PublishedApi
 internal val newSupportedFormats: List<DataFrameReadSource> by lazy {
     ServiceLoader.load(DataFrameReadSource::class.java)
         .toList()
         .distinct()
         .sortedBy { it.testOrder }
+}
+
+internal val dataFrameReadSourceByType: Map<KType, List<DataFrameReadSource>> by lazy {
+    buildMap<KType, MutableList<DataFrameReadSource>> {
+        newSupportedFormats.forEach { format ->
+            format.supportedTypes.forEach { type ->
+                getOrPut(type) { mutableListOf() }.let {
+                    if (format !in it) it += format
+                }
+
+                // special String -> URL case
+                if (type == typeOf<URL>()) {
+                    getOrPut(typeOf<String>()) { mutableListOf() }.let {
+                        if (format !in it) it += format
+                    }
+                }
+            }
+        }
+        values.forEach {
+            it.sortBy { it.testOrder }
+        }
+    }
 }
 
 /**
@@ -170,7 +193,12 @@ internal fun <T : Any> readSourceImpl(
  * entries in `guess.kt` that use the older [SupportedDataFrameFormat] system. Once the legacy entries are
  * retired, this can be renamed to `read`.
  */
-public fun DataFrame.Companion.readSource(source: Any, type: KType, options: DataFrameReadOptions? = null): AnyFrame =
+public fun DataFrame.Companion.readSource(
+    source: Any,
+    type: KType,
+    options: DataFrameReadOptions? = null,
+    formats: List<DataFrameReadSource> = newSupportedFormats,
+): AnyFrame =
     readSourceImpl(
         source = source,
         sourceInfo = DataSourceInfo(
@@ -179,7 +207,7 @@ public fun DataFrame.Companion.readSource(source: Any, type: KType, options: Dat
             mimeType = null, // TODO, Apache Tika?
         ),
         options = options,
-        formats = newSupportedFormats,
+        formats = formats,
         resultKind = "DataFrame",
         readOrNull = DataFrameReadSource::readDataFrameOrNull,
     )
@@ -187,9 +215,15 @@ public fun DataFrame.Companion.readSource(source: Any, type: KType, options: Dat
 public inline fun <reified R : Any> DataRow.Companion.readSource(
     source: R,
     options: DataFrameReadOptions? = null,
-): AnyRow = readSource(source = source, type = typeOf<R>(), options = options)
+    formats: List<DataFrameReadSource> = newSupportedFormats,
+): AnyRow = readSource(source = source, type = typeOf<R>(), options = options, formats = formats)
 
-public fun DataRow.Companion.readSource(source: Any, type: KType, options: DataFrameReadOptions? = null): AnyRow =
+public fun DataRow.Companion.readSource(
+    source: Any,
+    type: KType,
+    options: DataFrameReadOptions? = null,
+    formats: List<DataFrameReadSource> = newSupportedFormats,
+): AnyRow =
     readSourceImpl(
         source = source,
         sourceInfo = DataSourceInfo(
@@ -198,7 +232,7 @@ public fun DataRow.Companion.readSource(source: Any, type: KType, options: DataF
             mimeType = null, // TODO, Apache Tika?
         ),
         options = options,
-        formats = newSupportedFormats,
+        formats = formats,
         resultKind = "DataRow",
         readOrNull = { source, sourceInfo, options ->
             readDataFrameOrNull(source, sourceInfo, options)?.single()
@@ -208,7 +242,14 @@ public fun DataRow.Companion.readSource(source: Any, type: KType, options: DataF
 public inline fun <reified R : Any> DataFrame.Companion.readSource(
     source: R,
     options: DataFrameReadOptions? = null,
-): AnyFrame = readSource(source = source, type = typeOf<R>(), options = options)
+    formats: List<DataFrameReadSource> = newSupportedFormats,
+): AnyFrame =
+    readSource(
+        source = source,
+        type = typeOf<R>(),
+        options = options,
+        formats = formats,
+    )
 
 /**
  * Schema-only counterpart of [DataFrame.Companion.readSource]: dispatches through every registered
@@ -220,6 +261,7 @@ public fun DataFrameSchema.Companion.readSource(
     source: Any,
     type: KType,
     options: DataFrameReadOptions? = null,
+    formats: List<DataFrameReadSource> = newSupportedFormats,
 ): DataFrameSchema =
     readSourceImpl(
         source = source,
@@ -229,21 +271,6 @@ public fun DataFrameSchema.Companion.readSource(
             mimeType = null, // TODO, Apache Tika?
         ),
         options = options,
-        formats = newSupportedFormats,
-        resultKind = "DataFrameSchema",
-        readOrNull = DataFrameReadSource::readDataFrameSchemaOrNull,
-    )
-
-internal fun readDataFrameSchemaImpl(
-    source: Any,
-    sourceInfo: DataSourceInfo,
-    options: DataFrameReadOptions? = null,
-    formats: List<DataFrameReadSource> = newSupportedFormats,
-): DataFrameSchema =
-    readSourceImpl(
-        source = source,
-        sourceInfo = sourceInfo,
-        options = options,
         formats = formats,
         resultKind = "DataFrameSchema",
         readOrNull = DataFrameReadSource::readDataFrameSchemaOrNull,
@@ -252,7 +279,14 @@ internal fun readDataFrameSchemaImpl(
 public inline fun <reified R : Any> DataFrameSchema.Companion.readSource(
     source: R,
     options: DataFrameReadOptions? = null,
-): DataFrameSchema = readSource(source = source, type = typeOf<R>(), options = options)
+    formats: List<DataFrameReadSource> = newSupportedFormats,
+): DataFrameSchema =
+    readSource(
+        source = source,
+        type = typeOf<R>(),
+        options = options,
+        formats = formats,
+    )
 
 /**
  * Code-generation counterpart of [DataFrame.Companion.readSource]: dispatches through every registered
@@ -270,6 +304,7 @@ public fun CodeString.Companion.readSource(
     type: KType,
     name: String,
     options: DataFrameReadOptions? = null,
+    formats: List<DataFrameReadSource> = newSupportedFormats,
 ): CodeString =
     readSourceImpl(
         source = source,
@@ -279,7 +314,7 @@ public fun CodeString.Companion.readSource(
             mimeType = null, // TODO, Apache Tika?
         ),
         options = options,
-        formats = newSupportedFormats,
+        formats = formats,
         resultKind = "CodeString",
         readOrNull = { src, info, opts ->
             readDataSchemaCodeOrNull(src, info, name, opts)
@@ -290,7 +325,15 @@ public inline fun <reified R : Any> CodeString.Companion.readSource(
     source: R,
     name: String,
     options: DataFrameReadOptions? = null,
-): CodeString = readSource(source = source, type = typeOf<R>(), name = name, options = options)
+    formats: List<DataFrameReadSource> = newSupportedFormats,
+): CodeString =
+    readSource(
+        source = source,
+        type = typeOf<R>(),
+        name = name,
+        options = options,
+        formats = formats,
+    )
 
 internal fun Any.extensionOrNull(): String? =
     when (this) {
