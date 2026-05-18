@@ -30,6 +30,12 @@ with a separate class representing the schema of each column group or nested `Da
 For example, consider a simple hierarchical dataframe from
 <resource src="example.csv"></resource>.
 
+> Note that this is not a regular CSV file — it contains a column with embedded JSON values.
+>
+> To read such files correctly, both the [`dataframe-csv`](Modules.md#dataframe-csv)
+> and [`dataframe-json`](Modules.md#dataframe-json) modules must be included.
+> {style="note"}
+
 This dataframe consists of two columns:
 - `name`, which is a `String` column
 - `info`, which is a [column group](DataColumn.md#columngroup) containing two nested [value columns](DataColumn.md#valuecolumn):
@@ -102,19 +108,19 @@ See [](extensionPropertiesApi.md) for more information.
 ## `@DataSchema` annotation
 
 `@DataSchema` is a Kotlin annotation that marks a data class or interface as a data schema.
-Compiler plugin generates [extension properties](extensionPropertiesApi.md) for the `DataFrame` 
-(or `DataRow`, `ColumnGroup`, etc.)
+[The compiler plugin](Compiler-Plugin.md) generates [extension properties](extensionPropertiesApi.md) for the `DataFrame` 
+(or [`DataRow`](DataRow.md) ), [`ColumnGroup`](DataColumn.md#columngroup), etc.)
 with a type parameter annotated with `@DataSchema`.
 
-Each property of an annotated class or interface corresponds to a column in the `DataFrame` 
-(or `DataRow`, `ColumnGroup`, etc.).
+Each property of an annotated class or interface corresponds to a column in the `DataFrame`
+(or [`DataRow`](DataRow.md) ), [`ColumnGroup`](DataColumn.md#columngroup), etc.).
 The property name is the column name, and the property type is the column type.
 
 > While you can annotate any Kotlin class or object with a `@DataSchema`,
 > we highly recommend using it only on interfaces and data classes specially made
 > for representing the data schema of a `DataFrame`.
 > 
-> Use only trivial properties, avoiding computed, `lateinit` or delegated properties.
+> Use only trivial properties, avoiding computed, `lateinit`, or delegated properties.
 > In data classes, provide only constructor properties.
 > 
 > In all other cases, the behavior may be undefined. 
@@ -189,3 +195,24 @@ See [extension properties example in Kotlin Notebook](extensionPropertiesApi.md#
 [extension properties](extensionPropertiesApi.md) for a [`DataFrame`](DataFrame.md)
 manually by calling one of the [`generate..()` methods](DataSchemaGenerationMethods.md) 
 with the `extensionProperties = true` argument.
+
+### Custom extension properties
+
+Sometimes it is also useful to define your own extension properties
+based on a [data schema](schema.md).
+
+```kotlin
+@DataSchema
+interface BranchData {
+    val expenses: Long
+    val revenue: Long
+}
+
+val DataRow<BranchData>.profit get() = revenue - expenses
+```
+
+```kotlin
+val dfProfitable = df.filter { it.profit > 0 }
+```
+
+See [](extensionPropertiesApi.md#custom-extension-properties) for more information.
