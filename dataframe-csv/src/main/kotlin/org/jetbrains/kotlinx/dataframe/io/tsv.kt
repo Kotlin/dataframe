@@ -58,7 +58,7 @@ public class Tsv : DataFrameReadSource {
     ) : DataFrameReadOptions
 
     public companion object {
-        public val supportedTypes: Set<KType> =
+        public val SUPPORTED_TYPES: Set<KType> =
             setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
 
         internal const val EXTENSION: String = "tsv"
@@ -69,7 +69,7 @@ public class Tsv : DataFrameReadSource {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
         if (sourceInfo.mimeType?.lowercase()?.equals(MIME_TYPE) == false) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(

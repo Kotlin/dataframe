@@ -368,4 +368,68 @@ class Guess2 {
             }
         }
     }
+
+    @Test
+    fun `read Arrow Feather reference`() {
+        val featherFile = File("src/test/resources/test.feather")
+        val expected = DataFrame.readArrowFeather(featherFile)
+
+        DataFrame.readSource(featherFile.path) shouldBe expected
+        DataFrame.readSource(Path(featherFile.path)) shouldBe expected
+        DataFrame.readSource(featherFile) shouldBe expected
+        DataFrame.readSource(
+            Path(featherFile.path).absolute().normalize().toUri().toURL(),
+        ) shouldBe expected
+
+        val options = ArrowFeatherNEW.Options()
+
+        DataFrame.readSource(featherFile.path, options) shouldBe expected
+        DataFrame.readSource(featherFile, options) shouldBe expected
+    }
+
+    @Test
+    fun `read Arrow Feather in memory`() {
+        val featherFile = File("src/test/resources/test.feather")
+        val expected = DataFrame.readArrowFeather(featherFile)
+        val options = ArrowFeatherNEW.Options()
+
+        // ByteArray, InputStream, SeekableByteChannel all need options to disambiguate (no extension).
+        DataFrame.readSource(featherFile.readBytes(), options) shouldBe expected
+        DataFrame.readSource(featherFile.inputStream(), options) shouldBe expected
+        java.nio.file.Files.newByteChannel(featherFile.toPath()).use { channel ->
+            DataFrame.readSource<java.nio.channels.SeekableByteChannel>(channel, options) shouldBe expected
+        }
+    }
+
+    @Test
+    fun `read Arrow IPC reference`() {
+        val ipcFile = File("src/test/resources/test.arrow")
+        val expected = DataFrame.readArrowIPC(ipcFile)
+
+        DataFrame.readSource(ipcFile.path) shouldBe expected
+        DataFrame.readSource(Path(ipcFile.path)) shouldBe expected
+        DataFrame.readSource(ipcFile) shouldBe expected
+        DataFrame.readSource(
+            Path(ipcFile.path).absolute().normalize().toUri().toURL(),
+        ) shouldBe expected
+
+        val options = ArrowIPC.Options()
+        DataFrame.readSource(ipcFile, options) shouldBe expected
+    }
+
+    @Test
+    fun `read Parquet reference`() {
+        val parquetFile = File("src/test/resources/test.parquet")
+        val expected = DataFrame.readParquet(parquetFile)
+
+        DataFrame.readSource(parquetFile.path) shouldBe expected
+        DataFrame.readSource(Path(parquetFile.path)) shouldBe expected
+        DataFrame.readSource(parquetFile) shouldBe expected
+        DataFrame.readSource(
+            Path(parquetFile.path).absolute().normalize().toUri().toURL(),
+        ) shouldBe expected
+
+        val options = Parquet.Options()
+        DataFrame.readSource(parquetFile, options) shouldBe expected
+    }
 }

@@ -313,6 +313,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "1g"
+    // Arrow's off-heap allocator needs deep reflection into java.nio.
+    jvmArgs("--add-opens", "java.base/java.nio=ALL-UNNAMED")
 }
 
 // Test task for Java 16+ language-specific tests

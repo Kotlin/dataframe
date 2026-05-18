@@ -81,12 +81,11 @@ public class ExcelNEW : DataFrameReadSource {
     ) : DataFrameReadOptions
 
     public companion object {
-        public val supportedTypes: Set<KType> =
+        public val SUPPORTED_TYPES: Set<KType> =
             setOf(
                 typeOf<URL>(),
                 typeOf<Path>(),
                 typeOf<File>(),
-                typeOf<String>(),
                 typeOf<InputStream>(),
                 typeOf<Workbook>(),
                 typeOf<Sheet>(),
@@ -105,7 +104,7 @@ public class ExcelNEW : DataFrameReadSource {
         if (ext != null && ext !in EXTENSIONS) return false
         val mime = sourceInfo.mimeType?.lowercase()
         if (mime != null && mime !in MIME_TYPES) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     override fun readDataFrameOrNull(

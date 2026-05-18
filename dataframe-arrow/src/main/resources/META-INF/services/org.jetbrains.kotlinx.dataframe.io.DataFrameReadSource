@@ -1,0 +1,3 @@
+org.jetbrains.kotlinx.dataframe.io.ArrowIPC
+org.jetbrains.kotlinx.dataframe.io.ArrowFeatherNEW
+org.jetbrains.kotlinx.dataframe.io.Parquet

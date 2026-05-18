@@ -46,7 +46,7 @@ public class Json : DataFrameReadSource {
     ) : DataFrameReadOptions
 
     public companion object {
-        public val supportedTypes: Set<KType> =
+        public val SUPPORTED_TYPES: Set<KType> =
             setOf(
                 typeOf<URL>(),
                 typeOf<Path>(),
@@ -61,7 +61,7 @@ public class Json : DataFrameReadSource {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals("json") == false) return false
         if (sourceInfo.mimeType?.lowercase()?.equals("application/json") == false) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     @OptIn(ExperimentalSerializationApi::class)

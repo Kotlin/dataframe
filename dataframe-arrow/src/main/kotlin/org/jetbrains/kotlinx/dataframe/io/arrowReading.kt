@@ -18,6 +18,9 @@ import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 
 public class ArrowFeather : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
@@ -35,6 +38,247 @@ public class ArrowFeather : SupportedDataFrameFormat {
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
         DefaultReadArrowMethod(pathRepresentation)
 }
+
+/**
+ * [DataFrameReadSource] for [Arrow Feather files][DataFrame.readArrowFeather] (random-access IPC format).
+ *
+ * Supported source types:
+ *  - References: [URL], [Path], [File]
+ *  - In-memory: [SeekableByteChannel], [ByteArray], [InputStream], [ArrowReader]
+ *
+ * Default-accepts the `.feather` extension. To read with no extension hint (e.g., an [InputStream]) pass
+ * an [Options] instance to disambiguate from text formats.
+ */
+public class ArrowFeatherNEW : DataFrameReadSource {
+
+    public data class Options(val nullability: NullabilityOptions = NullabilityOptions.Infer) : DataFrameReadOptions
+
+    public companion object {
+        public val SUPPORTED_TYPES: Set<KType> =
+            setOf(
+                typeOf<URL>(),
+                typeOf<Path>(),
+                typeOf<File>(),
+                typeOf<SeekableByteChannel>(),
+                typeOf<ByteArray>(),
+                typeOf<InputStream>(),
+                typeOf<ArrowReader>(),
+            )
+
+        internal const val EXTENSION: String = "feather"
+    }
+
+    override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
+        if (options != null && options !is Options) return false
+        if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
+        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+    }
+
+    override fun readDataFrameOrNull(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ): DataFrame<*>? {
+        val opts = (options ?: Options()) as Options
+        val kType = sourceInfo.kType
+
+        // ArrowReader is exclusive; check before more general types.
+        if (kType.isArrowSubTypeOf<ArrowReader>()) {
+            return (source as? ArrowReader)?.let { DataFrame.readArrow(it, opts.nullability) }
+        }
+
+        val url: URL? = when {
+            kType.isArrowSubTypeOf<URL>() -> source as? URL
+            kType.isArrowSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+            kType.isArrowSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+            else -> null
+        }
+        if (url != null) {
+            return DataFrame.readArrowFeather(url, opts.nullability)
+        }
+
+        return when {
+            kType.isArrowSubTypeOf<SeekableByteChannel>() ->
+                (source as? SeekableByteChannel)?.let {
+                    DataFrame.readArrowFeather(it, nullability = opts.nullability)
+                }
+
+            kType.isArrowSubTypeOf<ByteArray>() ->
+                (source as? ByteArray)?.let { DataFrame.readArrowFeather(it, opts.nullability) }
+
+            kType.isArrowSubTypeOf<InputStream>() ->
+                (source as? InputStream)?.let { DataFrame.readArrowFeather(it, opts.nullability) }
+
+            else -> null
+        }
+    }
+
+    override val testOrder: Int = 60_000
+
+    override fun toString(): String = "ArrowFeather"
+}
+
+/**
+ * [DataFrameReadSource] for [Arrow IPC streaming files][DataFrame.readArrowIPC].
+ *
+ * Supported source types:
+ *  - References: [URL], [Path], [File]
+ *  - In-memory: [InputStream], [ByteArray], [ReadableByteChannel], [ArrowReader]
+ *
+ * There's no widely-standardized extension for IPC streaming files (`.arrow` is most common but is also
+ * used for random-access Feather), so this format accepts the `.arrow` extension. If your `.arrow` file is
+ * actually random-access (Feather), prefer [ArrowFeatherNEW] — both formats will match `.arrow`, but
+ * [ArrowFeatherNEW] runs first by [testOrder] and a Feather read of a streaming-format file will throw,
+ * letting the framework fall through to [ArrowIPC].
+ */
+public class ArrowIPC : DataFrameReadSource {
+
+    public data class Options(
+        val allocator: RootAllocator = Allocator.ROOT,
+        val nullability: NullabilityOptions = NullabilityOptions.Infer,
+    ) : DataFrameReadOptions
+
+    public companion object {
+        public val SUPPORTED_TYPES: Set<KType> =
+            setOf(
+                typeOf<URL>(),
+                typeOf<Path>(),
+                typeOf<File>(),
+                typeOf<InputStream>(),
+                typeOf<ByteArray>(),
+                typeOf<ReadableByteChannel>(),
+                typeOf<ArrowReader>(),
+            )
+
+        internal const val EXTENSION: String = "arrow"
+    }
+
+    override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
+        if (options != null && options !is Options) return false
+        if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
+        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+    }
+
+    override fun readDataFrameOrNull(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ): DataFrame<*>? {
+        val opts = (options ?: Options()) as Options
+        val kType = sourceInfo.kType
+
+        if (kType.isArrowSubTypeOf<ArrowReader>()) {
+            return (source as? ArrowReader)?.let { DataFrame.readArrow(it, opts.nullability) }
+        }
+
+        val url: URL? = when {
+            kType.isArrowSubTypeOf<URL>() -> source as? URL
+            kType.isArrowSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+            kType.isArrowSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+            else -> null
+        }
+        if (url != null) {
+            return DataFrame.readArrowIPC(url, opts.nullability)
+        }
+
+        return when {
+            kType.isArrowSubTypeOf<ReadableByteChannel>() ->
+                (source as? ReadableByteChannel)?.let {
+                    DataFrame.readArrowIPC(it, allocator = opts.allocator, nullability = opts.nullability)
+                }
+
+            kType.isArrowSubTypeOf<ByteArray>() ->
+                (source as? ByteArray)?.let { DataFrame.readArrowIPC(it, opts.nullability) }
+
+            kType.isArrowSubTypeOf<InputStream>() ->
+                (source as? InputStream)?.let { DataFrame.readArrowIPC(it, opts.nullability) }
+
+            else -> null
+        }
+    }
+
+    // Runs after ArrowFeatherNEW so that `.feather` files get the random-access reader first.
+    // Both accept `.arrow`; if Feather reading throws on an IPC streaming file the framework falls
+    // through to here.
+    override val testOrder: Int = 60_100
+
+    override fun toString(): String = "ArrowIPC"
+}
+
+/**
+ * [DataFrameReadSource] for Apache Parquet files (read via Arrow Dataset).
+ *
+ * Arrow Dataset only consumes URIs, so only reference-style sources are supported:
+ *  - References: [URL], [Path], [File]
+ *
+ * TODO? Multi-file Parquet datasets (vararg in [DataFrame.readParquet]) aren't covered by this single-source API;
+ * use [DataFrame.readParquet] directly for those.
+ */
+public class Parquet : DataFrameReadSource {
+
+    public data class Options(
+        val nullability: NullabilityOptions = NullabilityOptions.Infer,
+        val batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
+    ) : DataFrameReadOptions
+
+    public companion object {
+        public val SUPPORTED_TYPES: Set<KType> =
+            setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>())
+
+        internal const val EXTENSION: String = "parquet"
+    }
+
+    override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
+        if (options != null && options !is Options) return false
+        if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
+        return SUPPORTED_TYPES.any { sourceInfo.kType.isSubtypeOf(it) }
+    }
+
+    override fun readDataFrameOrNull(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ): DataFrame<*>? {
+        val opts = (options ?: Options()) as Options
+        val kType = sourceInfo.kType
+        return when {
+            kType.isArrowSubTypeOf<URL>() ->
+                (source as? URL)?.let {
+                    DataFrame.readParquet(
+                        it,
+                        nullability = opts.nullability,
+                        batchSize = opts.batchSize,
+                    )
+                }
+
+            kType.isArrowSubTypeOf<Path>() ->
+                (source as? Path)?.let {
+                    DataFrame.readParquet(
+                        it,
+                        nullability = opts.nullability,
+                        batchSize = opts.batchSize,
+                    )
+                }
+
+            kType.isArrowSubTypeOf<File>() ->
+                (source as? File)?.let {
+                    DataFrame.readParquet(
+                        it,
+                        nullability = opts.nullability,
+                        batchSize = opts.batchSize,
+                    )
+                }
+
+            else -> null
+        }
+    }
+
+    override val testOrder: Int = 60_500
+
+    override fun toString(): String = "Parquet"
+}
+
+private inline fun <reified T> KType.isArrowSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 
 private const val READ_ARROW_FEATHER = "readArrowFeather"
 
