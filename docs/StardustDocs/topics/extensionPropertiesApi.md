@@ -2,7 +2,7 @@
 
 When working with a [`DataFrame`](DataFrame.md), the most convenient and reliable way 
 to access its columns — including for operations and retrieving column values 
-in row expressions — is through *auto-generated extension properties*.
+in [row expressions](DataRow.md#row-expressions) — is through *auto-generated extension properties*.
 They are generated based on a [dataframe schema](schemas.md),
 with the name and type of properties inferred from the name and type of the corresponding columns.
 It also works for all types of hierarchical dataframes.
@@ -24,10 +24,17 @@ It also works for all types of hierarchical dataframes.
 Consider a simple hierarchical dataframe from
 <resource src="example.csv"></resource>.
 
-This table consists of two columns: `name`, which is a `String` column, and `info`, 
-which is a [**column group**](DataColumn.md#columngroup) containing two nested 
-[value columns](DataColumn.md#valuecolumn) — 
-`age` of type `Int`, and `height` of type `Double`.
+> Note that this is not a regular CSV file — it contains a column with embedded JSON values.
+>
+> To read such files correctly, both the [`dataframe-csv`](Modules.md#dataframe-csv)
+> and [`dataframe-json`](Modules.md#dataframe-json) modules must be included.
+> {style="note"}
+
+This dataframe consists of two columns:
+- `name`, which is a `String` column
+- `info`, which is a [column group](DataColumn.md#columngroup) containing two nested [value columns](DataColumn.md#valuecolumn):
+    - `age` of type `Int`
+    - `height` of type `Double`
 
 <table width="705">
   <thead>
@@ -119,24 +126,27 @@ You can do it quickly with [`generate..()` methods](DataSchemaGenerationMethods.
 Define schemas:
 
 ```kotlin
+// Data schema of the "info" column group
 @DataSchema
-data class PersonInfo(
-    val age: Int,
+interface Info {
+    val age: Int
     val height: Float
-)
+}
 
+// Data schema of the entire DataFrame
 @DataSchema
-data class Person(
-    val info: PersonInfo,
+interface Person {
+    val info: Info
     val name: String
-)
+}
+```
 ```
 
 Read the [`DataFrame`](DataFrame.md) from the CSV file and specify the schema with 
 [`.convertTo()`](convertTo.md) or [`cast()`](cast.md):
 
 ```kotlin
-val df = DataFrame.readCsv("example.csv").convertTo<Person>()
+val df = DataFrame.readCsv("example.csv").cast<Person>()
 ```
 
 Extensions for this `DataFrame` will be generated automatically by the plugin, 
@@ -228,4 +238,56 @@ interface Info {
 ```kotlin
 val df = dataFrameOf("size\nin:inches" to listOf(..)).cast<Info>()
 df.sizeInInches
+```
+
+## Custom extension properties
+
+Sometimes it is useful to define your own extension properties 
+based on a [data schema](schema.md).
+
+For example, consider a simple dataframe with two columns and the following `BranchData` schema:
+
+```kotlin
+@DataSchema
+interface BranchData {
+    val expenses: Long
+    val revenue: Long
+}
+```
+
+```kotlin
+// Read DataFrame and cast its type parameter to BranchData
+val df = DataFrame.readCsv("branchData.csv").cast<BranchData>()
+```
+
+You can define an extension property for `DataRow<BranchData>` 
+to create a convenient shortcut:
+
+```kotlin
+// Use generated extension properties to create a new one
+val DataRow<BranchData>.profit get() = revenue - expenses
+```
+
+You can then use it, for example, in [row expressions](DataRow.md#row-expressions):
+
+```kotlin
+val dfProfitable = df.filter { it.profit > 0 }
+```
+
+Note that if you change the actual schema of a dataframe 
+(by performing operations that modify its structure), 
+this extension property can no longer be used, 
+because it is tied to the specific schema.
+
+```kotlin
+df.add("name") { "branchName" }
+    // unresolved because of `add`
+    .filter { it.profit > 0 }
+```
+
+However, you can work around this by casting back to the original schema:
+
+```kotlin
+df.add("name") { "branchName" }
+    .filter { it.cast<BranchData>().profit > 0 }
 ```

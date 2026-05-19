@@ -135,7 +135,7 @@ is displayed when you hover on an expression or variable:
 
 ### @DataSchema declarations
 
-Untyped DataFrame can be assigned a data schema - top-level interface or class that describes names and types of columns in the dataframe.
+Untyped DataFrame can be assigned a data schema - top-level interface or data class that describes names and types of columns in the dataframe.
 
 ```kotlin
 @DataSchema
