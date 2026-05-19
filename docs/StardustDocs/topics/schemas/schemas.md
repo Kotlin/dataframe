@@ -109,25 +109,31 @@ See [](extensionPropertiesApi.md) for more information.
 
 `@DataSchema` is a Kotlin annotation that marks a data class or interface as a data schema.
 [The compiler plugin](Compiler-Plugin.md) generates [extension properties](extensionPropertiesApi.md) for the `DataFrame` 
-(or [`DataRow`](DataRow.md) ), [`ColumnGroup`](DataColumn.md#columngroup), etc.)
+(or [`DataRow`](DataRow.md), [`ColumnGroup`](DataColumn.md#columngroup), etc.)
 with a type parameter annotated with `@DataSchema`.
-
-Each property of an annotated class or interface corresponds to a column in the `DataFrame`
-(or [`DataRow`](DataRow.md) ), [`ColumnGroup`](DataColumn.md#columngroup), etc.).
-The property name is the column name, and the property type is the column type.
 
 > While you can annotate any Kotlin class or object with a `@DataSchema`,
 > we highly recommend using it only on interfaces and data classes specially made
 > for representing the data schema of a `DataFrame`.
-> 
+>
 > Use only trivial properties, avoiding computed, `lateinit`, or delegated properties.
 > In data classes, provide only constructor properties.
-> 
-> In all other cases, the behavior may be undefined. 
-> If you do need to use `@DataSchema` on a “complex” class, please let us know via 
+>
+> In all other cases, the behavior may be undefined.
+> If you do need to use `@DataSchema` on a “complex” class, please let us know via
 > the [issues](https://github.com/Kotlin/dataframe/issues).
 {style="warning"}
 
+Each property of an annotated class or interface corresponds to a column in the `DataFrame`
+(or [`DataRow`](DataRow.md), [`ColumnGroup`](DataColumn.md#columngroup), etc.).
+The property name is the column name, and the property type is the column type.
+
+> Data schema is considered *valid* if it contains any subset of actual dataframe columns.
+> If the data schema contains columns that are not present in the dataframe, 
+> it is considered *invalid*.
+> 
+> This is checked in [`.cast()`](cast.md) with `verify=true` and [`.convertTo()`](convertTo.md) methods.
+{style="warning"}
 
 ## Data Schema Retrieving
 
