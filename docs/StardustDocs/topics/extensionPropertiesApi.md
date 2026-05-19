@@ -256,6 +256,7 @@ interface BranchData {
 ```
 
 ```kotlin
+// Read DataFrame and cast its type parameter to BranchData
 val df = DataFrame.readCsv("branchData.csv").cast<BranchData>()
 ```
 
@@ -263,6 +264,7 @@ You can define an extension property for `DataRow<BranchData>`
 to create a convenient shortcut:
 
 ```kotlin
+// Use generated extension properties to create a new one
 val DataRow<BranchData>.profit get() = revenue - expenses
 ```
 
@@ -287,6 +289,5 @@ However, you can work around this by casting back to the original schema:
 
 ```kotlin
 df.add("name") { "branchName" }
-    // unresolved because of `add`
     .filter { it.cast<BranchData>().profit > 0 }
 ```
