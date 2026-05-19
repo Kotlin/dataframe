@@ -66,7 +66,6 @@ import kotlin.time.toJavaInstant
 import kotlin.time.toKotlinDuration
 import kotlin.time.toKotlinInstant
 import kotlin.toBigDecimal
-import kotlinx.datetime.Instant as DeprecatedInstant
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
@@ -75,6 +74,7 @@ import java.time.LocalTime as JavaLocalTime
 import kotlin.time.Instant as StdlibInstant
 import kotlin.toBigDecimal as toBigDecimalKotlin
 import kotlin.toBigInteger as toBigIntegerKotlin
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(

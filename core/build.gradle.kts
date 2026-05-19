@@ -59,6 +59,7 @@ dependencies {
 
     implementation(libs.commonsIo)
     implementation(libs.fastDoubleParser)
+    implementation(libs.tika)
 
     api(libs.kotlin.datetimeJvm)
     implementation(libs.kotlinpoet)

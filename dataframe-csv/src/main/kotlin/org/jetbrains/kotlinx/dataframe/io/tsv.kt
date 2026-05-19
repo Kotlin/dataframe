@@ -61,14 +61,18 @@ public class Tsv : DataFrameReadSource {
         setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
 
     public companion object {
-        internal const val EXTENSION: String = "tsv"
-        internal const val MIME_TYPE: String = "text/tab-separated-values"
+        internal val EXTENSIONS = setOf("tsv", "zip", "gz")
+        internal val MIME_TYPE = setOf(
+            "text/tab-separated-values",
+            "application/zip",
+            "application/gzip",
+        )
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
-        if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
-        if (sourceInfo.mimeType?.lowercase()?.equals(MIME_TYPE) == false) return false
+        if (sourceInfo.extension != null && sourceInfo.extension !in EXTENSIONS) return false
+        if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPE) return false
         return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 

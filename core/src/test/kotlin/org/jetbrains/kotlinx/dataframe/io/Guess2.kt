@@ -243,13 +243,21 @@ class Guess2 {
             // DataSource — opens a fresh connection each call (DataSource.readDataFrame closes it via `use`).
             val dataSource = object : DataSource {
                 override fun getConnection() = DriverManager.getConnection(url)
+
                 override fun getConnection(u: String?, p: String?) = DriverManager.getConnection(url)
+
                 override fun getLogWriter() = null
+
                 override fun setLogWriter(out: java.io.PrintWriter?) {}
+
                 override fun setLoginTimeout(seconds: Int) {}
+
                 override fun getLoginTimeout() = 0
+
                 override fun getParentLogger() = throw UnsupportedOperationException()
+
                 override fun <T : Any?> unwrap(iface: Class<T>?): T = throw UnsupportedOperationException()
+
                 override fun isWrapperFor(iface: Class<*>?) = false
             }
             DataFrame.readSource(dataSource, tableOpts) shouldBe expected

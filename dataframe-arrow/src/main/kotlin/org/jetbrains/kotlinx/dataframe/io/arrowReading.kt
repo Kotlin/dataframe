@@ -226,11 +226,16 @@ public class Parquet : DataFrameReadSource {
 
     public companion object {
         internal const val EXTENSION: String = "parquet"
+        internal val MIME_TYPES = setOf(
+            "application/x-parquet",
+            "application/parquet",
+        )
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
+        if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
         return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 

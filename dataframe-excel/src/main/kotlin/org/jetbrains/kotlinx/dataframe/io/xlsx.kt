@@ -97,6 +97,8 @@ public class ExcelNEW : DataFrameReadSource {
         internal val MIME_TYPES: Set<String> = setOf(
             "application/vnd.ms-excel",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/x-tika-ooxml",
+            "application/x-tika-msoffice",
         )
     }
 

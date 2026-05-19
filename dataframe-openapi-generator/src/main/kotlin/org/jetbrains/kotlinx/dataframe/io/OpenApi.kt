@@ -46,12 +46,27 @@ public class OpenApi2 : DataFrameReadSource {
 
     public companion object {
         internal val EXTENSIONS: Set<String> = setOf("yaml", "yml", "json")
+        internal val MIME_TYPES = setOf(
+            "application/vnd.oai.openapi",
+            "application/vnd.oai.openapi+json",
+            "application/vnd.oai.openapi.yaml",
+            "application/vnd.oai.openapi+yaml",
+            "text/x-yaml",
+            "text/yaml",
+            "application/x-yaml",
+            "application/yaml",
+            "application/x-json",
+            "application/json",
+            "text/x-json",
+            "text/json",
+        )
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
         val ext = sourceInfo.extension?.lowercase()
         if (ext != null && ext !in EXTENSIONS) return false
+        if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
         return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 

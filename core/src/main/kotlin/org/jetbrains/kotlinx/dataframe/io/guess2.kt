@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.apache.tika.detect.DefaultDetector
+import org.apache.tika.io.TikaInputStream
+import org.apache.tika.metadata.Metadata
+import org.apache.tika.metadata.TikaCoreProperties
+import org.apache.tika.mime.MediaType
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -12,12 +17,14 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.io.InputStream
 import java.net.URI
 import java.net.URL
 import java.nio.file.Path
 import java.util.ServiceLoader
 import kotlin.io.path.extension
+import kotlin.io.path.name
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -80,9 +87,14 @@ public interface DataFrameReadSource {
 public data class DataSourceInfo(
     public val kType: KType,
     public val extension: String? = null,
-    // TODO, Apache Tika?
     public val mimeType: String? = null,
-)
+) {
+    init {
+        if (mimeType != null) {
+            println()
+        }
+    }
+}
 
 /**
  * NOTE: Needs to have fully qualified name in
@@ -129,7 +141,7 @@ internal val dataFrameReadSourceByType: Map<KType, List<DataFrameReadSource>> by
  */
 internal fun <T : Any> readSourceImpl(
     source: Any,
-    sourceInfo: DataSourceInfo,
+    sourceType: KType,
     options: DataFrameReadOptions?,
     formats: List<DataFrameReadSource>,
     resultKind: String,
@@ -144,7 +156,7 @@ internal fun <T : Any> readSourceImpl(
         if (url != null) {
             return readSourceImpl(
                 source = url,
-                sourceInfo = sourceInfo.copy(kType = typeOf<URL>()),
+                sourceType = typeOf<URL>(),
                 options = options,
                 formats = formats,
                 resultKind = resultKind,
@@ -165,6 +177,12 @@ internal fun <T : Any> readSourceImpl(
 
             else -> source
         }
+
+    val sourceInfo = DataSourceInfo(
+        kType = sourceType,
+        extension = getSource().extensionOrNull(),
+        mimeType = getSource().mimeTypeOrNull(),
+    )
 
     val tries = mutableMapOf<String, Throwable>()
     formats.sortedBy { it.testOrder }.forEach {
@@ -201,11 +219,7 @@ public fun DataFrame.Companion.readSource(
 ): AnyFrame =
     readSourceImpl(
         source = source,
-        sourceInfo = DataSourceInfo(
-            kType = type.withNullability(false),
-            extension = source.extensionOrNull(),
-            mimeType = null, // TODO, Apache Tika?
-        ),
+        sourceType = type.withNullability(false),
         options = options,
         formats = formats,
         resultKind = "DataFrame",
@@ -226,11 +240,7 @@ public fun DataRow.Companion.readSource(
 ): AnyRow =
     readSourceImpl(
         source = source,
-        sourceInfo = DataSourceInfo(
-            kType = type.withNullability(false),
-            extension = source.extensionOrNull(),
-            mimeType = null, // TODO, Apache Tika?
-        ),
+        sourceType = type.withNullability(false),
         options = options,
         formats = formats,
         resultKind = "DataRow",
@@ -265,11 +275,7 @@ public fun DataFrameSchema.Companion.readSource(
 ): DataFrameSchema =
     readSourceImpl(
         source = source,
-        sourceInfo = DataSourceInfo(
-            kType = type.withNullability(false),
-            extension = source.extensionOrNull(),
-            mimeType = null, // TODO, Apache Tika?
-        ),
+        sourceType = type.withNullability(false),
         options = options,
         formats = formats,
         resultKind = "DataFrameSchema",
@@ -308,11 +314,7 @@ public fun CodeString.Companion.readSource(
 ): CodeString =
     readSourceImpl(
         source = source,
-        sourceInfo = DataSourceInfo(
-            kType = type.withNullability(false),
-            extension = source.extensionOrNull(),
-            mimeType = null, // TODO, Apache Tika?
-        ),
+        sourceType = type.withNullability(false),
         options = options,
         formats = formats,
         resultKind = "CodeString",
@@ -335,6 +337,48 @@ public inline fun <reified R : Any> CodeString.Companion.readSource(
         formats = formats,
     )
 
+private val tikaDetector by lazy { DefaultDetector() }
+
+internal fun Any.mimeTypeOrNull(): String? {
+    val inputStream = try {
+        when (this) {
+            is Path -> TikaInputStream.get(this)
+
+            is File ->
+                @Suppress("DEPRECATION")
+                TikaInputStream.get(this)
+
+            is URL -> TikaInputStream.get(this)
+
+            is InputStream -> TikaInputStream.get(this)
+
+            is ByteArray -> TikaInputStream.get(this)
+
+            else -> null
+        }
+    } catch (_: IOException) {
+        null
+    } ?: return null
+
+    val metadata = Metadata().apply {
+        if (inputStream.hasFile()) {
+            add(TikaCoreProperties.RESOURCE_NAME_KEY, inputStream.path.name)
+        }
+    }
+    return try {
+        val detected = tikaDetector.detect(inputStream, metadata)
+        return when {
+            detected == MediaType.OCTET_STREAM -> null
+            detected == MediaType.TEXT_PLAIN -> null
+            detected == MediaType.EMPTY -> null
+            detected.toString().isEmpty() -> null
+            else -> detected.toString()
+        }
+    } catch (_: IOException) {
+        null
+    }
+}
+
 internal fun Any.extensionOrNull(): String? =
     when (this) {
         is Path -> extension
@@ -350,7 +394,7 @@ internal fun Any.extensionOrNull(): String? =
         }
 
         else -> null
-    }
+    }?.lowercase()
 
 /**
  * Non-throwing variant of [asUrl]: returns the [URL] iff [string] is a recognized URL (`http`/`https`/`ftp`)
