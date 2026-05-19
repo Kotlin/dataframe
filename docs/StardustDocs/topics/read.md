@@ -25,9 +25,13 @@ or explore the [example project](https://github.com/zaleslaw/KotlinDataFrame-SQL
 
 The `.read()` function automatically detects the input format based on a file extension and content:
 
+<!---FUN read-->
+
 ```kotlin
 DataFrame.read("input.csv")
 ```
+
+<!---END-->
 
 The input string can be a file path or URL.
 
@@ -51,25 +55,31 @@ It is faster and more flexible than the old one, now being based on
 
 To read a CSV file from a file:
 
-```kotlin
-import java.io.File
+<!---FUN readCsvFromFile-->
 
+```kotlin
 DataFrame.readCsv("input.csv")
 // Alternatively
 DataFrame.readCsv(File("input.csv"))
 ```
 
+<!---END-->
+
 To read a CSV file from a URL:
 
-```kotlin
-import java.net.URI
+<!---FUN readCsvFromUrl-->
 
+```kotlin
 DataFrame.readCsv(URI("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv").toURL())
 ```
+
+<!---END-->
 
 Zip and GZip files are supported as well.
 
 To read CSV from `String`:
+
+<!---FUN readCsvFromString-->
 
 ```kotlin
 val csv = """
@@ -81,6 +91,8 @@ val csv = """
 
 DataFrame.readCsvStr(csv)
 ```
+
+<!---END-->
 
 ### Specify delimiter
 
@@ -114,14 +126,24 @@ For other types we fall back to [the parse operation](parse.md).
 Suppose that the CSV from the previous
 example had the following content:
 
-<table>
-<tr><th>A</th><th>B</th><th>C</th><th>D</th></tr>
-<tr><td>12</td><td>tuv</td><td>0.12</td><td>true</td></tr>
-<tr><td>41</td><td>xyz</td><td>3.6</td><td>not assigned</td></tr>
-<tr><td>89</td><td>abc</td><td>7.1</td><td>false</td></tr>
-</table>
+<inline-frame src="./resources/csvTypeInference.html" width="100%" height="500px"></inline-frame>
 
-Then the [`DataFrame`](DataFrame.md) schema we get is:
+Then we get a [`DataFrame`](DataFrame.md):
+
+<!---FUN readCsvTypeInference-->
+
+```kotlin
+val df = DataFrame.readCsv(
+    file,
+    delimiter = ',',
+    parserOptions = ParserOptions(nullStrings = setOf("not assigned")),
+)
+```
+
+<!---END-->
+<inline-frame src="./resources/readCsvTypeInference.html" width="100%" height="500px"></inline-frame>
+
+with the following schema:
 
 ```text
 A: Int
@@ -130,15 +152,22 @@ C: Double
 D: Boolean?
 ```
 
-[`DataFrame`](DataFrame.md) can [parse](parse.md) columns as JSON too, so when reading the following table with JSON object in column D:
+[`DataFrame`](DataFrame.md) can [parse](parse.md) columns as JSON too, so when reading the following table with a JSON object in column D:
 
-<table>
-<tr><th>A</th><th>D</th></tr>
-<tr><td>12</td><td>{"B":2,"C":3}</td></tr>
-<tr><td>41</td><td>{"B":3,"C":2}</td></tr>
-</table>
+<inline-frame src="./resources/csvWithJsonColumns.html" width="100%" height="500px"></inline-frame>
 
-We get this data schema where D is [`ColumnGroup`](DataColumn.md#columngroup) with two nested columns:
+We get this [`DataFrame`](DataFrame.md)
+
+<!---FUN readCsvWithJsonColumns-->
+
+```kotlin
+val df = DataFrame.readCsv(file)
+```
+
+<!---END-->
+<inline-frame src="./resources/readCsvWithJsonColumns.html" width="100%" height="500px"></inline-frame>
+
+with a data schema where D is a [`ColumnGroup`](DataColumn.md#columngroup) with two nested columns:
 
 ```text
 A: Int
@@ -148,11 +177,21 @@ D:
 ```
 
 For a column where values are lists of JSON values:
-<table>
-<tr><th>A</th><th>G</th></tr>
-<tr><td>12</td><td>[{"B":1,"C":2,"D":3},{"B":1,"C":3,"D":2}]</td></tr>
-<tr><td>41</td><td>[{"B":2,"C":1,"D":3}]</td></tr>
-</table>
+
+<inline-frame src="./resources/csvWithJsonListsColumns.html" width="100%" height="500px"></inline-frame>
+
+We get this [`DataFrame`](DataFrame.md):
+
+<!---FUN readCsvWithJsonListsColumns-->
+
+```kotlin
+val df = DataFrame.readCsv(file)
+```
+
+<!---END-->
+<inline-frame src="./resources/readCsvWithJsonListsColumns.html" width="100%" height="500px"></inline-frame>
+
+with the following schema:
 
 ```text
 A: Int
@@ -166,16 +205,12 @@ G: *
 
 Sometimes columns in your CSV can be interpreted differently depending on your system locale.
 
-<table>
-<tr><th>numbers</th></tr>
-<tr><td>12,123</td></tr>
-<tr><td>41,111</td></tr>
-</table>
+<inline-frame src="./resources/csvLocale.html" width="100%" height="500px"></inline-frame>
 
 Here a comma can be a decimal-, or thousands separator, and thus become different values.
 You can deal with it in multiple ways, for instance:
 
-1) Provide locale as parser option
+1) Provide locale as a parser option
 
 <!---FUN readNumbersWithSpecificLocale-->
 
@@ -187,6 +222,7 @@ val df = DataFrame.readCsv(
 ```
 
 <!---END-->
+<inline-frame src="./resources/readNumbersWithSpecificLocale.html" width="100%" height="500px"></inline-frame>
 
 2) Disable type inference for a specific column and convert it yourself
 
@@ -195,22 +231,19 @@ val df = DataFrame.readCsv(
 ```kotlin
 val df = DataFrame.readCsv(
     file,
-    colTypes = mapOf("colName" to ColType.String),
+    colTypes = mapOf("numbers" to ColType.String),
 )
 ```
 
 <!---END-->
+<inline-frame src="./resources/readNumbersWithColType.html" width="100%" height="500px"></inline-frame>
 
 ### Work with specific date-time formats
 
 When parsing date or date-time columns, you might encounter formats different from the default `ISO_LOCAL_DATE_TIME`.
 Like:
 
-<table>
-<tr><th>date</th></tr>
-<tr><td>13/Jan/23 11:49 AM</td></tr>
-<tr><td>14/Mar/23 5:35 PM</td></tr>
-</table>
+<inline-frame src="./resources/dateTimeSample.html" width="100%" height="500px"></inline-frame>
 
 Because the format here `"dd/MMM/yy h:mm a"` differs from the default (`ISO_LOCAL_DATE_TIME`),
 columns like this may be recognized as simple `String` values rather than actual date-time columns.
@@ -221,7 +254,7 @@ a custom date-time pattern.
 
 There are two ways to do this:
 
-1) By providing the date-time pattern as raw string to the `ParserOptions` argument:
+1) By providing the date-time pattern as a raw string to the `ParserOptions` argument:
 
 <!---FUN readDatesWithSpecificDateTimePattern-->
 
@@ -235,6 +268,7 @@ val df = DataFrame.readCsv(
 ```
 
 <!---END-->
+<inline-frame src="./resources/readDatesWithSpecificDateTimePattern.html" width="100%" height="500px"></inline-frame>
 
 2) By providing a `DateTimeFormatter` to the `ParserOptions` argument:
 
@@ -254,6 +288,8 @@ val df = DataFrame.readCsv(
 ```
 
 <!---END-->
+<inline-frame src="./resources/readDatesWithSpecificDateTimeFormatter.html" width="100%" height="500px"></inline-frame>
+
 These two approaches are essentially the same, just specified in different ways.
 The result will be a dataframe with properly parsed `DateTime` columns.
 
@@ -335,9 +371,13 @@ val df = DataFrame.readJson(file)
 
 To read a JSON file from a URL:
 
+<!---FUN readJsonFromUrl-->
+
 ```kotlin
-DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
+DataFrame.readJson("https://raw.githubusercontent.com/Kotlin/dataframe/refs/heads/master/data/participants.json")
 ```
+
+<!---END-->
 
 ### Column type inference from JSON
 
@@ -346,42 +386,45 @@ JSON string literals always become a `String`.
 Number literals are converted to a unified `Number` type which will fit all encountered numbers.
 Boolean literals are converted to `Boolean`.
 
-Let's take a look at the following JSON:
+Let's take a look at the following JSON and read it as a string:
 
-```json
-[
-    {
-        "A": "1",
-        "B": 1,
-        "C": 1.0,
-        "D": true
-    },
-    {
-        "A": "2",
-        "B": 2,
-        "C": 1.1,
-        "D": null
-    },
-    {
-        "A": "3",
-        "B": 3,
-        "C": 1,
-        "D": false
-    },
-    {
-        "A": "4",
-        "B": 4,
-        "C": 1.3,
-        "D": true
-    }
-]
-```
-
-We can read it from file:
+<!---FUN readJsonFromString-->
 
 ```kotlin
-val df = DataFrame.readJson(file)
+val text = """
+    [
+        {
+            "A": "1",
+            "B": 1,
+            "C": 1.0,
+            "D": true
+        },
+        {
+            "A": "2",
+            "B": 2,
+            "C": 1.1,
+            "D": null
+        },
+        {
+            "A": "3",
+            "B": 3,
+            "C": 1,
+            "D": false
+        },
+        {
+            "A": "4",
+            "B": 4,
+            "C": 1.3,
+            "D": true
+        }
+    ]
+""".trimIndent()
+
+val df = DataFrame.readJsonStr(text)
 ```
+
+<!---END-->
+<inline-frame src="./resources/readJsonFromString.html" width="100%" height="500px"></inline-frame>
 
 The corresponding [`DataFrame`](DataFrame.md) schema is:
 
@@ -399,54 +442,49 @@ has the `Double` type because it's the smallest unified number type for `Int` an
 
 #### Manage type clashes
 
-By default, if a type clash occurs when reading JSON, a new column group is created consisting of: "value", "array", and
+By default, if a type clash occurs when reading JSON, a new [`column group`](DataColumn.md#columngroup) is created consisting of: "value", "array", and
 any number of object properties:
 
-"value" will be set to the value of the JSON element if it's a primitive, else it will be `null`.\
-"array" will be set to the array of values if the JSON element is an array, else it will be `[]`.\
+* "value" will be set to the value of the JSON element if it's a primitive, else it will be `null`.
+* "array" will be set to the array of values if the JSON element is an array, else it will be `[]`.
+
 If the JSON element is an object, then each property will spread out to its own column in the group, else these columns
 will be `null`.
 
 In this case `typeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS`.
 
-For example:
+For example, this is how the following JSON will be read (including `null` and `[]` values):
 
-```json
-[
-    { "a": "text" },
-    { "a": { "b": 2 } },
-    { "a": [ 6, 7, 8 ] }
-]
+<!---FUN readJsonTypeClash-->
+
+```kotlin
+val text = """
+    [
+        { "a": "text" },
+        { "a": { "b": 2 } },
+        { "a": [ 6, 7, 8 ] }
+    ]
+""".trimIndent()
+
+val df = DataFrame.readJsonStr(text)
 ```
 
-will be read like (including `null` and `[]` values):
-
-```text
-⌌----------------------------------------------⌍
-|  | a:{b:Int?, value:String?, array:List<Int>}|
-|--|-------------------------------------------|
-| 0|   {b:null, value:"text",  array:[]       }|
-| 1|   {b:2,    value:null,    array:[]       }|
-| 2|   {b:null, value:null,    array:[6, 7, 8]}|
-⌎----------------------------------------------⌏
-```
+<!---END-->
+<inline-frame src="./resources/readJsonTypeClash.html" width="100%" height="500px"></inline-frame>
 
 This makes it more convenient to work with the data, but it can be confusing if you're not expecting it or if you
 just need the type to be an `Any`.
 
 For this case, you can set `typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS` to get the following:
 
-```text
-⌌-------------⌍
-|  |     a:Any|
-|--|----------|
-| 0|    "text"|
-| 1|   { b:2 }|
-| 2| [6, 7, 8]|
-⌎-------------⌏
+<!---FUN readJsonTypeClashTactic-->
+
+```kotlin
+val df = DataFrame.readJsonStr(text, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
 ```
 
-This option is also possible to set in the Gradle- and KSP plugin by providing `jsonOptions`.
+<!---END-->
+<inline-frame src="./resources/readJsonTypeClashTactic.html" width="100%" height="500px"></inline-frame>
 
 #### Specify Key/Value Paths
 
@@ -484,48 +522,22 @@ to the objects that should be read as key value frame columns.
 
 This can be the difference between:
 
-```text
-⌌---------------------------------------------------------------------------------------------------------------------------------------------...
-|  |                      dogs:{fido:{age:Int, breed:String}, spot:{age:Int, breed:String}, rex:{age:Int, breed:String}, lucky:{age:Int, breed...
-|--|------------------------------------------------------------------------------------------------------------------------------------------...
-| 0| { fido:{ age:3, breed:poodle }, spot:{ age:5, breed:labrador }, rex:{ age:2, breed:golden retriever }, lucky:{ age:1, breed:poodle }, rov...
-⌎---------------------------------------------------------------------------------------------------------------------------------------------...
+<!---FUN readJsonFromStringWithoutKeyValuePairs-->
+
+```kotlin
+val df = DataFrame.readJsonStr(pets)
 ```
+
+<!---END-->
+<inline-frame src="./resources/readJsonFromStringWithoutKeyValuePairs.html" width="100%" height="500px"></inline-frame>
 
 and
 
-```text
-⌌--------------------------------------------------------------------------------------------------------⌍
-|  | dogs:[name:String, value:{age:Int, breed:String}]| cats:[name:String, value:{age:Int, breed:String}]|
-|--|--------------------------------------------------|--------------------------------------------------|
-| 0|                                           [7 x 2]|                                           [6 x 2]|
-⌎--------------------------------------------------------------------------------------------------------⌏
-```
-
-with dogs looking like
-
-```text
-⌌--------------------------------------------------⌍
-|  | name:String|     value:{age:Int, breed:String}|
-|--|------------|----------------------------------|
-| 0|        fido|           { age:3, breed:poodle }|
-| 1|        spot|         { age:5, breed:labrador }|
-| 2|         rex| { age:2, breed:golden retriever }|
-| 3|       lucky|           { age:1, breed:poodle }|
-| 4|       rover|         { age:3, breed:labrador }|
-| 5|         max| { age:2, breed:golden retriever }|
-| 6|      buster|           { age:1, breed:poodle }|
-⌎--------------------------------------------------⌏
-```
-
-(The results are wrapped in a [`FrameColumn`](DataColumn.md#framecolumn) instead of a `ColumnGroup` since lengths between "cats" and "dogs" can vary,
-among other reasons.)
-
-To specify the paths, you can use the `JsonPath` class:
+<!---FUN readJsonFromStringWithKeyValuePairs-->
 
 ```kotlin
 DataFrame.readJsonStr(
-    text = myJson,
+    text = pets,
     keyValuePaths = listOf(
         JsonPath().append("dogs"), // which will result in '$["dogs"]'
         JsonPath().append("cats"), // which will result in '$["cats"]'
@@ -533,9 +545,12 @@ DataFrame.readJsonStr(
 )
 ```
 
-Note: For the KSP plugin, the `JsonPath` class is not available, so you will have to use the `String` version of the
-paths instead. For example: `jsonOptions = JsonOptions(keyValuePaths = ["""$""", """$[*]["versions"]"""])`.
-Only the bracket notation of json path is supported, as well as just double quotes, arrays, and wildcards.
+<!---END-->
+<inline-frame src="./resources/readJsonFromStringWithKeyValuePairs.html" width="100%" height="500px"></inline-frame>
+
+To specify the paths, you can use the `JsonPath` class.
+(The results are wrapped in a [`FrameColumn`](DataColumn.md#framecolumn) instead of a `ColumnGroup` since lengths between "cats" and "dogs" can vary,
+among other reasons.)
 
 For more examples, see the "examples/json" module.
 
@@ -554,15 +569,23 @@ Excel spreadsheet formats are: xls, xlsx.
 
 To read an Excel spreadsheet from a file:
 
+<!---FUN readExcelFromFile-->
+
 ```kotlin
 val df = DataFrame.readExcel(file)
 ```
 
+<!---END-->
+
 To read an Excel spreadsheet from a URL:
+
+<!---FUN readExcelFromUrl-->
 
 ```kotlin
 DataFrame.readExcel("https://example.com/data.xlsx")
 ```
+
+<!---END-->
 
 ### Cell type inference from Excel
 
