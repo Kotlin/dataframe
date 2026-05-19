@@ -292,8 +292,16 @@ private fun CsvReader.ResultColumn.toDataColumn(
             val givenSkipTypes = parserOptions?.skipTypes ?: DataFrame.parser.skipTypes
             // no need to check for types that Deephaven already parses, skip those too
             val adjustedSkipTypes = givenSkipTypes + typesDeephavenAlreadyParses
+
+            val parseDfReadSource = parserOptions?.parseToDataFrameReadSource
+                ?: DataFrame.parser.parseToDataFrameReadSource.takeIf { it } // only take if adjusted to 'true'
+                ?: true
+
             val adjustedParserOptions = (parserOptions ?: ParserOptions())
-                .copy(skipTypes = adjustedSkipTypes)
+                .copy(
+                    skipTypes = adjustedSkipTypes,
+                    parseToDataFrameReadSource = parseDfReadSource,
+                )
 
             column.tryParse(adjustedParserOptions)
         }
