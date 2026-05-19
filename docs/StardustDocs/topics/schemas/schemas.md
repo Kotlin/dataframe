@@ -12,7 +12,7 @@ properties, including support for hierarchical and nested dataframe structures.
 
 <link-summary>
 Typed dataframe schemas in Kotlin DataFrame — define schemas with `@DataSchema`, 
-generate extension properties, and work safely with structured and nested data.
+generate extension properties and work safely with structured and nested data.
 </link-summary>
 
 The Kotlin DataFrame library provides typed data access via
@@ -128,9 +128,10 @@ Each property of an annotated class or interface corresponds to a column in the 
 (or [`DataRow`](DataRow.md), [`ColumnGroup`](DataColumn.md#columngroup), etc.).
 The property name is the column name, and the property type is the column type.
 
-> Data schema is considered *valid* if it contains any subset of actual dataframe columns.
+> Data schema is considered *compatible* if it contains **any subset** of actual dataframe columns
+> with correct types.
 > If the data schema contains columns that are not present in the dataframe, 
-> it is considered *invalid*.
+> it is considered *incompatible*.
 > 
 > This is checked in [`.cast()`](cast.md) with `verify=true` and [`.convertTo()`](convertTo.md) methods.
 {style="warning"}
