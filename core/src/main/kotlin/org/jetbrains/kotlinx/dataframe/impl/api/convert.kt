@@ -196,10 +196,6 @@ internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConvert
 
 private enum class DummyEnum
 
-private val dataFrameReadSourceSupportedClasses by lazy {
-    dataFrameReadSourceByType.keys.map { it.jvmErasure }.toSet()
-}
-
 @Suppress("UNCHECKED_CAST")
 internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
     if (from.isMarkedNullable) {
@@ -209,49 +205,45 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
     val fromClass = from.jvmErasure
     val toClass = to.jvmErasure
 
-    // readSource-backed conversions handle target types with type arguments (e.g. `DataFrame<*>`,
-    // `DataRow<*>`), so they must run before the generic-arguments early-exit below.
-    if (dataFrameReadSourceByType.any { from.isSubtypeOf(it.key) }) {
-        val readSources = dataFrameReadSourceByType.entries
-            .first { from.isSubtypeOf(it.key) }.value
-
-        when (toClass) {
-            DataFrame::class ->
-                return convert<Any> { source ->
-                    DataFrame.readSource(
-                        source = source,
-                        type = from,
-                        options = null,
-                        formats = readSources,
-                    )
-                }
-
-            DataRow::class ->
-                return convert<Any> { source ->
-                    DataRow.readSource(
-                        source = source,
-                        type = from,
-                        options = null,
-                        formats = readSources,
-                    )
-                }
-
-            DataFrameSchema::class ->
-                return convert<Any> { source ->
-                    DataFrameSchema.readSource(
-                        source = source,
-                        type = from,
-                        options = null,
-                        formats = readSources,
-                    )
-                }
-        }
+    // early exit when we encounter types with generics (except DataFrame and DataRow), which we don't support
+    if (from.arguments.isNotEmpty() ||
+        (to.arguments.isNotEmpty() && toClass !in setOf(DataFrame::class, DataRow::class))
+    ) {
+        return null
     }
 
-    return when {
-        from.arguments.isNotEmpty() || to.arguments.isNotEmpty() -> null
+    val fromTypeInDfReadSources =
+        dataFrameReadSourceByType.keys.any { from.isSubtypeOf(it) } || from == typeOf<String>()
 
+    return when {
         fromClass == toClass -> TypeConverterIdentity
+
+        fromTypeInDfReadSources && toClass == DataFrame::class ->
+            convert<Any> { source ->
+                DataFrame.readSource(
+                    source = source,
+                    type = from,
+                    options = null,
+                )
+            }
+
+        fromTypeInDfReadSources && toClass == DataRow::class ->
+            convert<Any> { source ->
+                DataRow.readSource(
+                    source = source,
+                    type = from,
+                    options = null,
+                )
+            }
+
+        fromTypeInDfReadSources && toClass == DataFrameSchema::class ->
+            convert<Any> { source ->
+                DataFrameSchema.readSource(
+                    source = source,
+                    type = from,
+                    options = null,
+                )
+            }
 
         // kotlin.time.Duration is a value class,
         // so it must be handled before the generic toClass.isValue / fromClass.isValue branches.
@@ -277,7 +269,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             val underlyingType = constructor.parameters.single().type
             val converter = getConverter(from, underlyingType)
                 ?: throw TypeConverterNotFoundException(from, underlyingType, null)
-            return convert<Any> {
+            convert<Any> {
                 val converted = converter(it)
                 if (converted == null && !underlyingType.isMarkedNullable) {
                     throw TypeConversionException(it, from, underlyingType, null)

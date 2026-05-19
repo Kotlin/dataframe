@@ -291,6 +291,8 @@ public interface GlobalParserOptions {
      * @see [addJavaDateTimePattern]
      */
     public var dateTimeLibrary: ParseDateTimeLibrary?
+
+    public var parseToDataFrameReadSource: Boolean
 }
 
 /** @include [GlobalParserOptions] */
@@ -410,6 +412,7 @@ public class ParserOptions(
     public val useFastDoubleParser: Boolean? = null,
     public val parseExperimentalUuid: Boolean? = null,
     public val parseExperimentalInstant: Boolean? = null,
+    public val parseToDataFrameReadSource: Boolean? = null,
 ) {
     public fun copy(
         locale: Locale? = this.locale,
@@ -419,6 +422,7 @@ public class ParserOptions(
         useFastDoubleParser: Boolean? = this.useFastDoubleParser,
         parseExperimentalUuid: Boolean? = this.parseExperimentalUuid,
         parseExperimentalInstant: Boolean? = this.parseExperimentalInstant,
+        parseToDataFrameReadSource: Boolean? = this.parseToDataFrameReadSource,
     ): ParserOptions =
         ParserOptions(
             locale = locale,
@@ -428,6 +432,7 @@ public class ParserOptions(
             useFastDoubleParser = useFastDoubleParser,
             parseExperimentalUuid = parseExperimentalUuid,
             parseExperimentalInstant = parseExperimentalInstant,
+            parseToDataFrameReadSource = parseToDataFrameReadSource,
         )
 
     override fun equals(other: Any?): Boolean {
@@ -439,6 +444,7 @@ public class ParserOptions(
         if (useFastDoubleParser != other.useFastDoubleParser) return false
         if (parseExperimentalUuid != other.parseExperimentalUuid) return false
         if (parseExperimentalInstant != other.parseExperimentalInstant) return false
+        if (parseToDataFrameReadSource != other.parseToDataFrameReadSource) return false
         if (locale != other.locale) return false
         if (dateTime != other.dateTime) return false
         if (nullStrings != other.nullStrings) return false
@@ -451,6 +457,8 @@ public class ParserOptions(
         var result = useFastDoubleParser?.hashCode() ?: 0
         result = 31 * result + (parseExperimentalUuid?.hashCode() ?: 0)
         result = 31 * result + (parseExperimentalInstant?.hashCode() ?: 0)
+        result = 31 * result + (parseToDataFrameReadSource?.hashCode() ?: 0)
+        result = 31 * result + (parseExperimentalInstant?.hashCode() ?: 0)
         result = 31 * result + (locale?.hashCode() ?: 0)
         result = 31 * result + (dateTime?.hashCode() ?: 0)
         result = 31 * result + (nullStrings?.hashCode() ?: 0)
@@ -459,7 +467,7 @@ public class ParserOptions(
     }
 
     override fun toString(): String =
-        "ParserOptions(locale=$locale, dateTimeParserOptions=$dateTime, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser, parseExperimentalUuid=$parseExperimentalUuid, parseExperimentalInstant=$parseExperimentalInstant)"
+        "ParserOptions(locale=$locale, dateTimeParserOptions=$dateTime, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser, parseExperimentalUuid=$parseExperimentalUuid, parseExperimentalInstant=$parseExperimentalInstant, parseToDataFrameReadSource=$parseToDataFrameReadSource)"
 
     // region deprecated constructors
 
@@ -518,6 +526,7 @@ public class ParserOptions(
         useFastDoubleParser: Boolean? = null,
         parseExperimentalUuid: Boolean? = null,
         parseExperimentalInstant: Boolean? = null,
+        parseToDataFrameReadSource: Boolean? = null,
     ) : this(
         locale = locale,
         dateTime = 0.run {
@@ -535,6 +544,7 @@ public class ParserOptions(
         useFastDoubleParser = useFastDoubleParser,
         parseExperimentalUuid = parseExperimentalUuid,
         parseExperimentalInstant = parseExperimentalInstant,
+        parseToDataFrameReadSource = parseToDataFrameReadSource,
     )
     // endregion
 }
