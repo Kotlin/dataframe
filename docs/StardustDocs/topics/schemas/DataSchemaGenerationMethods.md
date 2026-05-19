@@ -17,6 +17,102 @@ Generate useful Kotlin definitions based on your DataFrame structure.
 Special utility functions that generate code of useful Kotlin definitions (returned as a `String`)
 based on the current `DataFrame` schema.
 
+## generateInterfaces
+
+```kotlin
+inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString
+
+fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString
+```
+
+Generates [`@DataSchema`](schemas.md) interfaces for this `DataFrame`
+(including all nested `DataFrame` columns and column groups) as Kotlin interfaces.
+
+This is useful when working with the [compiler plugin](Compiler-Plugin.md)
+in cases where the schema cannot be inferred automatically from the source.
+
+### Arguments {id="generateInterfaces-arguments"}
+
+* `markerName`: `String?` — The base name to use for generated interfaces.  
+  If `null`, uses the `T` type argument of `DataFrame` simple name.  
+  Default: `null`.
+* `extensionProperties`: `Boolean` – Whether to generate [extension properties](extensionPropertiesApi.md)
+  in addition to `interface` declarations.  
+  Useful if you don't use the [compiler plugin](Compiler-Plugin.md), otherwise they are not needed;
+  the [compiler plugin](Compiler-Plugin.md), [notebooks](SetupKotlinNotebook.md),
+  and older [Gradle/KSP plugin](schemasGradle.md) generate them automatically.
+  Default: `false`.
+* `visibility`: `MarkerVisibility` – Visibility modifier for the generated declarations.  
+  Default: `MarkerVisibility.IMPLICIT_PUBLIC`.
+* `useFqNames`: `Boolean` – If `true`, fully qualified type names will be used in generated code.  
+  Default: `false`.
+* `nameNormalizer`: `NameNormalizer` – Strategy for converting column names (with spaces, underscores, etc.) to
+  Kotlin-style identifiers.
+  Generated properties will still refer to columns by their actual name using the `@ColumnName` annotation.
+  Default: `NameNormalizer.default`.
+* `nestedMarkerNameProvider`: `MarkerNameProvider` – Strategy for generating names for nested data schema declarations (markers).
+    - `MarkerNameProvider.fromColumnName` (default) generates descriptive names from the column names.
+    - `MarkerNameProvider.PredefinedName` uses the name of the root marker for all nested declarations and appends a numerical suffix to resolve name conflicts.  
+      Default: `MarkerNameProvider.fromColumnName`.
+
+### Returns {id="generateInterfaces-returns"}
+
+* `CodeString` – A value class wrapper for `String`, containing  
+  the generated Kotlin code of `@DataSchema` interfaces. 
+  It also contains generated [extension properties](extensionPropertiesApi.md)
+  for `extensionProperties=true`.
+
+### Examples {id="generateInterfaces-examples"}
+
+<!---FUN notebook_test_generate_docs_1-->
+
+```kotlin
+df
+```
+
+<!---END-->
+
+<inline-frame src="./resources/notebook_test_generate_docs_1.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN notebook_test_generate_docs_2-->
+
+```kotlin
+df.generateInterfaces(markerName = "Customer")
+```
+
+Output:
+
+```kotlin
+@DataSchema
+interface Customer {
+    val orders: List<Orders>
+    val user: String
+
+    @DataSchema(isOpen = false)
+    interface Orders {
+        val amount: Double
+        val orderId: Int
+    }
+}
+```
+
+<!---END-->
+
+By adding these interfaces to your project with the [compiler plugin](Compiler-Plugin.md) enabled,  
+you'll gain full support for the [extension properties API](extensionPropertiesApi.md) and type-safe operations.
+
+Use [`cast`](cast.md) to apply the generated schema to a `DataFrame`.
+Right after that, you can use [extension properties](extensionPropertiesApi.md)
+in the following operations:
+
+<!---FUN notebook_test_generate_docs_3-->
+
+```kotlin
+df.cast<Customer>().filter { orders.all { orderId >= 102 } }
+```
+
+<!---END-->
+
 ## generateDataClasses
 
 ```kotlin
@@ -66,8 +162,10 @@ Useful when you want to:
 
 ### Returns {id="generateDataClasses-returns"}
 
-* `CodeString` — A value class wrapper for `String`, containing  
-  the generated Kotlin code of `data class` declarations and optionally [extension properties](extensionPropertiesApi.md).
+* `CodeString` – A value class wrapper for `String`, containing  
+  the generated Kotlin code of `@DataSchema` data classes.
+  It also contains generated [extension properties](extensionPropertiesApi.md)
+  for `extensionProperties=true`.
 
 ### Examples {id="generateDataClasses-examples"}
 
@@ -77,25 +175,40 @@ Useful when you want to:
 df.generateDataClasses("Customer")
 ```
 
-<!---END-->
-
 Output:
 
 ```kotlin
 @DataSchema
-data class Customer1(
-    val amount: Double,
-    val orderId: Int
-)
-
-@DataSchema
 data class Customer(
-    val orders: List<Customer1>,
+    val orders: List<Orders>,
     val user: String
-)
+) {
+    @DataSchema
+    data class Orders(
+        val amount: Double,
+        val orderId: Int
+    )
+}
 ```
 
-Add these classes to your project and convert the DataFrame to a list of typed objects:
+<!---END-->
+
+By adding these interfaces to your project with the [compiler plugin](Compiler-Plugin.md) enabled,  
+you'll gain full support for the [extension properties API](extensionPropertiesApi.md) and type-safe operations.
+
+Use [`cast`](cast.md) to apply the generated schema to a `DataFrame`.
+Right after that, you can use [extension properties](extensionPropertiesApi.md)
+in the following operations:
+
+<!---FUN notebook_test_generate_docs_3-->
+
+```kotlin
+df.cast<Customer>().filter { orders.all { orderId >= 102 } }
+```
+
+<!---END-->
+
+You can use these classes for the `DataFrame` conversion to a list of typed objects:
 
 <!---FUN notebook_test_generate_docs_5-->
 
@@ -104,99 +217,3 @@ val customers: List<Customer> = df.cast<Customer>().toList()
 ```
 
 <!---END-->
-
-## generateInterfaces
-
-```kotlin
-inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString
-
-fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString
-```
-
-Generates [`@DataSchema`](schemas.md) interfaces for this `DataFrame`
-(including all nested `DataFrame` columns and column groups) as Kotlin interfaces.
-
-This is useful when working with the [compiler plugin](Compiler-Plugin.md)
-in cases where the schema cannot be inferred automatically from the source.
-
-### Arguments {id="generateInterfaces-arguments"}
-
-* `markerName`: `String?` — The base name to use for generated interfaces.  
-  If `null`, uses the `T` type argument of `DataFrame` simple name.  
-  Default: `null`.
-* `extensionProperties`: `Boolean` – Whether to generate [extension properties](extensionPropertiesApi.md)
-  in addition to `interface` declarations.  
-  Useful if you don't use the [compiler plugin](Compiler-Plugin.md), otherwise they are not needed;
-  the [compiler plugin](Compiler-Plugin.md), [notebooks](SetupKotlinNotebook.md),
-  and older [Gradle/KSP plugin](schemasGradle.md) generate them automatically.
-  Default: `false`.
-* `visibility`: `MarkerVisibility` – Visibility modifier for the generated declarations.  
-  Default: `MarkerVisibility.IMPLICIT_PUBLIC`.
-* `useFqNames`: `Boolean` – If `true`, fully qualified type names will be used in generated code.  
-  Default: `false`.
-* `nameNormalizer`: `NameNormalizer` – Strategy for converting column names (with spaces, underscores, etc.) to
-  Kotlin-style identifiers.
-  Generated properties will still refer to columns by their actual name using the `@ColumnName` annotation.
-  Default: `NameNormalizer.default`.
-* `nestedMarkerNameProvider`: `MarkerNameProvider` – Strategy for generating names for nested data schema declarations (markers).  
-  - `MarkerNameProvider.fromColumnName` (default) generates descriptive names from the column names.
-  - `MarkerNameProvider.PredefinedName` uses the name of the root marker for all nested declarations and appends a numerical suffix to resolve name conflicts.  
-  Default: `MarkerNameProvider.fromColumnName`.
-
-### Returns {id="generateInterfaces-returns"}
-
-* `CodeString` – A value class wrapper for `String`, containing  
-  the generated Kotlin code of `@DataSchema` interfaces without [extension properties](extensionPropertiesApi.md).
-
-### Examples {id="generateInterfaces-examples"}
-
-<!---FUN notebook_test_generate_docs_1-->
-
-```kotlin
-df
-```
-
-<!---END-->
-
-<inline-frame src="./resources/notebook_test_generate_docs_1.html" width="100%" height="500px"></inline-frame>
-
-<!---FUN notebook_test_generate_docs_2-->
-
-```kotlin
-df.generateInterfaces()
-```
-
-<!---END-->
-
-Output:
-
-```kotlin
-@DataSchema(isOpen = false)
-interface _DataFrameType11 {
-    val amount: kotlin.Double
-    val orderId: kotlin.Int
-}
-
-@DataSchema
-interface _DataFrameType1 {
-    val orders: List<_DataFrameType11>
-    val user: kotlin.String
-}
-```
-
-By adding these interfaces to your project with the [compiler plugin](Compiler-Plugin.md) enabled,  
-you'll gain full support for the [extension properties API](extensionPropertiesApi.md) and type-safe operations.
-
-Use [`cast`](cast.md) to apply the generated schema to a `DataFrame`:
-
-<!---FUN notebook_test_generate_docs_3-->
-
-```kotlin
-df.filter { orders.all { orderId >= 102 } }
-```
-
-<!---END-->
-
-<!--inline-frame src="./resources/notebook_test_generate_docs_3.html" width="100%" height="500px"></inline-frame>-->
-
-

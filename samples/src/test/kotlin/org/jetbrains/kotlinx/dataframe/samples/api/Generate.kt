@@ -2,6 +2,7 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.all
@@ -20,31 +21,30 @@ import org.junit.Test
 class Generate : DataFrameSampleHelper("generate_docs", "api") {
 
     @DataSchema
-    data class Orders(
-        val orderId: Int,
-        val amount: Double,
-    )
-
+    data class Customer(
+        val orders: List<Orders>,
+        val user: String
+    ) {
+        @DataSchema
+        data class Orders(
+            val amount: Double,
+            val orderId: Int
+        )
+    }
     private val ordersAlice = dataFrameOf(
         "orderId" to listOf(101, 102),
         "amount" to listOf(50.0, 75.5),
-    ).cast<Orders>()
+    ).cast<Customer.Orders>()
 
     private val ordersBob = dataFrameOf(
         "orderId" to listOf(103, 104, 105),
         "amount" to listOf(20.0, 30.0, 25.0),
-    ).cast<Orders>()
+    ).cast<Customer.Orders>()
 
-    @DataSchema
-    data class Customer(
-        val user: String,
-        val orders: List<Orders>,
-    )
-
-    private val df = dataFrameOf(
+    private val df: AnyFrame = dataFrameOf(
         "user" to listOf("Alice", "Bob"),
         "orders" to listOf(ordersAlice, ordersBob),
-    ).cast<Customer>()
+    )
 
     @Test
     fun notebook_test_generate_docs_1() {
@@ -57,14 +57,15 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
     @Test
     fun notebook_test_generate_docs_2() {
         // SampleStart
-        df.generateInterfaces()
+        df.generateInterfaces(markerName = "Customer")
         // SampleEnd
+            .saveSample()
     }
 
     @Test
     fun notebook_test_generate_docs_3() {
         // SampleStart
-        df.filter { orders.all { orderId >= 102 } }
+        df.cast<Customer>().filter { orders.all { orderId >= 102 } }
         // SampleEnd
         // .saveDfHtmlSample()
     }
@@ -74,6 +75,7 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
         // SampleStart
         df.generateDataClasses("Customer")
         // SampleEnd
+            .saveSample()
     }
 
     @Test
@@ -88,6 +90,7 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
         // SampleStart
         df.generateInterfaces(markerName = "Customer")
         // SampleEnd
+            .saveSample()
     }
 
     @Test
