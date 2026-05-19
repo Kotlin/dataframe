@@ -116,13 +116,6 @@ internal val dataFrameReadSourceByType: Map<KType, List<DataFrameReadSource>> by
                 getOrPut(type) { mutableListOf() }.let {
                     if (format !in it) it += format
                 }
-
-                // special String -> URL case
-                if (type == typeOf<URL>()) {
-                    getOrPut(typeOf<String>()) { mutableListOf() }.let {
-                        if (format !in it) it += format
-                    }
-                }
             }
         }
         values.forEach {
@@ -145,13 +138,14 @@ internal fun <T : Any> readSourceImpl(
     options: DataFrameReadOptions?,
     formats: List<DataFrameReadSource>,
     resultKind: String,
+    doStringToUrlConversion: Boolean,
     readOrNull: DataFrameReadSource.(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
     ) -> T?,
-): T {
-    if (source is String) {
+): Result<T> {
+    if (doStringToUrlConversion && source is String) {
         val url = asUrlOrNull(source)
         if (url != null) {
             return readSourceImpl(
@@ -160,6 +154,7 @@ internal fun <T : Any> readSourceImpl(
                 options = options,
                 formats = formats,
                 resultKind = resultKind,
+                doStringToUrlConversion = true,
                 readOrNull = readOrNull,
             )
         }
@@ -189,14 +184,16 @@ internal fun <T : Any> readSourceImpl(
         if (!it.acceptsSource(sourceInfo, options)) return@forEach
         try {
             val result = it.readOrNull(getSource(), sourceInfo, options)
-            if (result != null) return result
+            if (result != null) return Result.success(result)
         } catch (e: FileNotFoundException) {
-            throw e
+            return Result.failure(exception = e)
         } catch (e: Exception) {
             tries[it::class.simpleName!!] = e
         }
     }
-    throw IllegalArgumentException("Unknown $resultKind source $source, $sourceInfo; Tried $tries")
+    return Result.failure(
+        exception = IllegalArgumentException("Unknown $resultKind source $source, $sourceInfo; Tried $tries"),
+    )
 }
 
 /**
@@ -223,8 +220,9 @@ public fun DataFrame.Companion.readSource(
         options = options,
         formats = formats,
         resultKind = "DataFrame",
+        doStringToUrlConversion = true,
         readOrNull = DataFrameReadSource::readDataFrameOrNull,
-    )
+    ).getOrThrow()
 
 public inline fun <reified R : Any> DataRow.Companion.readSource(
     source: R,
@@ -244,10 +242,11 @@ public fun DataRow.Companion.readSource(
         options = options,
         formats = formats,
         resultKind = "DataRow",
+        doStringToUrlConversion = true,
         readOrNull = { source, sourceInfo, options ->
             readDataFrameOrNull(source, sourceInfo, options)?.single()
         },
-    )
+    ).getOrThrow()
 
 public inline fun <reified R : Any> DataFrame.Companion.readSource(
     source: R,
@@ -279,8 +278,9 @@ public fun DataFrameSchema.Companion.readSource(
         options = options,
         formats = formats,
         resultKind = "DataFrameSchema",
+        doStringToUrlConversion = true,
         readOrNull = DataFrameReadSource::readDataFrameSchemaOrNull,
-    )
+    ).getOrThrow()
 
 public inline fun <reified R : Any> DataFrameSchema.Companion.readSource(
     source: R,
@@ -318,10 +318,11 @@ public fun CodeString.Companion.readSource(
         options = options,
         formats = formats,
         resultKind = "CodeString",
+        doStringToUrlConversion = true,
         readOrNull = { src, info, opts ->
             readDataSchemaCodeOrNull(src, info, name, opts)
         },
-    )
+    ).getOrThrow()
 
 public inline fun <reified R : Any> CodeString.Companion.readSource(
     source: R,

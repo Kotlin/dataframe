@@ -464,7 +464,9 @@ class ParserTests {
     @Test
     fun `Mixing null and json`() {
         val col by columnOf("[\"str\"]", "[]", "null")
-        val parsed = col.parse()
+        val parsed = col.parse(
+            ParserOptions(parseToDataFrameReadSource = true),
+        )
         parsed.type() shouldBe typeOf<AnyFrame>()
         parsed.kind() shouldBe ColumnKind.Frame
         require(parsed.isFrameColumn())
