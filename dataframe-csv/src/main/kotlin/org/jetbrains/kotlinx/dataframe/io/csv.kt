@@ -134,6 +134,9 @@ public class Csv : DataFrameReadSource {
 
             kType.isSubTypeOf<String>() ->
                 (source as? String)?.let { text ->
+                    // early fail
+                    if (opts.delimiter !in text) return null
+
                     DataFrame.readCsvStr(
                         text = text,
                         delimiter = opts.delimiter,
