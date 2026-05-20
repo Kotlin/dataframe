@@ -381,6 +381,8 @@ public val NameNormalizer.Companion.default: NameNormalizer get() = NameNormaliz
 @RequiredByIntellijPlugin
 public value class CodeString(public val value: String) {
     override fun toString(): String = value
+
+    public companion object
 }
 
 @PublishedApi
