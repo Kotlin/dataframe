@@ -8,6 +8,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
+import kotlinx.serialization.json.Json
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
@@ -371,6 +372,31 @@ class Read : DataFrameSampleHelper("read", "api") {
                 JsonPath().append("dogs"), // which will result in '$["dogs"]'
                 JsonPath().append("cats"), // which will result in '$["cats"]'
             ),
+        )
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    private val json = """
+        [{ // some comment
+           a: 123,
+           b: hello,
+         },
+         { // some other comment
+           a: 456,
+           b: world,
+         }]""".trimIndent()
+
+    @Test
+    fun readJsonWithJsonInstance() {
+        // SampleStart
+        DataFrame.readJson(
+            stream = json.byteInputStream(),
+            jsonInstance = Json {
+                isLenient = true
+                allowTrailingComma = true
+                allowComments = true
+            },
         )
             // SampleEnd
             .saveDfHtmlSample()

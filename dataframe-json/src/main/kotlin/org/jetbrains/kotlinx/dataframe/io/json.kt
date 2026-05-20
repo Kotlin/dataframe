@@ -146,7 +146,14 @@ public fun DataFrame.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyFrame = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers)
+): AnyFrame =
+    DataFrame.readJson(
+        path = file.toPath(),
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+    )
 
 /**
  * @param path Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
@@ -163,7 +170,14 @@ public fun DataFrame.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyFrame = DataFrame.readJson(path.toUri().toURL(), header, keyValuePaths, typeClashTactic, unifyNumbers)
+): AnyFrame =
+    DataFrame.readJson(
+        url = path.toUri().toURL(),
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+    )
 
 /**
  * @param file Where to fetch the Json as [InputStream] to be converted to a [DataRow].
@@ -180,7 +194,14 @@ public fun DataRow.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJson(file.toPath(), header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+): AnyRow =
+    DataFrame.readJson(
+        path = file.toPath(),
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+    ).single()
 
 /**
  * @param path Where to fetch the Json as [InputStream] to be converted to a [DataRow].
@@ -197,7 +218,14 @@ public fun DataRow.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJson(path, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+): AnyRow =
+    DataFrame.readJson(
+        path = path,
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+    ).single()
 
 /**
  * @param path URL or file path from where to fetch the Json as [InputStream] to be converted to a [DataFrame].
@@ -214,7 +242,14 @@ public fun DataFrame.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyFrame = DataFrame.readJson(asUrl(path), header, keyValuePaths, typeClashTactic, unifyNumbers)
+): AnyFrame =
+    DataFrame.readJson(
+        url = asUrl(path),
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+    )
 
 /**
  * @param path URL or file path from where to fetch the Json as [InputStream] to be converted to a [DataRow].
@@ -231,7 +266,14 @@ public fun DataRow.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJson(path, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+): AnyRow =
+    DataFrame.readJson(
+        path = path,
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+    ).single()
 
 /**
  * @param url Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
@@ -248,7 +290,16 @@ public fun DataFrame.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyFrame = catchHttpResponse(url) { DataFrame.readJson(it, header, keyValuePaths, typeClashTactic, unifyNumbers) }
+): AnyFrame =
+    catchHttpResponse(url) {
+        DataFrame.readJson(
+            stream = it,
+            header = header,
+            keyValuePaths = keyValuePaths,
+            typeClashTactic = typeClashTactic,
+            unifyNumbers = unifyNumbers,
+        )
+    }
 
 /**
  * @param url Where to fetch the Json as [InputStream] to be converted to a [DataRow].
@@ -265,7 +316,14 @@ public fun DataRow.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJson(url, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+): AnyRow =
+    DataFrame.readJson(
+        url = url,
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+    ).single()
 
 /**
  * @param stream Json as [InputStream] to be converted to a [DataFrame].
@@ -375,7 +433,14 @@ public fun DataFrame.Companion.readJsonStr(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyFrame = readJsonImpl(Json.parseToJsonElement(text), unifyNumbers, header, keyValuePaths, typeClashTactic)
+): AnyFrame =
+    readJsonImpl(
+        parsed = Json.parseToJsonElement(text),
+        unifyNumbers = unifyNumbers,
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+    )
 
 /**
  * @param text Json as [String] to be converted to a [DataRow].
@@ -392,7 +457,14 @@ public fun DataRow.Companion.readJsonStr(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJsonStr(text, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+): AnyRow =
+    DataFrame.readJsonStr(
+        text = text,
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+    ).single()
 
 public fun AnyFrame.toJson(prettyPrint: Boolean = false): String {
     val json = Json {
