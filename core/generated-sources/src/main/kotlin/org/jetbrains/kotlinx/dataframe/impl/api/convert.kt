@@ -22,6 +22,7 @@ import kotlinx.datetime.toStdlibInstant
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.api.Convert
@@ -30,7 +31,6 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.isValueColumn
-import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
@@ -41,13 +41,14 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
-import org.jetbrains.kotlinx.dataframe.impl.isSubtypeWithNullabilityOf
+import org.jetbrains.kotlinx.dataframe.io.dataFrameReadSourceByType
+import org.jetbrains.kotlinx.dataframe.io.readSource
 import org.jetbrains.kotlinx.dataframe.path
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
-import java.util.Locale
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.reflect.KType
@@ -197,15 +198,52 @@ private enum class DummyEnum
 
 @Suppress("UNCHECKED_CAST")
 internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
-    if (from.arguments.isNotEmpty() || to.arguments.isNotEmpty()) return null
     if (from.isMarkedNullable) {
         val res = createConverter(from.withNullability(false), to, options) ?: return null
         return { res(it) }
     }
     val fromClass = from.jvmErasure
     val toClass = to.jvmErasure
+
+    // early exit when we encounter types with generics (except DataFrame and DataRow), which we don't support
+    if (from.arguments.isNotEmpty() ||
+        (to.arguments.isNotEmpty() && toClass !in setOf(DataFrame::class, DataRow::class))
+    ) {
+        return null
+    }
+
+    val fromTypeInDfReadSources =
+        dataFrameReadSourceByType.keys.any { from.isSubtypeOf(it) } || from == typeOf<String>()
+
     return when {
         fromClass == toClass -> TypeConverterIdentity
+
+        fromTypeInDfReadSources && toClass == DataFrame::class ->
+            convert<Any> { source ->
+                DataFrame.readSource(
+                    source = source,
+                    type = from,
+                    options = null,
+                )
+            }
+
+        fromTypeInDfReadSources && toClass == DataRow::class ->
+            convert<Any> { source ->
+                DataRow.readSource(
+                    source = source,
+                    type = from,
+                    options = null,
+                )
+            }
+
+        fromTypeInDfReadSources && toClass == DataFrameSchema::class ->
+            convert<Any> { source ->
+                DataFrameSchema.readSource(
+                    source = source,
+                    type = from,
+                    options = null,
+                )
+            }
 
         // kotlin.time.Duration is a value class,
         // so it must be handled before the generic toClass.isValue / fromClass.isValue branches.
@@ -231,7 +269,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             val underlyingType = constructor.parameters.single().type
             val converter = getConverter(from, underlyingType)
                 ?: throw TypeConverterNotFoundException(from, underlyingType, null)
-            return convert<Any> {
+            convert<Any> {
                 val converted = converter(it)
                 if (converted == null && !underlyingType.isMarkedNullable) {
                     throw TypeConversionException(it, from, underlyingType, null)
