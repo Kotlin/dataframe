@@ -274,6 +274,7 @@ public fun DataRow.Companion.readJson(
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
+ * @param jsonInstance [Json] instance to use for parsing. Defaults to [Json.Default].
  * @return [DataFrame] from the given [stream].
  */
 @OptIn(ExperimentalSerializationApi::class)
@@ -283,8 +284,35 @@ public fun DataFrame.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
+    jsonInstance: Json = Json.Default,
 ): AnyFrame =
-    readJsonImpl(Json.decodeFromStream<JsonElement>(stream), unifyNumbers, header, keyValuePaths, typeClashTactic)
+    readJsonImpl(
+        parsed = jsonInstance.decodeFromStream<JsonElement>(stream),
+        unifyNumbers = unifyNumbers,
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+    )
+
+@Deprecated(
+    message = "This function exists for binary compatibility",
+    level = DeprecationLevel.HIDDEN,
+)
+public fun DataFrame.Companion.readJson(
+    stream: InputStream,
+    header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
+    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+    unifyNumbers: Boolean = true,
+): AnyFrame =
+    DataFrame.readJson(
+        stream = stream,
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+        jsonInstance = Json.Default,
+    )
 
 /**
  * @param stream Json as [InputStream] to be converted to a [DataRow].
@@ -293,6 +321,7 @@ public fun DataFrame.Companion.readJson(
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
+ * @param jsonInstance Json instance to use for parsing. Defaults to [Json.Default].
  * @return [DataRow] from the given [stream].
  */
 public fun DataRow.Companion.readJson(
@@ -301,7 +330,35 @@ public fun DataRow.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-): AnyRow = DataFrame.readJson(stream, header, keyValuePaths, typeClashTactic, unifyNumbers).single()
+    jsonInstance: Json = Json.Default,
+): AnyRow =
+    DataFrame.readJson(
+        stream = stream,
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+        jsonInstance = jsonInstance,
+    ).single()
+
+@Deprecated(
+    message = "This function exists for binary compatibility",
+    level = DeprecationLevel.HIDDEN,
+)
+public fun DataRow.Companion.readJson(
+    stream: InputStream,
+    header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
+    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+    unifyNumbers: Boolean = true,
+): AnyRow =
+    DataFrame.readJson(
+        stream = stream,
+        header = header,
+        keyValuePaths = keyValuePaths,
+        typeClashTactic = typeClashTactic,
+        unifyNumbers = unifyNumbers,
+    ).single()
 
 /**
  * @param text Json as [String] to be converted to a [DataFrame].
