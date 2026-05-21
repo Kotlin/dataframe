@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -14,9 +15,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -27,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.util.SINGLE
 import org.jetbrains.kotlinx.dataframe.util.SINGLE_COL_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.SINGLE_PLAIN_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.SINGLE_SET_REPLACE
-import kotlin.reflect.KProperty
 
 // region DataColumn
 
@@ -66,68 +63,50 @@ public interface SingleColumnsSelectionDsl {
     /**
      * ## Single (Col) Grammar
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### Definitions:
+     * `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * `columnGroup:
+     * `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>
+     * | `[`String`][String]` | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *
-     *
-     *
+     * ### What can be called directly in the
+     * [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()`
-     *
-     *
-     *
+     * [**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
-     *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()`
-     *
-     *
-     *
+     * ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     * [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
+     * &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     * ### What can be called on a
+     * [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`singleCol`**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
+     * [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *
-     *
-     *
-     *
-     *
-     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`singleCol`**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]`()`
      */
     public interface Grammar {
 
@@ -143,25 +122,27 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to
+     * avoid confusion.
      *
      * ### Check out: [Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]`  { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[single][ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[single][ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][String.singleCol]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
-     *
-     *
      *
      * @return A [SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -175,29 +156,38 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[single][ColumnSet.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[single][ColumnSet.single]` {
+     * it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
@@ -212,29 +202,38 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().nameStartsWith("year").`[single][ColumnSet.single]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().nameStartsWith("year").`[single][ColumnSet.single]`()
+     * }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
@@ -243,27 +242,34 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.single]` {
+     * it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
@@ -273,61 +279,76 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_PLAIN_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        asSingleColumn().singleCol(condition)
+    public fun ColumnsSelectionDsl<*>.single(
+        condition: ColumnFilter<*> = { true }
+    ): SingleColumn<*> = asSingleColumn().singleCol(condition)
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  { nameStartsWith("year").`[single][ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * nameStartsWith("year").`[single][ColumnsSelectionDsl.single]`() }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
     @Interpretable("Single1")
-    public fun ColumnsSelectionDsl<*>.single(): SingleColumn<*> = asSingleColumn().singleCol { true }
+    public fun ColumnsSelectionDsl<*>.single(): SingleColumn<*> =
+        asSingleColumn().singleCol { true }
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
@@ -337,61 +358,76 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        this.ensureIsColumnGroup().asColumnSet().single(condition)
+    public fun SingleColumn<DataRow<*>>.singleCol(
+        condition: ColumnFilter<*> = { true }
+    ): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().single(condition)
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
     @Interpretable("Single2")
-    public fun SingleColumn<DataRow<*>>.singleCol(): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().single()
+    public fun SingleColumn<DataRow<*>>.singleCol(): SingleColumn<*> =
+        this.ensureIsColumnGroup().asColumnSet().single()
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` {
+     * it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
@@ -405,27 +441,35 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("year").`[singleCol][String.singleCol]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("year").`[singleCol][String.singleCol]`()
+     * }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
@@ -433,29 +477,37 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[singleCol][SingleColumn.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[singleCol][SingleColumn.singleCol]`
+     * { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[singleCol][KProperty.singleCol]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColumnGroup.`[singleCol][KProperty.singleCol]`() }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
@@ -466,27 +518,35 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [NoSuchElementException] is thrown.
-     * If there are multiple columns, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this]. If there is no column, [NoSuchElementException] is
+     * thrown. If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single`
+     * is named `singleCol` instead to avoid confusion.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`()
+     * }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`()
+     * }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[singleCol][ColumnPath.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["myColumnGroup"].`[singleCol][ColumnPath.singleCol]` {
+     * it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
+     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the
+     *   single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
@@ -496,7 +556,7 @@ public interface SingleColumnsSelectionDsl {
 
 @Suppress("UNCHECKED_CAST")
 internal fun <C> ColumnsResolver<C>.singleInternal(
-    condition: ColumnFilter<C> = { true },
+    condition: ColumnFilter<C> = { true }
 ): TransformableSingleColumn<C> =
     (allColumnsInternal() as TransformableColumnSet<C>)
         .transform { listOf(it.single(condition)) }

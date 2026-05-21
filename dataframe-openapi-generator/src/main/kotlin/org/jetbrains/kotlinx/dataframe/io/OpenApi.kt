@@ -1,14 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import java.io.File
+import java.io.InputStream
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import java.io.File
-import java.io.InputStream
 
-/**
- * Allows for OpenApi type schemas to be converted to [DataSchema] interfaces.
- */
+/** Allows for OpenApi type schemas to be converted to [DataSchema] interfaces. */
 public class OpenApi : SupportedCodeGenerationFormat {
 
     public fun readCodeForGeneration(
@@ -49,7 +47,11 @@ public class OpenApi : SupportedCodeGenerationFormat {
             generateHelperCompanionObject = generateHelperCompanionObject,
         )
 
-    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code =
+    override fun readCodeForGeneration(
+        file: File,
+        name: String,
+        generateHelperCompanionObject: Boolean,
+    ): Code =
         readOpenApiAsString(
             openApiAsString = file.readText(),
             name = name,
@@ -88,5 +90,6 @@ public class OpenApi : SupportedCodeGenerationFormat {
 
     override val testOrder: Int = 9_000
 
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod = DefaultReadOpenApiMethod
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
+        DefaultReadOpenApiMethod
 }

@@ -4,6 +4,23 @@ import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.time.Duration as JavaDuration
+import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
+import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
+import kotlin.random.Random
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.typeOf
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.toJavaDuration
+import kotlin.time.toKotlinDuration
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -25,25 +42,6 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.api.toBigDecimal
 import org.jetbrains.kotlinx.dataframe.impl.api.toBigInteger
 import org.junit.Test
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.time.format.DateTimeFormatter
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
-import kotlin.random.Random
-import kotlin.reflect.full.starProjectedType
-import kotlin.reflect.typeOf
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.toJavaDuration
-import kotlin.time.toKotlinDuration
-import java.time.Duration as JavaDuration
-import java.time.Instant as JavaInstant
-import java.time.LocalDate as JavaLocalDate
-import java.time.LocalDateTime as JavaLocalDateTime
-import java.time.LocalTime as JavaLocalTime
 
 @OptIn(FormatStringsInDatetimeFormats::class)
 class ConvertTests {
@@ -61,7 +59,8 @@ class ConvertTests {
     @Test
     fun `convert nullable strings to time`() {
         val time by columnOf("11?22?33", null)
-        val converted = time.toDataFrame().convert { time }.toLocalTime("HH?mm?ss").get { "time"<String?>() }
+        val converted =
+            time.toDataFrame().convert { time }.toLocalTime("HH?mm?ss").get { "time"<String?>() }
         converted.hasNulls shouldBe true
         converted[0] shouldBe LocalTime(11, 22, 33)
     }
@@ -69,12 +68,10 @@ class ConvertTests {
     @Test
     fun `nullability persistence after conversion`() {
         val col by columnOf("1", null)
-        col.convertToInt().forEach {
-        }
+        col.convertToInt().forEach {}
     }
 
-    @DataSchema
-    data class Schema(val time: Instant)
+    @DataSchema data class Schema(val time: Instant)
 
     @Test
     fun `Instant to LocalDateTime`() {
@@ -82,14 +79,18 @@ class ConvertTests {
         df.convert { time }.toLocalDateTime()
     }
 
-    enum class EnumClass { A, B }
+    enum class EnumClass {
+        A,
+        B,
+    }
 
     @Test
     fun `convert string to enum`() {
         columnOf("A", "B").convertTo<EnumClass>() shouldBe columnOf(EnumClass.A, EnumClass.B)
 
         dataFrameOf(columnOf("A", "B") named "colA")
-            .convert("colA").to<EnumClass>()
+            .convert("colA")
+            .to<EnumClass>()
             .getColumn("colA") shouldBe columnOf(EnumClass.A, EnumClass.B).named("colA")
     }
 
@@ -99,18 +100,16 @@ class ConvertTests {
         columnOf('A', 'B').convertTo<EnumClass>() shouldBe columnOf(EnumClass.A, EnumClass.B)
 
         dataFrameOf(columnOf('A', 'B') named "colA")
-            .convert("colA").to<EnumClass>()
+            .convert("colA")
+            .to<EnumClass>()
             .getColumn("colA") shouldBe columnOf(EnumClass.A, EnumClass.B).named("colA")
     }
 
-    @JvmInline
-    value class IntClass(val v: Int)
+    @JvmInline value class IntClass(val v: Int)
 
-    @JvmInline
-    value class StringClass(val s: String?)
+    @JvmInline value class StringClass(val s: String?)
 
-    @JvmInline
-    value class PrivateInt(private val v: Int)
+    @JvmInline value class PrivateInt(private val v: Int)
 
     @Test
     fun `convert string to value class`() {
@@ -125,66 +124,49 @@ class ConvertTests {
     @Test
     fun `convert from value class `() {
         columnOf(IntClass(1)).convertTo<Double>() shouldBe columnOf(1.0)
-        columnOf(StringClass("1"), StringClass(null)).convertTo<Double?>() shouldBe columnOf(1.0, null)
+        columnOf(StringClass("1"), StringClass(null)).convertTo<Double?>() shouldBe
+            columnOf(1.0, null)
     }
 
     @Test
     fun `convert to value class exceptions`() {
-        shouldThrow<TypeConversionException> {
-            columnOf("a").convertTo<IntClass>()
-        }
+        shouldThrow<TypeConversionException> { columnOf("a").convertTo<IntClass>() }
 
-        shouldThrow<CellConversionException> {
-            columnOf("1", "10", "a").convertTo<IntClass>()
-        }.row shouldBe 2
+        shouldThrow<CellConversionException> { columnOf("1", "10", "a").convertTo<IntClass>() }
+            .row shouldBe 2
 
-        shouldThrow<CellConversionException> {
-            columnOf("1", "x", "2.5").convertToDouble()
-        }.row shouldBe 1
+        shouldThrow<CellConversionException> { columnOf("1", "x", "2.5").convertToDouble() }
+            .row shouldBe 1
 
-        shouldThrow<TypeConverterNotFoundException> {
-            columnOf(EnumClass.A).convertTo<IntClass>()
-        }
+        shouldThrow<TypeConverterNotFoundException> { columnOf(EnumClass.A).convertTo<IntClass>() }
     }
 
     @Test
     fun `convert from value class exceptions`() {
-        shouldThrow<TypeConversionException> {
-            columnOf(StringClass("a")).convertTo<Int>()
-        }.from shouldBe typeOf<String>()
+        shouldThrow<TypeConversionException> { columnOf(StringClass("a")).convertTo<Int>() }
+            .from shouldBe typeOf<String>()
 
-        shouldThrow<TypeConverterNotFoundException> {
-            columnOf(IntClass(1)).convertTo<EnumClass>()
-        }
+        shouldThrow<TypeConverterNotFoundException> { columnOf(IntClass(1)).convertTo<EnumClass>() }
 
-        shouldThrow<TypeConversionException> {
-            columnOf(StringClass(null)).convertTo<Double>()
-        }
+        shouldThrow<TypeConversionException> { columnOf(StringClass(null)).convertTo<Double>() }
 
-        shouldThrow<TypeConversionException> {
-            columnOf(PrivateInt(1)).convertTo<Double>()
-        }
+        shouldThrow<TypeConversionException> { columnOf(PrivateInt(1)).convertTo<Double>() }
     }
 
     @Test
     fun `convert null strings`() {
         val col = columnOf("none")
 
-        shouldThrow<TypeConversionException> {
-            col.convertTo<Int>()
-        }
+        shouldThrow<TypeConversionException> { col.convertTo<Int>() }
 
-        shouldThrow<TypeConversionException> {
-            col.convertTo<Int?>()
-        }
+        shouldThrow<TypeConversionException> { col.convertTo<Int?>() }
 
         DataFrame.parser.addNullString("none")
 
-        shouldThrow<TypeConversionException> {
-            col.convertTo<Int>()
-        }
+        shouldThrow<TypeConversionException> { col.convertTo<Int>() }
 
-        col.convertTo<Int?>() shouldBe DataColumn.createValueColumn("", listOf(null), typeOf<Int?>())
+        col.convertTo<Int?>() shouldBe
+            DataColumn.createValueColumn("", listOf(null), typeOf<Int?>())
 
         DataFrame.parser.resetToDefault()
     }
@@ -195,9 +177,7 @@ class ConvertTests {
 
         col.convertToInt() shouldBe columnOf(1, null)
 
-        shouldThrow<TypeConversionException> {
-            col.cast<Double>().convertToInt()
-        }
+        shouldThrow<TypeConversionException> { col.cast<Double>().convertToInt() }
 
         col.convertTo<Int?>() shouldBe columnOf(1, null)
     }
@@ -244,16 +224,17 @@ class ConvertTests {
 
     @Test
     fun `convert all number types to each other`() {
-        val numberTypes: List<Number> = listOf(
-            Random.nextInt().toByte(),
-            Random.nextInt().toShort(),
-            Random.nextInt(),
-            Random.nextLong(),
-            Random.nextFloat(),
-            Random.nextDouble(),
-            BigInteger.valueOf(Random.nextLong()),
-            BigDecimal.valueOf(Random.nextDouble()),
-        )
+        val numberTypes: List<Number> =
+            listOf(
+                Random.nextInt().toByte(),
+                Random.nextInt().toShort(),
+                Random.nextInt(),
+                Random.nextLong(),
+                Random.nextFloat(),
+                Random.nextDouble(),
+                BigInteger.valueOf(Random.nextLong()),
+                BigDecimal.valueOf(Random.nextDouble()),
+            )
         for (a in numberTypes) {
             val aCol = columnOf(a)
             for (b in numberTypes) {
@@ -401,14 +382,16 @@ class ConvertTests {
     fun `toDuration from JavaDuration column`() {
         val javaDuration = JavaDuration.ofHours(2)
         val duration by columnOf(javaDuration)
-        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe javaDuration.toKotlinDuration()
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe
+            javaDuration.toKotlinDuration()
     }
 
     @Test
     fun `toDuration from nullable JavaDuration column`() {
         val javaDuration = JavaDuration.ofMinutes(45)
         val duration by columnOf(javaDuration, null)
-        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe javaDuration.toKotlinDuration()
+        duration.toDataFrame().convert { duration }.toDuration()["duration"][0] shouldBe
+            javaDuration.toKotlinDuration()
     }
 
     @Test
@@ -461,7 +444,8 @@ class ConvertTests {
     fun `toJavaInstant from Long column`() {
         val epochMillis = 1657283006955L
         val ts by columnOf(epochMillis)
-        ts.toDataFrame().convert { ts }.toJavaInstant()["ts"][0] shouldBe JavaInstant.ofEpochMilli(epochMillis)
+        ts.toDataFrame().convert { ts }.toJavaInstant()["ts"][0] shouldBe
+            JavaInstant.ofEpochMilli(epochMillis)
     }
 
     @Test
@@ -524,9 +508,8 @@ class ConvertTests {
     @Test
     fun `toJavaLocalDate from String column with pattern`() {
         val date by columnOf("15/01/2024")
-        date.toDataFrame()
-            .convert { date }
-            .toJavaLocalDate("dd/MM/yyyy")["date"][0] shouldBe JavaLocalDate.of(2024, 1, 15)
+        date.toDataFrame().convert { date }.toJavaLocalDate("dd/MM/yyyy")["date"][0] shouldBe
+            JavaLocalDate.of(2024, 1, 15)
     }
 
     @Test
@@ -578,7 +561,8 @@ class ConvertTests {
     @Test
     fun `convertToJavaLocalDateTime from String`() {
         val col = columnOf("2024-01-15T11:22:33")
-        col.convertToJavaLocalDateTime() shouldBe columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33))
+        col.convertToJavaLocalDateTime() shouldBe
+            columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33))
     }
 
     @Test
@@ -591,21 +575,21 @@ class ConvertTests {
     @Test
     fun `convertToJavaLocalDateTime from nullable String`() {
         val col = columnOf("2024-01-15T11:22:33", null)
-        col.convertToJavaLocalDateTime() shouldBe columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33), null)
+        col.convertToJavaLocalDateTime() shouldBe
+            columnOf(JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33), null)
     }
 
     @Test
     fun `toJavaLocalDateTime from String column with pattern`() {
         val dt by columnOf("15/01/2024 11:22:33")
-        dt.toDataFrame()
-            .convert { dt }
-            .toJavaLocalDateTime("dd/MM/yyyy HH:mm:ss")["dt"][0] shouldBe
+        dt.toDataFrame().convert { dt }.toJavaLocalDateTime("dd/MM/yyyy HH:mm:ss")["dt"][0] shouldBe
             JavaLocalDateTime.of(2024, 1, 15, 11, 22, 33)
     }
 
     private interface Marker
 
-    private val ColumnsContainer<Marker>.a get() = this["a"] as DataColumn<String>
+    private val ColumnsContainer<Marker>.a
+        get() = this["a"] as DataColumn<String>
 
     @Test
     fun `convert with buggy extension property`() {

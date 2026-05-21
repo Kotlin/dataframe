@@ -21,8 +21,7 @@ public fun Geometry.scaleAroundCenter(factor: Double): Geometry = scaleAroundCen
 public fun Geometry.scaleAroundCenter(xFactor: Double, yFactor: Double): Geometry {
     val centroid = centroid.coordinate
 
-    val moveToOrigin = AffineTransformation
-        .translationInstance(-centroid.x, -centroid.y)
+    val moveToOrigin = AffineTransformation.translationInstance(-centroid.x, -centroid.y)
     val scale = AffineTransformation.scaleInstance(xFactor, yFactor)
     val moveBack = AffineTransformation.translationInstance(centroid.x, centroid.y)
     val transformation = moveToOrigin.compose(scale).compose(moveBack)

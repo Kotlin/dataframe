@@ -2,6 +2,7 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import kotlin.math.ln
 import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -42,7 +43,6 @@ import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
-import kotlin.math.ln
 
 class Analyze : TestBase() {
 
@@ -151,7 +151,9 @@ class Analyze : TestBase() {
         // SampleStart
         df.sum() // sum of values per every numeric column
         df.sum { age and weight } // sum of all values in `age` and `weight`
-        df.sumFor(skipNaN = true) { age and weight } // sum of values per `age` and `weight` separately
+        df.sumFor(skipNaN = true) {
+            age and weight
+        } // sum of values per `age` and `weight` separately
         df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
         // SampleEnd
     }
@@ -162,7 +164,9 @@ class Analyze : TestBase() {
         // SampleStart
         df.min() // min of values for every comparable column with mutually comparable values
         df.min { age and weight } // min of all values in `age` and `weight`
-        df.minFor(skipNaN = true) { age and name.firstName } // min of values per `age` and `firstName` separately
+        df.minFor(skipNaN = true) {
+            age and name.firstName
+        } // min of values per `age` and `firstName` separately
         df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
         df.minBy { age } // DataRow with minimal `age`
         // SampleEnd
@@ -186,9 +190,13 @@ class Analyze : TestBase() {
         // SampleStart
         df.median() // median of values for every column with mutually comparable values
         df.median { age and weight } // median of all values in `age` and `weight`
-        df.medianFor(skipNaN = true) { age and name.firstName } // median of values per `age` and `firstName` separately
+        df.medianFor(skipNaN = true) {
+            age and name.firstName
+        } // median of values per `age` and `firstName` separately
         df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
-        df.medianBy { age } // DataRow where the median age lies (lower-median for an even number of values)
+        df.medianBy {
+            age
+        } // DataRow where the median age lies (lower-median for an even number of values)
         // SampleEnd
     }
 
@@ -208,11 +216,21 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun percentileModes() {
         // SampleStart
-        df.percentile(25.0) // 25th percentile of values for every column with mutually comparable values
-        df.percentile(75.0) { age and weight } // 75th percentile of all values in `age` and `weight`
-        df.percentileFor(50.0, skipNaN = true) { age and name.firstName } // 50th percentile of values per `age` and `firstName` separately
-        df.percentileOf(75.0) { (weight ?: 0) / age } // 75th percentile of expression evaluated for every row
-        df.percentileBy(25.0) { age } // DataRow where the 25th percentile of `age` lies (index rounded using R3)
+        df.percentile(
+            25.0
+        ) // 25th percentile of values for every column with mutually comparable values
+        df.percentile(75.0) {
+            age and weight
+        } // 75th percentile of all values in `age` and `weight`
+        df.percentileFor(50.0, skipNaN = true) {
+            age and name.firstName
+        } // 50th percentile of values per `age` and `firstName` separately
+        df.percentileOf(75.0) {
+            (weight ?: 0) / age
+        } // 75th percentile of expression evaluated for every row
+        df.percentileBy(25.0) {
+            age
+        } // DataRow where the 25th percentile of `age` lies (index rounded using R3)
         // SampleEnd
     }
 
@@ -234,7 +252,9 @@ class Analyze : TestBase() {
         // SampleStart
         df.mean() // mean of values per every numeric column
         df.mean { age and weight } // mean of all values in `age` and `weight`
-        df.meanFor(skipNaN = true) { age and weight } // mean of values per `age` and `weight` separately, skips NaN
+        df.meanFor(skipNaN = true) {
+            age and weight
+        } // mean of values per `age` and `weight` separately, skips NaN
         df.meanOf { (weight ?: 0) / age } // median of expression evaluated for every row
         // SampleEnd
     }
@@ -257,7 +277,9 @@ class Analyze : TestBase() {
         // SampleStart
         df.std() // std of values per every numeric column
         df.std { age and weight } // std of all values in `age` and `weight`
-        df.stdFor(skipNaN = true) { age and weight } // std of values per `age` and `weight` separately, skips NA
+        df.stdFor(skipNaN = true) {
+            age and weight
+        } // std of values per `age` and `weight` separately, skips NA
         df.stdOf { (weight ?: 0) / age } // std of expression evaluated for every row
         // SampleEnd
     }

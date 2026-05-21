@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
@@ -27,12 +30,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
-import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T, C> Update<T, C>.updateImpl(expression: (AddDataRow<T>, DataColumn<C>, C) -> C?): DataFrame<T> =
+internal fun <T, C> Update<T, C>.updateImpl(
+    expression: (AddDataRow<T>, DataColumn<C>, C) -> C?
+): DataFrame<T> =
     if (df.isEmpty()) {
         df
     } else {
@@ -51,11 +53,11 @@ internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: ColumnEx
     }
 
 /**
- * Implementation for Update As Frame:
- * Replaces selected column groups with the result of the expression only where the filter is true.
+ * Implementation for Update As Frame: Replaces selected column groups with the result of the
+ * expression only where the filter is true.
  */
 internal fun <T, C, R> Update<T, DataRow<C>>.asFrameImpl(
-    expression: DataFrameExpression<C, DataFrame<R>>,
+    expression: DataFrameExpression<C, DataFrame<R>>
 ): DataFrame<T> =
     if (df.isEmpty()) {
         df
@@ -63,16 +65,18 @@ internal fun <T, C, R> Update<T, DataRow<C>>.asFrameImpl(
         df.replace(columns).with {
             // First, we create an updated column group with the result of the expression
             val srcColumnGroup = it.asColumnGroup()
-            val updatedColumnGroup = srcColumnGroup
-                .asDataFrame()
-                .let { expression(it, it) }
-                .asColumnGroup(srcColumnGroup.name())
+            val updatedColumnGroup =
+                srcColumnGroup
+                    .asDataFrame()
+                    .let { expression(it, it) }
+                    .asColumnGroup(srcColumnGroup.name())
 
             if (filter == null) {
                 // If there is no filter, we simply return the updated column group
                 updatedColumnGroup
             } else {
-                // If there is a filter, then we replace the rows of the source column group with the updated column group
+                // If there is a filter, then we replace the rows of the source column group with
+                // the updated column group
                 // only if they satisfy the filter
                 srcColumnGroup.replaceRowsIf(from = updatedColumnGroup) {
                     val srcRow = df[it.index]
@@ -88,11 +92,7 @@ private fun <C, R> ColumnGroup<C>.replaceRowsIf(
     from: ColumnGroup<R>,
     condition: (DataRow<C>) -> Boolean = { true },
 ): ColumnGroup<C> =
-    values()
-        .map { if (condition(it)) from[it.index] else it }
-        .toColumn(name)
-        .asColumnGroup()
-        .cast()
+    values().map { if (condition(it)) from[it.index] else it }.toColumn(name).asColumnGroup().cast()
 
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
@@ -112,7 +112,8 @@ internal fun <T, C> DataColumn<C>.updateImpl(
                 val row = AddDataRowImpl(rowIndex, df, collector.values)
                 val currentValue = row[src]
                 val newValue =
-                    if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
+                    if (filter.invoke(row, currentValue)) expression(row, src, currentValue)
+                    else currentValue
                 collector.add(newValue)
             }
         }
@@ -128,9 +129,7 @@ internal fun <T, C> DataColumn<C>.updateImpl(
 internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> =
     when (this) {
         is FrameColumn<*> -> {
-            values.forEach {
-                require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" }
-            }
+            values.forEach { require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" } }
             val groups = (values as List<AnyFrame>)
             DataColumn.createFrameColumn(name, groups) as DataColumn<T>
         }
@@ -147,7 +146,8 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> =
                         }
                     }
                     col.updateWith(newValues)
-                }.toDataFrame()
+                }
+                .toDataFrame()
                 .let { DataColumn.createColumnGroup(name, it) } as DataColumn<T>
         }
 

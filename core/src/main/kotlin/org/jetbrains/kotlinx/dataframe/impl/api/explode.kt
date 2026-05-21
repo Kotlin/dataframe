@@ -29,19 +29,24 @@ import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 
-internal fun AnyCol.explodeImpl(): AnyCol = dataFrameOf(this).explodeImpl(true) { all() }.getColumn(0)
+internal fun AnyCol.explodeImpl(): AnyCol =
+    dataFrameOf(this).explodeImpl(true) { all() }.getColumn(0)
 
-internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> {
+internal fun <T> DataFrame<T>.explodeImpl(
+    dropEmpty: Boolean = true,
+    columns: ColumnsSelector<T, *>,
+): DataFrame<T> {
     val columns = getColumnsWithPaths(columns)
     if (columns.isEmpty()) return this
 
     val rowExpandSizes = indices.map { row ->
         columns.maxOf {
-            val n = when (val value = it.data[row]) {
-                is AnyFrame -> value.nrow
-                is List<*> -> value.size
-                else -> 1
-            }
+            val n =
+                when (val value = it.data[row]) {
+                    is AnyFrame -> value.nrow
+                    is List<*> -> value.size
+                    else -> 1
+                }
             if (!dropEmpty && n == 0) 1 else n
         }
     }
@@ -49,68 +54,70 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
     val outputRowsCount = rowExpandSizes.sum()
 
     fun splitIntoRows(df: AnyFrame, data: Map<ColumnPath, AnyCol>): AnyFrame {
-        val newColumns: List<AnyBaseCol> = df.columns().map { srcCol ->
-
-            val dstCol = data[pathOf(srcCol.name)]
-            if (srcCol is ColumnGroup<*>) { // go to nested columns recursively
-                val newData = data.mapNotNull {
-                    if (it.key.isNotEmpty() && it.key[0] == srcCol.name) {
-                        it.key.drop(1) to it.value
-                    } else {
-                        null
-                    }
-                }.toMap()
-                val newDf = splitIntoRows(srcCol, newData)
-                DataColumn.createColumnGroup(srcCol.name, newDf)
-            } else if (dstCol != null) { // values in current column will be split
-                when (dstCol) {
-                    is FrameColumn<*> -> {
-                        val newDf = dstCol.values.mapIndexed { row, frame ->
-                            val expectedSize = rowExpandSizes[row]
-                            assert(frame.nrow <= expectedSize)
-                            frame.appendNulls(expectedSize - frame.nrow)
-                        }.concat()
-
-                        DataColumn.createColumnGroup(dstCol.name, newDf)
-                    }
-
-                    is ValueColumn<*> -> {
-                        val collector = createDataCollector(outputRowsCount)
-                        dstCol.asSequence().forEachIndexed { rowIndex, value ->
-                            val list = valueToList(value, splitStrings = false)
-                            val expectedSize = rowExpandSizes[rowIndex]
-                            list.forEach { collector.add(it) }
-                            repeat(expectedSize - list.size) {
-                                collector.add(null)
+        val newColumns: List<AnyBaseCol> =
+            df.columns().map { srcCol ->
+                val dstCol = data[pathOf(srcCol.name)]
+                if (srcCol is ColumnGroup<*>) { // go to nested columns recursively
+                    val newData =
+                        data
+                            .mapNotNull {
+                                if (it.key.isNotEmpty() && it.key[0] == srcCol.name) {
+                                    it.key.drop(1) to it.value
+                                } else {
+                                    null
+                                }
                             }
-                        }
-                        collector.toColumn(dstCol.name)
-                    }
+                            .toMap()
+                    val newDf = splitIntoRows(srcCol, newData)
+                    DataColumn.createColumnGroup(srcCol.name, newDf)
+                } else if (dstCol != null) { // values in current column will be split
+                    when (dstCol) {
+                        is FrameColumn<*> -> {
+                            val newDf =
+                                dstCol.values
+                                    .mapIndexed { row, frame ->
+                                        val expectedSize = rowExpandSizes[row]
+                                        assert(frame.nrow <= expectedSize)
+                                        frame.appendNulls(expectedSize - frame.nrow)
+                                    }
+                                    .concat()
 
-                    else -> error("")
-                }
-            } else { // values in current column will be duplicated
-                val collector = createDataCollector<Any?>(outputRowsCount, srcCol.type)
-                for (row in 0 until srcCol.size) {
-                    val expandSize = rowExpandSizes[row]
-                    if (expandSize > 0) {
-                        val value = srcCol[row]
-                        repeat(expandSize) {
-                            collector.add(value)
+                            DataColumn.createColumnGroup(dstCol.name, newDf)
+                        }
+
+                        is ValueColumn<*> -> {
+                            val collector = createDataCollector(outputRowsCount)
+                            dstCol.asSequence().forEachIndexed { rowIndex, value ->
+                                val list = valueToList(value, splitStrings = false)
+                                val expectedSize = rowExpandSizes[rowIndex]
+                                list.forEach { collector.add(it) }
+                                repeat(expectedSize - list.size) { collector.add(null) }
+                            }
+                            collector.toColumn(dstCol.name)
+                        }
+
+                        else -> error("")
+                    }
+                } else { // values in current column will be duplicated
+                    val collector = createDataCollector<Any?>(outputRowsCount, srcCol.type)
+                    for (row in 0 until srcCol.size) {
+                        val expandSize = rowExpandSizes[row]
+                        if (expandSize > 0) {
+                            val value = srcCol[row]
+                            repeat(expandSize) { collector.add(value) }
                         }
                     }
-                }
-                if (srcCol.isFrameColumn()) {
-                    DataColumn.createFrameColumn(
-                        name = srcCol.name,
-                        groups = collector.values as List<AnyFrame>,
-                        schema = srcCol.asAnyFrameColumn().schema, // keep original schema
-                    )
-                } else {
-                    collector.toColumn(srcCol.name)
+                    if (srcCol.isFrameColumn()) {
+                        DataColumn.createFrameColumn(
+                            name = srcCol.name,
+                            groups = collector.values as List<AnyFrame>,
+                            schema = srcCol.asAnyFrameColumn().schema, // keep original schema
+                        )
+                    } else {
+                        collector.toColumn(srcCol.name)
+                    }
                 }
             }
-        }
         return newColumns.toDataFrame()
     }
 

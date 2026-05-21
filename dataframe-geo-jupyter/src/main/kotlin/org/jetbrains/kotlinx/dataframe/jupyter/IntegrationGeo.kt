@@ -2,6 +2,9 @@
 
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import kotlin.reflect.KProperty
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.WithGeometry
 import org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry
@@ -15,15 +18,11 @@ import org.jetbrains.kotlinx.jupyter.api.FieldHandler
 import org.jetbrains.kotlinx.jupyter.api.FieldHandlerExecution
 import org.jetbrains.kotlinx.jupyter.api.libraries.FieldHandlerFactory
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
-import kotlin.reflect.KProperty
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.typeOf
 
 /**
  * DataFrame Jupyter integration for geo module.
  *
- * Adds all necessary imports.
- * Adds type converter for inner dataframe in `GeoDataFrame`.
+ * Adds all necessary imports. Adds type converter for inner dataframe in `GeoDataFrame`.
  */
 internal class IntegrationGeo : JupyterIntegration() {
 
@@ -56,7 +55,10 @@ internal class IntegrationGeo : JupyterIntegration() {
 
         renderWithHost<GeoDataFrame<*>> { host, geoDataFrame ->
             host.execute {
-                display("GeoDataFrame with ${geoDataFrame.crs?.name?.code} CRS and inner dataframe:", null)
+                display(
+                    "GeoDataFrame with ${geoDataFrame.crs?.name?.code} CRS and inner dataframe:",
+                    null,
+                )
             }
             geoDataFrame.df
         }
@@ -69,21 +71,27 @@ internal class IntegrationGeo : JupyterIntegration() {
         replCodeGeneratorImpl.process(WithMultiPointGeometry::class)
         replCodeGeneratorImpl.process(WithLineStringGeometry::class)
         replCodeGeneratorImpl.process(WithMultiLineStringGeometry::class)
-        val execution = FieldHandlerFactory.createUpdateExecution<GeoDataFrame<*>> { geo, kProperty ->
-            // TODO rewrite better
-            val generatedDf = execute(
-                codeWithTypeCastGenerator = replCodeGeneratorImpl.process(geo.df, kProperty),
-                expression = "(${kProperty.name}.df as DataFrame<*>)",
-            ).let { "`$it`" }
-            val name = execute("GeoDataFrame($generatedDf, ${kProperty.name}.crs)").name
-            name
-        }
+        val execution =
+            FieldHandlerFactory.createUpdateExecution<GeoDataFrame<*>> { geo, kProperty ->
+                // TODO rewrite better
+                val generatedDf =
+                    execute(
+                            codeWithTypeCastGenerator =
+                                replCodeGeneratorImpl.process(geo.df, kProperty),
+                            expression = "(${kProperty.name}.df as DataFrame<*>)",
+                        )
+                        .let { "`$it`" }
+                val name = execute("GeoDataFrame($generatedDf, ${kProperty.name}.crs)").name
+                name
+            }
 
-        addTypeConverter(object : FieldHandler {
-            override val execution: FieldHandlerExecution<*> = execution
+        addTypeConverter(
+            object : FieldHandler {
+                override val execution: FieldHandlerExecution<*> = execution
 
-            override fun accepts(value: Any?, property: KProperty<*>): Boolean =
-                property.returnType.isSubtypeOf(typeOf<GeoDataFrame<*>>())
-        })
+                override fun accepts(value: Any?, property: KProperty<*>): Boolean =
+                    property.returnType.isSubtypeOf(typeOf<GeoDataFrame<*>>())
+            }
+        )
     }
 }

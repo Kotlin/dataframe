@@ -10,11 +10,10 @@ import org.jetbrains.kotlinx.dataframe.impl.owner
 /**
  * Path to a [column][DataColumn] in [DataFrame].
  *
- * Stores a list of [column names][DataColumn.name] that are used to retrieve columns through a chain of [column groups][ColumnGroup].
+ * Stores a list of [column names][DataColumn.name] that are used to retrieve columns through a
+ * chain of [column groups][ColumnGroup].
  */
-public data class ColumnPath(val path: List<String>) :
-    List<String> by path,
-    ColumnAccessor<Any?> {
+public data class ColumnPath(val path: List<String>) : List<String> by path, ColumnAccessor<Any?> {
 
     internal companion object {
         internal val EMPTY = ColumnPath(emptyList())
@@ -29,16 +28,16 @@ public data class ColumnPath(val path: List<String>) :
     /**
      * Returns a shortened [ColumnPath] without the last [size] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.dropLastChildren]
-     * instead.
+     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for
+     * [ColumnsSelectionDsl.dropLastChildren] instead.
      */
     public fun dropLast(size: Int = 1): ColumnPath = ColumnPath(path.dropLast(size))
 
     /**
      * Returns a shortened [ColumnPath] without the first [size] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.dropChildren]
-     * instead.
+     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for
+     * [ColumnsSelectionDsl.dropChildren] instead.
      */
     public fun dropFirst(size: Int = 1): ColumnPath = ColumnPath(path.drop(size))
 
@@ -51,8 +50,8 @@ public data class ColumnPath(val path: List<String>) :
     /**
      * Returns a shortened [ColumnPath] containing just the first [first] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.takeCols]
-     * instead.
+     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for
+     * [ColumnsSelectionDsl.takeCols] instead.
      */
     public fun take(first: Int): ColumnPath = ColumnPath(path.take(first))
 
@@ -62,8 +61,8 @@ public data class ColumnPath(val path: List<String>) :
     /**
      * Returns a shortened [ColumnPath] containing just the last [last] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.takeLast]
-     * instead.
+     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for
+     * [ColumnsSelectionDsl.takeLast] instead.
      */
     public fun takeLast(last: Int): ColumnPath = ColumnPath(path.takeLast(last))
 
@@ -71,25 +70,30 @@ public data class ColumnPath(val path: List<String>) :
 
     override fun name(): String = path.last()
 
-    val columnName: String get() = name()
+    val columnName: String
+        get() = name()
 
-    val parentName: String? get() = if (path.size > 1) path[path.size - 2] else null
+    val parentName: String?
+        get() = if (path.size > 1) path[path.size - 2] else null
 
     override fun rename(newName: String): ColumnPath = ColumnPath(path.dropLast(1) + newName)
 
     override fun getValue(row: AnyRow): Any? = row.owner[this][row.index()]
 
-    override fun getValueOrNull(row: AnyRow): Any? = row.owner.getColumnOrNull(this)?.get(row.index())
+    override fun getValueOrNull(row: AnyRow): Any? =
+        row.owner.getColumnOrNull(this)?.get(row.index())
 
     override fun toString(): String = path.toString()
 
     public fun joinToString(separator: String = "/"): String = path.joinToString(separator)
 
-    override fun <C> get(column: ColumnReference<C>): ColumnAccessor<C> = ColumnAccessorImpl(this + column.path())
+    override fun <C> get(column: ColumnReference<C>): ColumnAccessor<C> =
+        ColumnAccessorImpl(this + column.path())
 }
 
 /**
- * Drops the overlapping start of the child path with respect to the parent path, and returns the resulting ColumnPath.
+ * Drops the overlapping start of the child path with respect to the parent path, and returns the
+ * resulting ColumnPath.
  *
  * For example:
  * ```kt

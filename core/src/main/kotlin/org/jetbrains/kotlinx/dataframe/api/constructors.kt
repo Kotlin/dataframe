@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.random.Random
+import kotlin.random.nextInt
+import kotlin.reflect.KProperty
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -34,11 +39,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_OF_WITH_VALUES
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.random.Random
-import kotlin.random.nextInt
-import kotlin.reflect.KProperty
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 // region create ColumnAccessor
 
@@ -56,9 +56,11 @@ public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccesso
 
 public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate(this)
 
-public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
+public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> =
+    ColumnAccessorImpl(path() + name)
 
-public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
+public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> =
+    ColumnAccessorImpl(this.path() + path)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -77,7 +79,8 @@ public inline fun <T, reified C> column(
     name: String = "",
     infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<T, C>,
-): ColumnReference<C> = createComputedColumnReference(name, typeOf<C>(), infer, expression as RowExpression<Any?, C>)
+): ColumnReference<C> =
+    createComputedColumnReference(name, typeOf<C>(), infer, expression as RowExpression<Any?, C>)
 
 // endregion
 
@@ -85,8 +88,7 @@ public inline fun <T, reified C> column(
 
 public fun valueColumn(): ColumnDelegate<Any?> = column()
 
-@JvmName("valueColumnTyped")
-public fun <T> valueColumn(): ColumnDelegate<T> = column()
+@JvmName("valueColumnTyped") public fun <T> valueColumn(): ColumnDelegate<T> = column()
 
 public fun valueColumn(name: String): ColumnAccessor<Any?> = column(name)
 
@@ -107,10 +109,12 @@ public fun ColumnGroupReference.valueColumn(): ColumnDelegate<Any?> = ColumnDele
 @JvmName("valueColumnTyped")
 public fun <T> ColumnGroupReference.valueColumn(): ColumnDelegate<T> = ColumnDelegate(this)
 
-public fun ColumnGroupReference.valueColumn(name: String): ColumnAccessor<Any?> = ColumnAccessorImpl(path() + name)
+public fun ColumnGroupReference.valueColumn(name: String): ColumnAccessor<Any?> =
+    ColumnAccessorImpl(path() + name)
 
 @JvmName("valueColumnTyped")
-public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
+public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> =
+    ColumnAccessorImpl(path() + name)
 
 public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
     ColumnAccessorImpl(this.path() + path)
@@ -130,8 +134,7 @@ public fun <T> ColumnGroupReference.valueColumn(property: KProperty<T>): ColumnA
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
 
-@JvmName("columnGroupTyped")
-public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
+@JvmName("columnGroupTyped") public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
 
 public fun columnGroup(name: String): ColumnAccessor<AnyRow> = column(name)
 
@@ -146,18 +149,21 @@ public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = colum
 @JvmName("columnGroupDataRowKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> = column(property)
+public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> =
+    column(property)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> = column(property.name)
+public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> =
+    column(property.name)
 
 public fun ColumnGroupReference.columnGroup(): ColumnDelegate<AnyRow> = ColumnDelegate(this)
 
 @JvmName("columnGroupTyped")
 public fun <T> ColumnGroupReference.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
 
-public fun ColumnGroupReference.columnGroup(name: String): ColumnAccessor<AnyRow> = ColumnAccessorImpl(path() + name)
+public fun ColumnGroupReference.columnGroup(name: String): ColumnAccessor<AnyRow> =
+    ColumnAccessorImpl(path() + name)
 
 @JvmName("columnGroupTyped")
 public fun <T> ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<T>> =
@@ -173,13 +179,15 @@ public fun <T> ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccesso
 @JvmName("columnGroupDataRowKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> =
-    ColumnAccessorImpl(this.path() + property.name)
+public fun <T> ColumnGroupReference.columnGroup(
+    property: KProperty<DataRow<T>>
+): ColumnAccessor<DataRow<T>> = ColumnAccessorImpl(this.path() + property.name)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> =
-    ColumnAccessorImpl(this.path() + property.name)
+public fun <T> ColumnGroupReference.columnGroup(
+    property: KProperty<T>
+): ColumnAccessor<DataRow<T>> = ColumnAccessorImpl(this.path() + property.name)
 
 // endregion
 
@@ -187,8 +195,7 @@ public fun <T> ColumnGroupReference.columnGroup(property: KProperty<T>): ColumnA
 
 public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
 
-@JvmName("frameColumnTyped")
-public fun <T> frameColumn(): ColumnDelegate<DataFrame<T>> = column()
+@JvmName("frameColumnTyped") public fun <T> frameColumn(): ColumnDelegate<DataFrame<T>> = column()
 
 public fun frameColumn(name: String): ColumnAccessor<AnyFrame> = column(name)
 
@@ -203,18 +210,22 @@ public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = col
 @JvmName("frameColumnDataFrameKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> = column(property)
+public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> =
+    column(property)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
+public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> =
+    column(property.name)
 
 public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = ColumnDelegate(this)
 
 @JvmName("frameColumnTyped")
-public fun <T> ColumnGroupReference.frameColumn(): ColumnDelegate<DataFrame<T>> = ColumnDelegate(this)
+public fun <T> ColumnGroupReference.frameColumn(): ColumnDelegate<DataFrame<T>> =
+    ColumnDelegate(this)
 
-public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(path() + name)
+public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<AnyFrame> =
+    ColumnAccessorImpl(path() + name)
 
 @JvmName("frameColumnTyped")
 public fun <T> ColumnGroupReference.frameColumn(name: String): ColumnAccessor<DataFrame<T>> =
@@ -230,18 +241,21 @@ public fun <T> ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccesso
 @JvmName("frameColumnDataFrameKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> =
-    ColumnAccessorImpl(this.path() + property.name)
+public fun <T> ColumnGroupReference.frameColumn(
+    property: KProperty<DataFrame<T>>
+): ColumnAccessor<DataFrame<T>> = ColumnAccessorImpl(this.path() + property.name)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> =
-    ColumnAccessorImpl(this.path() + property.name)
+public fun <T> ColumnGroupReference.frameColumn(
+    property: KProperty<List<T>>
+): ColumnAccessor<DataFrame<T>> = ColumnAccessorImpl(this.path() + property.name)
 
 // endregion
 
 public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null) {
-    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.columnName)
+    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> =
+        named(property.columnName)
 
     public infix fun named(name: String): ColumnAccessor<T> =
         parent?.let { ColumnAccessorImpl(it.path() + name) } ?: ColumnAccessorImpl(name)
@@ -253,13 +267,15 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 
 public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
     createColumnGuessingType(
-        values = values.asIterable(),
-        suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
-        listifyValues = false,
-        allColsMakesColGroup = true,
-    ).forceResolve()
+            values = values.asIterable(),
+            suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
+            listifyValues = false,
+            allColsMakesColGroup = true,
+        )
+        .forceResolve()
 
-public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
+public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> =
+    columnOf(values.asIterable()).forceResolve()
 
 /**
  * Example:
@@ -273,34 +289,24 @@ public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(va
 @Refine
 @Interpretable("ColumnOfPairs")
 public fun columnOf(vararg columns: Pair<String, AnyBaseCol>): ColumnGroup<*> =
-    dataFrameOf(
-        columns.map { (name, col) ->
-            col.rename(name)
-        },
-    ).asColumnGroup()
+    dataFrameOf(columns.map { (name, col) -> col.rename(name) }).asColumnGroup()
 
-public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
+public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> =
+    columnOf(frames.asIterable()).forceResolve()
 
 public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> =
-    DataColumn.createColumnGroup(
-        name = "",
-        df = dataFrameOf(columns),
-    )
-        .asDataColumn()
-        .forceResolve()
+    DataColumn.createColumnGroup(name = "", df = dataFrameOf(columns)).asDataColumn().forceResolve()
 
 public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> =
-    DataColumn.createFrameColumn(
-        name = "",
-        groups = frames.toList(),
-    ).forceResolve()
+    DataColumn.createFrameColumn(name = "", groups = frames.toList()).forceResolve()
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
     createColumnGuessingType(
-        values = values,
-        suggestedType = TypeSuggestion.Use(typeOf<T>()),
-        allColsMakesColGroup = true,
-    ).forceResolve()
+            values = values,
+            suggestedType = TypeSuggestion.Use(typeOf<T>()),
+            allColsMakesColGroup = true,
+        )
+        .forceResolve()
 
 // endregion
 
@@ -309,13 +315,14 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
 /**
  * Creates new [DataFrame] with given [columns]
  *
- * All named columns must have unique names. For columns with empty names unique column names are generated: "untitled", "untitiled1", "untitled2" etc.
+ * All named columns must have unique names. For columns with empty names unique column names are
+ * generated: "untitled", "untitiled1", "untitled2" etc.
  *
  * All columns must have equal sizes.
  *
+ * @param columns columns for [DataFrame]
  * @throws [DuplicateColumnNamesException] if column names are not unique
  * @throws [UnequalColumnSizesException] if column size are not equal
- * @param columns columns for [DataFrame]
  */
 public fun dataFrameOf(columns: Iterable<AnyBaseCol>): DataFrame<*> {
     val cols = columns.map { it.unbox() }
@@ -341,7 +348,8 @@ public fun dataFrameOf(columns: Iterable<AnyBaseCol>): DataFrame<*> {
 public fun dataFrameOf(vararg columns: Pair<String, AnyBaseCol>): DataFrame<*> =
     dataFrameOf(columns.map { (name, col) -> col.rename(name) })
 
-public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })
+public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder =
+    DataFrameBuilder(header.map { it.name() })
 
 public fun dataFrameOf(vararg columns: AnyBaseCol): DataFrame<*> = dataFrameOf(columns.asIterable())
 
@@ -353,7 +361,8 @@ public inline fun <reified C> dataFrameOf(
     crossinline fill: (String) -> Iterable<C>,
 ): DataFrame<*> = dataFrameOf(header.asIterable()).invoke(fill)
 
-public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
+public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder =
+    DataFrameBuilder(header.asList())
 
 @Refine
 @Interpretable("DataFrameOf3")
@@ -364,16 +373,22 @@ public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): DataFrame<*> =
 public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFrame<*> =
     dataFrameOf(header).withValues(values)
 
-public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): DataFrame<*> =
-    header.map { value ->
-        DataColumn.createByInference(
-            name = value.toString(),
-            values = fill(value).asList(),
-            suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<C>()),
-        )
-    }.toDataFrame()
+public inline fun <T, reified C> dataFrameOf(
+    header: Iterable<T>,
+    fill: (T) -> Iterable<C>,
+): DataFrame<*> =
+    header
+        .map { value ->
+            DataColumn.createByInference(
+                name = value.toString(),
+                values = fill(value).asList(),
+                suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<C>()),
+            )
+        }
+        .toDataFrame()
 
-public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
+public fun dataFrameOf(header: CharProgression): DataFrameBuilder =
+    dataFrameOf(header.map { it.toString() })
 
 public class DataFrameBuilder(private val header: List<String>) {
 
@@ -381,10 +396,10 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public operator fun invoke(columns: Iterable<AnyCol>): DataFrame<*> {
         val cols = columns.asList()
-        require(cols.size == header.size) { "Number of columns differs from number of column names" }
-        return cols.mapIndexed { i, col ->
-            col.rename(header[i])
-        }.toDataFrame()
+        require(cols.size == header.size) {
+            "Number of columns differs from number of column names"
+        }
+        return cols.mapIndexed { i, col -> col.rename(header[i]) }.toDataFrame()
     }
 
     @Refine
@@ -393,45 +408,48 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     @JvmName("invoke1")
     internal fun withValues(values: Iterable<Any?>): DataFrame<*> =
-        (header to values.asList()).withValuesImpl().map { (name, values) ->
-            DataColumn.createByInference(name, values)
-        }.toDataFrame()
+        (header to values.asList())
+            .withValuesImpl()
+            .map { (name, values) -> DataColumn.createByInference(name, values) }
+            .toDataFrame()
 
-    public operator fun invoke(args: Sequence<Any?>): DataFrame<*> = invoke(*args.toList().toTypedArray())
+    public operator fun invoke(args: Sequence<Any?>): DataFrame<*> =
+        invoke(*args.toList().toTypedArray())
 
     public fun withColumns(columnBuilder: (String) -> AnyCol): DataFrame<*> =
         header
-            .map { columnBuilder(it) named it } // create a columns and make sure to rename them to the given header
+            .map {
+                columnBuilder(it) named it
+            } // create a columns and make sure to rename them to the given header
             .toDataFrame()
 
-    public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =
-        withColumns { name ->
-            DataColumn.createByInference(
-                name = name,
-                values = valuesBuilder(name).asList(),
-                suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
-            )
-        }
+    public inline operator fun <reified T> invoke(
+        crossinline valuesBuilder: (String) -> Iterable<T>
+    ): DataFrame<*> = withColumns { name ->
+        DataColumn.createByInference(
+            name = name,
+            values = valuesBuilder(name).asList(),
+            suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
+        )
+    }
 
     @Refine
     @Interpretable("DataFrameBuilderFillValue")
-    public inline fun <reified C> fill(nrow: Int, value: C): DataFrame<*> =
-        withColumns { name ->
-            DataColumn.createValueColumn(
-                name = name,
-                values = List(nrow) { value },
-                type = typeOf<C>().withNullability(value == null),
-            )
-        }
+    public inline fun <reified C> fill(nrow: Int, value: C): DataFrame<*> = withColumns { name ->
+        DataColumn.createValueColumn(
+            name = name,
+            values = List(nrow) { value },
+            type = typeOf<C>().withNullability(value == null),
+        )
+    }
 
-    public fun fill(nrow: Int, dataFrame: AnyFrame): DataFrame<*> =
-        withColumns { name ->
-            DataColumn.createFrameColumn(
-                name = name,
-                groups = List(nrow) { dataFrame },
-                schema = lazy { dataFrame.schema() },
-            )
-        }
+    public fun fill(nrow: Int, dataFrame: AnyFrame): DataFrame<*> = withColumns { name ->
+        DataColumn.createFrameColumn(
+            name = name,
+            groups = List(nrow) { dataFrame },
+            schema = lazy { dataFrame.schema() },
+        )
+    }
 
     @Refine
     @Interpretable("DataFrameBuilderNulls")
@@ -439,31 +457,23 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     @Refine
     @Interpretable("DataFrameBuilderFillIndexed")
-    public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): DataFrame<*> =
-        withColumns { name ->
-            DataColumn.createByInference(
-                name = name,
-                values = List(nrow) { init(it, name) },
-            )
-        }
+    public inline fun <reified C> fillIndexed(
+        nrow: Int,
+        crossinline init: (Int, String) -> C,
+    ): DataFrame<*> = withColumns { name ->
+        DataColumn.createByInference(name = name, values = List(nrow) { init(it, name) })
+    }
 
     @Refine
     @Interpretable("DataFrameBuilderFill")
     public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.createByInference(
-                name = name,
-                values = List(nrow, init),
-            )
+            DataColumn.createByInference(name = name, values = List(nrow, init))
         }
 
     private inline fun <reified C : Any> fillNotNull(nrow: Int, crossinline init: (Int) -> C) =
         withColumns { name ->
-            DataColumn.createValueColumn(
-                name = name,
-                values = List(nrow, init),
-                type = typeOf<C>(),
-            )
+            DataColumn.createValueColumn(name = name, values = List(nrow, init), type = typeOf<C>())
         }
 
     @Refine
@@ -472,7 +482,8 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     @Refine
     @Interpretable("DataFrameBuilderRandomIntRange")
-    public fun randomInt(nrow: Int, range: IntRange): DataFrame<*> = fillNotNull(nrow) { Random.nextInt(range) }
+    public fun randomInt(nrow: Int, range: IntRange): DataFrame<*> =
+        fillNotNull(nrow) { Random.nextInt(range) }
 
     @Refine
     @Interpretable("DataFrameBuilderRandomDouble")
@@ -502,12 +513,12 @@ public class DataFrameBuilder(private val header: List<String>) {
 }
 
 /**
- * A builder class for dynamically constructing a DataFrame with provided columns.
- * Allows adding columns manually while automatically handling duplicate column names by assigning unique names.
+ * A builder class for dynamically constructing a DataFrame with provided columns. Allows adding
+ * columns manually while automatically handling duplicate column names by assigning unique names.
  *
- * @property checkDuplicateValues Whether to check for duplicate column (with identical names and values). If `true`,
- * doesn't add a new column if the identical one is already in the builder.
- * when adding new columns. `true` by default.
+ * @property checkDuplicateValues Whether to check for duplicate column (with identical names and
+ *   values). If `true`, doesn't add a new column if the identical one is already in the builder.
+ *   when adding new columns. `true` by default.
  */
 public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean = true) {
     private var cols: MutableMap<String, AnyCol> = mutableMapOf()
@@ -517,8 +528,9 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
      * Adds a column to the builder, ensuring its name is unique.
      *
      * - If a column with the same name already exists, the new column is renamed to a unique name.
-     * - If [checkDuplicateValues] is `true`, the method checks whether the new column has identical values
-     *   to an existing column with the same name. If the values match, the column is not added.
+     * - If [checkDuplicateValues] is `true`, the method checks whether the new column has identical
+     *   values to an existing column with the same name. If the values match, the column is not
+     *   added.
      *
      * @param col The column to add to the DataFrame builder.
      * @return The final unique name assigned to the column.
@@ -528,33 +540,38 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
         if (checkDuplicateValues && generator.contains(originalName)) {
             if (cols[originalName] == col) return originalName
         }
-        val uniqueName = if (originalName.isEmpty()) {
-            generator.addUnique(UNNAMED_COLUMN_PREFIX)
-        } else {
-            generator.addUnique(originalName)
-        }
-        val renamed = if (uniqueName != originalName) {
-            col.rename(uniqueName)
-        } else {
-            col
-        }
+        val uniqueName =
+            if (originalName.isEmpty()) {
+                generator.addUnique(UNNAMED_COLUMN_PREFIX)
+            } else {
+                generator.addUnique(originalName)
+            }
+        val renamed =
+            if (uniqueName != originalName) {
+                col.rename(uniqueName)
+            } else {
+                col
+            }
         cols.put(uniqueName, renamed)
         return uniqueName
     }
 
     /**
-     * Adds a column to the builder from the given iterable of values, ensuring the column's name is unique.
+     * Adds a column to the builder from the given iterable of values, ensuring the column's name is
+     * unique.
      *
-     * The method automatically converts the given iterable into a column using the specified or default name
-     * and infers the type of the column's elements.
+     * The method automatically converts the given iterable into a column using the specified or
+     * default name and infers the type of the column's elements.
      *
      * - If a column with the same name already exists, the new column is renamed to a unique name.
-     * - If the [checkDuplicateValues] property of the builder is `true`, the method checks whether the new column
-     *   has identical values to an existing column with the same name. If the values match, the column is not added.
+     * - If the [checkDuplicateValues] property of the builder is `true`, the method checks whether
+     *   the new column has identical values to an existing column with the same name. If the values
+     *   match, the column is not added.
      *
      * @param T The inferred type of the elements in the column.
      * @param values The iterable collection of values to be added as a new column.
-     * @param name The name of the new column. If empty, a unique name will be generated automatically.
+     * @param name The name of the new column. If empty, a unique name will be generated
+     *   automatically.
      * @return The final unique name assigned to the column.
      */
     public inline fun <reified T> add(values: Iterable<T>, name: String = ""): String =
@@ -569,8 +586,8 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
     public fun get(column: String): AnyCol? = cols[column]
 
     /**
-     * Converts the current [DynamicDataFrameBuilder] instance into a [DataFrame].
-     * The resulting [DataFrame] is constructed from the columns stored in the builder.
+     * Converts the current [DynamicDataFrameBuilder] instance into a [DataFrame]. The resulting
+     * [DataFrame] is constructed from the columns stored in the builder.
      *
      * @return A [DataFrame] containing the columns defined in the [DynamicDataFrameBuilder].
      */

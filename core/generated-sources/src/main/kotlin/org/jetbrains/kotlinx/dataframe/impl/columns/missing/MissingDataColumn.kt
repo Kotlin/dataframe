@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.impl.columns.missing
 
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
-import kotlin.reflect.KType
 
 internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
 

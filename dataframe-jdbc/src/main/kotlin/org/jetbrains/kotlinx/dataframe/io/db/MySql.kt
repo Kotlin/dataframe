@@ -30,7 +30,8 @@ public object MySql : DbType("mysql") {
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
 
-        fun String?.containsWithLowercase(substr: String) = this?.lowercase(locale)?.contains(substr) == true
+        fun String?.containsWithLowercase(substr: String) =
+            this?.lowercase(locale)?.contains(substr) == true
 
         val schemaName = tableMetadata.schemaName
         val name = tableMetadata.name

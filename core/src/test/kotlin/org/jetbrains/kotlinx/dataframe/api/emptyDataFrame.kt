@@ -1,10 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class EmptyDataFrameTests {
 
@@ -24,14 +24,11 @@ class EmptyDataFrameTests {
         }
     }
 
-    @DataSchema
-    data class FrameSchema(val e: Double)
+    @DataSchema data class FrameSchema(val e: Double)
 
-    @DataSchema
-    data class GroupSchema(val c: Int, val d: String)
+    @DataSchema data class GroupSchema(val c: Int, val d: String)
 
-    @DataSchema
-    data class Schema(val a: Int, val group: GroupSchema, val frame: List<FrameSchema>)
+    @DataSchema data class Schema(val a: Int, val group: GroupSchema, val frame: List<FrameSchema>)
 
     @Test
     fun emptyWithColumns() {
@@ -44,9 +41,7 @@ class EmptyDataFrameTests {
                 it.columnNames() shouldBe listOf("c", "d")
                 it["c"].type() shouldBe typeOf<Int>()
             }
-            getFrameColumn("frame").let {
-                it.schema.value.columns.keys shouldBe listOf("e")
-            }
+            getFrameColumn("frame").let { it.schema.value.columns.keys shouldBe listOf("e") }
         }
     }
 }

@@ -2,12 +2,12 @@
 
 package org.jetbrains.kotlinx.dataframe.documentationCsv
 
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
-import org.jetbrains.kotlinx.dataframe.io.ColType
 import java.io.File
 import java.io.InputStream
 import java.net.URL
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
+import org.jetbrains.kotlinx.dataframe.io.ColType
 
 /**
  * ### Read $[FILE_TYPE_TITLE] $[DATA_TITLE] to [DataFrame]
@@ -15,31 +15,37 @@ import java.net.URL
  * Reads any $[FILE_TYPE] $[DATA] to a [DataFrame][DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, \[delimiter\],
- * \[header\], \[colTypes\], \[readLines\], and \[parserOptions\].
- * See the param list below for all settings.
+ * \[header\], \[colTypes\], \[readLines\], and \[parserOptions\]. See the param list below for all
+ * settings.
  *
  * The integration is built upon {@include [DocumentationUrls.Deephaven]}.
  *
  * ##### Similar Functions
  * With the overloads of $[FUNCTION_LINK]`()`, you can read any $[FILE_TYPE] by [File][File],
- * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
- * Reading by file path or URL can also be done by passing a [String].
+ * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream]. Reading by file path or
+ * URL can also be done by passing a [String].
  *
- * For example, $[FUNCTION_LINK]`("input.$[CommonReadDelimDocs.FILE_EXTENSION]")` or with some options:
+ * For example, $[FUNCTION_LINK]`("input.$[CommonReadDelimDocs.FILE_EXTENSION]")` or with some
+ * options:
  *
  * $[FUNCTION_LINK]`(`
  *
  * {@include [Indent]}`file = `[File][File]`("input.$[CommonReadDelimDocs.FILE_EXTENSION]"),`
  *
- * {@include [Indent]}`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
+ * {@include [Indent]}`parserOptions =
+ * `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale =
+ * `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
  *
- * {@include [Indent]}`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`, `[ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
+ * {@include [Indent]}`colTypes = `[mapOf][mapOf]`("a" `[to][to]`
+ * `[ColType][ColType]`.`[Int][ColType.Int]`, `[ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]`
+ * `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
  *
  * {@include [Indent]}`readLines = 1000L,`
  *
  * `)`
  *
- * ZIP (.zip) or GZIP (.gz) files are supported by default. \[compression\] is automatically detected.
+ * ZIP (.zip) or GZIP (.gz) files are supported by default. \[compression\] is automatically
+ * detected.
  *
  * You can also read "raw" $[FILE_TYPE] data from a [String] like this:
  *
@@ -48,7 +54,8 @@ import java.net.URL
  * @comment Some helper arguments for the function links
  * @set [FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}\]\[${[FUNCTION_NAME]}\]
  * @set [STR_FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}Str\]\[${[FUNCTION_NAME]}Str\]
- * @set [OLD_FUNCTION_LINK] \[DataFrame.${[OLD_FUNCTION_NAME]}\]\[org.jetbrains.kotlinx.dataframe.io.${[OLD_FUNCTION_NAME]}\]
+ * @set [OLD_FUNCTION_LINK]
+ *   \[DataFrame.${[OLD_FUNCTION_NAME]}\]\[org.jetbrains.kotlinx.dataframe.io.${[OLD_FUNCTION_NAME]}\]
  */
 @Suppress("ClassName")
 internal interface CommonReadDelimDocs {

@@ -13,9 +13,11 @@ class ReplaceTests : Base() {
 
     @Test
     fun `reorder columns in group`() {
-        val reordered = df.replace { name }.with {
-            it.asColumnGroup().select { lastName and firstName }.asColumnGroup(it.name())
-        }
+        val reordered =
+            df.replace { name }
+                .with {
+                    it.asColumnGroup().select { lastName and firstName }.asColumnGroup(it.name())
+                }
         reordered shouldBe df.reorder { name.firstName and name.lastName }.byDesc { it.name() }
     }
 }

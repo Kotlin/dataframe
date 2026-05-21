@@ -1,6 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.io.h2
 
 import io.kotest.matchers.shouldBe
+import java.math.BigDecimal
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.SQLException
+import java.util.Date
+import java.util.UUID
+import kotlin.reflect.typeOf
+import kotlin.time.Instant
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -14,14 +22,6 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
-import java.math.BigDecimal
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
-import java.util.Date
-import java.util.UUID
-import kotlin.reflect.typeOf
-import kotlin.time.Instant
 
 private const val URL =
     "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
@@ -72,7 +72,8 @@ class MSSQLH2Test {
             connection = DriverManager.getConnection(URL)
 
             @Language("SQL")
-            val createTableQuery = """
+            val createTableQuery =
+                """
                 CREATE TABLE Table1 (
                 id INT NOT NULL IDENTITY PRIMARY KEY,
                 bigintColumn BIGINT,
@@ -120,17 +121,27 @@ class MSSQLH2Test {
                 smallintColumn, smallmoneyColumn, textColumn, timeColumn, timestampColumn, tinyintColumn,
                 uniqueidentifierColumn, varbinaryColumn, varbinaryMaxColumn, varcharColumn, varcharMaxColumn
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
                 for (i in 1..5) {
                     st.setLong(1, 123456789012345L) // bigintColumn
-                    st.setBytes(2, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // binaryColumn
+                    st.setBytes(
+                        2,
+                        byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67),
+                    ) // binaryColumn
                     st.setBoolean(3, true) // bitColumn
                     st.setString(4, "Sample") // charColumn
                     st.setDate(5, java.sql.Date(System.currentTimeMillis())) // dateColumn
-                    st.setTimestamp(6, java.sql.Timestamp(System.currentTimeMillis())) // datetime3Column
-                    st.setTimestamp(7, java.sql.Timestamp(System.currentTimeMillis())) // datetime2Column
+                    st.setTimestamp(
+                        6,
+                        java.sql.Timestamp(System.currentTimeMillis()),
+                    ) // datetime3Column
+                    st.setTimestamp(
+                        7,
+                        java.sql.Timestamp(System.currentTimeMillis()),
+                    ) // datetime2Column
                     st.setBigDecimal(8, BigDecimal("12345.67")) // decimalColumn
                     st.setFloat(9, 123.45f) // floatColumn
                     st.setNull(10, java.sql.Types.NULL) // imageColumn (assuming nullable)
@@ -142,17 +153,29 @@ class MSSQLH2Test {
                     st.setString(16, "Sample") // nvarcharColumn
                     st.setString(17, "Sample$i text") // nvarcharMaxColumn
                     st.setFloat(18, 123.45f) // realColumn
-                    st.setTimestamp(19, java.sql.Timestamp(System.currentTimeMillis())) // smalldatetimeColumn
+                    st.setTimestamp(
+                        19,
+                        java.sql.Timestamp(System.currentTimeMillis()),
+                    ) // smalldatetimeColumn
                     st.setInt(20, 123) // smallintColumn
                     st.setBigDecimal(21, BigDecimal("123.45")) // smallmoneyColumn
                     st.setString(22, "Sample$i text") // textColumn
                     st.setTime(23, java.sql.Time(System.currentTimeMillis())) // timeColumn
-                    st.setTimestamp(24, java.sql.Timestamp(System.currentTimeMillis())) // timestampColumn
+                    st.setTimestamp(
+                        24,
+                        java.sql.Timestamp(System.currentTimeMillis()),
+                    ) // timestampColumn
                     st.setInt(25, 123) // tinyintColumn
                     // st.setObject(27, null) // udtColumn (assuming nullable)
                     st.setObject(26, UUID.randomUUID()) // uniqueidentifierColumn
-                    st.setBytes(27, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryColumn
-                    st.setBytes(28, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryMaxColumn
+                    st.setBytes(
+                        27,
+                        byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67),
+                    ) // varbinaryColumn
+                    st.setBytes(
+                        28,
+                        byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67),
+                    ) // varbinaryMaxColumn
                     st.setString(29, "Sample$i") // varcharColumn
                     st.setString(30, "Sample$i text") // varcharMaxColumn
                     st.executeUpdate()
@@ -222,9 +245,11 @@ class MSSQLH2Test {
             Table1.id,
             Table1.bigintColumn
             FROM Table1
-            """.trimIndent()
+            """
+                .trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3).cast<Table1MSSSQL>()
+        val df =
+            DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3).cast<Table1MSSSQL>()
         val result = df.filter { "id"<Int>() == 1 }
         result[0]["bigintColumn"] shouldBe 123456789012345L
 

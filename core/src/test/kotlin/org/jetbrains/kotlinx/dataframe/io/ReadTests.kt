@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.all
@@ -15,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class ReadTests {
 
@@ -24,7 +24,8 @@ class ReadTests {
         val data =
             """
             [{"a":null, "b":1},{"a":null, "b":2}]
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val df = DataFrame.readJsonStr(data)
         df.ncol shouldBe 2
@@ -41,7 +42,8 @@ class ReadTests {
         val data =
             """
             [{"a":[{"b":[]}]},{"a":[]},{"a":[{"b":[{"c":1}]}]}]
-            """.trimIndent()
+            """
+                .trimIndent()
         val df = DataFrame.readJsonStr(data)
         df.nrow shouldBe 3
         val a = df["a"].asAnyFrameColumn()
@@ -60,7 +62,8 @@ class ReadTests {
         val data =
             """
             [ [], [ {"a": [{"q":2},{"q":3}] } ] ]
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val df = DataFrame.readJsonStr(data)
         df.nrow shouldBe 2
@@ -75,7 +78,8 @@ class ReadTests {
         val data =
             """
             [[3452345234345, 7795.34000000], [12314123532, 7795.34000000]]
-            """.trimIndent()
+            """
+                .trimIndent()
         val df = DataFrame.readJsonStr(data)
         println(df.getColumn("array").cast<List<Number>>()[0][1].javaClass)
     }
@@ -87,7 +91,8 @@ class ReadTests {
             {
                 "values": [[1,2,3],[4,5,6],[7,8,9]]
             }
-            """.trimIndent()
+            """
+                .trimIndent()
         val df = DataFrame.readJsonStr(data)
         val values by column<List<List<Int>>>()
         df[values][0][1][1] shouldBe 5
@@ -99,7 +104,8 @@ class ReadTests {
             """
             [[1,2,3],
             [4,5,6]]
-            """.trimIndent()
+            """
+                .trimIndent()
         val header = listOf("a", "b", "c")
         val df = DataFrame.readJsonStr(data, header)
         df.rowsCount() shouldBe 2

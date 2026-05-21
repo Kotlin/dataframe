@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
 import io.kotest.matchers.shouldBe
+import java.text.DecimalFormatSymbols
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.impl.scale
@@ -8,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PRECISION
 import org.jetbrains.kotlinx.dataframe.io.RendererDecimalFormat
 import org.jetbrains.kotlinx.dataframe.io.format
 import org.junit.Test
-import java.text.DecimalFormatSymbols
 
 class PrecisionTests {
 

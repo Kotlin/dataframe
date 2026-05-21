@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import java.net.URL
+import java.nio.file.Files
+import kotlin.reflect.typeOf
 import kotlinx.datetime.LocalDateTime
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -15,14 +18,12 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
-import java.net.URL
-import java.nio.file.Files
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class XlsxTest {
 
-    fun testResource(resourcePath: String): URL = this::class.java.classLoader.getResource(resourcePath)!!
+    fun testResource(resourcePath: String): URL =
+        this::class.java.classLoader.getResource(resourcePath)!!
 
     @Test
     fun `numerical columns`() {
@@ -51,12 +52,13 @@ class XlsxTest {
 
     @Test
     fun `column with empty header and with formatting`() {
-        val df = DataFrame.readExcel(
-            testResource("sample2.xlsx"),
-            "Sheet1",
-            columns = "A:C",
-            stringColumns = StringColumns("A:C"),
-        )
+        val df =
+            DataFrame.readExcel(
+                testResource("sample2.xlsx"),
+                "Sheet1",
+                columns = "A:C",
+                stringColumns = StringColumns("A:C"),
+            )
         df shouldBe dataFrameOf("col1", "col2", "C")("1", null, "3")
     }
 
@@ -76,10 +78,7 @@ class XlsxTest {
     @Test
     fun `read and write are isomorphic for string, double and null values`() {
         val temp = Files.createTempFile("excel", ".xlsx").toFile()
-        val df = dataFrameOf("col1", "col2")(
-            "string value", 3.2,
-            "string value 1", null,
-        )
+        val df = dataFrameOf("col1", "col2")("string value", 3.2, "string value 1", null)
         val extendedDf = List(10) { df }.concat()
         extendedDf.writeExcel(temp)
         val extendedDf1 = DataFrame.readExcel(temp)
@@ -110,26 +109,28 @@ class XlsxTest {
     @Test
     fun `consider skipRows when obtaining column indexes`() {
         val df = DataFrame.readExcel(testResource("header.xlsx"), skipRows = 6, rowsCount = 1)
-        df.columnNames() shouldBe listOf(
-            "Well",
-            "Well Position",
-            "Omit",
-            "Sample Name",
-            "Target Name",
-            "Task",
-            "Reporter",
-            "Quencher",
-        )
-        df shouldBe dataFrameOf(
-            "Well",
-            "Well Position",
-            "Omit",
-            "Sample Name",
-            "Target Name",
-            "Task",
-            "Reporter",
-            "Quencher",
-        )(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0)
+        df.columnNames() shouldBe
+            listOf(
+                "Well",
+                "Well Position",
+                "Omit",
+                "Sample Name",
+                "Target Name",
+                "Task",
+                "Reporter",
+                "Quencher",
+            )
+        df shouldBe
+            dataFrameOf(
+                "Well",
+                "Well Position",
+                "Omit",
+                "Sample Name",
+                "Target Name",
+                "Task",
+                "Reporter",
+                "Quencher",
+            )(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0)
     }
 
     @Test
@@ -167,10 +168,11 @@ class XlsxTest {
             DataFrame.readExcel(testResource("iris_duplicated_column.xlsx"))
         }
 
-        val df = DataFrame.readExcel(
-            testResource("iris_duplicated_column.xlsx"),
-            nameRepairStrategy = NameRepairStrategy.MAKE_UNIQUE,
-        )
+        val df =
+            DataFrame.readExcel(
+                testResource("iris_duplicated_column.xlsx"),
+                nameRepairStrategy = NameRepairStrategy.MAKE_UNIQUE,
+            )
         df.columnNames() shouldBe
             listOf(
                 "Sepal.Length",
@@ -190,54 +192,59 @@ class XlsxTest {
     @Test
     fun `read xlsx file that has cells with formulas that return numbers and strings`() {
         val df = DataFrame.readExcel(testResource("formula_cell.xlsx"))
-        df.columnNames() shouldBe listOf("Number", "Greater than 5", "Multiplied by 10", "Divided by 5")
+        df.columnNames() shouldBe
+            listOf("Number", "Greater than 5", "Multiplied by 10", "Divided by 5")
     }
 
     @Test
     fun `read mixed column`() {
-        val df = DataFrame.readExcel(
-            testResource("mixed_column.xlsx"),
-            stringColumns = StringColumns("A"),
-        )
+        val df =
+            DataFrame.readExcel(
+                testResource("mixed_column.xlsx"),
+                stringColumns = StringColumns("A"),
+            )
         df["col1"].type() shouldBe typeOf<String>()
         df shouldBe dataFrameOf("col1")("100", "A100", "B100", "C100")
     }
 
     @Test
     fun `read with default header unstructured excel file`() {
-        val df = DataFrame.readExcel(
-            testResource("unstructured_example.xlsx"),
-            firstRowIsHeader = false,
-        )
+        val df =
+            DataFrame.readExcel(testResource("unstructured_example.xlsx"), firstRowIsHeader = false)
         df.columnNames() shouldBe listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")
     }
 
     @Test
     fun `should work read with default header unstructured excel file with skipRow params`() {
-        val df = DataFrame.readExcel(
-            testResource("unstructured_example.xlsx"),
-            firstRowIsHeader = false,
-            skipRows = 2,
-            rowsCount = 1,
-            parseEmptyAsNull = false,
-        )
+        val df =
+            DataFrame.readExcel(
+                testResource("unstructured_example.xlsx"),
+                firstRowIsHeader = false,
+                skipRows = 2,
+                rowsCount = 1,
+                parseEmptyAsNull = false,
+            )
 
-        df shouldBe dataFrameOf(
-            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-        )(
-            "Field 3: ", "", "TEAM 1", "", "", "", "", "Staff Code:", "Staff 1", "",
-        )
+        df shouldBe
+            dataFrameOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")(
+                "Field 3: ",
+                "",
+                "TEAM 1",
+                "",
+                "",
+                "",
+                "",
+                "Staff Code:",
+                "Staff 1",
+                "",
+            )
     }
 
     @Test
     fun `read columns with nulls`() {
-        val df = DataFrame.readExcel(
-            testResource("withNulls.xlsx"),
-        ).convert("age").toInt()
-        df shouldBe dataFrameOf(
-            "name" to listOf("Alice", null, "Bob"),
-            "age" to listOf(23, 27, null),
-        )
+        val df = DataFrame.readExcel(testResource("withNulls.xlsx")).convert("age").toInt()
+        df shouldBe
+            dataFrameOf("name" to listOf("Alice", null, "Bob"), "age" to listOf(23, 27, null))
         df["name"].type shouldBe typeOf<String?>()
         df["age"].type shouldBe typeOf<Int?>()
     }

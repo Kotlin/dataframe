@@ -44,14 +44,16 @@ internal class TreeNode<T>(
     }
 
     fun getOrPut(childName: String, createData: () -> T): TreeNode<T> {
-        childrenMap[childName]?.let { return it }
+        childrenMap[childName]?.let {
+            return it
+        }
         return addChild(childName, createData())
     }
 
     /**
      * Traverses the tree in depth-first order and returns all nodes that satisfy [yieldCondition].
-     * If [enterCondition] returns false for a node, its children are not traversed.
-     * By default, all nodes are traversed and all nodes are returned.
+     * If [enterCondition] returns false for a node, its children are not traversed. By default, all
+     * nodes are traversed and all nodes are returned.
      */
     fun allChildren(
         enterCondition: (TreeNode<T>) -> Boolean = { true },
@@ -64,9 +66,7 @@ internal class TreeNode<T>(
                 result.add(node)
             }
             if (enterCondition(node)) {
-                node.children.forEach {
-                    traverse(it)
-                }
+                node.children.forEach { traverse(it) }
             }
         }
         traverse(this)

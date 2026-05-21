@@ -5,6 +5,11 @@ import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import java.math.BigDecimal
+import java.time.LocalDate
+import kotlin.reflect.KType
+import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -184,11 +189,6 @@ import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
-import java.math.BigDecimal
-import java.time.LocalDate
-import kotlin.reflect.KType
-import kotlin.reflect.jvm.jvmErasure
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class DataFrameTests : BaseTest() {
@@ -260,9 +260,7 @@ class DataFrameTests : BaseTest() {
     fun toMap() {
         val map = df.toMap()
         map.size shouldBe 4
-        map.forEach {
-            it.value.size shouldBe df.nrow
-        }
+        map.forEach { it.value.size shouldBe df.nrow }
     }
 
     @Test
@@ -324,21 +322,18 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `incorrect column nullability`() {
-        // non-nullable column definition is incorrect here, because actual dataframe has nulls in this column
+        // non-nullable column definition is incorrect here, because actual dataframe has nulls in
+        // this column
         val col = column<Int>().named("weight")
 
-        shouldThrow<NullPointerException> {
-            println(df[2][col])
-        }
+        shouldThrow<NullPointerException> { println(df[2][col]) }
     }
 
     @Test
     fun chunked() {
         val res = df.chunked(2)
         res.size() shouldBe 4
-        res.toList().dropLast(1).forEach {
-            it.nrow shouldBe 2
-        }
+        res.toList().dropLast(1).forEach { it.nrow shouldBe 2 }
     }
 
     @Test
@@ -426,9 +421,7 @@ class DataFrameTests : BaseTest() {
     fun resetToNull() {
         val updated = typed.update { all() }.withNull()
 
-        updated.columns().forEach {
-            it.forEach { it shouldBe null }
-        }
+        updated.columns().forEach { it.forEach { it shouldBe null } }
     }
 
     @Test
@@ -478,22 +471,20 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `get group by single key`() {
-        typed.groupBy { name }.xs("Charlie").concat() shouldBe typed.filter { name == "Charlie" }.remove { name }
+        typed.groupBy { name }.xs("Charlie").concat() shouldBe
+            typed.filter { name == "Charlie" }.remove { name }
     }
 
     @Test
     fun `get group by complex key`() {
         typed.groupBy { city and name }.xs("Tokyo", "Bob").concat() shouldBe
-            typed.filter { name == "Bob" && city == "Tokyo" }
-                .remove { name and city }
+            typed.filter { name == "Bob" && city == "Tokyo" }.remove { name and city }
     }
 
     @Test
     fun `get group by partial key`() {
         typed.groupBy { city and name }.xs("Tokyo").toDataFrame() shouldBe
-            typed.filter { city == "Tokyo" }
-                .remove { city }
-                .groupBy { name }.toDataFrame()
+            typed.filter { city == "Tokyo" }.remove { city }.groupBy { name }.toDataFrame()
     }
 
     @Test
@@ -543,7 +534,13 @@ class DataFrameTests : BaseTest() {
 
         fun AnyFrame.check() = nrow shouldBe expected
 
-        filtered.dropNulls(typed.weight.toColumnAccessor(), typed.city.toColumnAccessor(), whereAllNull = true).check()
+        filtered
+            .dropNulls(
+                typed.weight.toColumnAccessor(),
+                typed.city.toColumnAccessor(),
+                whereAllNull = true,
+            )
+            .check()
         filtered.dropNulls(whereAllNull = true) { weight and city }.check()
         filtered.dropNulls(whereAllNull = true) { it.weight and it.city }.check()
 
@@ -721,74 +718,87 @@ class DataFrameTests : BaseTest() {
             cities["from Milan"].toList() shouldBe listOf(0, 0, 1)
             cities["from Tokyo"].toList() shouldBe listOf(0, 1, 0)
             cities["from null"].toList() shouldBe listOf(1, 0, 0)
-            this["ages"].toList() shouldBe listOf(listOf(15, 20), listOf(45, 30), listOf(20, 40, 30))
+            this["ages"].toList() shouldBe
+                listOf(listOf(15, 20), listOf(45, 30), listOf(20, 40, 30))
         }
 
-        typed.groupBy { name }.aggregate {
-            count() into "n"
-            count { age > 25 } into "old count"
-            median { age } into "median age"
-            min { age } into "min age"
-            all { weight != null } into "all with weights"
-            maxBy { age }.city into "oldest origin"
-            sortBy { age }.first().city into "youngest origin"
-            pivot { city.map { "from $it" } }.count()
-            age.toList() into "ages"
-        }.check()
+        typed
+            .groupBy { name }
+            .aggregate {
+                count() into "n"
+                count { age > 25 } into "old count"
+                median { age } into "median age"
+                min { age } into "min age"
+                all { weight != null } into "all with weights"
+                maxBy { age }.city into "oldest origin"
+                sortBy { age }.first().city into "youngest origin"
+                pivot { city.map { "from $it" } }.count()
+                age.toList() into "ages"
+            }
+            .check()
 
-        typed.groupBy { it.name }.aggregate {
-            it.nrow into "n"
-            it.count { it.age > 25 } into "old count"
-            it.median { it.age } into "median age"
-            it.min { it.age } into "min age"
-            it.all { it.weight != null } into "all with weights"
-            it.maxBy { it.age }.city into "oldest origin"
-            it.sortBy { it.age }.first().city into "youngest origin"
-            it.pivot { it.city.map { "from $it" } }.count()
-            it.age.toList() into "ages"
-        }.check()
+        typed
+            .groupBy { it.name }
+            .aggregate {
+                it.nrow into "n"
+                it.count { it.age > 25 } into "old count"
+                it.median { it.age } into "median age"
+                it.min { it.age } into "min age"
+                it.all { it.weight != null } into "all with weights"
+                it.maxBy { it.age }.city into "oldest origin"
+                it.sortBy { it.age }.first().city into "youngest origin"
+                it.pivot { it.city.map { "from $it" } }.count()
+                it.age.toList() into "ages"
+            }
+            .check()
 
-        df.groupBy(name).aggregate {
-            count() into "n"
-            count { age > 25 } into "old count"
-            median(age) into "median age"
-            min(age) into "min age"
-            all { weight() != null } into "all with weights"
-            maxBy(age)[city] into "oldest origin"
-            sortBy(age).first()[city] into "youngest origin"
-            pivot(city.map { "from $it" }).count()
-            it[age].toList() into "ages"
-        }.check()
+        df.groupBy(name)
+            .aggregate {
+                count() into "n"
+                count { age > 25 } into "old count"
+                median(age) into "median age"
+                min(age) into "min age"
+                all { weight() != null } into "all with weights"
+                maxBy(age)[city] into "oldest origin"
+                sortBy(age).first()[city] into "youngest origin"
+                pivot(city.map { "from $it" }).count()
+                it[age].toList() into "ages"
+            }
+            .check()
 
-        df.groupBy(Person::name).aggregate {
-            count() into "n"
-            count { it[Person::age] > 25 } into "old count"
-            median(Person::age) into "median age"
-            min(Person::age) into "min age"
-            all { it[Person::weight] != null } into "all with weights"
-            maxBy(Person::age)[Person::city] into "oldest origin"
-            sortBy(Person::age).first()[Person::city] into "youngest origin"
-            pivot { it[Person::city].map { "from $it" } }.count()
-            it[Person::age].toList() into "ages"
-        }.check()
+        df.groupBy(Person::name)
+            .aggregate {
+                count() into "n"
+                count { it[Person::age] > 25 } into "old count"
+                median(Person::age) into "median age"
+                min(Person::age) into "min age"
+                all { it[Person::weight] != null } into "all with weights"
+                maxBy(Person::age)[Person::city] into "oldest origin"
+                sortBy(Person::age).first()[Person::city] into "youngest origin"
+                pivot { it[Person::city].map { "from $it" } }.count()
+                it[Person::age].toList() into "ages"
+            }
+            .check()
 
-        df.groupBy("name").aggregate {
-            count() into "n"
-            count { "age"<Int>() > 25 } into "old count"
-            median { "age"<Int>() } into "median age"
-            min { "age"<Int>() } into "min age"
-            all { it["weight"] != null } into "all with weights"
-            maxBy { "age"<Int>() }["city"] into "oldest origin"
-            sortBy("age").first()["city"] into "youngest origin"
-            pivot { it["city"].map { "from $it" } }.count()
-            it["age"].toList() into "ages"
-        }.check()
+        df.groupBy("name")
+            .aggregate {
+                count() into "n"
+                count { "age"<Int>() > 25 } into "old count"
+                median { "age"<Int>() } into "median age"
+                min { "age"<Int>() } into "min age"
+                all { it["weight"] != null } into "all with weights"
+                maxBy { "age"<Int>() }["city"] into "oldest origin"
+                sortBy("age").first()["city"] into "youngest origin"
+                pivot { it["city"].map { "from $it" } }.count()
+                it["age"].toList() into "ages"
+            }
+            .check()
     }
 
     @Test
     fun `groupBy meanOf`() {
-        typed.groupBy { name }.meanOf { age * 2 } shouldBe typed
-            .groupBy { name }.aggregate { mean { age } * 2 into "mean" }
+        typed.groupBy { name }.meanOf { age * 2 } shouldBe
+            typed.groupBy { name }.aggregate { mean { age } * 2 into "mean" }
     }
 
     @Test
@@ -885,19 +895,16 @@ class DataFrameTests : BaseTest() {
         val expected = typed.rows().map { now - it.age }
         val g by columnGroup()
 
-        val df = typed.add {
-            "a" from { now - age }
-            "b" from now - age
-            now - age into "c"
-            "d" {
-                "f" from { now - age }
-            }
-            group {
-                g from {
-                    add(age.map { now - it }.named("h"))
+        val df =
+            typed
+                .add {
+                    "a" from { now - age }
+                    "b" from now - age
+                    now - age into "c"
+                    "d" { "f" from { now - age } }
+                    group { g from { add(age.map { now - it }.named("h")) } } into "e"
                 }
-            } into "e"
-        }.remove { allBefore("a") }
+                .remove { allBefore("a") }
 
         df.columnNames() shouldBe listOf("a", "b", "c", "d", "e")
         df["d"].kind() shouldBe ColumnKind.Group
@@ -906,17 +913,13 @@ class DataFrameTests : BaseTest() {
         df.getColumnGroup("e").getColumnGroup("g").columnNames() shouldBe listOf("h")
         val cols = df.getColumns { colsAtAnyDepth().filter { !it.isColumnGroup() } }
         cols.size shouldBe 5
-        cols.forEach {
-            it.toList() shouldBe expected
-        }
+        cols.forEach { it.toList() shouldBe expected }
     }
 
     @Test
     fun `add several columns with type inference`() {
         val f: Any = 123
-        val df = typed.add {
-            expr(infer = Infer.Type) { f } into "f"
-        }
+        val df = typed.add { expr(infer = Infer.Type) { f } into "f" }
         df["f"].type() shouldBe typeOf<Int>()
     }
 
@@ -962,10 +965,7 @@ class DataFrameTests : BaseTest() {
         val heightOrNull = height.nullable()
 
         @Suppress("ktlint:standard:argument-list-wrapping")
-        val other = dataFrameOf(name, height)(
-            "Bill", 135,
-            "Charlie", 160,
-        ).cast<Unit>()
+        val other = dataFrameOf(name, height)("Bill", 135, "Charlie", 160).cast<Unit>()
 
         val res = typed.concat(other)
         res.nrow shouldBe typed.nrow + other.nrow
@@ -1086,9 +1086,7 @@ class DataFrameTests : BaseTest() {
     fun `pivot matches equality`() {
         val res1 = typed.pivot { city }.groupBy { name }.matches()
         val res2 = typed.groupBy { name }.pivot { city }.matches()
-        val res3 = typed.groupBy { name }.aggregate {
-            pivot { city }.matches()
-        }
+        val res3 = typed.groupBy { name }.aggregate { pivot { city }.matches() }
         res2 shouldBe res1
         res3 shouldBe res1
     }
@@ -1096,11 +1094,18 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot matches with conversion`() {
         val filtered = typed.dropNulls { city }
-        val res = filtered.pivot(inward = false) { city.map { it?.lowercase() } }.groupBy { name and age }.matches()
+        val res =
+            filtered
+                .pivot(inward = false) { city.map { it?.lowercase() } }
+                .groupBy { name and age }
+                .matches()
         val cities = filtered.city.toList().map { it!!.lowercase() }
         val gathered =
-            res.gather { colsOf<Boolean> { cities.contains(it.name()) } }.where { it }.keysInto("city")
-        val expected = filtered.select { name and age and city.map { it!!.lowercase() } }.moveToEnd { city }
+            res.gather { colsOf<Boolean> { cities.contains(it.name()) } }
+                .where { it }
+                .keysInto("city")
+        val expected =
+            filtered.select { name and age and city.map { it!!.lowercase() } }.moveToEnd { city }
         gathered shouldBe expected
     }
 
@@ -1124,13 +1129,17 @@ class DataFrameTests : BaseTest() {
 
         res.ncol shouldBe selected.city.countDistinct() + 1
         res.nrow shouldBe selected.name.countDistinct()
-        val trueValuesCount = res.columns().drop(1).sumOf { it.cast<Boolean>().toList().count { it } }
+        val trueValuesCount =
+            res.columns().drop(1).sumOf { it.cast<Boolean>().toList().count { it } }
         trueValuesCount shouldBe selected.distinct().nrow
 
-        val pairs = (1 until res.ncol).flatMap { i ->
-            val col = res.getColumn(i).cast<Boolean>()
-            res.filter { it[col] }.rows().map { it.name to col.name() }
-        }.toSet()
+        val pairs =
+            (1 until res.ncol)
+                .flatMap { i ->
+                    val col = res.getColumn(i).cast<Boolean>()
+                    res.filter { it[col] }.rows().map { it.name to col.name() }
+                }
+                .toSet()
 
         pairs shouldBe typed.rows().map { it.name to it.city.toString() }.toSet()
     }
@@ -1143,10 +1152,13 @@ class DataFrameTests : BaseTest() {
 
         val names = typed.name.distinct().toList()
 
-        val src = typed.select { name }
-            .add(others) { names }
-            .split { others }.intoRows()
-            .add(sum) { name.length + other().length }
+        val src =
+            typed
+                .select { name }
+                .add(others) { names }
+                .split { others }
+                .intoRows()
+                .add(sum) { name.length + other().length }
 
         val matrix = src.pivot { other }.groupBy { name }.with { sum() }
         matrix.getColumnGroup(other.name()).ncol shouldBe names.size
@@ -1156,17 +1168,18 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `gather bool`() {
         val pivoted = typed.pivot { city }.groupBy { name }.matches()
-        val res = pivoted.gather { colsAtAnyDepth().colsOf<Boolean>() }.where { it }.keysInto("city")
+        val res =
+            pivoted.gather { colsAtAnyDepth().colsOf<Boolean>() }.where { it }.keysInto("city")
         val sorted = res.sortBy { name and city }
-        sorted shouldBe typed.select { name and city.map { it.toString() } }.distinct().sortBy { name and city }
+        sorted shouldBe
+            typed.select { name and city.map { it.toString() } }.distinct().sortBy { name and city }
     }
 
     @Test
     fun `gather nothing`() {
         val gat = typed.gather { city and name }
 
-        gat.where { false }.into("key", "value")
-            .print()
+        gat.where { false }.into("key", "value").print()
     }
 
     @Test
@@ -1195,7 +1208,10 @@ class DataFrameTests : BaseTest() {
         merged[cityList].type() shouldBe typeOf<List<String>>()
 
         val expected =
-            typed.dropNulls { city }.groupBy { name }.aggregate { it.city.toSet() as Set<String> into "city" }
+            typed
+                .dropNulls { city }
+                .groupBy { name }
+                .aggregate { it.city.toSet() as Set<String> into "city" }
         val actual = merged.convert { cityList }.with { it.toSet() }
 
         actual shouldBe expected
@@ -1231,17 +1247,23 @@ class DataFrameTests : BaseTest() {
         merged.nrow shouldBe typed.nrow
         for (row in 0 until typed.nrow) {
             val joined = merged[row]["info"] as String
-            joined shouldBe typed.age[row].toString() + ", " + typed.city[row] + ", " + typed.weight[row]
+            joined shouldBe
+                typed.age[row].toString() + ", " + typed.city[row] + ", " + typed.weight[row]
         }
     }
 
     @Test
     fun mergeIntoList() {
-        val parsed = typed
-            .merge { age and city and weight }.by(", ").intoList()
-            .toDataFrame { "data" from { it } }
-            .split("data").by(", ").into(age, city, weight)
-            .parse(ParserOptions(nullStrings = setOf("null")))
+        val parsed =
+            typed
+                .merge { age and city and weight }
+                .by(", ")
+                .intoList()
+                .toDataFrame { "data" from { it } }
+                .split("data")
+                .by(", ")
+                .into(age, city, weight)
+                .parse(ParserOptions(nullStrings = setOf("null")))
 
         val expected = typed[age, city, weight]
         parsed shouldBe expected
@@ -1249,10 +1271,11 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun mergeColsCustom() {
-        val merged = typed
-            .merge { name and city and age }
-            .by { it[0].toString() + " from " + it[1] + " aged " + it[2] }
-            .into("info")
+        val merged =
+            typed
+                .merge { name and city and age }
+                .by { it[0].toString() + " from " + it[1] + " aged " + it[2] }
+                .into("info")
         merged.ncol shouldBe 2
         merged.nrow shouldBe typed.nrow
         merged[0]["info"] shouldBe "Alice from London aged 15"
@@ -1260,7 +1283,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun mergeColsCustom2() {
-        val merged = typed.merge { name and city and age }.by { "$name from $city aged $age" }.into("info")
+        val merged =
+            typed.merge { name and city and age }.by { "$name from $city aged $age" }.into("info")
         merged.ncol shouldBe 2
         merged.nrow shouldBe typed.nrow
         merged[0]["info"] shouldBe "Alice from London aged 15"
@@ -1321,12 +1345,13 @@ class DataFrameTests : BaseTest() {
     fun splitAgeIntoDigits() {
         fun digits(num: Int) =
             sequence {
-                var k = num
-                while (k > 0) {
-                    yield(k % 10)
-                    k /= 10
+                    var k = num
+                    while (k > 0) {
+                        yield(k % 10)
+                        k /= 10
+                    }
                 }
-            }.toList()
+                .toList()
 
         val res = typed.split { age }.by { digits(it) }.into { "digit$it" }
     }
@@ -1342,17 +1367,18 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitStringCols() {
-        val merged = typed
-            .merge { name and city }.by(", ").into("nameAndCity")
-            .merge { age and weight }.into("info")
+        val merged =
+            typed
+                .merge { name and city }
+                .by(", ")
+                .into("nameAndCity")
+                .merge { age and weight }
+                .into("info")
         val nameAndCity by column<String>()
         val info by column<List<Number?>>()
-        val res = merged
-            .split { nameAndCity }.into("name", "city")
-            .split(info).into("age", "weight")
-        val expected = typed
-            .update { city }.with { it.toString() }
-            .move { city }.to(1)
+        val res =
+            merged.split { nameAndCity }.into("name", "city").split(info).into("age", "weight")
+        val expected = typed.update { city }.with { it.toString() }.move { city }.to(1)
         res shouldBe expected
     }
 
@@ -1365,15 +1391,18 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge cols with conversion`() {
         val pivoted = typed.groupBy { name }.pivot { city }.count()
-        val res = pivoted.merge { city.asColumnGroup().colsOf<Int>() }.by { it.filterNotNull().sum() }.into("cities")
+        val res =
+            pivoted
+                .merge { city.asColumnGroup().colsOf<Int>() }
+                .by { it.filterNotNull().sum() }
+                .into("cities")
         val expected = typed.select { name and city }.groupBy { name }.count("cities")
         res shouldBe expected
     }
 
     @Test
     fun `merge into temp`() {
-        dataFrameOf("a", "b", "temp")(1, null, 3)
-            .merge { cols("a", "b") }.into("b")
+        dataFrameOf("a", "b", "temp")(1, null, 3).merge { cols("a", "b") }.into("b")
     }
 
     inline fun <T, reified C, R> Merge<T, C, R>.typeOfElement() = typeOf<C>()
@@ -1392,11 +1421,13 @@ class DataFrameTests : BaseTest() {
         val merge = dataFrameOf("a", "b")(1, null).merge { col("a") }
         merge.intoList().typeOfElement() shouldBe typeOf<List<Any?>>()
         merge.by { it }.intoList().typeOfElement() shouldBe typeOf<List<Any?>>()
-        // here we can safely narrow down List<Any?> to List<Any> after notNull because the default transformer creates a List from C
+        // here we can safely narrow down List<Any?> to List<Any> after notNull because the default
+        // transformer creates a List from C
         merge.notNull().intoList().typeOfElement() shouldBe typeOf<List<Any>>()
         // if by notNull could go after by { },
         // we won't be able to do so because non-default transformer could introduce nulls itself:
-        merge.notNull().by { listOf(1, null) }.intoList().typeOfElement() shouldBe typeOf<List<Int?>>()
+        merge.notNull().by { listOf(1, null) }.intoList().typeOfElement() shouldBe
+            typeOf<List<Int?>>()
     }
 
     @Test
@@ -1414,12 +1445,10 @@ class DataFrameTests : BaseTest() {
             val intGroup = this["Int"].asColumnGroup()
             intGroup.columnNames() shouldBe listOf("age", "weight")
 
-            val res = listOf(
-                this.name,
-                this["Int"]["age"],
-                this["String"]["city"],
-                this["Int"]["weight"],
-            ).toDataFrame().cast<Person>()
+            val res =
+                listOf(this.name, this["Int"]["age"], this["String"]["city"], this["Int"]["weight"])
+                    .toDataFrame()
+                    .cast<Person>()
             res shouldBe typed
         }
         typed.group { cols { it.data != name } }.into { it.type.jvmErasure.simpleName!! }.check()
@@ -1431,12 +1460,15 @@ class DataFrameTests : BaseTest() {
         val grouped = typed.move { age and name and city }.under("info")
         grouped.ncol shouldBe 2
         grouped.columnNames() shouldBe listOf("info", "weight")
-        val res = listOf(
-            grouped["info"]["name"],
-            grouped["info"]["age"],
-            grouped["info"]["city"],
-            grouped.weight,
-        ).toDataFrame().cast<Person>()
+        val res =
+            listOf(
+                    grouped["info"]["name"],
+                    grouped["info"]["age"],
+                    grouped["info"]["city"],
+                    grouped.weight,
+                )
+                .toDataFrame()
+                .cast<Person>()
         res shouldBe typed
     }
 
@@ -1488,11 +1520,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun forEachIn() {
         val pivoted = typed.pivot(inward = true) { city }.groupBy { name and weight }.with { age }
-        val sum = pivoted
-            .select { "city".allCols() }
-            .values()
-            .filterNotNull()
-            .sumOf { it as Int }
+        val sum = pivoted.select { "city".allCols() }.values().filterNotNull().sumOf { it as Int }
         sum shouldBe typed.age.sum()
     }
 
@@ -1517,18 +1545,19 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `aggregate into grouped column`() {
-        val d = typed.groupBy { name }.aggregate {
-            val row = meanFor { age and weight }
-            row into "mean"
-        }
+        val d =
+            typed
+                .groupBy { name }
+                .aggregate {
+                    val row = meanFor { age and weight }
+                    row into "mean"
+                }
         d.ncol shouldBe 2
         d["mean"].isColumnGroup() shouldBe true
         val mean = d.getColumnGroup("mean")
         mean.ncol shouldBe 2
         mean.columnNames() shouldBe listOf("age", "weight")
-        mean.columns().forEach {
-            it.type() shouldBe typeOf<Double>()
-        }
+        mean.columns().forEach { it.type() shouldBe typeOf<Double>() }
     }
 
     @Test
@@ -1542,33 +1571,28 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `aggregate into table column`() {
-        val d = typed.groupBy { name }.aggregate {
-            val row = select { age and weight }
-            row into "info"
-        }
+        val d =
+            typed
+                .groupBy { name }
+                .aggregate {
+                    val row = select { age and weight }
+                    row into "info"
+                }
         d.ncol shouldBe 2
         d["info"].isFrameColumn() shouldBe true
         val info = d.getFrameColumn("info")
         info.forEach {
             it.ncol shouldBe 2
             it.columnNames() shouldBe listOf("age", "weight")
-            it.columns().forEach {
-                it.typeClass shouldBe Int::class
-            }
+            it.columns().forEach { it.typeClass shouldBe Int::class }
         }
     }
 
     @Test
     fun `union table columns`() {
         val grouped = typed.addId("id").groupBy { name }.toDataFrame()
-        val flattened = (0 until grouped.nrow).map {
-            grouped[it..it]
-        }
-        val dst = flattened
-            .concat().asGroupBy()
-            .concat()
-            .sortBy("id")
-            .remove("id")
+        val flattened = (0 until grouped.nrow).map { grouped[it..it] }
+        val dst = flattened.concat().asGroupBy().concat().sortBy("id").remove("id")
         dst shouldBe typed
     }
 
@@ -1631,9 +1655,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `replace with expression`() {
         val res = typed.replace { age }.with { 2021 - age named "year" }
-        val expected = typed
-            .convert { age }.with { 2021 - age }
-            .rename { age }.to("year")
+        val expected = typed.convert { age }.with { 2021 - age }.rename { age }.to("year")
         res shouldBe expected
     }
 
@@ -1660,16 +1682,33 @@ class DataFrameTests : BaseTest() {
         val list2 by columnOf(listOf(1, 2), listOf(1, 2), listOf(1, 2), listOf(1))
         val df = dataFrameOf(values, list1, list2)
         val res = df.explode { list1 and list2 }
-        val expected = dataFrameOf(values.name(), list1.name(), list2.name())(
-            1, 1, 1,
-            1, 2, 2,
-            1, 3, null,
-            2, null, 1,
-            2, null, 2,
-            3, 1, 1,
-            3, 2, 2,
-            4, null, 1,
-        )
+        val expected =
+            dataFrameOf(values.name(), list1.name(), list2.name())(
+                1,
+                1,
+                1,
+                1,
+                2,
+                2,
+                1,
+                3,
+                null,
+                2,
+                null,
+                1,
+                2,
+                null,
+                2,
+                3,
+                1,
+                1,
+                3,
+                2,
+                2,
+                4,
+                null,
+                1,
+            )
         res shouldBe expected
     }
 
@@ -1677,24 +1716,49 @@ class DataFrameTests : BaseTest() {
     fun splitUnequalListAndFrames() {
         val values by columnOf(1, 2, 3)
         val list1 by columnOf(listOf(1, 2, 3), listOf(1), listOf(1, 2))
-        val frames by listOf(listOf(1, 2), listOf(1, 2), listOf(1, 2)).map {
-            val data = it.toColumn("data")
-            val dataStr = it.map { it.toString() }.toColumn("dataStr")
-            dataFrameOf(data, dataStr)
-        }.toColumn()
+        val frames by
+            listOf(listOf(1, 2), listOf(1, 2), listOf(1, 2))
+                .map {
+                    val data = it.toColumn("data")
+                    val dataStr = it.map { it.toString() }.toColumn("dataStr")
+                    dataFrameOf(data, dataStr)
+                }
+                .toColumn()
         frames.kind shouldBe ColumnKind.Frame
 
         val df = dataFrameOf(values, list1, frames)
         val res = df.explode { list1 and frames }.ungroup(frames)
-        val expected = dataFrameOf(values.name(), list1.name(), "data", "dataStr")(
-            1, 1, 1, "1",
-            1, 2, 2, "2",
-            1, 3, null, null,
-            2, 1, 1, "1",
-            2, null, 2, "2",
-            3, 1, 1, "1",
-            3, 2, 2, "2",
-        )
+        val expected =
+            dataFrameOf(values.name(), list1.name(), "data", "dataStr")(
+                1,
+                1,
+                1,
+                "1",
+                1,
+                2,
+                2,
+                "2",
+                1,
+                3,
+                null,
+                null,
+                2,
+                1,
+                1,
+                "1",
+                2,
+                null,
+                2,
+                "2",
+                3,
+                1,
+                1,
+                "1",
+                3,
+                2,
+                2,
+                "2",
+            )
         res shouldBe expected
     }
 
@@ -1720,19 +1784,13 @@ class DataFrameTests : BaseTest() {
     fun `update with two conditions`() {
         fun DataFrame<Person>.check() = indices { age == 100 } shouldBe listOf(1, 3)
 
-        typed
-            .update { age }.at(1..3).where { it > 20 }.with { 100 }
-            .check()
-        typed
-            .update { age }.where { it > 20 }.at(1..3).with { 100 }
-            .check()
+        typed.update { age }.at(1..3).where { it > 20 }.with { 100 }.check()
+        typed.update { age }.where { it > 20 }.at(1..3).with { 100 }.check()
     }
 
     @Test
     fun `update nulls`() {
-        typed
-            .update { weight }.where { it == null }.with { 15 }
-            .weight.hasNulls shouldBe false
+        typed.update { weight }.where { it == null }.with { 15 }.weight.hasNulls shouldBe false
     }
 
     @Test
@@ -1762,22 +1820,14 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `append many`() {
-        val res = typed.append(
-            "John", 22,
-            "New York", 46,
-            "Philip", 25,
-            "Chelyabinsk", 36,
-        )
+        val res = typed.append("John", 22, "New York", 46, "Philip", 25, "Chelyabinsk", 36)
         res.nrow shouldBe typed.nrow + 2
     }
 
     @Test
     fun `append wrong number of arguments`() {
         shouldThrow<IllegalStateException> {
-            dataFrameOf("name", "age")(
-                "Alice", 15,
-                "Bob", 20,
-            ).append("John")
+            dataFrameOf("name", "age")("Alice", 15, "Bob", 20).append("John")
         }
     }
 
@@ -1885,7 +1935,9 @@ class DataFrameTests : BaseTest() {
         val df = dataFrameOf(names).nulls<Double>(10)
         df.nrow shouldBe 10
         df.ncol shouldBe 2
-        df.columns().forEach { col -> (col.type() == typeOf<Double?>() && col.allNulls()) shouldBe true }
+        df.columns().forEach { col ->
+            (col.type() == typeOf<Double?>() && col.allNulls()) shouldBe true
+        }
     }
 
     @Test
@@ -1895,7 +1947,9 @@ class DataFrameTests : BaseTest() {
         val df = dataFrameOf(first, second).fill(5) { true }
         df.nrow shouldBe 5
         df.ncol shouldBe 2
-        df.columns().forEach { col -> (col.type() == typeOf<Boolean>() && col.all { it == true }) shouldBe true }
+        df.columns().forEach { col ->
+            (col.type() == typeOf<Boolean>() && col.all { it == true }) shouldBe true
+        }
     }
 
     @Test
@@ -1908,14 +1962,13 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `create nested dataframe inplace`() {
-        val df = dataFrameOf(
-            "a" to columnOf("1"),
-            "b" to columnOf(
-                "c" to columnOf("2"),
-            ),
-            "d" to columnOf(dataFrameOf("a")(123)),
-            "gr" to listOf("1").toDataFrame().asColumnGroup(),
-        )
+        val df =
+            dataFrameOf(
+                "a" to columnOf("1"),
+                "b" to columnOf("c" to columnOf("2")),
+                "d" to columnOf(dataFrameOf("a")(123)),
+                "gr" to listOf("1").toDataFrame().asColumnGroup(),
+            )
 
         df.columnNames() shouldBe listOf("a", "b", "d", "gr")
         df.getColumnGroup("gr")["value"].values() shouldBe listOf("1")
@@ -1950,23 +2003,26 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `render nested dataframes to string`() {
-        val rendered = typed
-            .drop(1)
-            .groupBy { name }
-            .groups
-            .asIterable()
-            .joinToString("\n") { renderValueForStdout(it).truncatedContent }
+        val rendered =
+            typed
+                .drop(1)
+                .groupBy { name }
+                .groups
+                .asIterable()
+                .joinToString("\n") { renderValueForStdout(it).truncatedContent }
         rendered shouldBe
             """
             [2 x 4]
             [3 x 4]
             [1 x 4] { name:Alice, age:20, weight:55 }
-            """.trimIndent()
+            """
+                .trimIndent()
     }
 
     @Test
     fun `drop where any na`() {
-        val updated = typed.convert { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
+        val updated =
+            typed.convert { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
         val expected = updated.count { city != null && !("weight"<Double?>()?.isNaN() ?: true) }
 
         fun AnyFrame.check() = nrow shouldBe expected
@@ -1979,7 +2035,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `drop where all na`() {
-        val updated = typed.convert { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
+        val updated =
+            typed.convert { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
         val expected = updated.count { city != null || !("weight"<Double?>()?.isNaN() ?: true) }
 
         fun AnyFrame.check() = nrow shouldBe expected
@@ -2030,12 +2087,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy with map`() {
-        typed
-            .groupBy { name.map { it.lowercase() } }.toDataFrame()
-            .name.values() shouldBe
-            run {
-                typed.name.distinct().map { it.lowercase() }.values()
-            }
+        typed.groupBy { name.map { it.lowercase() } }.toDataFrame().name.values() shouldBe
+            run { typed.name.distinct().map { it.lowercase() }.values() }
     }
 
     @Test
@@ -2075,9 +2128,7 @@ class DataFrameTests : BaseTest() {
             it.kind() shouldBe ColumnKind.Group
             val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("age", "weight")
-            group.columns().forEach {
-                it.type() shouldBe typeOf<Double?>()
-            }
+            group.columns().forEach { it.type() shouldBe typeOf<Double?>() }
         }
     }
 
@@ -2088,7 +2139,8 @@ class DataFrameTests : BaseTest() {
             pivot { name }.max { age }
             sum { weight } into "total weight"
         }
-        val expected = dataFrameOf("count", "Alice", "Bob", "Charlie", "total weight")(7, 20, 45, 40, 354)
+        val expected =
+            dataFrameOf("count", "Alice", "Bob", "Charlie", "total weight")(7, 20, 45, 40, 354)
         summary shouldBe expected.group { cols(1..3) }.into("name")[0]
     }
 
@@ -2104,9 +2156,11 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `find the longest string`() {
-        val longestCityName = "Taumatawhakatangihangakoauauotamateaturipukakapikimaungahoronukupokaiwhenuakitanatahu"
+        val longestCityName =
+            "Taumatawhakatangihangakoauauotamateaturipukakapikimaungahoronukupokaiwhenuakitanatahu"
         val updated = typed.update { city }.where { it == "Dubai" }.with { longestCityName }
-        updated.valuesNotNull { colsOf<String?>() }.maxByOrNull { it.length } shouldBe longestCityName
+        updated.valuesNotNull { colsOf<String?>() }.maxByOrNull { it.length } shouldBe
+            longestCityName
     }
 
     @Test
@@ -2119,7 +2173,8 @@ class DataFrameTests : BaseTest() {
     fun `grouped sort by count`() {
         val sorted = typed.groupBy { name }.sortByCount()
         sorted.toDataFrame().name.values() shouldBe
-            typed.rows()
+            typed
+                .rows()
                 .groupBy { it.name }
                 .toList()
                 .sortedByDescending { it.second.size }
@@ -2129,19 +2184,13 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `grouped sort by key`() {
         val sorted = typed.groupBy { name }.sortByKey()
-        sorted.toDataFrame().name.values() shouldBe
-            typed.name
-                .distinct()
-                .values()
-                .sorted()
+        sorted.toDataFrame().name.values() shouldBe typed.name.distinct().values().sorted()
     }
 
     @Test
     fun `infer ColumnGroup type in convert with`() {
         val g by frameColumn()
-        val grouped = typed
-            .groupBy { name }.toDataFrame(g.name)
-            .convert(g).with { it.first() }
+        val grouped = typed.groupBy { name }.toDataFrame(g.name).convert(g).with { it.first() }
         grouped[g.name].kind() shouldBe ColumnKind.Group
     }
 
@@ -2184,7 +2233,8 @@ class DataFrameTests : BaseTest() {
             4     Bob  30  Tokyo     68
             5   Alice  20   null     55
             6 Charlie  30 Moscow     90
-            """.trimIndent()
+            """
+                .trimIndent()
 
         typed.toString().trimIndent() shouldBe expected
     }
@@ -2194,17 +2244,15 @@ class DataFrameTests : BaseTest() {
         typed.age.isNumber() shouldBe true
         typed.weight.isNumber() shouldBe true
 
-        DataColumn.createValueColumn("a", emptyList<Nothing>(), nothingType(false)).isNumber() shouldBe true
+        DataColumn.createValueColumn("a", emptyList<Nothing>(), nothingType(false))
+            .isNumber() shouldBe true
         DataColumn.createValueColumn("a", listOf(null), nothingType(true)).isNumber() shouldBe true
     }
 
     @Test
     fun `pivot null to default`() {
-        val pivoted = typed
-            .groupBy { name }.pivot { city }.default(0).min { weight }
-        pivoted.columns().forEach {
-            it.hasNulls() shouldBe false
-        }
+        val pivoted = typed.groupBy { name }.pivot { city }.default(0).min { weight }
+        pivoted.columns().forEach { it.hasNulls() shouldBe false }
     }
 
     @Test
@@ -2230,12 +2278,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun convertTo() {
-        data class Target(
-            val name: String,
-            val age: Int,
-            val city: String?,
-            val weight: Int?,
-        )
+        data class Target(val name: String, val age: Int, val city: String?, val weight: Int?)
 
         df.convertTo<Target>() shouldBe df
         df.convert { age }.toStr().convertTo<Target>() shouldBe df
@@ -2245,30 +2288,21 @@ class DataFrameTests : BaseTest() {
         added.convertTo(typeOf<Target>(), ExcessiveColumns.Keep) shouldBe added
 
         df.remove { city }.convertTo<Target>() shouldBe
-            df.update { city }.withNull()
-                .move { city }.toEnd()
+            df.update { city }.withNull().move { city }.toEnd()
 
-        shouldThrow<IllegalArgumentException> {
-            df.remove { age }.convertTo<Target>()
-        }
+        shouldThrow<IllegalArgumentException> { df.remove { age }.convertTo<Target>() }
 
-        df.remove { age }.convertTo<Target> {
-            fill { age }.with { -1 }
-        } shouldBe
-            df.update { age }.with { -1 }
-                .move { age }.toEnd()
+        df.remove { age }.convertTo<Target> { fill { age }.with { -1 } } shouldBe
+            df.update { age }.with { -1 }.move { age }.toEnd()
 
         shouldThrow<TypeConversionException> {
-            df.update { name }.at(2).withNull()
-                .convertTo<Target>()
+            df.update { name }.at(2).withNull().convertTo<Target>()
         }
 
         shouldThrow<IllegalArgumentException> {
-            df.convert { age }.toStr().convertToImpl(
-                typeOf<Target>(),
-                allowConversion = false,
-                ExcessiveColumns.Remove,
-            )
+            df.convert { age }
+                .toStr()
+                .convertToImpl(typeOf<Target>(), allowConversion = false, ExcessiveColumns.Remove)
         }
 
         shouldThrow<ExcessiveColumnsException> {
@@ -2285,11 +2319,9 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun typedFrameColumn() {
-        @DataSchema
-        data class Student(val name: String, val age: Int, val weight: Int?)
+        @DataSchema data class Student(val name: String, val age: Int, val weight: Int?)
 
-        @DataSchema
-        data class Target(val city: String?, val students: List<Student>)
+        @DataSchema data class Target(val city: String?, val students: List<Student>)
 
         val grouped = df.groupBy { city }.toDataFrame("students")
 
@@ -2312,11 +2344,9 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun typedColumnGroup() {
-        @DataSchema
-        data class Info(val age: Int, val weight: Int?)
+        @DataSchema data class Info(val age: Int, val weight: Int?)
 
-        @DataSchema
-        data class Target(val name: String, val info: Info, val city: String?)
+        @DataSchema data class Target(val name: String, val info: Info, val city: String?)
 
         val grouped = typed.group { age and weight }.into("info")
 
@@ -2333,8 +2363,7 @@ class DataFrameTests : BaseTest() {
         val data by column<String>()
         val merged = typed.merge { name and city }.by("|").into(data)
         merged.split { data }.match("""(.*)\|(.*)""".toRegex()).into("name", "city") shouldBe
-            typed.update { city }.with { it ?: "null" }
-                .move { city }.to(1)
+            typed.update { city }.with { it ?: "null" }.move { city }.to(1)
     }
 
     @Test
@@ -2351,7 +2380,11 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitIntoThisAndNewColumn() {
-        val split = typed.split { name }.by { listOf<Any>(it.dropLast(1), it.last()) }.into("name", "lastChar")
+        val split =
+            typed
+                .split { name }
+                .by { listOf<Any>(it.dropLast(1), it.last()) }
+                .into("name", "lastChar")
         split.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
     }
 
@@ -2364,29 +2397,32 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun implodeWithNulls() {
-        val merged = typed
-            .update { weight }.where { name == "Charlie" }.withNull()
-            .select { name and weight }
-            .implode(dropNA = true) { weight }
+        val merged =
+            typed
+                .update { weight }
+                .where { name == "Charlie" }
+                .withNull()
+                .select { name and weight }
+                .implode(dropNA = true) { weight }
 
         merged["weight"].type() shouldBe typeOf<List<Int>>()
     }
 
     @Test
     fun updateWithZero() {
-        val updated = typed
-            .convert { weight }.toDouble()
-            .update { colsOf<Number?>() }.where { name == "Charlie" }.withZero()
+        val updated =
+            typed
+                .convert { weight }
+                .toDouble()
+                .update { colsOf<Number?>() }
+                .where { name == "Charlie" }
+                .withZero()
         updated.age.type shouldBe typeOf<Int>()
         updated["weight"].type shouldBe typeOf<Double>()
         val filtered = updated.filter { name == "Charlie" }
         filtered.nrow shouldBe 3
-        filtered.age.forEach {
-            it shouldBe 0
-        }
-        filtered["weight"].forEach {
-            it shouldBe .0
-        }
+        filtered.age.forEach { it shouldBe 0 }
+        filtered["weight"].forEach { it shouldBe .0 }
     }
 
     @Test
@@ -2402,17 +2438,13 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `groupByGroup name clash`() {
         val groupName = GroupBy.groupedColumnAccessor.name()
-        typed.add(groupName) { name }
-            .groupBy(groupName).toDataFrame()
-            .ncol shouldBe 2
+        typed.add(groupName) { name }.groupBy(groupName).toDataFrame().ncol shouldBe 2
     }
 
     @Test
     fun describe() {
-        val desc = typed
-            .group { age and weight }.into("info")
-            .groupBy { city }.toDataFrame()
-            .describe()
+        val desc =
+            typed.group { age and weight }.into("info").groupBy { city }.toDataFrame().describe()
         desc.nrow shouldBe typed.ncol + 1
         desc["type"][0] shouldBe "String?"
         desc["path"][1] shouldBe listOf("group", "name")
@@ -2441,10 +2473,9 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `is comparable`() {
-        val df = listOf(
-            ComparableTest(1, 1, "a", "a", 1, 1),
-            ComparableTest(2, 2, "b", "b", "2", "2"),
-        ).toDataFrame()
+        val df =
+            listOf(ComparableTest(1, 1, "a", "a", 1, 1), ComparableTest(2, 2, "b", "b", "2", "2"))
+                .toDataFrame()
 
         df.int.valuesAreComparable() shouldBe true
         // Comparable<Int> is not comparable to Comparable<Int>
@@ -2461,14 +2492,16 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `values are comparable difficult`() {
         val i = 1
-        val i1 = object : Comparable<Int> {
-            override fun compareTo(other: Int): Int = other
+        val i1 =
+            object : Comparable<Int> {
+                override fun compareTo(other: Int): Int = other
 
-            override fun toString(): String = "i1"
-        }
+                override fun toString(): String = "i1"
+            }
         val col by columnOf(i, i1)
 
-        // We cannot calculate min/max for this column because Int does not implement Comparable<Comparable<Int>>
+        // We cannot calculate min/max for this column because Int does not implement
+        // Comparable<Comparable<Int>>
         // aka i1.compareTo(i) would work but i.compareTo(i1) would not
         dataFrameOf(col).max().isEmpty() shouldBe true
         dataFrameOf(col).min().isEmpty() shouldBe true
@@ -2484,9 +2517,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `describe twice`() {
-        val df = typed
-            .group { age and weight }.into("info")
-            .groupBy { city }.toDataFrame()
+        val df = typed.group { age and weight }.into("info").groupBy { city }.toDataFrame()
         val desc1 = df.describe()
         val desc2 = desc1.describe()
         desc2::class shouldBe DataFrameImpl::class
@@ -2520,7 +2551,8 @@ class DataFrameTests : BaseTest() {
         typed.select { allExcept { age and weight } } shouldBe typed.select { name and city }
 
         typed
-            .group { age and weight and city }.into("info")
+            .group { age and weight and city }
+            .into("info")
             .alsoDebug()
             .select { allExcept { "info"["age"] } }
             .alsoDebug()
@@ -2551,28 +2583,19 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge into same name`() {
         typed.merge { name and city }.into("age") shouldBe
-            typed
-                .merge { name and city }.into("data")
-                .remove("age")
-                .rename("data" to "age")
+            typed.merge { name and city }.into("data").remove("age").rename("data" to "age")
     }
 
     @Test
     fun `groupBy sort`() {
-        typed
-            .groupBy { name }.sortByDesc { age }.xs("Charlie").concat() shouldBe
-            typed
-                .filter { name == "Charlie" }
-                .sortBy { age.desc() }
-                .remove { name }
+        typed.groupBy { name }.sortByDesc { age }.xs("Charlie").concat() shouldBe
+            typed.filter { name == "Charlie" }.sortBy { age.desc() }.remove { name }
     }
 
     @Test
     fun `split into columns`() {
         val group by frameColumn()
-        typed
-            .groupBy { name }.into(group)
-            .split(group).intoColumns()
+        typed.groupBy { name }.into(group).split(group).intoColumns()
     }
 
     @Test
@@ -2585,16 +2608,10 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `transpose row`() {
-        typed
-            .select { age and weight }[1]
-            .transpose()
-            .maxBy { it.value as Int? }
-            .name shouldBe "weight"
-        typed[2]
-            .transpose()
-            .dropNulls { value }
-            .name
-            .toList() shouldBe listOf("name", "age", "city")
+        typed.select { age and weight }[1].transpose().maxBy { it.value as Int? }.name shouldBe
+            "weight"
+        typed[2].transpose().dropNulls { value }.name.toList() shouldBe
+            listOf("name", "age", "city")
     }
 
     @Test
@@ -2602,12 +2619,8 @@ class DataFrameTests : BaseTest() {
         typed.xs("Charlie") shouldBe typed.filter { name == "Charlie" }.remove { name }
         typed.xs("Charlie", 20).nrow shouldBe 1
         typed.xs(20) { age }.nrow shouldBe 2
-        shouldThrow<java.lang.IllegalArgumentException> {
-            typed.xs(20) { age and weight }
-        }
-        shouldThrow<java.lang.IllegalArgumentException> {
-            typed.xs("Charlie", 20) { name }
-        }
+        shouldThrow<java.lang.IllegalArgumentException> { typed.xs(20) { age and weight } }
+        shouldThrow<java.lang.IllegalArgumentException> { typed.xs("Charlie", 20) { name } }
         shouldThrow<java.lang.IllegalArgumentException> {
             typed.xs("Charlie", 20, "Moscow", null, 1)
         }
@@ -2616,9 +2629,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `groupBy xs`() {
         typed.groupBy { name }.xs("Charlie").concat() shouldBe typed.xs("Charlie")
-        typed
-            .groupBy { name }.xs("Moscow") { city }.concat()
-            .print()
+        typed.groupBy { name }.xs("Moscow") { city }.concat().print()
     }
 
     @Test
@@ -2641,24 +2652,23 @@ class DataFrameTests : BaseTest() {
     fun `groupBy into accessor or kproperty`() {
         val n by column<Int>()
 
-        data class Data(
-            @ColumnName("total") val count: Int,
-        )
+        data class Data(@ColumnName("total") val count: Int)
 
-        typed.groupBy { name }.aggregate {
-            count() into n
-            count() into Data::count
-        } shouldBe
-            typed
-                .groupBy { name }.count(n.name())
-                .add("total") { "n"<Int>() }
+        typed
+            .groupBy { name }
+            .aggregate {
+                count() into n
+                count() into Data::count
+            } shouldBe typed.groupBy { name }.count(n.name()).add("total") { "n"<Int>() }
     }
 
     @Test
     fun `aggregate null row`() {
-        val aggregated = typed.groupBy { name }.aggregate {
-            (if (name.first().startsWith("A")) first() else null) into "agg"
-        }["agg"]
+        val aggregated =
+            typed
+                .groupBy { name }
+                .aggregate { (if (name.first().startsWith("A")) first() else null) into "agg" }[
+                    "agg"]
 
         aggregated.kind shouldBe ColumnKind.Group
         aggregated.size shouldBe 3
@@ -2680,27 +2690,21 @@ class DataFrameTests : BaseTest() {
     @Test
     fun takeLast() {
         typed.takeLast(2) shouldBe typed[5..6]
-        shouldThrow<IllegalArgumentException> {
-            typed.takeLast(-1)
-        }
+        shouldThrow<IllegalArgumentException> { typed.takeLast(-1) }
         typed.takeLast(20) shouldBe typed
     }
 
     @Test
     fun dropLast() {
         typed.dropLast(2) shouldBe typed[0..4]
-        shouldThrow<IllegalArgumentException> {
-            typed.dropLast(-1)
-        }
+        shouldThrow<IllegalArgumentException> { typed.dropLast(-1) }
         typed.dropLast(20) shouldBe typed.take(0)
     }
 
     @Test
     fun drop() {
         typed.drop(2) shouldBe typed[2..6]
-        shouldThrow<IllegalArgumentException> {
-            typed.drop(-1)
-        }
+        shouldThrow<IllegalArgumentException> { typed.drop(-1) }
         typed.drop(typed.nrow) shouldBe typed.filter { false }
         typed.drop(20) shouldBe typed.filter { false }
     }
@@ -2708,9 +2712,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun take() {
         typed.take(2) shouldBe typed[0..1]
-        shouldThrow<IllegalArgumentException> {
-            typed.take(-1)
-        }
+        shouldThrow<IllegalArgumentException> { typed.take(-1) }
         typed.take(typed.nrow) shouldBe typed
         typed.take(20) shouldBe typed
     }
@@ -2725,22 +2727,18 @@ class DataFrameTests : BaseTest() {
     fun `api for creating GroupBy with empty groups which can be aggregated using statistics`() {
         val df1 = dataFrameOf("a", "b")(1, "c")
         val df2 = DataFrame.empty()
-        val groupBy = dataFrameOf(columnOf("group1", "group2") named "group", columnOf(df1, df2)).asGroupBy()
+        val groupBy =
+            dataFrameOf(columnOf("group1", "group2") named "group", columnOf(df1, df2)).asGroupBy()
 
-        val exception = shouldThrow<IllegalStateException> {
-            groupBy.aggregate {
-                sum("a")
-            }
-        }
+        val exception = shouldThrow<IllegalStateException> { groupBy.aggregate { sum("a") } }
 
         exception.message shouldBe "Column 'a' not found among []."
 
-        val groupBy1 = groupBy
-            .updateGroups { if (it.isEmpty()) DataFrame.empty(groupBy.groups.schema.value) else it }
-
-        val res = groupBy1.aggregate {
-            sum("a")
+        val groupBy1 = groupBy.updateGroups {
+            if (it.isEmpty()) DataFrame.empty(groupBy.groups.schema.value) else it
         }
+
+        val res = groupBy1.aggregate { sum("a") }
 
         res["aggregated"].values() shouldBe listOf(1, 0)
     }

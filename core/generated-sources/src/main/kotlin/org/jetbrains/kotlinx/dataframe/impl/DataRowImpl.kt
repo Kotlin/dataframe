@@ -10,7 +10,8 @@ import org.jetbrains.kotlinx.dataframe.columns.shortPath
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 
-internal open class DataRowImpl<T>(private val index: Int, private val df: DataFrame<T>) : DataRow<T> {
+internal open class DataRowImpl<T>(private val index: Int, private val df: DataFrame<T>) :
+    DataRow<T> {
 
     override fun df() = df
 
@@ -43,7 +44,8 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
     override fun getOrNull(name: String): Any? = df.getColumnOrNull(name)?.get(index)
 }
 
-internal val <T> DataRow<T>.owner: DataFrame<T> get() = df()
+internal val <T> DataRow<T>.owner: DataFrame<T>
+    get() = df()
 
 internal fun AnyRow.namedValues(): Sequence<NamedValue> =
     owner.columns().asSequence().map {

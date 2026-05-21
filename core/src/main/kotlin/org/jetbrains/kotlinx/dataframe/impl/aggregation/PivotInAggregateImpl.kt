@@ -15,8 +15,7 @@ internal data class PivotInAggregateImpl<T>(
     val columns: PivotColumnsSelector<T, *>,
     val inward: Boolean?,
     val default: Any? = null,
-) : PivotGroupBy<T>,
-    AggregatableInternal<T> {
+) : PivotGroupBy<T>, AggregatableInternal<T> {
 
     override fun default(value: Any?) = copy(default = value)
 
@@ -28,5 +27,7 @@ internal data class PivotInAggregateImpl<T>(
         return AggregatedPivot(aggregator.df, inward, childAggregator)
     }
 
-    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(columns.toColumnSet()) }
+    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = {
+        all().except(columns.toColumnSet())
+    }
 }

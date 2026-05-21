@@ -9,8 +9,7 @@ public interface ColumnsList<C> : ColumnSet<C> {
 }
 
 internal class ColumnListImpl<C>(override val columns: List<ColumnsResolver<C>>) :
-    ColumnSet<C>,
-    ColumnsList<C> {
+    ColumnSet<C>, ColumnsList<C> {
     constructor(vararg columns: ColumnsResolver<C>) : this(columns.toList())
 
     override fun resolve(context: ColumnResolutionContext) = columns.flatMap { it.resolve(context) }

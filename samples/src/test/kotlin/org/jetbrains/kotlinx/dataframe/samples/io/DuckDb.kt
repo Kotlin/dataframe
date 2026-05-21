@@ -2,13 +2,13 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.io
 
+import java.sql.DriverManager
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Ignore
 import org.junit.Test
-import java.sql.DriverManager
 
 class DuckDb {
 
@@ -42,7 +42,8 @@ class DuckDb {
             // query a table from Iceberg using a specific SQL query
             DataFrame.readSqlQuery(
                 connection = connection,
-                sqlQuery = "SELECT * FROM iceberg_scan('data/iceberg/lineitem_iceberg', allow_moved_paths = true);",
+                sqlQuery =
+                    "SELECT * FROM iceberg_scan('data/iceberg/lineitem_iceberg', allow_moved_paths = true);",
             )
         }
         // SampleEnd

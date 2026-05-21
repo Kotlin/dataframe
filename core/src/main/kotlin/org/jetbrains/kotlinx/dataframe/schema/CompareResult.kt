@@ -7,22 +7,21 @@ public enum class CompareResult {
     // TODO can be reintroduced at 1.1 to support "equals exactly" as CompareResult
     @Deprecated(
         message = COMPARE_RESULT_EQUALS,
-        replaceWith = ReplaceWith("Matches", "org.jetbrains.kotlinx.dataframe.schema.CompareResult.Matches"),
+        replaceWith =
+            ReplaceWith("Matches", "org.jetbrains.kotlinx.dataframe.schema.CompareResult.Matches"),
         level = DeprecationLevel.ERROR,
     )
     Equals,
 
     /**
-     * If the other schema has columns this has not,
-     * or their columns have a more specific type than in this schema,
-     * this is considered "super".
+     * If the other schema has columns this has not, or their columns have a more specific type than
+     * in this schema, this is considered "super".
      */
     IsSuper,
 
     /**
-     * If this schema has columns the other has not,
-     * or their columns have a less specific type than in this schema,
-     * this is considered "derived".
+     * If this schema has columns the other has not, or their columns have a less specific type than
+     * in this schema, this is considered "derived".
      */
     IsDerived,
 
@@ -30,11 +29,10 @@ public enum class CompareResult {
     None,
 
     /**
-     * Both schemas contain exactly the same columns, column groups, and frame columns,
-     * though their order might still be different.
+     * Both schemas contain exactly the same columns, column groups, and frame columns, though their
+     * order might still be different.
      */
-    Matches,
-    ;
+    Matches;
 
     /**
      * True if
@@ -66,26 +64,29 @@ public enum class CompareResult {
     )
     public fun isEqual(): Boolean = this.matches()
 
-    /**
-     * Temporary helper method to avoid breaking changes.
-     */
-    @Deprecated(
-        message = COMPARE_RESULT_EQUALS,
-        level = DeprecationLevel.WARNING,
-    )
-    private fun isDeprecatedEquals(): Boolean = this != IsSuper && this != IsDerived && this != None && this != Matches
+    /** Temporary helper method to avoid breaking changes. */
+    @Deprecated(message = COMPARE_RESULT_EQUALS, level = DeprecationLevel.WARNING)
+    private fun isDeprecatedEquals(): Boolean =
+        this != IsSuper && this != IsDerived && this != None && this != Matches
 
     public fun combine(other: CompareResult): CompareResult =
         when (this) {
             Matches -> other
             None -> None
-            IsDerived -> if (other == Matches || other == IsDerived || other.isDeprecatedEquals()) this else None
-            IsSuper -> if (other == Matches || other == IsSuper || other.isDeprecatedEquals()) this else None
+            IsDerived ->
+                if (other == Matches || other == IsDerived || other.isDeprecatedEquals()) this
+                else None
+            IsSuper ->
+                if (other == Matches || other == IsSuper || other.isDeprecatedEquals()) this
+                else None
             else -> other
         }
 
     public companion object {
-        public fun compareNullability(thisIsNullable: Boolean, otherIsNullable: Boolean): CompareResult =
+        public fun compareNullability(
+            thisIsNullable: Boolean,
+            otherIsNullable: Boolean,
+        ): CompareResult =
             when {
                 thisIsNullable == otherIsNullable -> Matches
                 thisIsNullable -> IsSuper

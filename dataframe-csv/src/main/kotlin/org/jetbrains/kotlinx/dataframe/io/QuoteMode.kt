@@ -10,8 +10,8 @@ public enum class QuoteMode {
     ALL_NON_NULL,
 
     /**
-     * Quotes fields that contain special characters such as a field delimiter, quote character, or any of the
-     * characters in the line separator string.
+     * Quotes fields that contain special characters such as a field delimiter, quote character, or
+     * any of the characters in the line separator string.
      */
     MINIMAL,
 
@@ -19,8 +19,8 @@ public enum class QuoteMode {
     NON_NUMERIC,
 
     /**
-     * Never quotes fields. When the delimiter occurs in data, the printer prefixes it with the escape character. If the
-     * escape character is not set, format validation throws an exception.
+     * Never quotes fields. When the delimiter occurs in data, the printer prefixes it with the
+     * escape character. If the escape character is not set, format validation throws an exception.
      */
     NONE,
 }

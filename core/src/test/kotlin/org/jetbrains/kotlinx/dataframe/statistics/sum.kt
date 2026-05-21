@@ -5,6 +5,7 @@ import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.floats.shouldBeNaN
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -18,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class SumTests {
 
@@ -56,19 +56,21 @@ class SumTests {
         emptyIntCol.sum() shouldBe 0
 
         // empty column with Number type
-        val emptyNumberColumn = DataColumn.createValueColumn<Number?>(
-            "emptyNumberColumn",
-            listOf(null, null),
-            typeOf<Number?>(),
-        )
+        val emptyNumberColumn =
+            DataColumn.createValueColumn<Number?>(
+                "emptyNumberColumn",
+                listOf(null, null),
+                typeOf<Number?>(),
+            )
         emptyNumberColumn.sum() shouldBe 0.0
 
         // empty column with nullable Nothing type
-        val emptyNothingColumn = DataColumn.createValueColumn(
-            "emptyNothingColumn",
-            listOf(null, null),
-            nullableNothingType,
-        )
+        val emptyNothingColumn =
+            DataColumn.createValueColumn(
+                "emptyNothingColumn",
+                listOf(null, null),
+                nullableNothingType,
+            )
         emptyNothingColumn.cast<Number?>().sum() shouldBe 0.0
     }
 
@@ -120,22 +122,21 @@ class SumTests {
     @Suppress("DEPRECATION_ERROR")
     @Test
     fun `unknown number type`() {
-        columnOf(1.toBigDecimal(), 2.toBigDecimal()).toDataFrame()
-            .sum()
-            .isEmpty() shouldBe true
+        columnOf(1.toBigDecimal(), 2.toBigDecimal()).toDataFrame().sum().isEmpty() shouldBe true
     }
 
     @Test
     fun `mixed numbers`() {
         // mixed number types are picked up implicitly
-        columnOf<Number>(1.0, 2).toDataFrame()
-            .sum()[0] shouldBe 3.0
+        columnOf<Number>(1.0, 2).toDataFrame().sum()[0] shouldBe 3.0
 
         // in the slight case a mixed number column contains unsupported numbers
         // we give a helpful exception telling about primitive support only
         shouldThrow<IllegalArgumentException> {
-            columnOf<Number>(1.0, 2, 3.0.toBigDecimal()).toDataFrame().sum()[0]
-        }.message?.lowercase() shouldContain "primitive"
+                columnOf<Number>(1.0, 2, 3.0.toBigDecimal()).toDataFrame().sum()[0]
+            }
+            .message
+            ?.lowercase() shouldContain "primitive"
     }
 
     @Test

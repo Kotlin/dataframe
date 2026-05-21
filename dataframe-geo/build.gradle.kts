@@ -1,4 +1,3 @@
-import org.jetbrains.dataframe.gradle.DataSchemaVisibility
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -6,9 +5,7 @@ plugins {
         alias(kotlinJvm8)
         alias(kodex)
     }
-    with(libs.plugins) {
-        alias(publisher)
-    }
+    with(libs.plugins) { alias(publisher) }
 }
 
 group = "org.jetbrains.kotlinx"
@@ -20,11 +17,7 @@ repositories {
     mavenLocal()
 }
 
-kotlin.sourceSets {
-    main {
-        kotlin.srcDir("src/generated-dataschema-accessors/main/kotlin/")
-    }
-}
+kotlin.sourceSets { main { kotlin.srcDir("src/generated-dataschema-accessors/main/kotlin/") } }
 
 // https://stackoverflow.com/questions/26993105/i-get-an-error-downloading-javax-media-jai-core1-1-3-from-maven-central
 // jai core dependency should be excluded from geotools dependencies and added separately
@@ -70,6 +63,4 @@ kotlinPublications {
     }
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+tasks.test { useJUnitPlatform() }

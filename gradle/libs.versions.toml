@@ -5,6 +5,8 @@ kotlinJupyter = "0.16.0-736"
 ktlint-gradle = "14.0.1"
 ktlint = "1.8.0"
 
+ktfmt-gradle = "0.26.0"
+
 kotlin = "2.3.21"
 kotlinpoet = "2.3.0"
 
@@ -208,6 +210,7 @@ multik-core = { group = "org.jetbrains.kotlinx", name = "multik-core", version.r
 multik-default = { group = "org.jetbrains.kotlinx", name = "multik-default", version.ref = "multik" }
 
 [plugins]
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt-gradle" }
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }

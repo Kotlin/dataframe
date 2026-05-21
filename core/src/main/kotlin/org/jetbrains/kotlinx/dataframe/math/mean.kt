@@ -1,18 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
-import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
+import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Double {
     if (type.isMarkedNullable) {
-        error("Encountered nullable type ${renderType(type)} in mean function. This should not occur.")
+        error(
+            "Encountered nullable type ${renderType(type)} in mean function. This should not occur."
+        )
     }
     return when (type) {
         typeOf<Double>() -> (this as Sequence<Double>).mean(skipNaN)
@@ -29,9 +31,10 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Doubl
             (this as Sequence<Long>).map { it.toDouble() }.mean(false)
         }
 
-        typeOf<BigInteger>(), typeOf<BigDecimal>() ->
+        typeOf<BigInteger>(),
+        typeOf<BigDecimal>() ->
             throw IllegalArgumentException(
-                "Cannot calculate the mean for big numbers in DataFrame. Only primitive numbers are supported.",
+                "Cannot calculate the mean for big numbers in DataFrame. Only primitive numbers are supported."
             )
 
         typeOf<Number>() ->
@@ -40,16 +43,15 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Doubl
         // this means the sequence is empty
         nothingType -> Double.NaN
 
-        else -> throw IllegalArgumentException(
-            "Unable to compute the mean for ${renderType(type)}. Only primitive numbers are supported.",
-        )
+        else ->
+            throw IllegalArgumentException(
+                "Unable to compute the mean for ${renderType(type)}. Only primitive numbers are supported."
+            )
     }
 }
 
 /** T: Number? -> Double */
-internal val meanTypeConversion: CalculateReturnType = { _, _ ->
-    typeOf<Double>()
-}
+internal val meanTypeConversion: CalculateReturnType = { _, _ -> typeOf<Double>() }
 
 internal fun Sequence<Double>.mean(skipNaN: Boolean = skipNaNDefault): Double {
     var count = 0

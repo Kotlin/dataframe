@@ -2,7 +2,8 @@ package org.jetbrains.kotlinx.dataframe
 
 import java.net.URL
 
-fun testResource(resourcePath: String): URL = object { }::class.java.classLoader.getResource(resourcePath)!!
+fun testResource(resourcePath: String): URL =
+    object {}::class.java.classLoader.getResource(resourcePath)!!
 
 fun testCsv(csvName: String) = testResource("$csvName.csv")
 

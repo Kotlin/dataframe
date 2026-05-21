@@ -1,6 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.types
 
 import io.kotest.matchers.shouldBe
+import java.io.Serializable
+import java.math.BigDecimal
+import java.math.BigInteger
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -18,12 +24,6 @@ import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.junit.Test
-import java.io.Serializable
-import java.math.BigDecimal
-import java.math.BigInteger
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 class UtilTests {
 
@@ -81,9 +81,12 @@ class UtilTests {
     fun commonParentsTests() {
         commonParents(Int::class, Int::class) shouldBe listOf(Int::class)
         commonParents(Double::class, Int::class) shouldBe listOf(Comparable::class, Number::class)
-        commonParents(Int::class, String::class) shouldBe listOf(Comparable::class, Serializable::class)
-        commonParents(IllegalArgumentException::class, UnsupportedOperationException::class) shouldBe
-            listOf(RuntimeException::class)
+        commonParents(Int::class, String::class) shouldBe
+            listOf(Comparable::class, Serializable::class)
+        commonParents(
+            IllegalArgumentException::class,
+            UnsupportedOperationException::class,
+        ) shouldBe listOf(RuntimeException::class)
         commonParents(Nothing::class, Nothing::class) shouldBe listOf(Nothing::class)
         commonParents() shouldBe emptyList()
         commonParents(List::class, Set::class) shouldBe listOf(Collection::class)
@@ -147,7 +150,8 @@ class UtilTests {
 
         guessValueType(sequenceOf(listOf<Int?>(null))) shouldBe typeOf<List<Nothing?>>()
         guessValueType(sequenceOf(emptyList<Int>())) shouldBe typeOf<List<Nothing>>()
-        guessValueType(sequenceOf(listOf<Int?>(null), emptyList<Int>())) shouldBe typeOf<List<Nothing?>>()
+        guessValueType(sequenceOf(listOf<Int?>(null), emptyList<Int>())) shouldBe
+            typeOf<List<Nothing?>>()
         guessValueType(sequenceOf(emptyList<Int>(), null)) shouldBe typeOf<List<Nothing>?>()
 
         guessValueType(sequenceOf(listOf(1), emptyList())) shouldBe typeOf<List<Int>>()
@@ -159,18 +163,12 @@ class UtilTests {
         guessValueType(sequenceOf(1, 2, listOf(1), emptySet<Any>())) shouldBe typeOf<Any>()
         guessValueType(sequenceOf(listOf(1), setOf(1.0, 2.0))) shouldBe typeOf<Collection<Number>>()
 
-        guessValueType(
-            sequenceOf(DataColumn.empty(), columnOf(1)),
-            allColsMakesRow = true,
-        ) shouldBe typeOf<DataRow<*>>()
+        guessValueType(sequenceOf(DataColumn.empty(), columnOf(1)), allColsMakesRow = true) shouldBe
+            typeOf<DataRow<*>>()
 
-        guessValueType(
-            sequenceOf(columnOf("a"), columnOf(1)),
-            allColsMakesRow = true,
-        ) shouldBe typeOf<DataRow<*>>()
-        guessValueType(
-            sequenceOf(columnOf("a"), columnOf(1)),
-        ) shouldBe typeOf<DataColumn<*>>()
+        guessValueType(sequenceOf(columnOf("a"), columnOf(1)), allColsMakesRow = true) shouldBe
+            typeOf<DataRow<*>>()
+        guessValueType(sequenceOf(columnOf("a"), columnOf(1))) shouldBe typeOf<DataColumn<*>>()
     }
 
     @Test
@@ -181,21 +179,33 @@ class UtilTests {
         guessValueType(sequenceOf(1, 2.0), listifyValues = true) shouldBe typeOf<Number>()
         guessValueType(sequenceOf(1, 2.0, null), listifyValues = true) shouldBe typeOf<Number?>()
 
-        guessValueType(sequenceOf(1, 2.0, "a"), listifyValues = true) shouldBe typeOf<Comparable<*>>()
-        guessValueType(sequenceOf(1, 2.0, "a", null), listifyValues = true) shouldBe typeOf<Comparable<*>?>()
+        guessValueType(sequenceOf(1, 2.0, "a"), listifyValues = true) shouldBe
+            typeOf<Comparable<*>>()
+        guessValueType(sequenceOf(1, 2.0, "a", null), listifyValues = true) shouldBe
+            typeOf<Comparable<*>?>()
 
-        guessValueType(sequenceOf(1, 2, listOf(1)), listifyValues = true) shouldBe typeOf<List<Int>>()
-        guessValueType(sequenceOf(1, 2, listOf(1), null), listifyValues = true) shouldBe typeOf<List<Int>>()
-        guessValueType(sequenceOf(1, 2, listOf(1, null)), listifyValues = true) shouldBe typeOf<List<Int?>>()
-        guessValueType(sequenceOf(1, 2, listOf(1, null), null), listifyValues = true) shouldBe typeOf<List<Int?>>()
+        guessValueType(sequenceOf(1, 2, listOf(1)), listifyValues = true) shouldBe
+            typeOf<List<Int>>()
+        guessValueType(sequenceOf(1, 2, listOf(1), null), listifyValues = true) shouldBe
+            typeOf<List<Int>>()
+        guessValueType(sequenceOf(1, 2, listOf(1, null)), listifyValues = true) shouldBe
+            typeOf<List<Int?>>()
+        guessValueType(sequenceOf(1, 2, listOf(1, null), null), listifyValues = true) shouldBe
+            typeOf<List<Int?>>()
 
-        guessValueType(sequenceOf(1, 2, listOf(null)), listifyValues = true) shouldBe typeOf<List<Int?>>()
-        guessValueType(sequenceOf(1, 2, listOf(null), null), listifyValues = true) shouldBe typeOf<List<Int?>>()
+        guessValueType(sequenceOf(1, 2, listOf(null)), listifyValues = true) shouldBe
+            typeOf<List<Int?>>()
+        guessValueType(sequenceOf(1, 2, listOf(null), null), listifyValues = true) shouldBe
+            typeOf<List<Int?>>()
 
-        guessValueType(sequenceOf(emptyList<Int>()), listifyValues = true) shouldBe typeOf<List<Nothing>>()
-        guessValueType(sequenceOf(emptyList<Int>(), null), listifyValues = true) shouldBe typeOf<List<Nothing>>()
-        guessValueType(sequenceOf(listOf(null)), listifyValues = true) shouldBe typeOf<List<Nothing?>>()
-        guessValueType(sequenceOf(listOf(null), null), listifyValues = true) shouldBe typeOf<List<Nothing?>>()
+        guessValueType(sequenceOf(emptyList<Int>()), listifyValues = true) shouldBe
+            typeOf<List<Nothing>>()
+        guessValueType(sequenceOf(emptyList<Int>(), null), listifyValues = true) shouldBe
+            typeOf<List<Nothing>>()
+        guessValueType(sequenceOf(listOf(null)), listifyValues = true) shouldBe
+            typeOf<List<Nothing?>>()
+        guessValueType(sequenceOf(listOf(null), null), listifyValues = true) shouldBe
+            typeOf<List<Nothing?>>()
 
         guessValueType(
             values = sequenceOf(1, 2, listOf(1), emptySet<Any>()),
@@ -258,9 +268,11 @@ class UtilTests {
             typeOf<TypeWithUpperbound1<UpperBound>>()
 
         val comparableTypeT = TestTypeIn1::class.supertypes.first() // Comparable<T>
-        comparableTypeT.replaceGenericTypeParametersWithUpperbound() shouldBe typeOf<Comparable<Nothing>>()
+        comparableTypeT.replaceGenericTypeParametersWithUpperbound() shouldBe
+            typeOf<Comparable<Nothing>>()
 
-        val nestedTypeWithUpperboundT = TestType2::class.supertypes.first() // TestTypeIn1<TestType1<S>>
+        val nestedTypeWithUpperboundT =
+            TestType2::class.supertypes.first() // TestTypeIn1<TestType1<S>>
         nestedTypeWithUpperboundT.replaceGenericTypeParametersWithUpperbound() shouldBe
             typeOf<TestTypeIn1<TestType1<UpperBound>>>()
     }
@@ -271,7 +283,7 @@ class UtilTests {
     fun `commonType KTypes test`() {
         // TODO issue #471: Type inference incorrect w.r.t. variance
         listOf(null).commonType(false) shouldBe typeOf<Any?>()
-//        listOf(null).commonType(true) shouldBe null
+        //        listOf(null).commonType(true) shouldBe null
         listOf(typeOf<Int>(), typeOf<Any>()).commonType() shouldBe typeOf<Any>()
         listOf(typeOf<Int>(), typeOf<List<Any>>()).commonType() shouldBe typeOf<Any>()
         listOf(typeOf<Int>(), typeOf<List<Any>?>()).commonType() shouldBe typeOf<Any?>()
@@ -279,40 +291,49 @@ class UtilTests {
         listOf(typeOf<Int>(), typeOf<Int?>()).commonType() shouldBe typeOf<Int?>()
         listOf(typeOf<Int>(), nothingType(true)).commonType() shouldBe typeOf<Int?>()
         listOf(typeOf<Int>(), nothingType(false)).commonType() shouldBe typeOf<Int>()
-        listOf(typeOf<Comparable<Int>>(), typeOf<Comparable<Int>>()).commonType() shouldBe typeOf<Comparable<Int>>()
-//        listOf(typeOf<Comparable<Int>>(), typeOf<Comparable<String>>()).commonType() shouldBe typeOf<Comparable<*>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType(false) shouldBe typeOf<List<Comparable<Nothing>>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType() shouldBe typeOf<List<Comparable<*>>>()
-//        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType(false) shouldBe typeOf<Collection<Comparable<Nothing>>>()
-//        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType() shouldBe typeOf<Collection<Comparable<*>>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>>>()).commonType() shouldBe typeOf<List<Any>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType(false) shouldBe typeOf<List<Any?>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType() shouldBe typeOf<List<*>>()
-//        listOf(typeOf<List<Nothing>>(), typeOf<Set<Nothing>>()).commonType() shouldBe typeOf<Collection<Nothing>>()
+        listOf(typeOf<Comparable<Int>>(), typeOf<Comparable<Int>>()).commonType() shouldBe
+            typeOf<Comparable<Int>>()
+        //        listOf(typeOf<Comparable<Int>>(), typeOf<Comparable<String>>()).commonType()
+        // shouldBe typeOf<Comparable<*>>()
+        //        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType(false) shouldBe
+        // typeOf<List<Comparable<Nothing>>>()
+        //        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType() shouldBe
+        // typeOf<List<Comparable<*>>>()
+        //        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType(false) shouldBe
+        // typeOf<Collection<Comparable<Nothing>>>()
+        //        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType() shouldBe
+        // typeOf<Collection<Comparable<*>>>()
+        //        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>>>()).commonType() shouldBe
+        // typeOf<List<Any>>()
+        //        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType(false) shouldBe
+        // typeOf<List<Any?>>()
+        //        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType() shouldBe
+        // typeOf<List<*>>()
+        //        listOf(typeOf<List<Nothing>>(), typeOf<Set<Nothing>>()).commonType() shouldBe
+        // typeOf<Collection<Nothing>>()
         listOf(nothingType(false)).commonType() shouldBe nothingType(false)
         listOf(nothingType(true)).commonType() shouldBe nothingType(true)
-//        emptyList<KType>().commonType() shouldBe nothingType(false)
-        listOf(
-            typeOf<AbstractType<Int>>(),
-            typeOf<AbstractType<Int>>(),
-        ).commonType() shouldBe typeOf<AbstractType<Int>>()
-//        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<Any>>()).commonType() shouldBe typeOf<AbstractType<out Any>>()
-//        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<in Int>>()).commonType() shouldBe typeOf<AbstractType<in Int>>()
-        listOf(
-            typeOf<AbstractType<in Int>>(),
-            typeOf<AbstractType<in Int>>(),
-        ).commonType() shouldBe typeOf<AbstractType<in Int>>()
-//        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<out Int>>()).commonType() shouldBe typeOf<AbstractType<out Int>>()
-        listOf(
-            typeOf<AbstractType<out Int>>(),
-            typeOf<AbstractType<out Int>>(),
-        ).commonType() shouldBe typeOf<AbstractType<out Int>>()
-//        listOf(typeOf<AbstractType<out Int>>(), typeOf<AbstractType<in Int>>()).commonType(useStar = false) shouldBe typeOf<AbstractType<out Any?>>()
-//        listOf(typeOf<AbstractType<out Int>>(), typeOf<AbstractType<in Int>>()).commonType() shouldBe typeOf<AbstractType<*>>()
-//        listOf(
-//            typeOf<AbstractType<in Int>>(),
-//            typeOf<AbstractType<Any>>()
-//        ).commonType() shouldBe typeOf<AbstractType<in Int>>()
+        //        emptyList<KType>().commonType() shouldBe nothingType(false)
+        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<Int>>()).commonType() shouldBe
+            typeOf<AbstractType<Int>>()
+        //        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<Any>>()).commonType()
+        // shouldBe typeOf<AbstractType<out Any>>()
+        //        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<in Int>>()).commonType()
+        // shouldBe typeOf<AbstractType<in Int>>()
+        listOf(typeOf<AbstractType<in Int>>(), typeOf<AbstractType<in Int>>()).commonType() shouldBe
+            typeOf<AbstractType<in Int>>()
+        //        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<out Int>>()).commonType()
+        // shouldBe typeOf<AbstractType<out Int>>()
+        listOf(typeOf<AbstractType<out Int>>(), typeOf<AbstractType<out Int>>())
+            .commonType() shouldBe typeOf<AbstractType<out Int>>()
+        //        listOf(typeOf<AbstractType<out Int>>(), typeOf<AbstractType<in
+        // Int>>()).commonType(useStar = false) shouldBe typeOf<AbstractType<out Any?>>()
+        //        listOf(typeOf<AbstractType<out Int>>(), typeOf<AbstractType<in
+        // Int>>()).commonType() shouldBe typeOf<AbstractType<*>>()
+        //        listOf(
+        //            typeOf<AbstractType<in Int>>(),
+        //            typeOf<AbstractType<Any>>()
+        //        ).commonType() shouldBe typeOf<AbstractType<in Int>>()
 
         listOf(typeOf<Int>(), typeOf<List<Any>>()).commonType() shouldBe typeOf<Any>()
         listOf(typeOf<Int>(), typeOf<List<Any>?>()).commonType() shouldBe typeOf<Any?>()
@@ -320,20 +341,22 @@ class UtilTests {
         listOf(typeOf<Int>(), typeOf<Int?>()).commonType() shouldBe typeOf<Int?>()
         listOf(typeOf<Int>(), nothingType(true)).commonType() shouldBe typeOf<Int?>()
         listOf(typeOf<Int>(), nothingType(false)).commonType() shouldBe typeOf<Int>()
-        listOf(
-            typeOf<List<Int>>(),
-            typeOf<List<String>>(),
-        ).commonType(false) shouldBe typeOf<List<out Comparable<Nothing>>>()
-        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType() shouldBe typeOf<List<out Comparable<*>>>()
-        listOf(
-            typeOf<List<Int>>(),
-            typeOf<Set<String>>(),
-        ).commonType(false) shouldBe typeOf<Collection<out Comparable<Nothing>>>()
-        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType() shouldBe typeOf<Collection<out Comparable<*>>>()
-        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>>>()).commonType() shouldBe typeOf<List<out Any>>()
-        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType(false) shouldBe typeOf<List<out Any?>>()
-        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType() shouldBe typeOf<List<*>>()
-        listOf(typeOf<List<Nothing>>(), typeOf<Set<Nothing>>()).commonType() shouldBe typeOf<Collection<out Nothing>>()
+        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType(false) shouldBe
+            typeOf<List<out Comparable<Nothing>>>()
+        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType() shouldBe
+            typeOf<List<out Comparable<*>>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType(false) shouldBe
+            typeOf<Collection<out Comparable<Nothing>>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType() shouldBe
+            typeOf<Collection<out Comparable<*>>>()
+        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>>>()).commonType() shouldBe
+            typeOf<List<out Any>>()
+        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType(false) shouldBe
+            typeOf<List<out Any?>>()
+        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType() shouldBe
+            typeOf<List<*>>()
+        listOf(typeOf<List<Nothing>>(), typeOf<Set<Nothing>>()).commonType() shouldBe
+            typeOf<Collection<out Nothing>>()
         listOf(nothingType(false)).commonType() shouldBe nothingType(false)
         listOf(nothingType(true)).commonType() shouldBe nothingType(true)
         listOf<KType>().commonType() shouldBe typeOf<Any>()
@@ -347,82 +370,48 @@ class UtilTests {
         listOf(typeOf<Int>(), typeOf<Int?>()).commonTypeListifyValues() shouldBe typeOf<Int?>()
         listOf(typeOf<Int>(), nothingType(true)).commonTypeListifyValues() shouldBe typeOf<Int?>()
         listOf(typeOf<Int>(), nothingType(false)).commonTypeListifyValues() shouldBe typeOf<Int>()
-        listOf(typeOf<Int>(), typeOf<Double>(), nothingType(true)).commonTypeListifyValues() shouldBe typeOf<Number?>()
-        listOf(
-            typeOf<List<Int>>(),
-            typeOf<List<String>>(),
-        ).commonTypeListifyValues() shouldBe typeOf<List<out Comparable<*>>>()
-        listOf(
-            typeOf<List<Int>>(),
-            typeOf<Set<String>>(),
-        ).commonTypeListifyValues() shouldBe typeOf<Collection<out Comparable<*>>>()
+        listOf(typeOf<Int>(), typeOf<Double>(), nothingType(true))
+            .commonTypeListifyValues() shouldBe typeOf<Number?>()
+        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonTypeListifyValues() shouldBe
+            typeOf<List<out Comparable<*>>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonTypeListifyValues() shouldBe
+            typeOf<Collection<out Comparable<*>>>()
 
-        listOf(
-            typeOf<Int>(),
-            typeOf<List<Int>>(),
-        ).commonTypeListifyValues() shouldBe typeOf<List<Int>>()
+        listOf(typeOf<Int>(), typeOf<List<Int>>()).commonTypeListifyValues() shouldBe
+            typeOf<List<Int>>()
 
-        listOf(
-            typeOf<Int>(),
-            typeOf<List<Int>>(),
-            nothingType(true),
-        ).commonTypeListifyValues() shouldBe typeOf<List<Int>>()
+        listOf(typeOf<Int>(), typeOf<List<Int>>(), nothingType(true))
+            .commonTypeListifyValues() shouldBe typeOf<List<Int>>()
 
-        listOf(
-            typeOf<Int>(),
-            typeOf<List<Int?>>(),
-            nothingType(true),
-        ).commonTypeListifyValues() shouldBe typeOf<List<Int?>>()
+        listOf(typeOf<Int>(), typeOf<List<Int?>>(), nothingType(true))
+            .commonTypeListifyValues() shouldBe typeOf<List<Int?>>()
 
-        listOf(
-            typeOf<List<Nothing>>(),
-            typeOf<List<Nothing>>(),
-        ).commonTypeListifyValues() shouldBe typeOf<List<Nothing>>()
+        listOf(typeOf<List<Nothing>>(), typeOf<List<Nothing>>()).commonTypeListifyValues() shouldBe
+            typeOf<List<Nothing>>()
 
-        listOf(
-            typeOf<List<Nothing>>(),
-            nothingType(true),
-        ).commonTypeListifyValues() shouldBe typeOf<List<Nothing>>()
+        listOf(typeOf<List<Nothing>>(), nothingType(true)).commonTypeListifyValues() shouldBe
+            typeOf<List<Nothing>>()
 
-        listOf(
-            typeOf<Int>(),
-            typeOf<List<Int>>(),
-            typeOf<Set<Any>>(),
-        ).commonTypeListifyValues() shouldBe typeOf<Any>()
+        listOf(typeOf<Int>(), typeOf<List<Int>>(), typeOf<Set<Any>>())
+            .commonTypeListifyValues() shouldBe typeOf<Any>()
 
-        listOf(
-            typeOf<Int>(),
-            typeOf<List<Int>>(),
-            typeOf<Set<Any>>(),
-            nothingType(true),
-        ).commonTypeListifyValues() shouldBe typeOf<Any?>()
+        listOf(typeOf<Int>(), typeOf<List<Int>>(), typeOf<Set<Any>>(), nothingType(true))
+            .commonTypeListifyValues() shouldBe typeOf<Any?>()
 
-        listOf(
-            typeOf<List<Nothing>>(),
-            typeOf<Set<Nothing>>(),
-        ).commonTypeListifyValues() shouldBe typeOf<Collection<out Nothing>>()
+        listOf(typeOf<List<Nothing>>(), typeOf<Set<Nothing>>()).commonTypeListifyValues() shouldBe
+            typeOf<Collection<out Nothing>>()
 
-        listOf(
-            typeOf<List<Nothing>>(),
-            typeOf<Set<Nothing>>(),
-            nothingType(true),
-        ).commonTypeListifyValues() shouldBe typeOf<Collection<out Nothing>?>()
+        listOf(typeOf<List<Nothing>>(), typeOf<Set<Nothing>>(), nothingType(true))
+            .commonTypeListifyValues() shouldBe typeOf<Collection<out Nothing>?>()
 
-        listOf(
-            typeOf<List<Nothing?>>(),
-            typeOf<Set<Nothing>>(),
-        ).commonTypeListifyValues() shouldBe typeOf<Collection<out Nothing?>>()
+        listOf(typeOf<List<Nothing?>>(), typeOf<Set<Nothing>>()).commonTypeListifyValues() shouldBe
+            typeOf<Collection<out Nothing?>>()
 
-        listOf(
-            typeOf<List<Nothing?>>(),
-            typeOf<Set<Nothing>?>(),
-        ).commonTypeListifyValues() shouldBe typeOf<Collection<out Nothing?>?>()
+        listOf(typeOf<List<Nothing?>>(), typeOf<Set<Nothing>?>()).commonTypeListifyValues() shouldBe
+            typeOf<Collection<out Nothing?>?>()
     }
 
-    /**
-     * See [UnifyingNumbers] for more information.
-     * {@include [UnifyingNumbers.Graph]}
-     */
+    /** See [UnifyingNumbers] for more information. {@include [UnifyingNumbers.Graph]} */
     @Test
     fun `common number types`() {
         // Same type

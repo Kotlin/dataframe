@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -12,9 +15,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 // region DataSchema
 
@@ -38,15 +38,17 @@ public fun <T> DataColumn<T>.valueCounts(
 ): DataFrame<ValueCount> {
     var grouped = toList().groupBy { it }.map { it.key to it.value.size }
     if (sort) {
-        grouped = if (ascending) {
-            grouped.sortedBy { it.second }
-        } else {
-            grouped.sortedByDescending { it.second }
-        }
+        grouped =
+            if (ascending) {
+                grouped.sortedBy { it.second }
+            } else {
+                grouped.sortedByDescending { it.second }
+            }
     }
     if (dropNA) grouped = grouped.filter { !it.first.isNA }
     val nulls = if (dropNA) false else hasNulls()
-    val values = DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
+    val values =
+        DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
     val countName = if (resultColumn == name()) resultColumn + "1" else resultColumn
     val counts = DataColumn.createByType(countName, grouped.map { it.second }, typeOf<Int>())
     return dataFrameOf(values, counts).cast()
@@ -70,8 +72,7 @@ public fun <T> DataFrame<T>.valueCounts(
 
     val rows by columnGroup()
     val countName = nameGenerator().addUnique(resultColumn)
-    return df
-        .asColumnGroup(rows)
+    return df.asColumnGroup(rows)
         .asDataColumn()
         .valueCounts(sort, ascending, dropNA, countName)
         .ungroup { rows }

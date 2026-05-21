@@ -1,16 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.geo.io
 
-import org.geotools.referencing.CRS
+import java.io.File
+import java.nio.file.Files
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.toGeo
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.GeometryFactory
-import java.io.File
-import java.nio.file.Files
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class IOTest {
 
@@ -18,12 +17,7 @@ class IOTest {
         val geometryFactory = GeometryFactory()
         val point1 = geometryFactory.createPoint(Coordinate(30.5, 50.5))
         val point2 = geometryFactory.createPoint(Coordinate(31.5, 51.5))
-        dataFrameOf("name", "geometry")(
-            "Point 1",
-            point1,
-            "Point 2",
-            point2,
-        )
+        dataFrameOf("name", "geometry")("Point 1", point1, "Point 2", point2)
     }
     private val simplePointsGeoDf = simplePointsDf.toGeo(GeoDataFrame.DEFAULT_CRS)
     private val classLoader = (this::class as Any).javaClass.classLoader

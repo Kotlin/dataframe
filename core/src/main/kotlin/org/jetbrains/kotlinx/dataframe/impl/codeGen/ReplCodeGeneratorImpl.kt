@@ -1,5 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.KVisibility
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.superclasses
+import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -17,17 +28,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.codeGen.TypeCastGenerator
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.KVisibility
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.superclasses
-import kotlin.reflect.jvm.jvmErasure
-import kotlin.reflect.typeOf
-import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
 internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
@@ -50,7 +50,8 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             else -> null
         }
 
-    override fun process(row: AnyRow, property: KProperty<*>?): CodeWithTypeCastGenerator = process(row.df(), property)
+    override fun process(row: AnyRow, property: KProperty<*>?): CodeWithTypeCastGenerator =
+        process(row.df(), property)
 
     override fun process(df: AnyFrame, property: KProperty<*>?): CodeWithTypeCastGenerator {
         var targetSchema = df.schema()
@@ -60,21 +61,30 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             registeredProperties.add(property)
 
             // maybe property is already properly typed, let's do some checks
-            val currentMarker = getMarkerClass(property.returnType)
-                ?.takeIf { it.findAnnotation<DataSchema>() != null }
-                ?.let { registeredMarkers[it] ?: MarkersExtractor.get(it) }
+            val currentMarker =
+                getMarkerClass(property.returnType)
+                    ?.takeIf { it.findAnnotation<DataSchema>() != null }
+                    ?.let { registeredMarkers[it] ?: MarkersExtractor.get(it) }
             if (currentMarker != null) {
-                // we need to make sure that the property's marker type is open in order to let derived dataframes be assignable to it
+                // we need to make sure that the property's marker type is open in order to let
+                // derived dataframes be assignable to it
                 if (currentMarker.isOpen) {
                     val columnSchema = currentMarker.schema
-                    // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual dataframe type
+                    // for mutable properties we do strong typing only at the first processing,
+                    // after that we allow its type to be more general than actual dataframe type
                     if (wasProcessedBefore || columnSchema.compare(targetSchema).matches()) {
-                        // property scheme is valid for current dataframe, but we should also check that all compatible open markers are implemented by it
-                        val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
-                        if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
+                        // property scheme is valid for current dataframe, but we should also check
+                        // that all compatible open markers are implemented by it
+                        val requiredBaseMarkers =
+                            registeredMarkers.values.filterRequiredForSchema(columnSchema)
+                        if (
+                            requiredBaseMarkers.any() &&
+                                requiredBaseMarkers.all { currentMarker.implements(it) }
+                        ) {
                             return CodeWithTypeCastGenerator.EMPTY
                         }
-                        // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
+                        // use current marker scheme as a target for generation of new marker
+                        // interface, so that available properties won't change
                         targetSchema = columnSchema
                     }
                 }
@@ -85,19 +95,22 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
     }
 
     override fun process(groupBy: GroupBy<*, *>): CodeWithTypeCastGenerator {
-        val key = generate(
-            schema = groupBy.keys.schema(),
-            name = markerInterfacePrefix + "Keys",
-            isOpen = false,
-        )
-        val group = generate(
-            schema = groupBy.groups.schema.value,
-            name = markerInterfacePrefix + "Groups",
-            isOpen = false,
-        )
+        val key =
+            generate(
+                schema = groupBy.keys.schema(),
+                name = markerInterfacePrefix + "Keys",
+                isOpen = false,
+            )
+        val group =
+            generate(
+                schema = groupBy.groups.schema.value,
+                name = markerInterfacePrefix + "Groups",
+                isOpen = false,
+            )
 
         val keyTypeName = (key.typeCastGenerator as TypeCastGenerator.DataFrameApi).types.single()
-        val groupTypeName = (group.typeCastGenerator as TypeCastGenerator.DataFrameApi).types.single()
+        val groupTypeName =
+            (group.typeCastGenerator as TypeCastGenerator.DataFrameApi).types.single()
 
         return CodeWithTypeCastGenerator(
             declarations = key.declarations + "\n" + group.declarations,
@@ -105,33 +118,35 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         )
     }
 
-    fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithTypeCastGenerator {
-        val result = generator.generate(
-            schema = schema,
-            name = name,
-            fields = true,
-            extensionProperties = true,
-            isOpen = isOpen,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            knownMarkers = registeredMarkers
-                .filterKeys { it.visibility != KVisibility.PRIVATE }
-                .values,
-        )
+    fun generate(
+        schema: DataFrameSchema,
+        name: String,
+        isOpen: Boolean,
+    ): CodeWithTypeCastGenerator {
+        val result =
+            generator.generate(
+                schema = schema,
+                name = name,
+                fields = true,
+                extensionProperties = true,
+                isOpen = isOpen,
+                visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                knownMarkers =
+                    registeredMarkers.filterKeys { it.visibility != KVisibility.PRIVATE }.values,
+            )
 
-        result.newMarkers.forEach {
-            generatedMarkers[it.name] = it
-        }
+        result.newMarkers.forEach { generatedMarkers[it.name] = it }
 
-        val optIns = buildList {
-            if (schema.hasExperimentalInstant()) add("kotlin.time.ExperimentalTime::class")
-            if (schema.hasExperimentalUuid()) add("kotlin.uuid.ExperimentalUuidApi::class")
-        }.takeIf { it.isNotEmpty() }
-            ?.joinToString(prefix = "@file:OptIn(", separator = ", ", postfix = ")")
+        val optIns =
+            buildList {
+                    if (schema.hasExperimentalInstant()) add("kotlin.time.ExperimentalTime::class")
+                    if (schema.hasExperimentalUuid()) add("kotlin.uuid.ExperimentalUuidApi::class")
+                }
+                .takeIf { it.isNotEmpty() }
+                ?.joinToString(prefix = "@file:OptIn(", separator = ", ", postfix = ")")
 
         return if (optIns != null) {
-            result.code.copy(
-                declarations = optIns + "\n" + result.code.declarations,
-            )
+            result.code.copy(declarations = optIns + "\n" + result.code.declarations)
         } else {
             result.code
         }
@@ -146,7 +161,8 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             }
         }
 
-    private fun DataFrameSchema.hasExperimentalInstant(): Boolean = hasColumnOfType(typeOf<Instant?>())
+    private fun DataFrameSchema.hasExperimentalInstant(): Boolean =
+        hasColumnOfType(typeOf<Instant?>())
 
     private fun DataFrameSchema.hasExperimentalUuid(): Boolean = hasColumnOfType(typeOf<Uuid?>())
 
@@ -160,22 +176,21 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             if (temp != null) {
                 val baseClasses = clazz.superclasses.filter { it != Any::class }
 
-                val baseClassNames = baseClasses
-                    .map { it.simpleName!! }
-                    .sorted()
+                val baseClassNames = baseClasses.map { it.simpleName!! }.sorted()
 
                 val tempBaseClassNames = temp.superMarkers.map { it.value.shortName }.sorted()
 
                 if (baseClassNames == tempBaseClassNames) {
                     val newBaseMarkers = baseClasses.map { resolve(it) }
-                    val newMarker = Marker(
-                        name = clazz.quotedQualifiedNameOrNull()!!,
-                        isOpen = temp.isOpen,
-                        fields = temp.fields,
-                        superMarkers = newBaseMarkers,
-                        visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-                        klass = clazz,
-                    )
+                    val newMarker =
+                        Marker(
+                            name = clazz.quotedQualifiedNameOrNull()!!,
+                            isOpen = temp.isOpen,
+                            fields = temp.fields,
+                            superMarkers = newBaseMarkers,
+                            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                            klass = clazz,
+                        )
                     registeredMarkers[markerClass] = newMarker
                     generatedMarkers.remove(temp.name)
                     return newMarker
@@ -188,6 +203,8 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         }
 
         val marker = resolve(markerClass)
-        return newMarkers.map { generator.generate(marker, InterfaceGenerationMode.None, true).declarations }.join()
+        return newMarkers
+            .map { generator.generate(marker, InterfaceGenerationMode.None, true).declarations }
+            .join()
     }
 }

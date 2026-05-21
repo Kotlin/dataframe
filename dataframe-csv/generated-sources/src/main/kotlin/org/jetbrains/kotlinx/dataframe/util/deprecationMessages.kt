@@ -13,9 +13,12 @@ package org.jetbrains.kotlinx.dataframe.util
 
 private const val MESSAGE_1_0 = "Will be ERROR in 1.0."
 
-internal const val READ_CSV_BINARY_COMPATIBILITY = "This overload is here to maintain binary compatibility."
-internal const val READ_TSV_BINARY_COMPATIBILITY = "This overload is here to maintain binary compatibility."
-internal const val READ_DELIM_BINARY_COMPATIBILITY = "This overload is here to maintain binary compatibility."
+internal const val READ_CSV_BINARY_COMPATIBILITY =
+    "This overload is here to maintain binary compatibility."
+internal const val READ_TSV_BINARY_COMPATIBILITY =
+    "This overload is here to maintain binary compatibility."
+internal const val READ_DELIM_BINARY_COMPATIBILITY =
+    "This overload is here to maintain binary compatibility."
 
 // endregion
 

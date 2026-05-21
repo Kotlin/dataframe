@@ -90,7 +90,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df
             // SampleEnd
-            .format().perRowCol { row, _ ->
+            .format()
+            .perRowCol { row, _ ->
                 val isHappy = df[row.index()].isHappy
                 background(isHappyToColor(isHappy)) and textColor(black)
             }
@@ -103,12 +104,14 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         df.groupBy { isHappy }
             // SampleEnd
             .toDataFrame()
-            .convert { group }.with {
+            .convert { group }
+            .with {
                 it.format().perRowCol { _, _ ->
                     background(isHappyToColor(isHappy)) and textColor(black)
                 }
             }
-            .format().perRowCol { row, _ ->
+            .format()
+            .perRowCol { row, _ ->
                 val color = isHappyToColor(row.isHappy)
                 background(color) and textColor(black)
             }
@@ -171,8 +174,9 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun groupByExpr_strings() {
         // SampleStart
         df.groupBy {
-            expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named
-                "nameLength"
+            expr {
+                "name"["firstName"]<String>().length + "name"["lastName"]<String>().length
+            } named "nameLength"
         }
         // SampleEnd
     }
@@ -214,22 +218,26 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun dataFrameToGroupBy_properties() {
         // SampleStart
-        val df = dataFrameOf(
-            "key" to columnOf(1, 2),
-            "data" to columnOf(df[0..3], df[4..6]),
-        ) // create dataframe with two columns
+        val df =
+            dataFrameOf(
+                "key" to columnOf(1, 2),
+                "data" to columnOf(df[0..3], df[4..6]),
+            ) // create dataframe with two columns
 
-        df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' column as groups
+        df.asGroupBy {
+            data
+        } // convert dataframe to GroupBy by interpreting 'data' column as groups
         // SampleEnd
     }
 
     @Test
     fun dataFrameToGroupBy_strings() {
         // SampleStart
-        val df = dataFrameOf(
-            "key" to columnOf(1, 2),
-            "data" to columnOf(df[0..3], df[4..6]),
-        ) // create dataframe with two columns
+        val df =
+            dataFrameOf(
+                "key" to columnOf(1, 2),
+                "data" to columnOf(df[0..3], df[4..6]),
+            ) // create dataframe with two columns
 
         df.asGroupBy("data") // convert dataframe to GroupBy by interpreting 'data' column as groups
         // SampleEnd
@@ -242,7 +250,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun sortByOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.sortBy { age }
+        df.groupBy { isHappy }
+            .sortBy { age }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -257,7 +266,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun sortByGroupOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.sortByGroup { mean { age } }
+        df.groupBy { isHappy }
+            .sortByGroup { mean { age } }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -272,7 +282,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun sortByCountOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { age }.sortByCount()
+        df.groupBy { age }
+            .sortByCount()
             // SampleEnd
             .toDataFrame()
             .defaultHeaderFormatting { group }
@@ -289,7 +300,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun sortByKeyOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { age }.sortByKey()
+        df.groupBy { age }
+            .sortByKey()
             // SampleEnd
             .toDataFrame()
             .defaultHeaderFormatting { age }
@@ -306,7 +318,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun updateGroupsOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.updateGroups { sortByDesc { age }.take(2) }
+        df.groupBy { isHappy }
+            .updateGroups { sortByDesc { age }.take(2) }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -322,7 +335,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun filterOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.filter { group.median { age } > 20 }
+        df.groupBy { isHappy }
+            .filter { group.median { age } > 20 }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -337,7 +351,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun addOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.add("isAdult") { age >= 18 }
+        df.groupBy { isHappy }
+            .add("isAdult") { age >= 18 }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -359,7 +374,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         df.groupBy { isHappy }
             // SampleEnd
             .toDataFrame()
-            .convert { group }.with { group ->
+            .convert { group }
+            .with { group ->
                 val lastNameCol = group["name"]["lastName"]
                 group.format().perRowCol { row, _ ->
                     val lastName = lastNameCol[row.index()] as String
@@ -380,7 +396,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun groupByFirst_properties() {
         // SampleStart
-        df.groupBy { isHappy }.first { age == 30 }
+        df.groupBy { isHappy }
+            .first { age == 30 }
             // SampleEnd
             .values()
             .colorByLastName()
@@ -398,7 +415,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun groupByLast_properties() {
         // SampleStart
-        df.groupBy { isHappy }.last { weight == null }
+        df.groupBy { isHappy }
+            .last { weight == null }
             // SampleEnd
             .values()
             .colorByLastName()
@@ -416,7 +434,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun groupByMinBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.minBy { weight }
+        df.groupBy { isHappy }
+            .minBy { weight }
             // SampleEnd
             .values()
             .colorByLastName()
@@ -434,7 +453,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun groupByMaxBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.maxBy { age }
+        df.groupBy { isHappy }
+            .maxBy { age }
             // SampleEnd
             .values()
             .colorByLastName()
@@ -452,7 +472,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun groupByMedianBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.medianBy { weight }
+        df.groupBy { isHappy }
+            .medianBy { weight }
             // SampleEnd
             .values()
             .colorByLastName()
@@ -470,7 +491,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun groupByPercentileBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.percentileBy(25.0) { weight }
+        df.groupBy { isHappy }
+            .percentileBy(25.0) { weight }
             // SampleEnd
             .values()
             .colorByLastName()
@@ -492,7 +514,9 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun groupByConcat_properties() {
         // SampleStart
-        df.groupBy { isHappy }.minBy { age }.concat()
+        df.groupBy { isHappy }
+            .minBy { age }
+            .concat()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -507,7 +531,9 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun groupByValues_properties() {
         // SampleStart
-        df.groupBy { isHappy }.minBy { age }.values { name and age and city }
+        df.groupBy { isHappy }
+            .minBy { age }
+            .values { name and age and city }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -522,7 +548,9 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun groupByInto_properties() {
         // SampleStart
-        df.groupBy { isHappy }.minBy { age }.into("youngest") { name }
+        df.groupBy { isHappy }
+            .minBy { age }
+            .into("youngest") { name }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -541,7 +569,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun concatOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.concat()
+        df.groupBy { isHappy }
+            .concat()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -556,7 +585,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun toDfOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.toDataFrame()
+        df.groupBy { isHappy }
+            .toDataFrame()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -571,7 +601,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun concatWithKeysOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { expr { age >= 18 } named "isAdult" }.concatWithKeys()
+        df.groupBy { expr { age >= 18 } named "isAdult" }
+            .concatWithKeys()
             // SampleEnd
             .defaultHeaderFormatting { isAdult }
             .saveDfHtmlSample()
@@ -587,7 +618,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun intoOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.into("ages") { age }
+        df.groupBy { isHappy }
+            .into("ages") { age }
             // SampleEnd
             .defaultHeaderFormatting { "ages"<List<String>>() }
             .saveDfHtmlSample()
@@ -603,7 +635,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupBySelectedColumns_properties() {
         // SampleStart
-        df.groupBy { isHappy }.values { name and age }
+        df.groupBy { isHappy }
+            .values { name and age }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -618,7 +651,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByAllColumns_properties() {
         // SampleStart
-        df.groupBy { isHappy }.values()
+        df.groupBy { isHappy }
+            .values()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -633,7 +667,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun valuesOnGroupByRenameColumns_properties() {
         // SampleStart
-        df.groupBy { isHappy }.values { age into "ages" }
+        df.groupBy { isHappy }
+            .values { age into "ages" }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -648,7 +683,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun countOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { city }.count()
+        df.groupBy { city }
+            .count()
             // SampleEnd
             .defaultHeaderFormatting { count }
             .saveDfHtmlSample()
@@ -664,13 +700,14 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun aggregateOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { city }.aggregate {
-            count() into "total"
-            count { age > 18 } into "adults"
-            median { age } into "median age"
-            min { age } into "min age"
-            maxBy { age }.name into "oldest"
-        }
+        df.groupBy { city }
+            .aggregate {
+                count() into "total"
+                count { age > 18 } into "adults"
+                median { age } into "median age"
+                min { age } into "min age"
+                maxBy { age }.name into "oldest"
+            }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -699,7 +736,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun aggregateOnGroupByWithoutInto_properties() {
         // SampleStart
-        df.groupBy { city }.aggregate { maxBy { age }.name }
+        df.groupBy { city }
+            .aggregate { maxBy { age }.name }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -718,7 +756,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun maxOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { city }.max() // max for every column with mutually comparable values
+        df.groupBy { city }
+            .max() // max for every column with mutually comparable values
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -733,7 +772,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun maxSelectedOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.max { age and weight }
+        df.groupBy { isHappy }
+            .max { age and weight }
             // SampleEnd
             .defaultHeaderFormatting { "max"<Int>() }
             .saveDfHtmlSample()
@@ -749,7 +789,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun maxForOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.maxFor { age and weight }
+        df.groupBy { isHappy }
+            .maxFor { age and weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -764,7 +805,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun maxOfOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.maxOf { if (age < 30) weight else null }
+        df.groupBy { isHappy }
+            .maxOf { if (age < 30) weight else null }
             // SampleEnd
             .defaultHeaderFormatting { max }
             .saveDfHtmlSample()
@@ -782,9 +824,7 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { city }
             .max {
-                name.firstName.map {
-                    it.length
-                } and name.lastName.map { it.length }
+                name.firstName.map { it.length } and name.lastName.map { it.length }
             } // maximum length of firstName or lastName into column "max"
             // SampleEnd
             .defaultHeaderFormatting { "max"<Int>() }
@@ -795,7 +835,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun maxOnGroupByNameLength_strings() {
         // SampleStart
         df.groupBy("city").max {
-            "name"["firstName"]<String>().map { it.length } and "name"["lastName"]<String>().map { it.length }
+            "name"["firstName"]<String>().map { it.length } and
+                "name"["lastName"]<String>().map { it.length }
         } // maximum length of firstName or lastName into column "max"
         // SampleEnd
     }
@@ -803,7 +844,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun minOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.min { age }
+        df.groupBy { isHappy }
+            .min { age }
             // SampleEnd
             .defaultHeaderFormatting { "age"<Int>() }
             .saveDfHtmlSample()
@@ -831,17 +873,17 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun minForOnGroupBy_strings() {
         // SampleStart
-        df.groupBy("city")
-            .minFor {
-                ("age"<Int>() into "minAge") and ("weight"<Int?>() into "minWeight")
-            } // min age into column "min age", min weight into column "min weight"
+        df.groupBy("city").minFor {
+            ("age"<Int>() into "minAge") and ("weight"<Int?>() into "minWeight")
+        } // min age into column "min age", min weight into column "min weight"
         // SampleEnd
     }
 
     @Test
     fun sumOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { city }.sum("totalWeight") { weight } // sum of weights into column "total weight"
+        df.groupBy { city }
+            .sum("totalWeight") { weight } // sum of weights into column "total weight"
             // SampleEnd
             .defaultHeaderFormatting { "totalWeight"<Int?>() }
             .saveDfHtmlSample()
@@ -850,14 +892,16 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun sumOnGroupBy_strings() {
         // SampleStart
-        df.groupBy("city").sum("weight", name = "totalWeight") // sum of weights into column "total weight"
+        df.groupBy("city")
+            .sum("weight", name = "totalWeight") // sum of weights into column "total weight"
         // SampleEnd
     }
 
     @Test
     fun meanOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { city }.mean() // mean for every numeric column
+        df.groupBy { city }
+            .mean() // mean for every numeric column
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -872,7 +916,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun meanOfOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { city }.meanOf("meanRatio") { weight?.div(age) } // mean of weight/age into column "mean ratio"
+        df.groupBy { city }
+            .meanOf("meanRatio") { weight?.div(age) } // mean of weight/age into column "mean ratio"
             // SampleEnd
             .defaultHeaderFormatting { meanRatio }
             .saveDfHtmlSample()
@@ -890,7 +935,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun stdOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.std { age }
+        df.groupBy { isHappy }
+            .std { age }
             // SampleEnd
             .defaultHeaderFormatting { "age"() }
             .saveDfHtmlSample()
@@ -906,7 +952,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun medianOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.median { age }
+        df.groupBy { isHappy }
+            .median { age }
             // SampleEnd
             .defaultHeaderFormatting { "age"() }
             .saveDfHtmlSample()
@@ -923,7 +970,9 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun medianForOnGroupBy_properties() {
         // SampleStart
         df.groupBy { city }
-            .medianFor { age and weight } // median age into column "age", median weight into column "weight"
+            .medianFor {
+                age and weight
+            } // median age into column "age", median weight into column "weight"
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -932,14 +981,18 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun medianForOnGroupBy_strings() {
         // SampleStart
         df.groupBy("city")
-            .medianFor("age", "weight") // median age into column "age", median weight into column "weight"
+            .medianFor(
+                "age",
+                "weight",
+            ) // median age into column "age", median weight into column "weight"
         // SampleEnd
     }
 
     @Test
     fun percentileOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.percentile(25.0) { age }
+        df.groupBy { isHappy }
+            .percentile(25.0) { age }
             // SampleEnd
             .defaultHeaderFormatting { "age"() }
             .saveDfHtmlSample()
@@ -959,7 +1012,8 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun pivotOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.pivot { name.firstName }
+        df.groupBy { isHappy }
+            .pivot { name.firstName }
             // SampleEnd
             .frames()
             .saveDfHtmlSample()

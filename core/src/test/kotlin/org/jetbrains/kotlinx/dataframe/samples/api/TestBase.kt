@@ -43,25 +43,67 @@ public open class TestBase {
         }
     }
 
-    val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
-        "Alice", "Cooper", 15, "London", 54, true,
-        "Bob", "Dylan", 45, "Dubai", 87, true,
-        "Charlie", "Daniels", 20, "Moscow", null, false,
-        "Charlie", "Chaplin", 40, "Milan", null, true,
-        "Bob", "Marley", 30, "Tokyo", 68, true,
-        "Alice", "Wolf", 20, null, 55, false,
-        "Charlie", "Byrd", 30, "Moscow", 90, true,
-    ).group("firstName", "lastName").into("name").cast<Person>()
+    val df =
+        dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+                "Alice",
+                "Cooper",
+                15,
+                "London",
+                54,
+                true,
+                "Bob",
+                "Dylan",
+                45,
+                "Dubai",
+                87,
+                true,
+                "Charlie",
+                "Daniels",
+                20,
+                "Moscow",
+                null,
+                false,
+                "Charlie",
+                "Chaplin",
+                40,
+                "Milan",
+                null,
+                true,
+                "Bob",
+                "Marley",
+                30,
+                "Tokyo",
+                68,
+                true,
+                "Alice",
+                "Wolf",
+                20,
+                null,
+                55,
+                false,
+                "Charlie",
+                "Byrd",
+                30,
+                "Moscow",
+                90,
+                true,
+            )
+            .group("firstName", "lastName")
+            .into("name")
+            .cast<Person>()
 
-    val dfGroup = df.convert { name.firstName }.asColumn {
-        val firstName by it
-        val secondName by it.map<_, String?> { null }.asValueColumn()
-        val thirdName by it.map<_, String?> { null }.asValueColumn()
+    val dfGroup =
+        df.convert { name.firstName }
+            .asColumn {
+                val firstName by it
+                val secondName by it.map<_, String?> { null }.asValueColumn()
+                val thirdName by it.map<_, String?> { null }.asValueColumn()
 
-        dataFrameOf(firstName, secondName, thirdName)
-            .cast<FirstNames>(verify = true)
-            .asColumnGroup("firstName")
-    }.cast<Person2>(verify = true)
+                dataFrameOf(firstName, secondName, thirdName)
+                    .cast<FirstNames>(verify = true)
+                    .asColumnGroup("firstName")
+            }
+            .cast<Person2>(verify = true)
 
     @DataSchema
     interface Name {
@@ -110,22 +152,19 @@ public open class TestBase {
 
     infix fun <T, U : T> T.willBe(expected: U?) = shouldBe(expected)
 
-    /**
-     * Asserts that all elements of the iterable are equal to each other
-     */
+    /** Asserts that all elements of the iterable are equal to each other */
     fun <T> Iterable<T>.shouldAllBeEqual(): Iterable<T> {
-        this should {
-            it.reduce { a, b ->
-                a shouldBe b
-                b
+        this should
+            {
+                it.reduce { a, b ->
+                    a shouldBe b
+                    b
+                }
             }
-        }
         return this
     }
 
-    /**
-     * Helper function to print List<ColumnWithPath<*>> in a readable way
-     */
+    /** Helper function to print List<ColumnWithPath<*>> in a readable way */
     fun List<ColumnWithPath<*>>.print() {
         forEach {
             if (it.isValueColumn()) {
@@ -138,16 +177,16 @@ public open class TestBase {
     }
 
     /**
-     * Overload for shouldBe for List<ColumnWithPath<*>> to compare only names and paths
-     * since the instances of ColumnWithPath are different
+     * Overload for shouldBe for List<ColumnWithPath<*>> to compare only names and paths since the
+     * instances of ColumnWithPath are different
      */
     infix fun List<ColumnWithPath<*>>.shouldBe(other: List<ColumnWithPath<*>>) {
         this.map { it.name to it.path } shouldBe other.map { it.name to it.path }
     }
 
     /**
-     * Overload for shouldNotBe for List<ColumnWithPath<*>> to compare only names and paths
-     * since the instances of ColumnWithPath are different
+     * Overload for shouldNotBe for List<ColumnWithPath<*>> to compare only names and paths since
+     * the instances of ColumnWithPath are different
      */
     infix fun List<ColumnWithPath<*>>.shouldNotBe(other: List<ColumnWithPath<*>>) {
         this.map { it.name to it.path } shouldNotBe other.map { it.name to it.path }

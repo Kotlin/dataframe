@@ -1,6 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.io.h2
 
 import io.kotest.matchers.shouldBe
+import java.math.BigDecimal
+import java.sql.Blob
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.SQLException
+import java.sql.Timestamp
+import java.util.Date
+import kotlin.reflect.typeOf
+import kotlin.time.Instant
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -16,15 +25,6 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
-import java.math.BigDecimal
-import java.sql.Blob
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
-import java.sql.Timestamp
-import java.util.Date
-import kotlin.reflect.typeOf
-import kotlin.time.Instant
 
 private const val URL = "jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1;MODE=MariaDB;DATABASE_TO_LOWER=TRUE"
 
@@ -120,7 +120,8 @@ class MariadbH2Test {
             connection = DriverManager.getConnection(URL)
 
             @Language("SQL")
-            val createTableQuery = """
+            val createTableQuery =
+                """
             CREATE TABLE IF NOT EXISTS table1 (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 bitCol BIT NOT NULL,
@@ -158,7 +159,8 @@ class MariadbH2Test {
             connection.createStatement().execute(createTableQuery.trimIndent())
 
             @Language("SQL")
-            val createTableQuery2 = """
+            val createTableQuery2 =
+                """
                 CREATE TABLE IF NOT EXISTS table2 (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 bitCol BIT,
@@ -203,7 +205,8 @@ class MariadbH2Test {
                     timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
                     mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, jsonCol
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             @Language("SQL")
             val insertData2 =
@@ -214,7 +217,8 @@ class MariadbH2Test {
                     timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
                     mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
                 // Insert data into table1
@@ -342,7 +346,8 @@ class MariadbH2Test {
                t1.enumCol
             FROM table1 t1
             JOIN table2 t2 ON t1.id = t2.id
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MariaDb>()
         val result = df.filter { "id"<Int>() == 1 }
@@ -367,9 +372,7 @@ class MariadbH2Test {
         val table2Df = dataframes[1].cast<Table2MariaDb>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter {
-            "integercol"<Int?>()?.let { it > 400 } ?: false
-        }.rowsCount() shouldBe 1
+        table2Df.filter { "integercol"<Int?>()?.let { it > 400 } ?: false }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
     }
@@ -378,33 +381,30 @@ class MariadbH2Test {
     fun `reading numeric types`() {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
 
-        val result = df1.select("tinyintcol")
-            .add("tinyintcol2") { "tinyintcol"<Int>() }
+        val result = df1.select("tinyintcol").add("tinyintcol2") { "tinyintcol"<Int>() }
 
         result[0][1] shouldBe 1
 
-        val result2 = df1.select("mediumintcol")
-            .add("mediumintcol2") { "mediumintcol"<Int>() }
+        val result2 = df1.select("mediumintcol").add("mediumintcol2") { "mediumintcol"<Int>() }
 
         result2[0][1] shouldBe 100
 
-        val result3 = df1.select("mediumintunsignedcol")
-            .add("mediumintunsignedcol2") { "mediumintunsignedcol"<Int>() }
+        val result3 =
+            df1.select("mediumintunsignedcol").add("mediumintunsignedcol2") {
+                "mediumintunsignedcol"<Int>()
+            }
 
         result3[0][1] shouldBe 100
 
-        val result5 = df1.select("bigintcol")
-            .add("bigintcol2") { "bigintcol"<Long>() }
+        val result5 = df1.select("bigintcol").add("bigintcol2") { "bigintcol"<Long>() }
 
         result5[0][1] shouldBe 100
 
-        val result7 = df1.select("doublecol")
-            .add("doublecol2") { "doublecol"<Double>() }
+        val result7 = df1.select("doublecol").add("doublecol2") { "doublecol"<Double>() }
 
         result7[0][1] shouldBe 10.0
 
-        val result8 = df1.select("decimalcol")
-            .add("decimalcol2") { "decimalcol"<BigDecimal>() }
+        val result8 = df1.select("decimalcol").add("decimalcol2") { "decimalcol"<BigDecimal>() }
 
         result8[0][1] shouldBe BigDecimal("10")
 

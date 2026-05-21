@@ -1,20 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import java.sql.Connection
+import java.sql.DriverManager
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
-import java.sql.Connection
-import java.sql.DriverManager
-import kotlin.reflect.typeOf
 
 /**
- * TODO:
- * Xerial SQLite JDBC driver seems to give identical metadata for `Int?` and `Long?` columns,
- * so we have to solve it #1747.
+ * TODO: Xerial SQLite JDBC driver seems to give identical metadata for `Int?` and `Long?` columns,
+ *   so we have to solve it #1747.
  */
 class SqliteTestDynamicTypes {
 

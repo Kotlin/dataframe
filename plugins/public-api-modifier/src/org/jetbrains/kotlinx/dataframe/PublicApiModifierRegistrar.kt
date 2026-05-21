@@ -35,13 +35,12 @@ public class Extensions : FirExtensionRegistrar() {
 
 public class StatusTransformer(session: FirSession) : FirStatusTransformerExtension(session) {
     public companion object {
-        public val apiOverload: FqName = FqName("org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload")
+        public val apiOverload: FqName =
+            FqName("org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload")
     }
 
     override fun needTransformStatus(declaration: FirDeclaration): Boolean =
-        declaration.annotations.any {
-            it.fqName(session) == apiOverload
-        }
+        declaration.annotations.any { it.fqName(session) == apiOverload }
 
     override fun transformStatus(
         status: FirDeclarationStatus,

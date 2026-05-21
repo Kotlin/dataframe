@@ -3,29 +3,23 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.DataFrame
 
 /**
- * {@comment
- *    Access APIs KDoc-topic.
- *    Link to here whenever you want to explain the different access APIs
- *    with `@include [AccessApiLink]`.
- * }
+ * {@comment Access APIs KDoc-topic. Link to here whenever you want to explain the different access
+ * APIs with `@include [AccessApiLink]`. }
  *
  * ## Access APIs
  *
- * Accessing and specifying columns is the one of the most important parts of the API,
- * used in the most of [DataFrame] operations.
+ * Accessing and specifying columns is the one of the most important parts of the API, used in the
+ * most of [DataFrame] operations.
  *
- * In the Kotlin DataFrame library, we provide two different ways to access columns —
- * the {@include [StringApiLink]} and the {@include [ExtensionPropertiesApiLink]}.
+ * In the Kotlin DataFrame library, we provide two different ways to access columns — the {@include
+ * [StringApiLink]} and the {@include [ExtensionPropertiesApiLink]}.
  *
  * For more information: {@include [DocumentationUrls.AccessApis]}
  */
 internal interface AccessApis {
 
     /**
-     * {@comment
-     *    String API KDoc-topic.
-     *    Link to it with `@include [StringApiLink]`.
-     * }
+     * {@comment String API KDoc-topic. Link to it with `@include [StringApiLink]`. }
      *
      * ## String API
      *
@@ -34,8 +28,8 @@ internal interface AccessApis {
      *
      * ### String Column Accessors
      *
-     * You can also specify a column using a [String] representing their name
-     * and path inside the [Columns Selection DSL][SelectingColumns.ColumnsSelectionDsl] and
+     * You can also specify a column using a [String] representing their name and path inside the
+     * [Columns Selection DSL][SelectingColumns.ColumnsSelectionDsl] and
      * [Row Expressions][ExpressionsGivenRow].
      *
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
@@ -47,35 +41,33 @@ internal interface AccessApis {
     typealias StringApiLink = Nothing
 
     /**
-     * {@comment
-     *    Extension Properties API KDoc topic.
-     *    Link to it with `@include [ExtensionPropertiesApiLink]`.
-     * }
+     * {@comment Extension Properties API KDoc topic. Link to it with `@include
+     * [ExtensionPropertiesApiLink]`. }
      *
      * ## Extension Properties API
      *
-     * When working with a [DataFrame], the most convenient and reliable way to [access its columns][AccessApis] —
-     * including for operations and retrieving column values in row expressions —
-     * is through auto-generated extension properties.
+     * When working with a [DataFrame], the most convenient and reliable way to
+     * [access its columns][AccessApis] — including for operations and retrieving column values in
+     * row expressions — is through auto-generated extension properties.
      *
      * These properties are generated based on the
-     * [dataframe schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema],
-     * with their names and types inferred from the names and types of the corresponding columns.
-     * This also works for hierarchical [DataFrame] structures
-     * (i.e., [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * and [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]).
+     * [dataframe schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema], with their names
+     * and types inferred from the names and types of the corresponding columns. This also works for
+     * hierarchical [DataFrame] structures (i.e.,
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and
+     * [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn]).
      *
      * ### Example
      *
      * Given the following [DataFrame]:
      *
-     * | name | age | height |
+     * | name  | age | height |
      * |-------|-----|--------|
      * | Alice | 23  | 175.5  |
      * | Bob   | 27  | 160.2  |
      *
-     * You can access columns using extension properties in a type-safe way, avoiding typos and relying on autocompletion.
-     * These properties can be used in:
+     * You can access columns using extension properties in a type-safe way, avoiding typos and
+     * relying on autocompletion. These properties can be used in:
      * - [Columns Selection DSL][SelectingColumns.ColumnsSelectionDsl]
      * - [Row Expressions][ExpressionsGivenRow]
      *

@@ -10,8 +10,8 @@ import org.locationtech.jts.geom.Polygon
 /**
  * Converts a [Polygon] to a [MultiPolygon] by wrapping it in a MultiPolygon.
  *
- * @receiver Polygon to be converted.
  * @return A MultiPolygon containing the original Polygon.
+ * @receiver Polygon to be converted.
  */
 public fun Polygon.toMultiPolygon(): MultiPolygon {
     val geometryFactory = this.factory
@@ -21,8 +21,8 @@ public fun Polygon.toMultiPolygon(): MultiPolygon {
 /**
  * Converts a [Point] to a [MultiPoint] by wrapping it in a MultiPoint.
  *
- * @receiver Point to be converted.
  * @return A MultiPoint containing the original Point.
+ * @receiver Point to be converted.
  */
 public fun Point.toMultiPoint(): MultiPoint {
     val geometryFactory = this.factory
@@ -32,8 +32,8 @@ public fun Point.toMultiPoint(): MultiPoint {
 /**
  * Converts a [LineString] to a [MultiLineString] by wrapping it in a MultiLineString.
  *
- * @receiver LineString to be converted.
  * @return A MultiLineString containing the original LineString.
+ * @receiver LineString to be converted.
  */
 public fun LineString.toMultiLineString(): MultiLineString {
     val geometryFactory = this.factory

@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import org.jetbrains.kotlinx.dataframe.DataColumn
 
 /**
  * Column that stores values.
@@ -27,8 +27,7 @@ public interface ValueColumn<out T> : DataColumn<T> {
     public override operator fun get(range: IntRange): ValueColumn<T>
 
     /**
-     * Changes column [type][BaseColumn.type].
-     * Doesn't change column [values][BaseColumn.values].
+     * Changes column [type][BaseColumn.type]. Doesn't change column [values][BaseColumn.values].
      *
      * @param type New column [type][KType].
      */

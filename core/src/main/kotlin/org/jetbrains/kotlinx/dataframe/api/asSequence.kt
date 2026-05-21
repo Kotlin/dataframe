@@ -17,9 +17,7 @@ public fun <T> DataColumn<T>.asSequence(): Sequence<T> = asIterable().asSequence
 
 // region DataFrame
 
-/**
- * Returns a [Sequence] of [DataRow] over this [DataFrame].
- */
+/** Returns a [Sequence] of [DataRow] over this [DataFrame]. */
 public fun <T> DataFrame<T>.asSequence(): Sequence<DataRow<T>> = rows().asSequence()
 
 // endregion

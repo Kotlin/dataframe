@@ -1,16 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import kotlin.reflect.KType
 
-internal class FrameColumnWithParent<T>(override val parent: ColumnGroup<*>, override val source: FrameColumn<T>) :
-    ColumnWithParent<DataFrame<T>>,
-    FrameColumn<T> by source,
-    DataColumnInternal<DataFrame<T>> {
+internal class FrameColumnWithParent<T>(
+    override val parent: ColumnGroup<*>,
+    override val source: FrameColumn<T>,
+) : ColumnWithParent<DataFrame<T>>, FrameColumn<T> by source, DataColumnInternal<DataFrame<T>> {
 
     override fun equals(other: Any?) = source.checkEquals(other)
 
@@ -18,9 +16,11 @@ internal class FrameColumnWithParent<T>(override val parent: ColumnGroup<*>, ove
 
     override fun path() = super<ColumnWithParent>.path()
 
-    override fun resolve(context: ColumnResolutionContext) = super<ColumnWithParent>.resolve(context)
+    override fun resolve(context: ColumnResolutionContext) =
+        super<ColumnWithParent>.resolve(context)
 
-    override fun resolveSingle(context: ColumnResolutionContext) = super<ColumnWithParent>.resolveSingle(context)
+    override fun resolveSingle(context: ColumnResolutionContext) =
+        super<ColumnWithParent>.resolveSingle(context)
 
     override fun forceResolve() = ResolvingFrameColumn(this)
 

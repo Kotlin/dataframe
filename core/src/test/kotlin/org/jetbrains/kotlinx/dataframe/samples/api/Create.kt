@@ -3,6 +3,9 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import java.io.File
+import kotlin.random.Random as KotlinRandom
+import kotlin.random.nextInt
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -21,16 +24,12 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.preserve
 import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
-import java.io.File
-import kotlin.random.nextInt
-import kotlin.random.Random as KotlinRandom
 
 class Create : TestBase() {
 
@@ -77,7 +76,9 @@ class Create : TestBase() {
     fun columnAccessorComputed_strings() {
         // SampleStart
 
-        val fullName by column { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
+        val fullName by column {
+            "name"["firstName"]<String>() + " " + "name"["lastName"]<String>()
+        }
 
         df[fullName]
         // SampleEnd
@@ -187,11 +188,7 @@ class Create : TestBase() {
     fun createDataFrameOf() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
-        val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", 20,
-            "Charlie", 100,
-        )
+        val df = dataFrameOf("name", "age")("Alice", 15, "Bob", 20, "Charlie", 100)
         // SampleEnd
     }
 
@@ -199,8 +196,7 @@ class Create : TestBase() {
     @TransformDataFrameExpressions
     fun createRandomDataFrame() {
         // stable random + clean examples
-        @Suppress("LocalVariableName")
-        val Random = KotlinRandom(42)
+        @Suppress("LocalVariableName") val Random = KotlinRandom(42)
         fun <T> List<T>.random() = this.random(Random)
         // SampleStart
         val categories = listOf("Electronics", "Books", "Clothing")
@@ -218,8 +214,7 @@ class Create : TestBase() {
     @TransformDataFrameExpressions
     fun createNestedRandomDataFrame() {
         // stable random + clean examples
-        @Suppress("LocalVariableName")
-        val Random = KotlinRandom(42)
+        @Suppress("LocalVariableName") val Random = KotlinRandom(42)
         fun <T> List<T>.random() = this.random(Random)
         // SampleStart
         val categories = listOf("Electronics", "Books", "Clothing")
@@ -236,25 +231,56 @@ class Create : TestBase() {
             }
 
             // Frame Column
-            "reviews" from {
-                val reviewCount = Random.nextInt(0..7)
-                (0 until reviewCount).toDataFrame {
-                    val ratings: DataColumn<Int> = expr { Random.nextInt(1..5) }
-                    val comments = ratings.map {
-                        when (it) {
-                            5 -> listOf("Amazing quality!", "Best purchase ever!", "Highly recommend!", "Absolutely perfect!")
-                            4 -> listOf("Great product!", "Very satisfied", "Good value for money", "Would buy again")
-                            3 -> listOf("It's okay", "Does the job", "Average quality", "Neither good nor bad")
-                            2 -> listOf("Could be better", "Disappointed", "Not what I expected", "Poor quality")
-                            else -> listOf("Terrible!", "Not worth the price", "Complete waste of money", "Do not buy!")
-                        }.random()
-                    }
+            "reviews" from
+                {
+                    val reviewCount = Random.nextInt(0..7)
+                    (0 until reviewCount).toDataFrame {
+                        val ratings: DataColumn<Int> = expr { Random.nextInt(1..5) }
+                        val comments = ratings.map {
+                            when (it) {
+                                5 ->
+                                    listOf(
+                                        "Amazing quality!",
+                                        "Best purchase ever!",
+                                        "Highly recommend!",
+                                        "Absolutely perfect!",
+                                    )
+                                4 ->
+                                    listOf(
+                                        "Great product!",
+                                        "Very satisfied",
+                                        "Good value for money",
+                                        "Would buy again",
+                                    )
+                                3 ->
+                                    listOf(
+                                        "It's okay",
+                                        "Does the job",
+                                        "Average quality",
+                                        "Neither good nor bad",
+                                    )
+                                2 ->
+                                    listOf(
+                                        "Could be better",
+                                        "Disappointed",
+                                        "Not what I expected",
+                                        "Poor quality",
+                                    )
+                                else ->
+                                    listOf(
+                                        "Terrible!",
+                                        "Not worth the price",
+                                        "Complete waste of money",
+                                        "Do not buy!",
+                                    )
+                            }.random()
+                        }
 
-                    "author" from { "User${Random.nextInt(1000..10000)}" }
-                    ratings into "rating"
-                    comments into "comment"
+                        "author" from { "User${Random.nextInt(1000..10000)}" }
+                        ratings into "rating"
+                        comments into "comment"
+                    }
                 }
-            }
         }
         // SampleEnd
     }
@@ -264,10 +290,8 @@ class Create : TestBase() {
     fun createDataFrameOfPairs() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
-        val df = dataFrameOf(
-            "name" to listOf("Alice", "Bob", "Charlie"),
-            "age" to listOf(15, 20, 100),
-        )
+        val df =
+            dataFrameOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15, 20, 100))
         // SampleEnd
     }
 
@@ -276,13 +300,15 @@ class Create : TestBase() {
     fun createNestedDataFrameInplace() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
-        val df = dataFrameOf(
-            "name" to columnOf(
-                "firstName" to columnOf("Alice", "Bob", "Charlie"),
-                "lastName" to columnOf("Cooper", "Dylan", "Daniels"),
-            ),
-            "age" to columnOf(15, 20, 100),
-        )
+        val df =
+            dataFrameOf(
+                "name" to
+                    columnOf(
+                        "firstName" to columnOf("Alice", "Bob", "Charlie"),
+                        "lastName" to columnOf("Cooper", "Dylan", "Daniels"),
+                    ),
+                "age" to columnOf(15, 20, 100),
+            )
         // SampleEnd
     }
 
@@ -291,11 +317,7 @@ class Create : TestBase() {
     fun createDataFrameWithFill() {
         // SampleStart
         // Multiplication table
-        (1..10).toDataFrame {
-            (1..10).forEach { x ->
-                "$x" from { x * it }
-            }
-        }
+        (1..10).toDataFrame { (1..10).forEach { x -> "$x" from { x * it } } }
         // SampleEnd
     }
 
@@ -331,10 +353,11 @@ class Create : TestBase() {
     fun createDataFrameFromColumns() {
         // SampleStart
         // DataFrame with 2 columns
-        val df = dataFrameOf(
-            "name" to columnOf("Alice", "Bob", "Charlie"),
-            "age" to columnOf(15, 20, 22)
-        )
+        val df =
+            dataFrameOf(
+                "name" to columnOf("Alice", "Bob", "Charlie"),
+                "age" to columnOf(15, 20, 22),
+            )
         // SampleEnd
     }
 
@@ -383,10 +406,11 @@ class Create : TestBase() {
 
         data class Student(val name: Name, val age: Int, val scores: List<Score>)
 
-        val students = listOf(
-            Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
-            Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
-        )
+        val students =
+            listOf(
+                Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
+                Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
+            )
 
         val df = students.toDataFrame(maxDepth = 1)
         // SampleEnd
@@ -401,10 +425,11 @@ class Create : TestBase() {
 
         data class Student(val name: Name, val age: Int, val scores: List<Score>)
 
-        val students = listOf(
-            Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
-            Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
-        )
+        val students =
+            listOf(
+                Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
+                Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
+            )
 
         // SampleStart
         val df = students.toDataFrame {
@@ -413,8 +438,12 @@ class Create : TestBase() {
 
             // scan all properties
             properties(maxDepth = 1) {
-                exclude(Score::subject) // `subject` property will be skipped from object graph traversal
-                preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
+                exclude(
+                    Score::subject
+                ) // `subject` property will be skipped from object graph traversal
+                preserve<
+                    Name
+                >() // `Name` objects will be stored as-is without transformation into DataFrame
             }
 
             // add column group
@@ -456,7 +485,8 @@ class Create : TestBase() {
     @TransformDataFrameExpressions
     fun toDataFrameLists() {
         // SampleStart
-        val lines = """
+        val lines =
+            """
             1
             00:00:05,000 --> 00:00:07,500
             This is the first subtitle.
@@ -464,7 +494,9 @@ class Create : TestBase() {
             2
             00:00:08,000 --> 00:00:10,250
             This is the second subtitle.
-        """.trimIndent().lines()
+            """
+                .trimIndent()
+                .lines()
 
         lines.chunked(4) { it.take(3) }.toDataFrame(header = listOf("n", "timestamp", "text"))
         // SampleEnd

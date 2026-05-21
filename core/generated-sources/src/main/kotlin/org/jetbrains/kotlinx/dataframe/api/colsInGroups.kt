@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -10,19 +11,16 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.util.COLS_IN_GROUPS
 import org.jetbrains.kotlinx.dataframe.util.COLS_IN_GROUPS_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
 /**
- * ## Cols in Groups [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## Cols in Groups
+ * [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
  * See [Grammar] for all functions in this interface.
  */
@@ -31,68 +29,50 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups Grammar
      *
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### Definitions:
+     * `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * `columnGroup:
+     * `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>
+     * | `[`String`][String]` | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *
-     *
-     *
+     * ### What can be called directly in the
+     * [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`()`
-     *
-     *
-     *
+     * [**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
-     *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`()`
-     *
-     *
-     *
+     * ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     * [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
+     * &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`()`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     * ### What can be called on a
+     * [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`()`
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
+     * [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *
-     *
-     *
-     *
-     *
-     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`()`
      */
     public interface Grammar {
 
@@ -109,29 +89,34 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][colsInGroups] is a function that returns all columns at the top-levels of all
+     * [column groups][ColumnGroup] in [this]. This is useful if you want to select all columns that
+     * are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with [cols][ColumnsSelectionDsl.cols], which
+     * operates on all columns directly in [this], or with
+     * [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all columns in [this]
+     * at any depth.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a [DataFrame], instead of having to
+     * write:
      *
-     * `df.`[select][DataFrame.select]` { colGroupA.`[cols][ColumnsSelectionDsl.cols]`() `[and][ColumnsSelectionDsl.and]` colGroupB.`[cols][ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][DataFrame.select]` { colGroupA.`[cols][ColumnsSelectionDsl.cols]`()
+     * `[and][ColumnsSelectionDsl.and]` colGroupB.`[cols][ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`().`[nameContains][ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`().`[nameContains][ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -139,18 +124,17 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[nameContains][ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colGroups][ColumnsSelectionDsl.colGroups]`().`[nameContains][ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *
      * #### Examples of this overload:
      *
-     *
-     *
+     * @return A [ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet] containing the cols.
      */
     private interface ColsInGroupsDocs {
 
@@ -161,50 +145,68 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsInGroups][ColumnSet.colsInGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ..
+     * }.`[colsInGroups][ColumnSet.colsInGroups]` { "my" `[in][String.contains]`
+     * it.`[name][DataColumn.name]` } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`()
+     * }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
@@ -212,261 +214,341 @@ public interface ColsInGroupsColumnsSelectionDsl {
         level = DeprecationLevel.WARNING,
     )
     public fun ColumnSet<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
-        transform { it.flatMap { it.cols().filter { predicate(it) } } }
+        transform {
+            it.flatMap { it.cols().filter { predicate(it) } }
+        }
 
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`()
+     * }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     public fun ColumnSet<*>.colsInGroups(): ColumnSet<*> = transform { it.flatMap { it.cols() } }
 
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnSet.colsInGroups]` { "my"
+     * `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnSet.colsInGroups]`() }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
-        asSingleColumn().colsInGroups(predicate)
+    public fun ColumnsSelectionDsl<*>.colsInGroups(
+        predicate: ColumnFilter<*> = { true }
+    ): ColumnSet<*> = asSingleColumn().colsInGroups(predicate)
 
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnSet.colsInGroups]`() }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     public fun ColumnsSelectionDsl<*>.colsInGroups(): ColumnSet<*> = asSingleColumn().colsInGroups()
 
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]`
+     * { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
-        ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
+    public fun SingleColumn<DataRow<*>>.colsInGroups(
+        predicate: ColumnFilter<*> = { true }
+    ): ColumnSet<*> = ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
 
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]`
+     * { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     public fun SingleColumn<DataRow<*>>.colsInGroups(): ColumnSet<*> =
         ensureIsColumnGroup().allColumnsInternal().colsInGroups()
@@ -474,48 +556,62 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
@@ -528,98 +624,128 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     public fun String.colsInGroups(): ColumnSet<*> = columnGroup(this).colsInGroups()
 
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * Type::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -629,48 +755,63 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
@@ -683,48 +824,63 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups] is a function that returns all columns at the top-levels of
-     * all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
+     * [colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.colsInGroups]
+     * is a function that returns all columns at the top-levels of all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in [this]. This is
+     * useful if you want to select all columns that are "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
+     * NOTE: This function should not be confused with
+     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this], or with
+     * [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth],
+     * which operates on all columns in [this] at any depth.
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
+     * ### Check out:
+     * [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * To get only the columns inside all column groups in a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
+     * To get only the columns inside all column groups in a
+     * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], instead of having to write:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * colGroupA.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`()
+     * `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`
+     * colGroupB.`[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`() ... }`
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("user")
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Similarly, you can take the columns inside all [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * Similarly, you can take the columns inside all
+     * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] in a
+     * [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {
+     * `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`().`[nameContains][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`()
+     * }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
      *
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the cols.
      */
     public fun ColumnPath.colsInGroups(): ColumnSet<*> = columnGroup(this).colsInGroups()
 }

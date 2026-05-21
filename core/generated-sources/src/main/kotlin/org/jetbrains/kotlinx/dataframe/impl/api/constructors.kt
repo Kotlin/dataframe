@@ -2,9 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.exceptions.DataFrameError
 
-/**
- * Public API to be re-used in compiler plugin implementation
- */
+/** Public API to be re-used in compiler plugin implementation */
 public fun <T> Pair<List<String>, List<T>>.withValuesImpl(): List<Pair<String, List<T>>> {
     val (header, values) = this
     val ncol = header.size
@@ -16,15 +14,12 @@ public fun <T> Pair<List<String>, List<T>>.withValuesImpl(): List<Pair<String, L
     val nrow = values.size / ncol
 
     return (0 until ncol).map { col ->
-        val colValues = (0 until nrow).map { row ->
-            values[row * ncol + col]
-        }
+        val colValues = (0 until nrow).map { row -> values[row * ncol + col] }
         header[col] to colValues
     }
 }
 
 internal class WrongNumberOfValuesException(size: Int, ncol: Int) :
-    IllegalArgumentException(),
-    DataFrameError {
+    IllegalArgumentException(), DataFrameError {
     override val message = "Number of values $size is not divisible by number of columns $ncol"
 }

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
@@ -14,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 /**
  * Provides access to [columns][DataColumn].
@@ -27,11 +27,9 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     // region columns
 
-    @RequiredByIntellijPlugin
-    public fun columns(): List<AnyCol>
+    @RequiredByIntellijPlugin public fun columns(): List<AnyCol>
 
-    @RequiredByIntellijPlugin
-    public fun columnsCount(): Int
+    @RequiredByIntellijPlugin public fun columnsCount(): Int
 
     public fun containsColumn(name: String): Boolean
 
@@ -69,7 +67,8 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun <R> get(column: DataColumn<R>): DataColumn<R> = getColumn(column.name()).cast()
+    public operator fun <R> get(column: DataColumn<R>): DataColumn<R> =
+        getColumn(column.name()).cast()
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -77,7 +76,8 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun <R> get(column: DataColumn<DataFrame<R>>): FrameColumn<R> = getColumn(column)
+    public operator fun <R> get(column: DataColumn<DataFrame<R>>): FrameColumn<R> =
+        getColumn(column)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -85,11 +85,13 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = getColumn(column)
+    public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> =
+        getColumn(column)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = getColumn(column)
+    public operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> =
+        getColumn(column)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -107,7 +109,8 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     public fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>>
 
-    public fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()
+    public fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> =
+        get(column as ColumnsSelector<T, C>).single()
 
     // endregion
 }

@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
+import java.sql.ResultSet
+import java.util.Locale
+import kotlin.reflect.KType
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.full.withNullability
 import org.postgresql.geometric.PGbox
 import org.postgresql.geometric.PGcircle
 import org.postgresql.geometric.PGline
@@ -10,45 +15,42 @@ import org.postgresql.geometric.PGpolygon
 import org.postgresql.util.PGInterval
 import org.postgresql.util.PGmoney
 import org.postgresql.util.PGobject
-import java.sql.ResultSet
-import java.util.Locale
-import kotlin.reflect.KType
-import kotlin.reflect.full.starProjectedType
-import kotlin.reflect.full.withNullability
 
 /**
  * Represents the PostgreSql database type.
  *
- * This class provides methods to convert data from a ResultSet to the appropriate type for PostgreSql,
- * and to generate the corresponding column schema.
+ * This class provides methods to convert data from a ResultSet to the appropriate type for
+ * PostgreSql, and to generate the corresponding column schema.
  */
 public object PostgreSql : DbType("postgresql") {
     override val driverClassName: String
         get() = "org.postgresql.Driver"
 
     /**
-     * Map of [PostgreSQL object][PGobject] types by name
-     * containing both their [Java class][Class] and [Kotlin type][KType].
+     * Map of [PostgreSQL object][PGobject] types by name containing both their [Java class][Class]
+     * and [Kotlin type][KType].
      *
-     * These types need to be retrieved explicitly with [Java class][Class] in [ResultSet.getObject], else
-     * their return type is unpredictable.
+     * These types need to be retrieved explicitly with [Java class][Class] in
+     * [ResultSet.getObject], else their return type is unpredictable.
      */
     private val pgObjectTypes by lazy {
         listOf(
-            PGbox(),
-            PGcircle(),
-            PGline(),
-            PGlseg(),
-            PGpath(),
-            PGpoint(),
-            PGpolygon(),
-            PGmoney(),
-            PGInterval(),
-        ).map(::PgObjectType)
+                PGbox(),
+                PGcircle(),
+                PGline(),
+                PGlseg(),
+                PGpath(),
+                PGpoint(),
+                PGpolygon(),
+                PGmoney(),
+                PGInterval(),
+            )
+            .map(::PgObjectType)
             .associateBy { it.typeName }
     }
 
-    // TODO: Composite types like tableColumnMetadata.sqlTypeName = ROW("a" INTEGER, "b" CHARACTER VARYING(10))
+    // TODO: Composite types like tableColumnMetadata.sqlTypeName = ROW("a" INTEGER, "b" CHARACTER
+    // VARYING(10))
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         val typeName = tableColumnMetadata.sqlTypeName.lowercase()
         return if (typeName in pgObjectTypes) {
@@ -59,8 +61,8 @@ public object PostgreSql : DbType("postgresql") {
     }
 
     /**
-     * Overridden so [PGobject] types are retrieved explicitly with [Java class][Class],
-     * else their return type is unpredictable.
+     * Overridden so [PGobject] types are retrieved explicitly with [Java class][Class], else their
+     * return type is unpredictable.
      */
     override fun <J> getValueFromResultSet(
         rs: ResultSet,
@@ -78,7 +80,8 @@ public object PostgreSql : DbType("postgresql") {
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean =
         tableMetadata.name.lowercase(Locale.getDefault()).contains("pg_") ||
-            tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.") ?: false
+            tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.")
+                ?: false
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata =
         TableMetadata(
@@ -92,8 +95,14 @@ public object PostgreSql : DbType("postgresql") {
         return name.split(".").joinToString(".") { "\"$it\"" }
     }
 
-    private data class PgObjectType(val typeName: String, val kType: KType, val javaClass: Class<*>) {
-        constructor(pgObject: PGobject) : this(
+    private data class PgObjectType(
+        val typeName: String,
+        val kType: KType,
+        val javaClass: Class<*>,
+    ) {
+        constructor(
+            pgObject: PGobject
+        ) : this(
             typeName = pgObject.type,
             kType = pgObject::class.starProjectedType,
             javaClass = pgObject::class.java,

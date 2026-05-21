@@ -84,7 +84,8 @@ class MatchSchemeTests {
                 }
             ]
         }
-        """.trimIndent()
+        """
+            .trimIndent()
 
     val df = DataFrame.readJsonStr(json)
 
@@ -119,19 +120,14 @@ class MatchSchemeTests {
 
     @Test
     fun `simple data schema comparison`() {
-        val scheme1 = dataFrameOf(
-            "a" to columnOf(1, 2, 3, null),
-            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
-        ).schema()
+        val scheme1 =
+            dataFrameOf("a" to columnOf(1, 2, 3, null), "b" to columnOf(1.0, 2.0, 3.0, 4.0))
+                .schema()
 
-        val scheme2 = dataFrameOf(
-            "a" to columnOf(1, 2, 3, 4),
-            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
-        ).schema()
+        val scheme2 =
+            dataFrameOf("a" to columnOf(1, 2, 3, 4), "b" to columnOf(1.0, 2.0, 3.0, 4.0)).schema()
 
-        val scheme3 = dataFrameOf(
-            "c" to columnOf(1, 2, 3, 4),
-        ).schema()
+        val scheme3 = dataFrameOf("c" to columnOf(1, 2, 3, 4)).schema()
 
         scheme1.compare(scheme1, LENIENT) shouldBe Matches
         scheme2.compare(scheme2, LENIENT) shouldBe Matches
@@ -153,28 +149,18 @@ class MatchSchemeTests {
 
     @Test
     fun `nested data schema comparison`() {
-        val scheme1 = dataFrameOf(
-            "a" to columnOf(
-                "b" to columnOf(1.0, 2.0, 3.0, null),
-            ),
-        ).schema()
+        val scheme1 = dataFrameOf("a" to columnOf("b" to columnOf(1.0, 2.0, 3.0, null))).schema()
 
-        val scheme2 = dataFrameOf(
-            "a" to columnOf(
-                "b" to columnOf(1.0, 2.0, 3.0, 4.0),
-            ),
-        ).schema()
+        val scheme2 = dataFrameOf("a" to columnOf("b" to columnOf(1.0, 2.0, 3.0, 4.0))).schema()
 
-        val scheme3 = dataFrameOf(
-            "c" to columnOf(1, 2, 3, 4),
-        ).schema()
+        val scheme3 = dataFrameOf("c" to columnOf(1, 2, 3, 4)).schema()
 
-        val scheme4 = dataFrameOf(
-            "a" to columnOf(
-                "b" to columnOf(1.0, 2.0, 3.0, null),
-            ),
-            "c" to columnOf(1, 2, 3, 4),
-        ).schema()
+        val scheme4 =
+            dataFrameOf(
+                    "a" to columnOf("b" to columnOf(1.0, 2.0, 3.0, null)),
+                    "c" to columnOf(1, 2, 3, 4),
+                )
+                .schema()
 
         scheme1.compare(scheme1, LENIENT) shouldBe Matches
         scheme2.compare(scheme2, LENIENT) shouldBe Matches
@@ -206,20 +192,14 @@ class MatchSchemeTests {
 
     @Test
     fun `comparison with order`() {
-        val scheme1 = dataFrameOf(
-            "a" to columnOf(1, 2, 3, 4),
-            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
-        ).schema()
+        val scheme1 =
+            dataFrameOf("a" to columnOf(1, 2, 3, 4), "b" to columnOf(1.0, 2.0, 3.0, 4.0)).schema()
 
-        val scheme1a = dataFrameOf(
-            "a" to columnOf(1, 2, 3, 4),
-            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
-        ).schema()
+        val scheme1a =
+            dataFrameOf("a" to columnOf(1, 2, 3, 4), "b" to columnOf(1.0, 2.0, 3.0, 4.0)).schema()
 
-        val scheme2 = dataFrameOf(
-            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
-            "a" to columnOf(1, 2, 3, 4),
-        ).schema()
+        val scheme2 =
+            dataFrameOf("b" to columnOf(1.0, 2.0, 3.0, 4.0), "a" to columnOf(1, 2, 3, 4)).schema()
 
         scheme1.compare(scheme1a).matches() shouldBe true
         (scheme1 == scheme1a) shouldBe true
@@ -238,11 +218,12 @@ class MatchSchemeTests {
         typed.schema().compare(movedInGroup.schema()).matches() shouldBe true
         (typed.schema() == movedInGroup.schema()) shouldBe false
 
-        val movedInFrameAndGroup = typed
-            .update { items }.with {
-                it.move { kind }.after { id }
-                    .move { snippet.position }.after { snippet.info }
-            }
+        val movedInFrameAndGroup =
+            typed
+                .update { items }
+                .with {
+                    it.move { kind }.after { id }.move { snippet.position }.after { snippet.info }
+                }
 
         typed.schema().compare(movedInFrameAndGroup.schema()).matches() shouldBe true
         (typed.schema() == movedInFrameAndGroup.schema()) shouldBe false

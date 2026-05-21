@@ -16,11 +16,10 @@ class ConcatTests {
 
     @Test
     fun `concat with keys`() {
-        val df = dataFrameOf(
-            "value" to listOf(1, 2, 3, 3),
-            "type" to listOf("a", "b", "a", "b"),
-        )
-        val gb = df.groupBy { expr { "Category: ${(this["type"] as String).uppercase()}" } named "category" }
+        val df = dataFrameOf("value" to listOf(1, 2, 3, 3), "type" to listOf("a", "b", "a", "b"))
+        val gb = df.groupBy {
+            expr { "Category: ${(this["type"] as String).uppercase()}" } named "category"
+        }
         val dfWithCategory = gb.concatWithKeys()
 
         dfWithCategory.columnNames() shouldBe listOf("value", "type", "category")
@@ -34,10 +33,7 @@ class ConcatTests {
             concatenated.schema() shouldBe dfWithSchema.schema()
         }
 
-        val dfNothingCols = dataFrameOf(
-            "a" to DataColumn.empty(),
-            "b" to DataColumn.empty(),
-        )
+        val dfNothingCols = dataFrameOf("a" to DataColumn.empty(), "b" to DataColumn.empty())
         (dfNothingCols concat dfNothingCols).let { concatenated ->
             concatenated shouldBe dfNothingCols
             concatenated.schema() shouldBe dfNothingCols.schema()

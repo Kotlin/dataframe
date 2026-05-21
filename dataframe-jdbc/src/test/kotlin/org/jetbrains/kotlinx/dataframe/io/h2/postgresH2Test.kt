@@ -1,6 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io.h2
 
 import io.kotest.matchers.shouldBe
+import java.math.BigDecimal
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.SQLException
+import java.util.UUID
+import kotlin.reflect.typeOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -16,12 +22,6 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
-import java.math.BigDecimal
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
-import java.util.UUID
-import kotlin.reflect.typeOf
 
 private const val URL =
     "jdbc:h2:mem:test3;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"
@@ -98,7 +98,8 @@ class PostgresH2Test {
                     textArrayCol text array,
                     booleanArrayCol boolean array
                 )
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             connection.createStatement().execute(createTableStatement.trimIndent())
 
@@ -119,7 +120,8 @@ class PostgresH2Test {
                     timestampWithZoneCol timestamp with time zone not null,
                     uuidCol uuid not null
                 )
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             connection.createStatement().execute(createTableQuery.trimIndent())
 
@@ -131,7 +133,8 @@ class PostgresH2Test {
                     id serial PRIMARY KEY,
                     structCol ROW(a INT, b VARCHAR(10)) not null
                 )
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             connection.createStatement().execute(createTableWithStruct)
 
@@ -145,7 +148,8 @@ class PostgresH2Test {
                     integerCol, intArrayCol,
                     doubleArrayCol, dateArrayCol, textArrayCol, booleanArrayCol
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             @Language("SQL")
             val insertData2 =
@@ -157,14 +161,19 @@ class PostgresH2Test {
                     timeWithZoneCol, timestampCol, timestampWithZoneCol, 
                     uuidCol
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             val intArray = connection.createArrayOf("INTEGER", arrayOf(1, 2, 3))
             val doubleArray = connection.createArrayOf("DOUBLE", arrayOf(1.1, 2.2, 3.3))
-            val dateArray = connection.createArrayOf(
-                "DATE",
-                arrayOf(java.sql.Date.valueOf("2023-08-01"), java.sql.Date.valueOf("2023-08-02")),
-            )
+            val dateArray =
+                connection.createArrayOf(
+                    "DATE",
+                    arrayOf(
+                        java.sql.Date.valueOf("2023-08-01"),
+                        java.sql.Date.valueOf("2023-08-02"),
+                    ),
+                )
             val textArray = connection.createArrayOf("TEXT", arrayOf("Hello", "World"))
             val booleanArray = connection.createArrayOf("BOOLEAN", arrayOf(true, false, true))
 
@@ -217,7 +226,8 @@ class PostgresH2Test {
                 (ROW(1, 'X')),
                 (ROW(2, 'Y')),
                 (ROW(3, 'Z'))
-                """.trimIndent()
+                """
+                    .trimIndent()
             connection.createStatement().execute(insertStructs)
         }
 
@@ -242,7 +252,8 @@ class PostgresH2Test {
         result[0][8] shouldBe "A"
         result[0][12] shouldBe arrayOf(1, 2, 3)
         result[0][13] shouldBe arrayOf(1.1, 2.2, 3.3)
-        result[0][14] shouldBe arrayOf(java.sql.Date.valueOf("2023-08-01"), java.sql.Date.valueOf("2023-08-02"))
+        result[0][14] shouldBe
+            arrayOf(java.sql.Date.valueOf("2023-08-01"), java.sql.Date.valueOf("2023-08-02"))
         result[0][15] shouldBe arrayOf("Hello", "World")
         result[0][16] shouldBe arrayOf(true, false, true)
 
@@ -277,7 +288,8 @@ class PostgresH2Test {
                 t2.textCol
             FROM table1 t1
             JOIN table2 t2 ON t1.id = t2.id
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>()
         val result = df.filter { "id"<Int>() == 1 }
@@ -303,9 +315,7 @@ class PostgresH2Test {
         val table2Df = dataframes[1].cast<Table2>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter {
-            "realcol"<Float?>() == 12.34f
-        }.rowsCount() shouldBe 3
+        table2Df.filter { "realcol"<Float?>() == 12.34f }.rowsCount() shouldBe 3
         table2Df[0][4] shouldBe 1001
     }
 
@@ -326,31 +336,25 @@ class PostgresH2Test {
     fun `read columns of different types to check type mapping`() {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
-        val result = df1.select("smallintcol")
-            .add("smallintcol2") { "smallintcol"<Int?>() }
+        val result = df1.select("smallintcol").add("smallintcol2") { "smallintcol"<Int?>() }
         result[0][1] shouldBe 11
 
-        val result1 = df1.select("bigserialcol")
-            .add("bigserialcol2") { "bigserialcol"<Long>() }
+        val result1 = df1.select("bigserialcol").add("bigserialcol2") { "bigserialcol"<Long>() }
         result1[0][1] shouldBe 1000000001L
 
-        val result2 = df1.select("doublecol")
-            .add("doublecol2") { "doublecol"<Double>() }
+        val result2 = df1.select("doublecol").add("doublecol2") { "doublecol"<Double>() }
         result2[0][1] shouldBe 12.34
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
 
-        val result4 = df2.select("numericcol")
-            .add("numericcol2") { "numericcol"<BigDecimal>() }
+        val result4 = df2.select("numericcol").add("numericcol2") { "numericcol"<BigDecimal>() }
         result4[0][1] shouldBe BigDecimal("12.34")
 
-        val result5 = df2.select("realcol")
-            .add("realcol2") { "realcol"<Float>() }
+        val result5 = df2.select("realcol").add("realcol2") { "realcol"<Float>() }
         result5[0][1] shouldBe 12.34f
 
-        val result8 = df2.select("serialcol")
-            .add("serialcol2") { "serialcol"<Int>() }
+        val result8 = df2.select("serialcol").add("serialcol2") { "serialcol"<Int>() }
         result8[0][1] shouldBe 1000001
 
         val schema = DataFrameSchema.readSqlTable(connection, tableName1)
@@ -381,7 +385,8 @@ class PostgresH2Test {
                     name VARCHAR(100),
                     salary DOUBLE
                 )
-                """.trimIndent()
+                """
+                    .trimIndent()
             connection.createStatement().execute(createTableQuery)
 
             // Step 2: Insert data into the table
@@ -392,7 +397,8 @@ class PostgresH2Test {
                 (1, 'Alice', 60000.0),
                 (2, 'Bob', 50000.0),
                 (3, 'Charlie', 70000.0)
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             connection.createStatement().execute(insertDataQuery)
 
@@ -406,7 +412,8 @@ class PostgresH2Test {
                     WHERE salary > 55000.0
                 )
                 SELECT * FROM high_earners
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             val resultDataFrame = DataFrame.readSqlQuery(connection, queryWithClause)
 
@@ -416,8 +423,7 @@ class PostgresH2Test {
             resultDataFrame[1][0] shouldBe "Charlie"
         } finally {
             // Step 5: Clean up the temporary table
-            @Language("SQL")
-            val dropTableQuery = "DROP TABLE IF EXISTS employees"
+            @Language("SQL") val dropTableQuery = "DROP TABLE IF EXISTS employees"
             connection.createStatement().execute(dropTableQuery)
         }
     }

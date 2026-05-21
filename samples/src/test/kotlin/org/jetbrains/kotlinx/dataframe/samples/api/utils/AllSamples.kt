@@ -8,10 +8,9 @@ import org.junit.Test
 
 class AllSamples : DataFrameSampleHelper("all", "api") {
 
-    private val df = dataFrameOf(
-        "name" to listOf("Alice", "Bob"),
-        "age" to listOf(15, 20),
-    ).cast<AnySamples.SimplePerson>()
+    private val df =
+        dataFrameOf("name" to listOf("Alice", "Bob"), "age" to listOf(15, 20))
+            .cast<AnySamples.SimplePerson>()
 
     @Test
     fun notebook_test_all_3() {

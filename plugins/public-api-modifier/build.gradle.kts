@@ -1,14 +1,8 @@
-plugins {
-    with(convention.plugins) {
-        alias(kotlinJvm8)
-    }
-}
+plugins { with(convention.plugins) { alias(kotlinJvm8) } }
 
 group = "org.jetbrains.kotlinx.dataframe"
 
-dependencies {
-    compileOnly(libs.kotlin.compiler)
-}
+dependencies { compileOnly(libs.kotlin.compiler) }
 
 sourceSets {
     main {

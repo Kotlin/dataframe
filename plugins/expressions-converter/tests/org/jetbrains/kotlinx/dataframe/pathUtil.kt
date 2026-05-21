@@ -74,9 +74,7 @@ private fun splitJarUrl(url: String): Pair<String, String>? {
 
 fun tryGetResourcePathForClass(aClass: Class<*>): File? {
     val path = "/" + aClass.name.replace('.', '/') + ".class"
-    return getResourceRoot(aClass, path)?.let {
-        File(it).absoluteFile
-    }
+    return getResourceRoot(aClass, path)?.let { File(it).absoluteFile }
 }
 
 fun getResourcePathForClass(aClass: Class<*>): File =
@@ -99,13 +97,14 @@ internal fun URL.toFileOrNull() =
         null
     } catch (e: java.net.URISyntaxException) {
         null
-    } ?: run {
-        if (protocol != "file") {
-            null
-        } else {
-            File(file)
-        }
     }
+        ?: run {
+            if (protocol != "file") {
+                null
+            } else {
+                File(file)
+            }
+        }
 
 internal fun URL.toContainingJarOrNull(): File? =
     if (protocol == "jar") {

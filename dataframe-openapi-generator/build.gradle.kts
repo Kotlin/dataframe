@@ -1,9 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    with(convention.plugins) {
-        alias(kotlinJvm8)
-    }
+    with(convention.plugins) { alias(kotlinJvm8) }
     with(libs.plugins) {
         alias(publisher)
         alias(serialization)
@@ -50,6 +48,7 @@ tasks.compileTestKotlin {
         freeCompilerArgs.add("-Xjdk-release=11")
     }
 }
+
 tasks.compileTestJava {
     sourceCompatibility = JavaVersion.VERSION_11.toString()
     targetCompatibility = JavaVersion.VERSION_11.toString()

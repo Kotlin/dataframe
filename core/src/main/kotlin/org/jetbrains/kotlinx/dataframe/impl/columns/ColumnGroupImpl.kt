@@ -15,14 +15,11 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.renderSchema
 import org.jetbrains.kotlinx.dataframe.nrow
-import kotlin.reflect.KType
 
 internal val anyRowType = createTypeWithArgument<AnyRow>()
 
 internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T>) :
-    DataFrameImpl<T>(df.columns(), df.nrow),
-    DataColumnInternal<DataRow<T>>,
-    DataColumnGroup<T> {
+    DataFrameImpl<T>(df.columns(), df.nrow), DataColumnInternal<DataRow<T>>, DataColumnGroup<T> {
 
     override fun values() = rows()
 
@@ -41,13 +38,16 @@ internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T
     override fun get(firstIndex: Int, vararg otherIndices: Int) =
         ColumnGroupImpl(name, super<DataFrameImpl>.get(firstIndex, *otherIndices))
 
-    override fun rename(newName: String) = if (newName == name) this else ColumnGroupImpl(newName, this)
+    override fun rename(newName: String) =
+        if (newName == name) this else ColumnGroupImpl(newName, this)
 
     override fun defaultValue() = null
 
-    override fun get(indices: Iterable<Int>) = ColumnGroupImpl(name, super<DataFrameImpl>.get(indices))
+    override fun get(indices: Iterable<Int>) =
+        ColumnGroupImpl(name, super<DataFrameImpl>.get(indices))
 
-    override fun addParent(parent: ColumnGroup<*>): DataColumn<DataRow<T>> = ColumnGroupWithParent(parent, this)
+    override fun addParent(parent: ColumnGroup<*>): DataColumn<DataRow<T>> =
+        ColumnGroupWithParent(parent, this)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -67,9 +67,11 @@ internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T
 
     override fun distinct() = ColumnGroupImpl(name, get(distinct.value.map { it.index() }))
 
-    override fun resolve(context: ColumnResolutionContext) = super<DataColumnInternal>.resolve(context)
+    override fun resolve(context: ColumnResolutionContext) =
+        super<DataColumnInternal>.resolve(context)
 
-    override fun resolveSingle(context: ColumnResolutionContext) = super<DataColumnInternal>.resolveSingle(context)
+    override fun resolveSingle(context: ColumnResolutionContext) =
+        super<DataColumnInternal>.resolveSingle(context)
 
     override fun iterator() = super<DataFrameImpl>.iterator()
 
@@ -83,14 +85,12 @@ internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T
         if (distinct.isInitialized()) {
             distinct.value.contains(value)
         } else {
-            asColumnGroup()
-                .firstOrNull { it == value } != null
+            asColumnGroup().firstOrNull { it == value } != null
         }
 }
 
 internal class ResolvingColumnGroup<T>(override val source: ColumnGroupImpl<T>) :
-    DataColumnGroup<T> by source,
-    ForceResolvedColumn<DataRow<T>> {
+    DataColumnGroup<T> by source, ForceResolvedColumn<DataRow<T>> {
 
     override fun resolve(context: ColumnResolutionContext) = super<DataColumnGroup>.resolve(context)
 

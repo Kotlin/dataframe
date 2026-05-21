@@ -22,6 +22,11 @@ internal interface SchemaProcessor {
             fieldNameNormalizer: (String) -> String = { it },
             nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
         ): SchemaProcessorImpl =
-            SchemaProcessorImpl(existingMarkers, namePrefix, fieldNameNormalizer, nestedMarkerNameProvider)
+            SchemaProcessorImpl(
+                existingMarkers,
+                namePrefix,
+                fieldNameNormalizer,
+                nestedMarkerNameProvider,
+            )
     }
 }

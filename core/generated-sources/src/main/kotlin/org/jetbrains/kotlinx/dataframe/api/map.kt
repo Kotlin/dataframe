@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -18,9 +21,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReferenc
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.UNIFIED_SIMILAR_CS_API
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 // region ColumnReference
 
@@ -29,14 +29,18 @@ import kotlin.reflect.typeOf
 internal inline fun <C, reified R> ColumnReference<C>.map(
     infer: Infer = Infer.Nulls,
     noinline transform: (C) -> R,
-): ColumnReference<R> = createComputedColumnReference(name(), typeOf<R>(), infer) { transform(this@map()) }
+): ColumnReference<R> =
+    createComputedColumnReference(name(), typeOf<R>(), infer) { transform(this@map()) }
 
 // endregion
 
 // region DataColumn
 
 @Interpretable("DataColumnMap")
-public inline fun <T, reified R> DataColumn<T>.map(infer: Infer = Infer.Nulls, transform: (T) -> R): DataColumn<R> {
+public inline fun <T, reified R> DataColumn<T>.map(
+    infer: Infer = Infer.Nulls,
+    transform: (T) -> R,
+): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
 }
@@ -75,13 +79,13 @@ public inline fun <T, R> DataColumn<T>.mapIndexed(
 // region DataFrame
 
 /**
- * Note: When this method is applied to a **[ColumnGroup]**,
- * its behavior differs from [DataColumn.map].
- * To apply `map` as if on a regular [DataColumn] (i.e., a column of [DataRow]s
- * whose values correspond to values in columns of the group),
- * call [ColumnGroup.asDataColumn] first.
+ * Note: When this method is applied to a **[ColumnGroup]**, its behavior differs from
+ * [DataColumn.map]. To apply `map` as if on a regular [DataColumn] (i.e., a column of [DataRow]s
+ * whose values correspond to values in columns of the group), call [ColumnGroup.asDataColumn]
+ * first.
  */
-public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = rows().map { transform(it, it) }
+public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> =
+    rows().map { transform(it, it) }
 
 public inline fun <T, reified R> DataFrame<T>.mapToColumn(
     name: String,
@@ -91,7 +95,8 @@ public inline fun <T, reified R> DataFrame<T>.mapToColumn(
 
 @Deprecated(
     UNIFIED_SIMILAR_CS_API,
-    replaceWith = ReplaceWith("expr(name, infer, body)", "org.jetbrains.kotlinx.dataframe.api.Infer"),
+    replaceWith =
+        ReplaceWith("expr(name, infer, body)", "org.jetbrains.kotlinx.dataframe.api.Infer"),
 )
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     name: String,
@@ -160,10 +165,12 @@ public inline fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>,
         body(g, g)
     }
 
-public fun <T, G> GroupBy<T, G>.mapToRows(body: Selector<GroupWithKey<T, G>, DataRow<G>?>): DataFrame<G> =
-    map(body).concat()
+public fun <T, G> GroupBy<T, G>.mapToRows(
+    body: Selector<GroupWithKey<T, G>, DataRow<G>?>
+): DataFrame<G> = map(body).concat()
 
-public fun <T, G> GroupBy<T, G>.mapToFrames(body: Selector<GroupWithKey<T, G>, DataFrame<G>>): FrameColumn<G> =
-    DataColumn.createFrameColumn(groups.name, map(body))
+public fun <T, G> GroupBy<T, G>.mapToFrames(
+    body: Selector<GroupWithKey<T, G>, DataFrame<G>>
+): FrameColumn<G> = DataColumn.createFrameColumn(groups.name, map(body))
 
 // endregion

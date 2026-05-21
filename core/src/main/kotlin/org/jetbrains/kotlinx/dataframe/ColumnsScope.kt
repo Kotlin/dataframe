@@ -3,7 +3,8 @@ package org.jetbrains.kotlinx.dataframe
 /**
  * Provides minimal API required for generated column properties:
  *
- * `val ColumnsScope<Schema marker>.column: DataColumn<String> get() = this["column"] as DataColumn<String>`
+ * `val ColumnsScope<Schema marker>.column: DataColumn<String> get() = this["column"] as
+ * DataColumn<String>`
  *
  * @param T Schema marker. Used to resolve generated extension properties for typed column access.
  */

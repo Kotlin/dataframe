@@ -1,7 +1,5 @@
 plugins {
-    with(convention.plugins) {
-        alias(kotlinJvm8)
-    }
+    with(convention.plugins) { alias(kotlinJvm8) }
     with(libs.plugins) {
         alias(shadow)
         alias(publisher)
@@ -37,8 +35,14 @@ tasks.test {
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib", "kotlin-stdlib")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-reflect", "kotlin-reflect")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-test", "kotlin-test")
-        setLibraryProperty("org.jetbrains.kotlin.test.kotlin-script-runtime", "kotlin-script-runtime")
-        setLibraryProperty("org.jetbrains.kotlin.test.kotlin-annotations-jvm", "kotlin-annotations-jvm")
+        setLibraryProperty(
+            "org.jetbrains.kotlin.test.kotlin-script-runtime",
+            "kotlin-script-runtime",
+        )
+        setLibraryProperty(
+            "org.jetbrains.kotlin.test.kotlin-annotations-jvm",
+            "kotlin-annotations-jvm",
+        )
     }
 }
 
@@ -59,11 +63,11 @@ tasks.register<JavaExec>("generateTests") {
 }
 
 fun Test.setLibraryProperty(propName: String, jarName: String) {
-    val path = project.configurations
-        .testRuntimeClasspath.get()
-        .files
-        .find { """$jarName-\d.*jar""".toRegex().matches(it.name) }
-        ?.absolutePath
-        ?: return
+    val path =
+        project.configurations.testRuntimeClasspath
+            .get()
+            .files
+            .find { """$jarName-\d.*jar""".toRegex().matches(it.name) }
+            ?.absolutePath ?: return
     systemProperty(propName, path)
 }

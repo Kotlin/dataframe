@@ -17,8 +17,7 @@ public fun AnyRow.schema(): DataFrameSchema = owner.schema()
 
 // region DataFrame
 
-@RequiredByIntellijPlugin
-public fun AnyFrame.schema(): DataFrameSchema = extractSchema()
+@RequiredByIntellijPlugin public fun AnyFrame.schema(): DataFrameSchema = extractSchema()
 
 // endregion
 
@@ -29,8 +28,9 @@ public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
 // endregion
 
 /**
- * [ordered] - if true, columns are ordered the same as in runtime schema for easier diff between the two.
- * if false, columns are ordered as they are represented in the compiler plugin
+ * [ordered] - if true, columns are ordered the same as in runtime schema for easier diff between
+ * the two. if false, columns are ordered as they are represented in the compiler plugin
  */
-public inline fun <reified T> DataFrame<T>.compileTimeSchema(ordered: Boolean = true): DataFrameSchema =
-    compileTimeSchemaImpl(if (ordered) schema() else null, T::class)
+public inline fun <reified T> DataFrame<T>.compileTimeSchema(
+    ordered: Boolean = true
+): DataFrameSchema = compileTimeSchemaImpl(if (ordered) schema() else null, T::class)

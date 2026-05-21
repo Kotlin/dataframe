@@ -41,15 +41,15 @@ internal annotation class ExcludeFromSources
  * Any `Documentable` annotated with this annotation will be exported to HTML by the documentation
  * processor.
  *
- * You can use @exportAsHtmlStart and @exportAsHtmlEnd to specify a range of the doc to
- * export to HTML.
+ * You can use @exportAsHtmlStart and @exportAsHtmlEnd to specify a range of the doc to export to
+ * HTML.
  *
  * **NOTE: DO NOT RENAME!**
  *
  * @param theme Whether to include a simple theme in the HTML file. Default is `true`.
  * @param stripReferences Whether to strip `[references]` from the HTML file. Default is `true`.
- *  This is useful when you want to include the HTML file in a website, where the references are not
- *  needed or would break.
+ *   This is useful when you want to include the HTML file in a website, where the references are
+ *   not needed or would break.
  */
 @Target(
     CLASS,
@@ -66,4 +66,7 @@ internal annotation class ExcludeFromSources
     TYPEALIAS,
     FILE,
 )
-internal annotation class ExportAsHtml(val theme: Boolean = true, val stripReferences: Boolean = true)
+internal annotation class ExportAsHtml(
+    val theme: Boolean = true,
+    val stripReferences: Boolean = true,
+)

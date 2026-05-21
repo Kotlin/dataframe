@@ -1,5 +1,27 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import java.io.BufferedInputStream
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileWriter
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.io.Reader
+import java.io.StringReader
+import java.io.StringWriter
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.net.URL
+import java.nio.charset.Charset
+import java.nio.file.Path
+import java.util.zip.GZIPInputStream
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
+import kotlin.time.Duration
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -43,28 +65,6 @@ import org.jetbrains.kotlinx.dataframe.util.WRITE_CSV_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.WRITE_CSV_PATH_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.WRITE_CSV_WRITER_REPLACE
 import org.jetbrains.kotlinx.dataframe.values
-import java.io.BufferedInputStream
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileWriter
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.Reader
-import java.io.StringReader
-import java.io.StringWriter
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.net.URL
-import java.nio.charset.Charset
-import java.nio.file.Path
-import java.util.zip.GZIPInputStream
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
-import kotlin.time.Duration
-import kotlin.time.Instant as StdlibInstant
-import kotlinx.datetime.Instant as DeprecatedInstant
 
 @Deprecated(message = APACHE_CSV, level = DeprecationLevel.WARNING)
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
@@ -90,28 +90,22 @@ public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
     }
 }
 
-@Deprecated(
-    message = APACHE_CSV,
-    level = DeprecationLevel.WARNING,
-)
+@Deprecated(message = APACHE_CSV, level = DeprecationLevel.WARNING)
 public enum class CSVType(public val format: CSVFormat) {
     DEFAULT(
         CSVFormat.DEFAULT.builder()
             .setAllowMissingColumnNames(true)
             .setIgnoreSurroundingSpaces(true)
-            .build(),
+            .build()
     ),
-    TDF(
-        CSVFormat.TDF.builder()
-            .setAllowMissingColumnNames(true)
-            .build(),
-    ),
+    TDF(CSVFormat.TDF.builder().setAllowMissingColumnNames(true).build()),
 }
 
 private val defaultCharset = Charsets.UTF_8
 
 @Deprecated("", level = DeprecationLevel.WARNING)
-internal fun isCompressed(fileOrUrl: String) = listOf("gz", "zip").contains(fileOrUrl.split(".").last())
+internal fun isCompressed(fileOrUrl: String) =
+    listOf("gz", "zip").contains(fileOrUrl.split(".").last())
 
 @Deprecated("", level = DeprecationLevel.WARNING)
 internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extension)
@@ -131,10 +125,7 @@ public fun DataFrame.Companion.readDelimStr(
     readLines: Int? = null,
 ): DataFrame<*> =
     StringReader(text).use {
-        val format = CSVType.DEFAULT.format.builder()
-            .setHeader()
-            .setDelimiter(delimiter)
-            .build()
+        val format = CSVType.DEFAULT.format.builder().setHeader().setDelimiter(delimiter).build()
         readDelim(it, format, colTypes, skipLines, readLines)
     }
 
@@ -289,7 +280,8 @@ private fun getFormat(
     header: List<String>,
     duplicate: Boolean,
 ): CSVFormat =
-    type.format.builder()
+    type.format
+        .builder()
         .setDelimiter(delimiter)
         .setHeader(*header.toTypedArray())
         .setAllowMissingColumnNames(duplicate)
@@ -313,7 +305,8 @@ public fun DataFrame.Companion.readDelim(
     charset: Charset = defaultCharset,
     parserOptions: ParserOptions? = null,
 ): AnyFrame {
-    val bufferedInStream = BufferedInputStream(if (isCompressed) GZIPInputStream(inStream) else inStream)
+    val bufferedInStream =
+        BufferedInputStream(if (isCompressed) GZIPInputStream(inStream) else inStream)
     val bomIn = BOMInputStream.builder().setInputStream(bufferedInStream).get()
     val bufferedReader = BufferedReader(InputStreamReader(bomIn, charset))
 
@@ -339,7 +332,6 @@ public enum class ColType {
     LocalTime,
     LocalDateTime,
     String,
-
     @Deprecated(
         message = COL_TYPE_INSTANT,
         replaceWith = ReplaceWith(COL_TYPE_INSTANT_REPLACE),
@@ -351,7 +343,6 @@ public enum class ColType {
     JsonArray,
     JsonObject,
     Char,
-
     @Deprecated(
         message = COL_TYPE_DEPRECATED_INSTANT,
         replaceWith = ReplaceWith(COL_TYPE_DEPRECATED_INSTANT_REPLACE),
@@ -360,14 +351,13 @@ public enum class ColType {
     DeprecatedInstant,
 
     /** Temporary, will be renamed to [Instant] in 1.1+ */
-    StdlibInstant,
-    ;
+    StdlibInstant;
 
     public companion object {
 
         /**
-         * You can add a default column type to the `colTypes` parameter
-         * by setting the key to [ColType.DEFAULT] and the value to the desired type.
+         * You can add a default column type to the `colTypes` parameter by setting the key to
+         * [ColType.DEFAULT] and the value to the desired type.
          */
         public const val DEFAULT: kotlin.String = ".default"
     }
@@ -425,9 +415,7 @@ public fun ColType.toKType(): KType =
 )
 public fun DataFrame.Companion.readDelim(
     reader: Reader,
-    format: CSVFormat = CSVFormat.DEFAULT.builder()
-        .setHeader()
-        .build(),
+    format: CSVFormat = CSVFormat.DEFAULT.builder().setHeader().build(),
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -447,7 +435,7 @@ public fun DataFrame.Companion.readDelim(
             "Ran out of memory reading this CSV-like file. " +
                 "You can try our new experimental CSV reader by adding the dependency " +
                 "\"org.jetbrains.kotlinx:dataframe-csv:{VERSION}\" and using `DataFrame.readCsv()` instead of " +
-                "`DataFrame.readCSV()`.",
+                "`DataFrame.readCSV()`."
         )
     }
 
@@ -478,21 +466,22 @@ public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.D
             printer.printRecord(columnNames())
         }
         forEach {
-            val values = it.values.map {
-                when (it) { // todo use compileOnly?
-                    is AnyRow ->
-                        error(
-                            "Encountered a DataRow when writing CSV. This needs to be converted to JSON, which is not supported by `writeCSV` anymore. Please use `df.writeCsv()` instead.",
-                        )
+            val values =
+                it.values.map {
+                    when (it) { // todo use compileOnly?
+                        is AnyRow ->
+                            error(
+                                "Encountered a DataRow when writing CSV. This needs to be converted to JSON, which is not supported by `writeCSV` anymore. Please use `df.writeCsv()` instead."
+                            )
 
-                    is AnyFrame ->
-                        error(
-                            "Encountered a DataFrame when writing CSV. This needs to be converted to JSON, which is not supported by `writeCSV` anymore. Please use `df.writeCsv()` instead.",
-                        )
+                        is AnyFrame ->
+                            error(
+                                "Encountered a DataFrame when writing CSV. This needs to be converted to JSON, which is not supported by `writeCSV` anymore. Please use `df.writeCsv()` instead."
+                            )
 
-                    else -> it
+                        else -> it
+                    }
                 }
-            }
             printer.printRecord(values)
         }
     }
@@ -504,7 +493,9 @@ public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.D
     level = DeprecationLevel.WARNING,
 )
 public fun AnyFrame.toCsv(format: CSVFormat = CSVFormat.DEFAULT): String =
-    StringWriter().use {
-        this.writeCSV(it, format)
-        it
-    }.toString()
+    StringWriter()
+        .use {
+            this.writeCSV(it, format)
+            it
+        }
+        .toString()

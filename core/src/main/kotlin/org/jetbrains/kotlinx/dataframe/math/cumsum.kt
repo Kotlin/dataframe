@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.math
 
+import java.math.BigDecimal
+import java.math.BigInteger
+import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -14,16 +19,10 @@ import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.types
 import org.jetbrains.kotlinx.dataframe.impl.unifiedNumberTypeOrNull
-import java.math.BigDecimal
-import java.math.BigInteger
-import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 /**
- * @param skipNA when true, ignores NA values (null or NaN)
- *   When false, all values after first NA will be NaN (for Double and Float columns)
- *   or null (for integer columns).
+ * @param skipNA when true, ignores NA values (null or NaN) When false, all values after first NA
+ *   will be NaN (for Double and Float columns) or null (for integer columns).
  */
 internal fun DataColumn<Number?>.cumSumImpl(type: KType, skipNA: Boolean): DataColumn<Number?> =
     when (type) {
@@ -55,20 +54,25 @@ internal fun DataColumn<Number?>.cumSumImpl(type: KType, skipNA: Boolean): DataC
 
         typeOf<Long?>() -> cast<Long?>().cumSumImpl(skipNA)
 
-        typeOf<BigInteger>(), typeOf<BigInteger?>(), typeOf<BigDecimal>(), typeOf<BigDecimal?>() ->
+        typeOf<BigInteger>(),
+        typeOf<BigInteger?>(),
+        typeOf<BigDecimal>(),
+        typeOf<BigDecimal?>() ->
             throw IllegalArgumentException(
-                "Cannot calculate the cumSum for big numbers in DataFrame. Only primitive numbers are supported.",
+                "Cannot calculate the cumSum for big numbers in DataFrame. Only primitive numbers are supported."
             )
 
         // accepts mixed primitive numbers by unifying them
-        typeOf<Number?>(), typeOf<Number>() -> {
+        typeOf<Number?>(),
+        typeOf<Number>() -> {
             val types = this.asIterable().types().toSet()
-            val unifiedType = types.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.PRIMITIVES_ONLY)
-                ?: error(
-                    "Couldn't unify the numbers of types ${
+            val unifiedType =
+                types.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.PRIMITIVES_ONLY)
+                    ?: error(
+                        "Couldn't unify the numbers of types ${
                         types.joinToString { renderType(it) }
-                    } of column ${name()} in cumSum. Please manually convert the numbers in column ${name()} to the same primitive number type before using cumSum.",
-                )
+                    } of column ${name()} in cumSum. Please manually convert the numbers in column ${name()} to the same primitive number type before using cumSum."
+                    )
 
             this.asIterable()
                 .convertToUnifiedNumberType(UnifiedNumberTypeOptions.PRIMITIVES_ONLY, unifiedType)
@@ -77,7 +81,8 @@ internal fun DataColumn<Number?>.cumSumImpl(type: KType, skipNA: Boolean): DataC
         }
 
         // CumSum for empty column or column with just null is itself
-        nothingType, nullableNothingType -> this
+        nothingType,
+        nullableNothingType -> this
 
         else -> error("CumSum for type ${type()} is not supported")
     }
@@ -285,27 +290,28 @@ internal fun DataColumn<Long?>.cumSumImpl(skipNA: Boolean): DataColumn<Long?> {
     }
 }
 
-/**
- * Double(?) -> Double
- * Float(?) -> Float
- * Short(?), Byte(?) -> Int(?)
- * T : Number(?) -> T(?)
- */
+/** Double(?) -> Double Float(?) -> Float Short(?), Byte(?) -> Int(?) T : Number(?) -> T(?) */
 public val cumSumTypeConversion: CalculateReturnType = { type, _ ->
     when (type.withNullability(false)) {
         // type changes to Int, carrying nullability
-        typeOf<Short>(), typeOf<Byte>() -> typeOf<Int>().withNullability(type.isMarkedNullable)
+        typeOf<Short>(),
+        typeOf<Byte>() -> typeOf<Int>().withNullability(type.isMarkedNullable)
 
         // type remains the same, carrying nullability
-        typeOf<Int>(), typeOf<Long>(), typeOf<Number>() -> type
+        typeOf<Int>(),
+        typeOf<Long>(),
+        typeOf<Number>() -> type
 
         // type remains the same, but nulls are turned into NaN, so no more nullability
-        typeOf<Double>(), typeOf<Float>() -> type.withNullability(false)
+        typeOf<Double>(),
+        typeOf<Float>() -> type.withNullability(false)
 
         // CumSum for empty column or column with just nulls remains unchanged
         nothingType -> type
 
         else ->
-            error("Unable to compute the cumSum for ${renderType(type)}, Only primitive numbers are supported.")
+            error(
+                "Unable to compute the cumSum for ${renderType(type)}, Only primitive numbers are supported."
+            )
     }
 }

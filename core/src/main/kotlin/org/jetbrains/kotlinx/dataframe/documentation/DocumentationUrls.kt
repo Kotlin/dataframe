@@ -21,21 +21,34 @@ internal interface DocumentationUrls {
         /** [See String API on the documentation website.]({@include [Url]}/stringapi.html) */
         typealias StringApi = Nothing
 
-        /** [See Extension Properties API on the documentation website.]({@include [Url]}/extensionpropertiesapi.html) */
+        /**
+         * [See Extension Properties API on the documentation website.]({@include
+         * [Url]}/extensionpropertiesapi.html)
+         */
         typealias ExtensionPropertiesApi = Nothing
     }
 
-    /** [See Column Selectors on the documentation website.]({@include [Url]}/columnselectors.html) */
+    /**
+     * [See Column Selectors on the documentation website.]({@include [Url]}/columnselectors.html)
+     */
     typealias ColumnSelectors = Nothing
 
-    /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
+    /**
+     * [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html)
+     */
     typealias CompilerPlugin = Nothing
 
     interface DataRow {
-        /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
+        /**
+         * [See Row Expressions on the documentation website.]({@include
+         * [Url]}/datarow.html#row-expressions)
+         */
         typealias RowExpressions = Nothing
 
-        /** [See Row Conditions on the documentation website.]({@include [Url]}/datarow.html#row-conditions) */
+        /**
+         * [See Row Conditions on the documentation website.]({@include
+         * [Url]}/datarow.html#row-conditions)
+         */
         typealias RowConditions = Nothing
     }
 
@@ -86,7 +99,9 @@ internal interface DocumentationUrls {
     /** [See `distinct` on the documentation website.]({@include [Url]}/distinct.html) */
     typealias Distinct = Nothing
 
-    /** [See `distinctBy` on the documentation website.]({@include [Url]}/distinct.html#distinctby) */
+    /**
+     * [See `distinctBy` on the documentation website.]({@include [Url]}/distinct.html#distinctby)
+     */
     typealias DistinctBy = Nothing
 
     /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
@@ -131,7 +146,10 @@ internal interface DocumentationUrls {
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     typealias Explode = Nothing
 
-    /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
+    /**
+     * [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include
+     * [Url]}/dataschemagenerationmethods.html)
+     */
     typealias DataSchemaGeneration = Nothing
 
     /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
@@ -146,40 +164,70 @@ internal interface DocumentationUrls {
     /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
     typealias GroupBy = Nothing
 
-    /** [See "`GroupBy` Transformation" on the documentation website.]({@include [Url]}/groupby.html#transformation) */
+    /**
+     * [See "`GroupBy` Transformation" on the documentation website.]({@include
+     * [Url]}/groupby.html#transformation)
+     */
     typealias GroupByTransformation = Nothing
 
-    /** [See "`GroupBy` Reducing" on the documentation website.]({@include [Url]}/groupby.html#reducing) */
+    /**
+     * [See "`GroupBy` Reducing" on the documentation website.]({@include
+     * [Url]}/groupby.html#reducing)
+     */
     typealias GroupByReducing = Nothing
 
-    /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
+    /**
+     * [See "`GroupBy` Aggregation" on the documentation website.]({@include
+     * [Url]}/groupby.html#aggregation)
+     */
     typealias GroupByAggregation = Nothing
 
-    /** [See "`groupBy` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#groupby-statistics) */
+    /**
+     * [See "`groupBy` statistics" on the documentation website.]({@include
+     * [Url]}/summarystatistics.html#groupby-statistics)
+     */
     typealias GroupByStatistics = Nothing
 
-    /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/pivot.html#pivot-groupby) */
+    /**
+     * [See "`pivot` + `groupBy`" on the documentation website.]({@include
+     * [Url]}/pivot.html#pivot-groupby)
+     */
     typealias PivotGroupBy = Nothing
 
     /** [See `pivot` on the documentation website.]({@include [Url]}/pivot.html) */
     typealias Pivot = Nothing
 
-    /** [See `pivotMatches` on the documentation website.]({@include [Url]}/pivot.html#pivotmatches) */
+    /**
+     * [See `pivotMatches` on the documentation website.]({@include [Url]}/pivot.html#pivotmatches)
+     */
     typealias PivotMatches = Nothing
 
-    /** [See `pivotCounts` on the documentation website.]({@include [Url]}/pivot.html#pivotcounts) */
+    /**
+     * [See `pivotCounts` on the documentation website.]({@include [Url]}/pivot.html#pivotcounts)
+     */
     typealias PivotCounts = Nothing
 
-    /** [See "`pivot` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#pivot-statistics) */
+    /**
+     * [See "`pivot` statistics" on the documentation website.]({@include
+     * [Url]}/summarystatistics.html#pivot-statistics)
+     */
     typealias PivotStatistics = Nothing
 
-    /** [See "Pivot` reducing" on the documentation website.]({@include [Url]}/pivot.html#reducing) */
+    /**
+     * [See "Pivot` reducing" on the documentation website.]({@include [Url]}/pivot.html#reducing)
+     */
     typealias PivotReducing = Nothing
 
-    /** [See "Pivot` Aggregation" on the documentation website.]({@include [Url]}/pivot.html#aggregation) */
+    /**
+     * [See "Pivot` Aggregation" on the documentation website.]({@include
+     * [Url]}/pivot.html#aggregation)
+     */
     typealias PivotAggregation = Nothing
 
-    /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
+    /**
+     * [See "`pivot` inside aggregation" on the documentation website.]({@include
+     * [Url]}/pivot.html#pivot-inside-aggregate)
+     */
     typealias PivotInsideAggregationStatistics = Nothing
 
     /** [See `join` on the documentation website.]({@include [Url]}/join.html) */
@@ -188,7 +236,10 @@ internal interface DocumentationUrls {
     /** [See `joinWith` on the documentation website.]({@include [Url]}/joinWith.html) */
     typealias JoinWith = Nothing
 
-    /** [See "Summary statistics" on the documentation website.]({@include [Url]}/summarystatistics.html) */
+    /**
+     * [See "Summary statistics" on the documentation website.]({@include
+     * [Url]}/summarystatistics.html)
+     */
     typealias Statistics = Nothing
 
     /** [See `concat` on the documentation website.]({@include [Url]}/concat.html) */

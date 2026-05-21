@@ -2,9 +2,9 @@
 
 package org.jetbrains.kotlinx.dataframe.documentationCsv
 
+import java.io.File
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL
-import java.io.File
 
 /**
  * ### $[WRITE_OR_CONVERT] [DataFrame] to $[FILE_TYPE_TITLE] $[DATA_TITLE]
@@ -12,18 +12,19 @@ import java.io.File
  * ${[WRITE_OR_CONVERT]}s \[this\]\[this\] [DataFrame][DataFrame] to a $[FILE_TYPE] $[DATA].
  *
  * Parameters you can use to customize the process include, for instance, \[delimiter\],
- * \[includeHeader\], \[quoteMode\], and \[headerComments\].
- * See the param list below for all settings.
+ * \[includeHeader\], \[quoteMode\], and \[headerComments\]. See the param list below for all
+ * settings.
  *
  * The integration is built upon {@include [DocumentationUrls.ApacheCsv]}.
  *
  * ##### Similar Functions
- * With overloads of $[FUNCTION_LINK]`()`, you can write $[FILE_TYPE] to [File][File], [Path][java.nio.file.Path],
- * [Appendable], or [String].
+ * With overloads of $[FUNCTION_LINK]`()`, you can write $[FILE_TYPE] to [File][File],
+ * [Path][java.nio.file.Path], [Appendable], or [String].
  *
  * For example, $[FUNCTION_LINK]`("output.$[CommonWriteDelimDocs.FILE_EXTENSION]")`
  *
- * or $[FUNCTION_LINK]`(`[File][File]`("output.$[CommonWriteDelimDocs.FILE_EXTENSION]"), quoteMode = `[QuoteMode.ALL][ALL]`)`
+ * or $[FUNCTION_LINK]`(`[File][File]`("output.$[CommonWriteDelimDocs.FILE_EXTENSION]"), quoteMode =
+ * `[QuoteMode.ALL][ALL]`)`
  *
  * Converting to a [String] can be done like this:
  *

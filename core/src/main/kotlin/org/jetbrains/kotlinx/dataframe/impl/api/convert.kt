@@ -1,5 +1,34 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.net.URL
+import java.time.Duration as JavaDuration
+import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant as StdlibInstant
+import kotlin.time.toJavaDuration
+import kotlin.time.toJavaInstant
+import kotlin.time.toKotlinDuration
+import kotlin.time.toKotlinInstant
+import kotlin.toBigDecimal as toBigDecimalKotlin
+import kotlin.toBigDecimal
+import kotlin.toBigInteger as toBigIntegerKotlin
+import kotlinx.datetime.Instant as DeprecatedInstant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -41,55 +70,23 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
-import org.jetbrains.kotlinx.dataframe.impl.isSubtypeWithNullabilityOf
 import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.net.URL
-import java.util.Locale
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.jvm.jvmErasure
-import kotlin.reflect.typeOf
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.toJavaDuration
-import kotlin.time.toJavaInstant
-import kotlin.time.toKotlinDuration
-import kotlin.time.toKotlinInstant
-import kotlin.toBigDecimal
-import java.time.Duration as JavaDuration
-import java.time.Instant as JavaInstant
-import java.time.LocalDate as JavaLocalDate
-import java.time.LocalDateTime as JavaLocalDateTime
-import java.time.LocalTime as JavaLocalTime
-import kotlin.time.Instant as StdlibInstant
-import kotlin.toBigDecimal as toBigDecimalKotlin
-import kotlin.toBigInteger as toBigIntegerKotlin
-import kotlinx.datetime.Instant as DeprecatedInstant
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
     type: KType,
     infer: Infer,
     rowConverter: RowValueExpression<T, C, R>,
-): DataFrame<T> =
-    asColumn { col ->
-        try {
-            df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) }
-        } catch (e: ClassCastException) {
-            throw ColumnTypeMismatchesColumnValuesException(col, e)
-        } catch (e: NullPointerException) {
-            throw ColumnTypeMismatchesColumnValuesException(col, e)
-        }
+): DataFrame<T> = asColumn { col ->
+    try {
+        df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) }
+    } catch (e: ClassCastException) {
+        throw ColumnTypeMismatchesColumnValuesException(col, e)
+    } catch (e: NullPointerException) {
+        throw ColumnTypeMismatchesColumnValuesException(col, e)
     }
+}
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
@@ -134,17 +131,23 @@ internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?):
         var currentRow = 0
         try {
             return when (from.classifier) {
-                Any::class, Comparable::class, Number::class, java.io.Serializable::class -> {
+                Any::class,
+                Comparable::class,
+                Number::class,
+                java.io.Serializable::class -> {
                     // find converter for every value
                     val values = values.mapIndexed { row, value ->
                         currentRow = row
-                        value?.let {
-                            val clazz = it.javaClass.kotlin
-                            val type = clazz.createStarProjectedType(false)
-                            val converter = getConverter(type, to, parserOptions)
-                                ?: throw TypeConverterNotFoundException(from, to, path)
-                            converter(it)
-                        }.checkNulls()
+                        value
+                            ?.let {
+                                val clazz = it.javaClass.kotlin
+                                val type = clazz.createStarProjectedType(false)
+                                val converter =
+                                    getConverter(type, to, parserOptions)
+                                        ?: throw TypeConverterNotFoundException(from, to, path)
+                                converter(it)
+                            }
+                            .checkNulls()
                     }
                     DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
                 }
@@ -187,16 +190,23 @@ internal fun Any.convertTo(type: KType): Any? {
     val clazz = javaClass.kotlin
     if (clazz.isSubclassOf(type.jvmErasure)) return this
     val from = clazz.createStarProjectedType(false)
-    val converter = getConverter(from, type) ?: throw TypeConverterNotFoundException(from, type, null)
+    val converter =
+        getConverter(from, type) ?: throw TypeConverterNotFoundException(from, type, null)
     return converter(this)
 }
 
-internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConverter = { converter(it as T) }
+internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConverter = {
+    converter(it as T)
+}
 
 private enum class DummyEnum
 
 @Suppress("UNCHECKED_CAST")
-internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
+internal fun createConverter(
+    from: KType,
+    to: KType,
+    options: ParserOptions? = null,
+): TypeConverter? {
     if (from.arguments.isNotEmpty() || to.arguments.isNotEmpty()) return null
     if (from.isMarkedNullable) {
         val res = createConverter(from.withNullability(false), to, options) ?: return null
@@ -209,28 +219,32 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
         // kotlin.time.Duration is a value class,
         // so it must be handled before the generic toClass.isValue / fromClass.isValue branches.
-        toClass == Duration::class -> when (fromClass) {
-            String::class -> Parsers.getAsConverterOrNull(to, options)!!
-            JavaDuration::class -> convert<JavaDuration> { it.toKotlinDuration() }
-            Long::class -> convert<Long> { it.milliseconds }
-            Int::class -> convert<Int> { it.milliseconds }
-            else -> null
-        }
+        toClass == Duration::class ->
+            when (fromClass) {
+                String::class -> Parsers.getAsConverterOrNull(to, options)!!
+                JavaDuration::class -> convert<JavaDuration> { it.toKotlinDuration() }
+                Long::class -> convert<Long> { it.milliseconds }
+                Int::class -> convert<Int> { it.milliseconds }
+                else -> null
+            }
 
-        fromClass == Duration::class -> when (toClass) {
-            JavaDuration::class -> convert<Duration> { it.toJavaDuration() }
-            Long::class -> convert<Duration> { it.inWholeMilliseconds }
-            Int::class -> convert<Duration> { it.inWholeMilliseconds.toInt() }
-            String::class -> convert<Duration> { it.toString() }
-            else -> null
-        }
+        fromClass == Duration::class ->
+            when (toClass) {
+                JavaDuration::class -> convert<Duration> { it.toJavaDuration() }
+                Long::class -> convert<Duration> { it.inWholeMilliseconds }
+                Int::class -> convert<Duration> { it.inWholeMilliseconds.toInt() }
+                String::class -> convert<Duration> { it.toString() }
+                else -> null
+            }
 
         toClass.isValue -> {
             val constructor =
-                toClass.primaryConstructor ?: error("Value type $toClass doesn't have primary constructor")
+                toClass.primaryConstructor
+                    ?: error("Value type $toClass doesn't have primary constructor")
             val underlyingType = constructor.parameters.single().type
-            val converter = getConverter(from, underlyingType)
-                ?: throw TypeConverterNotFoundException(from, underlyingType, null)
+            val converter =
+                getConverter(from, underlyingType)
+                    ?: throw TypeConverterNotFoundException(from, underlyingType, null)
             return convert<Any> {
                 val converted = converter(it)
                 if (converted == null && !underlyingType.isMarkedNullable) {
@@ -243,46 +257,51 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
         fromClass == String::class -> {
             // turn our parsers into a converter if we have them
             // !NOTE! Do not cache this converter.
-            // GlobalParserOptions might influence which parsers should run and which should be skipped
+            // GlobalParserOptions might influence which parsers should run and which should be
+            // skipped
             val parserConverter = Parsers.getAsConverterOrNull(to, options)
             when {
                 parserConverter != null -> parserConverter
 
                 // convert enums by name (or by `value` if they implement DataSchemaEnum)
-                toClass.isSubclassOf(Enum::class) -> convert<String> { string ->
-                    if (toClass.isSubclassOf(DataSchemaEnum::class)) {
-                        val enumValues = toClass.java.enumConstants as Array<out DataSchemaEnum>
-                        enumValues.firstOrNull { it.value == string }
-                            ?: java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, string)
-                    } else {
-                        java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, string)
+                toClass.isSubclassOf(Enum::class) ->
+                    convert<String> { string ->
+                        if (toClass.isSubclassOf(DataSchemaEnum::class)) {
+                            val enumValues = toClass.java.enumConstants as Array<out DataSchemaEnum>
+                            enumValues.firstOrNull { it.value == string }
+                                ?: java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, string)
+                        } else {
+                            java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, string)
+                        }
                     }
-                }
 
                 else -> null
             }
         }
 
-        toClass == String::class -> convert<Any> {
-            when {
-                // convert enums to String by `value` if they implement DataSchemaEnum
-                fromClass.isSubclassOf(DataSchemaEnum::class) ->
-                    (it as? DataSchemaEnum?)?.value ?: it.toString()
+        toClass == String::class ->
+            convert<Any> {
+                when {
+                    // convert enums to String by `value` if they implement DataSchemaEnum
+                    fromClass.isSubclassOf(DataSchemaEnum::class) ->
+                        (it as? DataSchemaEnum?)?.value ?: it.toString()
 
-                else -> it.toString()
+                    else -> it.toString()
+                }
             }
-        }
 
         fromClass.isValue -> {
             val constructor =
-                fromClass.primaryConstructor ?: error("Value type $fromClass doesn't have primary constructor")
+                fromClass.primaryConstructor
+                    ?: error("Value type $fromClass doesn't have primary constructor")
             val constructorParameter = constructor.parameters.single()
             val underlyingType = constructorParameter.type
-            val converter = getConverter(underlyingType, to)
-                ?: throw TypeConverterNotFoundException(underlyingType, to, null)
+            val converter =
+                getConverter(underlyingType, to)
+                    ?: throw TypeConverterNotFoundException(underlyingType, to, null)
             val property =
-                fromClass.memberProperties
-                    .single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
+                fromClass.memberProperties.single { it.name == constructorParameter.name }
+                    as kotlin.reflect.KProperty1<Any, *>
             if (property.visibility != kotlin.reflect.KVisibility.PUBLIC) {
                 throw TypeConversionException(
                     "Not public member property in primary constructor of value type",
@@ -292,534 +311,703 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 )
             }
 
-            convert<Any> {
-                property.get(it)?.let {
-                    converter(it)
-                }
-            }
+            convert<Any> { property.get(it)?.let { converter(it) } }
         }
 
-        else -> when (fromClass) {
-            Boolean::class -> when (toClass) {
-                Float::class -> convert<Boolean> { if (it) 1.0f else 0.0f }
+        else ->
+            when (fromClass) {
+                Boolean::class ->
+                    when (toClass) {
+                        Float::class -> convert<Boolean> { if (it) 1.0f else 0.0f }
 
-                Double::class -> convert<Boolean> { if (it) 1.0 else 0.0 }
+                        Double::class -> convert<Boolean> { if (it) 1.0 else 0.0 }
 
-                Int::class -> convert<Boolean> { if (it) 1 else 0 }
+                        Int::class -> convert<Boolean> { if (it) 1 else 0 }
 
-                Long::class -> convert<Boolean> { if (it) 1L else 0L }
+                        Long::class -> convert<Boolean> { if (it) 1L else 0L }
 
-                Short::class -> convert<Boolean> {
-                    val one: Short = 1
-                    val zero: Short = 0
-                    if (it) one else zero
-                }
+                        Short::class ->
+                            convert<Boolean> {
+                                val one: Short = 1
+                                val zero: Short = 0
+                                if (it) one else zero
+                            }
 
-                Byte::class -> convert<Boolean> {
-                    val one: Byte = 1
-                    val zero: Byte = 0
-                    if (it) one else zero
-                }
+                        Byte::class ->
+                            convert<Boolean> {
+                                val one: Byte = 1
+                                val zero: Byte = 0
+                                if (it) one else zero
+                            }
 
-                BigDecimal::class -> convert<Boolean> { if (it) BigDecimal.ONE else BigDecimal.ZERO }
+                        BigDecimal::class ->
+                            convert<Boolean> { if (it) BigDecimal.ONE else BigDecimal.ZERO }
 
-                BigInteger::class -> convert<Boolean> { if (it) BigInteger.ONE else BigInteger.ZERO }
+                        BigInteger::class ->
+                            convert<Boolean> { if (it) BigInteger.ONE else BigInteger.ZERO }
 
-                else -> null
-            }
-
-            Number::class -> when (toClass) {
-                Double::class -> convert<Number> { it.toDouble() }
-                Int::class -> convert<Number> { it.toInt() }
-                Float::class -> convert<Number> { it.toFloat() }
-                Byte::class -> convert<Number> { it.toByte() }
-                Short::class -> convert<Number> { it.toShort() }
-                Long::class -> convert<Number> { it.toLong() }
-                Boolean::class -> convert<Number> { it.toDouble() != 0.0 }
-                BigDecimal::class -> convert<Number> { it.toBigDecimal() }
-                BigInteger::class -> convert<Number> { it.toBigInteger() }
-                else -> null
-            }
-
-            Char::class -> when (toClass) {
-                Int::class -> convert<Char> { it.code }
-
-                else -> // convert char to string and then to target type
-                    getConverter(typeOf<String>(), to, options)?.let { stringConverter ->
-                        convert<Char> {
-                            stringConverter(it.toString())
-                        }
+                        else -> null
                     }
-            }
 
-            Int::class -> when (toClass) {
-                Char::class -> convert<Int> { it.toChar() }
+                Number::class ->
+                    when (toClass) {
+                        Double::class -> convert<Number> { it.toDouble() }
+                        Int::class -> convert<Number> { it.toInt() }
+                        Float::class -> convert<Number> { it.toFloat() }
+                        Byte::class -> convert<Number> { it.toByte() }
+                        Short::class -> convert<Number> { it.toShort() }
+                        Long::class -> convert<Number> { it.toLong() }
+                        Boolean::class -> convert<Number> { it.toDouble() != 0.0 }
+                        BigDecimal::class -> convert<Number> { it.toBigDecimal() }
+                        BigInteger::class -> convert<Number> { it.toBigInteger() }
+                        else -> null
+                    }
 
-                Double::class -> convert<Int> { it.toDouble() }
+                Char::class ->
+                    when (toClass) {
+                        Int::class -> convert<Char> { it.code }
 
-                Float::class -> convert<Int> { it.toFloat() }
+                        else -> // convert char to string and then to target type
+                        getConverter(typeOf<String>(), to, options)?.let { stringConverter ->
+                                convert<Char> { stringConverter(it.toString()) }
+                            }
+                    }
 
-                Byte::class -> convert<Int> { it.toByte() }
+                Int::class ->
+                    when (toClass) {
+                        Char::class -> convert<Int> { it.toChar() }
 
-                Short::class -> convert<Int> { it.toShort() }
+                        Double::class -> convert<Int> { it.toDouble() }
 
-                Long::class -> convert<Int> { it.toLong() }
+                        Float::class -> convert<Int> { it.toFloat() }
 
-                BigDecimal::class -> convert<Int> { it.toBigDecimal() }
+                        Byte::class -> convert<Int> { it.toByte() }
 
-                BigInteger::class -> convert<Int> { it.toBigInteger() }
+                        Short::class -> convert<Int> { it.toShort() }
 
-                Boolean::class -> convert<Int> { it != 0 }
+                        Long::class -> convert<Int> { it.toLong() }
 
-                LocalDateTime::class -> convert<Int> { it.toLong().toLocalDateTime(defaultTimeZone) }
+                        BigDecimal::class -> convert<Int> { it.toBigDecimal() }
 
-                LocalDate::class -> convert<Int> { it.toLong().toLocalDate(defaultTimeZone) }
+                        BigInteger::class -> convert<Int> { it.toBigInteger() }
 
-                LocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone) }
+                        Boolean::class -> convert<Int> { it != 0 }
 
-                StdlibInstant::class -> convert<Int> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
+                        LocalDateTime::class ->
+                            convert<Int> { it.toLong().toLocalDateTime(defaultTimeZone) }
 
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<Int> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
+                        LocalDate::class ->
+                            convert<Int> { it.toLong().toLocalDate(defaultTimeZone) }
 
-                JavaLocalDateTime::class -> convert<Int> {
-                    it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
-                }
+                        LocalTime::class ->
+                            convert<Int> { it.toLong().toLocalTime(defaultTimeZone) }
 
-                JavaLocalDate::class -> convert<Int> { it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                        StdlibInstant::class ->
+                            convert<Int> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
 
-                JavaLocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime() }
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<Int> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
 
-                JavaInstant::class -> convert<Int> { JavaInstant.ofEpochMilli(it.toLong()) }
+                        JavaLocalDateTime::class ->
+                            convert<Int> {
+                                it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                            }
 
-                JavaDuration::class -> convert<Int> { JavaDuration.ofMillis(it.toLong()) }
+                        JavaLocalDate::class ->
+                            convert<Int> {
+                                it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate()
+                            }
+
+                        JavaLocalTime::class ->
+                            convert<Int> {
+                                it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime()
+                            }
+
+                        JavaInstant::class -> convert<Int> { JavaInstant.ofEpochMilli(it.toLong()) }
+
+                        JavaDuration::class -> convert<Int> { JavaDuration.ofMillis(it.toLong()) }
+
+                        else -> null
+                    }
+
+                Byte::class ->
+                    when (toClass) {
+                        Double::class -> convert<Byte> { it.toDouble() }
+
+                        Float::class -> convert<Byte> { it.toFloat() }
+
+                        Int::class -> convert<Byte> { it.toInt() }
+
+                        Short::class -> convert<Byte> { it.toShort() }
+
+                        Long::class -> convert<Byte> { it.toLong() }
+
+                        BigDecimal::class -> convert<Byte> { it.toBigDecimal() }
+
+                        BigInteger::class -> convert<Byte> { it.toBigInteger() }
+
+                        Boolean::class -> convert<Byte> { it != 0.toByte() }
+
+                        LocalDateTime::class ->
+                            convert<Byte> { it.toLong().toLocalDateTime(defaultTimeZone) }
+
+                        LocalDate::class ->
+                            convert<Byte> { it.toLong().toLocalDate(defaultTimeZone) }
+
+                        LocalTime::class ->
+                            convert<Byte> { it.toLong().toLocalTime(defaultTimeZone) }
+
+                        StdlibInstant::class ->
+                            convert<Byte> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
+
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<Byte> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
+
+                        JavaLocalDateTime::class ->
+                            convert<Byte> {
+                                it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                            }
+
+                        JavaLocalDate::class ->
+                            convert<Byte> {
+                                it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate()
+                            }
+
+                        JavaLocalTime::class ->
+                            convert<Byte> {
+                                it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime()
+                            }
+
+                        JavaInstant::class ->
+                            convert<Byte> { JavaInstant.ofEpochMilli(it.toLong()) }
+
+                        else -> null
+                    }
+
+                Short::class ->
+                    when (toClass) {
+                        Double::class -> convert<Short> { it.toDouble() }
+
+                        Float::class -> convert<Short> { it.toFloat() }
+
+                        Int::class -> convert<Short> { it.toInt() }
+
+                        Byte::class -> convert<Short> { it.toByte() }
+
+                        Long::class -> convert<Short> { it.toLong() }
+
+                        BigDecimal::class -> convert<Short> { it.toBigDecimal() }
+
+                        BigInteger::class -> convert<Short> { it.toBigInteger() }
+
+                        Boolean::class -> convert<Short> { it != 0.toShort() }
+
+                        LocalDateTime::class ->
+                            convert<Short> { it.toLong().toLocalDateTime(defaultTimeZone) }
+
+                        LocalDate::class ->
+                            convert<Short> { it.toLong().toLocalDate(defaultTimeZone) }
+
+                        LocalTime::class ->
+                            convert<Short> { it.toLong().toLocalTime(defaultTimeZone) }
+
+                        StdlibInstant::class ->
+                            convert<Short> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
+
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<Short> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
+
+                        JavaLocalDateTime::class ->
+                            convert<Short> {
+                                it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                            }
+
+                        JavaLocalDate::class ->
+                            convert<Short> {
+                                it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate()
+                            }
+
+                        JavaLocalTime::class ->
+                            convert<Short> {
+                                it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime()
+                            }
+
+                        JavaInstant::class ->
+                            convert<Short> { JavaInstant.ofEpochMilli(it.toLong()) }
+
+                        else -> null
+                    }
+
+                Double::class ->
+                    when (toClass) {
+                        Int::class -> convert<Double> { it.roundToInt() }
+                        Float::class -> convert<Double> { it.toFloat() }
+                        Long::class -> convert<Double> { it.roundToLong() }
+                        Short::class -> convert<Double> { it.roundToInt().toShort() }
+                        Byte::class -> convert<Double> { it.roundToInt().toByte() }
+                        BigDecimal::class -> convert<Double> { it.toBigDecimal() }
+                        BigInteger::class -> convert<Double> { it.toBigInteger() }
+                        Boolean::class -> convert<Double> { it != 0.0 }
+                        else -> null
+                    }
+
+                Long::class ->
+                    when (toClass) {
+                        Double::class -> convert<Long> { it.toDouble() }
+
+                        Float::class -> convert<Long> { it.toFloat() }
+
+                        Byte::class -> convert<Long> { it.toByte() }
+
+                        Short::class -> convert<Long> { it.toShort() }
+
+                        Int::class -> convert<Long> { it.toInt() }
+
+                        BigDecimal::class -> convert<Long> { it.toBigDecimal() }
+
+                        BigInteger::class -> convert<Long> { it.toBigInteger() }
+
+                        Boolean::class -> convert<Long> { it != 0L }
+
+                        LocalDateTime::class ->
+                            convert<Long> { it.toLocalDateTime(defaultTimeZone) }
+
+                        LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone) }
+
+                        LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
+
+                        StdlibInstant::class ->
+                            convert<Long> { StdlibInstant.fromEpochMilliseconds(it) }
+
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<Long> { DeprecatedInstant.fromEpochMilliseconds(it) }
+
+                        JavaLocalDateTime::class ->
+                            convert<Long> {
+                                it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                            }
+
+                        JavaLocalDate::class ->
+                            convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
+
+                        JavaLocalTime::class ->
+                            convert<Long> { it.toLocalTime(defaultTimeZone).toJavaLocalTime() }
+
+                        JavaInstant::class -> convert<Long> { JavaInstant.ofEpochMilli(it) }
+
+                        JavaDuration::class -> convert<Long> { JavaDuration.ofMillis(it) }
+
+                        else -> null
+                    }
+
+                StdlibInstant::class ->
+                    when (toClass) {
+                        Long::class -> convert<StdlibInstant> { it.toEpochMilliseconds() }
+
+                        LocalDateTime::class ->
+                            convert<StdlibInstant> { it.toLocalDateTime(defaultTimeZone) }
+
+                        LocalDate::class ->
+                            convert<StdlibInstant> { it.toLocalDate(defaultTimeZone) }
+
+                        LocalTime::class ->
+                            convert<StdlibInstant> { it.toLocalTime(defaultTimeZone) }
+
+                        JavaLocalDateTime::class ->
+                            convert<StdlibInstant> {
+                                it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                            }
+
+                        JavaLocalDate::class ->
+                            convert<StdlibInstant> {
+                                it.toLocalDate(defaultTimeZone).toJavaLocalDate()
+                            }
+
+                        JavaInstant::class -> convert<StdlibInstant> { it.toJavaInstant() }
+
+                        JavaLocalTime::class ->
+                            convert<StdlibInstant> {
+                                it.toLocalTime(defaultTimeZone).toJavaLocalTime()
+                            }
+
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<StdlibInstant> { it.toDeprecatedInstant() }
+
+                        else -> null
+                    }
+
+                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue
+                // #1350
+                DeprecatedInstant::class ->
+                    when (toClass) {
+                        Long::class ->
+                            convert<DeprecatedInstant> {
+                                it.toStdlibInstant().toEpochMilliseconds()
+                            }
+
+                        LocalDateTime::class ->
+                            convert<DeprecatedInstant> {
+                                it.toStdlibInstant().toLocalDateTime(defaultTimeZone)
+                            }
+
+                        LocalDate::class ->
+                            convert<DeprecatedInstant> {
+                                it.toStdlibInstant().toLocalDate(defaultTimeZone)
+                            }
+
+                        LocalTime::class ->
+                            convert<DeprecatedInstant> {
+                                it.toStdlibInstant().toLocalTime(defaultTimeZone)
+                            }
+
+                        JavaLocalDateTime::class ->
+                            convert<DeprecatedInstant> {
+                                it.toStdlibInstant()
+                                    .toLocalDateTime(defaultTimeZone)
+                                    .toJavaLocalDateTime()
+                            }
+
+                        JavaLocalDate::class ->
+                            convert<DeprecatedInstant> {
+                                it.toStdlibInstant().toLocalDate(defaultTimeZone).toJavaLocalDate()
+                            }
+
+                        JavaInstant::class ->
+                            convert<DeprecatedInstant> { it.toStdlibInstant().toJavaInstant() }
+
+                        JavaLocalTime::class ->
+                            convert<DeprecatedInstant> {
+                                it.toStdlibInstant().toLocalTime(defaultTimeZone).toJavaLocalTime()
+                            }
+
+                        StdlibInstant::class -> convert<DeprecatedInstant> { it.toStdlibInstant() }
+
+                        else -> null
+                    }
+
+                JavaInstant::class ->
+                    when (toClass) {
+                        Long::class -> convert<JavaInstant> { it.toEpochMilli() }
+
+                        LocalDateTime::class ->
+                            convert<JavaInstant> {
+                                it.toKotlinInstant().toLocalDateTime(defaultTimeZone)
+                            }
+
+                        LocalDate::class ->
+                            convert<JavaInstant> {
+                                it.toKotlinInstant().toLocalDate(defaultTimeZone)
+                            }
+
+                        LocalTime::class ->
+                            convert<JavaInstant> {
+                                it.toKotlinInstant().toLocalTime(defaultTimeZone)
+                            }
+
+                        StdlibInstant::class -> convert<JavaInstant> { it.toKotlinInstant() }
+
+                        JavaLocalDateTime::class ->
+                            convert<JavaInstant> {
+                                it.toKotlinInstant()
+                                    .toLocalDateTime(defaultTimeZone)
+                                    .toJavaLocalDateTime()
+                            }
+
+                        JavaLocalDate::class ->
+                            convert<JavaInstant> {
+                                it.toKotlinInstant().toLocalDate(defaultTimeZone).toJavaLocalDate()
+                            }
+
+                        JavaLocalTime::class ->
+                            convert<JavaInstant> {
+                                it.toKotlinInstant().toLocalTime(defaultTimeZone).toJavaLocalTime()
+                            }
+
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<JavaInstant> { it.toKotlinInstant().toDeprecatedInstant() }
+
+                        else -> null
+                    }
+
+                JavaDuration::class ->
+                    when (toClass) {
+                        Long::class -> convert<JavaDuration> { it.toMillis() }
+
+                        Int::class -> convert<JavaDuration> { it.toMillis().toInt() }
+
+                        // Duration::class already handled above
+                        else -> null
+                    }
+
+                Float::class ->
+                    when (toClass) {
+                        Double::class -> convert<Float> { it.toDouble() }
+                        Long::class -> convert<Float> { it.roundToLong() }
+                        Int::class -> convert<Float> { it.roundToInt() }
+                        Byte::class -> convert<Float> { it.roundToInt().toByte() }
+                        Short::class -> convert<Float> { it.roundToInt().toShort() }
+                        BigDecimal::class -> convert<Float> { it.toBigDecimal() }
+                        BigInteger::class -> convert<Float> { it.toBigInteger() }
+                        Boolean::class -> convert<Float> { it != 0.0F }
+                        else -> null
+                    }
+
+                BigDecimal::class ->
+                    when (toClass) {
+                        Double::class -> convert<BigDecimal> { it.toDouble() }
+                        Int::class -> convert<BigDecimal> { it.toInt() }
+                        Byte::class -> convert<BigDecimal> { it.toByte() }
+                        Short::class -> convert<BigDecimal> { it.toShort() }
+                        Float::class -> convert<BigDecimal> { it.toFloat() }
+                        Long::class -> convert<BigDecimal> { it.toLong() }
+                        BigInteger::class -> convert<BigDecimal> { it.toBigInteger() }
+                        Boolean::class -> convert<BigDecimal> { it != BigDecimal.ZERO }
+                        else -> null
+                    }
+
+                BigInteger::class ->
+                    when (toClass) {
+                        Double::class -> convert<BigInteger> { it.toDouble() }
+                        Int::class -> convert<BigInteger> { it.toInt() }
+                        Byte::class -> convert<BigInteger> { it.toByte() }
+                        Short::class -> convert<BigInteger> { it.toShort() }
+                        Float::class -> convert<BigInteger> { it.toFloat() }
+                        Long::class -> convert<BigInteger> { it.toLong() }
+                        BigDecimal::class -> convert<BigInteger> { it.toBigDecimal() }
+                        Boolean::class -> convert<BigInteger> { it != BigInteger.ZERO }
+                        else -> null
+                    }
+
+                DateTimeComponents::class ->
+                    when (toClass) {
+                        UtcOffset::class -> convert<DateTimeComponents> { it.toUtcOffset() }
+
+                        YearMonth::class -> convert<DateTimeComponents> { it.toYearMonth() }
+
+                        LocalDate::class -> convert<DateTimeComponents> { it.toLocalDate() }
+
+                        LocalTime::class -> convert<DateTimeComponents> { it.toLocalTime() }
+
+                        LocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime() }
+
+                        JavaLocalDate::class ->
+                            convert<DateTimeComponents> { it.toLocalDate().toJavaLocalDate() }
+
+                        JavaLocalTime::class ->
+                            convert<DateTimeComponents> { it.toLocalTime().toJavaLocalTime() }
+
+                        JavaLocalDateTime::class ->
+                            convert<DateTimeComponents> {
+                                it.toLocalDateTime().toJavaLocalDateTime()
+                            }
+
+                        StdlibInstant::class ->
+                            convert<DateTimeComponents> { it.toInstantUsingOffset() }
+
+                        DeprecatedInstant::class ->
+                            convert<DateTimeComponents> {
+                                it.toInstantUsingOffset().toDeprecatedInstant()
+                            }
+
+                        JavaInstant::class ->
+                            convert<DateTimeComponents> {
+                                it.toInstantUsingOffset().toJavaInstant()
+                            }
+
+                        Long::class ->
+                            convert<DateTimeComponents> {
+                                it.toInstantUsingOffset().toEpochMilliseconds()
+                            }
+
+                        else -> null
+                    }
+
+                LocalDateTime::class ->
+                    when (toClass) {
+                        LocalDate::class -> convert<LocalDateTime> { it.date }
+
+                        LocalTime::class -> convert<LocalDateTime> { it.time }
+
+                        StdlibInstant::class ->
+                            convert<LocalDateTime> { it.toInstant(defaultTimeZone) }
+
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<LocalDateTime> {
+                                it.toInstant(defaultTimeZone).toDeprecatedInstant()
+                            }
+
+                        Long::class ->
+                            convert<LocalDateTime> {
+                                it.toInstant(defaultTimeZone).toEpochMilliseconds()
+                            }
+
+                        JavaLocalDateTime::class ->
+                            convert<LocalDateTime> { it.toJavaLocalDateTime() }
+
+                        JavaLocalDate::class -> convert<LocalDateTime> { it.date.toJavaLocalDate() }
+
+                        JavaLocalTime::class ->
+                            convert<LocalDateTime> { it.toJavaLocalDateTime().toLocalTime() }
+
+                        JavaInstant::class ->
+                            convert<LocalDateTime> { it.toInstant(defaultTimeZone).toJavaInstant() }
+
+                        else -> null
+                    }
+
+                JavaLocalDateTime::class ->
+                    when (toClass) {
+                        LocalDate::class ->
+                            convert<JavaLocalDateTime> { it.toKotlinLocalDateTime().date }
+
+                        LocalTime::class ->
+                            convert<JavaLocalDateTime> { it.toKotlinLocalDateTime().time }
+
+                        LocalDateTime::class ->
+                            convert<JavaLocalDateTime> { it.toKotlinLocalDateTime() }
+
+                        StdlibInstant::class ->
+                            convert<JavaLocalDateTime> {
+                                it.toKotlinLocalDateTime().toInstant(defaultTimeZone)
+                            }
+
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<JavaLocalDateTime> {
+                                it.toKotlinLocalDateTime()
+                                    .toInstant(defaultTimeZone)
+                                    .toDeprecatedInstant()
+                            }
+
+                        Long::class ->
+                            convert<JavaLocalDateTime> {
+                                it.toKotlinLocalDateTime()
+                                    .toInstant(defaultTimeZone)
+                                    .toEpochMilliseconds()
+                            }
+
+                        JavaLocalDate::class -> convert<JavaLocalDateTime> { it.toLocalDate() }
+
+                        JavaLocalTime::class -> convert<JavaLocalDateTime> { it.toLocalTime() }
+
+                        JavaInstant::class ->
+                            convert<JavaLocalDateTime> {
+                                it.toKotlinLocalDateTime()
+                                    .toInstant(defaultTimeZone)
+                                    .toJavaInstant()
+                            }
+
+                        else -> null
+                    }
+
+                LocalDate::class ->
+                    when (toClass) {
+                        LocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0) }
+
+                        StdlibInstant::class ->
+                            convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone) }
+
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<LocalDate> {
+                                it.atStartOfDayIn(defaultTimeZone).toDeprecatedInstant()
+                            }
+
+                        Long::class ->
+                            convert<LocalDate> {
+                                it.atStartOfDayIn(defaultTimeZone).toEpochMilliseconds()
+                            }
+
+                        JavaLocalDate::class -> convert<LocalDate> { it.toJavaLocalDate() }
+
+                        JavaLocalDateTime::class ->
+                            convert<LocalDate> { it.atTime(0, 0).toJavaLocalDateTime() }
+
+                        JavaInstant::class ->
+                            convert<LocalDate> {
+                                it.atStartOfDayIn(defaultTimeZone).toJavaInstant()
+                            }
+
+                        else -> null
+                    }
+
+                JavaLocalDate::class ->
+                    when (toClass) {
+                        LocalDate::class -> convert<JavaLocalDate> { it.toKotlinLocalDate() }
+
+                        LocalDateTime::class ->
+                            convert<JavaLocalDate> { it.atTime(0, 0).toKotlinLocalDateTime() }
+
+                        StdlibInstant::class ->
+                            convert<JavaLocalDate> {
+                                it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone)
+                            }
+
+                        // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant,
+                        // Issue #1350
+                        DeprecatedInstant::class ->
+                            convert<JavaLocalDate> {
+                                it.toKotlinLocalDate()
+                                    .atStartOfDayIn(defaultTimeZone)
+                                    .toDeprecatedInstant()
+                            }
+
+                        Long::class ->
+                            convert<JavaLocalDate> {
+                                it.toKotlinLocalDate()
+                                    .atStartOfDayIn(defaultTimeZone)
+                                    .toEpochMilliseconds()
+                            }
+
+                        JavaLocalDateTime::class -> convert<JavaLocalDate> { it.atStartOfDay() }
+
+                        JavaInstant::class ->
+                            convert<JavaLocalDate> {
+                                it.toKotlinLocalDate()
+                                    .atStartOfDayIn(defaultTimeZone)
+                                    .toJavaInstant()
+                            }
+
+                        else -> null
+                    }
+
+                LocalTime::class ->
+                    when (toClass) {
+                        JavaLocalTime::class -> convert<LocalTime> { it.toJavaLocalTime() }
+                        else -> null
+                    }
+
+                JavaLocalTime::class ->
+                    when (toClass) {
+                        LocalTime::class -> convert<JavaLocalTime> { it.toKotlinLocalTime() }
+                        else -> null
+                    }
+
+                URL::class ->
+                    when (toClass) {
+                        IMG::class -> convert<URL> { IMG(it.toString()) }
+                        IFRAME::class -> convert<URL> { IFRAME(it.toString()) }
+                        else -> null
+                    }
 
                 else -> null
             }
-
-            Byte::class -> when (toClass) {
-                Double::class -> convert<Byte> { it.toDouble() }
-
-                Float::class -> convert<Byte> { it.toFloat() }
-
-                Int::class -> convert<Byte> { it.toInt() }
-
-                Short::class -> convert<Byte> { it.toShort() }
-
-                Long::class -> convert<Byte> { it.toLong() }
-
-                BigDecimal::class -> convert<Byte> { it.toBigDecimal() }
-
-                BigInteger::class -> convert<Byte> { it.toBigInteger() }
-
-                Boolean::class -> convert<Byte> { it != 0.toByte() }
-
-                LocalDateTime::class -> convert<Byte> { it.toLong().toLocalDateTime(defaultTimeZone) }
-
-                LocalDate::class -> convert<Byte> { it.toLong().toLocalDate(defaultTimeZone) }
-
-                LocalTime::class -> convert<Byte> { it.toLong().toLocalTime(defaultTimeZone) }
-
-                StdlibInstant::class -> convert<Byte> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
-
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<Byte> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
-
-                JavaLocalDateTime::class -> convert<Byte> {
-                    it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
-                }
-
-                JavaLocalDate::class -> convert<Byte> { it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate() }
-
-                JavaLocalTime::class -> convert<Byte> { it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime() }
-
-                JavaInstant::class -> convert<Byte> { JavaInstant.ofEpochMilli(it.toLong()) }
-
-                else -> null
-            }
-
-            Short::class -> when (toClass) {
-                Double::class -> convert<Short> { it.toDouble() }
-
-                Float::class -> convert<Short> { it.toFloat() }
-
-                Int::class -> convert<Short> { it.toInt() }
-
-                Byte::class -> convert<Short> { it.toByte() }
-
-                Long::class -> convert<Short> { it.toLong() }
-
-                BigDecimal::class -> convert<Short> { it.toBigDecimal() }
-
-                BigInteger::class -> convert<Short> { it.toBigInteger() }
-
-                Boolean::class -> convert<Short> { it != 0.toShort() }
-
-                LocalDateTime::class -> convert<Short> { it.toLong().toLocalDateTime(defaultTimeZone) }
-
-                LocalDate::class -> convert<Short> { it.toLong().toLocalDate(defaultTimeZone) }
-
-                LocalTime::class -> convert<Short> { it.toLong().toLocalTime(defaultTimeZone) }
-
-                StdlibInstant::class -> convert<Short> { StdlibInstant.fromEpochMilliseconds(it.toLong()) }
-
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<Short> { DeprecatedInstant.fromEpochMilliseconds(it.toLong()) }
-
-                JavaLocalDateTime::class -> convert<Short> {
-                    it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
-                }
-
-                JavaLocalDate::class -> convert<Short> { it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate() }
-
-                JavaLocalTime::class -> convert<Short> { it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime() }
-
-                JavaInstant::class -> convert<Short> { JavaInstant.ofEpochMilli(it.toLong()) }
-
-                else -> null
-            }
-
-            Double::class -> when (toClass) {
-                Int::class -> convert<Double> { it.roundToInt() }
-                Float::class -> convert<Double> { it.toFloat() }
-                Long::class -> convert<Double> { it.roundToLong() }
-                Short::class -> convert<Double> { it.roundToInt().toShort() }
-                Byte::class -> convert<Double> { it.roundToInt().toByte() }
-                BigDecimal::class -> convert<Double> { it.toBigDecimal() }
-                BigInteger::class -> convert<Double> { it.toBigInteger() }
-                Boolean::class -> convert<Double> { it != 0.0 }
-                else -> null
-            }
-
-            Long::class -> when (toClass) {
-                Double::class -> convert<Long> { it.toDouble() }
-
-                Float::class -> convert<Long> { it.toFloat() }
-
-                Byte::class -> convert<Long> { it.toByte() }
-
-                Short::class -> convert<Long> { it.toShort() }
-
-                Int::class -> convert<Long> { it.toInt() }
-
-                BigDecimal::class -> convert<Long> { it.toBigDecimal() }
-
-                BigInteger::class -> convert<Long> { it.toBigInteger() }
-
-                Boolean::class -> convert<Long> { it != 0L }
-
-                LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone) }
-
-                LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone) }
-
-                LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
-
-                StdlibInstant::class -> convert<Long> { StdlibInstant.fromEpochMilliseconds(it) }
-
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<Long> { DeprecatedInstant.fromEpochMilliseconds(it) }
-
-                JavaLocalDateTime::class -> convert<Long> {
-                    it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
-                }
-
-                JavaLocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
-
-                JavaLocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone).toJavaLocalTime() }
-
-                JavaInstant::class -> convert<Long> { JavaInstant.ofEpochMilli(it) }
-
-                JavaDuration::class -> convert<Long> { JavaDuration.ofMillis(it) }
-
-                else -> null
-            }
-
-            StdlibInstant::class -> when (toClass) {
-                Long::class -> convert<StdlibInstant> { it.toEpochMilliseconds() }
-
-                LocalDateTime::class -> convert<StdlibInstant> { it.toLocalDateTime(defaultTimeZone) }
-
-                LocalDate::class -> convert<StdlibInstant> { it.toLocalDate(defaultTimeZone) }
-
-                LocalTime::class -> convert<StdlibInstant> { it.toLocalTime(defaultTimeZone) }
-
-                JavaLocalDateTime::class -> convert<StdlibInstant> {
-                    it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
-                }
-
-                JavaLocalDate::class -> convert<StdlibInstant> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
-
-                JavaInstant::class -> convert<StdlibInstant> { it.toJavaInstant() }
-
-                JavaLocalTime::class -> convert<StdlibInstant> { it.toLocalTime(defaultTimeZone).toJavaLocalTime() }
-
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<StdlibInstant> { it.toDeprecatedInstant() }
-
-                else -> null
-            }
-
-            // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-            DeprecatedInstant::class -> when (toClass) {
-                Long::class -> convert<DeprecatedInstant> { it.toStdlibInstant().toEpochMilliseconds() }
-
-                LocalDateTime::class -> convert<DeprecatedInstant> {
-                    it.toStdlibInstant().toLocalDateTime(defaultTimeZone)
-                }
-
-                LocalDate::class -> convert<DeprecatedInstant> { it.toStdlibInstant().toLocalDate(defaultTimeZone) }
-
-                LocalTime::class -> convert<DeprecatedInstant> { it.toStdlibInstant().toLocalTime(defaultTimeZone) }
-
-                JavaLocalDateTime::class -> convert<DeprecatedInstant> {
-                    it.toStdlibInstant().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
-                }
-
-                JavaLocalDate::class -> convert<DeprecatedInstant> {
-                    it.toStdlibInstant().toLocalDate(defaultTimeZone).toJavaLocalDate()
-                }
-
-                JavaInstant::class -> convert<DeprecatedInstant> { it.toStdlibInstant().toJavaInstant() }
-
-                JavaLocalTime::class -> convert<DeprecatedInstant> {
-                    it.toStdlibInstant().toLocalTime(defaultTimeZone).toJavaLocalTime()
-                }
-
-                StdlibInstant::class -> convert<DeprecatedInstant> { it.toStdlibInstant() }
-
-                else -> null
-            }
-
-            JavaInstant::class -> when (toClass) {
-                Long::class -> convert<JavaInstant> { it.toEpochMilli() }
-
-                LocalDateTime::class -> convert<JavaInstant> {
-                    it.toKotlinInstant().toLocalDateTime(defaultTimeZone)
-                }
-
-                LocalDate::class -> convert<JavaInstant> { it.toKotlinInstant().toLocalDate(defaultTimeZone) }
-
-                LocalTime::class -> convert<JavaInstant> { it.toKotlinInstant().toLocalTime(defaultTimeZone) }
-
-                StdlibInstant::class -> convert<JavaInstant> { it.toKotlinInstant() }
-
-                JavaLocalDateTime::class -> convert<JavaInstant> {
-                    it.toKotlinInstant().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
-                }
-
-                JavaLocalDate::class -> convert<JavaInstant> {
-                    it.toKotlinInstant().toLocalDate(defaultTimeZone).toJavaLocalDate()
-                }
-
-                JavaLocalTime::class -> convert<JavaInstant> {
-                    it.toKotlinInstant().toLocalTime(defaultTimeZone).toJavaLocalTime()
-                }
-
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<JavaInstant> {
-                    it.toKotlinInstant().toDeprecatedInstant()
-                }
-
-                else -> null
-            }
-
-            JavaDuration::class -> when (toClass) {
-                Long::class -> convert<JavaDuration> { it.toMillis() }
-
-                Int::class -> convert<JavaDuration> { it.toMillis().toInt() }
-
-                // Duration::class already handled above
-                else -> null
-            }
-
-            Float::class -> when (toClass) {
-                Double::class -> convert<Float> { it.toDouble() }
-                Long::class -> convert<Float> { it.roundToLong() }
-                Int::class -> convert<Float> { it.roundToInt() }
-                Byte::class -> convert<Float> { it.roundToInt().toByte() }
-                Short::class -> convert<Float> { it.roundToInt().toShort() }
-                BigDecimal::class -> convert<Float> { it.toBigDecimal() }
-                BigInteger::class -> convert<Float> { it.toBigInteger() }
-                Boolean::class -> convert<Float> { it != 0.0F }
-                else -> null
-            }
-
-            BigDecimal::class -> when (toClass) {
-                Double::class -> convert<BigDecimal> { it.toDouble() }
-                Int::class -> convert<BigDecimal> { it.toInt() }
-                Byte::class -> convert<BigDecimal> { it.toByte() }
-                Short::class -> convert<BigDecimal> { it.toShort() }
-                Float::class -> convert<BigDecimal> { it.toFloat() }
-                Long::class -> convert<BigDecimal> { it.toLong() }
-                BigInteger::class -> convert<BigDecimal> { it.toBigInteger() }
-                Boolean::class -> convert<BigDecimal> { it != BigDecimal.ZERO }
-                else -> null
-            }
-
-            BigInteger::class -> when (toClass) {
-                Double::class -> convert<BigInteger> { it.toDouble() }
-                Int::class -> convert<BigInteger> { it.toInt() }
-                Byte::class -> convert<BigInteger> { it.toByte() }
-                Short::class -> convert<BigInteger> { it.toShort() }
-                Float::class -> convert<BigInteger> { it.toFloat() }
-                Long::class -> convert<BigInteger> { it.toLong() }
-                BigDecimal::class -> convert<BigInteger> { it.toBigDecimal() }
-                Boolean::class -> convert<BigInteger> { it != BigInteger.ZERO }
-                else -> null
-            }
-
-            DateTimeComponents::class -> when (toClass) {
-                UtcOffset::class -> convert<DateTimeComponents> { it.toUtcOffset() }
-
-                YearMonth::class -> convert<DateTimeComponents> { it.toYearMonth() }
-
-                LocalDate::class -> convert<DateTimeComponents> { it.toLocalDate() }
-
-                LocalTime::class -> convert<DateTimeComponents> { it.toLocalTime() }
-
-                LocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime() }
-
-                JavaLocalDate::class -> convert<DateTimeComponents> { it.toLocalDate().toJavaLocalDate() }
-
-                JavaLocalTime::class -> convert<DateTimeComponents> { it.toLocalTime().toJavaLocalTime() }
-
-                JavaLocalDateTime::class -> convert<DateTimeComponents> { it.toLocalDateTime().toJavaLocalDateTime() }
-
-                StdlibInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset() }
-
-                DeprecatedInstant::class -> convert<DateTimeComponents> {
-                    it.toInstantUsingOffset().toDeprecatedInstant()
-                }
-
-                JavaInstant::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toJavaInstant() }
-
-                Long::class -> convert<DateTimeComponents> { it.toInstantUsingOffset().toEpochMilliseconds() }
-
-                else -> null
-            }
-
-            LocalDateTime::class -> when (toClass) {
-                LocalDate::class -> convert<LocalDateTime> { it.date }
-
-                LocalTime::class -> convert<LocalDateTime> { it.time }
-
-                StdlibInstant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone) }
-
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<LocalDateTime> {
-                    it.toInstant(defaultTimeZone).toDeprecatedInstant()
-                }
-
-                Long::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone).toEpochMilliseconds() }
-
-                JavaLocalDateTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime() }
-
-                JavaLocalDate::class -> convert<LocalDateTime> { it.date.toJavaLocalDate() }
-
-                JavaLocalTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime().toLocalTime() }
-
-                JavaInstant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone).toJavaInstant() }
-
-                else -> null
-            }
-
-            JavaLocalDateTime::class -> when (toClass) {
-                LocalDate::class -> convert<JavaLocalDateTime> { it.toKotlinLocalDateTime().date }
-
-                LocalTime::class -> convert<JavaLocalDateTime> { it.toKotlinLocalDateTime().time }
-
-                LocalDateTime::class -> convert<JavaLocalDateTime> { it.toKotlinLocalDateTime() }
-
-                StdlibInstant::class -> convert<JavaLocalDateTime> {
-                    it.toKotlinLocalDateTime().toInstant(defaultTimeZone)
-                }
-
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<JavaLocalDateTime> {
-                    it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toDeprecatedInstant()
-                }
-
-                Long::class -> convert<JavaLocalDateTime> {
-                    it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toEpochMilliseconds()
-                }
-
-                JavaLocalDate::class -> convert<JavaLocalDateTime> { it.toLocalDate() }
-
-                JavaLocalTime::class -> convert<JavaLocalDateTime> { it.toLocalTime() }
-
-                JavaInstant::class -> convert<JavaLocalDateTime> {
-                    it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toJavaInstant()
-                }
-
-                else -> null
-            }
-
-            LocalDate::class -> when (toClass) {
-                LocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0) }
-
-                StdlibInstant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone) }
-
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<LocalDate> {
-                    it.atStartOfDayIn(defaultTimeZone).toDeprecatedInstant()
-                }
-
-                Long::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone).toEpochMilliseconds() }
-
-                JavaLocalDate::class -> convert<LocalDate> { it.toJavaLocalDate() }
-
-                JavaLocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0).toJavaLocalDateTime() }
-
-                JavaInstant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone).toJavaInstant() }
-
-                else -> null
-            }
-
-            JavaLocalDate::class -> when (toClass) {
-                LocalDate::class -> convert<JavaLocalDate> { it.toKotlinLocalDate() }
-
-                LocalDateTime::class -> convert<JavaLocalDate> { it.atTime(0, 0).toKotlinLocalDateTime() }
-
-                StdlibInstant::class -> convert<JavaLocalDate> {
-                    it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone)
-                }
-
-                // Related to migration of kotlinx.datetime.Instant -> kotlin.time.Instant, Issue #1350
-                DeprecatedInstant::class -> convert<JavaLocalDate> {
-                    it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toDeprecatedInstant()
-                }
-
-                Long::class -> convert<JavaLocalDate> {
-                    it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toEpochMilliseconds()
-                }
-
-                JavaLocalDateTime::class -> convert<JavaLocalDate> { it.atStartOfDay() }
-
-                JavaInstant::class -> convert<JavaLocalDate> {
-                    it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toJavaInstant()
-                }
-
-                else -> null
-            }
-
-            LocalTime::class -> when (toClass) {
-                JavaLocalTime::class -> convert<LocalTime> { it.toJavaLocalTime() }
-                else -> null
-            }
-
-            JavaLocalTime::class -> when (toClass) {
-                LocalTime::class -> convert<JavaLocalTime> { it.toKotlinLocalTime() }
-                else -> null
-            }
-
-            URL::class -> when (toClass) {
-                IMG::class -> convert<URL> { IMG(it.toString()) }
-                IFRAME::class -> convert<URL> { IFRAME(it.toString()) }
-                else -> null
-            }
-
-            else -> null
-        }
     }
 }
 
@@ -830,11 +1018,14 @@ internal fun Long.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTim
 
 internal fun Long.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
 
-internal fun StdlibInstant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
+internal fun StdlibInstant.toLocalDate(zone: TimeZone = defaultTimeZone) =
+    toLocalDateTime(zone).date
 
-internal fun StdlibInstant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
+internal fun StdlibInstant.toLocalTime(zone: TimeZone = defaultTimeZone) =
+    toLocalDateTime(zone).time
 
-internal val defaultTimeZone get() = TimeZone.currentSystemDefault()
+internal val defaultTimeZone
+    get() = TimeZone.currentSystemDefault()
 
 internal fun Number.toBigDecimal(): BigDecimal =
     when (this) {

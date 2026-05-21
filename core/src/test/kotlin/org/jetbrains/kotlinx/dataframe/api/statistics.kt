@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.ResolvingValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
@@ -8,45 +9,126 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.asValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.internalValueColumn
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class StatisticsTests {
-    private val personsDf = dataFrameOf(
-        "name",
-        "age",
-        "city",
-        "weight",
-        "height",
-        "yearsToRetirement",
-        "workExperienceYears",
-        "dependentsCount",
-        "annualIncome",
-    )(
-        "Alice", 15, "London", 99.5, "1.85", 50, 0.toShort(), 0.toByte(), 0L,
-        "Bob", 20, "Paris", 140.0, "1.35", 45, 2.toShort(), 0.toByte(), 12000L,
-        "Charlie", 100, "Dubai", 75.0, "1.95", 0, 70.toShort(), 0.toByte(), 0L,
-        "Rose", 1, "Moscow", 45.33, "0.79", 64, 0.toShort(), 2.toByte(), 0L,
-        "Dylan", 35, "London", 23.4, "1.83", 30, 15.toShort(), 1.toByte(), 90000L,
-        "Eve", 40, "Paris", 56.72, "1.85", 25, 18.toShort(), 3.toByte(), 125000L,
-        "Frank", 55, "Dubai", 78.9, "1.35", 10, 35.toShort(), 2.toByte(), 145000L,
-        "Grace", 29, "Moscow", 67.8, "1.65", 36, 5.toShort(), 1.toByte(), 70000L,
-        "Hank", 60, "Paris", 80.22, "1.75", 5, 40.toShort(), 4.toByte(), 200000L,
-        "Isla", 22, "London", 75.1, "1.85", 43, 1.toShort(), 0.toByte(), 30000L,
-    )
+    private val personsDf =
+        dataFrameOf(
+            "name",
+            "age",
+            "city",
+            "weight",
+            "height",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome",
+        )(
+            "Alice",
+            15,
+            "London",
+            99.5,
+            "1.85",
+            50,
+            0.toShort(),
+            0.toByte(),
+            0L,
+            "Bob",
+            20,
+            "Paris",
+            140.0,
+            "1.35",
+            45,
+            2.toShort(),
+            0.toByte(),
+            12000L,
+            "Charlie",
+            100,
+            "Dubai",
+            75.0,
+            "1.95",
+            0,
+            70.toShort(),
+            0.toByte(),
+            0L,
+            "Rose",
+            1,
+            "Moscow",
+            45.33,
+            "0.79",
+            64,
+            0.toShort(),
+            2.toByte(),
+            0L,
+            "Dylan",
+            35,
+            "London",
+            23.4,
+            "1.83",
+            30,
+            15.toShort(),
+            1.toByte(),
+            90000L,
+            "Eve",
+            40,
+            "Paris",
+            56.72,
+            "1.85",
+            25,
+            18.toShort(),
+            3.toByte(),
+            125000L,
+            "Frank",
+            55,
+            "Dubai",
+            78.9,
+            "1.35",
+            10,
+            35.toShort(),
+            2.toByte(),
+            145000L,
+            "Grace",
+            29,
+            "Moscow",
+            67.8,
+            "1.65",
+            36,
+            5.toShort(),
+            1.toByte(),
+            70000L,
+            "Hank",
+            60,
+            "Paris",
+            80.22,
+            "1.75",
+            5,
+            40.toShort(),
+            4.toByte(),
+            200000L,
+            "Isla",
+            22,
+            "London",
+            75.1,
+            "1.85",
+            43,
+            1.toShort(),
+            0.toByte(),
+            30000L,
+        )
 
     @Test
     fun `sum on DataFrame`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.sum()
-        res0.columnNames() shouldBe listOf(
-            "age",
-            "weight",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "age",
+                "weight",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val sum01 = res0["age"] as Int
         sum01 shouldBe 377
@@ -76,8 +158,16 @@ class StatisticsTests {
         sum111 shouldBe 13
 
         // scenario #2: sum of values per columns separately
-        val res3 = personsDf.sumFor("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
-        res3.columnNames() shouldBe listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+        val res3 =
+            personsDf.sumFor(
+                "age",
+                "weight",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
+        res3.columnNames() shouldBe
+            listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
 
         val sum31 = res3["age"] as Int
         sum31 shouldBe 377
@@ -95,15 +185,16 @@ class StatisticsTests {
     fun `sum on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").sum()
-        res0.columnNames() shouldBe listOf(
-            "city",
-            "age",
-            "weight",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "city",
+                "age",
+                "weight",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val sum01 = res0["age"][0] as Int
         sum01 shouldBe 72
@@ -139,7 +230,10 @@ class StatisticsTests {
         sum211 shouldBe 72
 
         // scenario #2.2: two columns with new name - schema changes but via columnSelector
-        val res22 = personsDf.groupBy("city").sum(name = "newAge") { "age"<Int>() and "yearsToRetirement"<Int>() }
+        val res22 =
+            personsDf.groupBy("city").sum(name = "newAge") {
+                "age"<Int>() and "yearsToRetirement"<Int>()
+            }
         res22.columnNames() shouldBe listOf("city", "newAge")
 
         val sum221 = res22["newAge"][0] as Int
@@ -153,7 +247,8 @@ class StatisticsTests {
         sum31 shouldBe 720
 
         // scenario #3.1: create new column via expression with Double type
-        val res31 = personsDf.groupBy("city").sumOf(resultName = "newAge") { "weight"<Double>() * 10 }
+        val res31 =
+            personsDf.groupBy("city").sumOf(resultName = "newAge") { "weight"<Double>() * 10 }
         res31.columnNames() shouldBe listOf("city", "newAge")
 
         val sum311 = res31["newAge"][0] as Double
@@ -164,14 +259,15 @@ class StatisticsTests {
     fun `mean on DataFrame`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.mean()
-        res0.columnNames() shouldBe listOf(
-            "age",
-            "weight",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "age",
+                "weight",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val mean01 = res0["age"] as Double
         mean01 shouldBe 37.7
@@ -201,8 +297,16 @@ class StatisticsTests {
         mean111 shouldBe 1.3
 
         // scenario #2: mean of values per columns separately
-        val res3 = personsDf.meanFor("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
-        res3.columnNames() shouldBe listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+        val res3 =
+            personsDf.meanFor(
+                "age",
+                "weight",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
+        res3.columnNames() shouldBe
+            listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
 
         val mean31 = res3["age"] as Double
         mean31 shouldBe 37.7
@@ -220,15 +324,16 @@ class StatisticsTests {
     fun `mean on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").mean()
-        res0.columnNames() shouldBe listOf(
-            "city",
-            "age",
-            "weight",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "city",
+                "age",
+                "weight",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val mean01 = res0["age"][0] as Double
         mean01 shouldBe 24.0
@@ -264,7 +369,10 @@ class StatisticsTests {
         mean211 shouldBe 24.0
 
         // scenario #2.2: two columns with new name - schema changes but via columnSelector
-        val res22 = personsDf.groupBy("city").mean(name = "newAge") { "age"<Int>() and "yearsToRetirement"<Int>() }
+        val res22 =
+            personsDf.groupBy("city").mean(name = "newAge") {
+                "age"<Int>() and "yearsToRetirement"<Int>()
+            }
         res22.columnNames() shouldBe listOf("city", "newAge")
 
         val mean221 = res22["newAge"][0] as Double
@@ -289,17 +397,18 @@ class StatisticsTests {
     fun `median on DataFrame`() {
         // scenario #0: all intraComparableColumns columns
         val res0 = personsDf.median()
-        res0.columnNames() shouldBe listOf(
-            "name",
-            "age",
-            "city",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "name",
+                "age",
+                "city",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val median01 = res0["age"] as Double
         median01 shouldBe 32.0
@@ -335,8 +444,16 @@ class StatisticsTests {
         median111 shouldBe 1.0
 
         // scenario #2: median of values per columns separately
-        val res3 = personsDf.medianFor("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
-        res3.columnNames() shouldBe listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+        val res3 =
+            personsDf.medianFor(
+                "weight",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+                "name",
+            )
+        res3.columnNames() shouldBe
+            listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
 
         val median31 = res3["weight"] as Double
         median31 shouldBe 75.05
@@ -354,17 +471,18 @@ class StatisticsTests {
     fun `median on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").median()
-        res0.columnNames() shouldBe listOf(
-            "city",
-            "name",
-            "age",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "city",
+                "name",
+                "age",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val median01 = res0["age"][0] as Double
         median01 shouldBe 22.0
@@ -400,7 +518,10 @@ class StatisticsTests {
         median211 shouldBe 22.0
 
         // scenario #2.2: two columns with new name - schema changes but via columnSelector
-        val res22 = personsDf.groupBy("city").median(name = "newAge") { "age"<Int>() and "yearsToRetirement"<Int>() }
+        val res22 =
+            personsDf.groupBy("city").median(name = "newAge") {
+                "age"<Int>() and "yearsToRetirement"<Int>()
+            }
         res22.columnNames() shouldBe listOf("city", "newAge")
 
         val median221 = res22["newAge"][0] as Double
@@ -425,14 +546,15 @@ class StatisticsTests {
     fun `std on DataFrame`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.std()
-        res0.columnNames() shouldBe listOf(
-            "age",
-            "weight",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "age",
+                "weight",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val std01 = res0["age"] as Double
         std01 shouldBe 28.26088777405582
@@ -462,8 +584,16 @@ class StatisticsTests {
         std111 shouldBe 1.4181364924121764
 
         // scenario #2: std of values per columns separately
-        val res3 = personsDf.stdFor("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
-        res3.columnNames() shouldBe listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+        val res3 =
+            personsDf.stdFor(
+                "age",
+                "weight",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
+        res3.columnNames() shouldBe
+            listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
 
         val std31 = res3["age"] as Double
         std31 shouldBe 28.26088777405582
@@ -481,15 +611,16 @@ class StatisticsTests {
     fun `std on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").std()
-        res0.columnNames() shouldBe listOf(
-            "city",
-            "age",
-            "weight",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "city",
+                "age",
+                "weight",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val std01 = res0["age"][0] as Double
         std01 shouldBe 10.14889156509222
@@ -525,7 +656,10 @@ class StatisticsTests {
         std211 shouldBe 10.14889156509222
 
         // scenario #2.2: two columns with new name - schema changes but via columnSelector
-        val res22 = personsDf.groupBy("city").std(name = "newAge") { "age"<Int>() and "yearsToRetirement"<Int>() }
+        val res22 =
+            personsDf.groupBy("city").std(name = "newAge") {
+                "age"<Int>() and "yearsToRetirement"<Int>()
+            }
         res22.columnNames() shouldBe listOf("city", "newAge")
 
         val std221 = res22["newAge"][0] as Double
@@ -550,17 +684,18 @@ class StatisticsTests {
     fun `min on DataFrame`() {
         // scenario #0: all intraComparableColumns columns
         val res0 = personsDf.min()
-        res0.columnNames() shouldBe listOf(
-            "name",
-            "age",
-            "city",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "name",
+                "age",
+                "city",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val min01 = res0["age"] as Int
         min01 shouldBe 1
@@ -596,8 +731,16 @@ class StatisticsTests {
         min111 shouldBe 0
 
         // scenario #2: min of values per columns separately
-        val res3 = personsDf.minFor("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
-        res3.columnNames() shouldBe listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+        val res3 =
+            personsDf.minFor(
+                "weight",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+                "name",
+            )
+        res3.columnNames() shouldBe
+            listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
 
         val min31 = res3["weight"] as Double
         min31 shouldBe 23.4
@@ -615,17 +758,18 @@ class StatisticsTests {
     fun `min on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").min()
-        res0.columnNames() shouldBe listOf(
-            "city",
-            "name",
-            "age",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "city",
+                "name",
+                "age",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val min01 = res0["age"][0] as Int
         min01 shouldBe 15
@@ -661,7 +805,10 @@ class StatisticsTests {
         min211 shouldBe 15
 
         // scenario #2.2: two columns with new name - schema changes but via columnSelector
-        val res22 = personsDf.groupBy("city").min(name = "newAge") { "age"<Int>() and "yearsToRetirement"<Int>() }
+        val res22 =
+            personsDf.groupBy("city").min(name = "newAge") {
+                "age"<Int>() and "yearsToRetirement"<Int>()
+            }
         res22.columnNames() shouldBe listOf("city", "newAge")
 
         val min221 = res22["newAge"][0] as Int
@@ -683,17 +830,18 @@ class StatisticsTests {
 
         // scenario #4: particular column via minBy
         val res4 = personsDf.groupBy("city").minBy("age").values()
-        res4.columnNames() shouldBe listOf(
-            "city",
-            "name",
-            "age",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        ) // TODO: why is here weight presented? looks like inconsitency
+        res4.columnNames() shouldBe
+            listOf(
+                "city",
+                "name",
+                "age",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            ) // TODO: why is here weight presented? looks like inconsitency
 
         val min41 = res4["age"][0] as Int
         min41 shouldBe 15
@@ -702,17 +850,18 @@ class StatisticsTests {
 
         // scenario #5: particular column via minBy and rowExpression
         val res5 = personsDf.groupBy("city").minBy { "age"<Int>() * 10 }.values()
-        res4.columnNames() shouldBe listOf(
-            "city",
-            "name",
-            "age",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res4.columnNames() shouldBe
+            listOf(
+                "city",
+                "name",
+                "age",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val min51 = res5["age"][0] as Int
         min51 shouldBe 15
@@ -722,17 +871,18 @@ class StatisticsTests {
     fun `max on DataFrame`() {
         // scenario #0: all intraComparableColumns columns
         val res0 = personsDf.max()
-        res0.columnNames() shouldBe listOf(
-            "name",
-            "age",
-            "city",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "name",
+                "age",
+                "city",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val max01 = res0["age"] as Int
         max01 shouldBe 100
@@ -768,8 +918,16 @@ class StatisticsTests {
         max111 shouldBe 4
 
         // scenario #2: max of values per columns separately
-        val res3 = personsDf.maxFor("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
-        res3.columnNames() shouldBe listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+        val res3 =
+            personsDf.maxFor(
+                "weight",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+                "name",
+            )
+        res3.columnNames() shouldBe
+            listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
 
         val max31 = res3["weight"] as Double
         max31 shouldBe 140.0
@@ -787,17 +945,18 @@ class StatisticsTests {
     fun `max on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").max()
-        res0.columnNames() shouldBe listOf(
-            "city",
-            "name",
-            "age",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "city",
+                "name",
+                "age",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val max01 = res0["age"][0] as Int
         max01 shouldBe 35
@@ -833,7 +992,10 @@ class StatisticsTests {
         max211 shouldBe 35
 
         // scenario #2.2: two columns with new name - schema changes but via columnSelector
-        val res22 = personsDf.groupBy("city").max(name = "newAge") { "age"<Int>() and "yearsToRetirement"<Int>() }
+        val res22 =
+            personsDf.groupBy("city").max(name = "newAge") {
+                "age"<Int>() and "yearsToRetirement"<Int>()
+            }
         res22.columnNames() shouldBe listOf("city", "newAge")
 
         val max221 = res22["newAge"][0] as Int
@@ -855,17 +1017,18 @@ class StatisticsTests {
 
         // scenario #4: particular column via maxBy
         val res4 = personsDf.groupBy("city").maxBy("age").values()
-        res4.columnNames() shouldBe listOf(
-            "city",
-            "name",
-            "age",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        ) // TODO: weight is here?
+        res4.columnNames() shouldBe
+            listOf(
+                "city",
+                "name",
+                "age",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            ) // TODO: weight is here?
 
         val max41 = res4["age"][0] as Int
         max41 shouldBe 35
@@ -874,17 +1037,18 @@ class StatisticsTests {
 
         // scenario #5: particular column via maxBy and rowExpression
         val res5 = personsDf.groupBy("city").maxBy { "age"<Int>() * 10 }.values()
-        res4.columnNames() shouldBe listOf(
-            "city",
-            "name",
-            "age",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res4.columnNames() shouldBe
+            listOf(
+                "city",
+                "name",
+                "age",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val max51 = res5["age"][0] as Int
         max51 shouldBe 35
@@ -895,17 +1059,18 @@ class StatisticsTests {
         // scenario #0: all intraComparableColumns columns
         val percentile = 30.0
         val res0 = personsDf.percentile(percentile)
-        res0.columnNames() shouldBe listOf(
-            "name",
-            "age",
-            "city",
-            "weight",
-            "height",
-            "yearsToRetirement",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-        )
+        res0.columnNames() shouldBe
+            listOf(
+                "name",
+                "age",
+                "city",
+                "weight",
+                "height",
+                "yearsToRetirement",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+            )
 
         val percentile01 = res0["age"] as Double
         percentile01 shouldBe 20.866666666666667
@@ -941,15 +1106,17 @@ class StatisticsTests {
         percentile111 shouldBe 0.0
 
         // scenario #2: percentile of values per columns separately
-        val res3 = personsDf.percentileFor(
-            percentile,
-            "weight",
-            "workExperienceYears",
-            "dependentsCount",
-            "annualIncome",
-            "name",
-        )
-        res3.columnNames() shouldBe listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+        val res3 =
+            personsDf.percentileFor(
+                percentile,
+                "weight",
+                "workExperienceYears",
+                "dependentsCount",
+                "annualIncome",
+                "name",
+            )
+        res3.columnNames() shouldBe
+            listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
 
         val percentile31 = res3["weight"] as Double
         percentile31 shouldBe 61.52133333333333
@@ -965,7 +1132,8 @@ class StatisticsTests {
 
     @Test
     fun `statistics cache for ValueColumn, stats functions read the cache`() {
-        // test idea: put in the cache nonsense values. If stats functions return them values, no computation was done
+        // test idea: put in the cache nonsense values. If stats functions return them values, no
+        // computation was done
         val valueColumn = columnOf(1, 4, 3, 8) as ValueColumnInternal
         // max
         valueColumn.putStatisticCache("max", mapOf("skipNaN" to false), StatisticResult(20))
@@ -980,11 +1148,16 @@ class StatisticsTests {
         valueColumn.putStatisticCache("sum", mapOf("skipNaN" to false), StatisticResult(0))
         valueColumn.sum() shouldBe 0
         // std
-        valueColumn.putStatisticCache("std", mapOf("skipNaN" to false, "ddof" to 1), StatisticResult(100))
+        valueColumn.putStatisticCache(
+            "std",
+            mapOf("skipNaN" to false, "ddof" to 1),
+            StatisticResult(100),
+        )
         valueColumn.std(false, 1) shouldBe 100
         // percentile
         valueColumn.putStatisticCache(
-            "percentile", mapOf("skipNaN" to false, "percentile" to 30.0),
+            "percentile",
+            mapOf("skipNaN" to false, "percentile" to 30.0),
             StatisticResult(100.0),
         )
         valueColumn.percentile(30.0, false) shouldBe 100.0
@@ -1010,12 +1183,14 @@ class StatisticsTests {
         valueColumn.getStatisticCacheOrNull("sum", mapOf("skipNaN" to false))?.value shouldBe 6
         // std
         valueColumn.std(false, 1) shouldBe 1.0
-        valueColumn.getStatisticCacheOrNull("std", mapOf("skipNaN" to false, "ddof" to 1))?.value shouldBe 1.0
+        valueColumn
+            .getStatisticCacheOrNull("std", mapOf("skipNaN" to false, "ddof" to 1))
+            ?.value shouldBe 1.0
         // percentile
         valueColumn.percentile(6.0, false) shouldBe 1.0
-        valueColumn.getStatisticCacheOrNull(
-            "percentile", mapOf("skipNaN" to false, "percentile" to 6.0),
-        )?.value shouldBe 1.0
+        valueColumn
+            .getStatisticCacheOrNull("percentile", mapOf("skipNaN" to false, "percentile" to 6.0))
+            ?.value shouldBe 1.0
         // median
         valueColumn.median(false) shouldBe 2
         valueColumn.getStatisticCacheOrNull("median", mapOf("skipNaN" to false))?.value shouldBe 2
@@ -1026,12 +1201,18 @@ class StatisticsTests {
         // generic situation where statistic function is called one time for each row
         val filteredDf = personsDf.filter { it["age"] == personsDf["age"].cast<Int>().max() }
         filteredDf.rowsCount() shouldBe 1
-        personsDf["age"].asValueColumn().internalValueColumn()
-            .getStatisticCacheOrNull("max", mapOf("skipNaN" to false))?.value shouldBe 100
+        personsDf["age"]
+            .asValueColumn()
+            .internalValueColumn()
+            .getStatisticCacheOrNull("max", mapOf("skipNaN" to false))
+            ?.value shouldBe 100
         // dataframe-wide statistic function
         personsDf.min { "age"<Int>() } shouldBe 1
-        personsDf["age"].asValueColumn().internalValueColumn()
-            .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+        personsDf["age"]
+            .asValueColumn()
+            .internalValueColumn()
+            .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))
+            ?.value shouldBe 1
     }
 
     @Test
@@ -1040,12 +1221,19 @@ class StatisticsTests {
         valueColumn.min(false) shouldBe 1
         // derived columns
         val renamedColumn = valueColumn.rename("newName").asValueColumn().internalValueColumn()
-        val colWithDifferentType = ((valueColumn as ResolvingValueColumn).source as ValueColumnImpl)
-            .changeType(typeOf<Number>())
+        val colWithDifferentType =
+            ((valueColumn as ResolvingValueColumn).source as ValueColumnImpl).changeType(
+                typeOf<Number>()
+            )
         // tests
-        valueColumn.asValueColumn().internalValueColumn()
-            .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+        valueColumn
+            .asValueColumn()
+            .internalValueColumn()
+            .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))
+            ?.value shouldBe 1
         renamedColumn.getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
-        colWithDifferentType.getStatisticCacheOrNull("min", mapOf("skipNaN" to false))?.value shouldBe 1
+        colWithDifferentType
+            .getStatisticCacheOrNull("min", mapOf("skipNaN" to false))
+            ?.value shouldBe 1
     }
 }

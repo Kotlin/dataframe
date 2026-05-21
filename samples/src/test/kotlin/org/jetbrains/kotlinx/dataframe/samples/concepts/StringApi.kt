@@ -27,13 +27,12 @@ class StringApi {
         val name: String
     }
 
-    private val df = dataFrameOf(
-        "name" to columnOf("Alice", "Bob"),
-        "info" to columnOf(
-            "age" to columnOf(23, 27),
-            "height" to columnOf(175.5, 160.2),
-        ),
-    ).cast<DfType>()
+    private val df =
+        dataFrameOf(
+                "name" to columnOf("Alice", "Bob"),
+                "info" to columnOf("age" to columnOf(23, 27), "height" to columnOf(175.5, 160.2)),
+            )
+            .cast<DfType>()
 
     @Test
     fun simpleSelect() {
@@ -75,10 +74,7 @@ class StringApi {
     @Test
     fun removeWithExcept() {
         // SampleStart
-        df.remove {
-            colsAtAnyDepth().colsOf<Number>() except
-                colGroup("info").col("age")
-        }
+        df.remove { colsAtAnyDepth().colsOf<Number>() except colGroup("info").col("age") }
         // SampleEnd
     }
 
@@ -94,9 +90,7 @@ class StringApi {
     @Test
     fun addColumnFromSubcolumn() {
         // SampleStart
-        df.add("heightInt") {
-            "info"["height"]<Double>().toInt()
-        }
+        df.add("heightInt") { "info"["height"]<Double>().toInt() }
         // SampleEnd
     }
 
@@ -132,9 +126,7 @@ class StringApi {
 
         // Add a new "heightInt" column by
         // casting the "height" column values to `Int`
-        df.add("heightInt") {
-            "info"["height"]<Double>().toInt()
-        }
+        df.add("heightInt") { "info"["height"]<Double>().toInt() }
 
         // Filter rows where the ("info"/"age") column value
         // is greater than or equal to 18

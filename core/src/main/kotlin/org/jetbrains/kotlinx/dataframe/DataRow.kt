@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
@@ -13,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.toIterable
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET
-import kotlin.reflect.KProperty
 
 /**
  * Single row of a [DataFrame].
@@ -39,7 +39,9 @@ public interface DataRow<out T> {
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map { get(it) }
+    public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map {
+        get(it)
+    }
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -47,15 +49,17 @@ public interface DataRow<out T> {
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataRow<T> =
-        owner.get(first, *other)[index]
+    public operator fun get(
+        first: AnyColumnReference,
+        vararg other: AnyColumnReference,
+    ): DataRow<T> = owner.get(first, *other)[index]
 
-    public operator fun get(first: String, vararg other: String): DataRow<T> = owner.get(first, *other)[index]
+    public operator fun get(first: String, vararg other: String): DataRow<T> =
+        owner.get(first, *other)[index]
 
     public operator fun get(path: ColumnPath): Any? = owner.get(path)[index]
 
-    @RequiredByIntellijPlugin
-    public operator fun get(name: String): Any?
+    @RequiredByIntellijPlugin public operator fun get(name: String): Any?
 
     public fun getColumnGroup(columnName: String): AnyRow {
         val value = get(columnName)
@@ -89,7 +93,8 @@ public interface DataRow<out T> {
 
     public fun values(): List<Any?>
 
-    public operator fun String.get(vararg path: String): ColumnPath = ColumnPath(listOf(this) + path)
+    public operator fun String.get(vararg path: String): ColumnPath =
+        ColumnPath(listOf(this) + path)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -103,7 +108,8 @@ public interface DataRow<out T> {
 
     public fun backwardIterable(): Iterable<DataRow<T>> = this.toIterable { it.prev }
 
-    public operator fun <R : Comparable<R>> ColumnReference<R>.compareTo(other: R): Int = get(this).compareTo(other)
+    public operator fun <R : Comparable<R>> ColumnReference<R>.compareTo(other: R): Int =
+        get(this).compareTo(other)
 
     public operator fun ColumnReference<Int>.plus(a: Int): Int = get(this) + a
 
@@ -160,7 +166,11 @@ public interface DataRow<out T> {
     }
 }
 
-internal val AnyRow.values: List<Any?> get() = values()
-internal val AnyRow.index: Int get() = index()
-internal val <T> DataRow<T>.prev: DataRow<T>? get() = this.prev()
-internal val <T> DataRow<T>.next: DataRow<T>? get() = this.next()
+internal val AnyRow.values: List<Any?>
+    get() = values()
+internal val AnyRow.index: Int
+    get() = index()
+internal val <T> DataRow<T>.prev: DataRow<T>?
+    get() = this.prev()
+internal val <T> DataRow<T>.next: DataRow<T>?
+    get() = this.next()

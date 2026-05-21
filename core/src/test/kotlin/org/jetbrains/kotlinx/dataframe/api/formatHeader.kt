@@ -44,12 +44,15 @@ class FormatHeaderTests : TestBase() {
 
     @Test
     fun `child header overrides parent group header style`() {
-        val formatted = df
-            .formatHeader { name }.with { attr("border", "1px solid red") }
-            .formatHeader { name.firstName }.with { attr("border", "2px dashed green") }
+        val formatted =
+            df.formatHeader { name }
+                .with { attr("border", "1px solid red") }
+                .formatHeader { name.firstName }
+                .with { attr("border", "2px dashed green") }
         val html = formatted.toHtml().toString()
 
-        // Parent style applies to group and lastName, but firstName gets its own style in addition to or replacing
+        // Parent style applies to group and lastName, but firstName gets its own style in addition
+        // to or replacing
         // We check for both occurrences
         val parentOcc = html.split("border:1px solid red").size - 1
         val childOcc = html.split("border:2px dashed green").size - 1
@@ -69,9 +72,11 @@ class FormatHeaderTests : TestBase() {
 
     @Test
     fun `format and formatHeader can be chained and both persist`() {
-        val formatted = df
-            .format { age }.with { background(blue) }
-            .formatHeader { age }.with { attr("border", "3px solid green") }
+        val formatted =
+            df.format { age }
+                .with { background(blue) }
+                .formatHeader { age }
+                .with { attr("border", "3px solid green") }
 
         val html = formatted.toHtml().toString()
 

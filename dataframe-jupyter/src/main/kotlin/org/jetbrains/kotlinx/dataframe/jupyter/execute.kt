@@ -1,10 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithTypeCastGenerator
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
 
 internal fun KotlinKernelHost.execute(
     codeWithTypeCastGenerator: CodeWithTypeCastGenerator,
@@ -28,6 +28,7 @@ internal fun KotlinKernelHost.execute(
     property: KProperty<*>,
     type: KType,
 ): VariableName? {
-    val variableName = "(${property.name}${if (property.returnType.isMarkedNullable) "!!" else ""} as $type)"
+    val variableName =
+        "(${property.name}${if (property.returnType.isMarkedNullable) "!!" else ""} as $type)"
     return execute(codeWithTypeCastGenerator, variableName)
 }

@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -19,31 +21,30 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.corrImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
-import kotlin.reflect.typeOf
 
 /**
  * Calculates the Pearson pairwise correlation between values in the specified [columns\].
  *
- * This function does not compute the correlation immediately.
- * Instead, it defines the primary set of columns
- * and returns a [Corr] instance that allows configuring how the correlation should be computed.
+ * This function does not compute the correlation immediately. Instead, it defines the primary set
+ * of columns and returns a [Corr] instance that allows configuring how the correlation should be
+ * computed.
  *
- * The function is available for numeric- and [Boolean] columns.
- * [Boolean] values are converted into 1 for true and 0 for false.
- * All other columns are ignored.
- * If a [ColumnGroup] instance is passed as the target column for correlation,
- * it will be unpacked into suitable nested columns.
+ * The function is available for numeric- and [Boolean] columns. [Boolean] values are converted into
+ * 1 for true and 0 for false. All other columns are ignored. If a [ColumnGroup] instance is passed
+ * as the target column for correlation, it will be unpacked into suitable nested columns.
  *
  * The [Corr] object provides two methods to perform correlation calculations:
- * - [with][Corr.with] — computes correlations between the initially selected columns and a second set of columns.
- * - [withItself][Corr.withItself] — computes pairwise correlations within the initially selected columns.
+ * - [with][Corr.with] — computes correlations between the initially selected columns and a second
+ *   set of columns.
+ * - [withItself][Corr.withItself] — computes pairwise correlations within the initially selected
+ *   columns.
  *
  * Each method returns a square or rectangular correlation matrix represented by a [DataFrame],
- * where rows and columns correspond to the selected column sets,
- * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
+ * where rows and columns correspond to the selected column sets, and each cell contains the Pearson
+ * correlation coefficient between the corresponding pair of columns.
  *
- * To compute correlations between all suitable columns in the [DataFrame], use [DataFrame.corr()][DataFrame.corr].
+ * To compute correlations between all suitable columns in the [DataFrame], use
+ * [DataFrame.corr()][DataFrame.corr].
  *
  * Check out [Grammar].
  *
@@ -57,23 +58,21 @@ internal interface CorrDocs {
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     *
      * @include [SelectingColumns] {@include [SetCorrOperationArg]}
      */
     typealias SelectingOptions = Nothing
 
     /**
      * ## Corr Operation Grammar
-     * {@include [LineBreak]}
-     * {@include [DslGrammarLink]}
-     * {@include [LineBreak]}
+     * {@include [LineBreak]} {@include [DslGrammarLink]} {@include [LineBreak]}
      *
-     * **[`corr`][convert]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
+     * **[`corr`][convert]**` { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]` }`
      *
-     * {@include [Indent]}
-     * __`.`__[**`with`**][Corr.with]` { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
+     * {@include [Indent]} __`.`__[**`with`**][Corr.with]` { columnsSelector:
+     * `[`ColumnsSelector`][ColumnsSelector]` }`
      *
-     * {@include [Indent]}
-     *`| `__`.`__[**`withItself`**][Corr.withItself]`()`
+     * {@include [Indent]} `| `__`.`__[**`withItself`**][Corr.withItself]`()`
      */
     typealias Grammar = Nothing
 }
@@ -84,6 +83,7 @@ private typealias SetCorrOperationArg = Nothing
 
 /**
  * {@include [CorrDocs]}
+ *
  * ### This Corr Overload
  */
 @ExcludeFromSources
@@ -96,59 +96,63 @@ internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typ
 /**
  * An intermediate class used in the [corr] operation.
  *
- * This class does not perform any computation by itself — it serves as a transitional step
- * before specifying how the correlation should be calculated.
- * It must be followed by one of the computation methods to produce a correlation [DataFrame].
+ * This class does not perform any computation by itself — it serves as a transitional step before
+ * specifying how the correlation should be calculated. It must be followed by one of the
+ * computation methods to produce a correlation [DataFrame].
  *
  * The resulting [DataFrame] is a correlation matrix where rows correspond to one set of columns,
- * columns to the other set, and each cell contains the Pearson correlation coefficient
- * between the respective pair of columns.
+ * columns to the other set, and each cell contains the Pearson correlation coefficient between the
+ * respective pair of columns.
  *
  * Use the following methods to perform the computation:
- * - [with] — selects a second set of columns and computes correlations between
- *   the initially selected columns and this second set.
+ * - [with] — selects a second set of columns and computes correlations between the initially
+ *   selected columns and this second set.
  * - [withItself] — computes pairwise correlations within the initially selected columns.
  *
  * See [Grammar][CorrDocs.Grammar] for more details.
  */
-public class Corr<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
+public class Corr<T, C>(
+    internal val df: DataFrame<T>,
+    internal val columns: ColumnsSelector<T, C>,
+) {
     override fun toString(): String = "Corr(df=$df, columns=$columns)"
 }
 
 /**
- * Computes the pearson correlation between all suitable columns in this [DataFrame],
- * including nested columns at any depth.
+ * Computes the pearson correlation between all suitable columns in this [DataFrame], including
+ * nested columns at any depth.
  *
- * The result is a square correlation matrix represented by a [DataFrame],
- * where both rows and columns correspond to the original columns,
- * and each cell contains the Pearson correlation coefficient between the respective pair of columns.
+ * The result is a square correlation matrix represented by a [DataFrame], where both rows and
+ * columns correspond to the original columns, and each cell contains the Pearson correlation
+ * coefficient between the respective pair of columns.
  *
- * The function is available for numeric- and [Boolean] columns.
- * [Boolean] values are converted into 1 for true and 0 for false.
- * All other columns are ignored.
+ * The function is available for numeric- and [Boolean] columns. [Boolean] values are converted into
+ * 1 for true and 0 for false. All other columns are ignored.
  *
  * For more information, see: {@include [DocumentationUrls.Corr]}
  *
- * @return A square correlation matrix as a [DataFrame], where both rows and columns correspond to the original columns.
+ * @return A square correlation matrix as a [DataFrame], where both rows and columns correspond to
+ *   the original columns.
  */
 @Refine
 @Interpretable("DataFrameCorr")
 public fun <T> DataFrame<T>.corr(): DataFrame<T> =
-    corr {
-        colsAtAnyDepth().filter { it.isSuitableForCorr() }
-    }.withItself()
+    corr { colsAtAnyDepth().filter { it.isSuitableForCorr() } }.withItself()
 
 /**
  * {@include [CommonCorrDocs]}
+ *
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this
+ *   [DataFrame] to compute a correlation.
+ * @return A [Corr] intermediate object with the selected columns.
  * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetCorrOperationArg]}
  *
- * The function is available for numeric- and [Boolean] columns.
- * [Boolean] values are converted into 1 for true and 0 for false.
- * All other columns are ignored.
- * If a [ColumnGroup] instance is passed as the target column for correlation,
- * it will be unpacked into suitable nested columns.
+ * The function is available for numeric- and [Boolean] columns. [Boolean] values are converted into
+ * 1 for true and 0 for false. All other columns are ignored. If a [ColumnGroup] instance is passed
+ * as the target column for correlation, it will be unpacked into suitable nested columns.
  *
  * ### Examples
+ *
  * ```kotlin
  * // Compute correlations between the "age" column and the "weight" and "height" columns
  * df.corr { age }.with { weight and height }
@@ -156,23 +160,24 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
  * // Compute pairwise correlations between all columns of type `Number`
  * df.corr { colsOf<Number>() }.withItself()
  * ```
- * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns
- * of this [DataFrame] to compute a correlation.
- * @return A [Corr] intermediate object with the selected columns.
  */
-public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> = Corr(this, columns)
+public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> =
+    Corr(this, columns)
 
 /**
  * {@include [CommonCorrDocs]}
+ *
+ * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to
+ *   compute a correlation.
+ * @return A [Corr] intermediate object with the selected columns.
  * @include [SelectingColumns.ColumnNamesApi] {@include [SetCorrOperationArg]}
  *
- * The function is available for numeric- and [Boolean] columns.
- * [Boolean] values are converted into 1 for true and 0 for false.
- * All other columns are ignored.
- * If a [ColumnGroup] instance is passed as the target column for correlation,
- * it will be unpacked into suitable nested columns.
+ * The function is available for numeric- and [Boolean] columns. [Boolean] values are converted into
+ * 1 for true and 0 for false. All other columns are ignored. If a [ColumnGroup] instance is passed
+ * as the target column for correlation, it will be unpacked into suitable nested columns.
  *
  * ### Examples
+ *
  * ```kotlin
  * // Compute correlations between the "age" column and the "weight" and "height" columns
  * df.corr { age }.with { weight and height }
@@ -180,27 +185,30 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
  * // Compute pairwise correlations between all columns of type `Number`
  * df.corr { colsOf<Number>() }.withItself()
  * ```
- * @param [columns\] The [Column Names][String] used to select the columns
- * of this [DataFrame] to compute a correlation.
- * @return A [Corr] intermediate object with the selected columns.
  */
-public fun <T> DataFrame<T>.corr(vararg columns: String): Corr<T, Any?> = corr { columns.toColumnSet() }
+public fun <T> DataFrame<T>.corr(vararg columns: String): Corr<T, Any?> = corr {
+    columns.toColumnSet()
+}
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataFrame<T>.corr(vararg columns: KProperty<C>): Corr<T, C> = corr { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.corr(vararg columns: KProperty<C>): Corr<T, C> = corr {
+    columns.toColumnSet()
+}
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T, C> = corr { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T, C> = corr {
+    columns.toColumnSet()
+}
 
 /**
- * Calculates the correlation of specified [columns][otherColumns]
- * with values in the columns previously selected with [corr].
+ * Calculates the correlation of specified [columns][otherColumns] with values in the columns
+ * previously selected with [corr].
  *
- * Returns a correlation matrix represented by a [DataFrame],
- * where rows and columns correspond to the selected column sets,
- * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
+ * Returns a correlation matrix represented by a [DataFrame], where rows and columns correspond to
+ * the selected column sets, and each cell contains the Pearson correlation coefficient between the
+ * corresponding pair of columns.
  *
  * Check out [Grammar].
  *
@@ -214,6 +222,7 @@ internal typealias CorrWithDocs = Nothing
 
 /**
  * {@include [CorrWithDocs]}
+ *
  * ### This Corr With Overload
  */
 @ExcludeFromSources
@@ -221,9 +230,14 @@ private typealias CommonCorrWithDocs = Nothing
 
 /**
  * {@include [CommonCorrWithDocs]}
+ *
+ * @param otherColumns The [ColumnsSelector] used to select the second set of columns from this
+ *   [DataFrame] to compute correlations against the initially selected columns.
+ * @return A [DataFrame] containing the resulting correlation matrix.
  * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetCorrOperationArg]}
  *
  * ### Examples
+ *
  * ```kotlin
  * // Compute correlations between the "age" column and the "weight" and "height" columns
  * df.corr { age }.with { weight and height }
@@ -231,18 +245,20 @@ private typealias CommonCorrWithDocs = Nothing
  * // Compute correlations between the "speed" column and all columns of type `Double` (excluding itself)
  * df.corr { speed }.with { colsOf<Double>() except speed }
  * ```
- *
- * @param otherColumns The [ColumnsSelector] used to select the second set of columns
- * from this [DataFrame] to compute correlations against the initially selected columns.
- * @return A [DataFrame] containing the resulting correlation matrix.
  */
-public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataFrame<T> = corrImpl(otherColumns)
+public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataFrame<T> =
+    corrImpl(otherColumns)
 
 /**
  * {@include [CommonCorrWithDocs]}
+ *
+ * @param otherColumns The [Column Names][String] used to select the second set of columns from this
+ *   [DataFrame] to compute correlations against the initially selected columns.
+ * @return A [DataFrame] containing the resulting correlation matrix.
  * @include [SelectingColumns.ColumnNamesApi] {@include [SetCorrOperationArg]}
  *
  * ### Examples
+ *
  * ```kotlin
  * // Compute correlations between the "age" column and the "weight" and "height" columns
  * df.corr("age").with("weight", "height")
@@ -250,30 +266,29 @@ public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataF
  * // Compute correlations between the "speed" column and all columns of type `Number`
  * df.corr { colsOf<Number>() }.with("speed")
  * ```
- *
- * @param otherColumns The [Column Names][String] used to select the second set of columns
- * from this [DataFrame] to compute correlations against the initially selected columns.
- * @return A [DataFrame] containing the resulting correlation matrix.
  */
-public fun <T, C> Corr<T, C>.with(vararg otherColumns: String): DataFrame<T> = with { otherColumns.toColumnSet() }
+public fun <T, C> Corr<T, C>.with(vararg otherColumns: String): DataFrame<T> = with {
+    otherColumns.toColumnSet()
+}
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: KProperty<R>): DataFrame<T> =
-    with { otherColumns.toColumnSet() }
+public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: KProperty<R>): DataFrame<T> = with {
+    otherColumns.toColumnSet()
+}
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: ColumnReference<R>): DataFrame<T> =
-    with { otherColumns.toColumnSet() }
+public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: ColumnReference<R>): DataFrame<T> = with {
+    otherColumns.toColumnSet()
+}
 
 /**
- * Calculates Pearson pairwise correlations between the columns
- * previously selected with [corr].
+ * Calculates Pearson pairwise correlations between the columns previously selected with [corr].
  *
- * Returns a square correlation matrix represented by a [DataFrame],
- * where both rows and columns correspond to the selected columns,
- * and each cell contains the Pearson correlation coefficient between the respective pair of columns.
+ * Returns a square correlation matrix represented by a [DataFrame], where both rows and columns
+ * correspond to the selected columns, and each cell contains the Pearson correlation coefficient
+ * between the respective pair of columns.
  *
  * Check out [Grammar].
  *

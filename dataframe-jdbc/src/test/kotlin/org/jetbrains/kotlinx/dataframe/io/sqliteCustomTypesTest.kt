@@ -1,15 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import java.sql.Connection
+import java.sql.DriverManager
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
-import java.sql.Connection
-import java.sql.DriverManager
-import kotlin.reflect.typeOf
 
 class SqliteTestCustomTypes {
 

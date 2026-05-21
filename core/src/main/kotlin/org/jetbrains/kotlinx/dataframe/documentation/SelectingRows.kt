@@ -16,30 +16,29 @@ import org.jetbrains.kotlinx.dataframe.index
 /**
  * ## Selecting Rows
  *
- * Selecting rows that satisfy a "Row Condition" ({@include [DocumentationUrls.DataRow.RowConditions]})
- * can occur in the following two types of operations:
- * - Selecting entire rows ({@include [RowConditionLink]}), for instance in [filter], [drop], [first], and [count]
- * (using [RowFilter]).
- * - Selecting parts of rows using a `where` operation after selecting columns ({@include [RowValueConditionLink]}),
- * such as with [update], [gather], and [format]
- * (using [RowValueFilter]).
+ * Selecting rows that satisfy a "Row Condition" ({@include
+ * [DocumentationUrls.DataRow.RowConditions]}) can occur in the following two types of operations:
+ * - Selecting entire rows ({@include [RowConditionLink]}), for instance in [filter], [drop],
+ *   [first], and [count] (using [RowFilter]).
+ * - Selecting parts of rows using a `where` operation after selecting columns ({@include
+ *   [RowValueConditionLink]}), such as with [update], [gather], and [format] (using
+ *   [RowValueFilter]).
  *
- * A Row Condition is similar to a {@include [RowExpressionsLink]} but expects a [Boolean] as result.
+ * A Row Condition is similar to a {@include [RowExpressionsLink]} but expects a [Boolean] as
+ * result.
  */
 internal interface SelectingRows {
 
     /**
-     * {@comment
-     *    Row filter KDoc-snippet.
-     *    Include it into KDoc with `@include [SelectingRows.RowFilterSnippet]`.
-     * }
+     * {@comment Row filter KDoc-snippet. Include it into KDoc with `@include
+     * [SelectingRows.RowFilterSnippet]`. }
      *
-     * The [predicate\] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and `it`
-     * and is expected to return a [Boolean] value.
+     * The [predicate\] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and
+     * `it` and is expected to return a [Boolean] value.
      *
-     * It allows you to define conditions using the row's values directly,
-     * including through [extension properties][AccessApis.ExtensionPropertiesApi]
-     * for convenient and type-safe access.
+     * It allows you to define conditions using the row's values directly, including through
+     * [extension properties][AccessApis.ExtensionPropertiesApi] for convenient and type-safe
+     * access.
      *
      * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
      */
@@ -47,18 +46,15 @@ internal interface SelectingRows {
     typealias RowFilterSnippet = Nothing
 
     /**
-     * {@comment
-     *    Row filter KDoc-snippet.
-     *    Include it into KDoc with `@include [SelectingRows.RowValueFilterSnippet]`.
-     * }
+     * {@comment Row filter KDoc-snippet. Include it into KDoc with `@include
+     * [SelectingRows.RowValueFilterSnippet]`. }
      *
      * The [predicate\] is a [RowValueFilter] — a lambda that receives each [DataRow] as `this` and
-     * given value as `it`
-     * and is expected to return a [Boolean] value.
+     * given value as `it` and is expected to return a [Boolean] value.
      *
-     * It allows you to define conditions using the row's values directly,
-     * including through [extension properties][AccessApis.ExtensionPropertiesApi]
-     * for convenient and type-safe access.
+     * It allows you to define conditions using the row's values directly, including through
+     * [extension properties][AccessApis.ExtensionPropertiesApi] for convenient and type-safe
+     * access.
      *
      * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
      */
@@ -98,6 +94,7 @@ internal interface SelectingRows {
          * `df.`{@get [FIRST_OPERATION]}` { `[index][index]`() % 2 == 0 }`
          *
          * `df.`{@get [FIRST_OPERATION]}` { `[diff][diff]` { age } == 0 }`
+         *
          * @include [SetDefaultOperationArg]
          */
         typealias WithExample = Nothing
@@ -107,7 +104,8 @@ internal interface SelectingRows {
     @ExcludeFromSources
     typealias RowValueConditionLink = Nothing
 
-    /** Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
+    /**
+     * Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
      * [row value filter][RowValueFilter].
      */
     interface RowValueCondition {
@@ -119,7 +117,9 @@ internal interface SelectingRows {
          *
          * `df.`{@get [FIRST_OPERATION]}` { length }.`{@get [SECOND_OPERATION]}` { it > 10.0 }`
          *
-         * `df.`{@get [FIRST_OPERATION]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@get [SECOND_OPERATION]}` { `[index][index]`() > 4 && city != "Paris" }`
+         * `df.`{@get [FIRST_OPERATION]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@get
+         * [SECOND_OPERATION]}` { `[index][index]`() > 4 && city != "Paris" }`
+         *
          * @include [SetDefaultOperationArg]
          */
         typealias WithExample = Nothing

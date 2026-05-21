@@ -17,17 +17,69 @@ interface TestBase {
     val peopleDf: DataFrame<Person>
         get() = run {
             dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
-                "Alice", "Cooper", 15, "London", 54, true,
-                "Bob", "Dylan", 45, "Dubai", 87, true,
-                "Charlie", "Daniels", 20, "Moscow", null, false,
-                "Charlie", "Chaplin", 40, "Milan", null, true,
-                "Bob", "Marley", 30, "Tokyo", 68, true,
-                "Alice", "Wolf", 20, null, 55, false,
-                "Charlie", "Byrd", 30, "Moscow", 90, true,
-                "Alice", "Smith", 30, "Milan", 52, false,
-                "Bob", "Brown", 15, "London", 60, false,
-                "Charlie", "Johnson", 18, "Dubai", 70, false
-            ).group { firstName and lastName }.into("name")
+                    "Alice",
+                    "Cooper",
+                    15,
+                    "London",
+                    54,
+                    true,
+                    "Bob",
+                    "Dylan",
+                    45,
+                    "Dubai",
+                    87,
+                    true,
+                    "Charlie",
+                    "Daniels",
+                    20,
+                    "Moscow",
+                    null,
+                    false,
+                    "Charlie",
+                    "Chaplin",
+                    40,
+                    "Milan",
+                    null,
+                    true,
+                    "Bob",
+                    "Marley",
+                    30,
+                    "Tokyo",
+                    68,
+                    true,
+                    "Alice",
+                    "Wolf",
+                    20,
+                    null,
+                    55,
+                    false,
+                    "Charlie",
+                    "Byrd",
+                    30,
+                    "Moscow",
+                    90,
+                    true,
+                    "Alice",
+                    "Smith",
+                    30,
+                    "Milan",
+                    52,
+                    false,
+                    "Bob",
+                    "Brown",
+                    15,
+                    "London",
+                    60,
+                    false,
+                    "Charlie",
+                    "Johnson",
+                    18,
+                    "Dubai",
+                    70,
+                    false,
+                )
+                .group { firstName and lastName }
+                .into("name")
                 .cast<Person>(verify = false)
         }
 
@@ -41,7 +93,11 @@ interface TestBase {
     interface Person {
         val age: Int
         val city: String?
-        val name: DataRow<Name> // TODO Requires https://code.jetbrains.team/p/kt/repositories/kotlin/reviews/23694 to be merged
+        val name:
+            DataRow<
+                Name
+            > // TODO Requires https://code.jetbrains.team/p/kt/repositories/kotlin/reviews/23694 to
+              // be merged
         val weight: Int?
         val isHappy: Boolean
     }

@@ -1,5 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
+import java.util.Locale
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.Padding
@@ -24,10 +28,6 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.dataframe.util.renderType
 import org.junit.Test
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.time.temporal.ChronoField
-import java.util.Locale
 
 class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
 
@@ -38,14 +38,11 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         )
 
     private fun AnyFrame.withTypes() =
-        this
-            .rename { colsAtAnyDepth() }.to { "${it.name()}: ${renderType(it.type())}" }
+        this.rename { colsAtAnyDepth() }.to { "${it.name()}: ${renderType(it.type())}" }
 
     @Test
     fun dfParse() {
-        getDf()
-            .withTypes()
-            .saveDfHtmlSample()
+        getDf().withTypes().saveDfHtmlSample()
     }
 
     @Test
@@ -76,9 +73,7 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
 
     @Test
     fun dfParseWithOptions() {
-        getDfParseWithOptions()
-            .withTypes()
-            .saveDfHtmlSample()
+        getDfParseWithOptions().withTypes().saveDfHtmlSample()
     }
 
     @Test
@@ -86,12 +81,15 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         val df = getDfParseWithOptions()
         // SampleStart
         df.parse(
-            options = ParserOptions(
-                locale = Locale.GERMAN,
-                dateTime = DateTimeParserOptions.Java
-                    .withFormatter<java.time.LocalDate>(formatter = DateTimeFormatter.ISO_WEEK_DATE),
-            ),
-        )
+                options =
+                    ParserOptions(
+                        locale = Locale.GERMAN,
+                        dateTime =
+                            DateTimeParserOptions.Java.withFormatter<java.time.LocalDate>(
+                                formatter = DateTimeFormatter.ISO_WEEK_DATE
+                            ),
+                    )
+            )
             // SampleEnd
             .withTypes()
             .saveDfHtmlSample()
@@ -111,7 +109,9 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         val stringCol by columnOf("550e8400-e29b-41d4-a716-446655440000")
         // SampleStart
         DataFrame.parser.parseExperimentalUuid = false
-        stringCol.convertTo<kotlin.uuid.Uuid>() // will still parse to `kotlin.uuid.Uuid`, as expected
+        stringCol.convertTo<
+            kotlin.uuid.Uuid
+        >() // will still parse to `kotlin.uuid.Uuid`, as expected
         // SampleEnd
         DataFrame.parser.resetToDefault()
     }
@@ -137,7 +137,8 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         DataFrame.parser.addDateTimeFormat(format)
 
         // now this will succeed!
-        columnOf("12/24 2023").parse()
+        columnOf("12/24 2023")
+            .parse()
             // SampleEnd
             .named("date")
             .toDataFrame()
@@ -149,13 +150,14 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
     @Test
     fun globalParserOptionsAddDateTimeFormatJava() {
         // SampleStart
-        val formatter = DateTimeFormatterBuilder()
-            .appendValue(ChronoField.MONTH_OF_YEAR, 2)
-            .appendLiteral('/')
-            .appendValue(ChronoField.DAY_OF_MONTH, 2)
-            .appendLiteral(' ')
-            .appendValue(ChronoField.YEAR, 4)
-            .toFormatter()
+        val formatter =
+            DateTimeFormatterBuilder()
+                .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+                .appendLiteral('/')
+                .appendValue(ChronoField.DAY_OF_MONTH, 2)
+                .appendLiteral(' ')
+                .appendValue(ChronoField.YEAR, 4)
+                .toFormatter()
 
         // Adding a custom DateTimeFormatter type-safely for LocalDate only
         DataFrame.parser.addJavaDateTimeFormatter<java.time.LocalDate>(formatter)
@@ -167,7 +169,8 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         DataFrame.parser.locale = Locale.US
 
         // now this will succeed!
-        columnOf("12/24 2023").parse()
+        columnOf("12/24 2023")
+            .parse()
             // SampleEnd
             .named("date")
             .toDataFrame()
@@ -185,7 +188,8 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         DataFrame.parser.addDateTimeUnicodePattern<LocalDate>("MM/dd yyyy")
 
         // now this will succeed!
-        columnOf("12/24 2023").parse()
+        columnOf("12/24 2023")
+            .parse()
             // SampleEnd
             .named("date")
             .toDataFrame()
@@ -207,7 +211,8 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         DataFrame.parser.locale = Locale.US
 
         // now this will succeed!
-        columnOf("12/24 2023").parse()
+        columnOf("12/24 2023")
+            .parse()
             // SampleEnd
             .named("date")
             .toDataFrame()
@@ -230,10 +235,7 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         // now this will succeed!
         columnOf("12/24 2023")
             .parse(
-                options = ParserOptions(
-                    dateTime = DateTimeParserOptions.Kotlin
-                        .withFormat(format),
-                ),
+                options = ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(format))
             )
             // SampleEnd
             .named("date")
@@ -245,13 +247,14 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
     @Test
     fun parserOptionsWithDateTimeFormatJava() {
         // SampleStart
-        val formatter = DateTimeFormatterBuilder()
-            .appendValue(ChronoField.MONTH_OF_YEAR, 2)
-            .appendLiteral('/')
-            .appendValue(ChronoField.DAY_OF_MONTH, 2)
-            .appendLiteral(' ')
-            .appendValue(ChronoField.YEAR, 4)
-            .toFormatter()
+        val formatter =
+            DateTimeFormatterBuilder()
+                .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+                .appendLiteral('/')
+                .appendValue(ChronoField.DAY_OF_MONTH, 2)
+                .appendLiteral(' ')
+                .appendValue(ChronoField.YEAR, 4)
+                .toFormatter()
 
         // Adding a custom DateTimeFormatter type-safely for LocalDate only
         DataFrame.parser.addJavaDateTimeFormatter<java.time.LocalDate>(formatter)
@@ -260,17 +263,22 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         DataFrame.parser.addJavaDateTimeFormatter(formatter)
 
         // now this will succeed!
-        columnOf("12/24 2023").parse(
-            options = ParserOptions(
-                dateTime = DateTimeParserOptions.Java
-                    // Supplying a custom DateTimeFormatter type-safely for LocalDate only
-                    .withFormatter<java.time.LocalDate>(formatter)
-                    // or, supplying it for all java-types: Local(Date)(Time), and Instant
-                    .withFormatter(formatter)
-                    // setting the locale to US
-                    .withLocale(Locale.US),
-            ),
-        )
+        columnOf("12/24 2023")
+            .parse(
+                options =
+                    ParserOptions(
+                        dateTime =
+                            DateTimeParserOptions.Java
+                                // Supplying a custom DateTimeFormatter type-safely for LocalDate
+                                // only
+                                .withFormatter<java.time.LocalDate>(formatter)
+                                // or, supplying it for all java-types: Local(Date)(Time), and
+                                // Instant
+                                .withFormatter(formatter)
+                                // setting the locale to US
+                                .withLocale(Locale.US)
+                    )
+            )
             // SampleEnd
             .named("date")
             .toDataFrame()
@@ -286,10 +294,10 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         @OptIn(FormatStringsInDatetimeFormats::class)
         columnOf("12/24 2023")
             .parse(
-                options = ParserOptions(
-                    dateTime = DateTimeParserOptions.Kotlin
-                        .withPattern<LocalDate>("MM/dd yyyy"),
-                ),
+                options =
+                    ParserOptions(
+                        dateTime = DateTimeParserOptions.Kotlin.withPattern<LocalDate>("MM/dd yyyy")
+                    )
             )
             // SampleEnd
             .named("date")
@@ -304,15 +312,18 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         // Now this will succeed!
         columnOf("12/24 2023")
             .parse(
-                options = ParserOptions(
-                    dateTime = DateTimeParserOptions.Java
-                        // Supplying a custom pattern type-safely for LocalDate only
-                        .withPattern<java.time.LocalDate>("MM/dd yyyy")
-                        // or, supplying it for all java-types: Local(Date)(Time), and Instant
-                        .withPattern("MM/dd yyyy")
-                        // setting the locale to US
-                        .withLocale(Locale.US),
-                ),
+                options =
+                    ParserOptions(
+                        dateTime =
+                            DateTimeParserOptions.Java
+                                // Supplying a custom pattern type-safely for LocalDate only
+                                .withPattern<java.time.LocalDate>("MM/dd yyyy")
+                                // or, supplying it for all java-types: Local(Date)(Time), and
+                                // Instant
+                                .withPattern("MM/dd yyyy")
+                                // setting the locale to US
+                                .withLocale(Locale.US)
+                    )
             )
             // SampleEnd
             .named("date")

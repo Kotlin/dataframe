@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import kotlin.reflect.KType
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDslDocs
@@ -28,35 +29,36 @@ import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrameOf
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KType
 
 /**
  * Readonly interface for an ordered list of [columns][DataColumn].
  *
- * Columns in `DataFrame` have distinct non-empty [names][DataColumn.name] and equal [sizes][DataColumn.size].
+ * Columns in `DataFrame` have distinct non-empty [names][DataColumn.name] and equal
+ * [sizes][DataColumn.size].
  *
- * @param T Schema marker. It identifies column schema and is used to generate schema-specific extension properties for typed data access. It is covariant, so `DataFrame<A>` is assignable to variable of type `DataFrame<B>` if `A` is a subtype of `B`.
+ * @param T Schema marker. It identifies column schema and is used to generate schema-specific
+ *   extension properties for typed data access. It is covariant, so `DataFrame<A>` is assignable to
+ *   variable of type `DataFrame<B>` if `A` is a subtype of `B`.
  */
 @HasSchema(schemaArg = 0)
-public interface DataFrame<out T> :
-    Aggregatable<T>,
-    ColumnsContainer<T> {
+public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public companion object {
         public val Empty: AnyFrame = DataFrameImpl<Unit>(emptyList(), 0)
 
-        public fun empty(nrow: Int = 0): AnyFrame = if (nrow == 0) Empty else DataFrameImpl<Unit>(emptyList(), nrow)
+        public fun empty(nrow: Int = 0): AnyFrame =
+            if (nrow == 0) Empty else DataFrameImpl<Unit>(emptyList(), nrow)
 
         /**
-         * Creates a DataFrame with empty columns (rows = 0).
-         * Can be used as a "null object" in aggregation operations, operations that work on columns (select, reorder, ...)
-         *
+         * Creates a DataFrame with empty columns (rows = 0). Can be used as a "null object" in
+         * aggregation operations, operations that work on columns (select, reorder, ...)
          */
-        public inline fun <reified T> emptyOf(): DataFrame<T> = createEmptyDataFrameOf(T::class).cast()
+        public inline fun <reified T> emptyOf(): DataFrame<T> =
+            createEmptyDataFrameOf(T::class).cast()
 
         /**
-         * Creates a DataFrame with empty columns (rows = 0).
-         * Can be used as a "null object" in aggregation operations, operations that work on columns (select, reorder, ...)
+         * Creates a DataFrame with empty columns (rows = 0). Can be used as a "null object" in
+         * aggregation operations, operations that work on columns (select, reorder, ...)
          */
         public fun empty(schema: DataFrameSchema): AnyFrame = schema.createEmptyDataFrame()
     }
@@ -76,26 +78,25 @@ public interface DataFrame<out T> :
      *
      * @return The number of rows in the [DataFrame].
      */
-    @RequiredByIntellijPlugin
-    public fun rowsCount(): Int
+    @RequiredByIntellijPlugin public fun rowsCount(): Int
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
 
     // endregion
 
     /**
-     * Aggregates this [DataFrame] using the provided statistics
-     * inside the [AggregateDsl].
+     * Aggregates this [DataFrame] using the provided statistics inside the [AggregateDsl].
      *
      * Returns a new [DataRow] with the aggregated values.
      *
-     * @include [AggregateDslDocs]
-     * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}
-     * {@set [AggregateDslDocs.RECEIVER] [DataFrame]}
-     * {@set [AggregateDslDocs.RESULT_TYPE] [DataRow]}
-     * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns of this [DataFrame]}
+     * @param body The aggregation logic defined using [AggregateDsl].
+     * @return A new [DataRow] with the results of the aggregation.
+     * @include [AggregateDslDocs] {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]} {@set
+     *   [AggregateDslDocs.RECEIVER] [DataFrame]} {@set [AggregateDslDocs.RESULT_TYPE] [DataRow]}
+     *   {@set [AggregateDslDocs.OPERATING_COLUMNS] columns of this [DataFrame]}
      *
      * #### Example
+     *
      * ```kotlin
      * df.aggregate {
      *   // Сount rows within each group and store the result
@@ -107,9 +108,6 @@ public interface DataFrame<out T> :
      *   max { age } into "maxAge"
      * }
      * ```
-     *
-     * @param body The aggregation logic defined using [AggregateDsl].
-     * @return A new [DataRow] with the results of the aggregation.
      */
     @Refine
     @Interpretable("AggregateRow")
@@ -120,7 +118,8 @@ public interface DataFrame<out T> :
     /**
      * Returns a list of columns selected by [columns], a [ColumnsSelectionDsl].
      *
-     * NOTE: This doesn't work in [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by predicate.
+     * NOTE: This doesn't work in [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select
+     * columns by predicate.
      */
     override fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
         getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
@@ -129,8 +128,7 @@ public interface DataFrame<out T> :
 
     // region get rows
 
-    @RequiredByIntellijPlugin
-    public operator fun get(index: Int): DataRow<T>
+    @RequiredByIntellijPlugin public operator fun get(index: Int): DataRow<T>
 
     public operator fun get(indices: Iterable<Int>): DataFrame<T> =
         columns().map { col -> col[indices] }.toDataFrame().cast()
@@ -150,36 +148,45 @@ public interface DataFrame<out T> :
 
     public operator fun plus(col: AnyBaseCol): DataFrame<T> = add(col)
 
-    public operator fun plus(cols: Iterable<AnyBaseCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
+    public operator fun plus(cols: Iterable<AnyBaseCol>): DataFrame<T> =
+        (columns() + cols).toDataFrame().cast()
 
     // endregion
 }
 
 // region get columns
 
-/**
- * Returns a list of columns selected by [columns], a [ColumnsSelectionDsl].
- */
-public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = this.get(columns)
+/** Returns a list of columns selected by [columns], a [ColumnsSelectionDsl]. */
+public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
+    this.get(columns)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
-    select { (listOf(first) + other).toColumnSet() }
+public operator fun <T> DataFrame<T>.get(
+    first: AnyColumnReference,
+    vararg other: AnyColumnReference,
+): DataFrame<T> = select { (listOf(first) + other).toColumnSet() }
 
 @Refine
 @Interpretable("DataFrameGetColumns")
 public operator fun <T> DataFrame<T>.get(first: String, vararg other: String): DataFrame<T> =
-    select { (listOf(first) + other).toColumnSet() }
+    select {
+        (listOf(first) + other).toColumnSet()
+    }
 
-public operator fun <T> DataFrame<T>.get(columnRange: ClosedRange<String>): DataFrame<T> =
-    select { columnRange.start..columnRange.endInclusive }
+public operator fun <T> DataFrame<T>.get(columnRange: ClosedRange<String>): DataFrame<T> = select {
+    columnRange.start..columnRange.endInclusive
+}
 
 // endregion
 
-internal val ColumnsContainer<*>.ncol get() = columnsCount()
-internal val AnyFrame.nrow get() = rowsCount()
-internal val AnyFrame.indices get() = indices()
-internal val AnyFrame.size: DataFrameSize get() = size()
+internal val ColumnsContainer<*>.ncol
+    get() = columnsCount()
+internal val AnyFrame.nrow
+    get() = rowsCount()
+internal val AnyFrame.indices
+    get() = indices()
+internal val AnyFrame.size: DataFrameSize
+    get() = size()
 
 public fun AnyFrame.size(): DataFrameSize = DataFrameSize(ncol, nrow)

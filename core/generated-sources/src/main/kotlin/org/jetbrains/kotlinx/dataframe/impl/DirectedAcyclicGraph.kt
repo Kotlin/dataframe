@@ -5,21 +5,19 @@ import kotlin.experimental.ExperimentalTypeInference
 /**
  * Represents a directed acyclic graph (DAG) of generic type [T].
  *
- * This class is immutable and guarantees that the graph does not contain any cycles.
- * It provides functionality to find the nearest common ancestor of two vertices
- * in the graph ([findNearestCommonVertex]).
+ * This class is immutable and guarantees that the graph does not contain any cycles. It provides
+ * functionality to find the nearest common ancestor of two vertices in the graph
+ * ([findNearestCommonVertex]).
  *
  * Use the [Builder] class or [buildDag] function to create a new instance of this class.
  *
  * @param T The type of items in the graph.
- * @property adjacencyList A map representing directed edges, where the keys are source vertices
- * and the values are sets of destination vertices.
+ * @property adjacencyList A map representing directed edges, where the keys are source vertices and
+ *   the values are sets of destination vertices.
  * @property vertices A set of all vertices in the graph.
  */
-internal class DirectedAcyclicGraph<T> private constructor(
-    private val adjacencyList: Map<T, Set<T>>,
-    private val vertices: Set<T>,
-) {
+internal class DirectedAcyclicGraph<T>
+private constructor(private val adjacencyList: Map<T, Set<T>>, private val vertices: Set<T>) {
     class Builder<T> {
         private val edges = mutableListOf<Pair<T, T>>()
         private val vertices = mutableSetOf<T>()
@@ -37,8 +35,8 @@ internal class DirectedAcyclicGraph<T> private constructor(
         }
 
         fun build(): DirectedAcyclicGraph<T> {
-            val adjacencyList = edges.groupBy({ it.first }, { it.second })
-                .mapValues { it.value.toSet() }
+            val adjacencyList =
+                edges.groupBy({ it.first }, { it.second }).mapValues { it.value.toSet() }
 
             if (hasCycle(adjacencyList)) {
                 throw IllegalStateException("Graph contains cycle")
@@ -58,9 +56,7 @@ internal class DirectedAcyclicGraph<T> private constructor(
                 visited.add(vertex)
                 recursionStack.add(vertex)
 
-                adjacencyList[vertex]?.forEach { neighbor ->
-                    if (dfs(neighbor)) return true
-                }
+                adjacencyList[vertex]?.forEach { neighbor -> if (dfs(neighbor)) return true }
 
                 recursionStack.remove(vertex)
                 return false
@@ -144,13 +140,15 @@ internal class DirectedAcyclicGraph<T> private constructor(
         val cache = mutableMapOf<T, R>()
         val cachedConversion: (T) -> R = { cache.getOrPut(it) { conversion(it) } }
 
-        return Builder<R>().apply {
-            for ((from, to) in adjacencyList) {
-                for (to in to) {
-                    addEdge(from = cachedConversion(from), to = cachedConversion(to))
+        return Builder<R>()
+            .apply {
+                for ((from, to) in adjacencyList) {
+                    for (to in to) {
+                        addEdge(from = cachedConversion(from), to = cachedConversion(to))
+                    }
                 }
             }
-        }.build()
+            .build()
     }
 
     companion object {
@@ -165,7 +163,7 @@ internal class DirectedAcyclicGraph<T> private constructor(
  */
 @OptIn(ExperimentalTypeInference::class)
 internal fun <T> buildDag(
-    @BuilderInference builder: DirectedAcyclicGraph.Builder<T>.() -> Unit,
+    @BuilderInference builder: DirectedAcyclicGraph.Builder<T>.() -> Unit
 ): DirectedAcyclicGraph<T> = DirectedAcyclicGraph.builder<T>().apply(builder).build()
 
 /**
@@ -173,4 +171,6 @@ internal fun <T> buildDag(
  *
  * @see DirectedAcyclicGraph
  */
-internal fun <T> dagOf(vararg edges: Pair<T, T>): DirectedAcyclicGraph<T> = buildDag { addEdges(*edges) }
+internal fun <T> dagOf(vararg edges: Pair<T, T>): DirectedAcyclicGraph<T> = buildDag {
+    addEdges(*edges)
+}

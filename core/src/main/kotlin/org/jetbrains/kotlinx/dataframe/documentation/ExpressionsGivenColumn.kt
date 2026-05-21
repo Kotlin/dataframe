@@ -2,15 +2,13 @@
 
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.ColumnExpression as DfColumnExpression
+import org.jetbrains.kotlinx.dataframe.DataColumn
 
 /**
  * ## Expressions Given Column
- * Expressing values using a "Column Expression" can occur exclusively in a
- * {@include [ColumnExpressionLink]}.
+ * Expressing values using a "Column Expression" can occur exclusively in a {@include
+ * [ColumnExpressionLink]}.
  */
 internal interface ExpressionsGivenColumn {
 
@@ -23,7 +21,10 @@ internal interface ExpressionsGivenColumn {
     /** {@set [OPERATION] operation} */
     typealias SetDefaultOperationArg = Nothing
 
-    /** Provide a new value for every selected cell given its column using a [column expression][DfColumnExpression]. */
+    /**
+     * Provide a new value for every selected cell given its column using a
+     * [column expression][DfColumnExpression].
+     */
     interface ColumnExpression {
 
         /**
@@ -34,6 +35,7 @@ internal interface ExpressionsGivenColumn {
          * `df.`{@get [OPERATION]}` { `[mean][DataColumn.mean]`(skipNA = true) }`
          *
          * `df.`{@get [OPERATION]}` { `[count][DataColumn.count]` { it > 10 } }`
+         *
          * @include [SetDefaultOperationArg]
          */
         typealias WithExample = Nothing

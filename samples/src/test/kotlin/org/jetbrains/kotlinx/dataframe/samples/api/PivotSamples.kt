@@ -88,7 +88,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
         // SampleStart
         df
             // SampleEnd
-            .format().perRowCol { row, _ ->
+            .format()
+            .perRowCol { row, _ ->
                 val isHappy = df[row.index()].isHappy
                 background(isHappyToColor(isHappy)) and textColor(black)
             }
@@ -102,12 +103,14 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
             // SampleEnd
             .frames()
             .toDataFrame()
-            .convert { "true"() }.with {
+            .convert { "true"() }
+            .with {
                 (it as DataFrame<Any?>).format().perRowCol { _, _ ->
                     background(isHappyToColor(true)) and textColor(black)
                 }
             }
-            .convert { "false"() }.with {
+            .convert { "false"() }
+            .with {
                 (it as DataFrame<Any?>).format().perRowCol { _, _ ->
                     background(isHappyToColor(false)) and textColor(black)
                 }
@@ -130,12 +133,14 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
             // SampleEnd
             .frames()
             .toDataFrame()
-            .convert { "isHappy"["true"] }.with {
+            .convert { "isHappy"["true"] }
+            .with {
                 (it as DataFrame<Any?>).format().perRowCol { _, _ ->
                     background(isHappyToColor(true)) and textColor(black)
                 }
             }
-            .convert { "isHappy"["false"] }.with {
+            .convert { "isHappy"["false"] }
+            .with {
                 (it as DataFrame<Any?>).format().perRowCol { _, _ ->
                     background(isHappyToColor(false)) and textColor(black)
                 }
@@ -192,14 +197,16 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
             // SampleEnd
             .frames()
             .toDataFrame()
-            .convert { "true"() }.with {
+            .convert { "true"() }
+            .with {
                 val lastNameCol = (it as DataFrame<Any?>)["name"]["lastName"]
                 it.format().perRowCol { row, _ ->
                     val lastName = lastNameCol[row.index()] as String
                     background(lastNameToColor(lastName)) and textColor(black)
                 }
             }
-            .convert { "false"() }.with {
+            .convert { "false"() }
+            .with {
                 val lastNameCol = (it as DataFrame<Any?>)["name"]["lastName"]
                 it.format().perRowCol { row, _ ->
                     val lastName = lastNameCol[row.index()] as String
@@ -222,7 +229,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotFirst_properties() {
         // SampleStart
-        df.pivot { isHappy }.first()
+        df.pivot { isHappy }
+            .first()
             // SampleEnd
             .values()
             .toDataFrame()
@@ -240,7 +248,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotFirstWithPredicate_properties() {
         // SampleStart
-        df.pivot { isHappy }.first { age == 30 }
+        df.pivot { isHappy }
+            .first { age == 30 }
             // SampleEnd
             .values()
             .toDataFrame()
@@ -258,7 +267,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotLast_properties() {
         // SampleStart
-        df.pivot { isHappy }.last()
+        df.pivot { isHappy }
+            .last()
             // SampleEnd
             .values()
             .toDataFrame()
@@ -276,7 +286,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotLastWithPredicate_properties() {
         // SampleStart
-        df.pivot { isHappy }.last { age > 20 }
+        df.pivot { isHappy }
+            .last { age > 20 }
             // SampleEnd
             .values()
             .toDataFrame()
@@ -298,7 +309,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMinBy_properties() {
         // SampleStart
-        df.pivot { isHappy }.minBy { weight }
+        df.pivot { isHappy }
+            .minBy { weight }
             // SampleEnd
             .values()
             .toDataFrame()
@@ -316,7 +328,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMaxBy_properties() {
         // SampleStart
-        df.pivot { isHappy }.maxBy { age }
+        df.pivot { isHappy }
+            .maxBy { age }
             // SampleEnd
             .values()
             .toDataFrame()
@@ -338,7 +351,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMedianBy_properties() {
         // SampleStart
-        df.pivot { isHappy }.medianBy { weight }
+        df.pivot { isHappy }
+            .medianBy { weight }
             // SampleEnd
             .values()
             .toDataFrame()
@@ -356,7 +370,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotPercentileBy_properties() {
         // SampleStart
-        df.pivot { isHappy }.percentileBy(25.0) { weight }
+        df.pivot { isHappy }
+            .percentileBy(25.0) { weight }
             // SampleEnd
             .values()
             .toDataFrame()
@@ -378,7 +393,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValues_properties() {
         // SampleStart
-        df.pivot { isHappy }.first().values()
+        df.pivot { isHappy }
+            .first()
+            .values()
             // SampleEnd
             .toDataFrame()
             .colorByLastName()
@@ -400,7 +417,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
             .with { name.firstName + " " + name.lastName }
             // SampleEnd
             .toDataFrame()
-            .format().perRowCol { row, col ->
+            .format()
+            .perRowCol { row, col ->
                 val fullName = row[col.name()] as String
                 val lastName = fullName.substringAfterLast(" ")
                 background(lastNameToColor(lastName)) and textColor(black)
@@ -412,9 +430,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotWith_strings() {
         // SampleStart
-        df.pivot("isHappy")
-            .maxBy("age")
-            .with { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
+        df.pivot("isHappy").maxBy("age").with {
+            "name"["firstName"]<String>() + " " + "name"["lastName"]<String>()
+        }
         // SampleEnd
     }
 
@@ -425,7 +443,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotFrames_properties() {
         // SampleStart
-        df.pivot { isHappy }.frames()
+        df.pivot { isHappy }
+            .frames()
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -445,7 +464,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValuesAggregate_properties() {
         // SampleStart
-        df.pivot { isHappy }.values { name and age }
+        df.pivot { isHappy }
+            .values { name and age }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -461,7 +481,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotValuesAggregateAll_properties() {
         // SampleStart
-        df.pivot { isHappy }.values()
+        df.pivot { isHappy }
+            .values()
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -481,7 +502,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotCount_properties() {
         // SampleStart
-        df.pivot { isHappy }.count()
+        df.pivot { isHappy }
+            .count()
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -501,7 +523,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun withOnPivot_properties() {
         // SampleStart
-        df.pivot { isHappy }.with { name.lastName }
+        df.pivot { isHappy }
+            .with { name.lastName }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -521,13 +544,14 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotAggregateMultiple_properties() {
         // SampleStart
-        df.pivot { isHappy }.aggregate {
-            count() into "total"
-            count { age >= 18 } into "adults"
-            median { age } into "median age"
-            min { age } into "min age"
-            maxBy { age }.name into "oldest"
-        }
+        df.pivot { isHappy }
+            .aggregate {
+                count() into "total"
+                count { age >= 18 } into "adults"
+                median { age } into "median age"
+                min { age } into "min age"
+                maxBy { age }.name into "oldest"
+            }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -549,7 +573,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotAggregate_properties() {
         // SampleStart
-        df.pivot { isHappy }.aggregate { minBy { age }.name }
+        df.pivot { isHappy }
+            .aggregate { minBy { age }.name }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -569,7 +594,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMax_properties() {
         // SampleStart
-        df.pivot { isHappy }.max { age }
+        df.pivot { isHappy }
+            .max { age }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -585,7 +611,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMaxMultiple_properties() {
         // SampleStart
-        df.pivot { isHappy }.max { age and weight }
+        df.pivot { isHappy }
+            .max { age and weight }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -601,7 +628,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMaxForMultiple_properties() {
         // SampleStart
-        df.pivot { isHappy }.maxFor { age and weight }
+        df.pivot { isHappy }
+            .maxFor { age and weight }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -617,7 +645,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMaxOf_properties() {
         // SampleStart
-        df.pivot { isHappy }.maxOf { if (age < 30) weight else null }
+        df.pivot { isHappy }
+            .maxOf { if (age < 30) weight else null }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -633,7 +662,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMin_properties() {
         // SampleStart
-        df.pivot { isHappy }.min { age }
+        df.pivot { isHappy }
+            .min { age }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -649,7 +679,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotSum_properties() {
         // SampleStart
-        df.pivot { isHappy }.sum { weight }
+        df.pivot { isHappy }
+            .sum { weight }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -665,7 +696,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMeanAll_properties() {
         // SampleStart
-        df.pivot { isHappy }.mean()
+        df.pivot { isHappy }
+            .mean()
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -681,7 +713,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMean_properties() {
         // SampleStart
-        df.pivot { isHappy }.mean { age }
+        df.pivot { isHappy }
+            .mean { age }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -697,7 +730,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotStd_properties() {
         // SampleStart
-        df.pivot { isHappy }.std { age }
+        df.pivot { isHappy }
+            .std { age }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -713,7 +747,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotMedian_properties() {
         // SampleStart
-        df.pivot { isHappy }.median { age }
+        df.pivot { isHappy }
+            .median { age }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -729,7 +764,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotPercentile_properties() {
         // SampleStart
-        df.pivot { isHappy }.percentile(25.0) { age }
+        df.pivot { isHappy }
+            .percentile(25.0) { age }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -749,7 +785,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotSeparate_properties() {
         // SampleStart
-        df.pivot { isHappy }.maxFor(separate = true) { age and weight }
+        df.pivot { isHappy }
+            .maxFor(separate = true) { age and weight }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -765,10 +802,11 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotAggregateSeparate_properties() {
         // SampleStart
-        df.pivot { isHappy }.aggregate(separate = true) {
-            min { age } into "min age"
-            maxOrNull { weight } into "max weight"
-        }
+        df.pivot { isHappy }
+            .aggregate(separate = true) {
+                min { age } into "min age"
+                maxOrNull { weight } into "max weight"
+            }
             // SampleEnd
             .toDataFrame()
             .saveDfHtmlSample()
@@ -791,7 +829,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotDefault_properties() {
         // SampleStart
-        df.pivot { isHappy }.groupBy { city }.aggregate { min { age } default 0 }
+        df.pivot { isHappy }
+            .groupBy { city }
+            .aggregate { min { age } default 0 }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -806,7 +846,10 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotDefaultDirect_properties() {
         // SampleStart
-        df.pivot { isHappy }.groupBy { city }.default(0).min()
+        df.pivot { isHappy }
+            .groupBy { city }
+            .default(0)
+            .min()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -821,10 +864,12 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotDefaultMultiple_properties() {
         // SampleStart
-        df.pivot { isHappy }.groupBy { city }.aggregate {
-            count() into "people" default 0
-            any { age < 18 } into "hasMinors" default false
-        }
+        df.pivot { isHappy }
+            .groupBy { city }
+            .aggregate {
+                count() into "people" default 0
+                any { age < 18 } into "hasMinors" default false
+            }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -846,13 +891,15 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotInAggregate_properties() {
         // SampleStart
-        df.groupBy { name.firstName }.aggregate {
-            pivot { isHappy }.aggregate(separate = true) {
-                mean { age } into "mean age"
-                count() into "count"
+        df.groupBy { name.firstName }
+            .aggregate {
+                pivot { isHappy }
+                    .aggregate(separate = true) {
+                        mean { age } into "mean age"
+                        count() into "count"
+                    }
+                count() into "total"
             }
-            count() into "total"
-        }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -860,13 +907,14 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotInAggregate_strings() {
         // SampleStart
-        df.groupBy { "name"["firstName"] }.aggregate {
-            pivot("isHappy").aggregate(separate = true) {
-                mean("age") into "mean age"
-                count() into "count"
+        df.groupBy { "name"["firstName"] }
+            .aggregate {
+                pivot("isHappy").aggregate(separate = true) {
+                    mean("age") into "mean age"
+                    count() into "count"
+                }
+                count() into "total"
             }
-            count() into "total"
-        }
         // SampleEnd
     }
 
@@ -879,7 +927,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
         // SampleStart
         df.pivotCounts { isHappy }
         // same as
-        df.pivot { isHappy }.groupByOther().count()
+        df.pivot { isHappy }
+            .groupByOther()
+            .count()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -900,9 +950,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
         // same as
         df.groupBy { name }.pivot { city }.count()
         // same as
-        df.groupBy { name }.aggregate {
-            pivotCounts { city }
-        }
+        df.groupBy { name }
+            .aggregate { pivotCounts { city } }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -914,9 +963,7 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
         // same as
         df.groupBy("name").pivot("city").count()
         // same as
-        df.groupBy("name").aggregate {
-            pivotCounts("city")
-        }
+        df.groupBy("name").aggregate { pivotCounts("city") }
         // SampleEnd
     }
 
@@ -929,7 +976,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
         // SampleStart
         df.pivotMatches { city }
         // same as
-        df.pivot { city }.groupByOther().matches()
+        df.pivot { city }
+            .groupByOther()
+            .matches()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -950,9 +999,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
         // same as
         df.groupBy { name }.pivot { city }.matches()
         // same as
-        df.groupBy { name }.aggregate {
-            pivotMatches { city }
-        }
+        df.groupBy { name }
+            .aggregate { pivotMatches { city } }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -964,9 +1012,7 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
         // same as
         df.groupBy("name").pivot("city").matches()
         // same as
-        df.groupBy("name").aggregate {
-            pivotMatches("city")
-        }
+        df.groupBy("name").aggregate { pivotMatches("city") }
         // SampleEnd
     }
 
@@ -979,7 +1025,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
         // SampleStart
         df.pivot { isHappy }.groupBy { name.firstName }
         // same as
-        df.groupBy { name.firstName }.pivot { isHappy }
+        df.groupBy { name.firstName }
+            .pivot { isHappy }
             // SampleEnd
             .frames()
             .defaultHeaderFormatting { "firstName"<String>() }
@@ -998,7 +1045,8 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotGroupByOther_properties() {
         // SampleStart
-        df.pivot { isHappy }.groupByOther()
+        df.pivot { isHappy }
+            .groupByOther()
             // SampleEnd
             .frames()
             .saveDfHtmlSample()
@@ -1014,7 +1062,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotGroupByAggregation_properties() {
         // SampleStart
-        df.groupBy { name.firstName }.pivot { isHappy }.max { age }
+        df.groupBy { name.firstName }
+            .pivot { isHappy }
+            .max { age }
             // SampleEnd
             .defaultHeaderFormatting { "firstName"<String>() }
             .saveDfHtmlSample()
@@ -1030,7 +1080,9 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     @Test
     fun pivotGroupByFrames_properties() {
         // SampleStart
-        df.pivot { isHappy }.groupBy { name.firstName }.frames()
+        df.pivot { isHappy }
+            .groupBy { name.firstName }
+            .frames()
             // SampleEnd
             .defaultHeaderFormatting { "firstName"<String>() }
             .saveDfHtmlSample()

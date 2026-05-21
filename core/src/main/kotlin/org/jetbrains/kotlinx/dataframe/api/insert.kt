@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -27,17 +28,15 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.INSERT_AFTER_COL_PATH
 import org.jetbrains.kotlinx.dataframe.util.INSERT_AFTER_COL_PATH_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.INSERT_UNDER
-import kotlin.reflect.KProperty
 
 // region DataFrame
 
 // region insert
 
 /**
- * This function does not immediately insert the new column but instead specify a column to insert and
- * returns an [InsertClause],
- * which serves as an intermediate step.
- * The [InsertClause] object provides methods to insert a new column using:
+ * This function does not immediately insert the new column but instead specify a column to insert
+ * and returns an [InsertClause], which serves as an intermediate step. The [InsertClause] object
+ * provides methods to insert a new column using:
  * - [under][InsertClause.under] - inserts a new column under the specified column group.
  * - [after][InsertClause.after] - inserts a new column after the specified column.
  * - [at][InsertClause.at]- inserts a new column at the specified position.
@@ -54,35 +53,35 @@ import kotlin.reflect.KProperty
  *
  * See also:
  * - [move][DataFrame.move] - move columns to a new position within the [DataFrame].
- * - [add][DataFrame.add] - add new columns to the [DataFrame]
- * (without specifying a position, to the end of the [DataFrame]).
+ * - [add][DataFrame.add] - add new columns to the [DataFrame] (without specifying a position, to
+ *   the end of the [DataFrame]).
  */
 internal interface InsertDocs {
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     *
      * @include [SelectingColumns] {@include [SetInsertOperationArg]}
      */
     typealias InsertSelectingOptions = Nothing
 
     /**
      * ## Insert Operation Grammar
-     * {@include [LineBreak]}
-     * {@include [DslGrammarLink]}
-     * {@include [LineBreak]}
+     * {@include [LineBreak]} {@include [DslGrammarLink]} {@include [LineBreak]}
      *
      * [**`insert`**][insert]**`(`**`column: `[`DataColumn`][DataColumn]**`)`**` /`
      *
-     * [**`insert`**][insert]**`(`**`name: `[`String`][String]**`, `**`infer: `[`Infer`][Infer]**`) { `**`rowExpression: `[`RowExpression`][RowExpression]**`  }`**
+     * [**`insert`**][insert]**`(`**`name: `[`String`][String]**`, `**`infer: `[`Infer`][Infer]**`)
+     * { `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
-     * {@include [Indent]}
-     * __`.`__[**`under`**][InsertClause.under]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * {@include [Indent]} __`.`__[**`under`**][InsertClause.under]**` { `**`column:
+     * `[`ColumnSelector`][ColumnSelector]**` }`**
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`after`**][InsertClause.after]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * {@include [Indent]} `| `__`.`__[**`after`**][InsertClause.after]**` { `**`column:
+     * `[`ColumnSelector`][ColumnSelector]**` }`**
      *
-     * {@include [Indent]}
-     * `| `__`.`__[**`at`**][InsertClause.at]**`(`**`position: `[`Int`][Int]**`)`**
+     * {@include [Indent]} `| `__`.`__[**`at`**][InsertClause.at]**`(`**`position:
+     * `[`Int`][Int]**`)`**
      */
     typealias Grammar = Nothing
 }
@@ -108,10 +107,12 @@ private typealias SetInsertOperationArg = Nothing
  * @param [column] A single [DataColumn] to insert into the [DataFrame].
  * @return An [InsertClause] for specifying the placement of the new column.
  */
-public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = InsertClause(this, column)
+public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> =
+    InsertClause(this, column)
 
 /**
- * Creates a new column using the provided [expression][AddExpression] and inserts it into this [DataFrame].
+ * Creates a new column using the provided [expression][AddExpression] and inserts it into this
+ * [DataFrame].
  *
  * {@include [AddExpressionDocs]}
  *
@@ -134,7 +135,8 @@ public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = 
  * ```
  *
  * @param [name] The name of the new column to be created and inserted.
- * @param [infer] Controls how values are inferred when building the new column. Defaults to [Infer.Nulls].
+ * @param [infer] Controls how values are inferred when building the new column. Defaults to
+ *   [Infer.Nulls].
  * @param [expression] An [AddExpression] that computes the value for each row of the new column.
  * @return An [InsertClause] for specifying the placement of the newly created column.
  */
@@ -166,10 +168,9 @@ public inline fun <T, reified R> DataFrame<T>.insert(
 /**
  * An intermediate class used in the [insert] operation.
  *
- * This class itself does not perform any insertions — it is a transitional step
- * before specifying how to insert the selected columns.
- * It must be followed by one of the inserting methods
- * to produce a new [DataFrame] with an inserted column.
+ * This class itself does not perform any insertions — it is a transitional step before specifying
+ * how to insert the selected columns. It must be followed by one of the inserting methods to
+ * produce a new [DataFrame] with an inserted column.
  *
  * Use the following methods to perform the insertion:
  * - [under][InsertClause.under] - inserts a new column under the specified column group.
@@ -185,11 +186,11 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
 // region under
 
 /**
- * Inserts the new column previously specified with [insert] under
- * the selected [column group][column].
+ * Inserts the new column previously specified with [insert] under the selected
+ * [column group][column].
  *
- * This works for existing column groups, as well as for ones that don't exist yet;
- * in that case, they will be created.
+ * This works for existing column groups, as well as for ones that don't exist yet; in that case,
+ * they will be created.
  *
  * For more information: {@include [DocumentationUrls.Insert]}
  *
@@ -198,6 +199,7 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  * See [SelectingColumns.ColumnsSelectionDsl].
  *
  * ### Examples
+ *
  * ```kotlin
  * // Insert a new column "age" under the column group with path ("info", "personal")
  * df.insert(age).under { info.personal }
@@ -209,18 +211,15 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  * val dfWithSum = df.insert("sum") { a + b }.under { colGroups().single() }
  * ```
  *
- * @param column The [ColumnSelector] used to choose a new or existing column group in this [DataFrame]
- * under which the new column will be inserted.
+ * @param column The [ColumnSelector] used to choose a new or existing column group in this
+ *   [DataFrame] under which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed under the selected group.
  */
 @Refine
 @Interpretable("Under0")
 public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> {
     val parentPath = df.getColumnPaths(UnresolvedColumnsPolicy.Create, column).single()
-    return df.insertImpl(
-        path = parentPath + this.column.name,
-        column = this.column,
-    )
+    return df.insertImpl(path = parentPath + this.column.name, column = this.column)
 }
 
 /**
@@ -248,23 +247,25 @@ public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = 
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
 
 /**
- * Inserts the new column previously specified with [insert] under
- * the given column group by its [name][column].
+ * Inserts the new column previously specified with [insert] under the given column group by its
+ * [name][column].
  *
- * If the column group with the provided [name][column] does not exist, it will be created automatically.
+ * If the column group with the provided [name][column] does not exist, it will be created
+ * automatically.
  *
  * For more information: {@include [DocumentationUrls.Insert]}
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
  * ### Example
+ *
  * ```kotlin
  * // Insert a new column "age" under the "info" column group.
  * df.insert(age).under("info")
  * ```
  *
- * @param [column] The [name][String] of the column group in this [DataFrame].
- * If the group does not exist, it will be created.
+ * @param [column] The [name][String] of the column group in this [DataFrame]. If the group does not
+ *   exist, it will be created.
  * @return A new [DataFrame] with the inserted column placed under the specified column group.
  */
 @Refine
@@ -276,8 +277,8 @@ public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under { pat
 // region after
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the position immediately after the selected [column] (on the same level).
+ * Inserts the new column previously specified with [insert] at the position immediately after the
+ * selected [column] (on the same level).
  *
  * For more information: {@include [DocumentationUrls.Insert]}
  *
@@ -294,17 +295,18 @@ public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under { pat
  * val dfWithSum = df.insert("sum") { a + b }.after { stats.min }
  * ```
  *
- * @param [column] The [ColumnSelector] used to choose an existing column in this [DataFrame],
- * after which the new column will be inserted.
+ * @param [column] The [ColumnSelector] used to choose an existing column in this [DataFrame], after
+ *   which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed after the selected column.
  */
 @Refine
 @Interpretable("InsertAfter0")
-public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterImpl(df.getColumnPath(column))
+public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> =
+    afterImpl(df.getColumnPath(column))
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the position immediately after the column with the given [name][column].
+ * Inserts the new column previously specified with [insert] at the position immediately after the
+ * column with the given [name][column].
  *
  * For more information: {@include [DocumentationUrls.Insert]}
  *
@@ -313,26 +315,33 @@ public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T>
  * See also: [SelectingColumns.ColumnNamesApi].
  *
  * ### Example
+ *
  * ```kotlin
  * // Insert a new column "age" after the "name" column
  * df.insert(age).after("name")
  * ```
  *
- * @param [column] The [String] name of the column in this [DataFrame]
- * after which the new column will be inserted.
+ * @param [column] The [String] name of the column in this [DataFrame] after which the new column
+ *   will be inserted.
  * @return A new [DataFrame] with the inserted column placed after the specified column.
  */
-public fun <T> InsertClause<T>.after(column: String): DataFrame<T> = df.add(this.column).move(this.column).after(column)
+public fun <T> InsertClause<T>.after(column: String): DataFrame<T> =
+    df.add(this.column).move(this.column).after(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> InsertClause<T>.after(column: ColumnAccessor<*>): DataFrame<T> = afterImpl(column.path())
+public fun <T> InsertClause<T>.after(column: ColumnAccessor<*>): DataFrame<T> =
+    afterImpl(column.path())
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> InsertClause<T>.after(column: KProperty<*>): DataFrame<T> = after(column.columnName)
 
-@Deprecated(INSERT_AFTER_COL_PATH, ReplaceWith(INSERT_AFTER_COL_PATH_REPLACE), DeprecationLevel.ERROR)
+@Deprecated(
+    INSERT_AFTER_COL_PATH,
+    ReplaceWith(INSERT_AFTER_COL_PATH_REPLACE),
+    DeprecationLevel.ERROR,
+)
 public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
     val dstPath = ColumnPath(columnPath.removeAt(columnPath.size - 1) + column.name())
     return df.insertImpl(dstPath, column).move { dstPath }.after { columnPath }
@@ -343,8 +352,8 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
 // region before
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the position immediately before the selected [column] (on the same level).
+ * Inserts the new column previously specified with [insert] at the position immediately before the
+ * selected [column] (on the same level).
  *
  * For more information: {@include [DocumentationUrls.Insert]}
  *
@@ -362,16 +371,17 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
  * ```
  *
  * @param [column] The [ColumnSelector] used to choose an existing column in this [DataFrame],
- * before which the new column will be inserted.
+ *   before which the new column will be inserted.
  * @return A new [DataFrame] with the inserted column placed before the selected column.
  */
 @Refine
 @Interpretable("InsertBefore0")
-public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T> = beforeImpl(df.getColumnPath(column))
+public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T> =
+    beforeImpl(df.getColumnPath(column))
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the position immediately before the column with the given [name][column].
+ * Inserts the new column previously specified with [insert] at the position immediately before the
+ * column with the given [name][column].
  *
  * For more information: {@include [DocumentationUrls.Insert]}
  *
@@ -380,13 +390,14 @@ public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T
  * See also: [SelectingColumns.ColumnNamesApi].
  *
  * ### Example
+ *
  * ```kotlin
  * // Insert a new column "age" before the "name" column
  * df.insert(age).before("name")
  * ```
  *
- * @param [column] The [String] name of the column in this [DataFrame]
- * before which the new column will be inserted.
+ * @param [column] The [String] name of the column in this [DataFrame] before which the new column
+ *   will be inserted.
  * @return A new [DataFrame] with the inserted column placed before the specified column.
  */
 public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
@@ -397,8 +408,8 @@ public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
 // region at
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the given [position] in the [DataFrame].
+ * Inserts the new column previously specified with [insert] at the given [position] in the
+ * [DataFrame].
  *
  * The new column will be placed at the specified index, shifting existing columns to the right.
  *
@@ -407,18 +418,20 @@ public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
  * See [Grammar][InsertDocs.Grammar] for more details.
  *
  * ### Example
+ *
  * ```kotlin
  * // Insert a new column "age" at index 3
  * df.insert(age).at(3)
  * ```
  *
- * @param [position] The [Int] index where the new column should be inserted.
- *                 Columns currently at this index and after will be shifted right.
+ * @param [position] The [Int] index where the new column should be inserted. Columns currently at
+ *   this index and after will be shifted right.
  * @return A new [DataFrame] with the inserted column placed at the specified position.
  */
 @Refine
 @Interpretable("InsertAt")
-public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> = df.add(column).move(column).to(position)
+public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> =
+    df.add(column).move(column).to(position)
 
 // endregion
 

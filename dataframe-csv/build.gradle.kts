@@ -38,11 +38,7 @@ dependencies {
     }
 }
 
-benchmark {
-    targets {
-        register("test")
-    }
-}
+benchmark { targets { register("test") } }
 
 kotlinPublications {
     publication {

@@ -1,5 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
+import java.net.URL
+import kotlin.reflect.KType
+import kotlin.reflect.KVariance
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import org.jetbrains.kotlinx.dataframe.AnyCol
@@ -15,12 +21,6 @@ import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
-import java.net.URL
-import kotlin.reflect.KType
-import kotlin.reflect.KVariance
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.jvm.jvmErasure
-import kotlin.reflect.typeOf
 
 internal fun String.truncate(limit: Int): RenderedContent =
     if (limit in 1 until length) {
@@ -33,7 +33,8 @@ internal fun String.truncate(limit: Int): RenderedContent =
         RenderedContent.text(this)
     }
 
-internal fun renderSchema(df: AnyFrame): String = df.columns().joinToString { "${it.name()}:${renderType(it)}" }
+internal fun renderSchema(df: AnyFrame): String =
+    df.columns().joinToString { "${it.name()}:${renderType(it)}" }
 
 internal fun renderSchema(schema: DataFrameSchema): String =
     schema.columns.map { "${it.key}:${renderType(it.value)}" }.joinToString()
@@ -64,42 +65,40 @@ internal fun renderType(type: KType?): String {
 
         else -> {
             val fullName = type.jvmErasure.qualifiedName ?: return type.toString()
-            val name = when {
-                type.isSubtypeOf(typeOf<Array<*>>()) ->
-                    "Array"
+            val name =
+                when {
+                    type.isSubtypeOf(typeOf<Array<*>>()) -> "Array"
 
-                type.classifier == URL::class ->
-                    fullName.removePrefix("java.net.")
+                    type.classifier == URL::class -> fullName.removePrefix("java.net.")
 
-                type.classifier in listOf(LocalDateTime::class, LocalTime::class) ->
-                    fullName.removePrefix("kotlinx.datetime.")
+                    type.classifier in listOf(LocalDateTime::class, LocalTime::class) ->
+                        fullName.removePrefix("kotlinx.datetime.")
 
-                fullName.startsWith("kotlin.collections.") ->
-                    fullName.removePrefix("kotlin.collections.")
+                    fullName.startsWith("kotlin.collections.") ->
+                        fullName.removePrefix("kotlin.collections.")
 
-                fullName.startsWith("kotlin.time.") ->
-                    fullName.removePrefix("kotlin.time.")
+                    fullName.startsWith("kotlin.time.") -> fullName.removePrefix("kotlin.time.")
 
-                fullName.startsWith("kotlin.") ->
-                    fullName.removePrefix("kotlin.")
+                    fullName.startsWith("kotlin.") -> fullName.removePrefix("kotlin.")
 
-                fullName.startsWith("org.jetbrains.kotlinx.dataframe.") ->
-                    fullName.removePrefix("org.jetbrains.kotlinx.dataframe.")
+                    fullName.startsWith("org.jetbrains.kotlinx.dataframe.") ->
+                        fullName.removePrefix("org.jetbrains.kotlinx.dataframe.")
 
-                else -> fullName
-            }
+                    else -> fullName
+                }
 
             buildString {
                 append(name)
                 if (type.arguments.isNotEmpty()) {
-                    val arguments = type.arguments.joinToString {
-                        when (it.variance) {
-                            null -> "*"
-                            KVariance.INVARIANT -> renderType(it.type)
-                            KVariance.IN -> "in ${renderType(it.type)}"
-                            KVariance.OUT -> "out ${renderType(it.type)}"
+                    val arguments =
+                        type.arguments.joinToString {
+                            when (it.variance) {
+                                null -> "*"
+                                KVariance.INVARIANT -> renderType(it.type)
+                                KVariance.IN -> "in ${renderType(it.type)}"
+                                KVariance.OUT -> "out ${renderType(it.type)}"
+                            }
                         }
-                    }
                     append("<$arguments>")
                 }
                 if (type.isMarkedNullable) {

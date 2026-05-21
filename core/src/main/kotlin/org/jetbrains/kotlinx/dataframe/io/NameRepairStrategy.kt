@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 /**
- * This strategy defines how the repeatable name column will be handled
- * during the creation new dataframe from the IO sources.
+ * This strategy defines how the repeatable name column will be handled during the creation new
+ * dataframe from the IO sources.
  */
 public enum class NameRepairStrategy {
     /** No actions, keep as is. */

@@ -5,11 +5,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 
-internal class ValueColumnWithPathImpl<T> internal constructor(
-    override val data: ValueColumn<T>,
-    override val path: ColumnPath,
-) : ColumnWithPath<T>,
-    ValueColumnInternal<T> by data.internalValueColumn() {
+internal class ValueColumnWithPathImpl<T>
+internal constructor(override val data: ValueColumn<T>, override val path: ColumnPath) :
+    ColumnWithPath<T>, ValueColumnInternal<T> by data.internalValueColumn() {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T> = this
 

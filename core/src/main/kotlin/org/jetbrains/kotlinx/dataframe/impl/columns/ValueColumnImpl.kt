@@ -1,5 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -8,13 +12,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.core.BuildConfig
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
-@JvmInline
-internal value class StatisticResult(val value: Any?)
+@JvmInline internal value class StatisticResult(val value: Any?)
 
 internal interface ValueColumnInternal<T> : ValueColumn<T> {
     fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult)
@@ -22,20 +21,26 @@ internal interface ValueColumnInternal<T> : ValueColumn<T> {
     fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult?
 
     /**
-     * Tiny wrapper for [ValueColumn]s that are not [ValueColumnImpl],
-     * which can occur in case a user implements the [ValueColumn] interface.
+     * Tiny wrapper for [ValueColumn]s that are not [ValueColumnImpl], which can occur in case a
+     * user implements the [ValueColumn] interface.
      */
     class Wrapper<T>(val source: ValueColumn<T>) :
-        ValueColumn<T> by source,
-        ValueColumnInternal<T> {
-        val statisticsCache: MutableMap<String, MutableMap<Map<String, Any>, StatisticResult>> = mutableMapOf()
+        ValueColumn<T> by source, ValueColumnInternal<T> {
+        val statisticsCache: MutableMap<String, MutableMap<Map<String, Any>, StatisticResult>> =
+            mutableMapOf()
 
-        override fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult) {
+        override fun putStatisticCache(
+            statName: String,
+            arguments: Map<String, Any>,
+            value: StatisticResult,
+        ) {
             statisticsCache.getOrPut(statName) { mutableMapOf() }[arguments] = value
         }
 
-        override fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult? =
-            statisticsCache[statName]?.get(arguments)
+        override fun getStatisticCacheOrNull(
+            statName: String,
+            arguments: Map<String, Any>,
+        ): StatisticResult? = statisticsCache[statName]?.get(arguments)
     }
 }
 
@@ -48,24 +53,27 @@ internal open class ValueColumnImpl<T>(
     type: KType,
     val defaultValue: T? = null,
     distinct: Lazy<Set<T>>? = null,
-    private val statisticsCache: MutableMap<String, MutableMap<Map<String, Any>, StatisticResult>> = mutableMapOf(),
-) : DataColumnImpl<T>(values, name, type, distinct),
-    ValueColumn<T>,
-    ValueColumnInternal<T> {
+    private val statisticsCache: MutableMap<String, MutableMap<Map<String, Any>, StatisticResult>> =
+        mutableMapOf(),
+) : DataColumnImpl<T>(values, name, type, distinct), ValueColumn<T>, ValueColumnInternal<T> {
 
     init {
         // This only runs with `kotlin.dataframe.debug=true` in gradle.properties.
         if (BuildConfig.DEBUG) {
-            // check if not all values are non-nullable AnyFrame; a FrameColumn should be created in that case
+            // check if not all values are non-nullable AnyFrame; a FrameColumn should be created in
+            // that case
             if (values.isNotEmpty() && values.all { it is AnyFrame }) {
                 throw IllegalArgumentException(
-                    "ValueColumnImpl cannot just contain AnyFrame values. A FrameColumn should be created instead.",
+                    "ValueColumnImpl cannot just contain AnyFrame values. A FrameColumn should be created instead."
                 )
             }
         }
-        // check if the type is not non-nullable AnyFrame; a FrameColumn should be created in that case
+        // check if the type is not non-nullable AnyFrame; a FrameColumn should be created in that
+        // case
         if (type.isSubtypeOf(typeOf<AnyFrame>()) && type != nothingType) {
-            throw IllegalArgumentException("ValueColumnImpl cannot contain AnyFrame values. Use FrameColumn instead.")
+            throw IllegalArgumentException(
+                "ValueColumnImpl cannot contain AnyFrame values. Use FrameColumn instead."
+            )
         }
     }
 
@@ -74,9 +82,11 @@ internal open class ValueColumnImpl<T>(
     override fun rename(newName: String) =
         ValueColumnImpl(values, newName, type, defaultValue, distinct, statisticsCache)
 
-    override fun changeType(type: KType) = ValueColumnImpl(values, name, type, defaultValue, distinct, statisticsCache)
+    override fun changeType(type: KType) =
+        ValueColumnImpl(values, name, type, defaultValue, distinct, statisticsCache)
 
-    override fun addParent(parent: ColumnGroup<*>): DataColumn<T> = ValueColumnWithParent(parent, this)
+    override fun addParent(parent: ColumnGroup<*>): DataColumn<T> =
+        ValueColumnWithParent(parent, this)
 
     override fun createWithValues(values: List<T>, hasNulls: Boolean?): ValueColumn<T> {
         val nulls = hasNulls ?: values.any { it == null }
@@ -94,27 +104,36 @@ internal open class ValueColumnImpl<T>(
     }
 
     override fun get(columnName: String) =
-        throw UnsupportedOperationException("Can not get nested column '$columnName' from ValueColumn '$name'")
+        throw UnsupportedOperationException(
+            "Can not get nested column '$columnName' from ValueColumn '$name'"
+        )
 
-    override operator fun get(range: IntRange): ValueColumn<T> = super<DataColumnImpl>.get(range) as ValueColumn<T>
+    override operator fun get(range: IntRange): ValueColumn<T> =
+        super<DataColumnImpl>.get(range) as ValueColumn<T>
 
     override fun defaultValue() = defaultValue
 
     override fun forceResolve() = ResolvingValueColumn(this)
 
-    override fun putStatisticCache(statName: String, arguments: Map<String, Any>, value: StatisticResult) {
+    override fun putStatisticCache(
+        statName: String,
+        arguments: Map<String, Any>,
+        value: StatisticResult,
+    ) {
         statisticsCache.getOrPut(statName) { mutableMapOf() }[arguments] = value
     }
 
-    override fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult? =
-        statisticsCache[statName]?.get(arguments)
+    override fun getStatisticCacheOrNull(
+        statName: String,
+        arguments: Map<String, Any>,
+    ): StatisticResult? = statisticsCache[statName]?.get(arguments)
 }
 
 internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
-    ValueColumnInternal<T> by source.internalValueColumn(),
-    ForceResolvedColumn<T> {
+    ValueColumnInternal<T> by source.internalValueColumn(), ForceResolvedColumn<T> {
 
-    override fun resolve(context: ColumnResolutionContext) = super<ValueColumnInternal>.resolve(context)
+    override fun resolve(context: ColumnResolutionContext) =
+        super<ValueColumnInternal>.resolve(context)
 
     override fun resolveSingle(context: ColumnResolutionContext) =
         context.df.getColumn<T>(source.name(), context.unresolvedColumnsPolicy)?.addPath()

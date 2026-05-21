@@ -1,13 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression as DfRowColumnExpression
 
 /**
  * ## Expressions Given Row and Column
- * Expressing values using a "Row-Column Expression" can occur exclusively in a
- * {@include [RowColumnExpressionLink]}.
+ * Expressing values using a "Row-Column Expression" can occur exclusively in a {@include
+ * [RowColumnExpressionLink]}.
  */
 internal interface ExpressionsGivenRowAndColumn {
 
@@ -17,13 +16,17 @@ internal interface ExpressionsGivenRowAndColumn {
      */
     @ExcludeFromSources
     typealias OPERATION = Nothing
+
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
     @ExcludeFromSources
     typealias SetDefaultOperationArg = Nothing
 
-    /** Provide a new value for every selected cell given both its row and column using a [row-column expression][DfRowColumnExpression]. */
+    /**
+     * Provide a new value for every selected cell given both its row and column using a
+     * [row-column expression][DfRowColumnExpression].
+     */
     interface RowColumnExpression {
 
         /**

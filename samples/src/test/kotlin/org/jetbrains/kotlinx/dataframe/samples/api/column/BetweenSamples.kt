@@ -15,10 +15,12 @@ class BetweenSamples : DataFrameSampleHelper("between", "api") {
         val age: Int
     }
 
-    private val df = dataFrameOf(
-        "name" to listOf("Alice", "Bob", "Charlie", "Diana"),
-        "age" to listOf(15, 20, 25, 30),
-    ).cast<SimplePerson>()
+    private val df =
+        dataFrameOf(
+                "name" to listOf("Alice", "Bob", "Charlie", "Diana"),
+                "age" to listOf(15, 20, 25, 30),
+            )
+            .cast<SimplePerson>()
 
     @Test
     fun notebook_test_between_1() {
@@ -31,7 +33,8 @@ class BetweenSamples : DataFrameSampleHelper("between", "api") {
     @Test
     fun notebook_test_between_2() {
         // SampleStart
-        df.age.between(left = 18, right = 25)
+        df.age
+            .between(left = 18, right = 25)
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -39,7 +42,8 @@ class BetweenSamples : DataFrameSampleHelper("between", "api") {
     @Test
     fun notebook_test_between_3() {
         // SampleStart
-        df.age.between(left = 18, right = 25, includeBoundaries = false)
+        df.age
+            .between(left = 18, right = 25, includeBoundaries = false)
             // SampleEnd
             .saveDfHtmlSample()
     }

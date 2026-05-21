@@ -1,5 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -50,18 +54,16 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
 import org.jetbrains.kotlinx.jupyter.api.libraries.FieldHandlerFactory
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
 
 /** Users will get an error if their Kotlin Jupyter kernel is older than this version. */
 private const val MIN_KERNEL_VERSION = "0.15.0.606"
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
-internal class Integration(private val notebook: Notebook, private val options: MutableMap<String, String?>) :
-    JupyterIntegration() {
+internal class Integration(
+    private val notebook: Notebook,
+    private val options: MutableMap<String, String?>,
+) : JupyterIntegration() {
 
     val version = options["v"]
 
@@ -81,13 +83,14 @@ internal class Integration(private val notebook: Notebook, private val options: 
         }
         val name = property.name + "DataSchema"
         return when (
-            val codeGenResult = CodeGenerator.urlCodeGenReader(importDataSchema.url, name, formats, true)
+            val codeGenResult =
+                CodeGenerator.urlCodeGenReader(importDataSchema.url, name, formats, true)
         ) {
             is CodeGenerationReadResult.Success -> {
-                val readDfMethod = codeGenResult.getReadDfMethod(importDataSchema.url.toExternalForm())
-                val code = readDfMethod.additionalImports.joinToString("\n") +
-                    "\n" +
-                    codeGenResult.code
+                val readDfMethod =
+                    codeGenResult.getReadDfMethod(importDataSchema.url.toExternalForm())
+                val code =
+                    readDfMethod.additionalImports.joinToString("\n") + "\n" + codeGenResult.code
 
                 execute(code)
                 display("Data schema successfully imported as ${property.name}: $name", null)
@@ -106,12 +109,17 @@ internal class Integration(private val notebook: Notebook, private val options: 
                             
                             Available formats: ${formats.map { it::class.qualifiedName ?: it }}
                             
-                            """.trimIndent(),
+                            """
+                                .trimIndent()
                         )
 
-                        if (formats.none { it::class.simpleName?.lowercase()?.contains("openapi") == true }) {
+                        if (
+                            formats.none {
+                                it::class.simpleName?.lowercase()?.contains("openapi") == true
+                            }
+                        ) {
                             appendLine(
-                                "If you were looking for OpenAPI 3.0.0 types, set `%use dataframe(..., enableExperimentalOpenApi=true)`.",
+                                "If you were looking for OpenAPI 3.0.0 types, set `%use dataframe(..., enableExperimentalOpenApi=true)`."
                             )
                         }
 
@@ -120,7 +128,8 @@ internal class Integration(private val notebook: Notebook, private val options: 
                                 |
                                 |StackTrace:
                                 |${codeGenResult.reason.stackTrace.joinToString("\n|")}
-                            """.trimMargin(),
+                            """
+                                .trimMargin()
                         )
                     },
                     null,
@@ -199,7 +208,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
                 println("CSV module is already enabled by default now.")
             }
             if (enableExperimentalGeo?.toBoolean() == true) {
-                println("dataframe-geo module was extracted into separate descriptor: %use dataframe-geo")
+                println(
+                    "dataframe-geo module was extracted into separate descriptor: %use dataframe-geo"
+                )
             }
             if (enableExperimentalOpenApi?.toBoolean() == true) {
                 println("Enabling experimental OpenAPI 3.0.0 module: dataframe-openapi")
@@ -215,19 +226,24 @@ internal class Integration(private val notebook: Notebook, private val options: 
         } catch (_: NoSuchMethodError) {
             // will be thrown when a version < 0.11.0.198
             throw IllegalStateException(
-                getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType),
+                getKernelUpdateMessage(
+                    notebook.kernelVersion,
+                    MIN_KERNEL_VERSION,
+                    notebook.jupyterClientType,
+                )
             )
         }
         val codeGen = ReplCodeGenerator.create()
-        val config = JupyterConfiguration(enableExperimentalOpenApi = enableExperimentalOpenApi?.toBoolean() == true)
+        val config =
+            JupyterConfiguration(
+                enableExperimentalOpenApi = enableExperimentalOpenApi?.toBoolean() == true
+            )
 
         if (notebook.jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
             config.display.isolatedOutputs = true
         }
 
-        onLoaded {
-            declare("dataFrameConfig" to config)
-        }
+        onLoaded { declare("dataFrameConfig" to config) }
 
         resources {
             if (!config.display.isolatedOutputs) {
@@ -237,7 +253,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
                     } else {
                         // Update this commit when new version of init.js is pushed
                         val initJsSha = "3db46ccccaa1291c0627307d64133317f545e6ae"
-                        url("https://cdn.jsdelivr.net/gh/Kotlin/dataframe@$initJsSha/core/src/main/resources/init.js")
+                        url(
+                            "https://cdn.jsdelivr.net/gh/Kotlin/dataframe@$initJsSha/core/src/main/resources/init.js"
+                        )
                     }
                 }
 
@@ -247,7 +265,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
         with(JupyterHtmlRenderer(config.display, this)) {
             render<DisableRowsLimitWrapper>(
-                { "DataRow: index = ${it.value.rowsCount()}, columnsCount = ${it.value.columnsCount()}" },
+                {
+                    "DataRow: index = ${it.value.rowsCount()}, columnsCount = ${it.value.columnsCount()}"
+                },
                 applyRowsLimit = false,
             )
 
@@ -259,31 +279,34 @@ internal class Integration(private val notebook: Notebook, private val options: 
             render<FormatClause<*, *>>({ "Format" })
 
             render<DataFrameHtmlData> {
-                // Our integration declares script and css definition. But in Kotlin Notebook outputs are isolated in IFrames
+                // Our integration declares script and css definition. But in Kotlin Notebook
+                // outputs are isolated in IFrames
                 // That's why we include them directly in the output
                 if (notebook.jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
-                    it.withTableDefinitions().toJupyterHtmlData().toIFrame(notebook.currentColorScheme)
+                    it.withTableDefinitions()
+                        .toJupyterHtmlData()
+                        .toIFrame(notebook.currentColorScheme)
                 } else {
                     it.toJupyterHtmlData().toSimpleHtml(notebook.currentColorScheme)
                 }
             }
 
-            render<AnyRow>(
-                { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
-            )
-            render<ColumnGroup<*>>(
-                {
-                    """ColumnGroup: name = "${it.name()}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"""
-                },
-            )
-            render<AnyCol>(
-                { """DataColumn: name = "${it.name()}", type = ${renderType(it.type())}, size = ${it.size()}""" },
-            )
-            render<AnyFrame>(
-                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },
-            )
+            render<AnyRow>({
+                "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}"
+            })
+            render<ColumnGroup<*>>({
+                """ColumnGroup: name = "${it.name()}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"""
+            })
+            render<AnyCol>({
+                """DataColumn: name = "${it.name()}", type = ${renderType(it.type())}, size = ${it.size()}"""
+            })
+            render<AnyFrame>({
+                "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"
+            })
             render<FormattedFrame<*>>(
-                { "DataFrame: rowsCount = ${it.df().rowsCount()}, columnsCount = ${it.df().columnsCount()}" },
+                {
+                    "DataFrame: rowsCount = ${it.df().rowsCount()}, columnsCount = ${it.df().columnsCount()}"
+                },
                 modifyConfig = { getDisplayConfiguration(it) },
             )
             render<GroupBy<*, *>>({ "GroupBy" })
@@ -319,34 +342,40 @@ internal class Integration(private val notebook: Notebook, private val options: 
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
         import("org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader")
 
-        addTypeConverter(object : FieldHandler {
+        addTypeConverter(
+            object : FieldHandler {
 
-            override val execution = FieldHandlerFactory.createUpdateExecution<Any> { instance, property ->
-                // TODO check property type first, then instance, Issue #1245
-                when (instance) {
-                    is AnyCol -> updateAnyColVariable(instance, property, codeGen)
-                    is ColumnGroup<*> -> updateColumnGroupVariable(instance, property, codeGen)
-                    is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
-                    is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
-                    is ImportDataSchema -> updateImportDataSchemaVariable(instance, property)
-                    is GroupBy<*, *> -> updateGroupByVariable(instance, property, codeGen)
-                    else -> error("${instance::class} should not be handled by Dataframe field handler")
-                }
+                override val execution =
+                    FieldHandlerFactory.createUpdateExecution<Any> { instance, property ->
+                        // TODO check property type first, then instance, Issue #1245
+                        when (instance) {
+                            is AnyCol -> updateAnyColVariable(instance, property, codeGen)
+                            is ColumnGroup<*> ->
+                                updateColumnGroupVariable(instance, property, codeGen)
+                            is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
+                            is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
+                            is ImportDataSchema ->
+                                updateImportDataSchemaVariable(instance, property)
+                            is GroupBy<*, *> -> updateGroupByVariable(instance, property, codeGen)
+                            else ->
+                                error(
+                                    "${instance::class} should not be handled by Dataframe field handler"
+                                )
+                        }
+                    }
+
+                override fun accepts(value: Any?, property: KProperty<*>): Boolean =
+                    value is AnyCol ||
+                        value is ColumnGroup<*> ||
+                        value is AnyRow ||
+                        value is AnyFrame ||
+                        value is ImportDataSchema ||
+                        value is GroupBy<*, *>
             }
-
-            override fun accepts(value: Any?, property: KProperty<*>): Boolean =
-                value is AnyCol ||
-                    value is ColumnGroup<*> ||
-                    value is AnyRow ||
-                    value is AnyFrame ||
-                    value is ImportDataSchema ||
-                    value is GroupBy<*, *>
-        })
+        )
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
-            val code = classes
-                .joinToString("\n") { codeGen.process(it) }
-                .trim()
+            val code = classes.joinToString("\n") { codeGen.process(it) }.trim()
 
             if (code.isNotEmpty()) {
                 execute(code)
@@ -362,19 +391,16 @@ internal class Integration(private val notebook: Notebook, private val options: 
             }
         }
 
-        val internalTypes = listOf(
-            ColumnReference::class,
-        ).map { it.createStarProjectedType(true) }
+        val internalTypes = listOf(ColumnReference::class).map { it.createStarProjectedType(true) }
 
         markVariableInternal { property ->
-            // TODO: add more conditions to include all generated properties and other internal stuff
+            // TODO: add more conditions to include all generated properties and other internal
+            // stuff
             //  that should not be shown to user in Jupyter variables view
             internalTypes.any { property.returnType.isSubtypeOf(it) }
         }
 
-        onColorSchemeChange {
-            config.display.useDarkColorScheme = (it == ColorScheme.DARK)
-        }
+        onColorSchemeChange { config.display.useDarkColorScheme = (it == ColorScheme.DARK) }
     }
 }
 
@@ -382,21 +408,27 @@ public fun KotlinKernelHost.useSchemas(schemaClasses: Iterable<KClass<*>>) {
     newDataSchemas.addAll(schemaClasses)
 }
 
-public fun KotlinKernelHost.useSchemas(vararg schemaClasses: KClass<*>): Unit = useSchemas(schemaClasses.asIterable())
+public fun KotlinKernelHost.useSchemas(vararg schemaClasses: KClass<*>): Unit =
+    useSchemas(schemaClasses.asIterable())
 
 public inline fun <reified T> KotlinKernelHost.useSchema(): Unit = useSchemas(T::class)
 
 // region friend module error suppression
 
 @Suppress("INVISIBLE_REFERENCE")
-private interface ReplCodeGenerator : org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator {
+private interface ReplCodeGenerator :
+    org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator {
 
     companion object {
         fun create(): ReplCodeGenerator =
             object :
                 ReplCodeGenerator,
-                org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator by
-                org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl() {}
+                org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator by org.jetbrains
+                    .kotlinx
+                    .dataframe
+                    .impl
+                    .codeGen
+                    .ReplCodeGeneratorImpl() {}
     }
 }
 
@@ -411,10 +443,8 @@ private fun KClass<*>.createStarProjectedType(nullable: Boolean) =
 @Suppress("INVISIBLE_REFERENCE")
 private fun renderType(type: KType?) = org.jetbrains.kotlinx.dataframe.impl.renderType(type)
 
-@Suppress("INVISIBLE_REFERENCE")
-private fun <T> FormattedFrame<T>.df() = df
+@Suppress("INVISIBLE_REFERENCE") private fun <T> FormattedFrame<T>.df() = df
 
-@Suppress("INVISIBLE_REFERENCE")
-private fun DisplayConfiguration.localTesting() = localTesting
+@Suppress("INVISIBLE_REFERENCE") private fun DisplayConfiguration.localTesting() = localTesting
 
 // endregion

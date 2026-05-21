@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -14,22 +15,27 @@ import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 public fun <T, C> DataFrame<T>.replace(columns: ColumnsSelector<T, C>): ReplaceClause<T, C> =
     ReplaceClause(this, columns)
 
-public fun <T> DataFrame<T>.replace(vararg columns: String): ReplaceClause<T, Any?> = replace { columns.toColumnSet() }
+public fun <T> DataFrame<T>.replace(vararg columns: String): ReplaceClause<T, Any?> = replace {
+    columns.toColumnSet()
+}
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.replace(vararg columns: ColumnReference<C>): ReplaceClause<T, C> =
-    replace { columns.toColumnSet() }
+    replace {
+        columns.toColumnSet()
+    }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceClause<T, C> =
-    replace { columns.toColumnSet() }
+    replace {
+        columns.toColumnSet()
+    }
 
 public fun <T> DataFrame<T>.replaceAll(
     vararg valuePairs: Pair<Any?, Any?>,
@@ -39,11 +45,15 @@ public fun <T> DataFrame<T>.replaceAll(
     return update(columns).with { map[it] ?: it }
 }
 
-public class ReplaceClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
+public class ReplaceClause<T, C>(
+    internal val df: DataFrame<T>,
+    internal val columns: ColumnsSelector<T, C>,
+) {
     override fun toString(): String = "ReplaceClause(df=$df, columns=$columns)"
 }
 
-public fun <T, C> ReplaceClause<T, C>.with(vararg columns: AnyCol): DataFrame<T> = with(columns.toList())
+public fun <T, C> ReplaceClause<T, C>.with(vararg columns: AnyCol): DataFrame<T> =
+    with(columns.toList())
 
 public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<AnyCol>): DataFrame<T> {
     var index = 0
@@ -57,15 +67,15 @@ public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<AnyCol>): DataFrame<
 
 // TODO: Issue #418: breaks if running on ColumnGroup and its child
 
-/**
- * For an alternative supported in the compiler plugin use [Convert.asColumn]
- */
-public fun <T, C> ReplaceClause<T, C>.with(transform: ColumnsContainer<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> {
+/** For an alternative supported in the compiler plugin use [Convert.asColumn] */
+public fun <T, C> ReplaceClause<T, C>.with(
+    transform: ColumnsContainer<T>.(DataColumn<C>) -> AnyBaseCol
+): DataFrame<T> {
     val removeResult = df.removeImpl(columns = columns)
-    val toInsert = removeResult.removedColumns.map {
-        @Suppress("UNCHECKED_CAST")
-        val newCol = transform(df, it.data.column as DataColumn<C>)
-        ColumnToInsert(it.pathFromRoot().dropLast(1) + newCol.name, newCol, it)
-    }
+    val toInsert =
+        removeResult.removedColumns.map {
+            @Suppress("UNCHECKED_CAST") val newCol = transform(df, it.data.column as DataColumn<C>)
+            ColumnToInsert(it.pathFromRoot().dropLast(1) + newCol.name, newCol, it)
+        }
     return removeResult.df.insertImpl(toInsert)
 }

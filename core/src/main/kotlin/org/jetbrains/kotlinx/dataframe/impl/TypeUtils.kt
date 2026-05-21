@@ -2,16 +2,6 @@
 
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.Infer
-import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
-import org.jetbrains.kotlinx.dataframe.util.GUESS_VALUE_TYPE
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KClass
@@ -32,6 +22,16 @@ import kotlin.reflect.full.superclasses
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
+import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
+import org.jetbrains.kotlinx.dataframe.util.GUESS_VALUE_TYPE
 
 internal inline fun <reified T> KClass<*>.createTypeUsing() = typeOf<T>().projectTo(this)
 
@@ -66,8 +66,7 @@ internal fun KType.projectUpTo(superClass: KClass<*>): KType {
 
 /**
  * Changes generic type parameters to its upperbound, like `List<T> -> List<Any?>` and
- * `Comparable<T> -> Comparable<Nothing>`.
- * Works recursively as well.
+ * `Comparable<T> -> Comparable<Nothing>`. Works recursively as well.
  */
 @PublishedApi
 internal fun KType.replaceGenericTypeParametersWithUpperbound(): KType {
@@ -76,24 +75,31 @@ internal fun KType.replaceGenericTypeParametersWithUpperbound(): KType {
         val arguments = arguments.mapIndexed { i, it ->
             val oldType = it.type ?: return@mapIndexed it // is * if null, we'll leave those be
 
-            val type = when {
-                oldType.classifier is KTypeParameter -> { // e.g. T
-                    replacedAnyArgument = true
+            val type =
+                when {
+                    oldType.classifier is KTypeParameter -> { // e.g. T
+                        replacedAnyArgument = true
 
-                    // resolve the variance (`in`/`out`/``) of the argument in the original class
-                    val varianceInClass = (classifier as? KClass<*>)?.typeParameters?.getOrNull(i)?.variance
-                    when (varianceInClass) {
-                        INVARIANT, OUT, null ->
-                            (oldType.classifier as KTypeParameter).upperBounds.firstOrNull() ?: typeOf<Any?>()
+                        // resolve the variance (`in`/`out`/``) of the argument in the original
+                        // class
+                        val varianceInClass =
+                            (classifier as? KClass<*>)?.typeParameters?.getOrNull(i)?.variance
+                        when (varianceInClass) {
+                            INVARIANT,
+                            OUT,
+                            null ->
+                                (oldType.classifier as KTypeParameter).upperBounds.firstOrNull()
+                                    ?: typeOf<Any?>()
 
-                        // Type<in T> cannot be replaced with Type<Any?>, instead it should be replaced with Type<Nothing>
-                        // TODO: issue #471
-                        IN -> nothingType(false)
+                            // Type<in T> cannot be replaced with Type<Any?>, instead it should be
+                            // replaced with Type<Nothing>
+                            // TODO: issue #471
+                            IN -> nothingType(false)
+                        }
                     }
-                }
 
-                else -> oldType
-            }
+                    else -> oldType
+                }
             val (replacedDownwards, newType) = type.replaceRecursively()
             if (replacedDownwards) replacedAnyArgument = true
 
@@ -101,18 +107,26 @@ internal fun KType.replaceGenericTypeParametersWithUpperbound(): KType {
         }
         return Pair(
             first = replacedAnyArgument,
-            second = if (replacedAnyArgument) jvmErasure.createType(arguments, isMarkedNullable) else this,
+            second =
+                if (replacedAnyArgument) jvmErasure.createType(arguments, isMarkedNullable)
+                else this,
         )
     }
 
     return replaceRecursively().second
 }
 
-internal fun inheritanceChain(subClass: KClass<*>, superClass: KClass<*>): List<Pair<KClass<*>, KType>> {
+internal fun inheritanceChain(
+    subClass: KClass<*>,
+    superClass: KClass<*>,
+): List<Pair<KClass<*>, KType>> {
     val inheritanceChain = mutableListOf<Pair<KClass<*>, KType>>()
     var current = subClass
     while (current != superClass) {
-        val baseType = current.supertypes.first { (it.classifier as? KClass<*>)?.isSubclassOf(superClass) ?: false }
+        val baseType =
+            current.supertypes.first {
+                (it.classifier as? KClass<*>)?.isSubclassOf(superClass) ?: false
+            }
         inheritanceChain.add(current to baseType)
         current = baseType.classifier as KClass<*>
     }
@@ -125,9 +139,10 @@ internal fun KType.projectDownTo(subClass: KClass<*>): KType {
 
     chain.reversed().forEach { (clazz, declaredBaseType) ->
         val substitution = resolve(type, declaredBaseType)
-        val projection = clazz.typeParameters.map {
-            substitution[it]?.let { KTypeProjection.invariant(it) } ?: KTypeProjection.STAR
-        }
+        val projection =
+            clazz.typeParameters.map {
+                substitution[it]?.let { KTypeProjection.invariant(it) } ?: KTypeProjection.STAR
+            }
         type = clazz.createType(projection, isMarkedNullable)
     }
     return type
@@ -137,10 +152,11 @@ internal fun KType.replace(substitution: Map<KTypeParameter, KType?>): KType =
     when (val clazz = classifier) {
         is KTypeParameter -> substitution[clazz] ?: this
 
-        is KClass<*> -> clazz.createType(
-            arguments.map { KTypeProjection(it.variance, it.type?.replace(substitution)) },
-            nullable = isMarkedNullable,
-        )
+        is KClass<*> ->
+            clazz.createType(
+                arguments.map { KTypeProjection(it.variance, it.type?.replace(substitution)) },
+                nullable = isMarkedNullable,
+            )
 
         else -> this
     }
@@ -150,19 +166,27 @@ internal fun resolve(actualType: KType, declaredType: KType): Map<KTypeParameter
 
     fun resolveRec(actualType: KType, declaredType: KType) {
         require(actualType.classifier == declaredType.classifier)
-        actualType.arguments.zip(declaredType.arguments).forEach { (actualArgument, declaredArgument) ->
+        actualType.arguments.zip(declaredType.arguments).forEach {
+            (actualArgument, declaredArgument) ->
             val declared = declaredArgument.type
             val actual = actualArgument.type
             if (declared?.classifier is KTypeParameter) {
                 val parameter = declared.classifier as KTypeParameter
                 val currentResolution = map[parameter]
-                if (currentResolution == null || (actual != null && actual.isSubtypeOf(currentResolution))) {
+                if (
+                    currentResolution == null ||
+                        (actual != null && actual.isSubtypeOf(currentResolution))
+                ) {
                     map[parameter] = actual
                 }
             } else if (declared != null && actual != null) {
                 val declaredClass = declared.classifier as? KClass<*>
                 val actualClass = actual.classifier as? KClass<*>
-                if (declaredClass != null && actualClass != null && declaredClass.isSubclassOf(actualClass)) {
+                if (
+                    declaredClass != null &&
+                        actualClass != null &&
+                        declaredClass.isSubclassOf(actualClass)
+                ) {
                     val projected = actual.projectTo(declaredClass)
                     resolveRec(projected, declared)
                 }
@@ -173,21 +197,27 @@ internal fun resolve(actualType: KType, declaredType: KType): Map<KTypeParameter
     return map
 }
 
-internal fun commonParent(classes: Iterable<KClass<*>>): KClass<*>? = commonParents(classes).withMostSuperclasses()
+internal fun commonParent(classes: Iterable<KClass<*>>): KClass<*>? =
+    commonParents(classes).withMostSuperclasses()
 
 internal fun commonParent(vararg classes: KClass<*>): KClass<*>? = commonParent(classes.toList())
 
-internal fun Iterable<KClass<*>>.withMostSuperclasses(): KClass<*>? = maxByOrNull { it.allSuperclasses.size }
+internal fun Iterable<KClass<*>>.withMostSuperclasses(): KClass<*>? = maxByOrNull {
+    it.allSuperclasses.size
+}
 
 internal fun Iterable<KClass<*>>.createType(nullable: Boolean, upperBound: KType? = null): KType =
     when {
         !iterator().hasNext() -> upperBound?.withNullability(nullable) ?: nothingType(nullable)
 
-        upperBound == null -> (withMostSuperclasses() ?: Any::class).createStarProjectedType(nullable)
+        upperBound == null ->
+            (withMostSuperclasses() ?: Any::class).createStarProjectedType(nullable)
 
         else -> {
             val upperClass = upperBound.classifier as KClass<*>
-            val baseClass = filter { it.isSubclassOf(upperClass) }.withMostSuperclasses() ?: withMostSuperclasses()
+            val baseClass =
+                filter { it.isSubclassOf(upperClass) }.withMostSuperclasses()
+                    ?: withMostSuperclasses()
             if (baseClass == null) {
                 upperBound.withNullability(nullable)
             } else {
@@ -196,7 +226,8 @@ internal fun Iterable<KClass<*>>.createType(nullable: Boolean, upperBound: KType
         }
     }
 
-internal fun commonParents(vararg classes: KClass<*>): List<KClass<*>> = commonParents(classes.toList())
+internal fun commonParents(vararg classes: KClass<*>): List<KClass<*>> =
+    commonParents(classes.toList())
 
 internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
     when {
@@ -211,36 +242,44 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
                 .let {
                     when {
                         // if there is only one class - return it
-                        it.size == 1 && it[0].visibility.let { it == null || it == KVisibility.PUBLIC } -> listOf(it[0])
+                        it.size == 1 &&
+                            it[0].visibility.let { it == null || it == KVisibility.PUBLIC } ->
+                            listOf(it[0])
 
                         else ->
                             it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
-                                // collect a set of all common superclasses from original classes
-                                val superclasses = (clazz.allSuperclasses + clazz)
-                                    .filter { it.visibility == null || it.visibility == KVisibility.PUBLIC }
-                                    .toSet()
-                                set?.intersect(superclasses) ?: superclasses
-                            }!!.let {
-                                // leave only 'leaf' classes, that are not super to some other class in a set
-                                it - it.flatMap { it.superclasses }.toSet()
-                            }.toList()
+                                    // collect a set of all common superclasses from original
+                                    // classes
+                                    val superclasses =
+                                        (clazz.allSuperclasses + clazz)
+                                            .filter {
+                                                it.visibility == null ||
+                                                    it.visibility == KVisibility.PUBLIC
+                                            }
+                                            .toSet()
+                                    set?.intersect(superclasses) ?: superclasses
+                                }!!
+                                .let {
+                                    // leave only 'leaf' classes, that are not super to some other
+                                    // class in a set
+                                    it - it.flatMap { it.superclasses }.toSet()
+                                }
+                                .toList()
                     }
                 }
         }
     }.sortedBy { it.simpleName } // make sure the order is stable to avoid bugs
 
 /**
- * Returns the common type of the given types including "listify" behaviour.
- * Values and nulls will be wrapped in a list if they appear among other lists.
- * For example: `[Int, Nothing?, List<Int>]` will become `List<Int>` instead of `Any?`. If there is another collection
- * in there, it will become `Any?` anyway.
- *
- * @receiver the types to find the common type for
- * @return the common type including listify behaviour
+ * Returns the common type of the given types including "listify" behaviour. Values and nulls will
+ * be wrapped in a list if they appear among other lists. For example: `[Int, Nothing?, List<Int>]`
+ * will become `List<Int>` instead of `Any?`. If there is another collection in there, it will
+ * become `Any?` anyway.
  *
  * @param useStar if true, `*` will be used to fill in generic type parameters instead of `Any?`
- * (for invariant/out variance) or `Nothing` (for in variance)
- *
+ *   (for invariant/out variance) or `Nothing` (for in variance)
+ * @return the common type including listify behaviour
+ * @receiver the types to find the common type for
  * @see Iterable.commonType
  */
 internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): KType {
@@ -252,24 +291,28 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
         distinct.size == 1 -> distinct.single()
 
         else -> {
-            val classes = distinct.map {
-                if (it == nothingType(false) || it == nothingType(true)) {
-                    Nothing::class
-                } else {
-                    it.jvmErasure
-                }
-            }.distinct()
-            when {
-                classes.size == 1 -> {
-                    val typeProjections = classes.single().typeParameters.mapIndexed { index, parameter ->
-                        val arguments = distinct.map { it.arguments[index].type }.toSet()
-                        if (arguments.contains(null)) {
-                            KTypeProjection.STAR
+            val classes =
+                distinct
+                    .map {
+                        if (it == nothingType(false) || it == nothingType(true)) {
+                            Nothing::class
                         } else {
-                            val type = arguments.filterNotNull().commonTypeListifyValues()
-                            KTypeProjection(parameter.variance, type)
+                            it.jvmErasure
                         }
                     }
+                    .distinct()
+            when {
+                classes.size == 1 -> {
+                    val typeProjections =
+                        classes.single().typeParameters.mapIndexed { index, parameter ->
+                            val arguments = distinct.map { it.arguments[index].type }.toSet()
+                            if (arguments.contains(null)) {
+                                KTypeProjection.STAR
+                            } else {
+                                val type = arguments.filterNotNull().commonTypeListifyValues()
+                                KTypeProjection(parameter.variance, type)
+                            }
+                        }
 
                     if (classes.single() == Nothing::class) {
                         nothingType(distinct.any { it.isMarkedNullable })
@@ -283,17 +326,21 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
                     val distinctNoNothing = distinct.filterNot {
                         it == nothingType(false) || it == nothingType(true)
                     }
-                    val listTypes = distinctNoNothing.map {
-                        if (it.classifier == List::class) {
-                            it.arguments[0].type
-                        } else {
-                            it
-                        }
-                    }.toMutableSet()
-                    val type = listTypes
-                        .filterNotNull()
-                        .commonTypeListifyValues()
-                        .withNullability(listTypes.any { it?.isMarkedNullable ?: true })
+                    val listTypes =
+                        distinctNoNothing
+                            .map {
+                                if (it.classifier == List::class) {
+                                    it.arguments[0].type
+                                } else {
+                                    it
+                                }
+                            }
+                            .toMutableSet()
+                    val type =
+                        listTypes
+                            .filterNotNull()
+                            .commonTypeListifyValues()
+                            .withNullability(listTypes.any { it?.isMarkedNullable ?: true })
 
                     List::class.createType(
                         arguments = listOf(KTypeProjection.invariant(type)),
@@ -302,37 +349,45 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
                 }
 
                 else -> {
-                    val kClass = commonParent(distinct.map { it.jvmErasure })
-                        ?: return typeOf<Any>().withNullability(nullable)
-                    val projections = distinct
-                        .map { it.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound() }
+                    val kClass =
+                        commonParent(distinct.map { it.jvmErasure })
+                            ?: return typeOf<Any>().withNullability(nullable)
+                    val projections = distinct.map {
+                        it.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound()
+                    }
                     require(projections.all { it.jvmErasure == kClass })
 
-                    val arguments = List(kClass.typeParameters.size) { i ->
-                        val typeParameter = kClass.typeParameters[i]
-                        val projectionTypes = projections
-                            .map { it.arguments[i].type }
-                            .filterNot { it in distinct } // avoid infinite recursion
+                    val arguments =
+                        List(kClass.typeParameters.size) { i ->
+                            val typeParameter = kClass.typeParameters[i]
+                            val projectionTypes =
+                                projections
+                                    .map { it.arguments[i].type }
+                                    .filterNot { it in distinct } // avoid infinite recursion
 
-                        when {
-                            projectionTypes.isEmpty() && typeParameter.variance == KVariance.IN -> {
-                                if (useStar) {
-                                    KTypeProjection.STAR
-                                } else {
-                                    KTypeProjection.invariant(nothingType(false))
+                            when {
+                                projectionTypes.isEmpty() &&
+                                    typeParameter.variance == KVariance.IN -> {
+                                    if (useStar) {
+                                        KTypeProjection.STAR
+                                    } else {
+                                        KTypeProjection.invariant(nothingType(false))
+                                    }
                                 }
-                            }
 
-                            else -> {
-                                val commonType = projectionTypes.filterNotNull().commonTypeListifyValues(useStar)
-                                if (commonType == typeOf<Any?>() && useStar) {
-                                    KTypeProjection.STAR
-                                } else {
-                                    KTypeProjection(typeParameter.variance, commonType)
+                                else -> {
+                                    val commonType =
+                                        projectionTypes
+                                            .filterNotNull()
+                                            .commonTypeListifyValues(useStar)
+                                    if (commonType == typeOf<Any?>() && useStar) {
+                                        KTypeProjection.STAR
+                                    } else {
+                                        KTypeProjection(typeParameter.variance, commonType)
+                                    }
                                 }
                             }
                         }
-                    }
 
                     if (kClass == Nothing::class) {
                         nothingType(nullable)
@@ -345,7 +400,10 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
     }
 }
 
-internal fun KClass<*>.createTypeWithArgument(argument: KType? = null, nullable: Boolean = false): KType {
+internal fun KClass<*>.createTypeWithArgument(
+    argument: KType? = null,
+    nullable: Boolean = false,
+): KType {
     require(typeParameters.size == 1)
     return if (argument != null) {
         createType(listOf(KTypeProjection.invariant(argument)), nullable)
@@ -368,7 +426,11 @@ internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KTyp
 /** Just for binary compatibility, as it's @PublishedApi. */
 @Deprecated(GUESS_VALUE_TYPE, level = DeprecationLevel.HIDDEN)
 @PublishedApi
-internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, listifyValues: Boolean = false): KType =
+internal fun guessValueType(
+    values: Sequence<Any?>,
+    upperBound: KType? = null,
+    listifyValues: Boolean = false,
+): KType =
     guessValueType(
         values = values,
         upperBound = upperBound,
@@ -399,21 +461,21 @@ internal fun guessValueType(
  *
  * This function analyzes all [values] once and returns the expected column type.
  *
- * The resulting column type may need [values] to be converted to the expected type.
- * See [createColumnGuessingType] for how to create a column with the guessed type.
+ * The resulting column type may need [values] to be converted to the expected type. See
+ * [createColumnGuessingType] for how to create a column with the guessed type.
  *
  * @param values the values to guess the type from
  * @param upperBound the upper bound of the type to guess
- * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear among other lists.
- *   For example: `[1, null, listOf(1, 2, 3)]` will become `List<Int>` instead of `Any?`
- *   Note: this parameter is ignored if another [Collection] is present in the values.
- * @param allColsMakesRow if true, then, if all values are non-null columns, we assume
- *   that a column group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`,
- *   so the function will return [DataRow].
- * @param unifyNumbers if true, then all number types encountered will be unified to the smallest possible
- *   number-type that can hold all number values lossless in [values]. See [commonNumberClass].
- *   Unsigned numbers are not supported.
- *   If false, the result of encountering multiple number types would be [Number].
+ * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear
+ *   among other lists. For example: `[1, null, listOf(1, 2, 3)]` will become `List<Int>` instead of
+ *   `Any?` Note: this parameter is ignored if another [Collection] is present in the values.
+ * @param allColsMakesRow if true, then, if all values are non-null columns, we assume that a column
+ *   group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`, so the
+ *   function will return [DataRow].
+ * @param unifyNumbers if true, then all number types encountered will be unified to the smallest
+ *   possible number-type that can hold all number values lossless in [values]. See
+ *   [commonNumberClass]. Unsigned numbers are not supported. If false, the result of encountering
+ *   multiple number types would be [Number].
  */
 @PublishedApi
 internal fun guessValueType(
@@ -473,9 +535,10 @@ internal fun guessValueType(
             else -> classes.add(it.javaClass.kotlin)
         }
     }
-    val allListsWithRows = classesInCollection.isNotEmpty() &&
-        classesInCollection.all { it.isSubclassOf(DataRow::class) } &&
-        !nullsInCollection
+    val allListsWithRows =
+        classesInCollection.isNotEmpty() &&
+            classesInCollection.all { it.isSubclassOf(DataRow::class) } &&
+            !nullsInCollection
 
     if (unifyNumbers) {
         val nothingClass = Nothing::class
@@ -496,14 +559,19 @@ internal fun guessValueType(
             if (hasCols) classes.add(DataColumn::class)
             if (hasList) {
                 if (listifyValues) {
-                    val typeInLists = classesInCollection.commonType(
-                        nullable = nullsInCollection || allListsAreEmpty,
-                        // for when the list is empty, make it Nothing instead of Any?
-                        upperBound = nothingType(nullable = false),
-                    )
-                    val typeOfOthers = classes.commonType(nullable = nullsInCollection, upperBound = upperBound)
+                    val typeInLists =
+                        classesInCollection.commonType(
+                            nullable = nullsInCollection || allListsAreEmpty,
+                            // for when the list is empty, make it Nothing instead of Any?
+                            upperBound = nothingType(nullable = false),
+                        )
+                    val typeOfOthers =
+                        classes.commonType(nullable = nullsInCollection, upperBound = upperBound)
                     val commonType = listOf(typeInLists, typeOfOthers).commonTypeListifyValues()
-                    return List::class.createTypeWithArgument(argument = commonType, nullable = false)
+                    return List::class.createTypeWithArgument(
+                        argument = commonType,
+                        nullable = false,
+                    )
                 }
                 classes.add(List::class)
             }
@@ -531,12 +599,15 @@ internal fun guessValueType(
                 }
             }
             if (hasList) collectionClasses.add(List::class)
-            (commonParent(collectionClasses) ?: Collection::class).createTypeWithArgument(
-                argument = classesInCollection.commonType(
-                    nullable = nullsInCollection,
-                    upperBound = elementType ?: nothingType(nullable = nullsInCollection),
-                ),
-            ).withNullability(hasNulls)
+            (commonParent(collectionClasses) ?: Collection::class)
+                .createTypeWithArgument(
+                    argument =
+                        classesInCollection.commonType(
+                            nullable = nullsInCollection,
+                            upperBound = elementType ?: nothingType(nullable = nullsInCollection),
+                        )
+                )
+                .withNullability(hasNulls)
         }
 
         hasList && collectionClasses.isEmpty() && !hasFrames && !hasRows && !hasCols -> {
@@ -544,11 +615,13 @@ internal fun guessValueType(
                 if (it.jvmErasure == List::class) it.arguments[0].type else null
             }
             List::class.createTypeWithArgument(
-                argument = classesInCollection.commonType(
-                    nullable = nullsInCollection,
-                    upperBound = elementType ?: nothingType(nullable = nullsInCollection),
-                ),
-            ).withNullability(hasNulls && !listifyValues)
+                    argument =
+                        classesInCollection.commonType(
+                            nullable = nullsInCollection,
+                            upperBound = elementType ?: nothingType(nullable = nullsInCollection),
+                        )
+                )
+                .withNullability(hasNulls && !listifyValues)
         }
 
         else -> {
@@ -568,26 +641,28 @@ internal val KType.isNothing: Boolean
 internal val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
 internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
 
-internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType
+internal fun nothingType(nullable: Boolean): KType =
+    if (nullable) nullableNothingType else nothingType
 
 internal val KType.canBeNaN: Boolean
     get() = isSubtypeOf(typeOf<Double?>()) || isSubtypeOf(typeOf<Float?>())
 
 @OptIn(ExperimentalUnsignedTypes::class)
-private val primitiveArrayClasses = setOf(
-    BooleanArray::class,
-    ByteArray::class,
-    ShortArray::class,
-    IntArray::class,
-    LongArray::class,
-    FloatArray::class,
-    DoubleArray::class,
-    CharArray::class,
-    UByteArray::class,
-    UShortArray::class,
-    UIntArray::class,
-    ULongArray::class,
-)
+private val primitiveArrayClasses =
+    setOf(
+        BooleanArray::class,
+        ByteArray::class,
+        ShortArray::class,
+        IntArray::class,
+        LongArray::class,
+        FloatArray::class,
+        DoubleArray::class,
+        CharArray::class,
+        UByteArray::class,
+        UShortArray::class,
+        UIntArray::class,
+        ULongArray::class,
+    )
 
 /**
  * Returns `true` if this class is a primitive array class like `XArray`.
@@ -603,8 +678,9 @@ internal val KClass<*>.isPrimitiveArray: Boolean
  * Use [KClass.isPrimitiveArray] to only check for primitive arrays.
  */
 internal val KClass<*>.isArray: Boolean
-    get() = this in primitiveArrayClasses ||
-        this.qualifiedName == Array::class.qualifiedName // instance check fails
+    get() =
+        this in primitiveArrayClasses ||
+            this.qualifiedName == Array::class.qualifiedName // instance check fails
 
 /**
  * Returns `true` if this type is of a primitive array like `XArray`.
@@ -639,8 +715,8 @@ internal val Any.isArray: Boolean
     get() = this::class.isArray
 
 /**
- * If [this] is an array of any kind, the function returns it as a list of values,
- * else it returns `null`.
+ * If [this] is an array of any kind, the function returns it as a list of values, else it returns
+ * `null`.
  */
 internal fun Any.asArrayAsListOrNull(): List<*>? =
     when (this) {
@@ -674,19 +750,18 @@ internal fun Any.isBigNumber(): Boolean = this is BigInteger || this is BigDecim
  * @return A set of [KClass] objects representing the runtime types of elements in the iterable.
  */
 internal fun Iterable<Any?>.classes(): Set<KClass<*>> =
-    mapTo(mutableSetOf()) {
-        if (it == null) Nothing::class else it::class
-    }
+    mapTo(mutableSetOf()) { if (it == null) Nothing::class else it::class }
 
 /**
- * Returns a set of [KType] objects representing the star-projected types of the runtime classes
- * of all unique elements in the iterable.
+ * Returns a set of [KType] objects representing the star-projected types of the runtime classes of
+ * all unique elements in the iterable.
  *
  * This can be a heavy operation!
  *
  * [typeOf<Nothing?>()][nullableNothingType] is used for elements that are `null`.
  *
- * @return A set of [KType] objects corresponding to the star-projected runtime types of elements in the iterable.
+ * @return A set of [KType] objects corresponding to the star-projected runtime types of elements in
+ *   the iterable.
  */
 internal fun Iterable<Any?>.types(): Set<KType> =
     mapTo(mutableSetOf()) {
@@ -694,14 +769,13 @@ internal fun Iterable<Any?>.types(): Set<KType> =
     }
 
 /**
- * Checks whether this KType adheres to `T : Comparable<T & Any>?`, aka, it is mutually comparable with itself.
+ * Checks whether this KType adheres to `T : Comparable<T & Any>?`, aka, it is mutually comparable
+ * with itself.
  */
 internal fun KType.isIntraComparable(): Boolean =
     this.isSubtypeOf(
         Comparable::class.createType(
-            arguments = listOf(
-                KTypeProjection(IN, this.withNullability(false)),
-            ),
+            arguments = listOf(KTypeProjection(IN, this.withNullability(false))),
             nullable = this.isMarkedNullable,
-        ),
+        )
     )

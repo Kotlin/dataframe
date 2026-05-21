@@ -27,13 +27,14 @@ internal fun <T, C, R> splitImpl(
 
     val removeResult = clause.df.removeImpl(columns = clause.columns)
 
-    // As we insert multiple columns at once it's possible to encounter a name conflict within a batch of a new columns
-    // that's why an old school mutable list is used here to check for name conflicts in intermediate steps of generation
+    // As we insert multiple columns at once it's possible to encounter a name conflict within a
+    // batch of a new columns
+    // that's why an old school mutable list is used here to check for name conflicts in
+    // intermediate steps of generation
     // of columns to insert
     val columnsToInsert = mutableListOf<ColumnToInsert>()
 
     removeResult.removedColumns.forEach { node ->
-
         val column = node.toColumnWithPath<C>()
         val columnCollectors = mutableListOf<ColumnDataCollector>()
         for (row in 0 until nrow) {
@@ -66,7 +67,8 @@ internal fun <T, C, R> splitImpl(
             val preferredName = names.getOrNull(i)
 
             val pathToInsert = if (clause.inward) sourcePath else sourcePath.dropLast(1)
-            val name = generateUnusedName(removeResult.df, preferredName, pathToInsert, columnsToInsert)
+            val name =
+                generateUnusedName(removeResult.df, preferredName, pathToInsert, columnsToInsert)
 
             val path = pathToInsert + name
 
@@ -84,13 +86,18 @@ internal fun generateUnusedName(
     insertPath: ColumnPath,
     columnsToBeInserted: List<ColumnToInsert>,
 ): String {
-    // check if column with this name already exists in the df in the same position in the hierarchy,
-    // or we already have a column with this name in the list of columns to be inserted to the same position in the hierarchy
+    // check if column with this name already exists in the df in the same position in the
+    // hierarchy,
+    // or we already have a column with this name in the list of columns to be inserted to the same
+    // position in the hierarchy
     fun isUsed(name: String) =
         df.getColumnOrNull(insertPath + name) != null ||
             columnsToBeInserted.any { it.insertionPath == insertPath + name }
 
-    fun generateNameVariationByTryingNumericSuffixes(original: String? = null, startSuffix: Int): String {
+    fun generateNameVariationByTryingNumericSuffixes(
+        original: String? = null,
+        startSuffix: Int,
+    ): String {
         var k = startSuffix
         var name = original ?: "split$k"
         while (isUsed(name)) {

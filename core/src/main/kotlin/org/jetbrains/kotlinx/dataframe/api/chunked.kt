@@ -12,11 +12,11 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 
 /**
- * Splits this [DataFrame] into consecutive chunks of up to [size] rows
- * and returns them as a [FrameColumn].
+ * Splits this [DataFrame] into consecutive chunks of up to [size] rows and returns them as a
+ * [FrameColumn].
  *
- * Each element of the resulting [FrameColumn] is a sub-[DataFrame] containing
- * at most [size] rows. Chunks are formed in order, without overlap.
+ * Each element of the resulting [FrameColumn] is a sub-[DataFrame] containing at most [size] rows.
+ * Chunks are formed in order, without overlap.
  *
  * @param [size] Maximum number of rows in each chunk. Must be positive.
  * @param [name] Name of the resulting [FrameColumn]. Defaults to `"groups"`.
@@ -28,16 +28,17 @@ public fun <T> DataFrame<T>.chunked(size: Int, name: String = "groups"): FrameCo
 /**
  * Splits this [DataFrame] into chunks starting at the given [startIndices].
  *
- * The chunk starting at index `i` ends right before the next start index
- * or the end of the [DataFrame].
- * Use this overload when you need custom chunk boundaries.
+ * The chunk starting at index `i` ends right before the next start index or the end of the
+ * [DataFrame]. Use this overload when you need custom chunk boundaries.
  *
  * @param [startIndices] Zero-based row indices where each new chunk starts.
  * @param [name] Name of the resulting [FrameColumn]. Defaults to `"groups"`.
  * @return A [FrameColumn] where each value is a sub-[DataFrame] chunk.
  */
-public fun <T> DataFrame<T>.chunked(startIndices: Iterable<Int>, name: String = "groups"): FrameColumn<T> =
-    chunkedImpl(startIndices, name)
+public fun <T> DataFrame<T>.chunked(
+    startIndices: Iterable<Int>,
+    name: String = "groups",
+): FrameColumn<T> = chunkedImpl(startIndices, name)
 
 /**
  * Groups consecutive values of this [DataColumn] into lists of at most [size] elements.
@@ -53,8 +54,8 @@ public fun <T> DataColumn<T>.chunked(size: Int): ValueColumn<List<T>> {
 }
 
 /**
- * Splits this [ColumnGroup] into a [FrameColumn] of sub-dataframes
- * with up to [size] rows in each chunk.
+ * Splits this [ColumnGroup] into a [FrameColumn] of sub-dataframes with up to [size] rows in each
+ * chunk.
  *
  * The resulting [FrameColumn] inherits the name of this group.
  *
@@ -64,13 +65,14 @@ public fun <T> DataColumn<T>.chunked(size: Int): ValueColumn<List<T>> {
 public fun <T> ColumnGroup<T>.chunked(size: Int): FrameColumn<T> = chunked(size, name())
 
 /**
- * Splits a [DataColumn] of [DataRow] into a [FrameColumn] of sub-dataframes
- * with up to [size] rows in each chunk.
+ * Splits a [DataColumn] of [DataRow] into a [FrameColumn] of sub-dataframes with up to [size] rows
+ * in each chunk.
  *
- * This is a convenience overload that treats a [DataColumn] of rows
- * as if it were a [ColumnGroup] (see [ColumnGroup.chunked]).
+ * This is a convenience overload that treats a [DataColumn] of rows as if it were a [ColumnGroup]
+ * (see [ColumnGroup.chunked]).
  *
  * @param [size] Maximum number of rows in each sub-dataframe. Must be positive.
  * @return A [FrameColumn] where each value is a sub-[DataFrame] chunk.
  */
-public fun <T> DataColumn<DataRow<T>>.chunked(size: Int): FrameColumn<T> = asColumnGroup().chunked(size)
+public fun <T> DataColumn<DataRow<T>>.chunked(size: Int): FrameColumn<T> =
+    asColumnGroup().chunked(size)

@@ -1,30 +1,39 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import java.io.File
+import java.io.InputStream
+import java.nio.file.Path
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import java.io.File
-import java.io.InputStream
-import java.nio.file.Path
 
 // TODO: https://github.com/Kotlin/dataframe/issues/450
-public class Jdbc :
-    SupportedCodeGenerationFormat,
-    SupportedDataFrameFormat {
-    public override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJDBC(stream)
+public class Jdbc : SupportedCodeGenerationFormat, SupportedDataFrameFormat {
+    public override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
+        DataFrame.readJDBC(stream)
 
-    public override fun readDataFrame(path: Path, header: List<String>): AnyFrame = DataFrame.readJDBC(path)
+    public override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
+        DataFrame.readJDBC(path)
 
     override fun readCodeForGeneration(
         stream: InputStream,
         name: String,
         generateHelperCompanionObject: Boolean,
-    ): Code = throw IllegalStateException("Jdbc.readCodeForGeneration() is not yet implemented: Issue #450")
+    ): Code =
+        throw IllegalStateException(
+            "Jdbc.readCodeForGeneration() is not yet implemented: Issue #450"
+        )
 
-    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code =
-        throw IllegalStateException("Jdbc.readCodeForGeneration() is not yet implemented: Issue #450")
+    override fun readCodeForGeneration(
+        file: File,
+        name: String,
+        generateHelperCompanionObject: Boolean,
+    ): Code =
+        throw IllegalStateException(
+            "Jdbc.readCodeForGeneration() is not yet implemented: Issue #450"
+        )
 
     override fun acceptsExtension(ext: String): Boolean = ext == "jdbc"
 
@@ -48,6 +57,7 @@ private fun DataFrame.Companion.readJDBC(stream: InputStream): DataFrame<*> {
     TODO("Not yet implemented")
 }
 
-internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_JDBC)
+internal class DefaultReadJdbcMethod(path: String?) :
+    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_JDBC)
 
 private const val READ_JDBC = "readJDBC"

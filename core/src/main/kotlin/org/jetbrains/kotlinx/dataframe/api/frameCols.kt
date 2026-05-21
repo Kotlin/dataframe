@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -18,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
@@ -32,26 +32,19 @@ public interface FrameColsColumnsSelectionDsl {
     /**
      * ## Frame Cols Grammar
      *
-     * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DEFINITIONS]
-     *  {@include [DslGrammarTemplate.ColumnSetDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ConditionDef]}
-     * }
+     * @include [DslGrammarTemplate] {@set [DslGrammarTemplate.DEFINITIONS] {@include
+     *   [DslGrammarTemplate.ColumnSetDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ColumnGroupDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ConditionDef]} }
      *
-     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
-     *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
-     * }
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS] {@include [PlainDslName]}` [ `**`{
+     * `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]` }
      *
-     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
-     * }
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnSetName]}` [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]` }
      *
-     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
-     * }
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnGroupName]}` [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]` }
      */
     public interface Grammar {
 
@@ -69,8 +62,8 @@ public interface FrameColsColumnsSelectionDsl {
      * ## Frame Columns
      * Creates a subset of columns from [this\] that are [FrameColumns][FrameColumn].
      *
-     * You can optionally use a [filter\] to only include certain columns.
-     * [frameCols] can be called using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
+     * You can optionally use a [filter\] to only include certain columns. [frameCols] can be called
+     * using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -78,9 +71,12 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[frameCols][SingleColumn.frameCols]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][SingleColumn.frameCols]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][SingleColumn.frameCols]`()
+     * }`
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]`() }`
      *
@@ -105,27 +101,32 @@ public interface FrameColsColumnsSelectionDsl {
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[frameCols][ColumnSet.frameCols]`() }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my")
+     * }.`[frameCols][ColumnSet.frameCols]`() }`
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[frameCols][ColumnsSelectionDsl.frameCols]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("FrameCols0")
-    public fun ColumnSet<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
-        frameColumnsInternal(filter)
+    public fun ColumnSet<*>.frameCols(
+        filter: Predicate<FrameColumn<*>> = { true }
+    ): ColumnSet<DataFrame<*>> = frameColumnsInternal(filter)
 
     /**
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]`() }`
+     * `df.`[select][DataFrame.select]` { `[frameCols][ColumnsSelectionDsl.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[frameCols][ColumnsSelectionDsl.frameCols]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("FrameCols1")
     public fun ColumnsSelectionDsl<*>.frameCols(
-        filter: Predicate<FrameColumn<*>> = { true },
+        filter: Predicate<FrameColumn<*>> = { true }
     ): ColumnSet<DataFrame<*>> = asSingleColumn().frameColumnsInternal(filter)
 
     /**
@@ -134,59 +135,71 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("FrameCols2")
     public fun SingleColumn<DataRow<*>>.frameCols(
-        filter: Predicate<FrameColumn<*>> = { true },
+        filter: Predicate<FrameColumn<*>> = { true }
     ): ColumnSet<DataFrame<*>> = this.ensureIsColumnGroup().frameColumnsInternal(filter)
 
     /**
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]`() }`
      */
-    public fun String.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
-        columnGroup(this).frameCols(filter)
+    public fun String.frameCols(
+        filter: Predicate<FrameColumn<*>> = { true }
+    ): ColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
 
     /**
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[frameCols][SingleColumn.frameCols]`
+     * { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[frameCols][SingleColumn.frameCols]`() }`
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[frameCols][SingleColumn.frameCols]`()
+     * }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[frameCols][KProperty.frameCols]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColGroup.`[frameCols][KProperty.frameCols]`() }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
-        columnGroup(this).frameCols(filter)
+    public fun KProperty<*>.frameCols(
+        filter: Predicate<FrameColumn<*>> = { true }
+    ): ColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
 
     /**
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`() }`
      */
-    public fun ColumnPath.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
-        columnGroup(this).frameCols(filter)
+    public fun ColumnPath.frameCols(
+        filter: Predicate<FrameColumn<*>> = { true }
+    ): ColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
 }
 
 /**
  * Returns a TransformableColumnSet containing the frame columns that satisfy the given filter.
  *
- * @param filter The filter function to apply on each frame column. Must accept a FrameColumn object and return a Boolean.
+ * @param filter The filter function to apply on each frame column. Must accept a FrameColumn object
+ *   and return a Boolean.
  * @return A [TransformableColumnSet] containing the frame columns that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
 internal inline fun ColumnsResolver<*>.frameColumnsInternal(
-    crossinline filter: (FrameColumn<*>) -> Boolean,
+    crossinline filter: (FrameColumn<*>) -> Boolean
 ): TransformableColumnSet<AnyFrame> =
-    colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) } as TransformableColumnSet<AnyFrame>
+    colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) }
+        as TransformableColumnSet<AnyFrame>
 
 // endregion

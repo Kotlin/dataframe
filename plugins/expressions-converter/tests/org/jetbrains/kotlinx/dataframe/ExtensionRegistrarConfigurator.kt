@@ -8,7 +8,8 @@ import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.test.services.EnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.TestServices
 
-class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentConfigurator(testServices) {
+class ExtensionRegistrarConfigurator(testServices: TestServices) :
+    EnvironmentConfigurator(testServices) {
     @OptIn(ExperimentalCompilerApi::class)
     override fun CompilerPluginRegistrar.ExtensionStorage.registerCompilerExtensions(
         module: TestModule,

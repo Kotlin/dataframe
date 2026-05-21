@@ -15,10 +15,12 @@ class ChunkedSamples : DataFrameSampleHelper("chunked", "api") {
         val age: Int
     }
 
-    private val df = dataFrameOf(
-        "name" to listOf("Alice", "Bob", "Charlie", "Diana", "Eve"),
-        "age" to listOf(15, 20, 25, 30, 35),
-    ).cast<SimplePerson>()
+    private val df =
+        dataFrameOf(
+                "name" to listOf("Alice", "Bob", "Charlie", "Diana", "Eve"),
+                "age" to listOf(15, 20, 25, 30, 35),
+            )
+            .cast<SimplePerson>()
 
     @Test
     fun notebook_test_chunked_1() {

@@ -4,6 +4,13 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import java.io.File
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.time.temporal.Temporal
+import kotlin.collections.toTypedArray
+import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -21,13 +28,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
-import java.io.File
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.time.temporal.Temporal
-import kotlin.collections.toTypedArray
-import kotlin.reflect.KProperty
-import kotlin.reflect.typeOf
 
 class CreateDataFrameTests {
     open class CreateDataFrameData {
@@ -35,8 +35,7 @@ class CreateDataFrameTests {
         protected val b = 2
         internal val c = 3
 
-        @Suppress("RedundantVisibilityModifier")
-        public val d = 4
+        @Suppress("RedundantVisibilityModifier") public val d = 4
     }
 
     @Test
@@ -47,7 +46,9 @@ class CreateDataFrameTests {
     @Test
     fun `exception test`() {
         class Data {
-            val a: Int get() = error("Error")
+            val a: Int
+                get() = error("Error")
+
             val b = 1
         }
 
@@ -62,13 +63,14 @@ class CreateDataFrameTests {
     @Test
     fun `create frame column`() {
         val df = dataFrameOf("a")(1)
-        val res = listOf(1, 2).toDataFrame {
-            "a" from { it }
-            "b" from { df }
-            "c" from { df[0] }
-            "d" from { if (it == 1) it else null }
-            "e" from { if (true) it else null }
-        }
+        val res =
+            listOf(1, 2).toDataFrame {
+                "a" from { it }
+                "b" from { df }
+                "c" from { df[0] }
+                "d" from { if (it == 1) it else null }
+                "e" from { if (true) it else null }
+            }
         res["a"].kind shouldBe ColumnKind.Value
         res["a"].type() shouldBe typeOf<Int>()
         res["b"].kind shouldBe ColumnKind.Frame
@@ -107,24 +109,17 @@ class CreateDataFrameTests {
     @Test
     fun `preserve fields order with @ColumnName`() {
         // constructor properties will keep order, so z, y
-        class B(
-            @ColumnName("z") val x: Int,
-            @ColumnName("y") val c: String,
-            d: Double,
-        ) {
+        class B(@ColumnName("z") val x: Int, @ColumnName("y") val c: String, d: Double) {
             // then child properties will be sorted lexicographically by column name, so w, x
-            @ColumnName("x")
-            val a: Double = d
+            @ColumnName("x") val a: Double = d
 
-            @ColumnName("w")
-            val b: Int = x
+            @ColumnName("w") val b: Int = x
         }
 
         listOf(B(1, "a", 2.0)).toDataFrame().columnNames() shouldBe listOf("z", "y", "w", "x")
     }
 
-    @DataSchema
-    data class A(val v: Int)
+    @DataSchema data class A(val v: Int)
 
     @DataSchema
     data class B(
@@ -140,10 +135,8 @@ class CreateDataFrameTests {
         val d1 = listOf(A(2), A(3)).toDataFrame()
         val d2 = listOf(A(4), A(5)).toDataFrame()
 
-        val data = listOf(
-            B("q", d1, d1[0], emptyList(), A(7)),
-            B("w", d2, d2[1], listOf(A(6)), A(8)),
-        )
+        val data =
+            listOf(B("q", d1, d1[0], emptyList(), A(7)), B("w", d2, d2[1], listOf(A(6)), A(8)))
 
         val df = data.toDataFrame()
 
@@ -158,11 +151,7 @@ class CreateDataFrameTests {
         df.list[1].v[0] shouldBe 6
         df.a[0].v shouldBe 7
 
-        val df2 = data.toDataFrame {
-            properties {
-                preserve(B::row)
-            }
-        }
+        val df2 = data.toDataFrame { properties { preserve(B::row) } }
 
         df2["row"].kind shouldBe ColumnKind.Value
         df2["row"].type shouldBe typeOf<DataRow<A>>()
@@ -170,12 +159,9 @@ class CreateDataFrameTests {
         df2.a.kind() shouldBe ColumnKind.Group
 
         shouldThrow<IllegalArgumentException> {
-            data.toDataFrame {
-                properties {
-                    preserve(DataFrame::class)
-                }
+                data.toDataFrame { properties { preserve(DataFrame::class) } }
             }
-        }.message!! shouldContain "If you used `preserve(DataFrame::class)`, please remove it"
+            .message!! shouldContain "If you used `preserve(DataFrame::class)`, please remove it"
     }
 
     class ExcludeTestData(val s: String, val data: NestedData)
@@ -184,10 +170,11 @@ class CreateDataFrameTests {
 
     @Test
     fun `preserve T test`() {
-        val data = listOf(
-            ExcludeTestData("test", NestedData(42, "nested")),
-            ExcludeTestData("test2", NestedData(43, "nested2")),
-        )
+        val data =
+            listOf(
+                ExcludeTestData("test", NestedData(42, "nested")),
+                ExcludeTestData("test2", NestedData(43, "nested2")),
+            )
 
         val res = data.toDataFrame {
             preserve<NestedData>()
@@ -203,33 +190,29 @@ class CreateDataFrameTests {
 
     @Test
     fun `exclude classes`() {
-        val list = listOf(
-            ExcludeClasses(1, listOf(1, 2, 3), NestedExcludeClasses("str", listOf("foo", "bar"))),
-        )
-        val df = list.toDataFrame {
-            properties(maxDepth = 2) {
-                exclude(List::class)
-            }
-        }
+        val list =
+            listOf(
+                ExcludeClasses(
+                    1,
+                    listOf(1, 2, 3),
+                    NestedExcludeClasses("str", listOf("foo", "bar")),
+                )
+            )
+        val df = list.toDataFrame { properties(maxDepth = 2) { exclude(List::class) } }
 
         df shouldBe list.toDataFrame(maxDepth = 2).remove { "list" and "nested"["list1"] }
     }
 
-    enum class DummyEnum { A }
+    enum class DummyEnum {
+        A
+    }
 
     @Test
     fun `don't convert value types`() {
-        data class Entry(
-            val a: Int,
-            val b: String,
-            val c: Boolean,
-            val e: DummyEnum,
-        )
+        data class Entry(val a: Int, val b: String, val c: Boolean, val e: DummyEnum)
 
         val df = listOf(Entry(1, "s", true, DummyEnum.A)).toDataFrame(maxDepth = 100)
-        df.columns().forEach {
-            it.kind shouldBe ColumnKind.Value
-        }
+        df.columns().forEach { it.kind shouldBe ColumnKind.Value }
     }
 
     @Test
@@ -249,11 +232,9 @@ class CreateDataFrameTests {
     fun `convert child schemas`() {
         class Child2(val s: String)
 
-        @DataSchema
-        class Child1(val child: Child2)
+        @DataSchema class Child1(val child: Child2)
 
-        @DataSchema
-        class Entry(val a: Int, val child: Child1)
+        @DataSchema class Entry(val a: Int, val child: Child1)
 
         val df = listOf(Entry(1, Child1(Child2("s")))).toDataFrame()
         df.rowsCount() shouldBe 1
@@ -302,7 +283,8 @@ class CreateDataFrameTests {
     }
 
     interface Named {
-        val name: String get() = "default impl"
+        val name: String
+            get() = "default impl"
     }
 
     class Data(override val name: String) : Named
@@ -383,7 +365,8 @@ class CreateDataFrameTests {
 
     @Test
     fun `should convert iterables of java time types to DataFrame with value column`() {
-        val localDates: List<java.time.LocalDate?> = listOf(java.time.LocalDate.of(2024, 2, 28), null)
+        val localDates: List<java.time.LocalDate?> =
+            listOf(java.time.LocalDate.of(2024, 2, 28), null)
         localDates.toDataFrame() shouldBe dataFrameOf("value")(*localDates.toTypedArray())
 
         val localDateTimes: List<java.time.LocalDateTime?> =
@@ -393,17 +376,19 @@ class CreateDataFrameTests {
         val localTimes: List<java.time.LocalTime?> = listOf(java.time.LocalTime.of(14, 30), null)
         localTimes.toDataFrame() shouldBe dataFrameOf("value")(*localTimes.toTypedArray())
 
-        val instants: List<java.time.Instant?> = listOf(java.time.Instant.parse("2024-02-28T14:30:00Z"), null)
+        val instants: List<java.time.Instant?> =
+            listOf(java.time.Instant.parse("2024-02-28T14:30:00Z"), null)
         instants.toDataFrame() shouldBe dataFrameOf("value")(*instants.toTypedArray())
 
         val durations: List<java.time.Duration?> = listOf(java.time.Duration.ofHours(2), null)
         durations.toDataFrame() shouldBe dataFrameOf("value")(*durations.toTypedArray())
 
-        val temporals: List<Temporal?> = listOf(
-            java.time.LocalDate.of(2024, 2, 28),
-            java.time.LocalDateTime.of(2024, 2, 28, 14, 30),
-            null,
-        )
+        val temporals: List<Temporal?> =
+            listOf(
+                java.time.LocalDate.of(2024, 2, 28),
+                java.time.LocalDateTime.of(2024, 2, 28, 14, 30),
+                null,
+            )
         temporals.toDataFrame() shouldBe dataFrameOf("value")(*temporals.toTypedArray())
     }
 
@@ -412,13 +397,15 @@ class CreateDataFrameTests {
         val localDates: List<LocalDate?> = listOf(LocalDate(2024, 2, 28), null)
         localDates.toDataFrame() shouldBe dataFrameOf("value")(*localDates.toTypedArray())
 
-        val localDateTimes: List<LocalDateTime?> = listOf(LocalDateTime(2024, 2, 28, 14, 30, 0), null)
+        val localDateTimes: List<LocalDateTime?> =
+            listOf(LocalDateTime(2024, 2, 28, 14, 30, 0), null)
         localDateTimes.toDataFrame() shouldBe dataFrameOf("value")(*localDateTimes.toTypedArray())
 
         val instants: List<Instant?> = listOf(Instant.parse("2024-02-28T14:30:00Z"), null)
         instants.toDataFrame() shouldBe dataFrameOf("value")(*instants.toTypedArray())
 
-        val timeZones: List<TimeZone?> = listOf(TimeZone.of("UTC"), TimeZone.of("Europe/Moscow"), null)
+        val timeZones: List<TimeZone?> =
+            listOf(TimeZone.of("UTC"), TimeZone.of("Europe/Moscow"), null)
         timeZones.toDataFrame() shouldBe dataFrameOf("value")(*timeZones.toTypedArray())
 
         val months: List<Month?> = listOf(Month.JANUARY, Month.FEBRUARY, null)
@@ -427,17 +414,21 @@ class CreateDataFrameTests {
         val daysOfWeek: List<DayOfWeek?> = listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, null)
         daysOfWeek.toDataFrame() shouldBe dataFrameOf("value")(*daysOfWeek.toTypedArray())
 
-        val dateTimePeriods: List<DateTimePeriod?> = listOf(DateTimePeriod(years = 1, months = 2), null)
+        val dateTimePeriods: List<DateTimePeriod?> =
+            listOf(DateTimePeriod(years = 1, months = 2), null)
         dateTimePeriods.toDataFrame().convert("value") { it.toString() } shouldBe
             dataFrameOf("value")("P1Y2M", "null")
 
-        val dateTimeUnits: List<DateTimeUnit?> = listOf(DateTimeUnit.MonthBased(3), DateTimeUnit.DayBased(7), null)
-        dateTimeUnits.toDataFrame()
-            .convert("value") { it.toString().trim() } shouldBe
+        val dateTimeUnits: List<DateTimeUnit?> =
+            listOf(DateTimeUnit.MonthBased(3), DateTimeUnit.DayBased(7), null)
+        dateTimeUnits.toDataFrame().convert("value") { it.toString().trim() } shouldBe
             dataFrameOf("value")("QUARTER", "WEEK", "null")
     }
 
-    enum class TestEnum { VALUE_ONE, VALUE_TWO }
+    enum class TestEnum {
+        VALUE_ONE,
+        VALUE_TWO,
+    }
 
     @Test
     fun `should convert iterables of Enum to DataFrame with value column`() {
@@ -447,7 +438,8 @@ class CreateDataFrameTests {
 
     @Test
     fun `should convert iterables of non-JSON Map to DataFrame with value column`() {
-        val maps: List<Map<*, *>?> = listOf(mapOf(1 to null, 2 to "val"), mapOf(3 to 1, 4 to true), null)
+        val maps: List<Map<*, *>?> =
+            listOf(mapOf(1 to null, 2 to "val"), mapOf(3 to 1, 4 to true), null)
         val df = maps.toDataFrame()
         df.columnNames() shouldBe listOf("value")
         df["value"].toList() shouldBe maps
@@ -455,7 +447,8 @@ class CreateDataFrameTests {
 
     @Test
     fun `should convert iterables of maps representing rows to DataFrame with value columns`() {
-        val maps: Iterable<Map<String, *>> = listOf(mapOf("a" to 1, "b" to true), mapOf("c" to 2, "d" to false))
+        val maps: Iterable<Map<String, *>> =
+            listOf(mapOf("a" to 1, "b" to true), mapOf("c" to 2, "d" to false))
         val df = maps.toDataFrame()
         df["a"][0] shouldBe 1
         df["b"][0] shouldBe true
@@ -469,7 +462,8 @@ class CreateDataFrameTests {
 
     @Test
     fun `should convert class with no public properties to DataFrame with value column`() {
-        val objs: List<NoPublicPropsClass> = listOf(NoPublicPropsClass(1, "a"), NoPublicPropsClass(2, "b"))
+        val objs: List<NoPublicPropsClass> =
+            listOf(NoPublicPropsClass(1, "a"), NoPublicPropsClass(2, "b"))
         objs.toDataFrame() shouldBe dataFrameOf("value")(*objs.toTypedArray())
     }
 
@@ -492,8 +486,7 @@ class CreateDataFrameTests {
     }
 
     // nullable field here - no generated unwrapping code
-    @JvmInline
-    internal value class Speed(val kmh: Number?)
+    @JvmInline internal value class Speed(val kmh: Number?)
 
     internal class PathSegment(val id: String, val speedLimit: Speed? = null)
 
@@ -513,8 +506,7 @@ class CreateDataFrameTests {
         df["speedLimit"].values() shouldBe listOf(Speed(2.3), Speed(null))
     }
 
-    @JvmInline
-    internal value class Speed1(val kmh: Number)
+    @JvmInline internal value class Speed1(val kmh: Number)
 
     internal class PathSegment1(val id: String, val speedLimit: Speed1? = null)
 
@@ -611,28 +603,32 @@ class CreateDataFrameTests {
         listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getB) } shouldBe
             dataFrameOf("b")("bb")
 
-        listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame {
-            properties(JavaPojo::getA)
-        } shouldBe dataFrameOf("a")(1)
+        listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame { properties(JavaPojo::getA) } shouldBe
+            dataFrameOf("a")(1)
 
-        listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame {
-            properties(JavaPojo::getB)
-        } shouldBe dataFrameOf("b")("bb")
+        listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame { properties(JavaPojo::getB) } shouldBe
+            dataFrameOf("b")("bb")
     }
 
     data class Arrays(val a: IntArray, val b: Array<Int>, val c: Array<Int?>)
 
     @Test
     fun `arrays in to DF`() {
-        val df = listOf(
-            Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null)),
-        ).toDataFrame(maxDepth = Int.MAX_VALUE)
+        val df =
+            listOf(Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null)))
+                .toDataFrame(maxDepth = Int.MAX_VALUE)
 
-        df.schema() shouldBe dataFrameOf(
-            DataColumn.createValueColumn("a", listOf(intArrayOf(1, 2)), typeOf<IntArray>()),
-            DataColumn.createValueColumn("b", listOf(arrayOf(3, 4)), typeOf<Array<Int>>()),
-            DataColumn.createValueColumn("c", listOf(arrayOf(5, null)), typeOf<Array<Int?>>()),
-        ).schema()
+        df.schema() shouldBe
+            dataFrameOf(
+                    DataColumn.createValueColumn("a", listOf(intArrayOf(1, 2)), typeOf<IntArray>()),
+                    DataColumn.createValueColumn("b", listOf(arrayOf(3, 4)), typeOf<Array<Int>>()),
+                    DataColumn.createValueColumn(
+                        "c",
+                        listOf(arrayOf(5, null)),
+                        typeOf<Array<Int?>>(),
+                    ),
+                )
+                .schema()
     }
 
     @DataSchema
@@ -643,23 +639,18 @@ class CreateDataFrameTests {
         val city: String?,
     ) : DataRowSchema
 
-    @DataSchema
-    data class Group(val id: String, val participants: List<Person>) : DataRowSchema
+    @DataSchema data class Group(val id: String, val participants: List<Person>) : DataRowSchema
 
     @Test
     fun `deeply convert data schema and list of data schema`() {
-        val participants1 = listOf(
-            Person("Alice", "Cooper", 15, "London"),
-            Person("Bob", "Dylan", 45, "Dubai"),
-        )
-        val participants2 = listOf(
-            Person("Charlie", "Daniels", 20, "Moscow"),
-            Person("Charlie", "Chaplin", 40, "Milan"),
-        )
-        val df = dataFrameOf(
-            Group("1", participants1),
-            Group("2", participants2),
-        )
+        val participants1 =
+            listOf(Person("Alice", "Cooper", 15, "London"), Person("Bob", "Dylan", 45, "Dubai"))
+        val participants2 =
+            listOf(
+                Person("Charlie", "Daniels", 20, "Moscow"),
+                Person("Charlie", "Chaplin", 40, "Milan"),
+            )
+        val df = dataFrameOf(Group("1", participants1), Group("2", participants2))
         shouldNotThrowAny {
             df.participants[0].firstName
             df.participants[0].city
@@ -685,13 +676,7 @@ class CreateDataFrameTests {
 
     @Test
     fun `preserve nested empty interface consistency`() {
-        val df = List(10) {
-            TestItem(
-                "Test1",
-                MyEmptyDeclaration(),
-                123,
-            )
-        }.toDataFrame(maxDepth = 2)
+        val df = List(10) { TestItem("Test1", MyEmptyDeclaration(), 123) }.toDataFrame(maxDepth = 2)
 
         df["containingDeclaration"].type() shouldBe typeOf<MyEmptyDeclaration>()
     }
@@ -714,7 +699,8 @@ class CreateDataFrameTests {
 
     @Test
     fun `parsing row-major lines into structured dataframe`() {
-        // I think finding data in such format will be rare, so we need an optional header parameter.
+        // I think finding data in such format will be rare, so we need an optional header
+        // parameter.
         val lines = buildList {
             addAll(listOf("stamp", "header", "data"))
             repeat(33) { row ->
@@ -744,7 +730,11 @@ class CreateDataFrameTests {
             }
         }
 
-        val df = lines.chunked(4).map { it.dropLast(1) }.toDataFrame(header = listOf("stamp", "header", "data"))
+        val df =
+            lines
+                .chunked(4)
+                .map { it.dropLast(1) }
+                .toDataFrame(header = listOf("stamp", "header", "data"))
 
         df.columnNames() shouldBe listOf("stamp", "header", "data")
         df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
@@ -752,7 +742,8 @@ class CreateDataFrameTests {
         df[0].values() shouldBe listOf("stamp 0", "header 0", "data 0")
 
         // Different approach. I think the dropLast one is better
-        lines.chunked(4)
+        lines
+            .chunked(4)
             .toDataFrame(header = listOf("stamp", "header", "data", "whitespace"))
             .remove("whitespace") shouldBe df
     }
@@ -761,18 +752,17 @@ class CreateDataFrameTests {
     fun `parsing column-major lines into structured dataframe`() {
         val lines = buildList {
             repeat(4) { col ->
-                repeat(5) { row ->
-                    add("data$col $row")
-                }
+                repeat(5) { row -> add("data$col $row") }
                 add("\n")
             }
         }
 
         val header = List(4) { "col $it" }
-        val df = lines
-            .chunked(6)
-            .map { it.dropLast(1) }
-            .toDataFrame(header = header, containsColumns = true)
+        val df =
+            lines
+                .chunked(6)
+                .map { it.dropLast(1) }
+                .toDataFrame(header = header, containsColumns = true)
         df.columnNames() shouldBe header
         df.columnTypes() shouldBe List(4) { typeOf<String>() }
         df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")
@@ -783,18 +773,17 @@ class CreateDataFrameTests {
         val lines = buildList {
             repeat(4) { col ->
                 add("col $col")
-                repeat(5) { row ->
-                    add("data$col $row")
-                }
+                repeat(5) { row -> add("data$col $row") }
                 add("\n")
             }
         }
 
         val header = List(4) { "col $it" }
-        val df = lines
-            .chunked(7)
-            .map { it.dropLast(1) }
-            .toDataFrame(header = null, containsColumns = true)
+        val df =
+            lines
+                .chunked(7)
+                .map { it.dropLast(1) }
+                .toDataFrame(header = null, containsColumns = true)
         df.columnNames() shouldBe header
         df.columnTypes() shouldBe List(4) { typeOf<String>() }
         df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")

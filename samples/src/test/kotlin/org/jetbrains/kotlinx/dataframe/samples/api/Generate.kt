@@ -21,30 +21,20 @@ import org.junit.Test
 class Generate : DataFrameSampleHelper("generate_docs", "api") {
 
     @DataSchema
-    data class Customer(
-        val orders: List<Orders>,
-        val user: String
-    ) {
-        @DataSchema
-        data class Orders(
-            val amount: Double,
-            val orderId: Int
-        )
+    data class Customer(val orders: List<Orders>, val user: String) {
+        @DataSchema data class Orders(val amount: Double, val orderId: Int)
     }
-    private val ordersAlice = dataFrameOf(
-        "orderId" to listOf(101, 102),
-        "amount" to listOf(50.0, 75.5),
-    ).cast<Customer.Orders>()
 
-    private val ordersBob = dataFrameOf(
-        "orderId" to listOf(103, 104, 105),
-        "amount" to listOf(20.0, 30.0, 25.0),
-    ).cast<Customer.Orders>()
+    private val ordersAlice =
+        dataFrameOf("orderId" to listOf(101, 102), "amount" to listOf(50.0, 75.5))
+            .cast<Customer.Orders>()
 
-    private val df: AnyFrame = dataFrameOf(
-        "user" to listOf("Alice", "Bob"),
-        "orders" to listOf(ordersAlice, ordersBob),
-    )
+    private val ordersBob =
+        dataFrameOf("orderId" to listOf(103, 104, 105), "amount" to listOf(20.0, 30.0, 25.0))
+            .cast<Customer.Orders>()
+
+    private val df: AnyFrame =
+        dataFrameOf("user" to listOf("Alice", "Bob"), "orders" to listOf(ordersAlice, ordersBob))
 
     @Test
     fun notebook_test_generate_docs_1() {
@@ -58,7 +48,7 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
     fun notebook_test_generate_docs_2() {
         // SampleStart
         df.generateInterfaces(markerName = "Customer")
-        // SampleEnd
+            // SampleEnd
             .saveSample()
     }
 
@@ -74,7 +64,7 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
     fun notebook_test_generate_docs_4() {
         // SampleStart
         df.generateDataClasses("Customer")
-        // SampleEnd
+            // SampleEnd
             .saveSample()
     }
 
@@ -89,7 +79,7 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
     fun notebook_test_generate_docs_6() {
         // SampleStart
         df.generateInterfaces(markerName = "Customer")
-        // SampleEnd
+            // SampleEnd
             .saveSample()
     }
 
@@ -99,7 +89,8 @@ class Generate : DataFrameSampleHelper("generate_docs", "api") {
         df.cast<Customer>()
             .add("ordersTotal") { orders.sumOf { it.amount } }
             .filter { user.startsWith("A") }
-            .rename { user }.to("customer")
+            .rename { user }
+            .to("customer")
         // SampleEnd
         //   .saveDfHtmlSample()
     }

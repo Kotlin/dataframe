@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.testSets.animals
 
 import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.mean
@@ -12,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class AnimalsTests {
 
@@ -39,9 +39,7 @@ class AnimalsTests {
 
     @Test
     fun `mean of empty`() {
-        val cleared = df
-            .update { age }.with { Double.NaN }
-            .update { visits }.withNull()
+        val cleared = df.update { age }.with { Double.NaN }.update { visits }.withNull()
         val mean = cleared.mean()
         mean[age].shouldBeNaN()
         (mean[visits.name()] as Double).shouldBeNaN()

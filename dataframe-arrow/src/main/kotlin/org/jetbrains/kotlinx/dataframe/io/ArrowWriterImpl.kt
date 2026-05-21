@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.apache.arrow.memory.RootAllocator
@@ -57,12 +59,11 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.values
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.typeOf
 
 /**
- * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
- * If [dataFrame] content does not match with [targetSchema], behaviour is specified by [mode], mismatches would be sent to [mismatchSubscriber]
+ * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream
+ * or raw Channel) with [targetSchema]. If [dataFrame] content does not match with [targetSchema],
+ * behaviour is specified by [mode], mismatches would be sent to [mismatchSubscriber]
  */
 internal class ArrowWriterImpl(
     override val dataFrame: DataFrame<*>,
@@ -77,23 +78,21 @@ internal class ArrowWriterImpl(
         when (vector) {
             is FixedWidthVector -> vector.allocateNew(size)
 
-            is VariableWidthVector -> totalBytes?.let { vector.allocateNew(it, size) } ?: vector.allocateNew(size)
+            is VariableWidthVector ->
+                totalBytes?.let { vector.allocateNew(it, size) } ?: vector.allocateNew(size)
 
             is StructVector -> {
-                vector.childrenFromFields.forEach { child ->
-                    allocateVector(child, size)
-                }
+                vector.childrenFromFields.forEach { child -> allocateVector(child, size) }
             }
 
             is NullVector -> vector.allocateNew()
 
-            else -> throw IllegalArgumentException("Can not allocate ${vector.javaClass.canonicalName}")
+            else ->
+                throw IllegalArgumentException("Can not allocate ${vector.javaClass.canonicalName}")
         }
     }
 
-    /**
-     * Calculate buffer size for VariableWidthVector (return null for FixedWidthVector)
-     */
+    /** Calculate buffer size for VariableWidthVector (return null for FixedWidthVector) */
     private fun countTotalBytes(column: AnyCol): Long? {
         val columnType = column.type()
         return when {
@@ -108,15 +107,18 @@ internal class ArrowWriterImpl(
 
     private fun infillWithNulls(vector: FieldVector, size: Int) {
         when (vector) {
-            is BaseFixedWidthVector -> for (i in 0 until size) {
-                vector.setNull(i)
-            }
+            is BaseFixedWidthVector ->
+                for (i in 0 until size) {
+                    vector.setNull(i)
+                }
 
-            is BaseVariableWidthVector -> for (i in 0 until size) {
-                vector.setNull(i)
-            }
+            is BaseVariableWidthVector ->
+                for (i in 0 until size) {
+                    vector.setNull(i)
+                }
 
-            else -> throw IllegalArgumentException("Can not infill ${vector.javaClass.canonicalName}")
+            else ->
+                throw IllegalArgumentException("Can not infill ${vector.javaClass.canonicalName}")
         }
         vector.valueCount = size
     }
@@ -158,142 +160,114 @@ internal class ArrowWriterImpl(
 
             else ->
                 throw NotImplementedError(
-                    "Saving ${targetFieldType.javaClass.canonicalName} is currently not implemented",
+                    "Saving ${targetFieldType.javaClass.canonicalName} is currently not implemented"
                 )
         }
     }
 
     private fun convertColumnToCompatible(column: AnyCol): Pair<AnyCol, Field> {
         val actualField = column.toArrowField(mismatchSubscriber)
-        val result = try {
-            convertColumnToTarget(column, actualField.type)!!
-        } catch (e: Exception) {
-            column
-        }
+        val result =
+            try {
+                convertColumnToTarget(column, actualField.type)!!
+            } catch (e: Exception) {
+                column
+            }
         return result to actualField
     }
 
     private fun infillVector(vector: FieldVector, column: AnyCol) {
         when (vector) {
             is VarCharVector ->
-                column.convertToString()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, Text(value)) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToString().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, Text(value)) } ?: vector.setNull(i)
+                }
 
             is LargeVarCharVector ->
-                column.convertToString()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, Text(value)) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToString().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, Text(value)) } ?: vector.setNull(i)
+                }
 
             is BitVector ->
-                column.convertToBoolean()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.compareTo(false)) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToBoolean().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value.compareTo(false)) } ?: vector.setNull(i)
+                }
 
             is TinyIntVector ->
-                column.convertToInt()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToInt().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value) } ?: vector.setNull(i)
+                }
 
             is SmallIntVector ->
-                column.convertToInt()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToInt().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value) } ?: vector.setNull(i)
+                }
 
             is IntVector ->
-                column.convertToInt()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToInt().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value) } ?: vector.setNull(i)
+                }
 
             is BigIntVector ->
-                column.convertToLong()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToLong().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value) } ?: vector.setNull(i)
+                }
 
             is DecimalVector ->
-                column.convertToBigDecimal()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToBigDecimal().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value) } ?: vector.setNull(i)
+                }
 
             is Decimal256Vector ->
-                column.convertToBigDecimal()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToBigDecimal().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value) } ?: vector.setNull(i)
+                }
 
             is Float8Vector ->
-                column.convertToDouble()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToDouble().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value) } ?: vector.setNull(i)
+                }
 
             is Float4Vector ->
-                column.convertToFloat()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToFloat().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value) } ?: vector.setNull(i)
+                }
 
             is DateDayVector ->
-                column.convertToLocalDate()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toEpochDays().toInt()) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToLocalDate().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value.toEpochDays().toInt()) } ?: vector.setNull(i)
+                }
 
             is DateMilliVector ->
-                column.convertToLocalDateTime()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds()) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToLocalDateTime().forEachIndexed { i, value ->
+                    value?.also {
+                        vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds())
+                    } ?: vector.setNull(i)
+                }
 
             is TimeNanoVector ->
-                column.convertToLocalTime()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toNanosecondOfDay()) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToLocalTime().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value.toNanosecondOfDay()) } ?: vector.setNull(i)
+                }
 
             is TimeMicroVector ->
-                column.convertToLocalTime()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toNanosecondOfDay() / 1000) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToLocalTime().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, value.toNanosecondOfDay() / 1000) }
+                        ?: vector.setNull(i)
+                }
 
             is TimeMilliVector ->
-                column.convertToLocalTime()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, (value.toNanosecondOfDay() / 1000 / 1000).toInt()) }
-                            ?: vector.setNull(i)
-                    }
+                column.convertToLocalTime().forEachIndexed { i, value ->
+                    value?.also { vector.set(i, (value.toNanosecondOfDay() / 1000 / 1000).toInt()) }
+                        ?: vector.setNull(i)
+                }
 
             is TimeSecVector ->
-                column.convertToLocalTime()
-                    .forEachIndexed { i, value ->
-                        value?.also {
-                            vector.set(i, (value.toNanosecondOfDay() / 1000 / 1000 / 1000).toInt())
-                        } ?: vector.setNull(i)
-                    }
+                column.convertToLocalTime().forEachIndexed { i, value ->
+                    value?.also {
+                        vector.set(i, (value.toNanosecondOfDay() / 1000 / 1000 / 1000).toInt())
+                    } ?: vector.setNull(i)
+                }
 
             is StructVector -> {
                 require(column is ColumnGroup<*>) {
@@ -307,11 +281,15 @@ internal class ArrowWriterImpl(
                 column.indices.forEach { i -> vector.setIndexDefined(i) }
             }
 
-            is NullVector -> { }
+            is NullVector -> {}
 
             else -> {
-                // TODO implement other vector types from [readField] (VarBinaryVector, UIntVector, DurationVector, StructVector) and may be others (ListVector, FixedSizeListVector etc)
-                throw NotImplementedError("Saving to ${vector.javaClass.canonicalName} is currently not implemented")
+                // TODO implement other vector types from [readField] (VarBinaryVector, UIntVector,
+                // DurationVector, StructVector) and may be others (ListVector, FixedSizeListVector
+                // etc)
+                throw NotImplementedError(
+                    "Saving to ${vector.javaClass.canonicalName} is currently not implemented"
+                )
             }
         }
 
@@ -319,7 +297,8 @@ internal class ArrowWriterImpl(
     }
 
     /**
-     * Create Arrow FieldVector with [column] content cast to [field] type according to [strictType] and [strictNullable] settings.
+     * Create Arrow FieldVector with [column] content cast to [field] type according to [strictType]
+     * and [strictNullable] settings.
      */
     private fun allocateVectorAndInfill(
         field: Field,
@@ -328,69 +307,96 @@ internal class ArrowWriterImpl(
         strictNullable: Boolean,
     ): FieldVector {
         val containNulls = (column == null || column.hasNulls())
-        // Convert the column to type specified in field. (If we already have target type, convertTo will do nothing)
+        // Convert the column to type specified in field. (If we already have target type, convertTo
+        // will do nothing)
 
-        val (convertedColumn, actualField) = try {
-            convertColumnToTarget(column, field.type) to field
-        } catch (e: CellConversionException) {
-            if (strictType) {
-                // If conversion failed but strictType is enabled, throw the exception
-                val mismatch =
-                    ConvertingMismatch.TypeConversionFail.ConversionFailError(e.column?.name() ?: "", e.row, e)
-                mismatchSubscriber(mismatch)
-                throw ConvertingException(mismatch)
-            } else {
-                // If strictType is not enabled, use original data with its type. Target nullable is saved at this step.
-                mismatchSubscriber(
-                    ConvertingMismatch.TypeConversionFail.ConversionFailIgnored(
-                        column = e.column?.name() ?: "",
-                        row = e.row,
-                        cause = e,
-                    ),
-                )
-                convertColumnToCompatible(column!!)
-            }
-        } catch (e: TypeConverterNotFoundException) {
-            if (strictType) {
-                // If conversion failed but strictType is enabled, throw the exception
-                val mismatch = ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundError(field.name, e)
-                mismatchSubscriber(mismatch)
-                throw ConvertingException(mismatch)
-            } else {
-                // If strictType is not enabled, use original data with its type. Target nullable is saved at this step.
-                mismatchSubscriber(ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundIgnored(field.name, e))
-                convertColumnToCompatible(column!!)
-            }
-        }
-
-        val vector = if (!actualField.isNullable && containNulls) {
-            var firstNullValue: Int? = null
-            for (i in 0 until (column?.size() ?: -1)) {
-                if (column!![i] == null) {
-                    firstNullValue = i
-                    break
+        val (convertedColumn, actualField) =
+            try {
+                convertColumnToTarget(column, field.type) to field
+            } catch (e: CellConversionException) {
+                if (strictType) {
+                    // If conversion failed but strictType is enabled, throw the exception
+                    val mismatch =
+                        ConvertingMismatch.TypeConversionFail.ConversionFailError(
+                            e.column?.name() ?: "",
+                            e.row,
+                            e,
+                        )
+                    mismatchSubscriber(mismatch)
+                    throw ConvertingException(mismatch)
+                } else {
+                    // If strictType is not enabled, use original data with its type. Target
+                    // nullable is saved at this step.
+                    mismatchSubscriber(
+                        ConvertingMismatch.TypeConversionFail.ConversionFailIgnored(
+                            column = e.column?.name() ?: "",
+                            row = e.row,
+                            cause = e,
+                        )
+                    )
+                    convertColumnToCompatible(column!!)
+                }
+            } catch (e: TypeConverterNotFoundException) {
+                if (strictType) {
+                    // If conversion failed but strictType is enabled, throw the exception
+                    val mismatch =
+                        ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundError(
+                            field.name,
+                            e,
+                        )
+                    mismatchSubscriber(mismatch)
+                    throw ConvertingException(mismatch)
+                } else {
+                    // If strictType is not enabled, use original data with its type. Target
+                    // nullable is saved at this step.
+                    mismatchSubscriber(
+                        ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundIgnored(
+                            field.name,
+                            e,
+                        )
+                    )
+                    convertColumnToCompatible(column!!)
                 }
             }
-            if (strictNullable) {
-                val mismatch = ConvertingMismatch.NullableMismatch.NullValueError(actualField.name, firstNullValue)
-                mismatchSubscriber(mismatch)
-                throw ConvertingException(mismatch)
+
+        val vector =
+            if (!actualField.isNullable && containNulls) {
+                var firstNullValue: Int? = null
+                for (i in 0 until (column?.size() ?: -1)) {
+                    if (column!![i] == null) {
+                        firstNullValue = i
+                        break
+                    }
+                }
+                if (strictNullable) {
+                    val mismatch =
+                        ConvertingMismatch.NullableMismatch.NullValueError(
+                            actualField.name,
+                            firstNullValue,
+                        )
+                    mismatchSubscriber(mismatch)
+                    throw ConvertingException(mismatch)
+                } else {
+                    mismatchSubscriber(
+                        ConvertingMismatch.NullableMismatch.NullValueIgnored(
+                            actualField.name,
+                            firstNullValue,
+                        )
+                    )
+                    Field(
+                            actualField.name,
+                            FieldType(
+                                true,
+                                actualField.fieldType.type,
+                                actualField.fieldType.dictionary,
+                            ),
+                            actualField.children,
+                        )
+                        .createVector(allocator)!!
+                }
             } else {
-                mismatchSubscriber(
-                    ConvertingMismatch.NullableMismatch.NullValueIgnored(
-                        actualField.name,
-                        firstNullValue,
-                    ),
-                )
-                Field(
-                    actualField.name,
-                    FieldType(true, actualField.fieldType.type, actualField.fieldType.dictionary),
-                    actualField.children,
-                ).createVector(allocator)!!
+                actualField.createVector(allocator)!!
             }
-        } else {
-            actualField.createVector(allocator)!!
-        }
 
         if (convertedColumn == null) {
             check(actualField.isNullable)
@@ -406,7 +412,12 @@ internal class ArrowWriterImpl(
     private fun List<AnyCol>.toVectors(): List<FieldVector> =
         this.map {
             val field = it.toArrowField(mismatchSubscriber)
-            allocateVectorAndInfill(field = field, column = it, strictType = true, strictNullable = true)
+            allocateVectorAndInfill(
+                field = field,
+                column = it,
+                strictType = true,
+                strictNullable = true,
+            )
         }
 
     override fun allocateVectorSchemaRoot(): VectorSchemaRoot {
@@ -416,16 +427,22 @@ internal class ArrowWriterImpl(
                 val column = dataFrame.getColumnOrNull(field.name)
                 if (column == null && !field.isNullable) {
                     if (mode.restrictNarrowing) {
-                        val mismatch = ConvertingMismatch.NarrowingMismatch.NotPresentedColumnError(field.name)
+                        val mismatch =
+                            ConvertingMismatch.NarrowingMismatch.NotPresentedColumnError(field.name)
                         mismatchSubscriber(mismatch)
                         throw ConvertingException(mismatch)
                     } else {
-                        mismatchSubscriber(ConvertingMismatch.NarrowingMismatch.NotPresentedColumnIgnored(field.name))
+                        mismatchSubscriber(
+                            ConvertingMismatch.NarrowingMismatch.NotPresentedColumnIgnored(
+                                field.name
+                            )
+                        )
                         continue
                     }
                 }
 
-                val vector = allocateVectorAndInfill(field, column, mode.strictType, mode.strictNullable)
+                val vector =
+                    allocateVectorAndInfill(field, column, mode.strictType, mode.strictNullable)
                 mainVectors[field.name] = vector
             }
         } catch (e: Exception) {
@@ -434,7 +451,8 @@ internal class ArrowWriterImpl(
         }
         val vectors = ArrayList<FieldVector>()
         vectors.addAll(mainVectors.values)
-        val otherColumns = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }
+        val otherColumns =
+            dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }
         if (!mode.restrictWidening) {
             vectors.addAll(otherColumns.toVectors())
             otherColumns.forEach {

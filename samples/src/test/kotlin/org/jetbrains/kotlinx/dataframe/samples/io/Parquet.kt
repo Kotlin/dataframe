@@ -3,6 +3,10 @@
 package org.jetbrains.kotlinx.dataframe.samples.io
 
 import io.kotest.matchers.shouldBe
+import java.io.File
+import java.net.URL
+import java.nio.file.Path
+import java.nio.file.Paths
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
@@ -10,10 +14,6 @@ import org.jetbrains.kotlinx.dataframe.io.readParquet
 import org.jetbrains.kotlinx.dataframe.testParquet
 import org.junit.Ignore
 import org.junit.Test
-import java.io.File
-import java.net.URL
-import java.nio.file.Path
-import java.nio.file.Paths
 
 private const val ARROW_PARQUET_DEFAULT_BATCH_SIZE: Long = 1000
 
@@ -28,7 +28,8 @@ class Parquet {
             batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
         ): AnyFrame
 
-        // 2) Strings (interpreted as file paths or URLs, e.g., "data/file.parquet", "file://", or "http(s)://")
+        // 2) Strings (interpreted as file paths or URLs, e.g., "data/file.parquet", "file://", or
+        // "http(s)://")
         public fun DataFrame.Companion.readParquet(
             vararg strUrls: String,
             nullability: NullabilityOptions = NullabilityOptions.Infer,
@@ -103,11 +104,12 @@ class Parquet {
         val file = File(url.toURI())
 
         // SampleStart
-        val df = DataFrame.readParquet(
-            file,
-            nullability = NullabilityOptions.Infer,
-            batchSize = 64L * 1024,
-        )
+        val df =
+            DataFrame.readParquet(
+                file,
+                nullability = NullabilityOptions.Infer,
+                batchSize = 64L * 1024,
+            )
         // SampleEnd
         df.rowsCount() shouldBe 300
         df.columnsCount() shouldBe 20

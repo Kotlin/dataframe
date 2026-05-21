@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.types
 
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -14,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.types.TypeProjectionTests.TypeInferenceTe
 import org.jetbrains.kotlinx.dataframe.types.TypeProjectionTests.TypeInferenceTest2.Test2A
 import org.jetbrains.kotlinx.dataframe.types.TypeProjectionTests.TypeInferenceTest2.Test2X
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class TypeProjectionTests {
     class TypeInferenceTest1 {
@@ -38,14 +38,13 @@ class TypeProjectionTests {
 
         interface D<T>
 
-        interface Test2X<T : Number, V : Number> :
-            C<T>,
-            D<V>
+        interface Test2X<T : Number, V : Number> : C<T>, D<V>
     }
 
     @Test
     fun test2() {
-        Test2X::class.createTypeUsing<Test2A<Test2A<Test2A<Int>>>>() shouldBe typeOf<Test2X<Int, *>>()
+        Test2X::class.createTypeUsing<Test2A<Test2A<Test2A<Int>>>>() shouldBe
+            typeOf<Test2X<Int, *>>()
         Test2A::class.createTypeUsing<Test2X<Double, Int>?>() shouldBe typeOf<Test2A<B<Double>>?>()
     }
 
@@ -57,16 +56,22 @@ class TypeProjectionTests {
 
     @Test
     fun `column group projections`() {
-        ColumnGroup::class.createTypeUsing<ColumnReference<DataRow<Int>>>() shouldBe typeOf<ColumnGroup<Int>>()
-        SingleColumn::class.createTypeUsing<ColumnGroupWithParent<Int>>() shouldBe typeOf<SingleColumn<DataRow<Int>>>()
+        ColumnGroup::class.createTypeUsing<ColumnReference<DataRow<Int>>>() shouldBe
+            typeOf<ColumnGroup<Int>>()
+        SingleColumn::class.createTypeUsing<ColumnGroupWithParent<Int>>() shouldBe
+            typeOf<SingleColumn<DataRow<Int>>>()
     }
 
     @Test
     fun `common type tests`() {
-        listOf(typeOf<List<Int>>(), typeOf<Set<Double?>>()).commonType() shouldBe typeOf<Collection<out Number?>>()
-        listOf(typeOf<List<Int>>(), typeOf<Set<*>>()).commonType(false) shouldBe typeOf<Collection<out Any?>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<Double?>>()).commonType() shouldBe
+            typeOf<Collection<out Number?>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<*>>()).commonType(false) shouldBe
+            typeOf<Collection<out Any?>>()
         listOf(typeOf<List<Int>>(), typeOf<Set<*>>()).commonType() shouldBe typeOf<Collection<*>>()
-        listOf(typeOf<List<Int>>(), typeOf<Set<*>?>()).commonType(false) shouldBe typeOf<Collection<out Any?>?>()
-        listOf(typeOf<List<Int>>(), typeOf<Set<*>?>()).commonType() shouldBe typeOf<Collection<*>?>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<*>?>()).commonType(false) shouldBe
+            typeOf<Collection<out Any?>?>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<*>?>()).commonType() shouldBe
+            typeOf<Collection<*>?>()
     }
 }

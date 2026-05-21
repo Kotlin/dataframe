@@ -1,6 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import java.math.BigInteger
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
+import java.time.ZoneOffset
+import kotlin.math.absoluteValue
+import kotlin.math.pow
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -10,19 +19,10 @@ import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
-import java.math.BigInteger
-import java.time.ZoneOffset
-import kotlin.math.absoluteValue
-import kotlin.math.pow
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
-import java.time.LocalDate as JavaLocalDate
-import java.time.LocalDateTime as JavaLocalDateTime
-import java.time.LocalTime as JavaLocalTime
 
 /**
- * Assert that we have got the same data that was originally saved on example creation.
- * Example generation project is currently located at https://github.com/Kopilov/arrow_example
+ * Assert that we have got the same data that was originally saved on example creation. Example
+ * generation project is currently located at https://github.com/Kopilov/arrow_example
  */
 internal fun assertEstimations(
     exampleFrame: AnyFrame,
@@ -31,7 +31,8 @@ internal fun assertEstimations(
     fromParquet: Boolean = false,
 ) {
     /**
-     * In [exampleFrame] we get two concatenated batches. To assert the estimations, we should transform frame row number to batch row number
+     * In [exampleFrame] we get two concatenated batches. To assert the estimations, we should
+     * transform frame row number to batch row number
      */
     fun iBatch(iFrame: Int): Int {
         val firstBatchSize = 100
@@ -99,13 +100,21 @@ internal fun assertEstimations(
     val unsignedByteCol = exampleFrame["unsigned_byte"] as DataColumn<Short?>
     unsignedByteCol.type() shouldBe typeOf<Short>().withNullability(expectedNullable)
     unsignedByteCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, (iBatch(i) * 10 % (Byte.MIN_VALUE.toShort() * 2).absoluteValue).toShort())
+        assertValueOrNull(
+            iBatch(i),
+            element,
+            (iBatch(i) * 10 % (Byte.MIN_VALUE.toShort() * 2).absoluteValue).toShort(),
+        )
     }
 
     val unsignedShortCol = exampleFrame["unsigned_short"] as DataColumn<Int?>
     unsignedShortCol.type() shouldBe typeOf<Int>().withNullability(expectedNullable)
     unsignedShortCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, iBatch(i) * 1000 % (Short.MIN_VALUE.toInt() * 2).absoluteValue)
+        assertValueOrNull(
+            iBatch(i),
+            element,
+            iBatch(i) * 1000 % (Short.MIN_VALUE.toInt() * 2).absoluteValue,
+        )
     }
 
     val unsignedIntCol = exampleFrame["unsigned_int"] as DataColumn<Long?>
@@ -124,8 +133,9 @@ internal fun assertEstimations(
         assertValueOrNull(
             rowNumber = iBatch(i),
             actual = element,
-            expected = iBatch(i).toBigInteger() * 100000000000000000L.toBigInteger() %
-                (Long.MIN_VALUE.toBigInteger() * 2.toBigInteger()).abs(),
+            expected =
+                iBatch(i).toBigInteger() * 100000000000000000L.toBigInteger() %
+                    (Long.MIN_VALUE.toBigInteger() * 2.toBigInteger()).abs(),
         )
     }
 
@@ -144,15 +154,24 @@ internal fun assertEstimations(
     val dateCol = exampleFrame["date32"] as DataColumn<LocalDate?>
     dateCol.type() shouldBe typeOf<LocalDate>().withNullability(expectedNullable)
     dateCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, JavaLocalDate.ofEpochDay(iBatch(i).toLong() * 30).toKotlinLocalDate())
+        assertValueOrNull(
+            iBatch(i),
+            element,
+            JavaLocalDate.ofEpochDay(iBatch(i).toLong() * 30).toKotlinLocalDate(),
+        )
     }
 
     if (fromParquet) {
-        // parquet format have only one type of date: https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#date without time
+        // parquet format have only one type of date:
+        // https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#date without time
         val datetimeCol = exampleFrame["date64"] as DataColumn<LocalDate?>
         datetimeCol.type() shouldBe typeOf<LocalDate>().withNullability(expectedNullable)
         datetimeCol.forEachIndexed { i, element ->
-            assertValueOrNull(iBatch(i), element, JavaLocalDate.ofEpochDay(iBatch(i).toLong() * 30).toKotlinLocalDate())
+            assertValueOrNull(
+                iBatch(i),
+                element,
+                JavaLocalDate.ofEpochDay(iBatch(i).toLong() * 30).toKotlinLocalDate(),
+            )
         }
     } else {
         val datetimeCol = exampleFrame["date64"] as DataColumn<LocalDateTime?>
@@ -161,11 +180,13 @@ internal fun assertEstimations(
             assertValueOrNull(
                 rowNumber = iBatch(i),
                 actual = element,
-                expected = JavaLocalDateTime.ofEpochSecond(
-                    iBatch(i).toLong() * 60 * 60 * 24 * 30,
-                    0,
-                    ZoneOffset.UTC,
-                ).toKotlinLocalDateTime(),
+                expected =
+                    JavaLocalDateTime.ofEpochSecond(
+                            iBatch(i).toLong() * 60 * 60 * 24 * 30,
+                            0,
+                            ZoneOffset.UTC,
+                        )
+                        .toKotlinLocalDateTime(),
             )
         }
     }
@@ -173,7 +194,11 @@ internal fun assertEstimations(
     val timeSecCol = exampleFrame["time32_seconds"] as DataColumn<LocalTime?>
     timeSecCol.type() shouldBe typeOf<LocalTime>().withNullability(expectedNullable)
     timeSecCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, JavaLocalTime.ofSecondOfDay(iBatch(i).toLong()).toKotlinLocalTime())
+        assertValueOrNull(
+            iBatch(i),
+            element,
+            JavaLocalTime.ofSecondOfDay(iBatch(i).toLong()).toKotlinLocalTime(),
+        )
     }
 
     val timeMilliCol = exampleFrame["time32_milli"] as DataColumn<LocalTime?>
@@ -189,20 +214,26 @@ internal fun assertEstimations(
     val timeMicroCol = exampleFrame["time64_micro"] as DataColumn<LocalTime?>
     timeMicroCol.type() shouldBe typeOf<LocalTime>().withNullability(expectedNullable)
     timeMicroCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, JavaLocalTime.ofNanoOfDay(iBatch(i).toLong() * 1000).toKotlinLocalTime())
+        assertValueOrNull(
+            iBatch(i),
+            element,
+            JavaLocalTime.ofNanoOfDay(iBatch(i).toLong() * 1000).toKotlinLocalTime(),
+        )
     }
 
     val timeNanoCol = exampleFrame["time64_nano"] as DataColumn<LocalTime?>
     timeNanoCol.type() shouldBe typeOf<LocalTime>().withNullability(expectedNullable)
     timeNanoCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, JavaLocalTime.ofNanoOfDay(iBatch(i).toLong()).toKotlinLocalTime())
+        assertValueOrNull(
+            iBatch(i),
+            element,
+            JavaLocalTime.ofNanoOfDay(iBatch(i).toLong()).toKotlinLocalTime(),
+        )
     }
 
     exampleFrame.getColumnOrNull("nulls")?.let { nullCol ->
         nullCol.type() shouldBe nothingType(hasNulls)
         assert(hasNulls)
-        nullCol.values().forEach {
-            assert(it == null)
-        }
+        nullCol.values().forEach { assert(it == null) }
     }
 }

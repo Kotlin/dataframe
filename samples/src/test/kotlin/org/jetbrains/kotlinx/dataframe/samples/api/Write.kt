@@ -3,6 +3,8 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.string.shouldStartWith
+import java.io.File
+import kotlin.io.path.deleteExisting
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.WorkbookFactory
@@ -21,8 +23,6 @@ import org.jetbrains.kotlinx.dataframe.io.writeExcel
 import org.jetbrains.kotlinx.dataframe.io.writeJson
 import org.jetbrains.kotlinx.dataframe.io.writeMismatchMessage
 import org.junit.Test
-import java.io.File
-import kotlin.io.path.deleteExisting
 
 class Write : TestBase {
 
@@ -51,10 +51,14 @@ class Write : TestBase {
         // SampleStart
         val csvStr = df.toCsvStr(delimiter = ';', recordSeparator = System.lineSeparator())
         // SampleEnd
-        csvStr shouldStartWith """
+        csvStr shouldStartWith
+            """
             name;age;city;weight;isHappy
             "{""firstName"":""Alice"",""lastName"":""Cooper""}";15;London;54;true
-        """.trimIndent().lines().joinToString(System.lineSeparator())
+            """
+                .trimIndent()
+                .lines()
+                .joinToString(System.lineSeparator())
     }
 
     @Test
@@ -62,7 +66,8 @@ class Write : TestBase {
         // SampleStart
         val jsonStr = df.toJson(prettyPrint = true)
         // SampleEnd
-        jsonStr shouldStartWith """
+        jsonStr shouldStartWith
+            """
             [
                 {
                     "name": {
@@ -73,7 +78,8 @@ class Write : TestBase {
                     "city": "London",
                     "weight": 54,
                     "isHappy": true
-        """.trimIndent()
+            """
+                .trimIndent()
     }
 
     @Test
@@ -90,7 +96,8 @@ class Write : TestBase {
         useTempFile { file ->
             // SampleStart
             /**
-             * Do something with generated sheets. Here we set bold style for headers and italic style for first data column
+             * Do something with generated sheets. Here we set bold style for headers and italic
+             * style for first data column
              */
             fun setStyles(sheet: Sheet) {
                 val headerFont = sheet.workbook.createFont()
@@ -120,9 +127,13 @@ class Write : TestBase {
             // Create different sheets from different dataframes in the workbook
             val allPersonsSheet = df.writeExcel(wb, sheetName = "allPersons")
             val happyPersonsSheet =
-                df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")
+                df.filter { person -> person.isHappy }
+                    .remove("isHappy")
+                    .writeExcel(wb, sheetName = "happyPersons")
             val unhappyPersonsSheet =
-                df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "unhappyPersons")
+                df.filter { person -> !person.isHappy }
+                    .remove("isHappy")
+                    .writeExcel(wb, sheetName = "unhappyPersons")
 
             // Do anything you want by POI
             listOf(happyPersonsSheet, unhappyPersonsSheet).forEach { setStyles(it) }
@@ -195,31 +206,34 @@ class Write : TestBase {
                 """
 
             // SampleStart
-            // Get schema from anywhere you want. It can be deserialized from JSON, generated from another dataset
-            // (including the DataFrame.columns().toArrowSchema() method), created manually, and so on.
+            // Get schema from anywhere you want. It can be deserialized from JSON, generated from
+            // another dataset
+            // (including the DataFrame.columns().toArrowSchema() method), created manually, and so
+            // on.
             val schema = Schema.fromJSON(schemaJson)
 
             df.arrowWriter(
 
-                // Specify your schema
-                targetSchema = schema,
+                    // Specify your schema
+                    targetSchema = schema,
 
-                // Specify desired behavior mode
-                mode = ArrowWriter.Mode(
-                    restrictWidening = true,
-                    restrictNarrowing = true,
-                    strictType = true,
-                    strictNullable = false,
-                ),
+                    // Specify desired behavior mode
+                    mode =
+                        ArrowWriter.Mode(
+                            restrictWidening = true,
+                            restrictNarrowing = true,
+                            strictType = true,
+                            strictNullable = false,
+                        ),
 
-                // Specify mismatch subscriber
-                mismatchSubscriber = writeMismatchMessage,
+                    // Specify mismatch subscriber
+                    mismatchSubscriber = writeMismatchMessage,
+                )
+                .use { writer: ArrowWriter ->
 
-                ).use { writer: ArrowWriter ->
-
-                // Save to any format and sink, like in the previous example
-                writer.writeArrowFeather(file)
-            }
+                    // Save to any format and sink, like in the previous example
+                    writer.writeArrowFeather(file)
+                }
             // SampleEnd
         }
     }
@@ -228,13 +242,18 @@ class Write : TestBase {
     fun writeXlsWithMultipleSheets() {
         useTempFile { file ->
             // SampleStart
-            // Create a new Excel workbook with a single sheet called "allPersons", replacing the file if it already exists -> Current sheets: allPersons
+            // Create a new Excel workbook with a single sheet called "allPersons", replacing the
+            // file if it already exists -> Current sheets: allPersons
             df.writeExcel(file, sheetName = "allPersons")
-            // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons
-            df.filter { person -> person.isHappy }.remove("isHappy")
+            // Add a new sheet to the previous file without replacing it, by setting keepFile = true
+            // -> Current sheets: allPersons, happyPersons
+            df.filter { person -> person.isHappy }
+                .remove("isHappy")
                 .writeExcel(file, sheetName = "happyPersons", keepFile = true)
-            // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons, unhappyPersons
-            df.filter { person -> !person.isHappy }.remove("isHappy")
+            // Add a new sheet to the previous file without replacing it, by setting keepFile = true
+            // -> Current sheets: allPersons, happyPersons, unhappyPersons
+            df.filter { person -> !person.isHappy }
+                .remove("isHappy")
                 .writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
             // SampleEnd
         }

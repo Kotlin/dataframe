@@ -1,9 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    with(convention.plugins) {
-        alias(kotlinJvm8)
-    }
+    with(convention.plugins) { alias(kotlinJvm8) }
     with(libs.plugins) {
         alias(publisher)
         alias(serialization)
@@ -32,23 +30,13 @@ dependencies {
     testImplementation(libs.sl4jsimple)
 }
 
-tasks.withType<KotlinCompile> {
-    friendPaths.from(project(projects.core.path).projectDir)
-}
+tasks.withType<KotlinCompile> { friendPaths.from(project(projects.core.path).projectDir) }
 
-tasks.withType<Javadoc> {
-    enabled = false
-}
+tasks.withType<Javadoc> { enabled = false }
 
-tasks.test {
-    useJUnitPlatform()
-}
+tasks.test { useJUnitPlatform() }
 
-sourceSets {
-    main {
-        java.srcDirs("src/main/kotlin")
-    }
-}
+sourceSets { main { java.srcDirs("src/main/kotlin") } }
 
 kotlinPublications {
     publication {

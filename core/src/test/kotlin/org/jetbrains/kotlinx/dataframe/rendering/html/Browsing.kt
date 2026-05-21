@@ -15,20 +15,27 @@ class Browsing {
 
         data class Student(val name: Name, val age: Int, val scores: List<Score>)
 
-        val students = listOf(
-            Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
-            Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
-            Student(Name("Null", null), 100, listOf(Score("nothing", 5))),
-            Student(Name("Antony", "Hover"), 20, listOf(Score("russian", 1))),
-            Student(Name("Sally", "Fever"), 20, listOf(Score("art", 4), Score("math", 4), Score("biology", 3))),
-        )
+        val students =
+            listOf(
+                Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
+                Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
+                Student(Name("Null", null), 100, listOf(Score("nothing", 5))),
+                Student(Name("Antony", "Hover"), 20, listOf(Score("russian", 1))),
+                Student(
+                    Name("Sally", "Fever"),
+                    20,
+                    listOf(Score("art", 4), Score("math", 4), Score("biology", 3)),
+                ),
+            )
 
         val df = students.toDataFrame {
             "year of birth" from { 2021 - it.age }
 
             properties(maxDepth = 1) {
-//                exclude(Score::subject) // `subject` property will be skipped from object graph traversal
-//                preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
+                //                exclude(Score::subject) // `subject` property will be skipped from
+                // object graph traversal
+                //                preserve<Name>() // `Name` objects will be stored as-is without
+                // transformation into DataFrame
             }
 
             "summary" {

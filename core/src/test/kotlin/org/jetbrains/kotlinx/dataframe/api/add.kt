@@ -2,10 +2,10 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class AddTests {
 
@@ -22,9 +22,7 @@ class AddTests {
     fun `throw for newValue at the next row`() {
         val x by columnOf(7, 2, 0, 3, 4, 2, 5, 0, 3, 4)
         val df = dataFrameOf(x)
-        shouldThrow<IndexOutOfBoundsException> {
-            df.add("y") { next()?.newValue() ?: 1 }
-        }
+        shouldThrow<IndexOutOfBoundsException> { df.add("y") { next()?.newValue() ?: 1 } }
     }
 
     private fun <T> AnyFrame.addValue(value: T) = add("value") { listOf(value) }
@@ -37,23 +35,28 @@ class AddTests {
 
     @Test
     fun `fibonacci simple add`() {
-        val df = DataFrame.empty(10).add("fibonacci") {
-            if (index() < 2) 1 else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
-        }
+        val df =
+            DataFrame.empty(10).add("fibonacci") {
+                if (index() < 2) 1 else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+            }
 
         df["fibonacci"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
     }
 
     @Test
     fun `fibonacci add dsl`() {
-        val df = DataFrame.empty(10).add {
-            "fibonacci1" from {
-                if (index() < 2) 1 else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+        val df =
+            DataFrame.empty(10).add {
+                "fibonacci1" from
+                    {
+                        if (index() < 2) 1
+                        else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+                    }
+                expr {
+                    if (index() < 2) 1
+                    else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+                } into "fibonacci2"
             }
-            expr {
-                if (index() < 2) 1 else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
-            } into "fibonacci2"
-        }
 
         df["fibonacci1"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
         df["fibonacci2"].toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13, 21, 34, 55)

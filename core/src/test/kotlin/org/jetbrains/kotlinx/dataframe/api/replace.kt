@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import org.junit.Test
 import kotlin.reflect.typeOf
+import org.junit.Test
 
 class ReplaceTests {
 

@@ -22,9 +22,7 @@ import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.io.geojson.GeoJsonReader
 
-/**
- * Experimental geo coding utility.
- */
+/** Experimental geo coding utility. */
 @Experimental
 public object Geocoder {
 
@@ -43,7 +41,8 @@ public object Geocoder {
           "ambiguity_resolver_closest_coord" : null
         }
         }
-        """.trimIndent()
+        """
+            .trimIndent()
 
     private fun geocodeQuery(countries: List<String>) =
         """
@@ -62,7 +61,8 @@ public object Geocoder {
   "namesake_example_limit" : 10,
   "allow_ambiguous" : false
 }
-        """.trimIndent()
+        """
+            .trimIndent()
 
     private fun idsQuery(ids: List<String>) =
         """
@@ -73,59 +73,74 @@ public object Geocoder {
         "view_box": null, 
         "fetched_ids": null, 
         "ids": [${ids.joinToString(", ") { "\"" + it + "\"" }}]}
-        """.trimIndent()
+        """
+            .trimIndent()
 
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    prettyPrint = true
-                    isLenient = true
-                },
-            )
+    private val client =
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        prettyPrint = true
+                        isLenient = true
+                    }
+                )
+            }
         }
-    }
 
     public fun geocodeCountries(countries: List<String>): GeoDataFrame<*> {
         val query = geocodeQuery(countries)
         val foundNames = mutableListOf<String>()
         val geometries = mutableListOf<Geometry>()
         runBlocking {
-            val responseString = client.post(url) {
-                contentType(ContentType.Application.Json)
-                // headers[HttpHeaders.AcceptEncoding] = "gzip"
-                setBody(query)
-            }.bodyAsText()
+            val responseString =
+                client
+                    .post(url) {
+                        contentType(ContentType.Application.Json)
+                        // headers[HttpHeaders.AcceptEncoding] = "gzip"
+                        setBody(query)
+                    }
+                    .bodyAsText()
             val ids = mutableListOf<String>()
 
-            Json.parseToJsonElement(responseString).jsonObject["data"]!!.jsonObject["answers"]!!.jsonArray.forEach {
-                it.jsonObject["features"]!!.jsonArray.single().jsonObject.also {
-                    foundNames.add(it["name"]!!.jsonPrimitive.content)
-                    ids.add(it["id"]!!.jsonPrimitive.content)
+            Json.parseToJsonElement(responseString)
+                .jsonObject["data"]!!
+                .jsonObject["answers"]!!
+                .jsonArray
+                .forEach {
+                    it.jsonObject["features"]!!.jsonArray.single().jsonObject.also {
+                        foundNames.add(it["name"]!!.jsonPrimitive.content)
+                        ids.add(it["id"]!!.jsonPrimitive.content)
+                    }
                 }
-            }
             val idsQuery = idsQuery(ids)
 
-            val responseStringGeometries = client.post(url) {
-                contentType(ContentType.Application.Json)
-                // headers[HttpHeaders.AcceptEncoding] = "gzip"
-                setBody(idsQuery)
-            }.bodyAsText()
+            val responseStringGeometries =
+                client
+                    .post(url) {
+                        contentType(ContentType.Application.Json)
+                        // headers[HttpHeaders.AcceptEncoding] = "gzip"
+                        setBody(idsQuery)
+                    }
+                    .bodyAsText()
 
             val geoJsonReader = GeoJsonReader(GeometryFactory())
-            Json.parseToJsonElement(
-                responseStringGeometries,
-            ).jsonObject["data"]!!.jsonObject["answers"]!!.jsonArray.forEach {
-                it.jsonObject["features"]!!.jsonArray.single().jsonObject.also {
-                    val boundary = it["boundary"]!!.jsonPrimitive.content
-                    geometries.add(geoJsonReader.read(boundary))
+            Json.parseToJsonElement(responseStringGeometries)
+                .jsonObject["data"]!!
+                .jsonObject["answers"]!!
+                .jsonArray
+                .forEach {
+                    it.jsonObject["features"]!!.jsonArray.single().jsonObject.also {
+                        val boundary = it["boundary"]!!.jsonPrimitive.content
+                        geometries.add(geoJsonReader.read(boundary))
+                    }
                 }
-            }
         }
         return dataFrameOf(
-            "country" to countries,
-            "foundName" to foundNames,
-            "geometry" to geometries,
-        ).toGeo()
+                "country" to countries,
+                "foundName" to foundNames,
+                "geometry" to geometries,
+            )
+            .toGeo()
     }
 }

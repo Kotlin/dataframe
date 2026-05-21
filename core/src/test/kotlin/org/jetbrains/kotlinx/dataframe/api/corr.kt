@@ -8,10 +8,7 @@ import org.junit.Test
 @Suppress("ktlint:standard:argument-list-wrapping")
 class CorrTests {
 
-    val df = dataFrameOf("a", "b", "c")(
-        3, true, 1,
-        6, false, 2,
-    )
+    val df = dataFrameOf("a", "b", "c")(3, true, 1, 6, false, 2)
 
     @Test
     fun `corr with boolean`() {
@@ -26,11 +23,7 @@ class CorrTests {
 
     @Test
     fun `corr group`() {
-        val corr = df
-            .group("a", "b")
-            .into("g")
-            .corr("g")
-            .with("c")
+        val corr = df.group("a", "b").into("g").corr("g").with("c")
 
         corr shouldBe df.corr("a", "b").with("c").rename("column" to "g")
     }
@@ -38,11 +31,21 @@ class CorrTests {
     @Test
     fun `corr itself`() {
         val corr = df.corr()
-        val expected = dataFrameOf("column", "a", "b", "c")(
-            "a", 1.0, -1.0, 1.0,
-            "b", -1.0, 1.0, -1.0,
-            "c", 1.0, -1.0, 1.0,
-        )
+        val expected =
+            dataFrameOf("column", "a", "b", "c")(
+                "a",
+                1.0,
+                -1.0,
+                1.0,
+                "b",
+                -1.0,
+                1.0,
+                -1.0,
+                "c",
+                1.0,
+                -1.0,
+                1.0,
+            )
         corr.columns().zip(expected.columns()).forEach { (a, b) ->
             a.type() shouldBe b.type()
             if (a.isNumber()) {

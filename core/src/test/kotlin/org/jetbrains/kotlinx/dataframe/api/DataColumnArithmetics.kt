@@ -3,8 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.Test
 import java.math.BigDecimal
+import org.junit.Test
 
 class DataColumnArithmeticsTests {
 
@@ -452,11 +452,8 @@ class DataColumnArithmeticsTests {
     fun `DataColumn of Int div zero`() {
         val age = columnOf(2, 4, 6)
         shouldThrow<ArithmeticException> { age / 0 }
-        age / 0.0 shouldBe columnOf(
-            Double.POSITIVE_INFINITY,
-            Double.POSITIVE_INFINITY,
-            Double.POSITIVE_INFINITY,
-        )
+        age / 0.0 shouldBe
+            columnOf(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
     }
 
     @Test
@@ -474,16 +471,10 @@ class DataColumnArithmeticsTests {
     @Test
     fun `DataColumn of Double div zero`() {
         val age = columnOf(2.0, 4.0, 6.0)
-        age / 0 shouldBe columnOf(
-            Double.POSITIVE_INFINITY,
-            Double.POSITIVE_INFINITY,
-            Double.POSITIVE_INFINITY,
-        )
-        age / 0.0 shouldBe columnOf(
-            Double.POSITIVE_INFINITY,
-            Double.POSITIVE_INFINITY,
-            Double.POSITIVE_INFINITY,
-        )
+        age / 0 shouldBe
+            columnOf(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
+        age / 0.0 shouldBe
+            columnOf(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
     }
 
     @Test

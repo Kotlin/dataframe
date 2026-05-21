@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import java.io.File
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.take
@@ -8,10 +9,11 @@ import org.jetbrains.kotlinx.dataframe.explainer.WritersideStyle
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
 import org.junit.Test
-import java.io.File
 
-// To display code together with a table, we can use TransformDataFrameExpressions annotation together with korro
-// This class provides an ability to save only a table that can be embedded anywhere in the documentation
+// To display code together with a table, we can use TransformDataFrameExpressions annotation
+// together with korro
+// This class provides an ability to save only a table that can be embedded anywhere in the
+// documentation
 
 @Deprecated("This can now be reproduced with 'sample dataframes' in the 'tests' module.")
 class OtherSamples : TestBase() {

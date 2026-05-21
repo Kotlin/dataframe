@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -15,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class ConstructorsTests {
 
@@ -49,9 +49,7 @@ class ConstructorsTests {
     @Test
     fun `untitled column naming`() {
         val builder = DynamicDataFrameBuilder()
-        repeat(5) {
-            builder.add(columnOf(1, 2, 3))
-        }
+        repeat(5) { builder.add(columnOf(1, 2, 3)) }
         builder.toDataFrame() shouldBe dataFrameOf(List(5) { columnOf(1, 2, 3) })
     }
 
@@ -104,10 +102,11 @@ class ConstructorsTests {
     @Test
     fun `guess column group from rows`() {
         val row = dataFrameOf("a", "b")(1, 2).single()
-        val col = createColumnGuessingType(
-            values = listOf(row, DataRow.empty),
-            suggestedType = InferWithUpperbound(typeOf<AnyRow>()),
-        )
+        val col =
+            createColumnGuessingType(
+                values = listOf(row, DataRow.empty),
+                suggestedType = InferWithUpperbound(typeOf<AnyRow>()),
+            )
         col shouldBe columnOf(row, DataRow.empty)
 
         col.hasNulls() shouldBe false
@@ -121,10 +120,11 @@ class ConstructorsTests {
     @Test
     fun `guess column group from rows with null`() {
         val row = dataFrameOf("a", "b")(1, 2).single()
-        val col = createColumnGuessingType(
-            values = listOf(row, DataRow.empty, null),
-            suggestedType = InferWithUpperbound(typeOf<AnyRow?>()),
-        )
+        val col =
+            createColumnGuessingType(
+                values = listOf(row, DataRow.empty, null),
+                suggestedType = InferWithUpperbound(typeOf<AnyRow?>()),
+            )
         col shouldBe columnOf(row, DataRow.empty, null)
 
         col.hasNulls() shouldBe false
@@ -141,11 +141,12 @@ class ConstructorsTests {
     fun `guess column group from columns`() {
         val col1 = columnOf(1, 2)
         val col2 = columnOf("a", "b")
-        val col = createColumnGuessingType(
-            values = listOf(col1, col2),
-            suggestedType = InferWithUpperbound(typeOf<AnyCol>()),
-            allColsMakesColGroup = true,
-        )
+        val col =
+            createColumnGuessingType(
+                values = listOf(col1, col2),
+                suggestedType = InferWithUpperbound(typeOf<AnyCol>()),
+                allColsMakesColGroup = true,
+            )
         col shouldBe columnOf(col1, col2)
 
         col as ColumnGroup<*>
@@ -161,14 +162,16 @@ class ConstructorsTests {
     fun `guess value column from columns and null`() {
         val col1 = columnOf(1, 2)
         val col2 = columnOf("a", "b")
-        val col = createColumnGuessingType(
-            values = listOf(col1, col2, null),
-            suggestedType = InferWithUpperbound(typeOf<AnyCol?>()),
-        )
+        val col =
+            createColumnGuessingType(
+                values = listOf(col1, col2, null),
+                suggestedType = InferWithUpperbound(typeOf<AnyCol?>()),
+            )
         col.values shouldBe columnOf(col1, col2, null).values
 
         col.hasNulls() shouldBe true
-        col.type() shouldBe typeOf<DataColumn<*>?>() // becomes a column with value columns and nulls
+        col.type() shouldBe
+            typeOf<DataColumn<*>?>() // becomes a column with value columns and nulls
         col.kind() shouldBe ColumnKind.Value
         col[0] shouldBe col1
         col[1] shouldBe col2
@@ -179,14 +182,16 @@ class ConstructorsTests {
     fun `guess frame column from dataframes and null`() {
         val df1 = dataFrameOf("a", "b")(1, 2)
         val df2 = dataFrameOf("a", "b")(3, 4)
-        val col = createColumnGuessingType(
-            values = listOf(df1, df2, null),
-            suggestedType = InferWithUpperbound(typeOf<AnyCol?>()),
-        )
+        val col =
+            createColumnGuessingType(
+                values = listOf(df1, df2, null),
+                suggestedType = InferWithUpperbound(typeOf<AnyCol?>()),
+            )
         col.values shouldBe columnOf(df1, df2, null).values
 
         col.hasNulls() shouldBe false
-        col.type() shouldBe typeOf<AnyFrame>() // becomes frame column, making nulls empty dataframes
+        col.type() shouldBe
+            typeOf<AnyFrame>() // becomes frame column, making nulls empty dataframes
         col.kind() shouldBe ColumnKind.Frame
         col[0] shouldBe df1
         col[1] shouldBe df2
@@ -195,10 +200,11 @@ class ConstructorsTests {
 
     @Test
     fun `guess value column from nulls`() {
-        val col = createColumnGuessingType(
-            values = listOf(null, null),
-            suggestedType = InferWithUpperbound(nothingType(true)),
-        )
+        val col =
+            createColumnGuessingType(
+                values = listOf(null, null),
+                suggestedType = InferWithUpperbound(nothingType(true)),
+            )
         col.values shouldBe columnOf<Any?>(null, null).values
 
         col.hasNulls() shouldBe true
@@ -214,27 +220,24 @@ class ConstructorsTests {
 
     @Test
     fun `dataFrameOf withColumns`() {
-        val df = dataFrameOf("value", "value2", "frameCol").withColumns {
-            when (it) {
-                "value" -> columnOf(1, 2, 3, null)
+        val df =
+            dataFrameOf("value", "value2", "frameCol").withColumns {
+                when (it) {
+                    "value" -> columnOf(1, 2, 3, null)
 
-                "value2" -> columnOf(
-                    columnOf(1, 2),
-                    columnOf(3, 4),
-                    columnOf(5, null),
-                    null,
-                )
+                    "value2" -> columnOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
 
-                "frameCol" -> columnOf(
-                    dataFrameOf("a", "b")(1, 2),
-                    dataFrameOf("a", "b")(3, 4),
-                    dataFrameOf("a", "b")(5, null),
-                    null,
-                )
+                    "frameCol" ->
+                        columnOf(
+                            dataFrameOf("a", "b")(1, 2),
+                            dataFrameOf("a", "b")(3, 4),
+                            dataFrameOf("a", "b")(5, null),
+                            null,
+                        )
 
-                else -> error("Unexpected column name: $it")
+                    else -> error("Unexpected column name: $it")
+                }
             }
-        }
 
         df["value"].type shouldBe typeOf<Int?>()
         df["value"].kind() shouldBe ColumnKind.Value
@@ -249,79 +252,84 @@ class ConstructorsTests {
 
     @Test
     fun `dataFrameOf invoke`() {
-        val df1 = dataFrameOf("value", "value2", "frameCol") {
-            when (it) {
-                "value" -> listOf(1, 2, 3, null)
+        val df1 =
+            dataFrameOf("value", "value2", "frameCol") {
+                when (it) {
+                    "value" -> listOf(1, 2, 3, null)
 
-                "value2" -> listOf(
-                    columnOf(1, 2),
-                    columnOf(3, 4),
-                    columnOf(5, null),
-                    null,
-                )
+                    "value2" -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
 
-                "frameCol" -> listOf(
-                    dataFrameOf("a", "b")(1, 2),
-                    dataFrameOf("a", "b")(3, 4),
-                    dataFrameOf("a", "b")(5, null),
-                    null,
-                )
+                    "frameCol" ->
+                        listOf(
+                            dataFrameOf("a", "b")(1, 2),
+                            dataFrameOf("a", "b")(3, 4),
+                            dataFrameOf("a", "b")(5, null),
+                            null,
+                        )
 
-                else -> error("Unexpected column name: $it")
+                    else -> error("Unexpected column name: $it")
+                }
             }
-        }
 
-        val df2 = dataFrameOf("value", "value2", "frameCol").invoke {
-            when (it) {
-                "value" -> listOf(1, 2, 3, null)
+        val df2 =
+            dataFrameOf("value", "value2", "frameCol").invoke {
+                when (it) {
+                    "value" -> listOf(1, 2, 3, null)
 
-                "value2" -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
+                    "value2" -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
 
-                "frameCol" -> listOf(
-                    dataFrameOf("a", "b")(1, 2),
-                    dataFrameOf("a", "b")(3, 4),
-                    dataFrameOf("a", "b")(5, null),
-                    null,
-                )
+                    "frameCol" ->
+                        listOf(
+                            dataFrameOf("a", "b")(1, 2),
+                            dataFrameOf("a", "b")(3, 4),
+                            dataFrameOf("a", "b")(5, null),
+                            null,
+                        )
 
-                else -> error("Unexpected column name: $it")
+                    else -> error("Unexpected column name: $it")
+                }
             }
-        }
 
         val names = listOf("value", "value2", "frameCol")
-        val df3 = dataFrameOf(listOf(1, 2, 3)) {
-            when (it) {
-                1 -> listOf(1, 2, 3, null)
+        val df3 =
+            dataFrameOf(listOf(1, 2, 3)) {
+                    when (it) {
+                        1 -> listOf(1, 2, 3, null)
 
-                2 -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
+                        2 -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
 
-                3 -> listOf(
-                    dataFrameOf("a", "b")(1, 2),
-                    dataFrameOf("a", "b")(3, 4),
-                    dataFrameOf("a", "b")(5, null),
-                    null,
-                )
+                        3 ->
+                            listOf(
+                                dataFrameOf("a", "b")(1, 2),
+                                dataFrameOf("a", "b")(3, 4),
+                                dataFrameOf("a", "b")(5, null),
+                                null,
+                            )
 
-                else -> error("Unexpected column name: $it")
+                        else -> error("Unexpected column name: $it")
+                    }
+                }
+                .rename { all() }
+                .to { names[it.name.toInt() - 1] }
+
+        val df4 =
+            dataFrameOf(names).invoke {
+                when (it) {
+                    "value" -> listOf(1, 2, 3, null)
+
+                    "value2" -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
+
+                    "frameCol" ->
+                        listOf(
+                            dataFrameOf("a", "b")(1, 2),
+                            dataFrameOf("a", "b")(3, 4),
+                            dataFrameOf("a", "b")(5, null),
+                            null,
+                        )
+
+                    else -> error("Unexpected column name: $it")
+                }
             }
-        }.rename { all() }.to { names[it.name.toInt() - 1] }
-
-        val df4 = dataFrameOf(names).invoke {
-            when (it) {
-                "value" -> listOf(1, 2, 3, null)
-
-                "value2" -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
-
-                "frameCol" -> listOf(
-                    dataFrameOf("a", "b")(1, 2),
-                    dataFrameOf("a", "b")(3, 4),
-                    dataFrameOf("a", "b")(5, null),
-                    null,
-                )
-
-                else -> error("Unexpected column name: $it")
-            }
-        }
 
         df1 shouldBe df2
         df2 shouldBe df3
@@ -367,13 +375,14 @@ class ConstructorsTests {
 
         val a = listOf(1, 2)
         val b = listOf(dataFrameOf("a", "b")(1, 2), null)
-        val df5 = dataFrameOf("a", "b").fillIndexed(2) { it, colName ->
-            when (colName) {
-                "a" -> a[it]
-                "b" -> b[it]
-                else -> error("Unexpected column name: $colName")
+        val df5 =
+            dataFrameOf("a", "b").fillIndexed(2) { it, colName ->
+                when (colName) {
+                    "a" -> a[it]
+                    "b" -> b[it]
+                    else -> error("Unexpected column name: $colName")
+                }
             }
-        }
         df5["a"].values shouldBe a
         df5["a"].kind() shouldBe ColumnKind.Value
         df5["b"].values shouldBe listOf(b[0], DataFrame.empty())
@@ -388,10 +397,8 @@ class ConstructorsTests {
         // issue #928
         data class Car(val type: String, val model: String)
 
-        val cars: DataFrame<*> = dataFrameOf("owner", "car")(
-            "Max", Car("audi", "a8"),
-            "Tom", Car("toyota", "corolla"),
-        )
+        val cars: DataFrame<*> =
+            dataFrameOf("owner", "car")("Max", Car("audi", "a8"), "Tom", Car("toyota", "corolla"))
 
         cars["car"].type shouldBe typeOf<Car>()
 
@@ -399,10 +406,7 @@ class ConstructorsTests {
         unfolded["car"]["type"].type shouldBe typeOf<String>()
         unfolded["car"]["model"].type shouldBe typeOf<String>()
 
-        val cars2 = listOf(
-            Car("audi", "a8"),
-            Car("toyota", "corolla"),
-        ).toDataFrame()
+        val cars2 = listOf(Car("audi", "a8"), Car("toyota", "corolla")).toDataFrame()
 
         cars2["type"].type shouldBe typeOf<String>()
         cars2["model"].type shouldBe typeOf<String>()

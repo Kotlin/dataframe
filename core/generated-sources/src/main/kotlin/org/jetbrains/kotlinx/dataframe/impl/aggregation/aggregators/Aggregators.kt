@@ -36,39 +36,48 @@ public object Aggregators {
         indexOfResult: IndexOfResult<Value>,
         stepOneSelector: Selector<Value, Return>,
         statisticsParameters: Map<String, Any>,
-    ) = Aggregator(
-        aggregationHandler = SelectingAggregationHandler(stepOneSelector, indexOfResult, getReturnType),
-        inputHandler = AnyInputHandler(),
-        multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
-        statisticsParameters = statisticsParameters,
-    )
+    ) =
+        Aggregator(
+            aggregationHandler =
+                SelectingAggregationHandler(stepOneSelector, indexOfResult, getReturnType),
+            inputHandler = AnyInputHandler(),
+            multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
+            statisticsParameters = statisticsParameters,
+        )
 
     private fun <Value : Any, Return : Any?> flattenHybridForAny(
         getReturnType: CalculateReturnType,
         indexOfResult: IndexOfResult<Value>,
         reducer: Reducer<Value, Return>,
         statisticsParameters: Map<String, Any>,
-    ) = Aggregator(
-        aggregationHandler = HybridAggregationHandler(reducer, indexOfResult, getReturnType),
-        inputHandler = AnyInputHandler(),
-        multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
-        statisticsParameters = statisticsParameters,
-    )
+    ) =
+        Aggregator(
+            aggregationHandler = HybridAggregationHandler(reducer, indexOfResult, getReturnType),
+            inputHandler = AnyInputHandler(),
+            multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
+            statisticsParameters = statisticsParameters,
+        )
 
     private fun <Value : Any, Return : Any?> twoStepReducingForAny(
         getReturnType: CalculateReturnType,
         stepOneReducer: Reducer<Value, Return>,
         stepTwoReducer: Reducer<Return, Return>? = null,
-    ) = Aggregator(
-        aggregationHandler = ReducingAggregationHandler(stepOneReducer, getReturnType),
-        inputHandler = AnyInputHandler(),
-        multipleColumnsHandler = TwoStepMultipleColumnsHandler(
-            stepTwoAggregationHandler = stepTwoReducer?.let {
-                ReducingAggregationHandler<Return & Any, Return>(stepTwoReducer, getReturnType)
-            },
-        ),
-        statisticsParameters = emptyMap(),
-    )
+    ) =
+        Aggregator(
+            aggregationHandler = ReducingAggregationHandler(stepOneReducer, getReturnType),
+            inputHandler = AnyInputHandler(),
+            multipleColumnsHandler =
+                TwoStepMultipleColumnsHandler(
+                    stepTwoAggregationHandler =
+                        stepTwoReducer?.let {
+                            ReducingAggregationHandler<Return & Any, Return>(
+                                stepTwoReducer,
+                                getReturnType,
+                            )
+                        }
+                ),
+            statisticsParameters = emptyMap(),
+        )
 
     private fun <Type : Any> flattenReducingForAny(reducer: Reducer<Type, Type?>) =
         Aggregator(
@@ -81,189 +90,185 @@ public object Aggregators {
     private fun <Value : Any, Return : Any?> flattenReducingForAny(
         getReturnType: CalculateReturnType,
         reducer: Reducer<Value, Return>,
-    ) = Aggregator(
-        aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
-        inputHandler = AnyInputHandler(),
-        multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
-        statisticsParameters = emptyMap(),
-    )
+    ) =
+        Aggregator(
+            aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
+            inputHandler = AnyInputHandler(),
+            multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
+            statisticsParameters = emptyMap(),
+        )
 
     private fun <Return : Number?> flattenReducingForNumbers(
         getReturnType: CalculateReturnType,
         statisticsParameters: Map<String, Any>,
         reducer: Reducer<Number, Return>,
-    ) = Aggregator(
-        aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
-        inputHandler = NumberInputHandler(),
-        multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
-        statisticsParameters = statisticsParameters,
-    )
+    ) =
+        Aggregator(
+            aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
+            inputHandler = NumberInputHandler(),
+            multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
+            statisticsParameters = statisticsParameters,
+        )
 
     private fun <Return : Number?> twoStepReducingForNumbers(
         getReturnType: CalculateReturnType,
         statisticsParameters: Map<String, Any>,
         reducer: Reducer<Number, Return>,
-    ) = Aggregator(
-        aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
-        inputHandler = NumberInputHandler(),
-        multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
-        statisticsParameters = statisticsParameters,
-    )
+    ) =
+        Aggregator(
+            aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
+            inputHandler = NumberInputHandler(),
+            multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
+            statisticsParameters = statisticsParameters,
+        )
 
-    /** Wrapper around an [aggregator factory][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorProvider] for aggregators that require a single parameter.
+    /**
+     * Wrapper around an
+     * [aggregator factory][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorProvider]
+     * for aggregators that require a single parameter.
      *
      * Aggregators are cached by their parameter value.
-     * @see AggregatorOptionSwitch2 */
+     *
+     * @see AggregatorOptionSwitch2
+     */
     private fun <Param1, Value : Any, Return : Any?> withOneOption(
-        getAggregator: (Param1) -> AggregatorProvider<Value, Return>,
+        getAggregator: (Param1) -> AggregatorProvider<Value, Return>
     ) = AggregatorOptionSwitch1.Factory(getAggregator)
 
-    /** Wrapper around an [aggregator factory][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorProvider] for aggregators that require two parameters.
+    /**
+     * Wrapper around an
+     * [aggregator factory][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorProvider]
+     * for aggregators that require two parameters.
      *
      * Aggregators are cached by their parameter values.
-     * @see AggregatorOptionSwitch1 */
+     *
+     * @see AggregatorOptionSwitch1
+     */
     private fun <Param1, Param2, Value : Any, Return : Any?> withTwoOptions(
-        getAggregator: (Param1, Param2) -> AggregatorProvider<Value, Return>,
+        getAggregator: (Param1, Param2) -> AggregatorProvider<Value, Return>
     ) = AggregatorOptionSwitch2.Factory(getAggregator)
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    public fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
+    public fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> =
+        min.invoke(skipNaN).cast2()
 
-    public val min: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
-        by withOneOption { skipNaN: Boolean ->
-            twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
-                getReturnType = minTypeConversion,
-                indexOfResult = { type -> indexOfMin(type, skipNaN) },
-                stepOneSelector = { type -> minOrNull(type, skipNaN) },
-                statisticsParameters = mapOf("skipNaN" to skipNaN),
-            )
-        }
+    public val min:
+        AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?> by withOneOption {
+        skipNaN: Boolean ->
+        twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
+            getReturnType = minTypeConversion,
+            indexOfResult = { type -> indexOfMin(type, skipNaN) },
+            stepOneSelector = { type -> minOrNull(type, skipNaN) },
+            statisticsParameters = mapOf("skipNaN" to skipNaN),
+        )
+    }
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    public fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
+    public fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> =
+        max.invoke(skipNaN).cast2()
 
-    public val max: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
-        by withOneOption { skipNaN: Boolean ->
-            twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
-                getReturnType = maxTypeConversion,
-                stepOneSelector = { type -> maxOrNull(type, skipNaN) },
-                indexOfResult = { type -> indexOfMax(type, skipNaN) },
-                statisticsParameters = mapOf("skipNaN" to skipNaN),
-            )
-        }
+    public val max:
+        AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?> by withOneOption {
+        skipNaN: Boolean ->
+        twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
+            getReturnType = maxTypeConversion,
+            stepOneSelector = { type -> maxOrNull(type, skipNaN) },
+            indexOfResult = { type -> indexOfMax(type, skipNaN) },
+            statisticsParameters = mapOf("skipNaN" to skipNaN),
+        )
+    }
 
     // T: Number? -> Double
     public val std: AggregatorOptionSwitch2<Boolean, Int, Number, Double> by withTwoOptions {
         skipNaN: Boolean,
-        ddof: Int,
-        ->
+        ddof: Int ->
         flattenReducingForNumbers(
             getReturnType = stdTypeConversion,
-            statisticsParameters = mapOf(
-                "skipNaN" to skipNaN,
-                "ddof" to ddof,
-            ),
-            reducer = { type ->
-                std(type, skipNaN, ddof)
-            },
+            statisticsParameters = mapOf("skipNaN" to skipNaN, "ddof" to ddof),
+            reducer = { type -> std(type, skipNaN, ddof) },
         )
     }
 
     // step one: T: Number? -> Double
     // step two: Double -> Double
-    public val mean: AggregatorOptionSwitch1<Boolean, Number, Double> by withOneOption { skipNaN: Boolean ->
+    public val mean: AggregatorOptionSwitch1<Boolean, Number, Double> by withOneOption {
+        skipNaN: Boolean ->
         twoStepReducingForNumbers(
             getReturnType = meanTypeConversion,
             statisticsParameters = mapOf("skipNaN" to skipNaN),
-            reducer = { type ->
-                mean(type, skipNaN)
-            },
+            reducer = { type -> mean(type, skipNaN) },
         )
     }
 
     // T: primitive Number? -> Double?
     // T: Comparable<T & Any>? -> T?
-    public fun <T> percentileCommon(
-        percentile: Double,
-        skipNaN: Boolean,
-    ): Aggregator<T & Any, T?>
-        where T : Comparable<T & Any>? =
-        this.percentile.invoke(percentile, skipNaN).cast2()
+    public fun <T> percentileCommon(percentile: Double, skipNaN: Boolean): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? = this.percentile.invoke(percentile, skipNaN).cast2()
 
     // T: Comparable<T & Any>? -> T?
-    public fun <T> percentileComparables(
-        percentile: Double,
-    ): Aggregator<T & Any, T?>
-        where T : Comparable<T & Any>? =
-        percentileCommon<T>(percentile, skipNaNDefault).cast2()
+    public fun <T> percentileComparables(percentile: Double): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? = percentileCommon<T>(percentile, skipNaNDefault).cast2()
 
     // T: primitive Number? -> Double?
     public fun <T> percentileNumbers(
         percentile: Double,
         skipNaN: Boolean,
-    ): Aggregator<T & Any, Double?>
-        where T : Comparable<T & Any>?, T : Number? =
+    ): Aggregator<T & Any, Double?> where T : Comparable<T & Any>?, T : Number? =
         percentileCommon<T>(percentile, skipNaN).cast2()
 
     @Suppress("UNCHECKED_CAST")
-    public val percentile: AggregatorOptionSwitch2<Double, Boolean, Comparable<Any>, Comparable<Any>?>
-        by withTwoOptions {
-            percentile: Double,
-            skipNaN: Boolean,
-            ->
-            flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
-                getReturnType = percentileConversion,
-                reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
-                indexOfResult = { type -> indexOfPercentile(percentile, type, skipNaN) },
-                statisticsParameters = mapOf(
-                    "skipNaN" to skipNaN,
-                    "percentile" to percentile,
-                ),
-            )
-        }
+    public val percentile:
+        AggregatorOptionSwitch2<
+            Double,
+            Boolean,
+            Comparable<Any>,
+            Comparable<Any>?,
+        > by withTwoOptions { percentile: Double, skipNaN: Boolean ->
+        flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
+            getReturnType = percentileConversion,
+            reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
+            indexOfResult = { type -> indexOfPercentile(percentile, type, skipNaN) },
+            statisticsParameters = mapOf("skipNaN" to skipNaN, "percentile" to percentile),
+        )
+    }
 
     // T: primitive Number? -> Double?
     // T: Comparable<T & Any>? -> T?
     public fun <T> medianCommon(skipNaN: Boolean): Aggregator<T & Any, T?>
-        where T : Comparable<T & Any>? =
-        median.invoke(skipNaN).cast2()
+        where T : Comparable<T & Any>? = median.invoke(skipNaN).cast2()
 
     // T: Comparable<T & Any>? -> T?
-    public fun <T> medianComparables(): Aggregator<T & Any, T?>
-        where T : Comparable<T & Any>? =
+    public fun <T> medianComparables(): Aggregator<T & Any, T?> where T : Comparable<T & Any>? =
         medianCommon<T>(skipNaNDefault).cast2()
 
     // T: primitive Number? -> Double?
-    public fun <T> medianNumbers(
-        skipNaN: Boolean,
-    ): Aggregator<T & Any, Double?>
-        where T : Comparable<T & Any>?, T : Number? =
-        medianCommon<T>(skipNaN).cast2()
+    public fun <T> medianNumbers(skipNaN: Boolean): Aggregator<T & Any, Double?>
+        where T : Comparable<T & Any>?, T : Number? = medianCommon<T>(skipNaN).cast2()
 
     @Suppress("UNCHECKED_CAST")
-    public val median: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
-        by withOneOption { skipNaN: Boolean ->
-            flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
-                getReturnType = medianConversion,
-                reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
-                indexOfResult = { type -> indexOfMedian(type, skipNaN) },
-                statisticsParameters = mapOf("skipNaN" to skipNaN),
-            )
-        }
+    public val median:
+        AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?> by withOneOption {
+        skipNaN: Boolean ->
+        flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
+            getReturnType = medianConversion,
+            reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
+            indexOfResult = { type -> indexOfMedian(type, skipNaN) },
+            statisticsParameters = mapOf("skipNaN" to skipNaN),
+        )
+    }
 
     // T: Number -> T
     // Byte -> Int
     // Short -> Int
     // Nothing -> Double
-    public val sum: AggregatorOptionSwitch1<Boolean, Number, Number> by withOneOption { skipNaN: Boolean ->
+    public val sum: AggregatorOptionSwitch1<Boolean, Number, Number> by withOneOption {
+        skipNaN: Boolean ->
         twoStepReducingForNumbers(
             getReturnType = sumTypeConversion,
             statisticsParameters = mapOf("skipNaN" to skipNaN),
-            reducer = { type ->
-                sum(type, skipNaN)
-            },
+            reducer = { type -> sum(type, skipNaN) },
         )
     }
 }

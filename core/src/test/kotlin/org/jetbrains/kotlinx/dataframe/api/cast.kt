@@ -2,16 +2,15 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import java.lang.IllegalArgumentException
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
-import java.lang.IllegalArgumentException
 
 class CastTests {
 
     @Test
     fun safeUnsafeCast() {
-        @DataSchema
-        data class Data(val a: Int, val b: String)
+        @DataSchema data class Data(val a: Int, val b: String)
 
         val df = dataFrameOf("a", "b", "c")(1, "s", 2)
         df.cast<Data>(verify = true) shouldBe df
@@ -24,21 +23,15 @@ class CastTests {
         converted.cast<Data>() shouldBe converted
     }
 
-    @DataSchema
-    data class Container(val test: Schema)
+    @DataSchema data class Container(val test: Schema)
 
-    @DataSchema
-    data class Schema(val score: Float, val rawData: String)
+    @DataSchema data class Schema(val score: Float, val rawData: String)
 
     @Test
     fun `cast should disregard column order`() {
         // https://github.com/Kotlin/dataframe/issues/1644
         // it ensures that variable in notebooks can be `castTo` to its own marker type
-        dataFrameOf(
-            "test" to columnOf(
-                "rawData" to columnOf("string"),
-                "score" to columnOf(1f),
-            ),
-        ).cast<Container>(verify = true)
+        dataFrameOf("test" to columnOf("rawData" to columnOf("string"), "score" to columnOf(1f)))
+            .cast<Container>(verify = true)
     }
 }

@@ -16,19 +16,9 @@ class DescribeTests {
 
     @Test
     fun `describe nullable Number column`() {
-        val a by columnOf<Number?>(
-            1,
-            2.0,
-            3f,
-            4L,
-            5.toShort(),
-            6.toByte(),
-            null,
-        )
+        val a by columnOf<Number?>(1, 2.0, 3f, 4L, 5.toShort(), 6.toByte(), null)
         val df = dataFrameOf(a)
-        val describe = df.describe()
-            .alsoDebug()
-            .single()
+        val describe = df.describe().alsoDebug().single()
         with(describe) {
             name shouldBe "a"
             type shouldBe "Number?"
@@ -51,9 +41,7 @@ class DescribeTests {
     fun `describe with NaNs`() {
         val a by columnOf(1.0, 2.0, Double.NaN, 4.0)
         val df = dataFrameOf(a)
-        val describe = df.describe()
-            .alsoDebug()
-            .single()
+        val describe = df.describe().alsoDebug().single()
         with(describe) {
             name shouldBe "a"
             type shouldBe "Double"

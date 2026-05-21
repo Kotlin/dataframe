@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -16,10 +17,11 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
-public class ExplodeWrongColumnKindException(public val df: DataFrame<*>, public val col: ColumnWithPath<*>) :
-    IllegalArgumentException() {
+public class ExplodeWrongColumnKindException(
+    public val df: DataFrame<*>,
+    public val col: ColumnWithPath<*>,
+) : IllegalArgumentException() {
     override val message: String =
         "Column '${col.path.joinToString()}' cannot be exploded: expected a FrameColumn or " +
             "a ValueColumn of List, but got ${col.kind()} of type ${col.type()}"
@@ -34,20 +36,20 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
 // region explode DataFrame
 
 /**
- * Splits list-like values in the specified [\columns] and spreads them vertically —
- * that is, it adds a separate row for each element (one value per row).
- * Values in all other columns are duplicated to preserve row context.
+ * Splits list-like values in the specified [\columns] and spreads them vertically — that is, it
+ * adds a separate row for each element (one value per row). Values in all other columns are
+ * duplicated to preserve row context.
  *
- * If no [\columns] are specified, all columns (at any depth) containing
- * [List] or [DataFrame] values will be exploded.
+ * If no [\columns] are specified, all columns (at any depth) containing [List] or [DataFrame]
+ * values will be exploded.
  *
- * If [dropEmpty] is `true`, rows with empty lists or [DataFrame]s will be removed.
- * If `false`, such rows will be exploded into `null` values.
+ * If [dropEmpty] is `true`, rows with empty lists or [DataFrame]s will be removed. If `false`, such
+ * rows will be exploded into `null` values.
  *
  * Returns a new [DataFrame] with exploded columns.
  *
- * Each exploded column will have a new type (`List<T>` -> `T`).
- * When several columns are exploded in one operation, lists in different columns will be aligned.
+ * Each exploded column will have a new type (`List<T>` -> `T`). When several columns are exploded
+ * in one operation, lists in different columns will be aligned.
  *
  * This operation is the reverse of [implode].
  *
@@ -60,30 +62,29 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
 @ExcludeFromSources
 internal interface ExplodeDocs {
     /**
-     * @param [dropEmpty] If `true`, removes rows with empty [List]s or [DataFrame]s.
-     *                  If `false`, such rows will be exploded into `null` values.
+     * @param [dropEmpty] If `true`, removes rows with empty [List]s or [DataFrame]s. If `false`,
+     *   such rows will be exploded into `null` values.
      */
     typealias DropEmptySnippet = Nothing
 
     /**
-     * If not specified, all applicable columns (i.e., of type [List] or [DataFrame]) will be exploded.
+     * If not specified, all applicable columns (i.e., of type [List] or [DataFrame]) will be
+     * exploded.
      */
     typealias DefaultExplodeColumnsSnippet = Nothing
 
-    /**
-     * @return A new [DataFrame] with exploded columns.
-     */
+    /** @return A new [DataFrame] with exploded columns. */
     typealias ReturnSnippet = Nothing
 
     /**
-     * @throws IllegalArgumentException if the specified columns are not of type [List] or [DataFrame].
+     * @throws IllegalArgumentException if the specified columns are not of type [List] or
+     *   [DataFrame].
      */
     typealias ThrowsSnippet = Nothing
 }
 
 /**
- * {@include [ExplodeDocs]}
- * {@include [SelectingColumns.ColumnsSelectionDsl]}
+ * {@include [ExplodeDocs]} {@include [SelectingColumns.ColumnsSelectionDsl]}
  *
  * #### Examples
  *
@@ -98,8 +99,8 @@ internal interface ExplodeDocs {
  * df.explode { colsOf<List<Double>>() }
  * ```
  *
- * @include [ExplodeDocs.DropEmptySnippet]
  * @param selector The [ColumnsSelector] used to select columns to explode.
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
  * @include [ExplodeDocs.ReturnSnippet]
  * @include [ExplodeDocs.ThrowsSnippet]
@@ -119,8 +120,7 @@ public fun <T> DataFrame<T>.explode(
 }
 
 /**
- * {@include [ExplodeDocs]}
- * {@include [SelectingColumns.ColumnNamesApi]}
+ * {@include [ExplodeDocs]} {@include [SelectingColumns.ColumnNamesApi]}
  *
  * #### Example
  *
@@ -130,45 +130,50 @@ public fun <T> DataFrame<T>.explode(
  * val exploded = df.explode("tags", "scores")
  * ```
  *
- * @include [ExplodeDocs.DropEmptySnippet]
  * @param columns The [column names][String] used to select columns to explode.
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
  * @include [ExplodeDocs.ReturnSnippet]
  * @include [ExplodeDocs.ThrowsSnippet]
  */
-public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumnSet() }
+public fun <T> DataFrame<T>.explode(
+    vararg columns: String,
+    dropEmpty: Boolean = true,
+): DataFrame<T> = explode(dropEmpty) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.explode(
+    vararg columns: ColumnReference<C>,
+    dropEmpty: Boolean = true,
+): DataFrame<T> = explode(dropEmpty) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.explode(
+    vararg columns: KProperty<C>,
+    dropEmpty: Boolean = true,
+): DataFrame<T> = explode(dropEmpty) { columns.toColumnSet() }
 
 // endregion
 
 // region explode DataRow
 
 /**
- * Splits list-like values in the specified [\columns] of this [DataRow] and spreads them vertically —
- * that is, it adds a separate row for each element (one value per row)
- * and combine them into new [DataFrame].
- * Values in all other columns are duplicated to preserve row context.
+ * Splits list-like values in the specified [\columns] of this [DataRow] and spreads them vertically
+ * — that is, it adds a separate row for each element (one value per row) and combine them into new
+ * [DataFrame]. Values in all other columns are duplicated to preserve row context.
  *
- * If no [\columns] are specified, all columns (at any depth) containing
- * [List] or [DataFrame] values will be exploded.
+ * If no [\columns] are specified, all columns (at any depth) containing [List] or [DataFrame]
+ * values will be exploded.
  *
- * If [dropEmpty] is `true`, the result will exclude rows with empty lists or DataFrames.
- * If `false`, such values will be exploded into `null`.
+ * If [dropEmpty] is `true`, the result will exclude rows with empty lists or DataFrames. If
+ * `false`, such values will be exploded into `null`.
  *
  * Returns a new [DataFrame] expanded into multiple rows based on the exploded columns.
  *
- * Each exploded column will have a new type (`List<T>` → `T`).
- * When several columns are exploded in one operation, lists in different columns will be aligned.
+ * Each exploded column will have a new type (`List<T>` → `T`). When several columns are exploded in
+ * one operation, lists in different columns will be aligned.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -179,15 +184,12 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
 @ExcludeFromSources
 internal interface ExplodeDataRowDocs {
 
-    /**
-     * @return A new [DataFrame] with exploded columns from this [DataRow].
-     */
+    /** @return A new [DataFrame] with exploded columns from this [DataRow]. */
     typealias ReturnSnippet = Nothing
 }
 
 /**
- * {@include [ExplodeDataRowDocs]}
- * {@include [SelectingColumns.ColumnsSelectionDsl]}
+ * {@include [ExplodeDataRowDocs]} {@include [SelectingColumns.ColumnsSelectionDsl]}
  *
  * #### Example
  *
@@ -197,8 +199,8 @@ internal interface ExplodeDataRowDocs {
  * row.explode { hobbies and scores }
  * ```
  *
- * @include [ExplodeDocs.DropEmptySnippet]
  * @param columns The [ColumnsSelector] used to select columns to explode.
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
  * @include [ExplodeDataRowDocs.ReturnSnippet]
  * @include [ExplodeDocs.ThrowsSnippet]
@@ -211,8 +213,7 @@ public fun <T> DataRow<T>.explode(
 ): DataFrame<T> = toDataFrame().explode(dropEmpty, columns)
 
 /**
- * {@include [ExplodeDataRowDocs]}
- * {@include [SelectingColumns.ColumnNamesApi]}
+ * {@include [ExplodeDataRowDocs]} {@include [SelectingColumns.ColumnNamesApi]}
  *
  * #### Example
  *
@@ -222,8 +223,8 @@ public fun <T> DataRow<T>.explode(
  * row.explode("hobbies", "scores")
  * ```
  *
- * @include [ExplodeDocs.DropEmptySnippet]
  * @param columns The [column names][String] used to select columns to explode.
+ * @include [ExplodeDocs.DropEmptySnippet]
  * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
  * @include [ExplodeDataRowDocs.ReturnSnippet]
  * @include [ExplodeDocs.ThrowsSnippet]
@@ -233,24 +234,28 @@ public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = t
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataRow<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumnSet() }
+public fun <T, C> DataRow<T>.explode(
+    vararg columns: ColumnReference<C>,
+    dropEmpty: Boolean = true,
+): DataFrame<T> = explode(dropEmpty) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> DataRow<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
-    explode(dropEmpty) { columns.toColumnSet() }
+public fun <T, C> DataRow<T>.explode(
+    vararg columns: KProperty<C>,
+    dropEmpty: Boolean = true,
+): DataFrame<T> = explode(dropEmpty) { columns.toColumnSet() }
 
 // endregion
 
 // region explode DataColumn
 
 /**
- * Splits list-like values in this [DataColumn] and spreads them vertically —
- * that is, it adds a separate row for each element (one value per row).
+ * Splits list-like values in this [DataColumn] and spreads them vertically — that is, it adds a
+ * separate row for each element (one value per row).
  *
- * Returns a new [DataColumn] with the exploded values.
- * The resulting column will have a new type (`List<T>` → `T`).
+ * Returns a new [DataColumn] with the exploded values. The resulting column will have a new type
+ * (`List<T>` → `T`).
  *
  * For more information, see: {@include [DocumentationUrls.Explode]}
  *
@@ -262,9 +267,9 @@ public fun <T> DataColumn<Collection<T>>.explode(): DataColumn<T> = explodeImpl(
 /**
  * Explodes a [DataColumn] of [DataFrame] values into a single [ColumnGroup].
  *
- * Each nested [DataFrame] is unwrapped, and its columns are placed side by side
- * within a column group named after the original column.
- * The number of resulting rows equals the total number of rows across all nested DataFrames.
+ * Each nested [DataFrame] is unwrapped, and its columns are placed side by side within a column
+ * group named after the original column. The number of resulting rows equals the total number of
+ * rows across all nested DataFrames.
  *
  * For more information, see: {@include [DocumentationUrls.Explode]}
  *

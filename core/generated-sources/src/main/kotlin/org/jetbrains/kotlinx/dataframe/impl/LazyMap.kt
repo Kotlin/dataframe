@@ -1,20 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-/**
- * Map that resolves values lazily.
- */
+/** Map that resolves values lazily. */
 internal class LazyMap<K, out V>(private val actualMap: Map<K, Lazy<V>>) : Map<K, V> {
 
     // Operations that traverse all values will resolve all values anyway
-    private val resolvedMap = lazy {
-        actualMap.mapValues { it.value.value }
-    }
+    private val resolvedMap = lazy { actualMap.mapValues { it.value.value } }
 
-    override val size: Int get() = actualMap.size
-    override val keys: Set<K> get() = actualMap.keys
+    override val size: Int
+        get() = actualMap.size
+
+    override val keys: Set<K>
+        get() = actualMap.keys
 
     // resolves all values!
-    override val values: Collection<V> get() = resolvedMap.value.values
+    override val values: Collection<V>
+        get() = resolvedMap.value.values
 
     // resolves all values!
     override val entries: Set<Map.Entry<K, V>>
@@ -43,8 +43,6 @@ internal class LazyMap<K, out V>(private val actualMap: Map<K, Lazy<V>>) : Map<K
         }
 }
 
-/**
- * Creates a [Map] that resolves values lazily.
- */
+/** Creates a [Map] that resolves values lazily. */
 internal fun <K, V> lazyMapOf(vararg entries: Pair<K, () -> V>): LazyMap<K, V> =
     LazyMap(mapOf(*entries).mapValues { lazy(it.value) })

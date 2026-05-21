@@ -2,17 +2,15 @@ package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import kotlin.random.Random
 import org.jetbrains.kotlinx.dataframe.math.quickSelect
 import org.junit.Test
-import kotlin.random.Random
 
 class QuickSelectTests {
 
     @Test
     fun empty() {
-        shouldThrow<IndexOutOfBoundsException> {
-            listOf<Int>().quickSelect(0)
-        }
+        shouldThrow<IndexOutOfBoundsException> { listOf<Int>().quickSelect(0) }
     }
 
     @Test

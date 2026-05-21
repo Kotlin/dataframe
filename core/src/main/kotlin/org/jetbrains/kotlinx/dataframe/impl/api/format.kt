@@ -28,11 +28,7 @@ internal fun encHex(v: Short): String = "${(v / 16).toString(16)}${(v % 16).toSt
 internal fun RgbColor.encode() = encRgb(r, g, b)
 
 internal fun componentWise(color1: RgbColor, color2: RgbColor, f: (Short, Short) -> Short) =
-    RgbColor(
-        f(color1.r, color2.r),
-        f(color1.g, color2.g),
-        f(color1.b, color2.b),
-    )
+    RgbColor(f(color1.r, color2.r), f(color1.g, color2.g), f(color1.b, color2.b))
 
 internal fun linearGradient(
     x: Double,
@@ -51,7 +47,7 @@ internal fun linearGradient(
 
 @Suppress("UNCHECKED_CAST")
 internal inline fun <T, C> FormatClause<T, C>.formatImpl(
-    crossinline formatter: RowColFormatter<T, C>,
+    crossinline formatter: RowColFormatter<T, C>
 ): FormattedFrame<T> {
     val clause = this
     val columns = clause.df.getColumnPaths(UnresolvedColumnsPolicy.Skip, clause.columns).toSet()
@@ -63,7 +59,8 @@ internal inline fun <T, C> FormatClause<T, C>.formatImpl(
             if (col.path in columns) {
                 val value = col[row] as C
                 if (clause.filter(row, value)) {
-                    return@FormattedFrame oldAttributes and formatter(FormattingDsl, row.cast(), col.cast())
+                    return@FormattedFrame oldAttributes and
+                        formatter(FormattingDsl, row.cast(), col.cast())
                 }
             }
             oldAttributes

@@ -19,7 +19,7 @@ internal fun <T, C> DataFrame<T>.getAggregateColumn(selector: ColumnsForAggregat
     getAggregateColumns(selector).single()
 
 internal fun <T, C> DataFrame<T>.getAggregateColumns(
-    selector: ColumnsForAggregateSelector<T, C>,
+    selector: ColumnsForAggregateSelector<T, C>
 ): List<AggregateColumnDescriptor<C>> {
     val columns = selector.toColumns().resolve(this, UnresolvedColumnsPolicy.Create)
     return columns.map {
@@ -30,5 +30,7 @@ internal fun <T, C> DataFrame<T>.getAggregateColumns(
     }
 }
 
-internal fun <T, C> AggregateInternalDsl<T>.getPath(col: AggregateColumnDescriptor<C>, isSingle: Boolean) =
-    col.newPath ?: if (isSingle) pathForSingleColumn(col.data) else col.data.shortPath()
+internal fun <T, C> AggregateInternalDsl<T>.getPath(
+    col: AggregateColumnDescriptor<C>,
+    isSingle: Boolean,
+) = col.newPath ?: if (isSingle) pathForSingleColumn(col.data) else col.data.shortPath()

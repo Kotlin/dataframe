@@ -20,13 +20,22 @@ internal fun BufferedImage.resizeKeepingAspectRatio(
     val aspectRatio = width.toDouble() / height.toDouble()
     val size = min(maxSize, max(width, height))
 
-    val (nWidth, nHeight) = if (width > height) {
-        Pair(size, (size / aspectRatio).toInt())
-    } else {
-        Pair((size * aspectRatio).toInt(), size)
-    }
+    val (nWidth, nHeight) =
+        if (width > height) {
+            Pair(size, (size / aspectRatio).toInt())
+        } else {
+            Pair((size * aspectRatio).toInt(), size)
+        }
 
-    return resize(nWidth, nHeight, resultImageType, interpolation, renderingQuality, antialiasing, observer)
+    return resize(
+        nWidth,
+        nHeight,
+        resultImageType,
+        interpolation,
+        renderingQuality,
+        antialiasing,
+        observer,
+    )
 }
 
 internal fun BufferedImage.resize(
@@ -69,15 +78,17 @@ internal fun resizeKeepingAspectRatio(
     renderingQuality: Any = RenderingHints.VALUE_RENDER_QUALITY,
     antialiasing: Any = RenderingHints.VALUE_ANTIALIAS_ON,
     observer: ImageObserver? = null,
-) = image.resizeKeepingAspectRatio(
-    maxSize = maxSize,
-    resultImageType = resultImageType,
-    interpolation = interpolation,
-    renderingQuality = renderingQuality,
-    antialiasing = antialiasing,
-    observer = observer,
-)
+) =
+    image.resizeKeepingAspectRatio(
+        maxSize = maxSize,
+        resultImageType = resultImageType,
+        interpolation = interpolation,
+        renderingQuality = renderingQuality,
+        antialiasing = antialiasing,
+        observer = observer,
+    )
 
 // helper overload for friend modules
 @JvmName("toByteArrayOverload")
-internal fun toByteArray(image: BufferedImage, format: String = DEFAULT_IMG_FORMAT) = image.toByteArray(format)
+internal fun toByteArray(image: BufferedImage, format: String = DEFAULT_IMG_FORMAT) =
+    image.toByteArray(format)

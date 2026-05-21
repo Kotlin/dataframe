@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class TypeInferenceTest {
 

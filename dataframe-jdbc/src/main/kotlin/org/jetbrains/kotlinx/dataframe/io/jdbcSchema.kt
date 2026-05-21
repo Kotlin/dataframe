@@ -1,13 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import java.net.URL
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
-import java.net.URL
 
-// TODO: helper functions created to support existing hierarchy https://github.com/Kotlin/dataframe/issues/450
-public val CodeGenerator.Companion.databaseCodeGenReader: (url: URL, name: String) -> CodeGenerationReadResult
+// TODO: helper functions created to support existing hierarchy
+// https://github.com/Kotlin/dataframe/issues/450
+public val CodeGenerator.Companion.databaseCodeGenReader:
+    (url: URL, name: String) -> CodeGenerationReadResult
     get() = { url, name ->
         try {
             val code = buildCodeForDB(url, name)

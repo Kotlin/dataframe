@@ -28,10 +28,9 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         val firstName: String
     }
 
-    private val dfAges = dataFrameOf(
-        "firstName" to listOf("Alice", "Bob", "Charlie"),
-        "age" to listOf(14, 45, 20),
-    ).cast<DfAges>()
+    private val dfAges =
+        dataFrameOf("firstName" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(14, 45, 20))
+            .cast<DfAges>()
 
     @DataSchema
     interface DfCities {
@@ -39,10 +38,12 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         val name: String
     }
 
-    private val dfCities = dataFrameOf(
-        "name" to listOf("Bob", "Alice", "Charlie"),
-        "city" to listOf("London", "Dubai", "Moscow"),
-    ).cast<DfCities>()
+    private val dfCities =
+        dataFrameOf(
+                "name" to listOf("Bob", "Alice", "Charlie"),
+                "city" to listOf("London", "Dubai", "Moscow"),
+            )
+            .cast<DfCities>()
 
     @DataSchema
     interface DfWithNameAndCity {
@@ -57,11 +58,13 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         override val name: String
     }
 
-    private val dfLeft = dataFrameOf(
-        "name" to listOf("Alice", "Bob", "Charlie", "Charlie"),
-        "age" to listOf(15, 45, 20, 40),
-        "city" to listOf("London", "Dubai", "Moscow", "Tokyo"),
-    ).cast<DfLeft>()
+    private val dfLeft =
+        dataFrameOf(
+                "name" to listOf("Alice", "Bob", "Charlie", "Charlie"),
+                "age" to listOf(15, 45, 20, 40),
+                "city" to listOf("London", "Dubai", "Moscow", "Tokyo"),
+            )
+            .cast<DfLeft>()
 
     @DataSchema
     interface DfRight : DfWithNameAndCity {
@@ -70,11 +73,13 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         override val name: String
     }
 
-    private val dfRight = dataFrameOf(
-        "name" to listOf("Alice", "Bob", "Alice", "Charlie"),
-        "isBusy" to listOf(true, false, true, true),
-        "city" to listOf("London", "Tokyo", null, "Moscow"),
-    ).cast<DfRight>()
+    private val dfRight =
+        dataFrameOf(
+                "name" to listOf("Alice", "Bob", "Alice", "Charlie"),
+                "isBusy" to listOf(true, false, true, true),
+                "city" to listOf("London", "Tokyo", null, "Moscow"),
+            )
+            .cast<DfRight>()
 
     private fun nameToColor(name: String): RgbColor =
         when (name) {
@@ -106,7 +111,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         dfAges
             // SampleEnd
-            .format().perRowCol { row, _ ->
+            .format()
+            .perRowCol { row, _ ->
                 val color = nameToColor(row.firstName)
                 background(color) and textColor(black)
             }
@@ -119,7 +125,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         dfCities
             // SampleEnd
-            .format().perRowCol { row, _ ->
+            .format()
+            .perRowCol { row, _ ->
                 val color = nameToColor(row.name)
                 background(color) and textColor(black)
             }
@@ -133,9 +140,11 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // INNER JOIN on differently named keys:
         // Merge a row when dfAges.firstName == dfCities.name.
         // With the given data all 3 names match → all rows merge.
-        dfAges.join(dfCities) { firstName match right.name }
+        dfAges
+            .join(dfCities) { firstName match right.name }
             // SampleEnd
-            .format().perRowCol { row, _ ->
+            .format()
+            .perRowCol { row, _ ->
                 val color = nameToColor(row.firstName)
                 background(color) and textColor(black)
             }
@@ -169,7 +178,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // INNER JOIN on "name" only:
         // Merge when left.name == right.name.
         // Duplicate keys produce multiple merged rows (one per pairing).
-        dfLeft.join(dfRight) { name }
+        dfLeft
+            .join(dfRight) { name }
             // SampleEnd
             .colorized()
             .defaultHeaderFormatting { name }
@@ -201,7 +211,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // SampleStart
         // INNER JOIN on all same-named columns ("name" and "city"):
         // Merge when BOTH name AND city are equal; otherwise the row is dropped.
-        dfLeft.join(dfRight)
+        dfLeft
+            .join(dfRight)
             // SampleEnd
             .colorized()
             .defaultHeaderFormatting { "name" and "city" }
@@ -234,7 +245,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // INNER JOIN:
         // Combines columns from the left and right dataframes
         // and keep only rows where (name, city) matches on both sides.
-        dfLeft.innerJoin(dfRight) { name and city }
+        dfLeft
+            .innerJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
             .defaultHeaderFormatting { name and city }
@@ -247,7 +259,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // FILTER JOIN:
         // Keep ONLY left rows that have ANY match on (name, city).
         // No right-side columns are added.
-        dfLeft.filterJoin(dfRight) { name and city }
+        dfLeft
+            .filterJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
             .defaultHeaderFormatting { name and city }
@@ -262,10 +275,12 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // If (name, city) matches, attach right columns values from
         // the corresponding row in the right dataframe;
         // if not (e.g. ("Bob", "Dubai") row), fill them with `null`.
-        dfLeft.leftJoin(dfRight) { name and city }
+        dfLeft
+            .leftJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
-            .format { all() except (name and city) }.with { if (it == null) bold else null }
+            .format { all() except (name and city) }
+            .with { if (it == null) bold else null }
             .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
@@ -278,10 +293,12 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // If (name, city) matches, attach left columns values from
         // the corresponding row in the left dataframe;
         // if not (e.g. ("Bob", "Tokyo") row), fill them with `null`.
-        dfLeft.rightJoin(dfRight) { name and city }
+        dfLeft
+            .rightJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
-            .format { all() except (name and city) }.with { if (it == null) bold else null }
+            .format { all() except (name and city) }
+            .with { if (it == null) bold else null }
             .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
@@ -292,10 +309,12 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // FULL JOIN:
         // Keep ALL rows from both sides. Where there's no match on (name, city),
         // the other side is filled with nulls.
-        dfLeft.fullJoin(dfRight) { name and city }
+        dfLeft
+            .fullJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
-            .format { all() except (name and city) }.with { if (it == null) bold else null }
+            .format { all() except (name and city) }
+            .with { if (it == null) bold else null }
             .defaultHeaderFormatting { name and city }
             .saveDfHtmlSample()
     }
@@ -306,7 +325,8 @@ class JoinSamples : DataFrameSampleHelper("join", "api") {
         // EXCLUDE JOIN:
         // Keep ONLY left rows that have NO match on (name, city).
         // Useful to find "unpaired" left rows.
-        dfLeft.excludeJoin(dfRight) { name and city }
+        dfLeft
+            .excludeJoin(dfRight) { name and city }
             // SampleEnd
             .colorized()
             .defaultHeaderFormatting { name and city }

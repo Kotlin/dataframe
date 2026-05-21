@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import kotlin.reflect.full.withNullability
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -15,23 +16,16 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
-import kotlin.reflect.full.withNullability
 
 internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int): DataFrame<T> =
-    columns()
-        .map { it.duplicateValuesImpl(n) }
-        .toDataFrame()
-        .cast()
+    columns().map { it.duplicateValuesImpl(n) }.toDataFrame().cast()
 
 internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int): DataColumn<T> {
     require(n > 0) { "Number of duplicates must be greater than 0, but was $n" }
     return when (this) {
         is ColumnGroup<*> ->
-            DataColumn
-                .createColumnGroup(
-                    name = name,
-                    df = asDataFrame().duplicateRowsImpl(n),
-                ).asDataColumn()
+            DataColumn.createColumnGroup(name = name, df = asDataFrame().duplicateRowsImpl(n))
+                .asDataColumn()
 
         else -> {
             val list = List(size() * n) { get(it / n) }
@@ -44,13 +38,17 @@ internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int): DataColumn<T> {
     }.cast()
 }
 
-internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int, indicesSorted: Iterable<Int>): DataColumn<T> =
+internal fun <T> DataColumn<T>.duplicateValuesImpl(
+    n: Int,
+    indicesSorted: Iterable<Int>,
+): DataColumn<T> =
     when (this) {
         is ColumnGroup<*> ->
             DataColumn.createColumnGroup(
-                name = name,
-                df = asDataFrame().duplicateRowsImpl(n, indicesSorted),
-            ).asDataColumn()
+                    name = name,
+                    df = asDataFrame().duplicateRowsImpl(n, indicesSorted),
+                )
+                .asDataColumn()
 
         else -> {
             val list = mutableListOf<Any?>()
@@ -73,28 +71,32 @@ internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int, indicesSorted: Iterab
     }.cast()
 
 @PublishedApi
-internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int, indicesSorted: Iterable<Int>): DataFrame<T> =
-    columns()
-        .map { it.duplicateValuesImpl(n, indicesSorted) }
-        .toDataFrame()
-        .cast()
+internal fun <T> DataFrame<T>.duplicateRowsImpl(
+    n: Int,
+    indicesSorted: Iterable<Int>,
+): DataFrame<T> = columns().map { it.duplicateValuesImpl(n, indicesSorted) }.toDataFrame().cast()
 
 internal fun <T> DataRow<T>.duplicateImpl(n: Int): DataFrame<T> =
-    owner.columns().map { col ->
-        when (col) {
-            is ColumnGroup<*> -> DataColumn.createColumnGroup(col.name, col[index].duplicateImpl(n))
+    owner
+        .columns()
+        .map { col ->
+            when (col) {
+                is ColumnGroup<*> ->
+                    DataColumn.createColumnGroup(col.name, col[index].duplicateImpl(n))
 
-            else -> {
-                val value = col[index]
-                if (value is AnyFrame) {
-                    DataColumn.createFrameColumn(col.name, List(n) { value })
-                } else {
-                    DataColumn.createValueColumn(
-                        col.name,
-                        List(n) { value },
-                        col.type.withNullability(value == null),
-                    )
+                else -> {
+                    val value = col[index]
+                    if (value is AnyFrame) {
+                        DataColumn.createFrameColumn(col.name, List(n) { value })
+                    } else {
+                        DataColumn.createValueColumn(
+                            col.name,
+                            List(n) { value },
+                            col.type.withNullability(value == null),
+                        )
+                    }
                 }
             }
         }
-    }.toDataFrame().cast()
+        .toDataFrame()
+        .cast()

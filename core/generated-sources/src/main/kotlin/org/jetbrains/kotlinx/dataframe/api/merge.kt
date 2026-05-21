@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -15,39 +18,34 @@ import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 @Interpretable("Merge0")
 public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): Merge<T, C, List<C>> =
     Merge(this, selector, false, { it }, typeOf<Any?>(), Infer.Type)
 
-public fun <T> DataFrame<T>.merge(vararg columns: String): Merge<T, Any?, List<Any?>> = merge { columns.toColumnSet() }
+public fun <T> DataFrame<T>.merge(vararg columns: String): Merge<T, Any?, List<Any?>> = merge {
+    columns.toColumnSet()
+}
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): Merge<T, C, List<C>> =
-    merge { columns.toColumnSet() }
+public inline fun <T, reified C> DataFrame<T>.merge(
+    vararg columns: ColumnReference<C>
+): Merge<T, C, List<C>> = merge { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: KProperty<C>): Merge<T, C, List<C>> =
-    merge { columns.toColumnSet() }
+public inline fun <T, reified C> DataFrame<T>.merge(
+    vararg columns: KProperty<C>
+): Merge<T, C, List<C>> = merge { columns.toColumnSet() }
 
 public data class Merge<T, C, R>(
-    @PublishedApi
-    internal val df: DataFrame<T>,
-    @PublishedApi
-    internal val selector: ColumnsSelector<T, C>,
-    @PublishedApi
-    internal val notNull: Boolean,
-    @PublishedApi
-    internal val transform: DataRow<T>.(List<C>) -> R,
-    @PublishedApi
-    internal val resultType: KType,
-    @PublishedApi
-    internal val infer: Infer,
+    @PublishedApi internal val df: DataFrame<T>,
+    @PublishedApi internal val selector: ColumnsSelector<T, C>,
+    @PublishedApi internal val notNull: Boolean,
+    @PublishedApi internal val transform: DataRow<T>.(List<C>) -> R,
+    @PublishedApi internal val resultType: KType,
+    @PublishedApi internal val infer: Infer,
 )
 
 public class MergeWithTransform<T, C, R>(
@@ -60,7 +58,8 @@ public class MergeWithTransform<T, C, R>(
 )
 
 @Interpretable("MergeId")
-public fun <T, C, R> Merge<T, C, R>.notNull(): Merge<T, C & Any, R> = copy(notNull = true) as Merge<T, C & Any, R>
+public fun <T, C, R> Merge<T, C, R>.notNull(): Merge<T, C & Any, R> =
+    copy(notNull = true) as Merge<T, C & Any, R>
 
 @JvmName("notNullList")
 @Interpretable("MergeId")
@@ -69,20 +68,24 @@ public fun <T, C, R> Merge<T, C, List<R>>.notNull(): Merge<T, C & Any, List<R & 
 
 @Refine
 @Interpretable("MergeInto0")
-public fun <T, C, R> MergeWithTransform<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
+public fun <T, C, R> MergeWithTransform<T, C, R>.into(columnName: String): DataFrame<T> =
+    into(pathOf(columnName))
 
 @Refine
 @Interpretable("MergeInto0")
-public fun <T, C, R> Merge<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
+public fun <T, C, R> Merge<T, C, R>.into(columnName: String): DataFrame<T> =
+    into(pathOf(columnName))
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, C, reified R> Merge<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> = into(column.path())
-
-@Deprecated(DEPRECATED_ACCESS_API)
-@AccessApiOverload
-public inline fun <T, C, reified R> MergeWithTransform<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> =
+public inline fun <T, C, reified R> Merge<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> =
     into(column.path())
+
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
+public inline fun <T, C, reified R> MergeWithTransform<T, C, R>.into(
+    column: ColumnAccessor<*>
+): DataFrame<T> = into(column.path())
 
 public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
     df.select(selector).rows().map { transform(it, it.values() as List<C>) }
@@ -93,32 +96,32 @@ public fun <T, C, R> MergeWithTransform<T, C, R>.intoList(): List<R> =
 @Suppress("DEPRECATION_ERROR")
 public fun <T, C, R> MergeWithTransform<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     // If target path exists, merge into temp path
-    val mergePath = if (df.getColumnOrNull(path) != null) {
-        pathOf(df.nameGenerator().addUnique("temp"))
-    } else {
-        path
-    }
+    val mergePath =
+        if (df.getColumnOrNull(path) != null) {
+            pathOf(df.nameGenerator().addUnique("temp"))
+        } else {
+            path
+        }
 
     // move columns into group
     val grouped = df.move(selector).under { mergePath }
 
-    var res = grouped.convert { getColumnGroup(mergePath) }.withRowCellImpl(resultType, infer) {
-        val srcRow = df[index()]
-        var values = it.values() as List<C>
-        if (notNull) {
-            values = values.filter {
-                it != null && (it !is AnyRow || !it.isEmpty())
+    var res =
+        grouped
+            .convert { getColumnGroup(mergePath) }
+            .withRowCellImpl(resultType, infer) {
+                val srcRow = df[index()]
+                var values = it.values() as List<C>
+                if (notNull) {
+                    values = values.filter { it != null && (it !is AnyRow || !it.isEmpty()) }
+                }
+                transform(srcRow, values)
             }
-        }
-        transform(srcRow, values)
-    }
     if (mergePath != path) {
         // target path existed before merge, but
         // it may have already been removed
-        res = res
-            .removeImpl(allowMissingColumns = true) { path }
-            .df
-            .move { mergePath }.into { path }
+        res =
+            res.removeImpl(allowMissingColumns = true) { path }.df.move { mergePath }.into { path }
     }
     return res
 }
@@ -159,6 +162,11 @@ public inline fun <T, C, R, reified V> Merge<T, C, R>.by(
     infer: Infer = Infer.Nulls,
     crossinline transform: DataRow<T>.(R) -> V,
 ): MergeWithTransform<T, C, V> =
-    MergeWithTransform(df, selector, notNull, {
-        transform(this@by.transform(this, it))
-    }, typeOf<V>(), infer)
+    MergeWithTransform(
+        df,
+        selector,
+        notNull,
+        { transform(this@by.transform(this, it)) },
+        typeOf<V>(),
+        infer,
+    )

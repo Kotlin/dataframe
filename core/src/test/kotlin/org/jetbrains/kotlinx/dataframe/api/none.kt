@@ -11,15 +11,17 @@ class NoneTests : ColumnsSelectionDslTests() {
 
     @Test
     fun none() {
-        df.select { none() }.let {
-            it.nrow shouldBe 0
-            it.ncol shouldBe 0
-        }
+        df.select { none() }
+            .let {
+                it.nrow shouldBe 0
+                it.ncol shouldBe 0
+            }
 
         listOf(
-            df.select { none() and age },
-            df.select { age },
-            df.select { name.select { none() } and age },
-        ).shouldAllBeEqual()
+                df.select { none() and age },
+                df.select { age },
+                df.select { name.select { none() } and age },
+            )
+            .shouldAllBeEqual()
     }
 }

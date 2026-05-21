@@ -4,7 +4,30 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import java.time.Duration as JavaDuration
+import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
+import java.time.Month as JavaMonth
+import java.util.Locale
+import kotlin.random.Random
+import kotlin.reflect.typeOf
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.microseconds
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.nanoseconds
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant as StdlibInstant
+import kotlin.time.toJavaInstant
+import kotlin.time.toKotlinInstant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant as DeprecatedInstant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -24,29 +47,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
-import java.util.Locale
-import kotlin.random.Random
-import kotlin.reflect.typeOf
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.microseconds
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.nanoseconds
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.toJavaInstant
-import kotlin.time.toKotlinInstant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-import java.time.Duration as JavaDuration
-import java.time.Instant as JavaInstant
-import java.time.LocalDate as JavaLocalDate
-import java.time.LocalDateTime as JavaLocalDateTime
-import java.time.LocalTime as JavaLocalTime
-import java.time.Month as JavaMonth
-import kotlin.time.Instant as StdlibInstant
-import kotlinx.datetime.Instant as DeprecatedInstant
 
 class ParseTests {
 
@@ -77,11 +77,10 @@ class ParseTests {
             year()
         }
 
-        val parsed = date.parse(
-            ParserOptions(
-                dateTime = DateTimeParserOptions.Kotlin.withFormat(format),
-            ),
-        ).cast<LocalDate>()
+        val parsed =
+            date
+                .parse(ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(format)))
+                .cast<LocalDate>()
 
         parsed.type() shouldBe typeOf<LocalDate>()
         with(parsed[0]) {
@@ -93,10 +92,8 @@ class ParseTests {
         date.convertToLocalDate(format) shouldBe parsed
         with(date.toDataFrame()) {
             convert { date }.toLocalDate(format)[date.name] shouldBe parsed
-            parse(
-                ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(format)),
-            )[date.name] shouldBe
-                parsed
+            parse(ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat(format)))[
+                date.name] shouldBe parsed
         }
 
         // Checking the kotlin one has priority over the java one
@@ -122,11 +119,8 @@ class ParseTests {
         DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
 
         date.convertToLocalDate().single() shouldBe LocalDate(2026, 4, 16)
-        date.toDataFrame()
-            .convert { all() }.toLocalDate()
-            .columns()
-            .single()
-            .single() shouldBe LocalDate(2026, 4, 16)
+        date.toDataFrame().convert { all() }.toLocalDate().columns().single().single() shouldBe
+            LocalDate(2026, 4, 16)
 
         // do fail when the user explicitly provides incorrect parser options
         shouldThrow<IllegalStateException> {
@@ -144,11 +138,15 @@ class ParseTests {
             val date by columnOf("January 1, 2020")
             val pattern = "MMMM d, yyyy"
 
-            val parsed = date.parse(
-                ParserOptions(
-                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDate>(pattern),
-                ),
-            ).cast<JavaLocalDate>()
+            val parsed =
+                date
+                    .parse(
+                        ParserOptions(
+                            dateTime =
+                                DateTimeParserOptions.Java.withPattern<JavaLocalDate>(pattern)
+                        )
+                    )
+                    .cast<JavaLocalDate>()
 
             parsed.type() shouldBe typeOf<JavaLocalDate>()
             with(parsed[0]) {
@@ -158,16 +156,19 @@ class ParseTests {
             }
 
             date.convertTo<JavaLocalDate>(
-                parserOptions = ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)),
+                parserOptions =
+                    ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern))
             ) shouldBe parsed
             with(date.toDataFrame()) {
-                convert { date }.to<JavaLocalDate>(
-                    parserOptions = ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)),
-                )[date.name] shouldBe parsed
-                parse(
-                    ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)),
-                )[date.name] shouldBe
-                    parsed
+                convert { date }
+                    .to<JavaLocalDate>(
+                        parserOptions =
+                            ParserOptions(
+                                dateTime = DateTimeParserOptions.Java.withPattern(pattern)
+                            )
+                    )[date.name] shouldBe parsed
+                parse(ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern(pattern)))[
+                    date.name] shouldBe parsed
             }
 
             DataFrame.parser.addJavaDateTimePattern(pattern)
@@ -188,11 +189,12 @@ class ParseTests {
         val parsed = dateTime.parse().cast<DateTimeComponents>()
         val parsedAsLocalDateTime = parsed.convertToLocalDateTime()
 
-        dateTime.parse(ParserOptions())
+        dateTime.parse(ParserOptions()).cast<DateTimeComponents>().convertToLocalDateTime() shouldBe
+            parsedAsLocalDateTime
+        dateTime
+            .parse(ParserOptions(dateTime = DateTimeParserOptions.Kotlin))
             .cast<DateTimeComponents>()
             .convertToLocalDateTime() shouldBe parsedAsLocalDateTime
-        dateTime.parse(ParserOptions(dateTime = DateTimeParserOptions.Kotlin))
-            .cast<DateTimeComponents>().convertToLocalDateTime() shouldBe parsedAsLocalDateTime
 
         parsed.type() shouldBe typeOf<DateTimeComponents>()
         with(parsed[0]) {
@@ -208,10 +210,12 @@ class ParseTests {
             offsetSecondsOfMinute shouldBe null
         }
 
-        dateTime.convertToDateTimeComponents().convertToLocalDateTime() shouldBe parsedAsLocalDateTime
+        dateTime.convertToDateTimeComponents().convertToLocalDateTime() shouldBe
+            parsedAsLocalDateTime
         with(dateTime.toDataFrame()) {
-            convert { dateTime }.toDateTimeComponents()[dateTime.name].convertToLocalDateTime() shouldBe
-                parsedAsLocalDateTime
+            convert { dateTime }
+                .toDateTimeComponents()[dateTime.name]
+                .convertToLocalDateTime() shouldBe parsedAsLocalDateTime
             parse()[dateTime.name].convertToLocalDateTime() shouldBe parsedAsLocalDateTime
             parse(ParserOptions(dateTime = DateTimeParserOptions.Kotlin))[dateTime.name]
                 .convertToLocalDateTime() shouldBe parsedAsLocalDateTime
@@ -220,7 +224,8 @@ class ParseTests {
 
     @Test
     fun `convert DateTimeComponents to supported date time targets`() {
-        val components = DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET.parse("2008-06-30T11:05:30-03:00")
+        val components =
+            DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET.parse("2008-06-30T11:05:30-03:00")
         val nullableComponents = components as DateTimeComponents?
 
         val expectedOffset = UtcOffset(hours = -3)
@@ -252,28 +257,37 @@ class ParseTests {
         columnOf(components).convertToLong() shouldBe columnOf(expectedEpochMillis)
         columnOf(nullableComponents).convertToLong() shouldBe columnOf(expectedEpochMillis)
 
-        val df = dataFrameOf("components", "nullable")(
-            components,
-            nullableComponents,
-        )
+        val df = dataFrameOf("components", "nullable")(components, nullableComponents)
 
-        df.convert("components").cast<DateTimeComponents>().toUtcOffset()["components"][0] shouldBe expectedOffset
-        df.convert("nullable").cast<DateTimeComponents?>().toUtcOffset()["nullable"][0] shouldBe expectedOffset
+        df.convert("components").cast<DateTimeComponents>().toUtcOffset()["components"][0] shouldBe
+            expectedOffset
+        df.convert("nullable").cast<DateTimeComponents?>().toUtcOffset()["nullable"][0] shouldBe
+            expectedOffset
 
-        df.convert("components").cast<DateTimeComponents>().toYearMonth()["components"][0] shouldBe expectedYearMonth
-        df.convert("nullable").cast<DateTimeComponents?>().toYearMonth()["nullable"][0] shouldBe expectedYearMonth
+        df.convert("components").cast<DateTimeComponents>().toYearMonth()["components"][0] shouldBe
+            expectedYearMonth
+        df.convert("nullable").cast<DateTimeComponents?>().toYearMonth()["nullable"][0] shouldBe
+            expectedYearMonth
 
-        df.convert("components").cast<DateTimeComponents>().toLocalDate()["components"][0] shouldBe expectedDate
-        df.convert("nullable").cast<DateTimeComponents?>().toLocalDate()["nullable"][0] shouldBe expectedDate
+        df.convert("components").cast<DateTimeComponents>().toLocalDate()["components"][0] shouldBe
+            expectedDate
+        df.convert("nullable").cast<DateTimeComponents?>().toLocalDate()["nullable"][0] shouldBe
+            expectedDate
 
-        df.convert("components").cast<DateTimeComponents>().toLocalTime()["components"][0] shouldBe expectedTime
-        df.convert("nullable").cast<DateTimeComponents?>().toLocalTime()["nullable"][0] shouldBe expectedTime
+        df.convert("components").cast<DateTimeComponents>().toLocalTime()["components"][0] shouldBe
+            expectedTime
+        df.convert("nullable").cast<DateTimeComponents?>().toLocalTime()["nullable"][0] shouldBe
+            expectedTime
 
-        df.convert("components").cast<DateTimeComponents>().toLocalDateTime()["components"][0] shouldBe expectedDateTime
-        df.convert("nullable").cast<DateTimeComponents?>().toLocalDateTime()["nullable"][0] shouldBe expectedDateTime
+        df.convert("components").cast<DateTimeComponents>().toLocalDateTime()["components"][
+            0] shouldBe expectedDateTime
+        df.convert("nullable").cast<DateTimeComponents?>().toLocalDateTime()["nullable"][0] shouldBe
+            expectedDateTime
 
-        df.convert("components").cast<DateTimeComponents>().toStdlibInstant()["components"][0] shouldBe expectedInstant
-        df.convert("nullable").cast<DateTimeComponents?>().toStdlibInstant()["nullable"][0] shouldBe expectedInstant
+        df.convert("components").cast<DateTimeComponents>().toStdlibInstant()["components"][
+            0] shouldBe expectedInstant
+        df.convert("nullable").cast<DateTimeComponents?>().toStdlibInstant()["nullable"][0] shouldBe
+            expectedInstant
 
         df.convert("components").toLong()["components"][0] shouldBe expectedEpochMillis
         df.convert("nullable").toLong()["nullable"][0] shouldBe expectedEpochMillis
@@ -294,12 +308,15 @@ class ParseTests {
         }
         val locale = Locale.forLanguageTag("en-US")
 
-        val parsed = dateTime.parse(
-            ParserOptions(
-                dateTime = DateTimeParserOptions.Kotlin.withFormat<LocalDateTime>(format),
-                locale = locale,
-            ),
-        ).cast<LocalDateTime>()
+        val parsed =
+            dateTime
+                .parse(
+                    ParserOptions(
+                        dateTime = DateTimeParserOptions.Kotlin.withFormat<LocalDateTime>(format),
+                        locale = locale,
+                    )
+                )
+                .cast<LocalDateTime>()
 
         parsed.type() shouldBe typeOf<LocalDateTime>()
         with(parsed[0]) {
@@ -315,9 +332,10 @@ class ParseTests {
         with(dateTime.toDataFrame()) {
             convert { dateTime }.toLocalDateTime(format)[dateTime.name] shouldBe parsed
             parse(
-                ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withFormat<LocalDateTime>(format)),
-            )[dateTime.name] shouldBe
-                parsed
+                ParserOptions(
+                    dateTime = DateTimeParserOptions.Kotlin.withFormat<LocalDateTime>(format)
+                )
+            )[dateTime.name] shouldBe parsed
         }
 
         DataFrame.parser.addDateTimeFormat(format)
@@ -337,12 +355,16 @@ class ParseTests {
             val pattern = "d MMM yyyy HH:mm:ss"
             val locale = Locale.forLanguageTag("en-US")
 
-            val parsed = dateTime.parse(
-                ParserOptions(
-                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
-                    locale = locale,
-                ),
-            ).cast<JavaLocalDateTime>()
+            val parsed =
+                dateTime
+                    .parse(
+                        ParserOptions(
+                            dateTime =
+                                DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
+                            locale = locale,
+                        )
+                    )
+                    .cast<JavaLocalDateTime>()
 
             parsed.type() shouldBe typeOf<JavaLocalDateTime>()
             with(parsed[0]) {
@@ -356,21 +378,23 @@ class ParseTests {
 
             dateTime.convertTo<JavaLocalDateTime>(
                 ParserOptions(
-                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
-                ),
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern)
+                )
             ) shouldBe parsed
             with(dateTime.toDataFrame()) {
-                convert { dateTime }.to<JavaLocalDateTime>(
-                    ParserOptions(
-                        dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
-                    ),
-                )[dateTime.name] shouldBe parsed
+                convert { dateTime }
+                    .to<JavaLocalDateTime>(
+                        ParserOptions(
+                            dateTime =
+                                DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern)
+                        )
+                    )[dateTime.name] shouldBe parsed
                 parse(
                     ParserOptions(
-                        dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
-                    ),
-                )[dateTime.name] shouldBe
-                    parsed
+                        dateTime =
+                            DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern)
+                    )
+                )[dateTime.name] shouldBe parsed
             }
 
             DataFrame.parser.addJavaDateTimePattern(pattern)
@@ -378,8 +402,8 @@ class ParseTests {
             dateTime.parse(ParserOptions(locale = locale)) shouldBe parsed
             dateTime.convertTo<JavaLocalDateTime>(
                 ParserOptions(
-                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern),
-                ),
+                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalDateTime>(pattern)
+                )
             ) shouldBe parsed
 
             DataFrame.parser.resetToDefault()
@@ -394,9 +418,14 @@ class ParseTests {
         val time by columnOf(" 13-05-30")
         val pattern = "HH-mm-ss"
 
-        val parsed = time.parse(
-            ParserOptions(dateTime = DateTimeParserOptions.Kotlin.withPattern<LocalTime>(pattern)),
-        ).cast<LocalTime>()
+        val parsed =
+            time
+                .parse(
+                    ParserOptions(
+                        dateTime = DateTimeParserOptions.Kotlin.withPattern<LocalTime>(pattern)
+                    )
+                )
+                .cast<LocalTime>()
 
         parsed.type() shouldBe typeOf<LocalTime>()
         with(parsed[0]) {
@@ -408,9 +437,10 @@ class ParseTests {
         with(time.toDataFrame()) {
             convert { time }.toLocalTime(pattern)[time.name] shouldBe parsed
             parse(
-                options = ParserOptions(
-                    dateTime = DateTimeParserOptions.Kotlin.withPattern<LocalTime>(pattern),
-                ),
+                options =
+                    ParserOptions(
+                        dateTime = DateTimeParserOptions.Kotlin.withPattern<LocalTime>(pattern)
+                    )
             )[time.name] shouldBe parsed
         }
 
@@ -427,9 +457,14 @@ class ParseTests {
         val time by columnOf(" 13-05-30")
         val pattern = "HH-mm-ss"
 
-        val parsed = time.parse(
-            ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)),
-        ).cast<JavaLocalTime>()
+        val parsed =
+            time
+                .parse(
+                    ParserOptions(
+                        dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)
+                    )
+                )
+                .cast<JavaLocalTime>()
 
         parsed.type() shouldBe typeOf<JavaLocalTime>()
         with(parsed[0]) {
@@ -438,16 +473,20 @@ class ParseTests {
             second shouldBe 30
         }
         time.convertTo<JavaLocalTime>(
-            ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)),
+            ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern))
         ) shouldBe parsed
         with(time.toDataFrame()) {
-            convert { time }.to<JavaLocalTime>(
-                ParserOptions(dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)),
-            )[time.name] shouldBe parsed
+            convert { time }
+                .to<JavaLocalTime>(
+                    ParserOptions(
+                        dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)
+                    )
+                )[time.name] shouldBe parsed
             parse(
-                options = ParserOptions(
-                    dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern),
-                ),
+                options =
+                    ParserOptions(
+                        dateTime = DateTimeParserOptions.Java.withPattern<JavaLocalTime>(pattern)
+                    )
             )[time.name] shouldBe parsed
         }
 
@@ -463,14 +502,10 @@ class ParseTests {
     fun `parse date adjusting library`() {
         try {
             val col = columnOf("2017-05-30 08:34:14")
-            val parsedJava = col.parse(
-                ParserOptions(dateTime = DateTimeParserOptions.Java),
-            )
+            val parsedJava = col.parse(ParserOptions(dateTime = DateTimeParserOptions.Java))
             parsedJava.type shouldBe typeOf<JavaLocalDateTime>()
 
-            val parsedKotlin = col.parse(
-                ParserOptions(dateTime = DateTimeParserOptions.Kotlin),
-            )
+            val parsedKotlin = col.parse(ParserOptions(dateTime = DateTimeParserOptions.Kotlin))
             parsedKotlin.type shouldBe typeOf<LocalDateTime>()
 
             val parsedDefault = col.parse()
@@ -499,11 +534,7 @@ class ParseTests {
     @Test
     fun `parse column group`() {
         val df = dataFrameOf("a", "b")("1", "2")
-        df
-            .group("a", "b")
-            .into("c")
-            .parse("c")
-            .ungroup("c") shouldBe dataFrameOf("a", "b")(1, 2)
+        df.group("a", "b").into("c").parse("c").ungroup("c") shouldBe dataFrameOf("a", "b")(1, 2)
     }
 
     @Test
@@ -513,23 +544,27 @@ class ParseTests {
 
         val options = ParserOptions(parseExperimentalInstant = false)
         columnOf("2022-01-23T04:29:40Z").parse(options).type shouldBe typeOf<DeprecatedInstant>()
-        columnOf("2022-01-23T04:29:40+01:00").parse(options).type shouldBe typeOf<DeprecatedInstant>()
+        columnOf("2022-01-23T04:29:40+01:00").parse(options).type shouldBe
+            typeOf<DeprecatedInstant>()
 
         columnOf("2022-01-23T04:29:40").parse().type shouldBe typeOf<LocalDateTime>()
     }
 
     @Test
     fun `can parse instants`() {
-        val deprecatedInstantParser = Parsers[typeOf<DeprecatedInstant>()].single().applyOptions(null)
-        val stdlibInstantParser = Parsers[typeOf<StdlibInstant>()].single()
-            .applyOptions(ParserOptions(parseExperimentalInstant = true))
-        val javaInstantParser = Parsers[typeOf<JavaInstant>()].last() // the default one
-            .applyOptions(null)
+        val deprecatedInstantParser =
+            Parsers[typeOf<DeprecatedInstant>()].single().applyOptions(null)
+        val stdlibInstantParser =
+            Parsers[typeOf<StdlibInstant>()].single()
+                .applyOptions(ParserOptions(parseExperimentalInstant = true))
+        val javaInstantParser =
+            Parsers[typeOf<JavaInstant>()].last() // the default one
+                .applyOptions(null)
 
         // from the kotlinx-datetime tests, java instants treat leap seconds etc. like this
-        fun parseInstantLikeJavaDoesOrNull(input: String): StdlibInstant? =
-            catchSilent {
-                DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET.parseOrNull(input)?.apply {
+        fun parseInstantLikeJavaDoesOrNull(input: String): StdlibInstant? = catchSilent {
+            DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET.parseOrNull(input)
+                ?.apply {
                     when {
                         hour == 24 && minute == 0 && second == 0 && nanosecond == 0 -> {
                             setDate(toLocalDate().plus(1, DateTimeUnit.DAY))
@@ -538,15 +573,17 @@ class ParseTests {
 
                         hour == 23 && minute == 59 && second == 60 -> second = 59
                     }
-                }?.toInstantUsingOffset()
-            }
+                }
+                ?.toInstantUsingOffset()
+        }
 
         fun formatTwoDigits(i: Int) = if (i < 10) "0$i" else "$i"
 
         for (hour in 23..25) {
             for (minute in listOf(0..5, 58..62).flatten()) {
                 for (second in listOf(0..5, 58..62).flatten()) {
-                    val input = "2020-03-16T$hour:${formatTwoDigits(minute)}:${formatTwoDigits(second)}Z"
+                    val input =
+                        "2020-03-16T$hour:${formatTwoDigits(minute)}:${formatTwoDigits(second)}Z"
 
                     val deprecatedParserRes = deprecatedInstantParser(input) as DeprecatedInstant?
                     val javaParserRes = javaInstantParser(input) as JavaInstant?
@@ -561,9 +598,9 @@ class ParseTests {
                     javaParserRes?.toKotlinInstant() shouldBe stdlibParserRes
 
                     // our parser has a fallback mechanism built in, like this
-                    deprecatedParserRes shouldBe (
-                        deprecatedInstantRes ?: javaInstantRes?.toKotlinInstant()?.toDeprecatedInstant()
-                    )
+                    deprecatedParserRes shouldBe
+                        (deprecatedInstantRes
+                            ?: javaInstantRes?.toKotlinInstant()?.toDeprecatedInstant())
                     deprecatedParserRes shouldBe stdlibInstantLikeJava?.toDeprecatedInstant()
 
                     stdlibParserRes shouldBe (stdlibInstantRes ?: javaInstantRes?.toKotlinInstant())
@@ -571,9 +608,8 @@ class ParseTests {
 
                     javaParserRes shouldBe javaInstantRes
 
-                    deprecatedParserRes?.toStdlibInstant()?.toJavaInstant() shouldBe (
-                        stdlibInstantLikeJava?.toJavaInstant()
-                    )
+                    deprecatedParserRes?.toStdlibInstant()?.toJavaInstant() shouldBe
+                        (stdlibInstantLikeJava?.toJavaInstant())
                     stdlibParserRes?.toJavaInstant() shouldBe stdlibInstantLikeJava?.toJavaInstant()
                     stdlibInstantLikeJava?.toJavaInstant() shouldBe javaParserRes
                     javaParserRes shouldBe javaInstantRes
@@ -590,7 +626,8 @@ class ParseTests {
 
     @Test
     fun `can parse duration isoStrings`() {
-        val durationParser = Parsers[typeOf<Duration>()].single().applyOptions(null) as (String) -> Duration?
+        val durationParser =
+            Parsers[typeOf<Duration>()].single().applyOptions(null) as (String) -> Duration?
         val javaDurationParser =
             Parsers[typeOf<JavaDuration>()].single().applyOptions(null) as (String) -> JavaDuration?
 
@@ -643,7 +680,12 @@ class ParseTests {
             "-PT-9999999999999H",
             "-PT-1234567890123456789012S",
         )
-        testSuccess(-Duration.INFINITE, "-PT9999999999999H", "-PT10000000000000H", "PT-1234567890123456789012S")
+        testSuccess(
+            -Duration.INFINITE,
+            "-PT9999999999999H",
+            "-PT10000000000000H",
+            "PT-1234567890123456789012S",
+        )
 
         fun testFailure(isoString: String) {
             catchSilent { Duration.parse(isoString) } shouldBe durationParser(isoString)
@@ -651,49 +693,51 @@ class ParseTests {
         }
 
         listOf(
-            "",
-            " ",
-            "P",
-            "PT",
-            "P1DT",
-            "P1",
-            "PT1",
-            "0",
-            "+P",
-            "+",
-            "-",
-            "h",
-            "H",
-            "something",
-            "1m",
-            "1d",
-            "2d 11s",
-            "Infinity",
-            "-Infinity", // successful in kotlin, not in java
-            "P+12+34D",
-            "P12-34D",
-            "PT1234567890-1234567890S",
-            " P1D",
-            "PT1S ",
-            "P3W",
-            "P1Y",
-            "P1M",
-            "P1S",
-            "PT1D",
-            "PT1Y",
-            "PT1S2S",
-            "PT1S2H",
-            "P9999999999999DT-9999999999999H",
-            "PT1.5H",
-            "PT0.5D",
-            "PT.5S",
-            "PT0.25.25S",
-        ).forEach(::testFailure)
+                "",
+                " ",
+                "P",
+                "PT",
+                "P1DT",
+                "P1",
+                "PT1",
+                "0",
+                "+P",
+                "+",
+                "-",
+                "h",
+                "H",
+                "something",
+                "1m",
+                "1d",
+                "2d 11s",
+                "Infinity",
+                "-Infinity", // successful in kotlin, not in java
+                "P+12+34D",
+                "P12-34D",
+                "PT1234567890-1234567890S",
+                " P1D",
+                "PT1S ",
+                "P3W",
+                "P1Y",
+                "P1M",
+                "P1S",
+                "PT1D",
+                "PT1Y",
+                "PT1S2S",
+                "PT1S2H",
+                "P9999999999999DT-9999999999999H",
+                "PT1.5H",
+                "PT0.5D",
+                "PT.5S",
+                "PT0.25.25S",
+            )
+            .forEach(::testFailure)
     }
 
     @Test
     fun `can parse duration default kotlin strings`() {
-        val durationParser = Parsers[typeOf<Duration>()].single().applyOptions(null) as (String) -> Duration?
+        val durationParser =
+            Parsers[typeOf<Duration>()].single().applyOptions(null) as (String) -> Duration?
 
         fun testParsing(string: String, expectedDuration: Duration) {
             Duration.parse(string) shouldBe expectedDuration
@@ -772,23 +816,26 @@ class ParseTests {
         testSuccess(0.7512.nanoseconds, "1ns")
 
         // equal to zero
-//        testSuccess(0.023.nanoseconds, "0.023ns")
-//        testSuccess(0.0034.nanoseconds, "0.0034ns")
-//        testSuccess(0.0000035.nanoseconds, "0.0000035ns")
+        //        testSuccess(0.023.nanoseconds, "0.023ns")
+        //        testSuccess(0.0034.nanoseconds, "0.0034ns")
+        //        testSuccess(0.0000035.nanoseconds, "0.0000035ns")
 
         testSuccess(Duration.ZERO, "0s", "0.4ns", "0000.0000ns")
         testSuccess(365.days * 10000, "3650000d")
         testSuccess(300.days * 100000, "30000000d")
         testSuccess(365.days * 100000, "36500000d")
-        testSuccess(((Long.MAX_VALUE / 2) - 1).milliseconds, "53375995583d 15h 36m 27.902s") // max finite value
+        testSuccess(
+            ((Long.MAX_VALUE / 2) - 1).milliseconds,
+            "53375995583d 15h 36m 27.902s",
+        ) // max finite value
 
         // all infinite
-//        val universeAge = Duration.days(365.25) * 13.799e9
-//        val planckTime = Duration.seconds(5.4e-44)
+        //        val universeAge = Duration.days(365.25) * 13.799e9
+        //        val planckTime = Duration.seconds(5.4e-44)
 
-//        testSuccess(universeAge, "5.04e+12d")
-//        testSuccess(planckTime, "5.40e-44s")
-//        testSuccess(Duration.nanoseconds(Double.MAX_VALUE), "2.08e+294d")
+        //        testSuccess(universeAge, "5.04e+12d")
+        //        testSuccess(planckTime, "5.40e-44s")
+        //        testSuccess(Duration.nanoseconds(Double.MAX_VALUE), "2.08e+294d")
         testSuccess(Duration.INFINITE, "Infinity", "53375995583d 20h", "+Infinity")
         testSuccess(-Duration.INFINITE, "-Infinity", "-(53375995583d 20h)")
 
@@ -797,65 +844,67 @@ class ParseTests {
         }
 
         listOf(
-            "",
-            " ",
-            "P",
-            "PT",
-            "P1DT",
-            "P1",
-            "PT1",
-            "0",
-            "+P",
-            "+",
-            "-",
-            "h",
-            "H",
-            "something",
-            "1234567890123456789012ns",
-            "Inf",
-            "-Infinity value",
-            "1s ",
-            " 1s",
-            "1d 1m 1h",
-            "1s 2s",
-            "-12m 15s",
-            "-12m -15s",
-            "-()",
-            "-(12m 30s",
-            "+12m 15s",
-            "+12m +15s",
-            "+()",
-            "+(12m 30s",
-            "()",
-            "(12m 30s)",
-            "12.5m 11.5s",
-            ".2s",
-            "0.1553.39m",
-            "P+12+34D",
-            "P12-34D",
-            "PT1234567890-1234567890S",
-            " P1D",
-            "PT1S ",
-            "P1Y",
-            "P1M",
-            "P1S",
-            "PT1D",
-            "PT1Y",
-            "PT1S2S",
-            "PT1S2H",
-            "P9999999999999DT-9999999999999H",
-            "PT1.5H",
-            "PT0.5D",
-            "PT.5S",
-            "PT0.25.25S",
-        ).forEach(::testFailure)
+                "",
+                " ",
+                "P",
+                "PT",
+                "P1DT",
+                "P1",
+                "PT1",
+                "0",
+                "+P",
+                "+",
+                "-",
+                "h",
+                "H",
+                "something",
+                "1234567890123456789012ns",
+                "Inf",
+                "-Infinity value",
+                "1s ",
+                " 1s",
+                "1d 1m 1h",
+                "1s 2s",
+                "-12m 15s",
+                "-12m -15s",
+                "-()",
+                "-(12m 30s",
+                "+12m 15s",
+                "+12m +15s",
+                "+()",
+                "+(12m 30s",
+                "()",
+                "(12m 30s)",
+                "12.5m 11.5s",
+                ".2s",
+                "0.1553.39m",
+                "P+12+34D",
+                "P12-34D",
+                "PT1234567890-1234567890S",
+                " P1D",
+                "PT1S ",
+                "P1Y",
+                "P1M",
+                "P1S",
+                "PT1D",
+                "PT1Y",
+                "PT1S2S",
+                "PT1S2H",
+                "P9999999999999DT-9999999999999H",
+                "PT1.5H",
+                "PT0.5D",
+                "PT.5S",
+                "PT0.25.25S",
+            )
+            .forEach(::testFailure)
     }
 
     @Test
     fun `Parse normal string column`() {
-        val df = dataFrameOf(List(5_000) { "_$it" }).fill(100) {
-            Random.nextInt().toChar().toString() + Random.nextInt().toChar()
-        }
+        val df =
+            dataFrameOf(List(5_000) { "_$it" }).fill(100) {
+                Random.nextInt().toChar().toString() + Random.nextInt().toChar()
+            }
 
         df.parse()
     }
@@ -890,9 +939,7 @@ class ParseTests {
         val invalidUUID = "this is not a UUID"
         val column = columnOf(invalidUUID)
         // tryParse as string is not formatted.
-        val parsed = column.tryParse(
-            ParserOptions(parseExperimentalUuid = true),
-        )
+        val parsed = column.tryParse(ParserOptions(parseExperimentalUuid = true))
 
         parsed.type() shouldNotBe typeOf<Uuid>()
         parsed.type() shouldBe typeOf<String>()
@@ -909,16 +956,15 @@ class ParseTests {
         parsed.type() shouldBe typeOf<String>()
     }
 
-    /**
-     * Asserts that all elements of the iterable are equal to each other
-     */
+    /** Asserts that all elements of the iterable are equal to each other */
     private fun <T> Iterable<T>.shouldAllBeEqual(): Iterable<T> {
-        this should {
-            it.reduce { a, b ->
-                a shouldBe b
-                b
+        this should
+            {
+                it.reduce { a, b ->
+                    a shouldBe b
+                    b
+                }
             }
-        }
         return this
     }
 }

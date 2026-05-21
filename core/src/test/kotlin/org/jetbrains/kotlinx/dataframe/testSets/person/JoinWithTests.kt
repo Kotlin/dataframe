@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.api.JoinType
 import org.jetbrains.kotlinx.dataframe.api.addId
 import org.jetbrains.kotlinx.dataframe.api.all
@@ -22,16 +23,13 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rightJoinWith
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class JoinWithTests : BaseJoinTest() {
 
     @Test
     fun `inner join`() {
-        val res = typed.joinWith(typed2) {
-            name == right.name && city == right.origin
-        }
+        val res = typed.joinWith(typed2) { name == right.name && city == right.origin }
         res.columnsCount() shouldBe 8
         res.rowsCount() shouldBe 7
         res["age1"].hasNulls() shouldBe false
@@ -59,9 +57,7 @@ class JoinWithTests : BaseJoinTest() {
 
     @Test
     fun `right join`() {
-        val res = typed.rightJoinWith(typed2) {
-            name == right.name && city == right.origin
-        }
+        val res = typed.rightJoinWith(typed2) { name == right.name && city == right.origin }
         res.columnsCount() shouldBe 8
         res.rowsCount() shouldBe 9
         res["age1"].hasNulls() shouldBe true
@@ -71,7 +67,9 @@ class JoinWithTests : BaseJoinTest() {
         res.age.type() shouldBe typeOf<Int?>()
         val newEntries = res.filter { it["age"] == null }
         newEntries.rowsCount() shouldBe 2
-        newEntries.all { it["name1"] == "Bob" && it["origin"] == "Paris" && weight == null } shouldBe true
+        newEntries.all {
+            it["name1"] == "Bob" && it["origin"] == "Paris" && weight == null
+        } shouldBe true
     }
 
     @Test
@@ -92,7 +90,8 @@ class JoinWithTests : BaseJoinTest() {
     @Test
     fun `filter join`() {
         val res = typed.filterJoinWith(typed2) { city == right.origin }
-        val expected = typed.innerJoinWith(typed2.select { origin }) { city == right.origin }.remove("origin")
+        val expected =
+            typed.innerJoinWith(typed2.select { origin }) { city == right.origin }.remove("origin")
         res shouldBe expected
     }
 
@@ -106,25 +105,17 @@ class JoinWithTests : BaseJoinTest() {
         val withIndex = typed.addId(indexColumn)
         val joined = withIndex.filterJoinWith(typed2) { city == right.origin }
         val joinedIndices = joined[indexColumn].toSet()
-        val expected = withIndex.filter { !joinedIndices.contains(it[indexColumn]) }.remove(indexColumn)
+        val expected =
+            withIndex.filter { !joinedIndices.contains(it[indexColumn]) }.remove(indexColumn)
 
         res shouldBe expected
     }
 
     @Test
     fun `exclude join`() {
-        val df = dataFrameOf("a", "b")(
-            1, "a",
-            2, "b",
-            3, "c",
-        )
+        val df = dataFrameOf("a", "b")(1, "a", 2, "b", 3, "c")
 
-        val df1 = dataFrameOf("a", "c")(
-            5, "V",
-            1, "I",
-            2, "II",
-            3, "III",
-        )
+        val df1 = dataFrameOf("a", "c")(5, "V", 1, "I", 2, "II", 3, "III")
 
         df.append(4, "e").excludeJoin(df1).print()
 

@@ -20,53 +20,58 @@ internal fun <T, C> RenameClause<T, C>.renameImpl(newNames: Array<out String>): 
     if (selectedColumns.size != newNames.size) {
         throw IllegalArgumentException(
             "Selected column count (${selectedColumns.size}) must match new " +
-                "column names count (${newNames.size}).",
+                "column names count (${newNames.size})."
         )
     }
 
     // associate old column names with new ones
-    val oldToNew = newNames.mapIndexed { index, newName ->
-        selectedColumns[index].path to newName
-    }.toMap()
+    val oldToNew =
+        newNames.mapIndexed { index, newName -> selectedColumns[index].path to newName }.toMap()
 
     return renameImpl { column ->
         oldToNew[column.path] ?: throw IllegalArgumentException("Unexpected column: $column")
     }
 }
 
-internal fun <T, C> RenameClause<T, C>.renameImpl(transform: (ColumnWithPath<C>) -> String): DataFrame<T> {
+internal fun <T, C> RenameClause<T, C>.renameImpl(
+    transform: (ColumnWithPath<C>) -> String
+): DataFrame<T> {
     // get all selected columns and their paths
-    val selectedColumnsWithPath = df.getColumnsWithPaths(columns)
-        .associateBy { it.path }
+    val selectedColumnsWithPath = df.getColumnsWithPaths(columns).associateBy { it.path }
     // gather a tree of all columns where the nodes will be renamed
     val tree = df.getColumnsWithPaths { colsAtAnyDepth() }.collectTree()
 
     // perform rename in nodes
-    tree.allChildrenNotNull().map { it to it.pathFromRoot() }.forEach { (node, originalPath) ->
-        // Check if the current node/column is a selected column and, if so, get its ColumnWithPath
-        val column = selectedColumnsWithPath[originalPath] ?: return@forEach
-        // Use the found selected ColumnWithPath to query for the new name
-        val newColumnName = transform(column)
-        node.name = newColumnName
-    }
+    tree
+        .allChildrenNotNull()
+        .map { it to it.pathFromRoot() }
+        .forEach { (node, originalPath) ->
+            // Check if the current node/column is a selected column and, if so, get its
+            // ColumnWithPath
+            val column = selectedColumnsWithPath[originalPath] ?: return@forEach
+            // Use the found selected ColumnWithPath to query for the new name
+            val newColumnName = transform(column)
+            node.name = newColumnName
+        }
 
     // use the mapping function to convert the tree to a ColumnGroup/ValueColumn structure
     // The result will be a ColumnGroup, since the root node's data is null
-    val renamedDfAsColumnGroup = tree.map { node, children ->
-        val col = node.data
-        when (col?.kind) {
-            // if the column is a value column or a frame column, rename it using the node's (new) name
-            ColumnKind.Value, ColumnKind.Frame ->
-                col.rename(node.name)
+    val renamedDfAsColumnGroup =
+        tree.map { node, children ->
+            val col = node.data
+            when (col?.kind) {
+                // if the column is a value column or a frame column, rename it using the node's
+                // (new) name
+                ColumnKind.Value,
+                ColumnKind.Frame -> col.rename(node.name)
 
-            // if the column is a group column, create a new column group using the node's (new) name and children
-            // if the column is null, node is the root, so we'll create a column group as well
-            ColumnKind.Group, null ->
-                children
-                    .toDataFrame()
-                    .asColumnGroup(node.name)
-        }
-    } as ColumnGroup<*>
+                // if the column is a group column, create a new column group using the node's (new)
+                // name and children
+                // if the column is null, node is the root, so we'll create a column group as well
+                ColumnKind.Group,
+                null -> children.toDataFrame().asColumnGroup(node.name)
+            }
+        } as ColumnGroup<*>
 
     // convert the created ColumnGroup to a DataFrame
     val renamedDf = renamedDfAsColumnGroup.columns().toDataFrame()

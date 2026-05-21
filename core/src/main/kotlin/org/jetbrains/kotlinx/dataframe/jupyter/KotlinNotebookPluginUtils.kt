@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import java.util.Arrays
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -40,95 +41,111 @@ import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.valuesAreComparable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import java.util.Arrays
 
 /**
- * A class with utility methods for Kotlin Notebook Plugin integration.
- * Kotlin Notebook Plugin acts as a client of Kotlin Jupyter kernel and uses this functionality
- * for dynamic pagination when rendering dataframes.
- * The plugin sends the following code to the kernel to evaluate:
+ * A class with utility methods for Kotlin Notebook Plugin integration. Kotlin Notebook Plugin acts
+ * as a client of Kotlin Jupyter kernel and uses this functionality for dynamic pagination when
+ * rendering dataframes. The plugin sends the following code to the kernel to evaluate:
  * DISPLAY(KotlinNotebooksPluginUtils.getRowsSubsetForRendering(Out[...], 0, 20), "")
  */
 public object KotlinNotebookPluginUtils {
     private const val KTNB_IDE_BUILD_PROP = "KTNB_IDE_BUILD_NUMBER"
 
     /**
-     * Returns a subset of rows from the given dataframe for rendering.
-     * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
+     * Returns a subset of rows from the given dataframe for rendering. It's used for example for
+     * dynamic pagination in Kotlin Notebook Plugin.
      */
     @RequiredByIntellijPlugin
-    public fun getRowsSubsetForRendering(dataFrameLike: Any?, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
+    public fun getRowsSubsetForRendering(
+        dataFrameLike: Any?,
+        startIdx: Int,
+        endIdx: Int,
+    ): DisableRowsLimitWrapper =
         when (dataFrameLike) {
             null -> throw IllegalArgumentException("Dataframe is null")
             else -> getRowsSubsetForRendering(convertToDataFrame(dataFrameLike), startIdx, endIdx)
         }
 
     /**
-     * Returns a subset of rows from the given dataframe for rendering.
-     * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
+     * Returns a subset of rows from the given dataframe for rendering. It's used for example for
+     * dynamic pagination in Kotlin Notebook Plugin.
      */
-    public fun getRowsSubsetForRendering(df: AnyFrame, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
-        DisableRowsLimitWrapper(df[startIdx..<endIdx], addHtml = false)
+    public fun getRowsSubsetForRendering(
+        df: AnyFrame,
+        startIdx: Int,
+        endIdx: Int,
+    ): DisableRowsLimitWrapper = DisableRowsLimitWrapper(df[startIdx..<endIdx], addHtml = false)
 
     /**
-     * Sorts a dataframe-like object by multiple columns.
-     * If a column type is not comparable, sorting by string representation is applied instead.
-     * Sorts DataFrames by their size because looking at the smallest / biggest groups after groupBy is very popular.
+     * Sorts a dataframe-like object by multiple columns. If a column type is not comparable,
+     * sorting by string representation is applied instead. Sorts DataFrames by their size because
+     * looking at the smallest / biggest groups after groupBy is very popular.
      *
-     * Returns "lazily materialized" dataframe, which means get, getRows, take operation must be applied to turn it to a valid sorted dataframe.
-     * "lazily materialized" - after sorting 1 million of rows and given the page size = 100, a dataframe with only 100 rows is created.
+     * Returns "lazily materialized" dataframe, which means get, getRows, take operation must be
+     * applied to turn it to a valid sorted dataframe. "lazily materialized" - after sorting 1
+     * million of rows and given the page size = 100, a dataframe with only 100 rows is created.
      *
      * @param dataFrameLike The dataframe-like object to sort.
-     * @param columnPaths The list of columns to sort by. Each element in the list represents a column path
-     * @param desc The list of booleans indicating whether each column should be sorted in descending order.
-     *             The size of this list should be the same as the size of the `columns` list.
-     *
-     * @throws IllegalArgumentException if `dataFrameLike` is `null`.
-     *
+     * @param columnPaths The list of columns to sort by. Each element in the list represents a
+     *   column path
+     * @param desc The list of booleans indicating whether each column should be sorted in
+     *   descending order. The size of this list should be the same as the size of the `columns`
+     *   list.
      * @return The sorted dataframe.
+     * @throws IllegalArgumentException if `dataFrameLike` is `null`.
      */
     @RequiredByIntellijPlugin
-    public fun sortByColumns(dataFrameLike: Any?, columnPaths: List<List<String>>, desc: List<Boolean>): AnyFrame =
+    public fun sortByColumns(
+        dataFrameLike: Any?,
+        columnPaths: List<List<String>>,
+        desc: List<Boolean>,
+    ): AnyFrame =
         when (dataFrameLike) {
             null -> throw IllegalArgumentException("Dataframe is null")
             else -> sortByColumns(convertToDataFrame(dataFrameLike), columnPaths, desc)
         }
 
     /**
-     * Sorts a dataframe by multiple columns with specified sorting order for each column.
-     * If a column type is not comparable, sorting by string representation is applied instead.
+     * Sorts a dataframe by multiple columns with specified sorting order for each column. If a
+     * column type is not comparable, sorting by string representation is applied instead.
      *
      * @param df The dataframe to be sorted.
-     * @param columnPaths A list of column paths where each path is a list of strings representing the hierarchical path of the column.
-     * @param isDesc A list of boolean values indicating whether each column should be sorted in descending order;
-     *               true for descending, false for ascending. The size of this list should match the size of `columnPaths`.
+     * @param columnPaths A list of column paths where each path is a list of strings representing
+     *   the hierarchical path of the column.
+     * @param isDesc A list of boolean values indicating whether each column should be sorted in
+     *   descending order; true for descending, false for ascending. The size of this list should
+     *   match the size of `columnPaths`.
      * @return The sorted dataframe.
      */
-    public fun sortByColumns(df: AnyFrame, columnPaths: List<List<String>>, isDesc: List<Boolean>): AnyFrame {
+    public fun sortByColumns(
+        df: AnyFrame,
+        columnPaths: List<List<String>>,
+        isDesc: List<Boolean>,
+    ): AnyFrame {
         require(columnPaths.all { it.isNotEmpty() })
         require(columnPaths.size == isDesc.size)
 
-        val sortKeys = columnPaths.map { path ->
-            ColumnPath(path)
-        }
+        val sortKeys = columnPaths.map { path -> ColumnPath(path) }
 
         if (sortKeys.size == 1) {
             val column = df.getColumn(sortKeys[0])
 
-            // Not sure how to have generic logic that would produce Comparator<Int> and Comparator<DataRow> without overhead
-            // For now Comparator<DataRow> is needed for fallback case of sorting multiple columns. Although it's now impossible in UI
+            // Not sure how to have generic logic that would produce Comparator<Int> and
+            // Comparator<DataRow> without overhead
+            // For now Comparator<DataRow> is needed for fallback case of sorting multiple columns.
+            // Although it's now impossible in UI
             // Please make sure to change both this and createColumnComparator
-            val comparator: Comparator<Int> = when {
-                column.valuesAreComparable() -> compareBy(nullsLast()) {
-                    column[it] as Comparable<Any>?
+            val comparator: Comparator<Int> =
+                when {
+                    column.valuesAreComparable() ->
+                        compareBy(nullsLast()) { column[it] as Comparable<Any>? }
+
+                    column.isFrameColumn() -> compareBy { column[it].rowsCount() }
+
+                    column.isList() -> compareBy { (column[it] as? List<*>)?.size ?: 0 }
+
+                    else -> compareBy { column[it]?.toString() ?: "" }
                 }
-
-                column.isFrameColumn() -> compareBy { column[it].rowsCount() }
-
-                column.isList() -> compareBy { (column[it] as? List<*>)?.size ?: 0 }
-
-                else -> compareBy { column[it]?.toString() ?: "" }
-            }
 
             val finalComparator = if (isDesc[0]) comparator.reversed() else comparator
 
@@ -147,41 +164,44 @@ public object KotlinNotebookPluginUtils {
         sortKeys: List<ColumnPath>,
         isDesc: List<Boolean>,
     ): Comparator<DataRow<*>> {
-        val columnComparators = sortKeys.zip(isDesc).map { (key, desc) ->
-            val column = df.getColumn(key)
-            createColumnComparator(column, desc)
-        }
+        val columnComparators =
+            sortKeys.zip(isDesc).map { (key, desc) ->
+                val column = df.getColumn(key)
+                createColumnComparator(column, desc)
+            }
 
         return when (columnComparators.size) {
             1 -> columnComparators.single()
 
-            else -> Comparator { row1, row2 ->
-                for (comparator in columnComparators) {
-                    val result = comparator.compare(row1, row2)
-                    // If a comparison result is non-zero, we have resolved the ordering
-                    if (result != 0) return@Comparator result
+            else ->
+                Comparator { row1, row2 ->
+                    for (comparator in columnComparators) {
+                        val result = comparator.compare(row1, row2)
+                        // If a comparison result is non-zero, we have resolved the ordering
+                        if (result != 0) return@Comparator result
+                    }
+                    // All comparisons are equal
+                    0
                 }
-                // All comparisons are equal
-                0
-            }
         }
     }
 
     private fun createColumnComparator(column: AnyCol, desc: Boolean): Comparator<DataRow<*>> {
-        val comparator: Comparator<DataRow<*>> = when {
-            column.valuesAreComparable() -> compareBy(nullsLast()) {
-                column[it] as Comparable<Any?>?
+        val comparator: Comparator<DataRow<*>> =
+            when {
+                column.valuesAreComparable() ->
+                    compareBy(nullsLast()) { column[it] as Comparable<Any?>? }
+
+                // Comparator shows a slight improvement in performance for this case
+                column.isFrameColumn() ->
+                    Comparator { r1, r2 ->
+                        column[r1].rowsCount().compareTo(column[r2].rowsCount())
+                    }
+
+                column.isList() -> compareBy { (column[it] as? List<*>)?.size ?: 0 }
+
+                else -> compareBy { column[it]?.toString() ?: "" }
             }
-
-            // Comparator shows a slight improvement in performance for this case
-            column.isFrameColumn() -> Comparator { r1, r2 ->
-                column[r1].rowsCount().compareTo(column[r2].rowsCount())
-            }
-
-            column.isList() -> compareBy { (column[it] as? List<*>)?.size ?: 0 }
-
-            else -> compareBy { column[it]?.toString() ?: "" }
-        }
         return if (desc) comparator.reversed() else comparator
     }
 
@@ -190,8 +210,10 @@ public object KotlinNotebookPluginUtils {
         return SortedDataFrameView(this, permutation)
     }
 
-    private class SortedDataFrameView<T>(private val source: DataFrame<T>, private val permutation: List<Int>) :
-        DataFrame<T> by source {
+    private class SortedDataFrameView<T>(
+        private val source: DataFrame<T>,
+        private val permutation: List<Int>,
+    ) : DataFrame<T> by source {
 
         override operator fun get(index: Int): DataRow<T> = source[permutation[index]]
 
@@ -233,16 +255,15 @@ public object KotlinNotebookPluginUtils {
             is ReplaceClause<*, *>,
             is GroupClause<*, *>,
             is InsertClause<*>,
-            is FormatClause<*, *>,
-            -> true
+            is FormatClause<*, *> -> true
 
             else -> false
         }
 
     /**
-     * Converts [dataframeLike] to [AnyFrame].
-     * If [dataframeLike] is already [AnyFrame] then it is returned as is.
-     * If it's not possible to convert [dataframeLike] to [AnyFrame] then [IllegalArgumentException] is thrown.
+     * Converts [dataframeLike] to [AnyFrame]. If [dataframeLike] is already [AnyFrame] then it is
+     * returned as is. If it's not possible to convert [dataframeLike] to [AnyFrame] then
+     * [IllegalArgumentException] is thrown.
      */
     public fun convertToDataFrame(dataframeLike: Any): AnyFrame =
         when (dataframeLike) {
@@ -260,24 +281,21 @@ public object KotlinNotebookPluginUtils {
 
             is Split<*, *> -> dataframeLike.toDataFrame()
 
-            is Merge<*, *, *> -> dataframeLike.into(
-                generateRandomVariationOfColumnName(
-                    "merged",
-                    dataframeLike.df.columnNames(),
-                ),
-            )
+            is Merge<*, *, *> ->
+                dataframeLike.into(
+                    generateRandomVariationOfColumnName("merged", dataframeLike.df.columnNames())
+                )
 
-            is MergeWithTransform<*, *, *> -> dataframeLike.into(
-                generateRandomVariationOfColumnName(
-                    "merged",
-                    dataframeLike.df.columnNames(),
-                ),
-            )
+            is MergeWithTransform<*, *, *> ->
+                dataframeLike.into(
+                    generateRandomVariationOfColumnName("merged", dataframeLike.df.columnNames())
+                )
 
-            is Gather<*, *, *, *> -> dataframeLike.into(
-                generateRandomVariationOfColumnName("key", dataframeLike.df.columnNames()),
-                generateRandomVariationOfColumnName("value", dataframeLike.df.columnNames()),
-            )
+            is Gather<*, *, *, *> ->
+                dataframeLike.into(
+                    generateRandomVariationOfColumnName("key", dataframeLike.df.columnNames()),
+                    generateRandomVariationOfColumnName("value", dataframeLike.df.columnNames()),
+                )
 
             is Update<*, *> -> dataframeLike.df
 
@@ -301,12 +319,10 @@ public object KotlinNotebookPluginUtils {
 
             is ReplaceClause<*, *> -> dataframeLike.df
 
-            is GroupClause<*, *> -> dataframeLike.into(
-                generateRandomVariationOfColumnName(
-                    "untitled",
-                    dataframeLike.df.columnNames(),
-                ),
-            )
+            is GroupClause<*, *> ->
+                dataframeLike.into(
+                    generateRandomVariationOfColumnName("untitled", dataframeLike.df.columnNames())
+                )
 
             is InsertClause<*> -> dataframeLike.at(0)
 
@@ -330,8 +346,8 @@ public object KotlinNotebookPluginUtils {
     /**
      * Retrieves the build number of the Kotlin Notebook IDE.
      *
-     * @return The build number of the Kotlin Notebook IDE as an instance of [IdeBuildNumber],
-     * or null if the build number is not available.
+     * @return The build number of the Kotlin Notebook IDE as an instance of [IdeBuildNumber], or
+     *   null if the build number is not available.
      */
     public fun getKotlinNotebookIDEBuildNumber(): IdeBuildNumber? {
         val value = System.getProperty(KTNB_IDE_BUILD_PROP, null) ?: return null

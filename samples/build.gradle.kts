@@ -12,24 +12,22 @@ plugins {
     }
 }
 
-val dependentProjects = with(projects) {
-    listOf(
-        core,
-        dataframeArrow,
-        dataframeExcel,
-        dataframeJdbc,
-        dataframeCsv,
-        dataframeJson,
-        dataframeOpenapi,
-        dataframeOpenapiGenerator,
-    )
-}.map { project(it.path) }
+val dependentProjects =
+    with(projects) {
+            listOf(
+                core,
+                dataframeArrow,
+                dataframeExcel,
+                dataframeJdbc,
+                dataframeCsv,
+                dataframeJson,
+                dataframeOpenapi,
+                dataframeOpenapiGenerator,
+            )
+        }
+        .map { project(it.path) }
 
-tasks.withType<KotlinCompile> {
-    dependentProjects.forEach {
-        dependsOn("${it.path}:jar")
-    }
-}
+tasks.withType<KotlinCompile> { dependentProjects.forEach { dependsOn("${it.path}:jar") } }
 
 tasks.withType<KotlinCompile>().configureEach {
     friendPaths.from(project(projects.core.path).projectDir)
@@ -40,8 +38,10 @@ tasks.withType<KotlinCompile>().configureEach {
 val dependentProjectJarPaths = dependentProjects.map {
     it.configurations
         .getByName("instrumentedJars")
-        .artifacts.single()
-        .file.absolutePath
+        .artifacts
+        .single()
+        .file
+        .absolutePath
         .replace(File.separatorChar, '/')
 }
 
@@ -62,12 +62,8 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
-    testImplementation(libs.kandy) {
-        exclude("org.jetbrains.kotlinx", "dataframe")
-    }
-    testImplementation(libs.kandy.samples.utils) {
-        exclude("org.jetbrains.kotlinx", "dataframe")
-    }
+    testImplementation(libs.kandy) { exclude("org.jetbrains.kotlinx", "dataframe") }
+    testImplementation(libs.kandy.samples.utils) { exclude("org.jetbrains.kotlinx", "dataframe") }
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
@@ -79,9 +75,7 @@ korro {
     // TODO(#898)
     // Should work without "missing" errors
     // after migration all test sample to :samples module
-    behavior {
-        ignoreMissing = true
-    }
+    behavior { ignoreMissing = true }
 
     docs {
         from(
@@ -108,7 +102,7 @@ korro {
                 include("columnArithmetics.md")
                 include("groupBy.md")
                 include("pivot.md")
-            },
+            }
         )
         baseDir = rootProject.file("docs/StardustDocs/topics")
     }
@@ -121,48 +115,33 @@ korro {
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/utils/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/multiple/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/render/*.kt")
-                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt")
+                include(
+                    "src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/collectionsInterop/*.kt"
+                )
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/column/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/info/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
-            },
+            }
         )
 
-        outputs.from(
-            fileTree(project.layout.buildDirectory) {
-                include("korroOutputLines/*")
-            },
-        )
+        outputs.from(fileTree(project.layout.buildDirectory) { include("korroOutputLines/*") })
     }
 
     groupSamples {
-
         beforeSample = "<tab title=\"NAME\">\n"
         afterSample = "\n</tab>"
 
-        funSuffix("_properties") {
-            replaceText("NAME", "Properties")
-        }
-        funSuffix("_accessors") {
-            replaceText("NAME", "Accessors")
-        }
-        funSuffix("_strings") {
-            replaceText("NAME", "Strings")
-        }
-        funSuffix("_kotlin") {
-            replaceText("NAME", "Kotlin")
-        }
-        funSuffix("_java") {
-            replaceText("NAME", "Java")
-        }
+        funSuffix("_properties") { replaceText("NAME", "Properties") }
+        funSuffix("_accessors") { replaceText("NAME", "Accessors") }
+        funSuffix("_strings") { replaceText("NAME", "Strings") }
+        funSuffix("_kotlin") { replaceText("NAME", "Kotlin") }
+        funSuffix("_java") { replaceText("NAME", "Java") }
 
         beforeGroup = "<tabs>\n"
         afterGroup = "</tabs>"
     }
 }
 
-tasks.test {
-    jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
-}
+tasks.test { jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED") }

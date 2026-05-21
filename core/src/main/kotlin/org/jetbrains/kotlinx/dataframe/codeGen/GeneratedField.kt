@@ -13,12 +13,15 @@ public sealed interface FieldType {
         public val renderAsList: Boolean,
     ) : FieldType
 
-    public data class GroupFieldType(public val markerName: String, public val renderAsObject: Boolean) : FieldType
+    public data class GroupFieldType(
+        public val markerName: String,
+        public val renderAsObject: Boolean,
+    ) : FieldType
 }
 
 /**
- * Returns whether the column type ends with `?` or not.
- * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
+ * Returns whether the column type ends with `?` or not. NOTE: for [FieldType.FrameFieldType], the
+ * `nullable` property indicates the nullability of the frame itself, not the type of the column.
  */
 public fun FieldType.isNullable(): Boolean =
     when (this) {
@@ -28,22 +31,26 @@ public fun FieldType.isNullable(): Boolean =
     }
 
 /**
- * Returns whether the column type doesn't end with `?` or whether it does.
- * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
+ * Returns whether the column type doesn't end with `?` or whether it does. NOTE: for
+ * [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame
+ * itself, not the type of the column.
  */
 public fun FieldType.isNotNullable(): Boolean = !isNullable()
 
 private fun String.toNullable() = if (this.last() == '?' || this == "*") this else "$this?"
 
 /**
- * Returns a new fieldType with the same type but with nullability in the column type.
- * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
+ * Returns a new fieldType with the same type but with nullability in the column type. NOTE: for
+ * [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame
+ * itself, not the type of the column.
  */
 public fun FieldType.toNullable(): FieldType =
     if (isNotNullable()) {
         when (this) {
-            is FieldType.FrameFieldType -> FieldType.FrameFieldType(markerName.toNullable(), nullable, renderAsList)
-            is FieldType.GroupFieldType -> FieldType.GroupFieldType(markerName.toNullable(), renderAsObject)
+            is FieldType.FrameFieldType ->
+                FieldType.FrameFieldType(markerName.toNullable(), nullable, renderAsList)
+            is FieldType.GroupFieldType ->
+                FieldType.GroupFieldType(markerName.toNullable(), renderAsObject)
             is FieldType.ValueFieldType -> FieldType.ValueFieldType(typeFqName.toNullable())
         }
     } else {
@@ -52,45 +59,49 @@ public fun FieldType.toNullable(): FieldType =
 
 /**
  * Returns a new fieldType with the same type but with nullability disabled in the column type.
- * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
+ * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the
+ * frame itself, not the type of the column.
  */
 public fun FieldType.toNotNullable(): FieldType =
     if (isNullable()) {
         when (this) {
             is FieldType.FrameFieldType ->
                 FieldType.FrameFieldType(
-                    markerName = markerName.let {
-                        if (it == "*") {
-                            "Any"
-                        } else {
-                            it.removeSuffix("?")
-                        }
-                    },
+                    markerName =
+                        markerName.let {
+                            if (it == "*") {
+                                "Any"
+                            } else {
+                                it.removeSuffix("?")
+                            }
+                        },
                     nullable = nullable,
                     renderAsList = renderAsList,
                 )
 
             is FieldType.GroupFieldType ->
                 FieldType.GroupFieldType(
-                    markerName = markerName.let {
-                        if (it == "*") {
-                            "Any"
-                        } else {
-                            it.removeSuffix("?")
-                        }
-                    },
+                    markerName =
+                        markerName.let {
+                            if (it == "*") {
+                                "Any"
+                            } else {
+                                it.removeSuffix("?")
+                            }
+                        },
                     renderAsObject = renderAsObject,
                 )
 
             is FieldType.ValueFieldType ->
                 FieldType.ValueFieldType(
-                    typeFqName = typeFqName.let {
-                        if (it == "*") {
-                            "Any"
-                        } else {
-                            it.removeSuffix("?")
+                    typeFqName =
+                        typeFqName.let {
+                            if (it == "*") {
+                                "Any"
+                            } else {
+                                it.removeSuffix("?")
+                            }
                         }
-                    },
                 )
         }
     } else {
@@ -98,18 +109,26 @@ public fun FieldType.toNotNullable(): FieldType =
     }
 
 public val FieldType.name: String
-    get() = when (this) {
-        is FieldType.FrameFieldType -> markerName
-        is FieldType.GroupFieldType -> markerName
-        is FieldType.ValueFieldType -> typeFqName
-    }
+    get() =
+        when (this) {
+            is FieldType.FrameFieldType -> markerName
+            is FieldType.GroupFieldType -> markerName
+            is FieldType.ValueFieldType -> typeFqName
+        }
 
-public class ValidFieldName private constructor(private val identifier: String, public val needsQuote: Boolean) {
-    public val unquoted: String get() = identifier
-    public val quotedIfNeeded: String get() = if (needsQuote) "`$identifier`" else identifier
+public class ValidFieldName
+private constructor(private val identifier: String, public val needsQuote: Boolean) {
+    public val unquoted: String
+        get() = identifier
+
+    public val quotedIfNeeded: String
+        get() = if (needsQuote) "`$identifier`" else identifier
 
     public operator fun plus(other: ValidFieldName): ValidFieldName =
-        ValidFieldName(identifier = identifier + other.identifier, needsQuote = needsQuote || other.needsQuote)
+        ValidFieldName(
+            identifier = identifier + other.identifier,
+            needsQuote = needsQuote || other.needsQuote,
+        )
 
     override fun toString(): String = identifier
 
@@ -118,20 +137,22 @@ public class ValidFieldName private constructor(private val identifier: String, 
             val needsQuote = name.needsQuoting()
             var result = name
             if (needsQuote) {
-                result = name.replace("<", "{")
-                    .replace(">", "}")
-                    .replace("::", " - ")
-                    .replace(": ", " - ")
-                    .replace(":", " - ")
-                    .replace(".", " ")
-                    .replace("/", "-")
-                    .replace("[", "{")
-                    .replace("]", "}")
-                    .replace("`", "'")
-                    .replace(";", " ")
-                    .replace("\\", " ")
-                    .replace("\n", " ")
-                    .replace("\r", " ")
+                result =
+                    name
+                        .replace("<", "{")
+                        .replace(">", "}")
+                        .replace("::", " - ")
+                        .replace(": ", " - ")
+                        .replace(":", " - ")
+                        .replace(".", " ")
+                        .replace("/", "-")
+                        .replace("[", "{")
+                        .replace("]", "}")
+                        .replace("`", "'")
+                        .replace(";", " ")
+                        .replace("\\", " ")
+                        .replace("\n", " ")
+                        .replace("\r", " ")
             }
 
             return ValidFieldName(result, needsQuote)
@@ -174,5 +195,6 @@ public data class GeneratedField(
     val columnSchema: ColumnSchema,
     override val fieldType: FieldType,
 ) : BaseField {
-    val columnKind: ColumnKind get() = columnSchema.kind
+    val columnKind: ColumnKind
+        get() = columnSchema.kind
 }

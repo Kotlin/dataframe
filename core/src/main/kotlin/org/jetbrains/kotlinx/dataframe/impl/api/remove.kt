@@ -17,21 +17,25 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.nrow
 
-internal data class RemoveResult<T>(val df: DataFrame<T>, val removedColumns: List<TreeNode<ColumnPosition>>)
+internal data class RemoveResult<T>(
+    val df: DataFrame<T>,
+    val removedColumns: List<TreeNode<ColumnPosition>>,
+)
 
 internal fun <T> DataFrame<T>.removeImpl(
     allowMissingColumns: Boolean = false,
     columns: ColumnsSelector<T, *>,
 ): RemoveResult<T> {
-    val colWithPaths = getColumnsWithPaths(
-        unresolvedColumnsPolicy =
-            if (allowMissingColumns) {
-                UnresolvedColumnsPolicy.Skip
-            } else {
-                UnresolvedColumnsPolicy.Fail
-            },
-        selector = columns,
-    )
+    val colWithPaths =
+        getColumnsWithPaths(
+            unresolvedColumnsPolicy =
+                if (allowMissingColumns) {
+                    UnresolvedColumnsPolicy.Skip
+                } else {
+                    UnresolvedColumnsPolicy.Fail
+                },
+            selector = columns,
+        )
     val colPaths = colWithPaths.map { it.path }
     val originalOrder = colPaths.mapIndexed { index, path -> path to index }.toMap()
 
@@ -76,10 +80,12 @@ internal fun <T> DataFrame<T>.removeImpl(
 
     val newDf = dfs(columns(), colWithPaths, root) ?: DataFrame.empty(nrow)
 
-    val removedColumns = root.allRemovedColumns()
-        .map { it.pathFromRoot() to it }
-        .sortedBy { originalOrder[it.first] }
-        .map { it.second }
+    val removedColumns =
+        root
+            .allRemovedColumns()
+            .map { it.pathFromRoot() to it }
+            .sortedBy { originalOrder[it.first] }
+            .map { it.second }
 
     return RemoveResult(newDf.cast(), removedColumns)
 }

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -9,11 +10,10 @@ import org.jetbrains.kotlinx.dataframe.api.getOrNull
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.indexOfAggregationResult
-import kotlin.reflect.typeOf
 
 /**
- * Selects the best matching value in the [sequence][values]
- * using the provided [Aggregator] `by` the provided [selector].
+ * Selects the best matching value in the [sequence][values] using the provided [Aggregator] `by`
+ * the provided [selector].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -24,15 +24,12 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
     crossinline selector: (T) -> V,
 ): T? =
     values.elementAtOrNull(
-        indexOfAggregationResult(
-            values = values.map { selector(it) },
-            valueType = typeOf<V>(),
-        ),
+        indexOfAggregationResult(values = values.map { selector(it) }, valueType = typeOf<V>())
     )
 
 /**
- * Selects the best matching value in the [iterable][values]
- * using the provided [Aggregator] `by` the provided [selector].
+ * Selects the best matching value in the [iterable][values] using the provided [Aggregator] `by`
+ * the provided [selector].
  *
  * Faster implementation than for sequences.
  *
@@ -48,11 +45,12 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
         indexOfAggregationResult(
             values = values.asSequence().map { selector(it) },
             valueType = typeOf<V>(),
-        ),
+        )
     )
 
 /**
- * Selects the best matching value in the [column] using the provided [Aggregator] `by` the provided [selector].
+ * Selects the best matching value in the [column] using the provided [Aggregator] `by` the provided
+ * [selector].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -63,8 +61,8 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
 ): T? = aggregateByOrNull(column.values(), selector)
 
 /**
- * Selects the best matching value in the [dataframe][data]
- * using the provided [Aggregator] `by` the provided [rowExpression].
+ * Selects the best matching value in the [dataframe][data] using the provided [Aggregator] `by` the
+ * provided [rowExpression].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -77,12 +75,12 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
         indexOfAggregationResult(
             values = data.asSequence().map { rowExpression(it, it) },
             valueType = typeOf<V>(),
-        ),
+        )
     )
 
 /**
- * Selects the best matching value in the [dataframe][data]
- * using the provided [Aggregator] `by` the provided [column].
+ * Selects the best matching value in the [dataframe][data] using the provided [Aggregator] `by` the
+ * provided [column].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -95,5 +93,5 @@ internal inline fun <T, reified V : R, R> Aggregator<V & Any, R>.aggregateByOrNu
         indexOfAggregationResult(
             values = data.asSequence().map { column.getValue(it) },
             valueType = typeOf<V>(),
-        ),
+        )
     )

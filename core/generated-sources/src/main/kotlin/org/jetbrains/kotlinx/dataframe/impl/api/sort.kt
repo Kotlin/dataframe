@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
@@ -45,12 +44,15 @@ internal fun <T, C> DataFrame<T>.sortByImpl(
     val sortColumns = getSortColumns(columns, unresolvedColumnsPolicy)
     if (sortColumns.isEmpty()) return this
 
-    val compChain = sortColumns.map {
-        when (it.direction) {
-            SortDirection.Asc -> it.column.createComparator(it.nullsLast)
-            SortDirection.Desc -> it.column.createComparator(it.nullsLast).reversed()
-        }
-    }.reduce { a, b -> a.then(b) }
+    val compChain =
+        sortColumns
+            .map {
+                when (it.direction) {
+                    SortDirection.Asc -> it.column.createComparator(it.nullsLast)
+                    SortDirection.Desc -> it.column.createComparator(it.nullsLast).reversed()
+                }
+            }
+            .reduce { a, b -> a.then(b) }
 
     val permutation = (0 until nrow).sortedWith(compChain)
 
@@ -60,11 +62,11 @@ internal fun <T, C> DataFrame<T>.sortByImpl(
 internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<Int> {
     assertIsComparable()
 
-    val valueComparator = Comparator<Any?> { left, right ->
-        (left as Comparable<Any?>).compareTo(right)
-    }
+    val valueComparator =
+        Comparator<Any?> { left, right -> (left as Comparable<Any?>).compareTo(right) }
 
-    val comparatorWithNulls = if (nullsLast) nullsLast(valueComparator) else nullsFirst(valueComparator)
+    val comparatorWithNulls =
+        if (nullsLast) nullsLast(valueComparator) else nullsFirst(valueComparator)
     return Comparator { left, right -> comparatorWithNulls.compare(get(left), get(right)) }
 }
 
@@ -72,7 +74,9 @@ internal fun <T, C> DataFrame<T>.getSortColumns(
     columns: SortColumnsSelector<T, C>,
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
 ): List<SortColumnDescriptor<*>> =
-    columns.toColumnSet().resolve(this, unresolvedColumnsPolicy)
+    columns
+        .toColumnSet()
+        .resolve(this, unresolvedColumnsPolicy)
         // can appear using [DataColumn<R>?.check] with UnresolvedColumnsPolicy.Skip
         .filterNot { it.data is MissingColumnGroup<*> }
         .map {
@@ -83,7 +87,10 @@ internal fun <T, C> DataFrame<T>.getSortColumns(
             }
         }
 
-internal enum class SortFlag { Reversed, NullsLast }
+internal enum class SortFlag {
+    Reversed,
+    NullsLast,
+}
 
 internal fun <C> ColumnsResolver<C>.addFlag(flag: SortFlag): ColumnSetWithSortFlag<C> =
     ColumnSetWithSortFlag(this, flag)
@@ -93,7 +100,8 @@ internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
     return when (col) {
         is SortColumnDescriptor -> {
             when (flag) {
-                SortFlag.Reversed -> SortColumnDescriptor(col.column, col.direction.reversed(), col.nullsLast)
+                SortFlag.Reversed ->
+                    SortColumnDescriptor(col.column, col.direction.reversed(), col.nullsLast)
                 SortFlag.NullsLast -> SortColumnDescriptor(col.column, col.direction, true)
             }
         }
@@ -109,8 +117,10 @@ internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
     }.addPath(path)
 }
 
-internal class ColumnSetWithSortFlag<C>(val column: ColumnsResolver<C>, val flag: SortFlag) : ColumnSet<C> {
-    override fun resolve(context: ColumnResolutionContext) = column.resolve(context).map { it.addFlag(flag) }
+internal class ColumnSetWithSortFlag<C>(val column: ColumnsResolver<C>, val flag: SortFlag) :
+    ColumnSet<C> {
+    override fun resolve(context: ColumnResolutionContext) =
+        column.resolve(context).map { it.addFlag(flag) }
 }
 
 internal class SortColumnDescriptor<C>(
@@ -119,7 +129,10 @@ internal class SortColumnDescriptor<C>(
     val nullsLast: Boolean = false,
 ) : ValueColumnInternal<C> by column.internalValueColumn()
 
-internal enum class SortDirection { Asc, Desc }
+internal enum class SortDirection {
+    Asc,
+    Desc,
+}
 
 internal fun SortDirection.reversed(): SortDirection =
     when (this) {

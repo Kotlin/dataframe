@@ -1,7 +1,5 @@
 plugins {
-    with(convention.plugins) {
-        alias(kotlinJvm8)
-    }
+    with(convention.plugins) { alias(kotlinJvm8) }
     with(libs.plugins) {
         alias(publisher)
         alias(binary.compatibility.validator)
@@ -10,9 +8,7 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-dependencies {
-    api(projects.core)
-}
+dependencies { api(projects.core) }
 
 kotlinPublications {
     publication {

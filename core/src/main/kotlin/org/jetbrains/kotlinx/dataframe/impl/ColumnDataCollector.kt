@@ -1,5 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -8,13 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.jvm.jvmErasure
-import kotlin.reflect.typeOf
 
 public interface DataCollector<T> {
 
@@ -49,7 +49,9 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<
             }
 
             type == nullableNothingType -> {
-                require(values.all { it == null }) { "Cannot create DataColumn of type Nothing? with non-null values" }
+                require(values.all { it == null }) {
+                    "Cannot create DataColumn of type Nothing? with non-null values"
+                }
                 DataColumn.createValueColumn(name, values, nullableNothingType)
             }
 
@@ -71,15 +73,18 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val typeOf: (KCla
     override fun toColumn(name: String) = createColumnGuessingType(name, values)
 }
 
-internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KType, val checkTypes: Boolean = true) :
-    DataCollectorBase<T?>(initCapacity) {
+internal class TypedColumnDataCollector<T>(
+    initCapacity: Int = 0,
+    val type: KType,
+    val checkTypes: Boolean = true,
+) : DataCollectorBase<T?>(initCapacity) {
 
     internal val kclass = type.jvmErasure
 
     override fun add(value: T?) {
         if (checkTypes && value != null && !value.javaClass.kotlin.isSubclassOf(kclass)) {
             throw IllegalArgumentException(
-                "Cannot add a value of class ${value.javaClass.kotlin.qualifiedName} to a column of type $type. Value: '$value'.",
+                "Cannot add a value of class ${value.javaClass.kotlin.qualifiedName} to a column of type $type. Value: '$value'."
             )
         }
         super.add(value)
@@ -89,9 +94,7 @@ internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KTyp
 }
 
 internal fun createDataCollector(initCapacity: Int = 0) =
-    createDataCollector(initCapacity) {
-        it.createStarProjectedType(false)
-    }
+    createDataCollector(initCapacity) { it.createStarProjectedType(false) }
 
 internal fun createDataCollector(initCapacity: Int = 0, typeOf: (KClass<*>) -> KType) =
     ColumnDataCollector(initCapacity, typeOf)

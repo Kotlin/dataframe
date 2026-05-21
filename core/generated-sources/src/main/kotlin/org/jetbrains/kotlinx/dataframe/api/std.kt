@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -21,8 +23,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveOrMixedNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
-import kotlin.reflect.typeOf
 
 /* TODO KDocs:
  * Calculating the std is supported for all primitive number types.
@@ -36,8 +36,10 @@ import kotlin.reflect.typeOf
 
 // region DataColumn
 
-public fun DataColumn<Number?>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): Double =
-    Aggregators.std(skipNaN, ddof).aggregateSingleColumn(this)
+public fun DataColumn<Number?>.std(
+    skipNaN: Boolean = skipNaNDefault,
+    ddof: Int = ddofDefault,
+): Double = Aggregators.std(skipNaN, ddof).aggregateSingleColumn(this)
 
 public inline fun <T, reified R : Number?> DataColumn<T>.stdOf(
     skipNaN: Boolean = skipNaNDefault,
@@ -67,8 +69,10 @@ public inline fun <reified T : Number?> AnyRow.rowStdOf(
 // region DataFrame
 @Refine
 @Interpretable("Std0")
-public fun <T> DataFrame<T>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): DataRow<T> =
-    stdFor(skipNaN, ddof, primitiveOrMixedNumberColumns())
+public fun <T> DataFrame<T>.std(
+    skipNaN: Boolean = skipNaNDefault,
+    ddof: Int = ddofDefault,
+): DataRow<T> = stdFor(skipNaN, ddof, primitiveOrMixedNumberColumns())
 
 @Refine
 @Interpretable("Std1")
@@ -106,13 +110,17 @@ public fun <T> DataFrame<T>.std(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Number?> DataFrame<T>.std(vararg columns: ColumnReference<C>): Double = std { columns.toColumnSet() }
+public fun <T, C : Number?> DataFrame<T>.std(vararg columns: ColumnReference<C>): Double = std {
+    columns.toColumnSet()
+}
 
 public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.toColumnsSetOf() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Number?> DataFrame<T>.std(vararg columns: KProperty<C>): Double = std { columns.toColumnSet() }
+public fun <T, C : Number?> DataFrame<T>.std(vararg columns: KProperty<C>): Double = std {
+    columns.toColumnSet()
+}
 
 public inline fun <T, reified R : Number?> DataFrame<T>.stdOf(
     skipNaN: Boolean = skipNaNDefault,
@@ -125,8 +133,10 @@ public inline fun <T, reified R : Number?> DataFrame<T>.stdOf(
 // region GroupBy
 @Refine
 @Interpretable("GroupByStd1")
-public fun <T> Grouped<T>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): DataFrame<T> =
-    stdFor(skipNaN, ddof, primitiveOrMixedNumberColumns())
+public fun <T> Grouped<T>.std(
+    skipNaN: Boolean = skipNaNDefault,
+    ddof: Int = ddofDefault,
+): DataFrame<T> = stdFor(skipNaN, ddof, primitiveOrMixedNumberColumns())
 
 @Refine
 @Interpretable("GroupByStd0")

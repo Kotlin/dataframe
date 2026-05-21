@@ -7,11 +7,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 
-internal class ColumnGroupWithPathImpl<T> internal constructor(
-    val column: ColumnGroup<T>,
-    override val path: ColumnPath,
-) : ColumnGroupImpl<T>(column.name, column),
-    ColumnWithPath<DataRow<T>> {
+internal class ColumnGroupWithPathImpl<T>
+internal constructor(val column: ColumnGroup<T>, override val path: ColumnPath) :
+    ColumnGroupImpl<T>(column.name, column), ColumnWithPath<DataRow<T>> {
 
     override fun rename(newName: String) =
         if (newName == name()) {

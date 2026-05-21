@@ -1,6 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import java.io.File
+import java.nio.file.Files
+import java.sql.Connection
+import java.sql.DriverManager
+import kotlin.reflect.typeOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -10,11 +15,6 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
-import java.io.File
-import java.nio.file.Files
-import java.sql.Connection
-import java.sql.DriverManager
-import kotlin.reflect.typeOf
 
 @DataSchema
 interface CustomerSQLite {
@@ -53,7 +53,8 @@ class SqliteTest {
 
         /**
          * We are using a temporary file because we need to test requests with DBConnectionConfig,
-         * which creates a connection under the hood and need to have access to the shared SQLite database
+         * which creates a connection under the hood and need to have access to the shared SQLite
+         * database
          */
         private lateinit var testDbFile: File
         private lateinit var databaseUrl: String
@@ -68,7 +69,8 @@ class SqliteTest {
             connection = DriverManager.getConnection(databaseUrl)
 
             @Language("SQL")
-            val createCustomersTableQuery = """
+            val createCustomersTableQuery =
+                """
             CREATE TABLE Customers (
                 id INTEGER PRIMARY KEY,
                 name TEXT,
@@ -81,7 +83,8 @@ class SqliteTest {
             connection.createStatement().execute(createCustomersTableQuery)
 
             @Language("SQL")
-            val createOrderTableQuery = """
+            val createOrderTableQuery =
+                """
             CREATE TABLE Orders (
                 id INTEGER PRIMARY KEY,
                 customerName TEXT,
@@ -96,7 +99,10 @@ class SqliteTest {
             val profilePicture = "SampleProfilePictureData".toByteArray()
             val orderDetails = "OrderDetailsData".toByteArray()
 
-            connection.prepareStatement("INSERT INTO Customers (name, age, salary, profilePicture) VALUES (?, ?, ?, ?)")
+            connection
+                .prepareStatement(
+                    "INSERT INTO Customers (name, age, salary, profilePicture) VALUES (?, ?, ?, ?)"
+                )
                 .use {
                     it.setString(1, "John Doe")
                     it.setInt(2, 30)
@@ -105,7 +111,10 @@ class SqliteTest {
                     it.executeUpdate()
                 }
 
-            connection.prepareStatement("INSERT INTO Customers (name, age, salary, profilePicture) VALUES (?, ?, ?, ?)")
+            connection
+                .prepareStatement(
+                    "INSERT INTO Customers (name, age, salary, profilePicture) VALUES (?, ?, ?, ?)"
+                )
                 .use {
                     it.setString(1, null)
                     it.setInt(2, 40)
@@ -114,25 +123,29 @@ class SqliteTest {
                     it.executeUpdate()
                 }
 
-            connection.prepareStatement(
-                "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
-            ).use {
-                it.setString(1, null)
-                it.setString(2, "2023-07-21")
-                it.setDouble(3, 150.75)
-                it.setBytes(4, orderDetails)
-                it.executeUpdate()
-            }
+            connection
+                .prepareStatement(
+                    "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)"
+                )
+                .use {
+                    it.setString(1, null)
+                    it.setString(2, "2023-07-21")
+                    it.setDouble(3, 150.75)
+                    it.setBytes(4, orderDetails)
+                    it.executeUpdate()
+                }
 
-            connection.prepareStatement(
-                "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
-            ).use {
-                it.setString(1, "John Doe")
-                it.setString(2, "2023-08-21")
-                it.setDouble(3, 250.75)
-                it.setBytes(4, orderDetails)
-                it.executeUpdate()
-            }
+            connection
+                .prepareStatement(
+                    "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)"
+                )
+                .use {
+                    it.setString(1, "John Doe")
+                    it.setString(2, "2023-08-21")
+                    it.setDouble(3, 250.75)
+                    it.setBytes(4, orderDetails)
+                    it.executeUpdate()
+                }
         }
 
         @AfterClass
@@ -180,7 +193,8 @@ class SqliteTest {
 
         val dbConnectionConfig = DbConnectionConfig(databaseUrl)
 
-        val df = DataFrame.readSqlTable(dbConnectionConfig, customerTableName).cast<CustomerSQLite>()
+        val df =
+            DataFrame.readSqlTable(dbConnectionConfig, customerTableName).cast<CustomerSQLite>()
         val result = df.filter { "name"<String?>() == "John Doe" }
         result[0][2] shouldBe 30
 
@@ -202,7 +216,8 @@ class SqliteTest {
     }
 
     @Language("SQL")
-    private val sqlQuery = """
+    private val sqlQuery =
+        """
             SELECT
                 c.id AS customerId,
                 c.name AS customerName,

@@ -9,14 +9,14 @@ private val logger = KotlinLogging.logger {}
 private const val UNSUPPORTED_H2_MODE_MESSAGE =
     "Unsupported H2 MODE: %s. Supported: MySQL, PostgreSQL, MSSQLServer, MariaDB, REGULAR/H2-Regular (or omit MODE)."
 
-private const val H2_MODE_QUERY = "SELECT SETTING_VALUE FROM INFORMATION_SCHEMA.SETTINGS WHERE SETTING_NAME = 'MODE'"
+private const val H2_MODE_QUERY =
+    "SELECT SETTING_VALUE FROM INFORMATION_SCHEMA.SETTINGS WHERE SETTING_NAME = 'MODE'"
 
 private val H2_MODE_URL_PATTERN = "MODE=([^;:&]+)".toRegex(RegexOption.IGNORE_CASE)
 
 /**
- * Extracts the database type from the given connection.
- * For H2, fetches the actual MODE from the active connection settings.
- * For other databases, extracts type from URL.
+ * Extracts the database type from the given connection. For H2, fetches the actual MODE from the
+ * active connection settings. For other databases, extracts type from URL.
  *
  * @param [connection] the database connection.
  * @return the corresponding [DbType].
@@ -25,8 +25,9 @@ private val H2_MODE_URL_PATTERN = "MODE=([^;:&]+)".toRegex(RegexOption.IGNORE_CA
  * @throws [SQLException] if the URL is null.
  */
 public fun extractDBTypeFromConnection(connection: Connection): DbType {
-    val url = connection.metaData?.url
-        ?: throw IllegalStateException("URL information is missing in connection meta data!")
+    val url =
+        connection.metaData?.url
+            ?: throw IllegalStateException("URL information is missing in connection meta data!")
     logger.info { "Processing DB type extraction for connection url: $url" }
 
     // First, determine the base database type from URL
@@ -44,8 +45,7 @@ public fun extractDBTypeFromConnection(connection: Connection): DbType {
 }
 
 /**
- * Fetches H2 database mode from an active connection.
- * Works only for H2 version 2.
+ * Fetches H2 database mode from an active connection. Works only for H2 version 2.
  *
  * @param [connection] the database connection.
  * @return the mode string or null if not set.
@@ -107,10 +107,11 @@ public fun extractDBTypeFromUrl(url: String?): DbType {
 
         DuckDb.dbTypeInJdbcUrl in url -> DuckDb
 
-        else -> throw IllegalArgumentException(
-            "Unsupported database type in the url: $url. " +
-                "Only H2, MariaDB, MySQL, MSSQL, SQLite, PostgreSQL, and DuckDB are supported!",
-        )
+        else ->
+            throw IllegalArgumentException(
+                "Unsupported database type in the url: $url. " +
+                    "Only H2, MariaDB, MySQL, MSSQL, SQLite, PostgreSQL, and DuckDB are supported!"
+            )
     }
 }
 

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -33,7 +34,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region DataColumn
 
@@ -42,9 +42,7 @@ public fun <T> DataColumn<T>.all(predicate: Predicate<T>): Boolean = values.all(
 
 /** Returns `true` if all [values] are `null` or [values] is empty. */
 public fun <C> DataColumn<C>.allNulls(): Boolean =
-    size == 0 ||
-        type() == nullableNothingType ||
-        all { it == null }
+    size == 0 || type() == nullableNothingType || all { it == null }
 
 // endregion
 
@@ -57,7 +55,8 @@ public fun AnyRow.allNA(): Boolean = owner.columns().all { it[index()].isNA }
 // region DataFrame
 
 /** Returns `true` if all [rows] match the given [predicate] or [rows] is empty. */
-public inline fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
+public inline fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean =
+    rows().all { predicate(it, it) }
 
 // endregion
 
@@ -67,6 +66,7 @@ public inline fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows(
  * ## All Flavors of All (Cols) {@include [ColumnsSelectionDslLink]}
  *
  * See [Grammar] for all functions in this interface.
+ *
  * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
 public interface AllColumnsSelectionDsl<out _UNUSED> {
@@ -74,36 +74,32 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Grammar of All Flavors of All (Cols):
      *
-     * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DEFINITIONS]
-     *  {@include [DslGrammarTemplate.ColumnSetDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ColumnDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ColumnSelectorDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ConditionDef]}
-     * }
+     * @include [DslGrammarTemplate] {@set [DslGrammarTemplate.DEFINITIONS] {@include
+     *   [DslGrammarTemplate.ColumnSetDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ColumnGroupDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ColumnDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ColumnSelectorDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ConditionDef]} }
      *
-     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
-     *  {@include [PlainDslName]}**`()`**
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS] {@include [PlainDslName]}**`()`**
      *
-     *  `| `**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**`  |  `**`{ `**{@include [DslGrammarTemplate.ColumnSelectorRef]}**` \}`**` )`
-     * }
+     * `| `**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include
+     * [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**` | `**`{ `**{@include
+     * [DslGrammarTemplate.ColumnSelectorRef]}**` \}`**` )` }
      *
-     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnSetName]}**`()`**
      *
-     *  {@include [Indent]}`| `**`.all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**`  |  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` )`
-     * }
+     * {@include [Indent]}`| `**`.all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include
+     * [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**` |
+     * `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` )` }
      *
-     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnGroupName]}**`()`**
      *
-     *  {@include [Indent]}`| `**`.allCols`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**`  |  `**`{ `**{@include [DslGrammarTemplate.ColumnSelectorRef]}**` \}`**` )`
-     * }
+     * {@include [Indent]}`| `**`.allCols`**`(`{@include [Before]}`|`{@include [After]}`|`{@include
+     * [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**` |
+     * `**`{ `**{@include [DslGrammarTemplate.ColumnSelectorRef]}**` \}`**` )` }
      */
     public interface Grammar {
 
@@ -132,20 +128,19 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * #### Flavors of All (Cols):
      *
-     * - [`all(Cols)`][ColumnsSelectionDsl.allCols]`()`:
-     *     All columns
+     * - [`all(Cols)`][ColumnsSelectionDsl.allCols]`()`: All columns
      *
-     * - [`all(Cols)Before`][ColumnsSelectionDsl.allColsBefore]`(column)`:
-     *     All columns before the specified column, excluding that column
+     * - [`all(Cols)Before`][ColumnsSelectionDsl.allColsBefore]`(column)`: All columns before the
+     *   specified column, excluding that column
      *
-     * - [`all(Cols)After`][ColumnsSelectionDsl.allColsAfter]`(column)`:
-     *     All columns after the specified column, excluding that column
+     * - [`all(Cols)After`][ColumnsSelectionDsl.allColsAfter]`(column)`: All columns after the
+     *   specified column, excluding that column
      *
-     * - [`all(Cols)From`][ColumnsSelectionDsl.allColsFrom]`(column)`:
-     *     All columns from the specified column, including that column
+     * - [`all(Cols)From`][ColumnsSelectionDsl.allColsFrom]`(column)`: All columns from the
+     *   specified column, including that column
      *
-     * - [`all(Cols)UpTo`][ColumnsSelectionDsl.allColsUpTo]`(column)`:
-     *     All columns up to the specified column, including that column
+     * - [`all(Cols)UpTo`][ColumnsSelectionDsl.allColsUpTo]`(column)`: All columns up to the
+     *   specified column, including that column
      */
     @ExcludeFromSources
     private typealias AllFlavors = Nothing
@@ -153,27 +148,31 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## {@get [TITLE]}
      *
-     * Creates a new [ColumnSet] that contains a subset of columns from [this\],
-     * containing all columns {@get [BEHAVIOR]}.
+     * Creates a new [ColumnSet] that contains a subset of columns from [this\], containing all
+     * columns {@get [BEHAVIOR]}.
      *
      * [column\] can be specified both relative to the current [ColumnGroup] or the outer scope and
      * can be referenced using any {@include [AccessApiLink]}.
      *
-     * If [column\] does not exist, {@get [COLUMN_DOES_NOT_EXIST]}.
-     * {@include [LineBreak]}
-     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector]
-     * in the Plain DSL and on [column groups][ColumnGroup].
-     * On [ColumnSets][ColumnSet] it requires a [ColumnFilter] instead.
+     * If [column\] does not exist, {@get [COLUMN_DOES_NOT_EXIST]}. {@include [LineBreak]} NOTE:
+     * Using the `{}` overloads of these functions requires a [ColumnSelector] in the Plain DSL and
+     * on [column groups][ColumnGroup]. On [ColumnSets][ColumnSet] it requires a [ColumnFilter]
+     * instead.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[{@get [FUNCTION]}][ColumnsSelectionDsl.{@get [FUNCTION]}]`("someColumn") }`
+     * `df.`[select][DataFrame.select]` { `[{@get [FUNCTION]}][ColumnsSelectionDsl.{@get
+     * [FUNCTION]}]`("someColumn") }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@get [FUNCTION_COLS]}][SingleColumn.{@get [FUNCTION_COLS]}]`(someColumn) }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@get
+     * [FUNCTION_COLS]}][SingleColumn.{@get [FUNCTION_COLS]}]`(someColumn) }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[{@get [FUNCTION]}][ColumnSet.{@get [FUNCTION]}]`(Type::someColumn) }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[{@get [FUNCTION]}][ColumnSet.{@get
+     * [FUNCTION]}]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
@@ -223,8 +222,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## All (Cols)
      *
-     * Creates a new [ColumnSet] that contains all columns from [this\],
-     * the opposite of [none][ColumnsSelectionDsl.none].
+     * Creates a new [ColumnSet] that contains all columns from [this\], the opposite of
+     * [none][ColumnsSelectionDsl.none].
      *
      * This makes the function equivalent to [cols()][ColumnsSelectionDsl.cols] without filter.
      *
@@ -235,7 +234,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * ### Check out: [Grammar]
      *
      * #### For example:
-     * `df.`[move][DataFrame.move]`  {  `[all][ColumnsSelectionDsl.all]`() }.`[under][MoveClause.under]`("info")`
+     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`()
+     * }.`[under][MoveClause.under]`("info")`
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      *
@@ -264,9 +264,9 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonAllDocs]
      * @set [CommonAllDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`  { "a" in  `[name][ColumnWithPath.name]` }.`[all][ColumnSet.all]`() }`
-     * {@include [LineBreak]}
-     * NOTE: This is an identity call and can be omitted in most cases.
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "a" in
+     * `[name][ColumnWithPath.name]` }.`[all][ColumnSet.all]`() }` {@include [LineBreak]} NOTE: This
+     * is an identity call and can be omitted in most cases.
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("All0")
@@ -276,7 +276,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonAllDocs]
      * @set [CommonAllDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  {  `[all][ColumnsSelectionDsl.all]`() }`
+     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`() }`
      */
     @Interpretable("All1")
     public fun ColumnsSelectionDsl<*>.all(): ColumnSet<*> = asSingleColumn().allColumnsInternal()
@@ -288,7 +288,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      */
     @Interpretable("All2")
-    public fun SingleColumn<DataRow<*>>.allCols(): ColumnSet<*> = ensureIsColumnGroup().allColumnsInternal()
+    public fun SingleColumn<DataRow<*>>.allCols(): ColumnSet<*> =
+        ensureIsColumnGroup().allColumnsInternal()
 
     /**
      * @include [CommonAllDocs]
@@ -302,7 +303,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonAllDocs]
      * @set [CommonAllDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::columnGroup.`[allCols][KProperty.allCols]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::columnGroup.`[allCols][KProperty.allCols]`() }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -321,14 +323,15 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     // region allAfter
 
     /**
+     * @param [column\] The specified column after which all columns should be taken. This column
+     *   can be referenced to both relatively to the current [ColumnsResolver] and absolutely.
      * @include [CommonAllSubsetDocs]
      * @set [CommonAllSubsetDocs.TITLE] All (Cols) After
      * @set [CommonAllSubsetDocs.FUNCTION] allAfter
      * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsAfter
      * @set [CommonAllSubsetDocs.BEHAVIOR] after [column\], excluding [column\] itself
-     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [ColumnSet][ColumnSet]
-     * @param [column\] The specified column after which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty
+     *   [ColumnSet][ColumnSet]
      */
     private typealias AllAfterDocs = Nothing
 
@@ -336,7 +339,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllAfterDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`{@get [ColumnSetAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ..
+     * }.`[allAfter][ColumnSet.allAfter]`{@get [ColumnSetAllAfterDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnSetAllAfterDocs {
@@ -345,12 +349,17 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] \ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}} */
+    /**
+     * @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] \ \{ myColumn
+     *   `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}}
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allAfter(column: ColumnFilter<C>): ColumnSet<C> =
         allAfterInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
-    /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
+    /**
+     * @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] ("pathTo"["myColumn"])}
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allAfter(column: ColumnPath): ColumnSet<C> =
         allAfterInternal { it.path == column } as ColumnSet<C>
@@ -360,7 +369,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] (myColumn)} */
     @Interpretable("AllAfter0")
-    public fun <C> ColumnSet<C>.allAfter(column: AnyColumnReference): ColumnSet<C> = allAfter(column.path())
+    public fun <C> ColumnSet<C>.allAfter(column: AnyColumnReference): ColumnSet<C> =
+        allAfter(column.path())
 
     /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -372,7 +382,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllAfterDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[allAfter][ColumnsSelectionDsl.allAfter]`{@get [ColumnsSelectionDslAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[allAfter][ColumnsSelectionDsl.allAfter]`{@get
+     * [ColumnsSelectionDslAllAfterDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnsSelectionDslAllAfterDocs {
@@ -381,22 +392,40 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] \ \{ myColumn \}} */
+    /**
+     * @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] \ \{
+     *   myColumn \}}
+     */
     @Interpretable("AllAfter1")
     public fun <T> ColumnsSelectionDsl<T>.allAfter(column: ColumnSelector<T, *>): ColumnSet<*> =
         asSingleColumn().allColsAfter(column)
 
-    /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun ColumnsSelectionDsl<*>.allAfter(column: ColumnPath): ColumnSet<*> = asSingleColumn().allColsAfter(column)
+    /**
+     * @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg]
+     *   ("pathTo"["myColumn"])}
+     */
+    public fun ColumnsSelectionDsl<*>.allAfter(column: ColumnPath): ColumnSet<*> =
+        asSingleColumn().allColsAfter(column)
 
-    /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] ("myColumn")} */
-    public fun ColumnsSelectionDsl<*>.allAfter(column: String): ColumnSet<*> = allAfter(pathOf(column))
+    /**
+     * @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg]
+     *   ("myColumn")}
+     */
+    public fun ColumnsSelectionDsl<*>.allAfter(column: String): ColumnSet<*> =
+        allAfter(pathOf(column))
 
-    /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] (myColumn)} */
+    /**
+     * @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg]
+     *   (myColumn)}
+     */
     @Interpretable("AllAfter2")
-    public fun ColumnsSelectionDsl<*>.allAfter(column: AnyColumnReference): ColumnSet<*> = allAfter(column.path())
+    public fun ColumnsSelectionDsl<*>.allAfter(column: AnyColumnReference): ColumnSet<*> =
+        allAfter(column.path())
 
-    /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] (Type::myColumn)} */
+    /**
+     * @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg]
+     *   (Type::myColumn)}
+     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allAfter(column: KProperty<*>): ColumnSet<*> =
@@ -406,7 +435,9 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllAfterDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsAfter][SingleColumn.allColsAfter]`{@get [SingleColumnAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * someColumnGroup.`[allColsAfter][SingleColumn.allColsAfter]`{@get
+     * [SingleColumnAllAfterDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface SingleColumnAllAfterDocs {
@@ -415,20 +446,25 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] \ \{ myColumn \}} */
-    public fun <T> SingleColumn<DataRow<T>>.allColsAfter(column: ColumnSelector<T, *>): ColumnSet<*> {
+    /**
+     * @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] \ \{ myColumn \}}
+     */
+    public fun <T> SingleColumn<DataRow<T>>.allColsAfter(
+        column: ColumnSelector<T, *>
+    ): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
-        return this
-            .ensureIsColumnGroup()
+        return this.ensureIsColumnGroup()
             .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
             .allAfterInternal { it.data == resolvedCol!! }
     }
 
-    /** @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
+    /**
+     * @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg]
+     *   ("pathTo"["myColumn"])}
+     */
     public fun SingleColumn<DataRow<*>>.allColsAfter(column: ColumnPath): ColumnSet<*> {
         var path: ColumnPath? = null
-        return this
-            .ensureIsColumnGroup()
+        return this.ensureIsColumnGroup()
             .onResolve { path = it!!.path }
             .allAfterInternal {
                 // accept both relative and full column path
@@ -437,13 +473,16 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] ("myColumn")} */
-    public fun SingleColumn<DataRow<*>>.allColsAfter(column: String): ColumnSet<*> = allColsAfter(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allColsAfter(column: String): ColumnSet<*> =
+        allColsAfter(pathOf(column))
 
     /** @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] (myColumn)} */
     public fun SingleColumn<DataRow<*>>.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
         allColsAfter(column.path())
 
-    /** @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] (Type::myColumn)} */
+    /**
+     * @include [SingleColumnAllAfterDocs] {@set [SingleColumnAllAfterDocs.Arg] (Type::myColumn)}
+     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsAfter(column: KProperty<*>): ColumnSet<*> =
@@ -453,7 +492,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllAfterDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsAfter][String.allColsAfter]`{@get [StringAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsAfter][String.allColsAfter]`{@get
+     * [StringAllAfterDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface StringAllAfterDocs {
@@ -463,27 +503,34 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [StringAllAfterDocs] {@set [StringAllAfterDocs.Arg] \ \{ myColumn \}} */
-    public fun String.allColsAfter(column: ColumnSelector<*, *>): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun String.allColsAfter(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /** @include [StringAllAfterDocs] {@set [StringAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun String.allColsAfter(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun String.allColsAfter(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /** @include [StringAllAfterDocs] {@set [StringAllAfterDocs.Arg] ("myColumn")} */
-    public fun String.allColsAfter(column: String): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun String.allColsAfter(column: String): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /** @include [StringAllAfterDocs] {@set [StringAllAfterDocs.Arg] (myColumn)} */
-    public fun String.allColsAfter(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun String.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /** @include [StringAllAfterDocs] {@set [StringAllAfterDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun String.allColsAfter(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun String.allColsAfter(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /**
      * @include [AllAfterDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[allColsAfter][KProperty.allColsAfter]`{@get [KPropertyAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColGroup.`[allColsAfter][KProperty.allColsAfter]`{@get
+     * [KPropertyAllAfterDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface KPropertyAllAfterDocs {
@@ -492,23 +539,25 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /**
-     * @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] \ \{ myColumn \}}
-     */
+    /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] \ \{ myColumn \}} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.allColsAfter(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsAfter(column)
 
-    /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
+    /**
+     * @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] ("pathTo"["myColumn"])}
+     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsAfter(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun KProperty<*>.allColsAfter(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] ("myColumn")} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsAfter(column: String): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun KProperty<*>.allColsAfter(column: String): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] (myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -519,13 +568,16 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsAfter(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun KProperty<*>.allColsAfter(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /**
      * @include [AllAfterDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsAfter][ColumnPath.allColsAfter]`{@get [ColumnPathAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["someColGroup"].`[allColsAfter][ColumnPath.allColsAfter]`{@get
+     * [ColumnPathAllAfterDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnPathAllAfterDocs {
@@ -538,11 +590,15 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsAfter(column: ColumnSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsAfter(column)
 
-    /** @include [ColumnPathAllAfterDocs] {@set [ColumnPathAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun ColumnPath.allColsAfter(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    /**
+     * @include [ColumnPathAllAfterDocs] {@set [ColumnPathAllAfterDocs.Arg] ("pathTo"["myColumn"])}
+     */
+    public fun ColumnPath.allColsAfter(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /** @include [ColumnPathAllAfterDocs] {@set [ColumnPathAllAfterDocs.Arg] ("myColumn")} */
-    public fun ColumnPath.allColsAfter(column: String): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun ColumnPath.allColsAfter(column: String): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     /** @include [ColumnPathAllAfterDocs] {@set [ColumnPathAllAfterDocs.Arg] (myColumn)} */
     public fun ColumnPath.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
@@ -551,21 +607,23 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /** @include [ColumnPathAllAfterDocs] {@set [ColumnPathAllAfterDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun ColumnPath.allColsAfter(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun ColumnPath.allColsAfter(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsAfter(column)
 
     // endregion
 
     // region allFrom
 
     /**
+     * @param [column\] The specified column from which all columns should be taken. This column can
+     *   be referenced to both relatively to the current [ColumnsResolver] and absolutely.
      * @include [CommonAllSubsetDocs]
      * @set [CommonAllSubsetDocs.TITLE] All (Cols) From
      * @set [CommonAllSubsetDocs.FUNCTION] allFrom
      * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsFrom
      * @set [CommonAllSubsetDocs.BEHAVIOR] from [column\], including [column\] itself
-     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [ColumnSet][ColumnSet]
-     * @param [column\] The specified column from which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty
+     *   [ColumnSet][ColumnSet]
      */
     private typealias AllFromDocs = Nothing
 
@@ -573,7 +631,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllFromDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`{@get [ColumnSetAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ..
+     * }.`[allFrom][ColumnSet.allFrom]`{@get [ColumnSetAllFromDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnSetAllFromDocs {
@@ -582,7 +641,10 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] \ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}} */
+    /**
+     * @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] \ \{ myColumn
+     *   `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}}
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allFrom(column: ColumnFilter<C>): ColumnSet<C> =
         allFromInternal(column as ColumnFilter<*>) as ColumnSet<C>
@@ -597,18 +659,21 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] (myColumn)} */
     @Interpretable("AllFrom0")
-    public fun <C> ColumnSet<C>.allFrom(column: AnyColumnReference): ColumnSet<C> = allFrom(column.path())
+    public fun <C> ColumnSet<C>.allFrom(column: AnyColumnReference): ColumnSet<C> =
+        allFrom(column.path())
 
     /** @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> ColumnSet<C>.allFrom(column: KProperty<*>): ColumnSet<C> = allFrom(column.toColumnAccessor().path())
+    public fun <C> ColumnSet<C>.allFrom(column: KProperty<*>): ColumnSet<C> =
+        allFrom(column.toColumnAccessor().path())
 
     /**
      * @include [AllFromDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[allFrom][ColumnsSelectionDsl.allFrom]`{@get [ColumnsSelectionDslAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`{@get
+     * [ColumnsSelectionDslAllFromDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnsSelectionDslAllFromDocs {
@@ -617,32 +682,52 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] \ \{ myColumn \}} */
+    /**
+     * @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] \ \{
+     *   myColumn \}}
+     */
     @Interpretable("AllFrom1")
     public fun <T> ColumnsSelectionDsl<T>.allFrom(column: ColumnSelector<T, *>): ColumnSet<*> =
         asSingleColumn().allColsFrom(column)
 
-    /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun ColumnsSelectionDsl<*>.allFrom(column: ColumnPath): ColumnSet<*> = asSingleColumn().allColsFrom(column)
+    /**
+     * @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg]
+     *   ("pathTo"["myColumn"])}
+     */
+    public fun ColumnsSelectionDsl<*>.allFrom(column: ColumnPath): ColumnSet<*> =
+        asSingleColumn().allColsFrom(column)
 
-    /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] ("myColumn")} */
-    public fun ColumnsSelectionDsl<*>.allFrom(column: String): ColumnSet<*> = asSingleColumn().allColsFrom(column)
+    /**
+     * @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg]
+     *   ("myColumn")}
+     */
+    public fun ColumnsSelectionDsl<*>.allFrom(column: String): ColumnSet<*> =
+        asSingleColumn().allColsFrom(column)
 
-    /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] (myColumn)} */
+    /**
+     * @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg]
+     *   (myColumn)}
+     */
     @Interpretable("AllFrom2")
     public fun ColumnsSelectionDsl<*>.allFrom(column: AnyColumnReference): ColumnSet<*> =
         asSingleColumn().allColsFrom(column)
 
-    /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] (Type::myColumn)} */
+    /**
+     * @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg]
+     *   (Type::myColumn)}
+     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun ColumnsSelectionDsl<*>.allFrom(column: KProperty<*>): ColumnSet<*> = asSingleColumn().allColsFrom(column)
+    public fun ColumnsSelectionDsl<*>.allFrom(column: KProperty<*>): ColumnSet<*> =
+        asSingleColumn().allColsFrom(column)
 
     /**
      * @include [AllFromDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsFrom][SingleColumn.allColsFrom]`{@get [SingleColumnAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * someColumnGroup.`[allColsFrom][SingleColumn.allColsFrom]`{@get [SingleColumnAllFromDocs.Arg]}
+     * }`
      */
     @ExcludeFromSources
     private interface SingleColumnAllFromDocs {
@@ -652,19 +737,22 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [SingleColumnAllFromDocs] {@set [SingleColumnAllFromDocs.Arg] \ \{ myColumn \}} */
-    public fun <T> SingleColumn<DataRow<T>>.allColsFrom(column: ColumnSelector<T, *>): ColumnSet<*> {
+    public fun <T> SingleColumn<DataRow<T>>.allColsFrom(
+        column: ColumnSelector<T, *>
+    ): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
-        return this
-            .ensureIsColumnGroup()
+        return this.ensureIsColumnGroup()
             .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
             .allFromInternal { it.data == resolvedCol!! }
     }
 
-    /** @include [SingleColumnAllFromDocs] {@set [SingleColumnAllFromDocs.Arg] ("pathTo"["myColumn"])} */
+    /**
+     * @include [SingleColumnAllFromDocs] {@set [SingleColumnAllFromDocs.Arg]
+     *   ("pathTo"["myColumn"])}
+     */
     public fun SingleColumn<DataRow<*>>.allColsFrom(column: ColumnPath): ColumnSet<*> {
         var path: ColumnPath? = null
-        return this
-            .ensureIsColumnGroup()
+        return this.ensureIsColumnGroup()
             .onResolve { path = it!!.path }
             .allFromInternal {
                 // accept both relative and full column path
@@ -673,7 +761,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [SingleColumnAllFromDocs] {@set [SingleColumnAllFromDocs.Arg] ("myColumn")} */
-    public fun SingleColumn<DataRow<*>>.allColsFrom(column: String): ColumnSet<*> = allColsFrom(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allColsFrom(column: String): ColumnSet<*> =
+        allColsFrom(pathOf(column))
 
     /** @include [SingleColumnAllFromDocs] {@set [SingleColumnAllFromDocs.Arg] (myColumn)} */
     public fun SingleColumn<DataRow<*>>.allColsFrom(column: AnyColumnReference): ColumnSet<*> =
@@ -689,7 +778,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllFromDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsFrom][String.allColsFrom]`{@get [StringAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsFrom][String.allColsFrom]`{@get
+     * [StringAllFromDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface StringAllFromDocs {
@@ -699,27 +789,34 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [StringAllFromDocs] {@set [StringAllFromDocs.Arg] \ \{ myColumn \}} */
-    public fun String.allColsFrom(column: ColumnSelector<*, *>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun String.allColsFrom(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** @include [StringAllFromDocs] {@set [StringAllFromDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun String.allColsFrom(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun String.allColsFrom(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** @include [StringAllFromDocs] {@set [StringAllFromDocs.Arg] ("myColumn")} */
-    public fun String.allColsFrom(column: String): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun String.allColsFrom(column: String): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** @include [StringAllFromDocs] {@set [StringAllFromDocs.Arg] (myColumn)} */
-    public fun String.allColsFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun String.allColsFrom(column: AnyColumnReference): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** @include [StringAllFromDocs] {@set [StringAllFromDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun String.allColsFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun String.allColsFrom(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /**
      * @include [AllFromDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][KProperty.allColsFrom]`{@get [KPropertyAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::someColGroup.`[allColsFrom][KProperty.allColsFrom]`{@get
+     * [KPropertyAllFromDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface KPropertyAllFromDocs {
@@ -728,9 +825,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /**
-     * @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] \ \{ myColumn \}}
-     */
+    /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] \ \{ myColumn \}} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.allColsFrom(column: ColumnSelector<C, *>): ColumnSet<*> =
@@ -739,12 +834,14 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] ("pathTo"["myColumn"])} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsFrom(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun KProperty<*>.allColsFrom(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] ("myColumn")} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsFrom(column: String): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun KProperty<*>.allColsFrom(column: String): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] (myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -755,13 +852,16 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun KProperty<*>.allColsFrom(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /**
      * @include [AllFromDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allColsFrom]`{@get [ColumnPathAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["someColGroup"].`[allFrom][ColumnPath.allColsFrom]`{@get
+     * [ColumnPathAllFromDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnPathAllFromDocs {
@@ -774,33 +874,40 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsFrom(column: ColumnSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsFrom(column)
 
-    /** @include [ColumnPathAllFromDocs] {@set [ColumnPathAllFromDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun ColumnPath.allColsFrom(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    /**
+     * @include [ColumnPathAllFromDocs] {@set [ColumnPathAllFromDocs.Arg] ("pathTo"["myColumn"])}
+     */
+    public fun ColumnPath.allColsFrom(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** @include [ColumnPathAllFromDocs] {@set [ColumnPathAllFromDocs.Arg] ("myColumn")} */
-    public fun ColumnPath.allColsFrom(column: String): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun ColumnPath.allColsFrom(column: String): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** @include [ColumnPathAllFromDocs] {@set [ColumnPathAllFromDocs.Arg] (myColumn)} */
-    public fun ColumnPath.allColsFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun ColumnPath.allColsFrom(column: AnyColumnReference): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     /** @include [ColumnPathAllFromDocs] {@set [ColumnPathAllFromDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun ColumnPath.allColsFrom(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun ColumnPath.allColsFrom(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsFrom(column)
 
     // endregion
 
     // region allBefore
 
     /**
+     * @param [column\] The specified column before which all columns should be taken. This column
+     *   can be referenced to both relatively to the current [ColumnsResolver] and absolutely.
      * @include [CommonAllSubsetDocs]
      * @set [CommonAllSubsetDocs.TITLE] All (Cols) Before
      * @set [CommonAllSubsetDocs.FUNCTION] allBefore
      * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsBefore
      * @set [CommonAllSubsetDocs.BEHAVIOR] before [column\], excluding [column\] itself
-     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [ColumnSet][ColumnSet] containing all columns
-     * @param [column\] The specified column before which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a
+     *   [ColumnSet][ColumnSet] containing all columns
      */
     private typealias AllBeforeDocs = Nothing
 
@@ -808,7 +915,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllBeforeDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`{@get [ColumnSetAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ..
+     * }.`[allBefore][ColumnSet.allBefore]`{@get [ColumnSetAllBeforeDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnSetAllBeforeDocs {
@@ -817,12 +925,17 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] \ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}} */
+    /**
+     * @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] \ \{ myColumn
+     *   `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}}
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allBefore(column: ColumnFilter<C>): ColumnSet<C> =
         allBeforeInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
-    /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
+    /**
+     * @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] ("pathTo"["myColumn"])}
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allBefore(column: ColumnPath): ColumnSet<C> =
         allBeforeInternal { it.path == column } as ColumnSet<C>
@@ -832,7 +945,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] (myColumn)} */
     @Interpretable("AllBefore0")
-    public fun <C> ColumnSet<C>.allBefore(column: AnyColumnReference): ColumnSet<C> = allBefore(column.path())
+    public fun <C> ColumnSet<C>.allBefore(column: AnyColumnReference): ColumnSet<C> =
+        allBefore(column.path())
 
     /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -844,7 +958,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllBeforeDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[allBefore][ColumnsSelectionDsl.allBefore]`{@get [ColumnsSelectionDslAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`{@get
+     * [ColumnsSelectionDslAllBeforeDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnsSelectionDslAllBeforeDocs {
@@ -853,23 +968,40 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] \ \{ myColumn \}} */
+    /**
+     * @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] \ \{
+     *   myColumn \}}
+     */
     @Interpretable("AllBefore1")
     public fun <T> ColumnsSelectionDsl<T>.allBefore(column: ColumnSelector<T, *>): ColumnSet<*> =
         asSingleColumn().allColsBefore(column)
 
-    /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
+    /**
+     * @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg]
+     *   ("pathTo"["myColumn"])}
+     */
     public fun ColumnsSelectionDsl<*>.allBefore(column: ColumnPath): ColumnSet<*> =
         asSingleColumn().allColsBefore(column)
 
-    /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] ("myColumn")} */
-    public fun ColumnsSelectionDsl<*>.allBefore(column: String): ColumnSet<*> = allBefore(pathOf(column))
+    /**
+     * @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg]
+     *   ("myColumn")}
+     */
+    public fun ColumnsSelectionDsl<*>.allBefore(column: String): ColumnSet<*> =
+        allBefore(pathOf(column))
 
-    /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] (myColumn)} */
+    /**
+     * @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg]
+     *   (myColumn)}
+     */
     @Interpretable("AllBefore2")
-    public fun ColumnsSelectionDsl<*>.allBefore(column: AnyColumnReference): ColumnSet<*> = allBefore(column.path())
+    public fun ColumnsSelectionDsl<*>.allBefore(column: AnyColumnReference): ColumnSet<*> =
+        allBefore(column.path())
 
-    /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] (Type::myColumn)} */
+    /**
+     * @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg]
+     *   (Type::myColumn)}
+     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allBefore(column: KProperty<*>): ColumnSet<*> =
@@ -879,7 +1011,9 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllBeforeDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsBefore][SingleColumn.allColsBefore]`{@get [SingleColumnAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * someColumnGroup.`[allColsBefore][SingleColumn.allColsBefore]`{@get
+     * [SingleColumnAllBeforeDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface SingleColumnAllBeforeDocs {
@@ -888,32 +1022,40 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] \ \{ myColumn \}} */
-    public fun <T> SingleColumn<DataRow<T>>.allColsBefore(column: ColumnSelector<T, *>): ColumnSet<*> {
+    /**
+     * @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] \ \{ myColumn \}}
+     */
+    public fun <T> SingleColumn<DataRow<T>>.allColsBefore(
+        column: ColumnSelector<T, *>
+    ): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
-        return this
-            .ensureIsColumnGroup()
+        return this.ensureIsColumnGroup()
             .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
             .allBeforeInternal { it.data == resolvedCol }
     }
 
-    /** @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
+    /**
+     * @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg]
+     *   ("pathTo"["myColumn"])}
+     */
     public fun SingleColumn<DataRow<*>>.allColsBefore(column: ColumnPath): ColumnSet<*> {
         var path: ColumnPath? = null
-        return this
-            .ensureIsColumnGroup()
+        return this.ensureIsColumnGroup()
             .onResolve { path = it!!.path }
             .allBeforeInternal { it.path == path!! + column || it.path == column }
     }
 
     /** @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] ("myColumn")} */
-    public fun SingleColumn<DataRow<*>>.allColsBefore(column: String): ColumnSet<*> = allColsBefore(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allColsBefore(column: String): ColumnSet<*> =
+        allColsBefore(pathOf(column))
 
     /** @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] (myColumn)} */
     public fun SingleColumn<DataRow<*>>.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
         allColsBefore(column.path())
 
-    /** @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] (Type::myColumn)} */
+    /**
+     * @include [SingleColumnAllBeforeDocs] {@set [SingleColumnAllBeforeDocs.Arg] (Type::myColumn)}
+     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsBefore(column: KProperty<*>): ColumnSet<*> =
@@ -923,7 +1065,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllBeforeDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsBefore][String.allColsBefore]`{@get [StringAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * "someColGroup".`[allColsBefore][String.allColsBefore]`{@get [StringAllBeforeDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface StringAllBeforeDocs {
@@ -937,24 +1080,30 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         columnGroup(this).allColsBefore(column)
 
     /** @include [StringAllBeforeDocs] {@set [StringAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun String.allColsBefore(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun String.allColsBefore(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** @include [StringAllBeforeDocs] {@set [StringAllBeforeDocs.Arg] ("myColumn")} */
-    public fun String.allColsBefore(column: String): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun String.allColsBefore(column: String): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** @include [StringAllBeforeDocs] {@set [StringAllBeforeDocs.Arg] (myColumn)} */
-    public fun String.allColsBefore(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun String.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** @include [StringAllBeforeDocs] {@set [StringAllBeforeDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun String.allColsBefore(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun String.allColsBefore(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /**
      * @include [AllBeforeDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][KProperty.allColsBefore]`{@get [KPropertyAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::someColGroup.`[allColsBefore][KProperty.allColsBefore]`{@get
+     * [KPropertyAllBeforeDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface KPropertyAllBeforeDocs {
@@ -963,23 +1112,25 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /**
-     * @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] \ \{ myColumn \}}
-     */
+    /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] \ \{ myColumn \}} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.allColsBefore(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsBefore(column)
 
-    /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
+    /**
+     * @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] ("pathTo"["myColumn"])}
+     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsBefore(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun KProperty<*>.allColsBefore(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] ("myColumn")} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsBefore(column: String): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun KProperty<*>.allColsBefore(column: String): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] (myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -990,13 +1141,16 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsBefore(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun KProperty<*>.allColsBefore(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /**
      * @include [AllBeforeDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][ColumnPath.allColsBefore]`{@get [ColumnPathAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["someColGroup"].`[allColsBefore][ColumnPath.allColsBefore]`{@get
+     * [ColumnPathAllBeforeDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnPathAllBeforeDocs {
@@ -1009,11 +1163,16 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsBefore(column: ColumnSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsBefore(column)
 
-    /** @include [ColumnPathAllBeforeDocs] {@set [ColumnPathAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun ColumnPath.allColsBefore(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    /**
+     * @include [ColumnPathAllBeforeDocs] {@set [ColumnPathAllBeforeDocs.Arg]
+     *   ("pathTo"["myColumn"])}
+     */
+    public fun ColumnPath.allColsBefore(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** @include [ColumnPathAllBeforeDocs] {@set [ColumnPathAllBeforeDocs.Arg] ("myColumn")} */
-    public fun ColumnPath.allColsBefore(column: String): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun ColumnPath.allColsBefore(column: String): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     /** @include [ColumnPathAllBeforeDocs] {@set [ColumnPathAllBeforeDocs.Arg] (myColumn)} */
     public fun ColumnPath.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
@@ -1022,21 +1181,23 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /** @include [ColumnPathAllBeforeDocs] {@set [ColumnPathAllBeforeDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun ColumnPath.allColsBefore(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun ColumnPath.allColsBefore(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsBefore(column)
 
     // endregion
 
     // region allUpTo
 
     /**
+     * @param [column\] The specified column up to which all columns should be taken. This column
+     *   can be referenced to both relatively to the current [ColumnsResolver] and absolutely.
      * @include [CommonAllSubsetDocs]
      * @set [CommonAllSubsetDocs.TITLE] All (Cols) Up To
      * @set [CommonAllSubsetDocs.FUNCTION] allUpTo
      * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsUpTo
      * @set [CommonAllSubsetDocs.BEHAVIOR] up to [column\], including [column\] itself
-     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [ColumnSet][ColumnSet] containing all columns
-     * @param [column\] The specified column up to which all columns should be taken. This column can be referenced
-     *   to both relatively to the current [ColumnsResolver] and absolutely.
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a
+     *   [ColumnSet][ColumnSet] containing all columns
      */
     private typealias AllUpToDocs = Nothing
 
@@ -1044,7 +1205,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllUpToDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`{@get [ColumnSetAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ..
+     * }.`[allUpTo][ColumnSet.allUpTo]`{@get [ColumnSetAllUpToDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnSetAllUpToDocs {
@@ -1053,7 +1215,10 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] \ \{ myColumn `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}} */
+    /**
+     * @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] \ \{ myColumn
+     *   `[in][String.contains]` it.`[name][ColumnWithPath.name]` \}}
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.allUpTo(column: ColumnFilter<C>): ColumnSet<C> =
         allUpToInternal(column as ColumnFilter<*>) as ColumnSet<C>
@@ -1068,18 +1233,21 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] (myColumn)} */
     @Interpretable("AllUpTo0")
-    public fun <C> ColumnSet<C>.allUpTo(column: AnyColumnReference): ColumnSet<C> = allUpTo(column.path())
+    public fun <C> ColumnSet<C>.allUpTo(column: AnyColumnReference): ColumnSet<C> =
+        allUpTo(column.path())
 
     /** @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> ColumnSet<C>.allUpTo(column: KProperty<*>): ColumnSet<C> = allUpTo(column.toColumnAccessor().path())
+    public fun <C> ColumnSet<C>.allUpTo(column: KProperty<*>): ColumnSet<C> =
+        allUpTo(column.toColumnAccessor().path())
 
     /**
      * @include [AllUpToDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[allUpTo][ColumnsSelectionDsl.allColsUpTo]`{@get [ColumnsSelectionDslAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allColsUpTo]`{@get
+     * [ColumnsSelectionDslAllUpToDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnsSelectionDslAllUpToDocs {
@@ -1088,32 +1256,52 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] \ \{ myColumn \}} */
+    /**
+     * @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] \ \{
+     *   myColumn \}}
+     */
     @Interpretable("AllUpTo1")
     public fun <T> ColumnsSelectionDsl<T>.allUpTo(column: ColumnSelector<T, *>): ColumnSet<*> =
         asSingleColumn().allColsUpTo(column)
 
-    /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun ColumnsSelectionDsl<*>.allUpTo(column: ColumnPath): ColumnSet<*> = asSingleColumn().allColsUpTo(column)
+    /**
+     * @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg]
+     *   ("pathTo"["myColumn"])}
+     */
+    public fun ColumnsSelectionDsl<*>.allUpTo(column: ColumnPath): ColumnSet<*> =
+        asSingleColumn().allColsUpTo(column)
 
-    /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] ("myColumn")} */
-    public fun ColumnsSelectionDsl<*>.allUpTo(column: String): ColumnSet<*> = asSingleColumn().allColsUpTo(column)
+    /**
+     * @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg]
+     *   ("myColumn")}
+     */
+    public fun ColumnsSelectionDsl<*>.allUpTo(column: String): ColumnSet<*> =
+        asSingleColumn().allColsUpTo(column)
 
-    /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] (myColumn)} */
+    /**
+     * @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg]
+     *   (myColumn)}
+     */
     @Interpretable("AllUpTo2")
     public fun ColumnsSelectionDsl<*>.allUpTo(column: AnyColumnReference): ColumnSet<*> =
         asSingleColumn().allColsUpTo(column)
 
-    /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] (Type::myColumn)} */
+    /**
+     * @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg]
+     *   (Type::myColumn)}
+     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun ColumnsSelectionDsl<*>.allUpTo(column: KProperty<*>): ColumnSet<*> = asSingleColumn().allColsUpTo(column)
+    public fun ColumnsSelectionDsl<*>.allUpTo(column: KProperty<*>): ColumnSet<*> =
+        asSingleColumn().allColsUpTo(column)
 
     /**
      * @include [AllUpToDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsUpTo][SingleColumn.allColsUpTo]`{@get [SingleColumnAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * someColumnGroup.`[allColsUpTo][SingleColumn.allColsUpTo]`{@get [SingleColumnAllUpToDocs.Arg]}
+     * }`
      */
     @ExcludeFromSources
     private interface SingleColumnAllUpToDocs {
@@ -1123,19 +1311,22 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [SingleColumnAllUpToDocs] {@set [SingleColumnAllUpToDocs.Arg] \ \{ myColumn \}} */
-    public fun <T> SingleColumn<DataRow<T>>.allColsUpTo(column: ColumnSelector<T, *>): ColumnSet<*> {
+    public fun <T> SingleColumn<DataRow<T>>.allColsUpTo(
+        column: ColumnSelector<T, *>
+    ): ColumnSet<*> {
         var resolvedCol: DataColumn<*>? = null
-        return this
-            .ensureIsColumnGroup()
+        return this.ensureIsColumnGroup()
             .onResolve { resolvedCol = it!!.asColumnGroup().getColumn(column) }
             .allUpToInternal { it.data == resolvedCol!! }
     }
 
-    /** @include [SingleColumnAllUpToDocs] {@set [SingleColumnAllUpToDocs.Arg] ("pathTo"["myColumn"])} */
+    /**
+     * @include [SingleColumnAllUpToDocs] {@set [SingleColumnAllUpToDocs.Arg]
+     *   ("pathTo"["myColumn"])}
+     */
     public fun SingleColumn<DataRow<*>>.allColsUpTo(column: ColumnPath): ColumnSet<*> {
         var path: ColumnPath? = null
-        return this
-            .ensureIsColumnGroup()
+        return this.ensureIsColumnGroup()
             .onResolve { path = it!!.path }
             .allUpToInternal {
                 // accept both relative and full column path
@@ -1144,7 +1335,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [SingleColumnAllUpToDocs] {@set [SingleColumnAllUpToDocs.Arg] ("myColumn")} */
-    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: String): ColumnSet<*> = allColsUpTo(pathOf(column))
+    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: String): ColumnSet<*> =
+        allColsUpTo(pathOf(column))
 
     /** @include [SingleColumnAllUpToDocs] {@set [SingleColumnAllUpToDocs.Arg] (myColumn)} */
     public fun SingleColumn<DataRow<*>>.allColsUpTo(column: AnyColumnReference): ColumnSet<*> =
@@ -1160,7 +1352,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllUpToDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsUpTo][String.allColsUpTo]`{@get [StringAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsUpTo][String.allColsUpTo]`{@get
+     * [StringAllUpToDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface StringAllUpToDocs {
@@ -1170,27 +1363,34 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [StringAllUpToDocs] {@set [StringAllUpToDocs.Arg] \ \{ myColumn \}} */
-    public fun String.allColsUpTo(column: ColumnSelector<*, *>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun String.allColsUpTo(column: ColumnSelector<*, *>): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** @include [StringAllUpToDocs] {@set [StringAllUpToDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun String.allColsUpTo(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun String.allColsUpTo(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** @include [StringAllUpToDocs] {@set [StringAllUpToDocs.Arg] ("myColumn")} */
-    public fun String.allColsUpTo(column: String): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun String.allColsUpTo(column: String): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** @include [StringAllUpToDocs] {@set [StringAllUpToDocs.Arg] (myColumn)} */
-    public fun String.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun String.allColsUpTo(column: AnyColumnReference): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** @include [StringAllUpToDocs] {@set [StringAllUpToDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun String.allColsUpTo(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun String.allColsUpTo(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /**
      * @include [AllUpToDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][KProperty.allColsUpTo]`{@get [KPropertyAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::someColGroup.`[allColsUpTo][KProperty.allColsUpTo]`{@get
+     * [KPropertyAllUpToDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface KPropertyAllUpToDocs {
@@ -1199,9 +1399,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         typealias Arg = Nothing
     }
 
-    /**
-     * @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] \ \{ myColumn \}}
-     */
+    /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] \ \{ myColumn \}} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> KProperty<C>.allColsUpTo(column: ColumnSelector<C, *>): ColumnSet<*> =
@@ -1210,12 +1408,14 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] ("pathTo"["myColumn"])} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsUpTo(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun KProperty<*>.allColsUpTo(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] ("myColumn")} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsUpTo(column: String): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun KProperty<*>.allColsUpTo(column: String): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] (myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -1226,13 +1426,16 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsUpTo(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun KProperty<*>.allColsUpTo(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /**
      * @include [AllUpToDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][ColumnPath.allColsUpTo]`{@get [ColumnPathAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["someColGroup"].`[allColsUpTo][ColumnPath.allColsUpTo]`{@get
+     * [ColumnPathAllUpToDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnPathAllUpToDocs {
@@ -1245,54 +1448,67 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnPath.allColsUpTo(column: ColumnSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsUpTo(column)
 
-    /** @include [ColumnPathAllUpToDocs] {@set [ColumnPathAllUpToDocs.Arg] ("pathTo"["myColumn"])} */
-    public fun ColumnPath.allColsUpTo(column: ColumnPath): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    /**
+     * @include [ColumnPathAllUpToDocs] {@set [ColumnPathAllUpToDocs.Arg] ("pathTo"["myColumn"])}
+     */
+    public fun ColumnPath.allColsUpTo(column: ColumnPath): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** @include [ColumnPathAllUpToDocs] {@set [ColumnPathAllUpToDocs.Arg] ("myColumn")} */
-    public fun ColumnPath.allColsUpTo(column: String): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun ColumnPath.allColsUpTo(column: String): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** @include [ColumnPathAllUpToDocs] {@set [ColumnPathAllUpToDocs.Arg] (myColumn)} */
-    public fun ColumnPath.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun ColumnPath.allColsUpTo(column: AnyColumnReference): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     /** @include [ColumnPathAllUpToDocs] {@set [ColumnPathAllUpToDocs.Arg] (Type::myColumn)} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun ColumnPath.allColsUpTo(column: KProperty<*>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun ColumnPath.allColsUpTo(column: KProperty<*>): ColumnSet<*> =
+        columnGroup(this).allColsUpTo(column)
 
     // endregion
 }
 
 /**
- * If [this] is a [SingleColumn] containing a single [ColumnGroup]
- * (like [SingleColumn][SingleColumn]`<`[AnyRow][AnyRow]`>` or [ColumnsSelectionDsl][ColumnsSelectionDsl]), it
- * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
- * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this]
- * (like when [this] is a [ColumnSet]).
+ * If [this] is a [SingleColumn] containing a single [ColumnGroup] (like
+ * [SingleColumn][SingleColumn]`<`[AnyRow][AnyRow]`>` or
+ * [ColumnsSelectionDsl][ColumnsSelectionDsl]), it returns a
+ * [(transformable) ColumnSet][TransformableColumnSet] containing the children of this
+ * [ColumnGroup], else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from
+ * [this] (like when [this] is a [ColumnSet]).
  */
 @PublishedApi
-internal fun ColumnsResolver<*>.allColumnsInternal(removePaths: Boolean = false): TransformableColumnSet<*> =
-    transform { cols ->
-        if (this is SingleColumn<*> && cols.singleOrNull()?.isColumnGroup() == true) {
-            cols.single().let {
-                if (removePaths) {
-                    it.asColumnGroup().columns().map(AnyCol::addPath)
-                } else {
-                    it.cols()
-                }
+internal fun ColumnsResolver<*>.allColumnsInternal(
+    removePaths: Boolean = false
+): TransformableColumnSet<*> = transform { cols ->
+    if (this is SingleColumn<*> && cols.singleOrNull()?.isColumnGroup() == true) {
+        cols.single().let {
+            if (removePaths) {
+                it.asColumnGroup().columns().map(AnyCol::addPath)
+            } else {
+                it.cols()
             }
-        } else {
-            cols
         }
+    } else {
+        cols
     }
+}
 
 /**
- * Returns a new ColumnSet containing all columns after the first column that matches the given predicate.
+ * Returns a new ColumnSet containing all columns after the first column that matches the given
+ * predicate.
  *
- * @param colByPredicate a function that takes a ColumnWithPath and returns true if the column matches the predicate, false otherwise
- * @return a new ColumnSet containing all columns after the first column that matches the given predicate
+ * @param colByPredicate a function that takes a ColumnWithPath and returns true if the column
+ *   matches the predicate, false otherwise
+ * @return a new ColumnSet containing all columns after the first column that matches the given
+ *   predicate
  */
 @PublishedApi
-internal inline fun ColumnsResolver<*>.allAfterInternal(crossinline colByPredicate: ColumnFilter<*>): ColumnSet<*> {
+internal inline fun ColumnsResolver<*>.allAfterInternal(
+    crossinline colByPredicate: ColumnFilter<*>
+): ColumnSet<*> {
     var take = false
     return colsInternal {
         if (take) {
@@ -1305,13 +1521,17 @@ internal inline fun ColumnsResolver<*>.allAfterInternal(crossinline colByPredica
 }
 
 /**
- * Returns a column set containing all columns from the internal column set that satisfy the given predicate.
+ * Returns a column set containing all columns from the internal column set that satisfy the given
+ * predicate.
  *
- * @param colByPredicate the predicate used to determine if a column should be included in the resulting set
+ * @param colByPredicate the predicate used to determine if a column should be included in the
+ *   resulting set
  * @return a column set containing all columns that satisfy the predicate
  */
 @PublishedApi
-internal inline fun ColumnsResolver<*>.allFromInternal(crossinline colByPredicate: ColumnFilter<*>): ColumnSet<*> {
+internal inline fun ColumnsResolver<*>.allFromInternal(
+    crossinline colByPredicate: ColumnFilter<*>
+): ColumnSet<*> {
     var take = false
     return colsInternal {
         if (take) {
@@ -1324,13 +1544,18 @@ internal inline fun ColumnsResolver<*>.allFromInternal(crossinline colByPredicat
 }
 
 /**
- * Returns a new ColumnSet containing all columns before the first column that satisfies the given predicate.
+ * Returns a new ColumnSet containing all columns before the first column that satisfies the given
+ * predicate.
  *
- * @param colByPredicate the predicate function used to determine if a column should be included in the returned ColumnSet
- * @return a new ColumnSet containing all columns that come before the first column that satisfies the given predicate
+ * @param colByPredicate the predicate function used to determine if a column should be included in
+ *   the returned ColumnSet
+ * @return a new ColumnSet containing all columns that come before the first column that satisfies
+ *   the given predicate
  */
 @PublishedApi
-internal inline fun ColumnsResolver<*>.allBeforeInternal(crossinline colByPredicate: ColumnFilter<*>): ColumnSet<*> {
+internal inline fun ColumnsResolver<*>.allBeforeInternal(
+    crossinline colByPredicate: ColumnFilter<*>
+): ColumnSet<*> {
     var take = true
     return colsInternal {
         if (!take) {
@@ -1343,13 +1568,18 @@ internal inline fun ColumnsResolver<*>.allBeforeInternal(crossinline colByPredic
 }
 
 /**
- * Returns a ColumnSet containing all columns up to (and including) the first column that satisfies the given predicate.
+ * Returns a ColumnSet containing all columns up to (and including) the first column that satisfies
+ * the given predicate.
  *
- * @param colByPredicate a predicate function that takes a ColumnWithPath and returns true if the column satisfies the desired condition.
- * @return a ColumnSet containing all columns up to the first column that satisfies the given predicate.
+ * @param colByPredicate a predicate function that takes a ColumnWithPath and returns true if the
+ *   column satisfies the desired condition.
+ * @return a ColumnSet containing all columns up to the first column that satisfies the given
+ *   predicate.
  */
 @PublishedApi
-internal inline fun ColumnsResolver<*>.allUpToInternal(crossinline colByPredicate: ColumnFilter<*>): ColumnSet<*> {
+internal inline fun ColumnsResolver<*>.allUpToInternal(
+    crossinline colByPredicate: ColumnFilter<*>
+): ColumnSet<*> {
     var take = true
     return colsInternal {
         if (!take) {

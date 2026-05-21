@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
@@ -19,8 +20,6 @@ import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
@@ -30,54 +29,61 @@ import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_COLUMNS_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_FRAMES
 import org.jetbrains.kotlinx.dataframe.util.ADD_VARARG_FRAMES_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region Add existing columns
 
 /**
  * Adds new [columns] to the end of this [DataFrame] (at the top level).
  *
- * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
+ * Returns a new [DataFrame] with the new [columns] appended to the original list of
+ * [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * @param columns columns to add.
+ * @return new [DataFrame] with added columns.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
- * @return new [DataFrame] with added columns.
  */
 @Deprecated(
     message = ADD_VARARG_COLUMNS,
     replaceWith = ReplaceWith(ADD_VARARG_COLUMNS_REPLACE),
     level = DeprecationLevel.WARNING,
 )
-public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
+public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> =
+    addAll(columns.asIterable())
 
 /**
  * Adds new [columns] to the end of this [DataFrame] (at the top level).
  *
- * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
+ * Returns a new [DataFrame] with the new [columns] appended to the original list of
+ * [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * @param columns columns to add.
+ * @return new [DataFrame] with added columns.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
- * @return new [DataFrame] with added columns.
  */
-public fun <T> DataFrame<T>.addAll(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
+public fun <T> DataFrame<T>.addAll(vararg columns: AnyBaseCol): DataFrame<T> =
+    addAll(columns.asIterable())
 
 /**
  * Adds new [columns] to the end of this [DataFrame] (at the top level).
  *
- * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
+ * Returns a new [DataFrame] with the new [columns] appended to the original list of
+ * [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * @param columns columns to add.
+ * @return new [DataFrame] with added columns.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
- * @return new [DataFrame] with added columns.
  */
 public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> =
     dataFrameOf(columns() + columns).cast()
@@ -85,52 +91,57 @@ public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> 
 /**
  * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
  *
- * Returns a new [DataFrame] with the columns from the specified
- * [dataFrames] appended to the original list of [DataFrame.columns].
+ * Returns a new [DataFrame] with the columns from the specified [dataFrames] appended to the
+ * original list of [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * @param dataFrames dataFrames to get columns from.
+ * @return new [DataFrame] with added columns.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
- * @return new [DataFrame] with added columns.
  */
 @Deprecated(
     message = ADD_VARARG_FRAMES,
     replaceWith = ReplaceWith(ADD_VARARG_FRAMES_REPLACE),
     level = DeprecationLevel.WARNING,
 )
-public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
+public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> =
+    addAll(dataFrames.asIterable())
 
 /**
  * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
  *
- * Returns a new [DataFrame] with the columns from the specified
- * [dataFrames] appended to the original list of [DataFrame.columns].
+ * Returns a new [DataFrame] with the columns from the specified [dataFrames] appended to the
+ * original list of [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * @param dataFrames dataFrames to get columns from.
+ * @return new [DataFrame] with added columns.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
- * @return new [DataFrame] with added columns.
  */
 @Refine
 @Interpretable("DataFrameAddAll")
-public fun <T> DataFrame<T>.addAll(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
+public fun <T> DataFrame<T>.addAll(vararg dataFrames: AnyFrame): DataFrame<T> =
+    addAll(dataFrames.asIterable())
 
 /**
  * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
  *
- * Returns a new [DataFrame] with the columns from the specified
- * [dataFrames] appended to the original list of [DataFrame.columns].
+ * Returns a new [DataFrame] with the columns from the specified [dataFrames] appended to the
+ * original list of [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * @param dataFrames dataFrames to get columns from.
+ * @return new [DataFrame] with added columns.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
- * @return new [DataFrame] with added columns.
  */
 @JvmName("addAllFrames")
 public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> =
@@ -148,18 +159,20 @@ public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T>
 public interface AddDataRow<out T> : DataRow<T> {
 
     /**
-     * Returns a new value that was already computed for some preceding row during current [add] or [update] column operation.
+     * Returns a new value that was already computed for some preceding row during current [add] or
+     * [update] column operation.
      *
      * Can be used to compute series of values with recurrence relations, e.g. fibonacci.
      *
-     * @throws IndexOutOfBoundsException when called on a successive row that doesn't have new value yet
+     * @throws IndexOutOfBoundsException when called on a successive row that doesn't have new value
+     *   yet
      */
     public fun <C> AnyRow.newValue(): C
 }
 
 /**
- * [AddExpression] is used to express or select any instance of `R` using the given instance of [AddDataRow]`<T>` as
- * `this` and `it`.
+ * [AddExpression] is used to express or select any instance of `R` using the given instance of
+ * [AddDataRow]`<T>` as `this` and `it`.
  *
  * Shorthand for:
  * ```kotlin
@@ -169,17 +182,21 @@ public interface AddDataRow<out T> : DataRow<T> {
 public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
 
 /**
- * Creates a new column using an [AddExpression] and
- * adds a new column to the end of this [DataFrame] (at the top level).
+ * Creates a new column using an [AddExpression] and adds a new column to the end of this
+ * [DataFrame] (at the top level).
  *
- * With an [AddExpression][org.jetbrains.kotlinx.dataframe.api.AddExpression], you define the value that each row in the new column should have.
- * This can be based on values from the same row in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * With an [AddExpression][org.jetbrains.kotlinx.dataframe.api.AddExpression], you define the value
+ * that each row in the new column should have. This can be based on values from the same row in the
+ * original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
- * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
- * For example, use `prev().newValue()` to access the new column value from the previous row.
+ * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and
+ * [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
+ * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already
+ * computed in the new column. For example, use `prev().newValue()` to access the new column value
+ * from the previous row.
  *
- * Returns a new [DataFrame] with the new column appended to the original list of [DataFrame.columns].
+ * Returns a new [DataFrame] with the new column appended to the original list of
+ * [DataFrame.columns].
  *
  * ## Example
  *
@@ -197,16 +214,15 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
  * }
  * ```
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
- * @param name name for a new column.
- * If it is empty, a unique column name will be generated.
- * Otherwise, it should be unique for original [DataFrame].
- * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for a new column.
- * Defaults to [Infer.Nulls].
+ * @param name name for a new column. If it is empty, a unique column name will be generated.
+ *   Otherwise, it should be unique for original [DataFrame].
+ * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for
+ *   a new column. Defaults to [Infer.Nulls].
  * @param expression [AddExpression] that computes column value for every [DataRow] of a new column.
  * @return new [DataFrame] with added column.
- *
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
 @Refine
@@ -236,20 +252,24 @@ public inline fun <reified R, T> DataFrame<T>.add(
 /**
  * Creates a new column using [AddExpression] and inserts it at the specified [ColumnPath].
  *
- * With an [AddExpression][org.jetbrains.kotlinx.dataframe.api.AddExpression], you define the value that each row in the new column should have.
- * This can be based on values from the same row in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * With an [AddExpression][org.jetbrains.kotlinx.dataframe.api.AddExpression], you define the value
+ * that each row in the new column should have. This can be based on values from the same row in the
+ * original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
- * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
- * For example, use `prev().newValue()` to access the new column value from the previous row.
+ * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and
+ * [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
+ * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already
+ * computed in the new column. For example, use `prev().newValue()` to access the new column value
+ * from the previous row.
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * Returns a new [DataFrame] with the new column inserted at the given [path].
  *
- *
- * If the specified path is partially or fully missing — that is, if any segment of the path
- * does not correspond to an existing column or column group — all missing parts will be created automatically.
+ * If the specified path is partially or fully missing — that is, if any segment of the path does
+ * not correspond to an existing column or column group — all missing parts will be created
+ * automatically.
  *
  * ## Example
  *
@@ -259,15 +279,15 @@ public inline fun <reified R, T> DataFrame<T>.add(
  * val dfWithSum = df.add(pathOf("info", "sum")) { firstValue + secondValue }
  * ```
  *
- * @param path Target [ColumnPath] for the new column.
- * If it points to a nested location,
- * intermediate columns will be created if necessary.
- * @param infer A value of [Infer] that specifies how to compute the column [type][BaseColumn.type] for the new column.
- * Defaults to [Infer.Nulls].
- * @param expression An [AddExpression] that computes the column value for every [DataRow] of the new column.
+ * @param path Target [ColumnPath] for the new column. If it points to a nested location,
+ *   intermediate columns will be created if necessary.
+ * @param infer A value of [Infer] that specifies how to compute the column [type][BaseColumn.type]
+ *   for the new column. Defaults to [Infer.Nulls].
+ * @param expression An [AddExpression] that computes the column value for every [DataRow] of the
+ *   new column.
  * @return A new [DataFrame] with the added column.
- *
- * @throws DuplicateColumnNamesException If the [DataFrame] already contains a column at the specified [path].
+ * @throws DuplicateColumnNamesException If the [DataFrame] already contains a column at the
+ *   specified [path].
  */
 public inline fun <reified R, T> DataFrame<T>.add(
     path: ColumnPath,
@@ -284,19 +304,17 @@ public inline fun <reified R, T> DataFrame<T>.add(
 // region Create and add several columns
 
 /**
- * Receiver that is used by the [add] and [mapToFrame]
- * for adding new columns and column groups based on [DataFrame] columns and row values.
+ * Receiver that is used by the [add] and [mapToFrame] for adding new columns and column groups
+ * based on [DataFrame] columns and row values.
  */
-public class AddDsl<T>(
-    @PublishedApi internal val df: DataFrame<T>,
-) : ColumnsContainer<T> by df,
-    ColumnSelectionDsl<T> {
+public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) :
+    ColumnsContainer<T> by df, ColumnSelectionDsl<T> {
 
     // TODO: support adding column into path
-    @PublishedApi
-    internal val columns: MutableList<AnyCol> = mutableListOf<AnyCol>()
+    @PublishedApi internal val columns: MutableList<AnyCol> = mutableListOf<AnyCol>()
 
-    public fun add(column: AnyColumnReference): Boolean = columns.add(column.resolveSingle(df)!!.data)
+    public fun add(column: AnyColumnReference): Boolean =
+        columns.add(column.resolveSingle(df)!!.data)
 
     @Interpretable("AddDslReferencePlus")
     public operator fun AnyColumnReference.unaryPlus(): Boolean = add(this)
@@ -316,36 +334,43 @@ public class AddDsl<T>(
     ): DataColumn<R> = df.mapToColumn("", infer, expression)
 
     @Interpretable("From")
-    public inline infix fun <reified R> String.from(noinline expression: AddExpression<T, R>): Boolean =
-        add(this, Infer.Nulls, expression)
+    public inline infix fun <reified R> String.from(
+        noinline expression: AddExpression<T, R>
+    ): Boolean = add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: AddExpression<T, R>): Boolean =
-        name().from(expression)
+    public inline infix fun <reified R> ColumnAccessor<R>.from(
+        noinline expression: AddExpression<T, R>
+    ): Boolean = name().from(expression)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public inline infix fun <reified R> KProperty<R>.from(noinline expression: AddExpression<T, R>): Boolean =
-        add(name, Infer.Nulls, expression)
+    public inline infix fun <reified R> KProperty<R>.from(
+        noinline expression: AddExpression<T, R>
+    ): Boolean = add(name, Infer.Nulls, expression)
 
     public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
+    public inline infix fun <reified R> ColumnAccessor<R>.from(
+        column: ColumnReference<R>
+    ): Boolean = name() from column
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
+    public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean =
+        name from column
 
     @Interpretable("Into")
     public infix fun AnyColumnReference.into(name: String): Boolean = add(rename(name))
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
+    public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean =
+        into(column.name())
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -356,11 +381,13 @@ public class AddDsl<T>(
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
+    public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit =
+        group(this, body)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
+    public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit =
+        group(column.name(), body)
 
     @Interpretable("AddDslNamedGroup")
     public fun group(name: String, body: AddDsl<T>.() -> Unit) {
@@ -383,8 +410,8 @@ public class AddDsl<T>(
 /**
  * Creates new columns using the [AddDsl] builder.
  *
- * An [AddDsl] allows to add multiple new columns and column groups to a [DataFrame]
- * using concise syntax based on `from`, `into` operations and [AddExpression]s.
+ * An [AddDsl] allows to add multiple new columns and column groups to a [DataFrame] using concise
+ * syntax based on `from`, `into` operations and [AddExpression]s.
  *
  * Returns a new [DataFrame] with the newly added columns.
  *
@@ -412,7 +439,8 @@ public class AddDsl<T>(
  * }
  * ```
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * @param body An [AddDsl] expression used to define new columns and column groups.
  * @return A new [DataFrame] with the added columns.
@@ -426,18 +454,21 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
 }
 
 /**
- * Creates a new column using [AddExpression] and
- * adds a new column to the end of each group (i.e., [DataFrame]s) of this [GroupBy] (at the top level).
+ * Creates a new column using [AddExpression] and adds a new column to the end of each group (i.e.,
+ * [DataFrame]s) of this [GroupBy] (at the top level).
  *
- * With an [AddExpression][org.jetbrains.kotlinx.dataframe.api.AddExpression], you define the value that each row in the new column should have.
- * This can be based on values from the same row in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * With an [AddExpression][org.jetbrains.kotlinx.dataframe.api.AddExpression], you define the value
+ * that each row in the new column should have. This can be based on values from the same row in the
+ * original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
- * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
- * For example, use `prev().newValue()` to access the new column value from the previous row.
+ * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and
+ * [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
+ * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already
+ * computed in the new column. For example, use `prev().newValue()` to access the new column value
+ * from the previous row.
  *
- * Returns a new [GroupBy] with the new column
- * appended to each group [DataFrame] to the original list of [DataFrame.columns].
+ * Returns a new [GroupBy] with the new column appended to each group [DataFrame] to the original
+ * list of [DataFrame.columns].
  *
  * ## Example
  *
@@ -455,17 +486,17 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * }
  * ```
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information:
+ * [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
- * @param name name for a new column.
- * If it is empty, a unique column name will be generated.
- * Otherwise, it should be unique for original group [DataFrame]s.
- * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for a new column.
- * Defaults to [Infer.Nulls].
+ * @param name name for a new column. If it is empty, a unique column name will be generated.
+ *   Otherwise, it should be unique for original group [DataFrame]s.
+ * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for
+ *   a new column. Defaults to [Infer.Nulls].
  * @param expression [AddExpression] that computes column value for every [DataRow] of a new column.
  * @return new [GroupBy] with added column.
- *
- * @throws DuplicateColumnNamesException if group [DataFrame]s already contains a column with given [name].
+ * @throws DuplicateColumnNamesException if group [DataFrame]s already contains a column with given
+ *   [name].
  */
 @Refine
 @Interpretable("GroupByAdd")

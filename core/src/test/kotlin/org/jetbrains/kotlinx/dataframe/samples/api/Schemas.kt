@@ -34,10 +34,7 @@ class Schemas {
     @TransformDataFrameExpressions
     fun createDfNullable() {
         // SampleStart
-        val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", null,
-        )
+        val df = dataFrameOf("name", "age")("Alice", 15, "Bob", null)
         // SampleEnd
     }
 
@@ -45,10 +42,7 @@ class Schemas {
     @TransformDataFrameExpressions
     fun createDf() {
         // SampleStart
-        val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", 20,
-        )
+        val df = dataFrameOf("name", "age")("Alice", 15, "Bob", 20)
         // SampleEnd
     }
 
@@ -56,10 +50,8 @@ class Schemas {
     @TransformDataFrameExpressions
     fun extendedDf() {
         // SampleStart
-        val df = dataFrameOf("name", "age", "weight")(
-            "Merton, Alice", 15, 60.0,
-            "Marley, Bob", 20, 73.5,
-        )
+        val df =
+            dataFrameOf("name", "age", "weight")("Merton, Alice", 15, 60.0, "Marley, Bob", 20, 73.5)
         // SampleEnd
         df.print()
     }
@@ -67,10 +59,9 @@ class Schemas {
     @Test
     @TransformDataFrameExpressions
     fun splitNameWorks() {
-        val df = dataFrameOf("name", "age", "weight")(
-            "Merton, Alice", 15, 60.0,
-            "Marley, Bob", 20, 73.5,
-        ).cast<Person>()
+        val df =
+            dataFrameOf("name", "age", "weight")("Merton, Alice", 15, 60.0, "Marley, Bob", 20, 73.5)
+                .cast<Person>()
         // SampleStart
         df.splitName()
         // SampleEnd
@@ -79,10 +70,9 @@ class Schemas {
     @Test
     @TransformDataFrameExpressions
     fun adultsWorks() {
-        val df = dataFrameOf("name", "age", "weight")(
-            "Merton, Alice", 15, 60.0,
-            "Marley, Bob", 20, 73.5,
-        ).cast<Person>()
+        val df =
+            dataFrameOf("name", "age", "weight")("Merton, Alice", 15, 60.0, "Marley, Bob", 20, 73.5)
+                .cast<Person>()
         // SampleStart
         df.adults()
         // SampleEnd
@@ -94,16 +84,22 @@ class Schemas {
     @TransformDataFrameExpressions
     fun convertTo() {
         // SampleStart
-        @DataSchema
-        data class Name(val firstName: String, val lastName: String)
+        @DataSchema data class Name(val firstName: String, val lastName: String)
 
-        @DataSchema
-        data class Person(val name: Name, val age: Int?)
+        @DataSchema data class Person(val name: Name, val age: Int?)
 
-        val df = dataFrameOf("name", "age", "weight")(
-            "Merton, Alice", "15", 60.0,
-            "Marley, Bob", "20", 73.5,
-        ).split { "name"<String>() }.by(",").inward("firstName", "lastName")
+        val df =
+            dataFrameOf("name", "age", "weight")(
+                    "Merton, Alice",
+                    "15",
+                    60.0,
+                    "Marley, Bob",
+                    "20",
+                    73.5,
+                )
+                .split { "name"<String>() }
+                .by(",")
+                .inward("firstName", "lastName")
 
         val persons = df.cast<Person>().toList()
         // SampleEnd
@@ -113,10 +109,7 @@ class Schemas {
     @TransformDataFrameExpressions
     fun useProperties() {
         // SampleStart
-        val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", 20,
-        ).cast<Person>()
+        val df = dataFrameOf("name", "age")("Alice", 15, "Bob", 20).cast<Person>()
         // age only available after executing `build` or `kspKotlin`!
         val teens = df.filter { age in 10..19 }
         teens.print()
@@ -127,7 +120,8 @@ class Schemas {
     @TransformDataFrameExpressions
     fun useInferredSchema() {
         // SampleStart
-        // Repository.readCsv() has argument 'path' with default value https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv
+        // Repository.readCsv() has argument 'path' with default value
+        // https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv
         val df = Repository.readCsv()
         // Use generated properties to access data in rows
         df.maxBy { stargazersCount }.print()

@@ -5,10 +5,19 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import java.io.File
+import java.io.StringWriter
+import java.math.BigDecimal
+import java.net.URL
+import java.time.LocalDate as JavaLocalDate
+import java.util.Locale
+import java.util.zip.GZIPInputStream
+import kotlin.reflect.KClass
+import kotlin.reflect.typeOf
+import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -30,16 +39,6 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.io.File
-import java.io.StringWriter
-import java.math.BigDecimal
-import java.net.URL
-import java.util.Locale
-import java.util.zip.GZIPInputStream
-import kotlin.reflect.KClass
-import kotlin.reflect.typeOf
-import java.time.LocalDate as JavaLocalDate
-import kotlin.time.Instant as StdlibInstant
 
 //  can be enabled for showing logs for these tests
 private const val SHOW_LOGS = false
@@ -73,7 +72,8 @@ class DelimCsvTsvTests {
             first,second
             2,,
             3,,
-            """.trimIndent()
+            """
+                .trimIndent()
         val df = DataFrame.readCsvStr(src)
         df.rowsCount() shouldBe 2
         df.columnsCount() shouldBe 2
@@ -84,10 +84,7 @@ class DelimCsvTsvTests {
 
     @Test
     fun write() {
-        val df = dataFrameOf("col1", "col2")(
-            1, null,
-            2, null,
-        ).convert("col2").toStr()
+        val df = dataFrameOf("col1", "col2")(1, null, 2, null).convert("col2").toStr()
 
         val str = StringWriter()
         df.writeCsv(str)
@@ -147,9 +144,7 @@ class DelimCsvTsvTests {
     fun `read ZIP Csv`() {
         DataFrame.readCsv(simpleCsvZip) shouldBe DataFrame.readCsv(simpleCsv)
 
-        shouldThrow<IllegalStateException> {
-            DataFrame.readCsv(notCsv)
-        }
+        shouldThrow<IllegalStateException> { DataFrame.readCsv(notCsv) }
     }
 
     @Test
@@ -159,10 +154,8 @@ class DelimCsvTsvTests {
 
     @Test
     fun `read custom compression Csv`() {
-        DataFrame.readCsv(
-            simpleCsvGz,
-            compression = Compression(::GZIPInputStream),
-        ) shouldBe DataFrame.readCsv(simpleCsv)
+        DataFrame.readCsv(simpleCsvGz, compression = Compression(::GZIPInputStream)) shouldBe
+            DataFrame.readCsv(simpleCsv)
     }
 
     @Test
@@ -172,11 +165,12 @@ class DelimCsvTsvTests {
 
     @Test
     fun readCsvWithFrenchLocaleAndAlternativeDelimiter() {
-        val df = DataFrame.readCsv(
-            url = csvWithFrenchLocale,
-            delimiter = ';',
-            parserOptions = ParserOptions(locale = Locale.FRENCH),
-        )
+        val df =
+            DataFrame.readCsv(
+                url = csvWithFrenchLocale,
+                delimiter = ';',
+                parserOptions = ParserOptions(locale = Locale.FRENCH),
+            )
 
         df.columnsCount() shouldBe 11
         df.rowsCount() shouldBe 5
@@ -265,14 +259,16 @@ class DelimCsvTsvTests {
     @Test
     fun `if string starts with a number, it should be parsed as a string anyway`() {
         @Language("CSV")
-        val df = DataFrame.readCsvStr(
-            """
-            duration,floatDuration
-            12 min,1.0
-            15,12.98 sec
-            1 Season,0.9 parsec
-            """.trimIndent(),
-        )
+        val df =
+            DataFrame.readCsvStr(
+                """
+                duration,floatDuration
+                12 min,1.0
+                15,12.98 sec
+                1 Season,0.9 parsec
+                """
+                    .trimIndent()
+            )
         df["duration"].type() shouldBe typeOf<String>()
         df["floatDuration"].type() shouldBe typeOf<String>()
     }
@@ -285,25 +281,17 @@ class DelimCsvTsvTests {
             col1,col2,col3
             568,801,587
             780,588
-            """.trimIndent()
+            """
+                .trimIndent()
 
-        val df = shouldNotThrowAny {
-            DataFrame.readCsvStr(csvContent)
-        }
+        val df = shouldNotThrowAny { DataFrame.readCsvStr(csvContent) }
 
-        df shouldBe dataFrameOf("col1", "col2", "col3")(
-            568, 801, 587,
-            780, 588, null,
-        )
+        df shouldBe dataFrameOf("col1", "col2", "col3")(568, 801, 587, 780, 588, null)
     }
 
     @Test
     fun `write and read frame column`() {
-        val df = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            1, 3, 2,
-            2, 1, 3,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 1, 3, 2, 2, 1, 3)
         val grouped = df.groupBy("a").into("g")
         val str = grouped.toCsvStr(escapeChar = null)
         val res = DataFrame.readCsvStr(str, quote = '"')
@@ -312,10 +300,7 @@ class DelimCsvTsvTests {
 
     @Test
     fun `write and read column group`() {
-        val df = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            1, 3, 2,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 1, 3, 2)
         val grouped = df.group("b", "c").into("d")
         val str = grouped.toCsvStr()
         val res = DataFrame.readCsvStr(str)
@@ -337,10 +322,7 @@ class DelimCsvTsvTests {
 
     @Test
     fun `write csv without header produce correct file`() {
-        val df = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            1, 3, 2,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 1, 3, 2)
         df.writeCsv(
             path = "src/test/resources/without_header.csv",
             includeHeader = false,
@@ -363,18 +345,15 @@ class DelimCsvTsvTests {
             DataFrame.readCsv("../data/jetbrains repositories.csv", ignoreEmptyLines = true)
         }
 
-        val df = DataFrame.readCsv(
-            "../data/jetbrains repositories.csv",
-            skipLines = 1, // we need to skip the empty lines manually
-        )
-        df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
-        df.columnTypes() shouldBe listOf(
-            typeOf<String>(),
-            typeOf<URL>(),
-            typeOf<Int>(),
-            typeOf<String>(),
-            typeOf<Int>(),
-        )
+        val df =
+            DataFrame.readCsv(
+                "../data/jetbrains repositories.csv",
+                skipLines = 1, // we need to skip the empty lines manually
+            )
+        df.columnNames() shouldBe
+            listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
+        df.columnTypes() shouldBe
+            listOf(typeOf<String>(), typeOf<URL>(), typeOf<Int>(), typeOf<String>(), typeOf<Int>())
         // same file without empty line at the beginning
         df shouldBe DataFrame.readCsv("../data/jetbrains_repositories.csv")
     }
@@ -386,7 +365,8 @@ class DelimCsvTsvTests {
             """
             a	b	c
             1	2	3
-            """.trimIndent()
+            """
+                .trimIndent()
         val df = DataFrame.readCsvStr(tsv, '\t')
         df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }
@@ -408,19 +388,21 @@ class DelimCsvTsvTests {
         val emptyCsvFile = DataFrame.readCsv(File.createTempFile("empty", "csv"))
         emptyCsvFile shouldBe DataFrame.empty()
 
-        val emptyCsvFileManualHeader = DataFrame.readCsv(
-            file = File.createTempFile("empty", "csv"),
-            header = listOf("a", "b", "c"),
-        )
+        val emptyCsvFileManualHeader =
+            DataFrame.readCsv(
+                file = File.createTempFile("empty", "csv"),
+                header = listOf("a", "b", "c"),
+            )
         emptyCsvFileManualHeader.apply {
             isEmpty() shouldBe true
             columnNames() shouldBe listOf("a", "b", "c")
             columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
         }
 
-        val emptyCsvFileWithHeader = DataFrame.readCsv(
-            file = File.createTempFile("empty", "csv").also { it.writeText("a,b,c") },
-        )
+        val emptyCsvFileWithHeader =
+            DataFrame.readCsv(
+                file = File.createTempFile("empty", "csv").also { it.writeText("a,b,c") }
+            )
         emptyCsvFileWithHeader.apply {
             isEmpty() shouldBe true
             columnNames() shouldBe listOf("a", "b", "c")
@@ -439,7 +421,8 @@ class DelimCsvTsvTests {
             # This is a comment
             a,b,c
             1,2,3
-            """.trimIndent()
+            """
+                .trimIndent()
         val df = DataFrame.readCsvStr(csv, skipLines = 1L)
         df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }
@@ -451,23 +434,19 @@ class DelimCsvTsvTests {
             """
             a,b,c
             1,2,3
-            
+
             4,5,6
-            """.trimIndent()
+            """
+                .trimIndent()
         val df1 = DataFrame.readCsvStr(csv)
-        df1 shouldBe dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            null, null, null,
-            4, 5, 6,
-        )
+        df1 shouldBe dataFrameOf("a", "b", "c")(1, 2, 3, null, null, null, 4, 5, 6)
 
         val df2 = DataFrame.readCsvStr(csv, ignoreEmptyLines = true)
-        df2 shouldBe dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            4, 5, 6,
-        )
+        df2 shouldBe dataFrameOf("a", "b", "c")(1, 2, 3, 4, 5, 6)
 
-        shouldThrow<IllegalStateException> { DataFrame.readCsvStr(csv, allowMissingColumns = false) }
+        shouldThrow<IllegalStateException> {
+            DataFrame.readCsvStr(csv, allowMissingColumns = false)
+        }
     }
 
     @Test
@@ -488,22 +467,21 @@ class DelimCsvTsvTests {
             d;-204 235,23;;
             e;NaN;;
             f;null;;
-            """.trimIndent()
+            """
+                .trimIndent()
 
-        val dfDeephaven = DataFrame.readCsvStr(
-            text = frenchCsv,
-            delimiter = ';',
-        )
+        val dfDeephaven = DataFrame.readCsvStr(text = frenchCsv, delimiter = ';')
 
         // could not parse, remains String
         dfDeephaven["date"].type() shouldBe typeOf<String?>()
 
-        val dfDataFrame = DataFrame.readCsvStr(
-            text = frenchCsv,
-            delimiter = ';',
-            // setting any locale skips deephaven's date parsing
-            parserOptions = ParserOptions(locale = Locale.ROOT),
-        )
+        val dfDataFrame =
+            DataFrame.readCsvStr(
+                text = frenchCsv,
+                delimiter = ';',
+                // setting any locale skips deephaven's date parsing
+                parserOptions = ParserOptions(locale = Locale.ROOT),
+            )
 
         // could not parse, remains String
         dfDataFrame["date"].type() shouldBe typeOf<String?>()
@@ -521,16 +499,20 @@ class DelimCsvTsvTests {
             d;-204 235,23;;
             e;NaN;;
             f;null;;
-            """.trimIndent()
+            """
+                .trimIndent()
 
-        val frenchDf = DataFrame.readCsvStr(
-            text = frenchCsv,
-            delimiter = ';',
-            parserOptions = ParserOptions(
-                dateTime = DateTimeParserOptions.Java(locale = Locale.FRENCH)
-                    .withPattern("dd/MM/yyyy"),
-            ),
-        )
+        val frenchDf =
+            DataFrame.readCsvStr(
+                text = frenchCsv,
+                delimiter = ';',
+                parserOptions =
+                    ParserOptions(
+                        dateTime =
+                            DateTimeParserOptions.Java(locale = Locale.FRENCH)
+                                .withPattern("dd/MM/yyyy")
+                    ),
+            )
 
         frenchDf["price"].type() shouldBe typeOf<Double?>()
         frenchDf["date"].type() shouldBe typeOf<JavaLocalDate?>()
@@ -545,15 +527,15 @@ class DelimCsvTsvTests {
             d;-204.235,23;
             e;NaN;
             f;null;
-            """.trimIndent()
+            """
+                .trimIndent()
 
-        val dutchDf = DataFrame.readCsvStr(
-            text = dutchCsv,
-            delimiter = ';',
-            parserOptions = ParserOptions(
-                locale = Locale.forLanguageTag("nl-NL"),
-            ),
-        )
+        val dutchDf =
+            DataFrame.readCsvStr(
+                text = dutchCsv,
+                delimiter = ';',
+                parserOptions = ParserOptions(locale = Locale.forLanguageTag("nl-NL")),
+            )
 
         dutchDf["price"].type() shouldBe typeOf<Double?>()
 
@@ -570,15 +552,15 @@ class DelimCsvTsvTests {
                 د;٢٠٤٫٢٣٥;
                 هـ;ليس رقم;
                 و;null;
-                """.trimIndent()
+                """
+                    .trimIndent()
 
-            val easternArabicDf = DataFrame.readCsvStr(
-                arabicCsv,
-                delimiter = ';',
-                parserOptions = ParserOptions(
-                    locale = Locale.forLanguageTag("ar-001"),
-                ),
-            )
+            val easternArabicDf =
+                DataFrame.readCsvStr(
+                    arabicCsv,
+                    delimiter = ';',
+                    parserOptions = ParserOptions(locale = Locale.forLanguageTag("ar-001")),
+                )
 
             easternArabicDf["السعر"].type() shouldBe typeOf<Double?>()
             easternArabicDf["الاسم"].type() shouldBe typeOf<String>() // apparently not a char
@@ -597,25 +579,22 @@ class DelimCsvTsvTests {
             d;-204 235,23;
             e;NaN;
             f;null;
-            """.trimIndent()
+            """
+                .trimIndent()
 
-        val estonianDf1 = DataFrame.readCsvStr(
-            text = estonianWrongMinus,
-            delimiter = ';',
-            parserOptions = ParserOptions(
-                locale = Locale.forLanguageTag("et-EE"),
-            ),
-        )
+        val estonianDf1 =
+            DataFrame.readCsvStr(
+                text = estonianWrongMinus,
+                delimiter = ';',
+                parserOptions = ParserOptions(locale = Locale.forLanguageTag("et-EE")),
+            )
 
         estonianDf1["price"].type() shouldBe typeOf<Double?>()
 
         // also test the global setting
         DataFrame.parser.locale = Locale.forLanguageTag("et-EE")
 
-        val estonianDf2 = DataFrame.readCsvStr(
-            text = estonianWrongMinus,
-            delimiter = ';',
-        )
+        val estonianDf2 = DataFrame.readCsvStr(text = estonianWrongMinus, delimiter = ';')
         estonianDf2 shouldBe estonianDf1
 
         DataFrame.parser.resetToDefault()
@@ -623,12 +602,11 @@ class DelimCsvTsvTests {
 
     @Test
     fun `NA and custom null string in double column`() {
-        val df1 = DataFrame.readCsv(
-            msleepCsv,
-            parserOptions = ParserOptions(
-                nullStrings = DEFAULT_DELIM_NULL_STRINGS + "nothing",
-            ),
-        )
+        val df1 =
+            DataFrame.readCsv(
+                msleepCsv,
+                parserOptions = ParserOptions(nullStrings = DEFAULT_DELIM_NULL_STRINGS + "nothing"),
+            )
 
         df1["name"].type() shouldBe typeOf<String>()
         df1["genus"].type() shouldBe typeOf<String>()
@@ -644,9 +622,7 @@ class DelimCsvTsvTests {
 
         // Also test the global setting
         DataFrame.parser.addNullString("nothing")
-        DEFAULT_DELIM_NULL_STRINGS.forEach {
-            DataFrame.parser.addNullString(it)
-        }
+        DEFAULT_DELIM_NULL_STRINGS.forEach { DataFrame.parser.addNullString(it) }
 
         val df2 = DataFrame.readCsv(msleepCsv)
         df2 shouldBe df1
@@ -664,12 +640,10 @@ class DelimCsvTsvTests {
             argo-workflows           Active   2y77d    1234     app.kubernetes.io/instance=argo-workflows,kubernetes.io/metadata.name=argo-workflows
             argocd                   Active   5y18d    1234     kubernetes.io/metadata.name=argocd
             beta                     Active   4y235d   1234     kubernetes.io/metadata.name=beta
-            """.trimIndent()
+            """
+                .trimIndent()
 
-        val df1 = DataFrame.readCsvStr(
-            text = csv,
-            hasFixedWidthColumns = true,
-        )
+        val df1 = DataFrame.readCsvStr(text = csv, hasFixedWidthColumns = true)
 
         df1["NAME"].type() shouldBe typeOf<String>()
         df1["STATUS"].type() shouldBe typeOf<String>()
@@ -677,13 +651,14 @@ class DelimCsvTsvTests {
         df1["NUMBER"].type() shouldBe typeOf<Int>()
         df1["LABELS"].type() shouldBe typeOf<String>()
 
-        val df2 = DataFrame.readCsvStr(
-            text = csv,
-            hasFixedWidthColumns = true,
-            fixedColumnWidths = listOf(25, 9, 9, 9, 100),
-            skipLines = 1,
-            header = listOf("name", "status", "age", "number", "labels"),
-        )
+        val df2 =
+            DataFrame.readCsvStr(
+                text = csv,
+                hasFixedWidthColumns = true,
+                fixedColumnWidths = listOf(25, 9, 9, 9, 100),
+                skipLines = 1,
+                header = listOf("name", "status", "age", "number", "labels"),
+            )
 
         df2["name"].type() shouldBe typeOf<String>()
         df2["status"].type() shouldBe typeOf<String>()
@@ -694,42 +669,44 @@ class DelimCsvTsvTests {
 
     @Test
     fun `handle default coltype with other parameters`() {
-        val df = DataFrame.readCsv(
-            simpleCsv,
-            header = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"),
-            skipLines = 2,
-            colTypes = mapOf(
-                "a" to ColType.Int,
-                "b" to ColType.Double,
-                ColType.DEFAULT to ColType.String,
-            ),
-        )
+        val df =
+            DataFrame.readCsv(
+                simpleCsv,
+                header = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"),
+                skipLines = 2,
+                colTypes =
+                    mapOf(
+                        "a" to ColType.Int,
+                        "b" to ColType.Double,
+                        ColType.DEFAULT to ColType.String,
+                    ),
+            )
 
-        df.columnTypes().shouldContainInOrder(
-            typeOf<Int>(),
-            typeOf<Double>(),
-            typeOf<String>(),
-            typeOf<String?>(),
-            typeOf<String>(),
-            typeOf<String?>(),
-            typeOf<String?>(),
-            typeOf<String?>(),
-            typeOf<String>(),
-            typeOf<String>(),
-            typeOf<String?>(),
-        )
+        df.columnTypes()
+            .shouldContainInOrder(
+                typeOf<Int>(),
+                typeOf<Double>(),
+                typeOf<String>(),
+                typeOf<String?>(),
+                typeOf<String>(),
+                typeOf<String?>(),
+                typeOf<String?>(),
+                typeOf<String?>(),
+                typeOf<String>(),
+                typeOf<String>(),
+                typeOf<String?>(),
+            )
         df.rowsCount() shouldBe 4
     }
 
     @Test
     fun `skipping types`() {
-        val df1 = DataFrame.readCsv(
-            irisDataset,
-            colTypes = mapOf("sepal.length" to ColType.Double),
-            parserOptions = ParserOptions(
-                skipTypes = setOf(typeOf<Double>()),
-            ),
-        )
+        val df1 =
+            DataFrame.readCsv(
+                irisDataset,
+                colTypes = mapOf("sepal.length" to ColType.Double),
+                parserOptions = ParserOptions(skipTypes = setOf(typeOf<Double>())),
+            )
 
         df1["sepal.length"].type() shouldBe typeOf<Double>()
         df1["sepal.width"].type() shouldBe typeOf<BigDecimal>()
@@ -740,10 +717,7 @@ class DelimCsvTsvTests {
         // Also test the global setting
         DataFrame.parser.addSkipType(typeOf<Double>())
 
-        val df2 = DataFrame.readCsv(
-            irisDataset,
-            colTypes = mapOf("sepal.length" to ColType.Double),
-        )
+        val df2 = DataFrame.readCsv(irisDataset, colTypes = mapOf("sepal.length" to ColType.Double))
         df2 shouldBe df1
 
         DataFrame.parser.resetToDefault()
@@ -761,31 +735,23 @@ class DelimCsvTsvTests {
             3,45
             ,noppes
             1.3,1
-            """.trimIndent()
+            """
+                .trimIndent()
 
-        val df1 = DataFrame.readCsvStr(
-            csv,
-            parserOptions = ParserOptions(
-                nullStrings = setOf("noppes", ""),
-            ),
-            colTypes = mapOf("a" to ColType.Double, "b" to ColType.Int),
-        )
-        df1 shouldBe dataFrameOf("a", "b")(
-            null, 2,
-            1.2, null,
-            3.0, 45,
-            null, null,
-            1.3, 1,
-        )
+        val df1 =
+            DataFrame.readCsvStr(
+                csv,
+                parserOptions = ParserOptions(nullStrings = setOf("noppes", "")),
+                colTypes = mapOf("a" to ColType.Double, "b" to ColType.Int),
+            )
+        df1 shouldBe dataFrameOf("a", "b")(null, 2, 1.2, null, 3.0, 45, null, null, 1.3, 1)
 
         // Also test the global setting
         DataFrame.parser.addNullString("noppes")
         DataFrame.parser.addNullString("")
 
-        val df2 = DataFrame.readCsvStr(
-            csv,
-            colTypes = mapOf("a" to ColType.Double, "b" to ColType.Int),
-        )
+        val df2 =
+            DataFrame.readCsvStr(csv, colTypes = mapOf("a" to ColType.Double, "b" to ColType.Int))
 
         df2 shouldBe df1
 
@@ -800,7 +766,8 @@ class DelimCsvTsvTests {
             """
             with_timezone_offset,without_timezone_offset
             2024-12-12T13:00:00+01:00,2024-12-12T13:00:00
-            """.trimIndent()
+            """
+                .trimIndent()
 
         // use DFs parsers by default for datetime-like columns
         val df1 = DataFrame.readCsvStr(csvContent)
@@ -814,12 +781,11 @@ class DelimCsvTsvTests {
         }
 
         // enable fast datetime parser for the first column with adjustCsvSpecs
-        val df2 = DataFrame.readCsv(
-            inputStream = csvContent.byteInputStream(),
-            adjustCsvSpecs = {
-                putParserForName("with_timezone_offset", Parsers.DATETIME)
-            },
-        )
+        val df2 =
+            DataFrame.readCsv(
+                inputStream = csvContent.byteInputStream(),
+                adjustCsvSpecs = { putParserForName("with_timezone_offset", Parsers.DATETIME) },
+            )
         df2["with_timezone_offset"].let {
             it.type() shouldBe typeOf<LocalDateTime>()
             it[0] shouldBe LocalDateTime.parse("2024-12-12T12:00:00")
@@ -837,7 +803,8 @@ class DelimCsvTsvTests {
             """
             with_timezone_offset,without_timezone_offset
             2024-12-12T13:00:00+01:00,2024-12-12T13:00:00
-            """.trimIndent()
+            """
+                .trimIndent()
 
         DataFrame.parser.parseExperimentalInstant = true
 
@@ -853,31 +820,35 @@ class DelimCsvTsvTests {
 
     @Test
     fun `json dependency test`() {
-        val df = dataFrameOf("firstName", "lastName")(
-            "John", "Doe",
-            "Jane", "Doe",
-        ).group { "firstName" and "lastName" }.into { "name" }
+        val df =
+            dataFrameOf("firstName", "lastName")("John", "Doe", "Jane", "Doe")
+                .group { "firstName" and "lastName" }
+                .into { "name" }
 
         df.toCsvStr(quote = '\'') shouldBe
             """
             name
             '{"firstName":"John","lastName":"Doe"}'
             '{"firstName":"Jane","lastName":"Doe"}'
-            
-            """.trimIndent()
+
+            """
+                .trimIndent()
     }
 
     @Test
     fun `incorrect colTypes exception`() {
         shouldThrow<IllegalStateException> {
-            DataFrame.readCsvStr(
-                """
-                a
-                abc
-                """.trimIndent(),
-                colTypes = mapOf("a" to ColType.Int),
-            )
-        }.message!!.shouldContain("Check `colTypes`")
+                DataFrame.readCsvStr(
+                    """
+                    a
+                    abc
+                    """
+                        .trimIndent(),
+                    colTypes = mapOf("a" to ColType.Int),
+                )
+            }
+            .message!!
+            .shouldContain("Check `colTypes`")
     }
 
     companion object {
@@ -897,6 +868,7 @@ class DelimCsvTsvTests {
     }
 }
 
-fun testResource(resourcePath: String): URL = DelimCsvTsvTests::class.java.classLoader.getResource(resourcePath)!!
+fun testResource(resourcePath: String): URL =
+    DelimCsvTsvTests::class.java.classLoader.getResource(resourcePath)!!
 
 fun testCsv(csvName: String) = testResource("$csvName.csv")

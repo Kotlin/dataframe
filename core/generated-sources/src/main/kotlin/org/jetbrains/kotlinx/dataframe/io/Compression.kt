@@ -9,8 +9,8 @@ import java.util.zip.InflaterInputStream
 import java.util.zip.ZipInputStream
 
 /**
- * Compression algorithm to use when reading files.
- * We support [GZIP][Compression.Gzip] and [ZIP][Compression.Zip] compression out of the box.
+ * Compression algorithm to use when reading files. We support [GZIP][Compression.Gzip] and
+ * [ZIP][Compression.Zip] compression out of the box.
  *
  * Custom decompression algorithms can be added by creating an instance of [Compression].
  */
@@ -37,8 +37,8 @@ public fun interface Compression<I : InputStream> {
     public fun doFirst(inputStream: I) {}
 
     /**
-     * Can be overridden to perform some actions after reading from the input stream.
-     * Remember to close the stream if you override this function.
+     * Can be overridden to perform some actions after reading from the input stream. Remember to
+     * close the stream if you override this function.
      */
     public fun doFinally(inputStream: I) {
         inputStream.close()

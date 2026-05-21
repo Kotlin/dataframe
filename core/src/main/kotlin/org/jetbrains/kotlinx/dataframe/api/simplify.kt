@@ -22,17 +22,13 @@ public interface SimplifyColumnsSelectionDsl {
     /**
      * ## Simplify [ColumnSet] Grammar
      *
-     * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DEFINITIONS]
-     *  {@include [DslGrammarTemplate.ColumnSetDef]}
-     * }
+     * @include [DslGrammarTemplate] {@set [DslGrammarTemplate.DEFINITIONS] {@include
+     *   [DslGrammarTemplate.ColumnSetDef]} }
      *
-     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
-     * }
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnSetName]}**`()`** }
      *
-     * {@set [DslGrammarTemplate.PLAIN_DSL_PART]}
-     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
+     * {@set [DslGrammarTemplate.PLAIN_DSL_PART]} {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
      */
     public interface Grammar {
 
@@ -43,32 +39,37 @@ public interface SimplifyColumnsSelectionDsl {
     /**
      * ## Simplify [ColumnSet]
      *
-     * Given a [this] [ColumnSet], [simplify] simplifies the structure by removing columns that are already present in
-     * column groups, returning only these groups plus columns not belonging in any of the groups.
+     * Given a [this] [ColumnSet], [simplify] simplifies the structure by removing columns that are
+     * already present in column groups, returning only these groups plus columns not belonging in
+     * any of the groups.
      *
-     * In other words, this means that if a column in [this] is inside another column group in [this],
-     * it will not be included in the result.
+     * In other words, this means that if a column in [this] is inside another column group in
+     * [this], it will not be included in the result.
      *
      * ### Check out: [Grammar]
      *
      * ## For example:
      *
-     * [cols][ColumnsSelectionDsl.cols]`(a, a.b, d.c).`[simplify][SimplifyColumnsSelectionDsl.simplify]`() == `[cols][ColumnsSelectionDsl.cols]`(a, d.c)`
-     * {@include [LineBreak]}
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "e"  `[in][String.contains]` it.`[name][DataColumn.name]` }.`[simplify][ColumnSet.simplify]`() }`
+     * [cols][ColumnsSelectionDsl.cols]`(a, a.b,
+     * d.c).`[simplify][SimplifyColumnsSelectionDsl.simplify]`() ==
+     * `[cols][ColumnsSelectionDsl.cols]`(a, d.c)` {@include [LineBreak]}
+     * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` {
+     * "e" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[simplify][ColumnSet.simplify]`()
+     * }`
      *
-     * @return A [ColumnSet][ColumnSet]`<`[C][C]`>` containing only the columns that are not inside any column group in [this].
+     * @return A [ColumnSet][ColumnSet]`<`[C][C]`>` containing only the columns that are not inside
+     *   any column group in [this].
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.simplify(): ColumnSet<C> = simplifyInternal() as ColumnSet<C>
 }
 
 /**
- * Simplifies structure by removing columns that are already present in
- * column groups in [this].
+ * Simplifies structure by removing columns that are already present in column groups in [this].
  *
  * A.k.a. it gets a sub-list of columns that are roots of the trees of columns.
  */
-internal fun ColumnsResolver<*>.simplifyInternal(): ColumnSet<*> = allColumnsInternal().transform { it.simplify() }
+internal fun ColumnsResolver<*>.simplifyInternal(): ColumnSet<*> =
+    allColumnsInternal().transform { it.simplify() }
 
 // endregion

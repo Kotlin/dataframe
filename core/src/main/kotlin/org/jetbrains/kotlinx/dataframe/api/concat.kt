@@ -13,7 +13,8 @@ import org.jetbrains.kotlinx.dataframe.type
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.concat(vararg other: DataColumn<T>): DataColumn<T> = concatImpl(name, listOf(this) + other)
+public fun <T> DataColumn<T>.concat(vararg other: DataColumn<T>): DataColumn<T> =
+    concatImpl(name, listOf(this) + other)
 
 public fun <T> DataColumn<DataFrame<T>>.concat(): DataFrame<T> = values.concat()
 
@@ -23,27 +24,30 @@ public fun <T> DataColumn<Collection<T>>.concat(): List<T> = values.flatten()
 
 // region DataRow
 
-public fun <T> DataRow<T>.concat(vararg rows: DataRow<T>): DataFrame<T> = (listOf(this) + rows).concat()
+public fun <T> DataRow<T>.concat(vararg rows: DataRow<T>): DataFrame<T> =
+    (listOf(this) + rows).concat()
 
 // endregion
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + frames)
+public fun <T> DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T> =
+    concatImpl(listOf(this) + frames)
 
 /**
- * Vertically concat rows from two DataFrames with different schemas.
- * Use [Iterable.concat] to concatenate DataFrames with identical schemas.
+ * Vertically concat rows from two DataFrames with different schemas. Use [Iterable.concat] to
+ * concatenate DataFrames with identical schemas.
  *
  * #### Schema unification
- * If input DataFrame objects have different schemas, every column in the resulting DataFrame will get the lowest common type of the original columns with the same name.
+ * If input DataFrame objects have different schemas, every column in the resulting DataFrame will
+ * get the lowest common type of the original columns with the same name.
  *
  * Rows of columns missing in either DataFrame will be filled with `null` values.
  *
- * Example: `[A: Int, B: String]` concat `[A: Double, C: Float]` yields `[A: Number, B: String?, C: Float?]`.
+ * Example: `[A: Int, B: String]` concat `[A: Double, C: Float]` yields `[A: Number, B: String?, C:
+ * Float?]`.
  *
  * For more information: {@include [DocumentationUrls.Concat]}
- *
  */
 @Refine
 @Interpretable("DataFrameConcat")
@@ -51,9 +55,11 @@ public infix fun <T, T1> DataFrame<T>.concat(frame: DataFrame<T1>): DataFrame<An
     concatImpl(listOf(this) + frame).cast()
 
 @JvmName("concatT")
-public fun <T> DataFrame<T>.concat(rows: Iterable<DataRow<T>>): DataFrame<T> = (rows() + rows).concat()
+public fun <T> DataFrame<T>.concat(rows: Iterable<DataRow<T>>): DataFrame<T> =
+    (rows() + rows).concat()
 
-public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T> = (listOf(this) + frames).concat()
+public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T> =
+    (listOf(this) + frames).concat()
 
 // endregion
 
@@ -62,25 +68,27 @@ public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
 /**
  * Concatenates all [groups] in this [GroupBy] into a single [DataFrame].
  *
- * Doesn't take [keys] into account.
- * See also [concatWithKeys], which also includes all grouping key columns.
+ * Doesn't take [keys] into account. See also [concatWithKeys], which also includes all grouping key
+ * columns.
  *
  * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
  *
  * For more information: {@include [DocumentationUrls.GroupBy]}
  *
- * @return A new [DataFrame] where all groups are combined and additional key columns are included in each row.
+ * @return A new [DataFrame] where all groups are combined and additional key columns are included
+ *   in each row.
  */
 public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
 
 /**
- * Concatenates all [groups] in this [GroupBy] into a single [DataFrame],
- * preserving and including all grouping key columns that are not present in the group's columns.
+ * Concatenates all [groups] in this [GroupBy] into a single [DataFrame], preserving and including
+ * all grouping key columns that are not present in the group's columns.
  *
- * Doesn't affect key columns that have the same name as columns inside the groups (even if their content differs).
+ * Doesn't affect key columns that have the same name as columns inside the groups (even if their
+ * content differs).
  *
- * This function is especially useful when grouping by expressions or renamed columns,
- * and you want the resulting [DataFrame] to include those keys as part of the output.
+ * This function is especially useful when grouping by expressions or renamed columns, and you want
+ * the resulting [DataFrame] to include those keys as part of the output.
  *
  * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
  *
@@ -97,52 +105,60 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
  * val gb = df.groupBy { expr { "Category: \${type.uppercase()}" } named "category" }
  * ```
  *
- * A regular `concat()` will return a [DataFrame] similar to the original `df`
- * (with the same columns and rows but in the different orders):
- *
+ * A regular `concat()` will return a [DataFrame] similar to the original `df` (with the same
+ * columns and rows but in the different orders):
  * ```
  * gb.concat()
  * ```
+ *
  * | value | type |
- * | :---- | :--- |
+ * |-------|------|
  * | 1     | a    |
  * | 3     | a    |
  * | 2     | b    |
  * | 3     | b    |
  *
  * But `concatWithKeys()` will include the new "category" key column:
- *
  * ```
  * gb.concatWithKeys()
  * ```
- * | value | type | category      |
- * | :---- | :--- | :------------ |
- * | 1     | a    | Category: A   |
- * | 3     | a    | Category: A   |
- * | 2     | b    | Category: B   |
- * | 3     | b    | Category: B   |
  *
- * @return A new [DataFrame] where all groups are combined and additional key columns are included in each row.
+ * | value | type | category    |
+ * |-------|------|-------------|
+ * | 1     | a    | Category: A |
+ * | 3     | a    | Category: A |
+ * | 2     | b    | Category: B |
+ * | 3     | b    | Category: B |
+ *
+ * @return A new [DataFrame] where all groups are combined and additional key columns are included
+ *   in each row.
  */
 @Refine
 @Interpretable("ConcatWithKeys")
 public fun <T, G> GroupBy<T, G>.concatWithKeys(): DataFrame<G> =
     mapToFrames {
-        val rowsCount = group.rowsCount()
-        val keyColumns = keys.columns().filter { it.name !in group.columnNames() }.map { keyColumn ->
-            DataColumn.createByType(keyColumn.name, List(rowsCount) { key[keyColumn] }, keyColumn.type)
+            val rowsCount = group.rowsCount()
+            val keyColumns =
+                keys
+                    .columns()
+                    .filter { it.name !in group.columnNames() }
+                    .map { keyColumn ->
+                        DataColumn.createByType(
+                            keyColumn.name,
+                            List(rowsCount) { key[keyColumn] },
+                            keyColumn.type,
+                        )
+                    }
+            group.addAll(keyColumns)
         }
-        group.addAll(keyColumns)
-    }.concat()
+        .concat()
 
 // endregion
 
 // region ReducedGroupBy
 
 public fun <T, G> ReducedGroupBy<T, G>.concat(): DataFrame<G> =
-    groupBy.groups.values()
-        .map { reducer(it, it) }
-        .concat()
+    groupBy.groups.values().map { reducer(it, it) }.concat()
 
 // endregion
 

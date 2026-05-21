@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithTypeCastGenerator
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
 
 internal interface ReplCodeGenerator {
 

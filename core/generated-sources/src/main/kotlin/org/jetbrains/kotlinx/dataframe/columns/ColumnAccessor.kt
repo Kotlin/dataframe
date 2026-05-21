@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
-import kotlin.reflect.KProperty
 
 /**
  * Combination of [column path][path] and [column type][T].
@@ -19,7 +19,10 @@ import kotlin.reflect.KProperty
  */
 public interface ColumnAccessor<out T> : ColumnReference<T> {
 
-    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = this
+    public override operator fun getValue(
+        thisRef: Any?,
+        property: KProperty<*>,
+    ): ColumnAccessor<T> = this
 
     public operator fun <C> get(column: ColumnReference<C>): ColumnAccessor<C>
 

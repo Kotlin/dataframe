@@ -26,8 +26,6 @@ class BuildTests {
 
     @Test
     fun `create dataframe`() {
-        persons.toDataFrame {
-            expr { it.age + 4 } into "age"
-        }
+        persons.toDataFrame { expr { it.age + 4 } into "age" }
     }
 }

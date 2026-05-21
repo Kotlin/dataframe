@@ -1,14 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.junit.Test
 import java.net.URL
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
 import kotlin.time.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.junit.Test
 
 class Rendering {
 

@@ -1,21 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.intellij.lang.annotations.Language
 import java.io.Serializable
+import org.intellij.lang.annotations.Language
 
 /**
- * Simplistic JSON path implementation.
- * Supports just keys (in bracket notation), double quotes, arrays, and wildcards.
+ * Simplistic JSON path implementation. Supports just keys (in bracket notation), double quotes,
+ * arrays, and wildcards.
  *
- * Examples:
- * `$["store"]["book"][*]["author"]`
+ * Examples: `$["store"]["book"][*]["author"]`
  *
  * `$[1]` will match `$[*]`
  */
 @JvmInline
-public value class JsonPath(
-    @Language("jsonpath") public val path: String = "$",
-) : Serializable {
+public value class JsonPath(@Language("jsonpath") public val path: String = "$") : Serializable {
 
     public fun append(name: String): JsonPath = JsonPath("$path[\"$name\"]")
 
@@ -29,21 +26,24 @@ public value class JsonPath(
         JsonPath(
             path.toCharArray().let { chars ->
                 val lastStarIndex = chars.lastIndexOf('*')
-                chars.flatMapIndexed { i, c ->
-                    if (i == lastStarIndex) {
-                        index.toString().toCharArray().toList()
-                    } else {
-                        listOf(c)
+                chars
+                    .flatMapIndexed { i, c ->
+                        if (i == lastStarIndex) {
+                            index.toString().toCharArray().toList()
+                        } else {
+                            listOf(c)
+                        }
                     }
-                }.joinToString("")
-            },
+                    .joinToString("")
+            }
         )
 
     public fun prepend(name: String): JsonPath = JsonPath("\$[\"$name\"]" + path.removePrefix("$"))
 
     public fun prependWildcard(): JsonPath = JsonPath("\$[*]" + path.removePrefix("$"))
 
-    public fun prependArrayWithIndex(index: Int): JsonPath = JsonPath("\$[$index]" + path.removePrefix("$"))
+    public fun prependArrayWithIndex(index: Int): JsonPath =
+        JsonPath("\$[$index]" + path.removePrefix("$"))
 
     public fun prependArrayWithWildcard(): JsonPath = JsonPath("\$[*]" + path.removePrefix("$"))
 
@@ -60,9 +60,7 @@ public value class JsonPath(
                 if (path.size != otherPath.size) {
                     false
                 } else {
-                    path.zip(otherPath).all { (p, o) ->
-                        p == o || p == "*" || o == "*"
-                    }
+                    path.zip(otherPath).all { (p, o) -> p == o || p == "*" || o == "*" }
                 }
             }
 }

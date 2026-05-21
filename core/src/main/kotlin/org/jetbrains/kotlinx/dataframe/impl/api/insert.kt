@@ -47,7 +47,10 @@ internal fun <T> insertImpl(
 
     val childDepth = depth + 1
 
-    val columnsMap = columns.groupBy { it.insertionPath[depth] }.toMutableMap() // map: columnName -> columnsToAdd
+    val columnsMap =
+        columns
+            .groupBy { it.insertionPath[depth] }
+            .toMutableMap() // map: columnName -> columnsToAdd
 
     val newColumns = mutableListOf<AnyBaseCol>()
 
@@ -75,34 +78,39 @@ internal fun <T> insertImpl(
     }
 
     // collect new columns to insert
-    val columnsToAdd = columns.mapNotNull {
-        val name = it.insertionPath[depth]
-        val subTree = columnsMap[name]
-        if (subTree != null) {
-            columnsMap.remove(name)
+    val columnsToAdd =
+        columns
+            .mapNotNull {
+                val name = it.insertionPath[depth]
+                val subTree = columnsMap[name]
+                if (subTree != null) {
+                    columnsMap.remove(name)
 
-            // look for columns in subtree that were originally located at the current insertion path
-            // find the minimal original index among them
-            // new column will be inserted at that position
-            val minIndex = subTree.minOf {
-                if (it.referenceNode == null) {
-                    Int.MAX_VALUE
-                } else {
-                    var col = it.referenceNode
-                    if (col.depth > depth) col = col.getAncestor(depth + 1)
-                    if (col.parent === treeNode) {
-                        if (col.data.wasRemoved) col.data.originalIndex else col.data.originalIndex + 1
-                    } else {
-                        Int.MAX_VALUE
+                    // look for columns in subtree that were originally located at the current
+                    // insertion path
+                    // find the minimal original index among them
+                    // new column will be inserted at that position
+                    val minIndex = subTree.minOf {
+                        if (it.referenceNode == null) {
+                            Int.MAX_VALUE
+                        } else {
+                            var col = it.referenceNode
+                            if (col.depth > depth) col = col.getAncestor(depth + 1)
+                            if (col.parent === treeNode) {
+                                if (col.data.wasRemoved) col.data.originalIndex
+                                else col.data.originalIndex + 1
+                            } else {
+                                Int.MAX_VALUE
+                            }
+                        }
                     }
+
+                    minIndex to (name to subTree)
+                } else {
+                    null
                 }
             }
-
-            minIndex to (name to subTree)
-        } else {
-            null
-        }
-    }.sortedBy { it.first } // sort by insertion index
+            .sortedBy { it.first } // sort by insertion index
 
     val removedSiblings = treeNode?.children
     var k = 0 // index in 'removedSiblings' list
@@ -113,36 +121,40 @@ internal fun <T> insertImpl(
 
         // adjust insertion index by number of columns that were removed before current index
         if (removedSiblings != null) {
-            while (k < removedSiblings.size && removedSiblings[k].data.originalIndex < insertionIndex) {
+            while (
+                k < removedSiblings.size && removedSiblings[k].data.originalIndex < insertionIndex
+            ) {
                 if (removedSiblings[k].data.wasRemoved) insertionIndexOffset--
                 k++
             }
         }
 
-        val nodeToInsert =
-            columns.firstOrNull { it.insertionPath.size == childDepth } // try to find existing node to insert
-        val newCol = if (nodeToInsert != null) {
-            val column = nodeToInsert.column
-            if (columns.size > 1) {
-                check(columns.count { it.insertionPath.size == childDepth } == 1) {
-                    "Can not insert more than one column into the path ${nodeToInsert.insertionPath}"
+        val nodeToInsert = columns.firstOrNull {
+            it.insertionPath.size == childDepth
+        } // try to find existing node to insert
+        val newCol =
+            if (nodeToInsert != null) {
+                val column = nodeToInsert.column
+                if (columns.size > 1) {
+                    check(columns.count { it.insertionPath.size == childDepth } == 1) {
+                        "Can not insert more than one column into the path ${nodeToInsert.insertionPath}"
+                    }
+                    check(column is ColumnGroup<*>)
+                    val newDf =
+                        insertImpl(
+                            column,
+                            columns.filter { it.insertionPath.size > childDepth },
+                            treeNode?.get(name),
+                            childDepth,
+                        )
+                    column.withDf(newDf)
+                } else {
+                    column.rename(name)
                 }
-                check(column is ColumnGroup<*>)
-                val newDf = insertImpl(
-                    column,
-                    columns.filter { it.insertionPath.size > childDepth },
-                    treeNode?.get(name),
-                    childDepth,
-                )
-                column.withDf(newDf)
             } else {
-                column.rename(name)
+                val newDf = insertImpl<Unit>(null, columns, treeNode?.get(name), childDepth)
+                DataColumn.createColumnGroup(name, newDf) // new node needs to be created
             }
-        } else {
-            val newDf =
-                insertImpl<Unit>(null, columns, treeNode?.get(name), childDepth)
-            DataColumn.createColumnGroup(name, newDf) // new node needs to be created
-        }
         if (insertionIndex == Int.MAX_VALUE) {
             newColumns.add(newCol)
         } else {

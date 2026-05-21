@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.excludeJoin
 import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.innerJoin
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.rename
@@ -51,7 +50,8 @@ class Join : TestBase() {
 
     class Right
 
-    val DataFrame<Right>.fullName: ColumnGroup<Name> get() = getColumnGroup("fullName").cast()
+    val DataFrame<Right>.fullName: ColumnGroup<Name>
+        get() = getColumnGroup("fullName").cast()
 
     @Test
     @TransformDataFrameExpressions

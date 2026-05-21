@@ -19,46 +19,6 @@ import io.deephaven.csv.parsers.Parser
 import io.deephaven.csv.parsers.Parsers
 import io.deephaven.csv.reading.CsvReader
 import io.deephaven.csv.util.CsvReaderException
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
-import org.apache.commons.io.input.BOMInputStream
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.api.parser
-import org.jetbrains.kotlinx.dataframe.api.tryParse
-import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COMPRESSION
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.FIXED_COLUMN_WIDTHS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.HAS_FIXED_WIDTH_COLUMNS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.HEADER
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_EMPTY_LINES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_EXCESS_COLUMNS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_SURROUNDING_SPACES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.INPUT_STREAM_READ
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PARSER_OPTIONS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PARSE_PARALLEL
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.QUOTE
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.READ_LINES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.SKIP_LINES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_QUOTED
-import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
-import org.jetbrains.kotlinx.dataframe.io.ColType
-import org.jetbrains.kotlinx.dataframe.io.Compression
-import org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS
-import org.jetbrains.kotlinx.dataframe.io.skippingBomCharacters
-import org.jetbrains.kotlinx.dataframe.io.toKType
-import org.jetbrains.kotlinx.dataframe.io.useDecompressed
 import java.io.InputStream
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -70,51 +30,81 @@ import kotlin.reflect.typeOf
 import kotlin.time.Duration
 import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.Instant as DeprecatedInstant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import org.apache.commons.io.input.BOMInputStream
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.parser
+import org.jetbrains.kotlinx.dataframe.api.tryParse
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
+import org.jetbrains.kotlinx.dataframe.io.ColType
+import org.jetbrains.kotlinx.dataframe.io.Compression
+import org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS
+import org.jetbrains.kotlinx.dataframe.io.skippingBomCharacters
+import org.jetbrains.kotlinx.dataframe.io.toKType
+import org.jetbrains.kotlinx.dataframe.io.useDecompressed
 
 /**
- * Implementation to read delimiter-separated data from an [InputStream] based on the Deephaven CSV library.
+ * Implementation to read delimiter-separated data from an [InputStream] based on the Deephaven CSV
+ * library.
  *
- * @param inputStream Represents the file to read.
- *   Use [charset] to specify the encoding.
- * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
- *   Default: `null`
+ * @param inputStream Represents the file to read. Use [charset] to specify the encoding.
+ * @param charset The [character set][java.nio.charset.Charset] the input is encoded in. Default:
+ *   `null`
  *
- *   If `null`, the Charset will be read from the BOM of the provided input,
- *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
+ *   If `null`, the Charset will be read from the BOM of the provided input, defaulting to
+ *   [UTF-8][Charsets.UTF_8] if no BOM is found.
+ *
  * @param delimiter The field delimiter character. The default is ',' for CSV, 't' for TSV.
  * @param header Optional column titles. Default: empty list.
  *
- *   If non-empty, the data will be read with [header] as the column titles
- *   (use [skipLines] if there's a header in the data).
- *   If empty (default), the header will be read from the data.
- * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every column type.
+ *   If non-empty, the data will be read with [header] as the column titles (use [skipLines] if
+ *   there's a header in the data). If empty (default), the header will be read from the data.
  *
- *   If supplied for a certain column name (inferred from data or given by [header]),
- *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
+ * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every
+ *   column type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`)`.
- *   You can also set [ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.X`
- *   to set a _default_ column type, like [ColType.String].
+ *   If supplied for a certain column name (inferred from data or given by [header]), the parser
+ *   will parse the column with the specified name as the specified type, else it will infer the
+ *   type.
+ *
+ *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]`
+ *   `[ColType][ColType]`.`[Int][ColType.Int]`)`. You can also set
+ *   [ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.X` to set a
+ *   _default_ column type, like [ColType.String].
+ *
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
  *   Useful for files with metadata, or comments at the beginning, or to give a custom [header].
+ *
  * @param readLines The maximum number of lines to read from the data. Default: `null`.
  *
  *   If `null`, all lines will be read.
- * @param hasFixedWidthColumns Whether the data has fixed-width columns instead of a single delimiter.
- *   Default: `false`.
  *
- *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
- *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
- *   Column widths are determined by the header in the data (if present), or manually by setting
- *   [fixedColumnWidths].
+ * @param hasFixedWidthColumns Whether the data has fixed-width columns instead of a single
+ *   delimiter. Default: `false`.
+ *
+ *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns
+ *   are separated by multiple spaces instead of a single delimiter, so columns are visually
+ *   aligned. Column widths are determined by the header in the data (if present), or manually by
+ *   setting [fixedColumnWidths].
+ *
  * @param fixedColumnWidths The fixed column widths. Default: empty list.
  *
- *   Requires [hasFixedWidthColumns]. If empty, the column widths will be determined by the header in the data
- *   (if present), else, this manually sets the column widths.
- *   The number of widths should match the number of columns.
- * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
- *   Default, `null`.
+ *   Requires [hasFixedWidthColumns]. If empty, the column widths will be determined by the header
+ *   in the data (if present), else, this manually sets the column widths. The number of widths
+ *   should match the number of columns.
+ *
+ * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as
+ *   [String]. Default, `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
@@ -122,38 +112,48 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
- *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
- *   the given types or the global setting.
+ *     - [nullStrings][ParserOptions.nullStrings], which, if `null`, will take the global setting +
+ *       [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL",
+ *       "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
+ *     - [skipTypes][ParserOptions.skipTypes], which will always add
+ *       [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses]
+ *       to the given types or the global setting.
+ *
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
  *   If `false`, empty lines will be interpreted as having _empty_ values if [allowMissingColumns].
- * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default: `true`.
+ *
+ * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default:
+ *   `true`.
  *
  *   If `true`, rows that are too short will be interpreted as _empty_ values.
- * @param ignoreExcessColumns Whether to ignore rows with more columns than the header. Default: `true`.
+ *
+ * @param ignoreExcessColumns Whether to ignore rows with more columns than the header. Default:
+ *   `true`.
  *
  *   If `true`, rows that are too long will have those columns dropped.
+ *
  * @param quote The quote character. Default: `"`.
  *
  *   Used when field- or line delimiters should be interpreted as literal text.
  *
  *   For example: `123,"hello, there",456,` would correspond to: `123`; `hello, there`; `456`.
- * @param ignoreSurroundingSpaces Whether to ignore leading and trailing blanks around non-quoted fields.
- *   Default: `true`.
+ *
+ * @param ignoreSurroundingSpaces Whether to ignore leading and trailing blanks around non-quoted
+ *   fields. Default: `true`.
  * @param trimInsideQuoted Whether to ignore leading and trailing blanks inside quoted fields.
  *   Default: `false`.
  * @param parseParallel Whether to parse the data in parallel. Default: `true`.
  *
- *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
- *   This is usually faster but can be turned off for debugging.
- * @param compression The compression of the data.
- *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ *   If `true`, the data will be read and parsed in parallel by the Deephaven parser. This is
+ *   usually faster but can be turned off for debugging.
+ *
+ * @param compression The compression of the data. Default: [Compression.None], unless detected
+ *   otherwise from the input file or url.
  * @param adjustCsvSpecs Optional extra [CsvSpecs] configuration. Default: `{ it }`.
  *
- *   Before instantiating the [CsvSpecs], the [CsvSpecs.Builder] will be passed to this lambda.
- *   This will allow you to configure/overwrite any CSV / TSV parsing options.
+ *   Before instantiating the [CsvSpecs], the [CsvSpecs.Builder] will be passed to this lambda. This
+ *   will allow you to configure/overwrite any CSV / TSV parsing options.
  */
 internal fun readDelimImpl(
     inputStream: InputStream,
@@ -177,69 +177,79 @@ internal fun readDelimImpl(
     adjustCsvSpecs: AdjustCsvSpecs,
 ): DataFrame<*> {
     // set up the csv specs
-    val csvSpecs = with(CsvSpecs.builder()) {
-        customDoubleParser(DataFrameCustomDoubleParser(parserOptions))
+    val csvSpecs =
+        with(CsvSpecs.builder()) {
+                customDoubleParser(DataFrameCustomDoubleParser(parserOptions))
 
-        // use the given nullStrings if provided, else take the global ones + some extras
-        val nullStrings = parserOptions?.nullStrings ?: (DataFrame.parser.nulls + DEFAULT_DELIM_NULL_STRINGS)
-        nullValueLiterals(nullStrings)
-        headerLegalizer(::legalizeHeader)
-        numRows(readLines ?: Long.MAX_VALUE)
-        ignoreEmptyLines(ignoreEmptyLines)
-        allowMissingColumns(allowMissingColumns)
-        ignoreExcessColumns(ignoreExcessColumns)
-        if (!hasFixedWidthColumns) delimiter(delimiter)
-        quote(quote)
-        ignoreSurroundingSpaces(ignoreSurroundingSpaces)
-        trim(trimInsideQuoted)
-        concurrent(parseParallel)
-        header(header)
-        hasFixedWidthColumns(hasFixedWidthColumns)
-        if (hasFixedWidthColumns && fixedColumnWidths.isNotEmpty()) fixedColumnWidths(fixedColumnWidths)
-        skipLines(takeHeaderFromCsv = header.isEmpty(), skipLines = skipLines)
-        parsers(parserOptions, colTypes)
+                // use the given nullStrings if provided, else take the global ones + some extras
+                val nullStrings =
+                    parserOptions?.nullStrings
+                        ?: (DataFrame.parser.nulls + DEFAULT_DELIM_NULL_STRINGS)
+                nullValueLiterals(nullStrings)
+                headerLegalizer(::legalizeHeader)
+                numRows(readLines ?: Long.MAX_VALUE)
+                ignoreEmptyLines(ignoreEmptyLines)
+                allowMissingColumns(allowMissingColumns)
+                ignoreExcessColumns(ignoreExcessColumns)
+                if (!hasFixedWidthColumns) delimiter(delimiter)
+                quote(quote)
+                ignoreSurroundingSpaces(ignoreSurroundingSpaces)
+                trim(trimInsideQuoted)
+                concurrent(parseParallel)
+                header(header)
+                hasFixedWidthColumns(hasFixedWidthColumns)
+                if (hasFixedWidthColumns && fixedColumnWidths.isNotEmpty())
+                    fixedColumnWidths(fixedColumnWidths)
+                skipLines(takeHeaderFromCsv = header.isEmpty(), skipLines = skipLines)
+                parsers(parserOptions, colTypes)
 
-        adjustCsvSpecs(this, this)
-    }.build()
+                adjustCsvSpecs(this, this)
+            }
+            .build()
 
-    val csvReaderResult = inputStream.useDecompressed(compression) { decompressedInputStream ->
-        // read the csv
-        try {
-            val deBommedInputString = decompressedInputStream.skippingBomCharacters()
+    val csvReaderResult =
+        inputStream.useDecompressed(compression) { decompressedInputStream ->
+            // read the csv
+            try {
+                val deBommedInputString = decompressedInputStream.skippingBomCharacters()
 
-            // choose charset like: provided? -> from BOM? -> UTF-8
-            val streamCharset = charset
-                ?: (deBommedInputString as? BOMInputStream)?.bom?.let { Charset.forName(it.charsetName) }
-                ?: Charsets.UTF_8
+                // choose charset like: provided? -> from BOM? -> UTF-8
+                val streamCharset =
+                    charset
+                        ?: (deBommedInputString as? BOMInputStream)?.bom?.let {
+                            Charset.forName(it.charsetName)
+                        }
+                        ?: Charsets.UTF_8
 
-            @Suppress("ktlint:standard:comment-wrapping")
-            CsvReader.read(
-                /* specs = */ csvSpecs,
-                /* stream = */ deBommedInputString,
-                /* streamCharset = */ streamCharset,
-                /* sinkFactory = */ ListSink.SINK_FACTORY,
-            )
-        } catch (e: CsvReaderException) {
-            when {
-                // catch case when the file is empty and header needs to be inferred from it.
-                e.message == FILE_EMPTY_EXCEPTION_MESSAGE ->
-                    return@readDelimImpl DataFrame.empty()
+                @Suppress("ktlint:standard:comment-wrapping")
+                CsvReader.read(
+                    /* specs = */ csvSpecs,
+                    /* stream = */ deBommedInputString,
+                    /* streamCharset = */ streamCharset,
+                    /* sinkFactory = */ ListSink.SINK_FACTORY,
+                )
+            } catch (e: CsvReaderException) {
+                when {
+                    // catch case when the file is empty and header needs to be inferred from it.
+                    e.message == FILE_EMPTY_EXCEPTION_MESSAGE ->
+                        return@readDelimImpl DataFrame.empty()
 
-                // provide extra information when an incorrect parser type is supplied
-                INCORRECT_PARSER_TYPE_EXCEPTION_MESSAGE in e.cause?.message.orEmpty() && colTypes.isNotEmpty() ->
-                    throw IllegalStateException(
-                        "Could not read delimiter-separated data. Check `colTypes`, you may have supplied the wrong type for a column. Cause: ${e.cause?.message}",
-                        e,
-                    )
+                    // provide extra information when an incorrect parser type is supplied
+                    INCORRECT_PARSER_TYPE_EXCEPTION_MESSAGE in e.cause?.message.orEmpty() &&
+                        colTypes.isNotEmpty() ->
+                        throw IllegalStateException(
+                            "Could not read delimiter-separated data. Check `colTypes`, you may have supplied the wrong type for a column. Cause: ${e.cause?.message}",
+                            e,
+                        )
 
-                else ->
-                    throw IllegalStateException(
-                        "Could not read delimiter-separated data: CsvReaderException: ${e.message}: ${e.cause?.message ?: ""}",
-                        e,
-                    )
+                    else ->
+                        throw IllegalStateException(
+                            "Could not read delimiter-separated data: CsvReaderException: ${e.message}: ${e.cause?.message ?: ""}",
+                            e,
+                        )
+                }
             }
         }
-    }
 
     val defaultColType = colTypes[ColType.DEFAULT]
 
@@ -271,11 +281,7 @@ private fun CsvReader.ResultColumn.toDataColumn(
     val hasNulls = listSink.hasNulls
     val type = dataType().toKType().withNullability(hasNulls)
 
-    val column = DataColumn.createValueColumn(
-        name = name(),
-        values = columnData,
-        type = type,
-    )
+    val column = DataColumn.createValueColumn(name = name(), values = columnData, type = type)
     if (dataType != STRING) return column
 
     // attempt to perform additional parsing if necessary, will remain String if it fails
@@ -292,8 +298,8 @@ private fun CsvReader.ResultColumn.toDataColumn(
             val givenSkipTypes = parserOptions?.skipTypes ?: DataFrame.parser.skipTypes
             // no need to check for types that Deephaven already parses, skip those too
             val adjustedSkipTypes = givenSkipTypes + typesDeephavenAlreadyParses
-            val adjustedParserOptions = (parserOptions ?: ParserOptions())
-                .copy(skipTypes = adjustedSkipTypes)
+            val adjustedParserOptions =
+                (parserOptions ?: ParserOptions()).copy(skipTypes = adjustedSkipTypes)
 
             column.tryParse(adjustedParserOptions)
         }
@@ -338,7 +344,10 @@ private fun legalizeHeader(header: Array<String>): Array<String> {
     return header.map { generator.addUnique(it) }.toTypedArray()
 }
 
-private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Long): CsvSpecs.Builder =
+private fun CsvSpecs.Builder.skipLines(
+    takeHeaderFromCsv: Boolean,
+    skipLines: Long,
+): CsvSpecs.Builder =
     if (takeHeaderFromCsv) {
         skipHeaderRows(skipLines)
     } else {
@@ -346,8 +355,8 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
     }
 
 /**
- * Sets the correct parsers for the csv, based on [colTypes] and [ParserOptions.skipTypes].
- * If [ColType.DEFAULT] is present, it sets the default parser.
+ * Sets the correct parsers for the csv, based on [colTypes] and [ParserOptions.skipTypes]. If
+ * [ColType.DEFAULT] is present, it sets the default parser.
  *
  * Logic overview:
  *
@@ -356,21 +365,23 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
  *     - subtract parsers of [skipTypes][ParserOptions.skipTypes] if those are supplied
  * - if [colTypes] are supplied
  *     - if [ColType.DEFAULT] is among the values
- *       - set the parser for each supplied column+colType
- *       - let deephaven use _only_ the parser given as [ColType.DEFAULT] type
+ *         - set the parser for each supplied column+colType
+ *         - let deephaven use _only_ the parser given as [ColType.DEFAULT] type
  *     - if [ColType.DEFAULT] is not among the values
- *       - set the parser for each supplied column+coltype
- *       - let deephaven use all its [default parsers][Parsers.DEFAULT] minus [Parsers.DATETIME]
- *       - subtract parsers of [skipTypes][ParserOptions.skipTypes] if those are supplied
+ *         - set the parser for each supplied column+coltype
+ *         - let deephaven use all its [default parsers][Parsers.DEFAULT] minus [Parsers.DATETIME]
+ *         - subtract parsers of [skipTypes][ParserOptions.skipTypes] if those are supplied
  *
- * We will not use [Deephaven's DateTime parser][Parsers.DATETIME].
- * This is done to avoid different behavior compared to [DataFrame.parse];
- * Deephaven parses [Instant] as [LocalDateTime]. [Issue #1047](https://github.com/Kotlin/dataframe/issues/1047)
+ * We will not use [Deephaven's DateTime parser][Parsers.DATETIME]. This is done to avoid different
+ * behavior compared to [DataFrame.parse]; Deephaven parses [Instant] as [LocalDateTime].
+ * [Issue #1047](https://github.com/Kotlin/dataframe/issues/1047)
  *
- * Note that `skipTypes` will never skip a type explicitly set by `colTypes`.
- * This is intended.
+ * Note that `skipTypes` will never skip a type explicitly set by `colTypes`. This is intended.
  */
-private fun CsvSpecs.Builder.parsers(parserOptions: ParserOptions?, colTypes: Map<String, ColType>): CsvSpecs.Builder {
+private fun CsvSpecs.Builder.parsers(
+    parserOptions: ParserOptions?,
+    colTypes: Map<String, ColType>,
+): CsvSpecs.Builder {
     for ((colName, colType) in colTypes) {
         if (colName == ColType.DEFAULT) continue
         putParserForName(colName, colType.toCsvParser())
@@ -378,18 +389,18 @@ private fun CsvSpecs.Builder.parsers(parserOptions: ParserOptions?, colTypes: Ma
     // BOOLEAN, INT, LONG, DOUBLE, CHAR, STRING
     val defaultParsers = Parsers.DEFAULT - Parsers.DATETIME
     val skipTypes = parserOptions?.skipTypes ?: DataFrame.parser.skipTypes
-    val parsersToUse = when {
-        ColType.DEFAULT in colTypes ->
-            listOf(colTypes[ColType.DEFAULT]!!.toCsvParser(), Parsers.STRING)
+    val parsersToUse =
+        when {
+            ColType.DEFAULT in colTypes ->
+                listOf(colTypes[ColType.DEFAULT]!!.toCsvParser(), Parsers.STRING)
 
-        skipTypes.isNotEmpty() -> {
-            val parsersToSkip = skipTypes
-                .mapNotNull { it.toColType().toCsvParserOrNull() }
-            defaultParsers.toSet() - parsersToSkip.toSet()
+            skipTypes.isNotEmpty() -> {
+                val parsersToSkip = skipTypes.mapNotNull { it.toColType().toCsvParserOrNull() }
+                defaultParsers.toSet() - parsersToSkip.toSet()
+            }
+
+            else -> defaultParsers
         }
-
-        else -> defaultParsers
-    }
     parsers(parsersToUse)
     return this
 }
@@ -399,13 +410,12 @@ private fun CsvSpecs.Builder.header(header: List<String>): CsvSpecs.Builder =
         // take header from csv
         hasHeaderRow(true)
     } else {
-        hasHeaderRow(false)
-            .headers(header)
+        hasHeaderRow(false).headers(header)
     }
 
 /**
- * Converts a [ColType] to a [Parser] from the Deephaven CSV library.
- * If no direct [Parser] exists, it returns `null`.
+ * Converts a [ColType] to a [Parser] from the Deephaven CSV library. If no direct [Parser] exists,
+ * it returns `null`.
  */
 internal fun ColType.toCsvParserOrNull(): Parser<*>? =
     when (this) {
@@ -419,8 +429,8 @@ internal fun ColType.toCsvParserOrNull(): Parser<*>? =
     }
 
 /**
- * Converts a [ColType] to a [Parser] from the Deephaven CSV library.
- * If no direct [Parser] exists, it defaults to [Parsers.STRING] so that [DataFrame.parse] can handle it.
+ * Converts a [ColType] to a [Parser] from the Deephaven CSV library. If no direct [Parser] exists,
+ * it defaults to [Parsers.STRING] so that [DataFrame.parse] can handle it.
  */
 internal fun ColType.toCsvParser(): Parser<*> = toCsvParserOrNull() ?: Parsers.STRING
 
@@ -447,16 +457,11 @@ internal fun KType.toColType(): ColType =
     }
 
 /**
- * Types that Deephaven already parses, so we can skip them when
- * defaulting to DataFrame's String parsers.
+ * Types that Deephaven already parses, so we can skip them when defaulting to DataFrame's String
+ * parsers.
  *
- * [LocalDateTime] and [java.time.LocalDateTime] are not included because Deephaven cannot recognize all formats.
+ * [LocalDateTime] and [java.time.LocalDateTime] are not included because Deephaven cannot recognize
+ * all formats.
  */
 internal val typesDeephavenAlreadyParses: Set<KType> =
-    setOf(
-        typeOf<Int>(),
-        typeOf<Long>(),
-        typeOf<Double>(),
-        typeOf<Char>(),
-        typeOf<Boolean>(),
-    )
+    setOf(typeOf<Int>(), typeOf<Long>(), typeOf<Double>(), typeOf<Char>(), typeOf<Boolean>())

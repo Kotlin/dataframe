@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.jupyter.testkit.ClasspathLibraryResolver
 import org.jetbrains.kotlinx.jupyter.testkit.ReplProvider
 import org.jetbrains.kotlinx.jupyter.testkit.ToEmptyLibraryResolver
 
-/**  Mirrors [ReplProvider.forLibrariesTesting] but `extraCompilerArguments` to set opt-in's. */
+/** Mirrors [ReplProvider.forLibrariesTesting] but `extraCompilerArguments` to set opt-in's. */
 @Suppress("unused")
 fun ReplProvider.Companion.forLibrariesTesting(
     libraries: Collection<String>,
@@ -30,24 +30,23 @@ fun withDefaultClasspathResolution(
     shouldResolveToEmpty: (String?) -> Boolean = { false },
     extraCompilerArguments: List<String> = emptyList(),
 ) = ReplProvider { classpath ->
-    val resolver =
-        run {
-            var res: LibraryResolver = ClasspathLibraryResolver(httpUtil.libraryDescriptorsManager, null, shouldResolve)
-            res = ToEmptyLibraryResolver(res, shouldResolveToEmpty)
-            res
-        }
+    val resolver = run {
+        var res: LibraryResolver =
+            ClasspathLibraryResolver(httpUtil.libraryDescriptorsManager, null, shouldResolve)
+        res = ToEmptyLibraryResolver(res, shouldResolveToEmpty)
+        res
+    }
 
     createRepl(
-        httpUtil = httpUtil,
-        scriptClasspath = classpath,
-        kernelRunMode = EmbeddedKernelRunMode,
-        mavenRepositories = defaultRepositoriesCoordinates,
-        libraryResolver = resolver,
-        inMemoryReplResultsHolder = NoOpInMemoryReplResultsHolder,
-        extraCompilerArguments = extraCompilerArguments,
-    ).apply {
-        initializeWithCurrentClasspath()
-    }
+            httpUtil = httpUtil,
+            scriptClasspath = classpath,
+            kernelRunMode = EmbeddedKernelRunMode,
+            mavenRepositories = defaultRepositoriesCoordinates,
+            libraryResolver = resolver,
+            inMemoryReplResultsHolder = NoOpInMemoryReplResultsHolder,
+            extraCompilerArguments = extraCompilerArguments,
+        )
+        .apply { initializeWithCurrentClasspath() }
 }
 
 private fun ReplForJupyter.initializeWithCurrentClasspath() {

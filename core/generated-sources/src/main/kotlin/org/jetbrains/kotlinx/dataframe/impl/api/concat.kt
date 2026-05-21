@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -15,13 +17,15 @@ import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.nrow
-import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 
 internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>>): DataColumn<T> =
     concatImpl(name, columns, columns.map { it.size() })
 
-internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnSizes: List<Int>): DataColumn<T> {
+internal fun <T> concatImpl(
+    name: String,
+    columns: List<DataColumn<T>?>,
+    columnSizes: List<Int>,
+): DataColumn<T> {
     when (columns.size) {
         0 -> return DataColumn.empty(name).cast()
         1 -> return columns.single() ?: DataColumn.empty(name).cast()
@@ -59,9 +63,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
                 if (!nulls && nrow > 0 && defaultValue == null) {
                     nulls = true
                 } else if (defaultValue != null) {
-                    types.add(
-                        guessValueType(sequenceOf(defaultValue)),
-                    )
+                    types.add(guessValueType(sequenceOf(defaultValue)))
                 }
                 List(nrow) { defaultValue }
             }
@@ -69,17 +71,19 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
 
         val guessType = types.size > 1
         val baseType = types.commonType()
-        val tartypeOf = if (guessType || !hasList) {
-            baseType.withNullability(nulls)
-        } else {
-            getListType(baseType.withNullability(listOfNullable))
-        }
+        val tartypeOf =
+            if (guessType || !hasList) {
+                baseType.withNullability(nulls)
+            } else {
+                getListType(baseType.withNullability(listOfNullable))
+            }
         return createColumnGuessingType(
-            name = name,
-            values = list,
-            suggestedType = TypeSuggestion.create(tartypeOf, guessType),
-            defaultValue = defaultValue,
-        ).cast()
+                name = name,
+                values = list,
+                suggestedType = TypeSuggestion.create(tartypeOf, guessType),
+                defaultValue = defaultValue,
+            )
+            .cast()
     }
 }
 
@@ -90,19 +94,20 @@ internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
     }
 
     // collect column names preserving original order
-    val columnNames = dataFrames
-        .fold(emptyList<String>()) { acc, df -> acc + (df.columnNames() - acc) }
+    val columnNames =
+        dataFrames.fold(emptyList<String>()) { acc, df -> acc + (df.columnNames() - acc) }
 
     val sizes = dataFrames.map { it.nrow }
     val columns = columnNames.map { name ->
         concatImpl(name, dataFrames.map { it.getColumnOrNull(name) }, sizes)
     }
     return if (columns.isEmpty()) {
-        // make sure the number of rows translate correctly if there are no columns
-        DataFrame.empty(nrow = sizes.sum())
-    } else {
-        dataFrameOf(columns)
-    }.cast()
+            // make sure the number of rows translate correctly if there are no columns
+            DataFrame.empty(nrow = sizes.sum())
+        } else {
+            dataFrameOf(columns)
+        }
+        .cast()
 }
 
 private inline fun <T, R : Any> Iterable<T>.firstNotNullResult(transform: (T) -> R?): R? {

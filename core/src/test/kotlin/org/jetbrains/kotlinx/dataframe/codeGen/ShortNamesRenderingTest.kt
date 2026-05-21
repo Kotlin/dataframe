@@ -15,8 +15,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
 
     interface Marker
 
-    @DataSchema
-    interface DataSchemaMarker
+    @DataSchema interface DataSchemaMarker
 
     interface A {
         val a: DataSchemaMarker
@@ -97,9 +96,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
 
     @Test
     fun `builtin type column`() {
-        fields.keys.asClue {
-            fields["b"]!!.renderColumnType() shouldBe "DataColumn<Int>"
-        }
+        fields.keys.asClue { fields["b"]!!.renderColumnType() shouldBe "DataColumn<Int>" }
     }
 
     @Test
@@ -112,9 +109,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
 
     @Test
     fun `functional type column`() {
-        fields.keys.asClue {
-            fields["d"]!!.renderColumnType() shouldBe "DataColumn<() -> Unit>"
-        }
+        fields.keys.asClue { fields["d"]!!.renderColumnType() shouldBe "DataColumn<() -> Unit>" }
     }
 
     @Test
@@ -139,21 +134,24 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
 
     @Test
     fun `generic field`() {
-        MarkersExtractor.get(GenericDataSchema::class).allFields[0].renderAccessorFieldType() shouldBe "A"
+        MarkersExtractor.get(GenericDataSchema::class)
+            .allFields[0]
+            .renderAccessorFieldType() shouldBe "A"
         MarkersExtractor.get(GenericDataSchema::class).allFields[0].renderFieldType() shouldBe "A"
     }
 
     @Test
     fun `generic column`() {
-        MarkersExtractor.get(GenericDataSchema::class).allFields[0].renderColumnType() shouldBe "DataColumn<A>"
+        MarkersExtractor.get(GenericDataSchema::class).allFields[0].renderColumnType() shouldBe
+            "DataColumn<A>"
     }
 
     @Test
     fun `drop redundant kotlin package prefixes`() {
         "kotlin.String".dropKotlinPackages() shouldBe "String"
         "kotlin.collections.List<kotlin.String>".dropKotlinPackages() shouldBe "List<String>"
-        "kotlin.collections.Map<kotlin.String, kotlin.collections.List<kotlin.Int>>".dropKotlinPackages() shouldBe
-            "Map<String, List<Int>>"
+        "kotlin.collections.Map<kotlin.String, kotlin.collections.List<kotlin.Int>>"
+            .dropKotlinPackages() shouldBe "Map<String, List<Int>>"
         "org.example.Foo<kotlin.String>".dropKotlinPackages() shouldBe "org.example.Foo<String>"
         "kotlin.internal.Foo".dropKotlinPackages() shouldBe "kotlin.internal.Foo"
     }

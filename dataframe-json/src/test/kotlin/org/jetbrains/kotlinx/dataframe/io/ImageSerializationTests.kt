@@ -2,6 +2,14 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.util.Base64
+import java.util.zip.GZIPInputStream
+import javax.imageio.ImageIO
+import kotlin.math.abs
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -15,14 +23,6 @@ import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.G
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import java.awt.image.BufferedImage
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.util.Base64
-import java.util.zip.GZIPInputStream
-import javax.imageio.ImageIO
-import kotlin.math.abs
 
 class ImageSerializationTests {
     @ParameterizedTest
@@ -61,11 +61,13 @@ class ImageSerializationTests {
         encodingOptions: Base64ImageEncodingOptions?,
     ): JsonObject {
         val df = dataFrameOf("imgs" to images)
-        val jsonStr = df.toJsonWithMetadata(
-            20,
-            nestedRowLimit = 20,
-            customEncoders = listOfNotNull(encodingOptions?.let { BufferedImageEncoder(encodingOptions) }),
-        )
+        val jsonStr =
+            df.toJsonWithMetadata(
+                20,
+                nestedRowLimit = 20,
+                customEncoders =
+                    listOfNotNull(encodingOptions?.let { BufferedImageEncoder(encodingOptions) }),
+            )
 
         return parseJsonStr(jsonStr)
     }
@@ -98,7 +100,10 @@ class ImageSerializationTests {
         return result
     }
 
-    private fun decodeBase64Image(imgString: String, encodingOptions: Base64ImageEncodingOptions): ByteArray =
+    private fun decodeBase64Image(
+        imgString: String,
+        encodingOptions: Base64ImageEncodingOptions,
+    ): ByteArray =
         when {
             encodingOptions.isGzipOn -> decompressGzip(Base64.getDecoder().decode(imgString))
             else -> Base64.getDecoder().decode(imgString)
@@ -112,7 +117,10 @@ class ImageSerializationTests {
             byteArrayOutputStream.toByteArray()
         }
 
-    private fun resizeIfNeeded(image: BufferedImage, encodingOptions: Base64ImageEncodingOptions): BufferedImage =
+    private fun resizeIfNeeded(
+        image: BufferedImage,
+        encodingOptions: Base64ImageEncodingOptions,
+    ): BufferedImage =
         when {
             !encodingOptions.isLimitSizeOn -> image
             else -> image.resizeKeepingAspectRatio(encodingOptions.imageSizeLimit)
@@ -123,7 +131,11 @@ class ImageSerializationTests {
         return ImageIO.read(bais)
     }
 
-    private fun isImagesIdentical(img1: BufferedImage, img2: BufferedImage, allowedDelta: Int): Boolean {
+    private fun isImagesIdentical(
+        img1: BufferedImage,
+        img2: BufferedImage,
+        allowedDelta: Int,
+    ): Boolean {
         // First check dimensions
         if (img1.width != img2.width || img1.height != img2.height) {
             return false
@@ -166,12 +178,6 @@ class ImageSerializationTests {
 
         @JvmStatic
         fun imageEncodingOptionsToTest(): List<Base64ImageEncodingOptions?> =
-            listOf(
-                DEFAULT,
-                GZIP_ON_RESIZE_OFF,
-                GZIP_OFF_RESIZE_OFF,
-                GZIP_ON_RESIZE_TO_700,
-                null,
-            )
+            listOf(DEFAULT, GZIP_ON_RESIZE_OFF, GZIP_OFF_RESIZE_OFF, GZIP_ON_RESIZE_TO_700, null)
     }
 }

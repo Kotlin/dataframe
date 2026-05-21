@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import java.io.File
+import java.net.URI
+import kotlin.io.path.Path
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -24,22 +27,23 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Ignore
 import org.junit.Test
-import java.io.File
-import java.net.URI
-import kotlin.io.path.Path
 
 class Render : DataFrameSampleHelper("toHTML", "api") {
 
-    private val df: AnyFrame = dataFrameOf(
-        "name" to columnOf(
-            "firstName" to columnOf("Alice", "Bob", "Charlie", "Charlie", "Bob", "Alice", "Charlie"),
-            "lastName" to columnOf("Cooper", "Dylan", "Daniels", "Chaplin", "Marley", "Wolf", "Byrd"),
-        ),
-        "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
-        "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
-        "weight" to columnOf(54, 87, null, null, 68, 55, 90),
-        "isHappy" to columnOf(true, true, false, true, true, false, true),
-    )
+    private val df: AnyFrame =
+        dataFrameOf(
+            "name" to
+                columnOf(
+                    "firstName" to
+                        columnOf("Alice", "Bob", "Charlie", "Charlie", "Bob", "Alice", "Charlie"),
+                    "lastName" to
+                        columnOf("Cooper", "Dylan", "Daniels", "Chaplin", "Marley", "Wolf", "Byrd"),
+                ),
+            "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
+            "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
+            "weight" to columnOf(54, 87, null, null, 68, 55, 90),
+            "isHappy" to columnOf(true, true, false, true, true, false, true),
+        )
 
     @Test
     @Ignore
@@ -54,16 +58,36 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
 
     @Test
     fun composeTables_strings() {
-        val df = dataFrameOf(
-            "name" to columnOf(
-                "firstName" to columnOf("Alice", "Bob", "Charlie", "Charlie", "Bob", "Alice", "Charlie"),
-                "lastName" to columnOf("Cooper", "Dylan", "Daniels", "Chaplin", "Marley", "Wolf", "Byrd"),
-            ),
-            "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
-            "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
-            "weight" to columnOf(54, 87, null, null, 68, 55, 90),
-            "isHappy" to columnOf(true, true, false, true, true, false, true),
-        )
+        val df =
+            dataFrameOf(
+                "name" to
+                    columnOf(
+                        "firstName" to
+                            columnOf(
+                                "Alice",
+                                "Bob",
+                                "Charlie",
+                                "Charlie",
+                                "Bob",
+                                "Alice",
+                                "Charlie",
+                            ),
+                        "lastName" to
+                            columnOf(
+                                "Cooper",
+                                "Dylan",
+                                "Daniels",
+                                "Chaplin",
+                                "Marley",
+                                "Wolf",
+                                "Byrd",
+                            ),
+                    ),
+                "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
+                "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
+                "weight" to columnOf(54, 87, null, null, 68, 55, 90),
+                "isHappy" to columnOf(true, true, false, true, true, false, true),
+            )
         // SampleStart
         val df1 = df.reorderColumnsByName()
         val df2 = df.sortBy("age")
@@ -77,22 +101,44 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
 
     @Test
     fun composeTables_properties() {
-        val df = dataFrameOf(
-            "name" to columnOf(
-                "firstName" to columnOf("Alice", "Bob", "Charlie", "Charlie", "Bob", "Alice", "Charlie"),
-                "lastName" to columnOf("Cooper", "Dylan", "Daniels", "Chaplin", "Marley", "Wolf", "Byrd"),
-            ),
-            "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
-            "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
-            "weight" to columnOf(54, 87, null, null, 68, 55, 90),
-            "isHappy" to columnOf(true, true, false, true, true, false, true),
-        )
+        val df =
+            dataFrameOf(
+                "name" to
+                    columnOf(
+                        "firstName" to
+                            columnOf(
+                                "Alice",
+                                "Bob",
+                                "Charlie",
+                                "Charlie",
+                                "Bob",
+                                "Alice",
+                                "Charlie",
+                            ),
+                        "lastName" to
+                            columnOf(
+                                "Cooper",
+                                "Dylan",
+                                "Daniels",
+                                "Chaplin",
+                                "Marley",
+                                "Wolf",
+                                "Byrd",
+                            ),
+                    ),
+                "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
+                "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
+                "weight" to columnOf(54, 87, null, null, 68, 55, 90),
+                "isHappy" to columnOf(true, true, false, true, true, false, true),
+            )
         // SampleStart
         val df1 = df.reorderColumnsByName()
         val df2 = df.sortBy { age }
         val df3 = df.sortByDesc { age }
 
-        listOf(df1, df2, df3).fold(DataFrameHtmlData.tableDefinitions()) { acc, df -> acc + df.toHtml() }
+        listOf(df1, df2, df3).fold(DataFrameHtmlData.tableDefinitions()) { acc, df ->
+            acc + df.toHtml()
+        }
         // SampleEnd
     }
 
@@ -106,11 +152,12 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
     @Test
     fun displayImg() {
         // SampleStart
-        val htmlData = dataFrameOf(
-            "kotlinLogo" to columnOf(
-                IMG("https://kotlin.github.io/dataframe/images/kotlin-logo.svg"),
-            ),
-        ).toStandaloneHtml()
+        val htmlData =
+            dataFrameOf(
+                    "kotlinLogo" to
+                        columnOf(IMG("https://kotlin.github.io/dataframe/images/kotlin-logo.svg"))
+                )
+                .toStandaloneHtml()
         // SampleEnd
         // .openInBrowser()
     }
@@ -118,15 +165,18 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
     @Test
     fun displayIFrame() {
         // SampleStart
-        val htmlData = dataFrameOf(
-            "documentationPages" to columnOf(
-                IFRAME(
-                    src = "https://kotlin.github.io/dataframe/tohtml.html",
-                    width = 850,
-                    height = 500,
-                ),
-            ),
-        ).toStandaloneHtml()
+        val htmlData =
+            dataFrameOf(
+                    "documentationPages" to
+                        columnOf(
+                            IFRAME(
+                                src = "https://kotlin.github.io/dataframe/tohtml.html",
+                                width = 850,
+                                height = 500,
+                            )
+                        )
+                )
+                .toStandaloneHtml()
         // SampleEnd
         // .openInBrowser()
     }
@@ -134,13 +184,16 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
     @Test
     fun displayURL() {
         // SampleStart
-        val htmlData = dataFrameOf(
-            "documentationPages" to columnOf(
-                URI("https://kotlin.github.io/dataframe/format.html").toURL(),
-                URI("https://kotlin.github.io/dataframe/tohtml.html").toURL(),
-                URI("https://kotlin.github.io/dataframe/jupyterrendering.html").toURL(),
-            ),
-        ).toStandaloneHtml()
+        val htmlData =
+            dataFrameOf(
+                    "documentationPages" to
+                        columnOf(
+                            URI("https://kotlin.github.io/dataframe/format.html").toURL(),
+                            URI("https://kotlin.github.io/dataframe/tohtml.html").toURL(),
+                            URI("https://kotlin.github.io/dataframe/jupyterrendering.html").toURL(),
+                        )
+                )
+                .toStandaloneHtml()
         // SampleEnd
         // .openInBrowser()
     }
@@ -148,18 +201,21 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
     @Test
     fun displayMediaContent_strings() {
         // SampleStart
-        val htmlData = dataFrameOf(
-            "documentationPages" to columnOf(
-                "https://kotlin.github.io/dataframe/format.html",
-                "https://kotlin.github.io/dataframe/tohtml.html",
-                "https://kotlin.github.io/dataframe/jupyterrendering.html",
-            ),
-        )
-            .convert { "documentationPages"<String>() }.with {
-                val uri = URI(it)
-                RenderedContent.media("""<a href='$uri'>${uri.path}</a>""")
-            }
-            .toStandaloneHtml()
+        val htmlData =
+            dataFrameOf(
+                    "documentationPages" to
+                        columnOf(
+                            "https://kotlin.github.io/dataframe/format.html",
+                            "https://kotlin.github.io/dataframe/tohtml.html",
+                            "https://kotlin.github.io/dataframe/jupyterrendering.html",
+                        )
+                )
+                .convert { "documentationPages"<String>() }
+                .with {
+                    val uri = URI(it)
+                    RenderedContent.media("""<a href='$uri'>${uri.path}</a>""")
+                }
+                .toStandaloneHtml()
         // SampleEnd
         // .openInBrowser()
     }
@@ -167,18 +223,21 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
     @Test
     fun displayMediaContent_properties() {
         // SampleStart
-        val htmlData = dataFrameOf(
-            "documentationPages" to columnOf(
-                "https://kotlin.github.io/dataframe/format.html",
-                "https://kotlin.github.io/dataframe/tohtml.html",
-                "https://kotlin.github.io/dataframe/jupyterrendering.html",
-            ),
-        )
-            .convert { documentationPages }.with {
-                val uri = URI(it)
-                RenderedContent.media("""<a href='$uri'>${uri.path}</a>""")
-            }
-            .toStandaloneHtml()
+        val htmlData =
+            dataFrameOf(
+                    "documentationPages" to
+                        columnOf(
+                            "https://kotlin.github.io/dataframe/format.html",
+                            "https://kotlin.github.io/dataframe/tohtml.html",
+                            "https://kotlin.github.io/dataframe/jupyterrendering.html",
+                        )
+                )
+                .convert { documentationPages }
+                .with {
+                    val uri = URI(it)
+                    RenderedContent.media("""<a href='$uri'>${uri.path}</a>""")
+                }
+                .toStandaloneHtml()
         // SampleEnd
         // .openInBrowser()
     }
@@ -187,7 +246,10 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
     fun cellRenderer() {
         // SampleStart
         class CustomArrayCellRenderer : ChainedCellRenderer(DefaultCellRenderer) {
-            override fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent? {
+            override fun maybeContent(
+                value: Any?,
+                configuration: DisplayConfiguration,
+            ): RenderedContent? {
                 if (value is Boolean) {
                     return RenderedContent.text(if (value) "✓" else "✗")
                 }
@@ -209,16 +271,36 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
     @Test
     fun df() {
         // SampleStart
-        val df = dataFrameOf(
-            "name" to columnOf(
-                "firstName" to columnOf("Alice", "Bob", "Charlie", "Charlie", "Bob", "Alice", "Charlie"),
-                "lastName" to columnOf("Cooper", "Dylan", "Daniels", "Chaplin", "Marley", "Wolf", "Byrd"),
-            ),
-            "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
-            "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
-            "weight" to columnOf(54, 87, null, null, 68, 55, 90),
-            "isHappy" to columnOf(true, true, false, true, true, false, true),
-        )
+        val df =
+            dataFrameOf(
+                "name" to
+                    columnOf(
+                        "firstName" to
+                            columnOf(
+                                "Alice",
+                                "Bob",
+                                "Charlie",
+                                "Charlie",
+                                "Bob",
+                                "Alice",
+                                "Charlie",
+                            ),
+                        "lastName" to
+                            columnOf(
+                                "Cooper",
+                                "Dylan",
+                                "Daniels",
+                                "Chaplin",
+                                "Marley",
+                                "Wolf",
+                                "Byrd",
+                            ),
+                    ),
+                "age" to columnOf(15, 45, 20, 40, 30, 20, 30),
+                "city" to columnOf("London", "Dubai", "Moscow", "Milan", "Tokyo", null, "Moscow"),
+                "weight" to columnOf(54, 87, null, null, 68, 55, 90),
+                "isHappy" to columnOf(true, true, false, true, true, false, true),
+            )
         // SampleEnd
     }
 
@@ -227,9 +309,10 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
         // SampleStart
         val pages = df.duplicateRows(10).chunked(20)
         val files = pages.indices.map { i -> File("page$i.html") }
-        val navLinks = files.mapIndexed { i, file ->
-            """<a href="${file.name}">Page ${i + 1}</a>"""
-        }.joinToString(" | ")
+        val navLinks =
+            files
+                .mapIndexed { i, file -> """<a href="${file.name}">Page ${i + 1}</a>""" }
+                .joinToString(" | ")
 
         pages.forEachIndexed { i, page ->
             val output = files[i]
@@ -243,27 +326,30 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
     @Test
     fun interactiveJs() {
         // SampleStart
-        val selectCellInteraction = DataFrameHtmlData(
-            style =
-                """
-                td:hover {
-                    background-color: rgba(0, 123, 255, 0.15);
-                    cursor: pointer;
-                }
-                """.trimIndent(),
-            script =
-                """
-                (function() {
-                    let cells = document.querySelectorAll('td');
-                    cells.forEach(function(cell) {
-                        cell.addEventListener('click', function(e) {
-                            let content = cell.textContent;
-                            alert(content);
+        val selectCellInteraction =
+            DataFrameHtmlData(
+                style =
+                    """
+                    td:hover {
+                        background-color: rgba(0, 123, 255, 0.15);
+                        cursor: pointer;
+                    }
+                    """
+                        .trimIndent(),
+                script =
+                    """
+                    (function() {
+                        let cells = document.querySelectorAll('td');
+                        cells.forEach(function(cell) {
+                            cell.addEventListener('click', function(e) {
+                                let content = cell.textContent;
+                                alert(content);
+                            });
                         });
-                    });
-                })();
-                """.trimIndent(),
-        )
+                    })();
+                    """
+                        .trimIndent(),
+            )
 
         // keep in mind JS script initialization order.
         val htmlData = df.toStandaloneHtml().plus(selectCellInteraction)

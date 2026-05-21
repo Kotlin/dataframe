@@ -13,13 +13,14 @@ public data class RenderedContent(
 ) {
     public companion object {
 
-        public fun media(
-            @Language("HTML") html: String,
-        ): RenderedContent = RenderedContent(html, 0, null, false)
+        public fun media(@Language("HTML") html: String): RenderedContent =
+            RenderedContent(html, 0, null, false)
 
-        public fun textWithLength(str: String, len: Int): RenderedContent = RenderedContent(str, len, null, false)
+        public fun textWithLength(str: String, len: Int): RenderedContent =
+            RenderedContent(str, len, null, false)
 
-        public fun text(str: String): RenderedContent = RenderedContent(str, str.length, null, false)
+        public fun text(str: String): RenderedContent =
+            RenderedContent(str, str.length, null, false)
 
         public fun truncatedText(str: String, fullText: String): RenderedContent =
             RenderedContent(str, str.length, fullText, false)
@@ -38,19 +39,18 @@ public data class RenderedContent(
 }
 
 public interface CellRenderer {
-    /**
-     * Returns [value] rendered to HTML text, or null if such rendering is impossible
-     */
+    /** Returns [value] rendered to HTML text, or null if such rendering is impossible */
     public fun content(value: Any?, configuration: DisplayConfiguration): RenderedContent
 
-    /**
-     * Returns cell tooltip for this [value]
-     */
+    /** Returns cell tooltip for this [value] */
     public fun tooltip(value: Any?, configuration: DisplayConfiguration): String
 }
 
 public abstract class ChainedCellRenderer(private val parent: CellRenderer) : CellRenderer {
-    public abstract fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent?
+    public abstract fun maybeContent(
+        value: Any?,
+        configuration: DisplayConfiguration,
+    ): RenderedContent?
 
     public abstract fun maybeTooltip(value: Any?, configuration: DisplayConfiguration): String?
 

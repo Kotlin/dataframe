@@ -11,10 +11,11 @@ class FilterTests : ColumnsSelectionDslTests() {
     @Test
     fun filter() {
         listOf(
-            df.select { cols(name, age, weight) },
-            df.select { all().filter { "e" in it.name() } },
-            df.select { all().cols { "e" in it.name() } },
-        ).shouldAllBeEqual()
+                df.select { cols(name, age, weight) },
+                df.select { all().filter { "e" in it.name() } },
+                df.select { all().cols { "e" in it.name() } },
+            )
+            .shouldAllBeEqual()
 
         df.select { all().filter { true } } shouldBe df.select { all() }
         df.select { all().filter { false } } shouldBe df.select { none() }

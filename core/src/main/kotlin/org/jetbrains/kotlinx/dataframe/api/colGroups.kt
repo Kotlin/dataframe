@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -15,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
@@ -29,26 +29,19 @@ public interface ColGroupsColumnsSelectionDsl {
     /**
      * ## Column Groups Grammar
      *
-     * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DEFINITIONS]
-     *  {@include [DslGrammarTemplate.ColumnSetDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ConditionDef]}
-     * }
+     * @include [DslGrammarTemplate] {@set [DslGrammarTemplate.DEFINITIONS] {@include
+     *   [DslGrammarTemplate.ColumnSetDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ColumnGroupDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ConditionDef]} }
      *
-     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
-     *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
-     * }
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS] {@include [PlainDslName]}` [ `**`{
+     * `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]` }
      *
-     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
-     * }
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnSetName]}` [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]` }
      *
-     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
-     * }
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnGroupName]}` [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]` }
      */
     public interface Grammar {
 
@@ -66,8 +59,8 @@ public interface ColGroupsColumnsSelectionDsl {
      * ## Column Groups
      * Creates a subset of columns from [this\] that are [ColumnGroups][ColumnGroup].
      *
-     * You can optionally use a [filter\] to only include certain columns.
-     * [colGroups] can be called using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
+     * You can optionally use a [filter\] to only include certain columns. [colGroups] can be called
+     * using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
@@ -75,9 +68,12 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[colGroups][ColumnsSelectionDsl.colGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[colGroups][ColumnsSelectionDsl.colGroups]`()
+     * }`
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[colGroups][String.colGroups]`() }`
      *
@@ -102,27 +98,33 @@ public interface ColGroupsColumnsSelectionDsl {
      * @include [CommonColGroupsDocs]
      * @set [CommonColGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[colGroups][ColumnSet.colGroups]`() }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my")
+     * }.`[colGroups][ColumnSet.colGroups]`() }`
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ColGroups0")
-    public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
-        columnGroupsInternal(filter)
+    public fun ColumnSet<*>.colGroups(
+        filter: Predicate<ColumnGroup<*>> = { true }
+    ): ColumnSet<AnyRow> = columnGroupsInternal(filter)
 
     /**
      * @include [CommonColGroupsDocs]
      * @set [CommonColGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`() }`
+     * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]`() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ColGroups1")
-    public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
-        asSingleColumn().columnGroupsInternal(filter)
+    public fun ColumnsSelectionDsl<*>.colGroups(
+        filter: Predicate<ColumnGroup<*>> = { true }
+    ): ColumnSet<AnyRow> = asSingleColumn().columnGroupsInternal(filter)
 
     /**
      * @include [CommonColGroupsDocs]
@@ -130,17 +132,20 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[colGroups][SingleColumn.colGroups]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { myColGroup.`[colGroups][SingleColumn.colGroups]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("ColGroups2")
-    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
-        this.ensureIsColumnGroup().columnGroupsInternal(filter)
+    public fun SingleColumn<DataRow<*>>.colGroups(
+        filter: Predicate<ColumnGroup<*>> = { true }
+    ): ColumnSet<AnyRow> = this.ensureIsColumnGroup().columnGroupsInternal(filter)
 
     /**
      * @include [CommonColGroupsDocs]
      * @set [CommonColGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[colGroups][String.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[colGroups][String.colGroups]` {
+     * it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[colGroups][String.colGroups]`() }`
      */
@@ -151,32 +156,39 @@ public interface ColGroupsColumnsSelectionDsl {
      * @include [CommonColGroupsDocs]
      * @set [CommonColGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[colGroups][SingleColumn.colGroups]`
+     * { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[colGroups][KProperty.colGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColGroup.`[colGroups][KProperty.colGroups]`() }`
      */
-    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
-        columnGroup(this).colGroups(filter)
+    public fun KProperty<*>.colGroups(
+        filter: Predicate<ColumnGroup<*>> = { true }
+    ): ColumnSet<AnyRow> = columnGroup(this).colGroups(filter)
 
     /**
      * @include [CommonColGroupsDocs]
      * @set [CommonColGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colGroups][ColumnPath.colGroups]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["myGroupCol"].`[colGroups][ColumnPath.colGroups]`() }`
      */
-    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
-        columnGroup(this).colGroups(filter)
+    public fun ColumnPath.colGroups(
+        filter: Predicate<ColumnGroup<*>> = { true }
+    ): ColumnSet<AnyRow> = columnGroup(this).colGroups(filter)
 }
 
 /**
  * Returns a ColumnSet containing the column groups that satisfy the given filter.
  *
- * @param filter The filter function to apply on each column group. Must accept a ColumnGroup object and return a Boolean.
+ * @param filter The filter function to apply on each column group. Must accept a ColumnGroup object
+ *   and return a Boolean.
  * @return A [ColumnSet] containing the column groups that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
 internal inline fun ColumnsResolver<*>.columnGroupsInternal(
-    crossinline filter: (ColumnGroup<*>) -> Boolean,
+    crossinline filter: (ColumnGroup<*>) -> Boolean
 ): ColumnSet<AnyRow> = colsInternal { it.isColumnGroup() && filter(it) }.cast()
 
 // endregion

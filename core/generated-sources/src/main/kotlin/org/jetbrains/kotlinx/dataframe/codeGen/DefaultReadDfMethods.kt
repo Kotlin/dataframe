@@ -20,7 +20,8 @@ public interface DefaultReadDfMethod {
 
 // Used APIs
 private const val CAST = "cast"
-private const val VERIFY = "verify" // cast(true) is obscure, i think it's better to use named argument here
+private const val VERIFY =
+    "verify" // cast(true) is obscure, i think it's better to use named argument here
 private const val READ_CSV = "readCSV"
 private const val READ_TSV = "readTSV"
 private const val READ_JDBC = "readJdbc"
@@ -31,11 +32,12 @@ public abstract class AbstractDefaultReadMethod(
     private val methodName: String,
 ) : DefaultReadDfMethod {
     override fun toDeclaration(marker: Marker, visibility: String): String {
-        val parameters = arguments.defaultValues.map {
-            ParameterSpec.builder(it.name, it.property.type)
-                .defaultValue("%N", it.property)
-                .build()
-        }
+        val parameters =
+            arguments.defaultValues.map {
+                ParameterSpec.builder(it.name, it.property.type)
+                    .defaultValue("%N", it.property)
+                    .build()
+            }
 
         val defaultPath = path?.let {
             PropertySpec.builder("defaultPath", typeNameOf<String>(), KModifier.CONST)
@@ -43,45 +45,53 @@ public abstract class AbstractDefaultReadMethod(
                 .build()
         }
 
-        val type = DataFrame::class.asClassName().parameterizedBy(ClassName("", listOf(marker.shortName)))
+        val type =
+            DataFrame::class.asClassName().parameterizedBy(ClassName("", listOf(marker.shortName)))
 
         val arguments = parameters.joinToString(", ") { "${it.name} = ${it.name}" }
 
-        val typeSpec = TypeSpec.companionObjectBuilder()
-            .apply { if (defaultPath != null) addProperty(defaultPath) }
-            .addProperties(this.arguments.defaultValues.map { it.property })
-            .addFunction(
-                FunSpec.builder(methodName)
-                    .returns(type)
-                    .addParameter(
-                        ParameterSpec.builder("path", typeNameOf<String>())
-                            .apply {
-                                if (defaultPath != null) {
-                                    defaultValue("%N", defaultPath)
+        val typeSpec =
+            TypeSpec.companionObjectBuilder()
+                .apply { if (defaultPath != null) addProperty(defaultPath) }
+                .addProperties(this.arguments.defaultValues.map { it.property })
+                .addFunction(
+                    FunSpec.builder(methodName)
+                        .returns(type)
+                        .addParameter(
+                            ParameterSpec.builder("path", typeNameOf<String>())
+                                .apply {
+                                    if (defaultPath != null) {
+                                        defaultValue("%N", defaultPath)
+                                    }
                                 }
-                            }.build(),
-                    )
-                    .addParameters(parameters)
-                    .addParameter(
-                        ParameterSpec.builder("verify", typeNameOf<Boolean?>())
-                            .defaultValue("null")
-                            .build(),
-                    )
-                    .addCode(
-                        """
+                                .build()
+                        )
+                        .addParameters(parameters)
+                        .addParameter(
+                            ParameterSpec.builder("verify", typeNameOf<Boolean?>())
+                                .defaultValue("null")
+                                .build()
+                        )
+                        .addCode(
+                            """
                         val df = DataFrame.$methodName(path, $arguments)
                         return if ($VERIFY != null) df.$CAST($VERIFY = $VERIFY) else df.$CAST()
-                        """.trimIndent(),
-                    ).build(),
-            ).build()
+                        """
+                                .trimIndent()
+                        )
+                        .build()
+                )
+                .build()
 
         return typeSpec.toString()
     }
 
-    override val additionalImports: List<String> = listOf("import org.jetbrains.kotlinx.dataframe.io.$methodName")
+    override val additionalImports: List<String> =
+        listOf("import org.jetbrains.kotlinx.dataframe.io.$methodName")
 }
 
 internal class DefaultReadCsvMethod(path: String?, arguments: MethodArguments) :
     AbstractDefaultReadMethod(path, arguments, READ_CSV)
 
-internal class DefaultReadTsvMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_TSV)
+internal class DefaultReadTsvMethod(path: String?) :
+    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_TSV)

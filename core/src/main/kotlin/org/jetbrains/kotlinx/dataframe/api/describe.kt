@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -13,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.describeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region DataSchema
 @DataSchema
@@ -37,7 +37,7 @@ public interface ColumnDescription {
 
 /**
  * ### Summary Metrics:
-
+ *
  * - **`name`** — The name of the column.
  * - **`path`** — path to the column (for hierarchical `DataFrame`)
  * - **`type`** — The data type of the column (e.g., Int, String, Boolean).
@@ -54,9 +54,9 @@ public interface ColumnDescription {
  * - **`p75`** — The 75th percentile value (third quartile).
  * - **`max`** — The maximum value in the column.
  *
- * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If column values are incomparable,
- * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
+ * For non-numeric columns, statistical metrics such as `mean` and `std` will return `null`. If
+ * column values are incomparable, percentile values (`min`, `p25`, `median`, `p75`, `max`) will
+ * also return `null`.
  */
 @ExcludeFromSources
 internal typealias SummaryMetrics = Nothing
@@ -64,12 +64,13 @@ internal typealias SummaryMetrics = Nothing
 /**
  * ## The Describe Operation
  *
- * Computes descriptive statistics for {@get COLUMNS all} columns in a given [DataFrame], including nested columns,
- * returning a [DataFrame] with key summary metrics for each column (with a [ColumnDescription] data schema).
+ * Computes descriptive statistics for {@get COLUMNS all} columns in a given [DataFrame], including
+ * nested columns, returning a [DataFrame] with key summary metrics for each column (with a
+ * [ColumnDescription] data schema).
  *
- * This function provides a statistical summary for all columns, including nested ones,
- * providing their type, count, unique and missing values, most frequent values,
- * and statistical measures if applicable.
+ * This function provides a statistical summary for all columns, including nested ones, providing
+ * their type, count, unique and missing values, most frequent values, and statistical measures if
+ * applicable.
  *
  * {@include [SummaryMetrics]}
  */
@@ -91,20 +92,22 @@ internal typealias DescribeWithSelection = Nothing
 /** {@set [SelectingColumns.OPERATION] [describe][describe]} */
 @ExcludeFromSources
 private typealias SetDescribeOperationArg = Nothing
+
 // endregion
 
 // region DataColumn
 
 /**
- * Computes descriptive statistics for a given [DataColumn], returning a [DataFrame] with key summary metrics.
+ * Computes descriptive statistics for a given [DataColumn], returning a [DataFrame] with key
+ * summary metrics.
  *
- * This function provides a statistical summary of a given column, including its type, count, uniqueness,
- * missing values, most frequent values, and statistical measures if applicable.
+ * This function provides a statistical summary of a given column, including its type, count,
+ * uniqueness, missing values, most frequent values, and statistical measures if applicable.
  *
  * {@include [SummaryMetrics]}
  *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column.
- *         The output contains one row per described column with the summary metrics as columns.
+ *   The output contains one row per described column with the summary metrics as columns.
  */
 public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describeImpl(listOf(this))
 
@@ -115,54 +118,56 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
 /**
  * {@include [Describe]}
  *
- * @return A [DataFrame] where each row represents the descriptive statistics of a single column in the input DataFrame.
- *         The output contains one row per described column with the summary metrics as columns.
+ * @return A [DataFrame] where each row represents the descriptive statistics of a single column in
+ *   the input DataFrame. The output contains one row per described column with the summary metrics
+ *   as columns.
  */
-public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
-    describe {
-        colsAtAnyDepth().filter { !it.isColumnGroup() }
-    }
+public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> = describe {
+    colsAtAnyDepth().filter { !it.isColumnGroup() }
+}
 
 /**
+ * @param [columns] The [Columns Selector][ColumnsSelector] that specifies which columns of this
+ *   [DataFrame] should be described.
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetDescribeOperationArg]}
- *
- * @param [columns] The [Columns Selector][ColumnsSelector] that specifies which
- * columns of this [DataFrame] should be described.
+ * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include
+ *   [SetDescribeOperationArg]}
  */
 public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<ColumnDescription> =
     describeImpl(getColumnsWithPaths(columns))
 
 /**
+ * @param [columns] The [Column Names][String] that specifies which columns of this [DataFrame]
+ *   should be described.
  * @include [DescribeWithSelection]
- * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetDescribeOperationArg]}
- *
- * @param [columns] The [Column Names][String] that specifies which
- * columns of this [DataFrame] should be described.
+ * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include
+ *   [SetDescribeOperationArg]}
  */
 public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDescription> =
-    describe { columns.toColumnSet() }
+    describe {
+        columns.toColumnSet()
+    }
 
 /**
+ * @param [columns] The [Column Accessors][ColumnReference] that specifies which columns of this
+ *   [DataFrame] should be described.
  * @include [DescribeWithSelection]
- *
- * @param [columns] The [Column Accessors][ColumnReference] that specifies which
- * columns of this [DataFrame] should be described.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReference<C>): DataFrame<ColumnDescription> =
-    describe { columns.toColumnSet() }
+public fun <T, C : Number?> DataFrame<T>.describe(
+    vararg columns: ColumnReference<C>
+): DataFrame<ColumnDescription> = describe { columns.toColumnSet() }
 
 /**
+ * @param [columns] The [KProperties][KProperty] that specifies which columns of this [DataFrame]
+ *   should be described.
  * @include [DescribeWithSelection]
- *
- * @param [columns] The [KProperties][KProperty] that specifies which
- * columns of this [DataFrame] should be described.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: KProperty<C>): DataFrame<ColumnDescription> =
-    describe { columns.toColumnSet() }
+public fun <T, C : Number?> DataFrame<T>.describe(
+    vararg columns: KProperty<C>
+): DataFrame<ColumnDescription> = describe { columns.toColumnSet() }
 
 // endregion

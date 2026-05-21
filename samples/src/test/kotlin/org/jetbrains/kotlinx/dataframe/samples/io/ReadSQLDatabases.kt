@@ -4,6 +4,9 @@ package org.jetbrains.kotlinx.dataframe.samples.io
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import java.sql.DriverManager
+import java.sql.ResultSet
+import javax.sql.rowset.RowSetProvider
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
@@ -17,9 +20,6 @@ import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Ignore
 import org.junit.Test
-import java.sql.DriverManager
-import java.sql.ResultSet
-import javax.sql.rowset.RowSetProvider
 
 class ReadSQLDatabases {
 
@@ -76,13 +76,14 @@ class ReadSQLDatabases {
     @Test
     fun readSqlTableDataSource() {
         // SampleStart
-        val config = HikariConfig().apply {
-            jdbcUrl = "URL_TO_CONNECT_DATABASE"
-            username = "USERNAME"
-            password = "PASSWORD"
-            maximumPoolSize = 10
-            minimumIdle = 2
-        }
+        val config =
+            HikariConfig().apply {
+                jdbcUrl = "URL_TO_CONNECT_DATABASE"
+                username = "USERNAME"
+                password = "PASSWORD"
+                maximumPoolSize = 10
+                minimumIdle = 2
+            }
         val dataSource = HikariDataSource(config)
 
         val users = DataFrame.readSqlTable(dataSource, "Users")
@@ -127,13 +128,14 @@ class ReadSQLDatabases {
     @Test
     fun readSqlQueryDataSource() {
         // SampleStart
-        val config = HikariConfig().apply {
-            jdbcUrl = "URL_TO_CONNECT_DATABASE"
-            username = "USERNAME"
-            password = "PASSWORD"
-            maximumPoolSize = 10
-            minimumIdle = 2
-        }
+        val config =
+            HikariConfig().apply {
+                jdbcUrl = "URL_TO_CONNECT_DATABASE"
+                username = "USERNAME"
+                password = "PASSWORD"
+                maximumPoolSize = 10
+                minimumIdle = 2
+            }
         val dataSource = HikariDataSource(config)
 
         val df = DataFrame.readSqlQuery(dataSource, "SELECT * FROM Users WHERE age > 35")
@@ -214,13 +216,14 @@ class ReadSQLDatabases {
     @Test
     fun readAllSqlTablesDataSource() {
         // SampleStart
-        val config = HikariConfig().apply {
-            jdbcUrl = "URL_TO_CONNECT_DATABASE"
-            username = "USERNAME"
-            password = "PASSWORD"
-            maximumPoolSize = 10
-            minimumIdle = 2
-        }
+        val config =
+            HikariConfig().apply {
+                jdbcUrl = "URL_TO_CONNECT_DATABASE"
+                username = "USERNAME"
+                password = "PASSWORD"
+                maximumPoolSize = 10
+                minimumIdle = 2
+            }
         val dataSource = HikariDataSource(config)
 
         val dataframes = DataFrame.readAllSqlTables(dataSource)
@@ -253,13 +256,14 @@ class ReadSQLDatabases {
     @Test
     fun readSqlTableSchemaDataSource() {
         // SampleStart
-        val config = HikariConfig().apply {
-            jdbcUrl = "URL_TO_CONNECT_DATABASE"
-            username = "USERNAME"
-            password = "PASSWORD"
-            maximumPoolSize = 10
-            minimumIdle = 2
-        }
+        val config =
+            HikariConfig().apply {
+                jdbcUrl = "URL_TO_CONNECT_DATABASE"
+                username = "USERNAME"
+                password = "PASSWORD"
+                maximumPoolSize = 10
+                minimumIdle = 2
+            }
         val dataSource = HikariDataSource(config)
 
         val schema = DataFrameSchema.readSqlTable(dataSource, "Users")
@@ -292,13 +296,14 @@ class ReadSQLDatabases {
     @Test
     fun readSqlQuerySchemaDataSource() {
         // SampleStart
-        val config = HikariConfig().apply {
-            jdbcUrl = "URL_TO_CONNECT_DATABASE"
-            username = "USERNAME"
-            password = "PASSWORD"
-            maximumPoolSize = 10
-            minimumIdle = 2
-        }
+        val config =
+            HikariConfig().apply {
+                jdbcUrl = "URL_TO_CONNECT_DATABASE"
+                username = "USERNAME"
+                password = "PASSWORD"
+                maximumPoolSize = 10
+                minimumIdle = 2
+            }
         val dataSource = HikariDataSource(config)
 
         val schema = DataFrameSchema.readSqlQuery(dataSource, "SELECT * FROM Users WHERE age > 35")
@@ -331,13 +336,14 @@ class ReadSQLDatabases {
     @Test
     fun readSqlQuerySchemaExtensionDataSource() {
         // SampleStart
-        val config = HikariConfig().apply {
-            jdbcUrl = "URL_TO_CONNECT_DATABASE"
-            username = "USERNAME"
-            password = "PASSWORD"
-            maximumPoolSize = 10
-            minimumIdle = 2
-        }
+        val config =
+            HikariConfig().apply {
+                jdbcUrl = "URL_TO_CONNECT_DATABASE"
+                username = "USERNAME"
+                password = "PASSWORD"
+                maximumPoolSize = 10
+                minimumIdle = 2
+            }
         val dataSource = HikariDataSource(config)
 
         val schema = dataSource.readDataFrameSchema("SELECT * FROM Users WHERE age > 35")
@@ -390,13 +396,14 @@ class ReadSQLDatabases {
     @Test
     fun readAllSqlTablesSchemaDataSource() {
         // SampleStart
-        val config = HikariConfig().apply {
-            jdbcUrl = "URL_TO_CONNECT_DATABASE"
-            username = "USERNAME"
-            password = "PASSWORD"
-            maximumPoolSize = 10
-            minimumIdle = 2
-        }
+        val config =
+            HikariConfig().apply {
+                jdbcUrl = "URL_TO_CONNECT_DATABASE"
+                username = "USERNAME"
+                password = "PASSWORD"
+                maximumPoolSize = 10
+                minimumIdle = 2
+            }
         val dataSource = HikariDataSource(config)
 
         val schemas = DataFrameSchema.readAllSqlTables(dataSource)

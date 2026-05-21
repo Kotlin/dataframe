@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -20,11 +21,12 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public inline fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter { !predicate(it) }
+public inline fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter {
+    !predicate(it)
+}
 
 public fun <T> DataColumn<T>.drop(n: Int): DataColumn<T> =
     when {
@@ -59,14 +61,12 @@ public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
     return take((nrow - n).coerceAtLeast(0))
 }
 
-/**
- * Returns a DataFrame containing all rows except rows that satisfy the given [predicate].
- */
-public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
+/** Returns a DataFrame containing all rows except rows that satisfy the given [predicate]. */
+public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter {
+    !predicate(it, it)
+}
 
-/**
- * Returns a DataFrame containing all rows except first rows that satisfy the given [predicate].
- */
+/** Returns a DataFrame containing all rows except first rows that satisfy the given [predicate]. */
 public inline fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: this
 
@@ -88,22 +88,32 @@ public interface DropColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnsSelectionDsl.dropLast]`)` */
+        /**
+         * [**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnsSelectionDsl.dropLast]`)`
+         */
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnSet.dropLast]`)` */
         public typealias ColumnSetName = Nothing
 
-        /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropCols]`(`[**`Last`**][ColumnsSelectionDsl.dropLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.dropCols] */
+        /**
+         * __`.`__[**`drop`**][ColumnsSelectionDsl.dropCols]`(`[**`Last`**][ColumnsSelectionDsl.dropLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.dropCols]
+         */
         public typealias ColumnGroupName = Nothing
 
-        /** [**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile] */
+        /**
+         * [**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile]
+         */
         public typealias PlainDslWhileName = Nothing
 
-        /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile] */
+        /**
+         * __`.`__[**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile]
+         */
         public typealias ColumnSetWhileName = Nothing
 
-        /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.dropColsWhile] */
+        /**
+         * __`.`__[**`drop`**][ColumnsSelectionDsl.dropColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.dropColsWhile]
+         */
         public typealias ColumnGroupWhileName = Nothing
     }
 
@@ -122,9 +132,11 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropFirstDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[drop][ColumnSet.drop]`(2) }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[drop][ColumnSet.drop]`(2) }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[drop][ColumnSet.drop]`(2) }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ..
+     * }.`[drop][ColumnSet.drop]`(2) }`
      */
     @Interpretable("Drop0")
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
@@ -133,7 +145,7 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropFirstDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[drop][ColumnsSelectionDsl.drop]`(5) }`
+     * `df.`[select][DataFrame.select]` { `[drop][ColumnsSelectionDsl.drop]`(5) }`
      */
     @Interpretable("Drop1")
     public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> = asSingleColumn().dropCols(n)
@@ -160,7 +172,8 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropFirstDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropCols][KProperty.dropCols]`(1) }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColumnGroup.`[dropCols][KProperty.dropCols]`(1) }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -170,7 +183,8 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropFirstDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropCols][ColumnPath.dropCols]`(1) }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["myColumnGroup"].`[dropCols][ColumnPath.dropCols]`(1) }`
      */
     public fun ColumnPath.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
@@ -191,9 +205,11 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropLastDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLast][ColumnSet.dropLast]`(2) }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLast][ColumnSet.dropLast]`(2) }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[dropLast][ColumnSet.dropLast]`() }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ..
+     * }.`[dropLast][ColumnSet.dropLast]`() }`
      */
     @Interpretable("DropLast0")
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
@@ -202,16 +218,18 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropLastDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[dropLast][ColumnsSelectionDsl.dropLast]`(5) }`
+     * `df.`[select][DataFrame.select]` { `[dropLast][ColumnsSelectionDsl.dropLast]`(5) }`
      */
     @Interpretable("DropLast1")
-    public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> = this.asSingleColumn().dropLastCols(n)
+    public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> =
+        this.asSingleColumn().dropLastCols(n)
 
     /**
      * @include [CommonDropLastDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastCols][SingleColumn.dropLastCols]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * myColumnGroup.`[dropLastCols][SingleColumn.dropLastCols]`() }`
      */
     @Interpretable("DropLast2")
     public fun SingleColumn<DataRow<*>>.dropLastCols(n: Int): ColumnSet<*> =
@@ -221,7 +239,8 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropLastDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastCols][String.dropLastCols]`(1) }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastCols][String.dropLastCols]`(1)
+     * }`
      */
     public fun String.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
@@ -229,7 +248,8 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropLastDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastCols][KProperty.dropLastCols]`(1) }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColumnGroup.`[dropLastCols][KProperty.dropLastCols]`(1) }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -239,7 +259,8 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropLastDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastCols][ColumnPath.dropLastCols]`(1) }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["myColumnGroup"].`[dropLastCols][ColumnPath.dropLastCols]`(1) }`
      */
     public fun ColumnPath.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
@@ -260,18 +281,24 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropWhile][ColumnSet.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropWhile][ColumnSet.dropWhile]` {
+     * it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[dropWhile][ColumnSet.dropWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ..
+     * }.`[dropWhile][ColumnSet.dropWhile]` {
+     * it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun <C> ColumnSet<C>.dropWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
-        transform { it.dropWhile(predicate) }
+    public fun <C> ColumnSet<C>.dropWhile(predicate: ColumnFilter<C>): ColumnSet<C> = transform {
+        it.dropWhile(predicate)
+    }
 
     /**
      * @include [CommonDropWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[dropWhile][ColumnsSelectionDsl.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` { `[dropWhile][ColumnsSelectionDsl.dropWhile]` {
+     * it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun ColumnsSelectionDsl<*>.dropWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.asSingleColumn().dropColsWhile(predicate)
@@ -280,7 +307,9 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropColsWhile][SingleColumn.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` {
+     * myColumnGroup.`[dropColsWhile][SingleColumn.dropColsWhile]` {
+     * it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun SingleColumn<DataRow<*>>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropWhile(predicate) }
@@ -289,7 +318,8 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropColsWhile][String.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropColsWhile][String.dropColsWhile]` {
+     * it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun String.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
@@ -298,7 +328,9 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropColsWhile][KProperty.dropColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColumnGroup.`[dropColsWhile][KProperty.dropColsWhile]` {
+     * it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -309,7 +341,9 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropColsWhile][ColumnPath.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["myColumnGroup"].`[dropColsWhile][ColumnPath.dropColsWhile]` {
+     * it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun ColumnPath.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
@@ -331,18 +365,25 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropLastWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLastWhile][ColumnSet.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLastWhile][ColumnSet.dropLastWhile]`
+     * { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[dropLastWhile][ColumnSet.dropLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { ..
+     * }.`[dropLastWhile][ColumnSet.dropLastWhile]` {
+     * it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun <C> ColumnSet<C>.dropLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
-        transform { it.dropLastWhile(predicate) }
+        transform {
+            it.dropLastWhile(predicate)
+        }
 
     /**
      * @include [CommonDropLastWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[dropLastWhile][ColumnsSelectionDsl.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` { `[dropLastWhile][ColumnsSelectionDsl.dropLastWhile]` {
+     * it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun ColumnsSelectionDsl<*>.dropLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         this.asSingleColumn().dropLastColsWhile(predicate)
@@ -351,16 +392,22 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropLastWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` {
+     * myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` {
+     * it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun SingleColumn<DataRow<*>>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropLastColsWhile(
+        predicate: ColumnFilter<*>
+    ): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLastWhile(predicate) }
 
     /**
      * @include [CommonDropLastWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastColsWhile][String.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` {
+     * "myColumnGroup".`[dropLastColsWhile][String.dropLastColsWhile]` {
+     * it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun String.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
@@ -369,9 +416,13 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropLastWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` {
+     * Type::myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` {
+     * it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastColsWhile][KProperty.dropLastColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColumnGroup.`[dropLastColsWhile][KProperty.dropLastColsWhile]` {
+     * it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -382,7 +433,9 @@ public interface DropColumnsSelectionDsl {
      * @include [CommonDropLastWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastColsWhile][ColumnPath.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]` {
+     * "pathTo"["myColumnGroup"].`[dropLastColsWhile][ColumnPath.dropLastColsWhile]` {
+     * it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun ColumnPath.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)

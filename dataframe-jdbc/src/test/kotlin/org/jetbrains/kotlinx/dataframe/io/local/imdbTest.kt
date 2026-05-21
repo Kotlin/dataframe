@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io.local
 
 import io.kotest.matchers.shouldBe
+import java.sql.DriverManager
+import java.util.Properties
+import kotlin.reflect.typeOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -11,9 +14,6 @@ import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Ignore
 import org.junit.Test
-import java.sql.DriverManager
-import java.util.Properties
-import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:mariadb://localhost:3307/imdb"
 private const val URL2 = "jdbc:mariadb://localhost:3307"
@@ -94,7 +94,8 @@ class ImdbTestTest {
             and movies.name is not null and movies.name is not null
             group by name, year, rank
             order by year
-            """.trimIndent()
+            """
+                .trimIndent()
         val props = Properties()
         props.setProperty("user", USER_NAME)
         props.setProperty("password", PASSWORD)
@@ -104,8 +105,7 @@ class ImdbTestTest {
 
         DriverManager.getConnection(URL, props).use { connection ->
             val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<RankedMoviesWithGenres>()
-            val result =
-                df.filter { "year"<Int?>()?.let { it > 2000 } ?: false }
+            val result = df.filter { "year"<Int?>()?.let { it > 2000 } ?: false }
             result[0][1] shouldBe 2003
 
             val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)

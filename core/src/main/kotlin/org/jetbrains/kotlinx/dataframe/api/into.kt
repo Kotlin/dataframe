@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -16,9 +19,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 // region GroupBy
 
@@ -27,8 +27,8 @@ import kotlin.reflect.typeOf
  *
  * Does the same as [GroupBy.toDataFrame].
  *
- * Each row of the resulting [DataFrame] represents a unique keys–group pair:
- * a row from [keys] and its corresponding group of rows (as [DataFrame]).
+ * Each row of the resulting [DataFrame] represents a unique keys–group pair: a row from [keys] and
+ * its corresponding group of rows (as [DataFrame]).
  *
  * Resulting [DataFrame] contains a [FrameColumn] with [groups].
  *
@@ -37,8 +37,8 @@ import kotlin.reflect.typeOf
  * For more information: {@include [DocumentationUrls.GroupBy]}
  *
  * @param column The name of the column in which to store grouped data.
- * @return A new [DataFrame] that includes the grouping key columns together
- * with a [FrameColumn] containing the corresponding groups.
+ * @return A new [DataFrame] that includes the grouping key columns together with a [FrameColumn]
+ *   containing the corresponding groups.
  */
 @Refine
 @Interpretable("GroupByInto")
@@ -46,19 +46,20 @@ public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T> = toDataFrame(column.name())
+public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T> =
+    toDataFrame(column.name())
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = toDataFrame(column.columnName)
+public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> =
+    toDataFrame(column.columnName)
 
 /**
- * Aggregates this [GroupBy] into a [DataFrame]
- * by computing the values of [expression] on all rows for each group.
+ * Aggregates this [GroupBy] into a [DataFrame] by computing the values of [expression] on all rows
+ * for each group.
  *
- * Each row of the resulting [DataFrame] represents a unique keys–value pair:
- * a row from [keys] and list of values, computed on all rows of the corresponding group using
- * provided [expression].
+ * Each row of the resulting [DataFrame] represents a unique keys–value pair: a row from [keys] and
+ * list of values, computed on all rows of the corresponding group using provided [expression].
  *
  * Check out [groupBy Grammar][GroupByDocs.Grammar].
  *
@@ -67,6 +68,7 @@ public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = t
  * For more information: {@include [DocumentationUrls.GroupBy]}
  *
  * #### Example
+ *
  * ```kotlin
  * // Compute list of prices within each city
  * // by multiplying "amount" and "cost" values.
@@ -77,8 +79,8 @@ public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = t
  *
  * @param [columnName] The name of the column in which to store aggregated data.
  * @param [expression] The expression to compute on each group row.
- * @return A new [DataFrame] that includes the grouping key columns together
- * with a list of values computed on all rows of corresponding groups.
+ * @return A new [DataFrame] that includes the grouping key columns together with a list of values
+ *   computed on all rows of corresponding groups.
  */
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     columnName: String? = null,
@@ -94,9 +96,7 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
 ): DataFrame<G> {
     val type = typeOf<V>()
     val path = column.path()
-    return aggregate {
-        internal().withExpr(type, path, expression)
-    }
+    return aggregate { internal().withExpr(type, path, expression) }
 }
 
 @PublishedApi
@@ -104,10 +104,7 @@ internal fun <T, G, V> GroupBy<T, G>.into(
     path: ColumnPath,
     expression: RowExpression<G, V>,
     type: KType,
-): DataFrame<G> =
-    aggregate {
-        internal().withExpr(type, path, expression)
-    }
+): DataFrame<G> = aggregate { internal().withExpr(type, path, expression) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -150,14 +147,17 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
 
 @Refine
 @Interpretable("GroupByReduceInto")
-public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = into(columnName) { this }
+public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> =
+    into(columnName) { this }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<AnyRow>): DataFrame<G> = into(column) { this }
+public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<AnyRow>): DataFrame<G> =
+    into(column) { this }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<AnyRow>): DataFrame<G> = into(column) { this }
+public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<AnyRow>): DataFrame<G> =
+    into(column) { this }
 
 // endregion

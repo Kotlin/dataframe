@@ -1,13 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.Actual
-import io.kotest.assertions.AssertionFailedError
-import io.kotest.assertions.Exceptions
 import io.kotest.assertions.Expected
 import io.kotest.assertions.failure
 import io.kotest.assertions.print.printed
-import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
+import java.sql.Connection
+import java.sql.ResultSet
+import kotlin.reflect.typeOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -15,9 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.inferType
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.db.MsSql
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import java.sql.Connection
-import java.sql.ResultSet
-import kotlin.reflect.typeOf
 
 private const val TEST_TABLE_NAME = "testtable123"
 
@@ -26,7 +23,8 @@ internal fun inferNullability(connection: Connection) {
 
     // prepare tables and data
     @Language("SQL")
-    val createTestTable1Query = """
+    val createTestTable1Query =
+        """
                 CREATE TABLE $TEST_TABLE_NAME (
                     id INT PRIMARY KEY,
                     name VARCHAR(50),
@@ -37,14 +35,26 @@ internal fun inferNullability(connection: Connection) {
 
     connection.createStatement().use { st -> st.execute(createTestTable1Query) }
 
-    connection.createStatement()
-        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
-    connection.createStatement()
-        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
-    connection.createStatement()
-        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
-    connection.createStatement()
-        .execute("INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
+    connection
+        .createStatement()
+        .execute(
+            "INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)"
+        )
+    connection
+        .createStatement()
+        .execute(
+            "INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)"
+        )
+    connection
+        .createStatement()
+        .execute(
+            "INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)"
+        )
+    connection
+        .createStatement()
+        .execute(
+            "INSERT INTO $TEST_TABLE_NAME (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)"
+        )
 
     // start testing `readSqlTable` method
 
@@ -80,7 +90,8 @@ internal fun inferNullability(connection: Connection) {
     val sqlQuery =
         """
         SELECT name, surname, age FROM $TEST_TABLE_NAME
-        """.trimIndent()
+        """
+            .trimIndent()
 
     val df2 = DataFrame.readSqlQuery(connection, sqlQuery)
     df2.schema().columns["name"]!!.type shouldBe typeOf<String>()
@@ -104,9 +115,9 @@ internal fun inferNullability(connection: Connection) {
 
     // start testing `readResultSet` method
 
-    connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
-        @Language("SQL")
-        val selectStatement = "SELECT * FROM $TEST_TABLE_NAME"
+    connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st
+        ->
+        @Language("SQL") val selectStatement = "SELECT * FROM $TEST_TABLE_NAME"
 
         st.executeQuery(selectStatement).use { rs ->
             // ith default inferNullability: Boolean = true
@@ -145,14 +156,17 @@ internal fun inferNullability(connection: Connection) {
 /**
  * Helper to check whether the provided schema matches the inferred schema.
  *
- * It must hold that all types in the provided schema are equal or super to
- * the corresponding types in the inferred schema.
+ * It must hold that all types in the provided schema are equal or super to the corresponding types
+ * in the inferred schema.
  */
 @Suppress("INVISIBLE_REFERENCE")
 fun AnyFrame.assertInferredTypesMatchSchema() {
     if (!schema().compare(inferType().schema()).isSuperOrMatches()) {
         throw failure(
-            expected = Expected(inferType().schema().toString().lines().sorted().joinToString("\n").printed()),
+            expected =
+                Expected(
+                    inferType().schema().toString().lines().sorted().joinToString("\n").printed()
+                ),
             actual = Actual(schema().toString().lines().sorted().joinToString("\n").printed()),
             prependMessage = "Inferred schema must be <: Provided schema",
         )

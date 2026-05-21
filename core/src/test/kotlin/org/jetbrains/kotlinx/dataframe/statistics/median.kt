@@ -7,6 +7,8 @@ import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.floats.shouldBeNaN
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import kotlin.experimental.ExperimentalTypeInference
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.column
@@ -24,24 +26,73 @@ import org.jetbrains.kotlinx.dataframe.api.medianOrNull
 import org.jetbrains.kotlinx.dataframe.api.rowMedianOf
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.junit.Test
-import kotlin.experimental.ExperimentalTypeInference
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class MedianTests {
 
-    val personsDf = dataFrameOf("name", "age", "city", "weight", "height", "yearsToRetirement")(
-        "Alice", 15, "London", 99.5, "1.85", 50,
-        "Bob", 20, "Paris", 140.0, "1.35", 45,
-        "Charlie", 100, "Dubai", 75.0, "1.95", 0,
-        "Rose", 1, "Moscow", 45.33, "0.79", 64,
-        "Dylan", 35, "London", 23.4, "1.83", 30,
-        "Eve", 40, "Paris", 56.72, "1.85", 25,
-        "Frank", 55, "Dubai", 78.9, "1.35", 10,
-        "Grace", 29, "Moscow", 67.8, "1.65", 36,
-        "Hank", 60, "Paris", 80.22, "1.75", 5,
-        "Isla", 22, "London", 75.1, "1.85", 43,
-    )
+    val personsDf =
+        dataFrameOf("name", "age", "city", "weight", "height", "yearsToRetirement")(
+            "Alice",
+            15,
+            "London",
+            99.5,
+            "1.85",
+            50,
+            "Bob",
+            20,
+            "Paris",
+            140.0,
+            "1.35",
+            45,
+            "Charlie",
+            100,
+            "Dubai",
+            75.0,
+            "1.95",
+            0,
+            "Rose",
+            1,
+            "Moscow",
+            45.33,
+            "0.79",
+            64,
+            "Dylan",
+            35,
+            "London",
+            23.4,
+            "1.83",
+            30,
+            "Eve",
+            40,
+            "Paris",
+            56.72,
+            "1.85",
+            25,
+            "Frank",
+            55,
+            "Dubai",
+            78.9,
+            "1.35",
+            10,
+            "Grace",
+            29,
+            "Moscow",
+            67.8,
+            "1.65",
+            36,
+            "Hank",
+            60,
+            "Paris",
+            80.22,
+            "1.75",
+            5,
+            "Isla",
+            22,
+            "London",
+            75.1,
+            "1.85",
+            43,
+        )
 
     @Test
     fun `medianOf test`() {
@@ -51,11 +102,7 @@ class MedianTests {
 
     @Test
     fun `median of two columns`() {
-        val df = dataFrameOf("a", "b", "c")(
-            1, 4, "a",
-            2, 6, "b",
-            7, 7, "c",
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 4, "a", 2, 6, "b", 7, 7, "c")
         df.median("a", "b") shouldBe 5.0
         df.median { "a"<Int>() and "b"<Int>() } shouldBe 5.0
         df.medianOrNull { "a"<Int>() and "b"<Int>() } shouldBe 5.0
@@ -72,11 +119,7 @@ class MedianTests {
 
     @Test
     fun `row median`() {
-        val df = dataFrameOf("a", "b")(
-            1, 3,
-            2, 4,
-            7, 7,
-        )
+        val df = dataFrameOf("a", "b")(1, 3, 2, 4, 7, 7)
         df.mapToColumn("", Infer.Type) { it.rowMedianOf<Int>() } shouldBe columnOf(2, 3, 7)
     }
 
@@ -97,7 +140,8 @@ class MedianTests {
         // Integer types
         columnOf(5, 2, 8, 1, 9).median() shouldBe 5.0
         columnOf(5L, 2L, 8L, 1L, 9L).median() shouldBe 5.0
-        columnOf(5.toShort(), 2.toShort(), 8.toShort(), 1.toShort(), 9.toShort()).median() shouldBe 5.0
+        columnOf(5.toShort(), 2.toShort(), 8.toShort(), 1.toShort(), 9.toShort()).median() shouldBe
+            5.0
         columnOf(5.toByte(), 2.toByte(), 8.toByte(), 1.toByte(), 9.toByte()).median() shouldBe 5.0
 
         // Floating point types
@@ -107,7 +151,9 @@ class MedianTests {
 
     @Test
     fun `median with empty column`() {
-        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false)).medianOrNull().shouldBeNull()
+        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false))
+            .medianOrNull()
+            .shouldBeNull()
     }
 
     @Test
@@ -139,22 +185,14 @@ class MedianTests {
         // Test with a data class
         data class Person(val name: String, val age: Int)
 
-        val people = columnOf(
-            Person("Alice", 30),
-            Person("Bob", 25),
-            Person("Charlie", 35),
-        )
+        val people = columnOf(Person("Alice", 30), Person("Bob", 25), Person("Charlie", 35))
 
         // Find person with median age
         people.medianBy { it.age } shouldBe Person("Alice", 30)
 
         // With null values
-        val peopleWithNull = columnOf(
-            Person("Alice", 30),
-            Person("Bob", 25),
-            null,
-            Person("Charlie", 35),
-        )
+        val peopleWithNull =
+            columnOf(Person("Alice", 30), Person("Bob", 25), null, Person("Charlie", 35))
 
         peopleWithNull.medianBy { it?.age ?: Int.MAX_VALUE } shouldBe Person("Alice", 30)
         peopleWithNull.medianByOrNull { it?.age ?: Int.MAX_VALUE } shouldBe Person("Alice", 30)
@@ -180,10 +218,12 @@ class MedianTests {
     fun `medianOf with transformer function with NaNs`() {
         // Median functions should return NaN if any value is NaN
         val mixedValues = columnOf("5.0", "2.0", "NaN", "1.0", "9.0")
-        mixedValues.medianOf {
-            val num = it.toDoubleOrNull()
-            if (num == null || num.isNaN()) Double.NaN else num
-        }.shouldBeNaN()
+        mixedValues
+            .medianOf {
+                val num = it.toDoubleOrNull()
+                if (num == null || num.isNaN()) Double.NaN else num
+            }
+            .shouldBeNaN()
 
         // With skipNaN=true, NaN values should be ignored
         mixedValues.medianOf(skipNaN = true) {
@@ -194,13 +234,7 @@ class MedianTests {
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `rowMedianOf with dataframe`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1f, 2, 3,
-            4f, 5, 6,
-            7f, 8, 9,
-        )
+        val df = dataFrameOf("a", "b", "c")(1f, 2, 3, 4f, 5, 6, 7f, 8, 9)
 
         // Find median value in each row
         df[0].rowMedianOf<Int>() shouldBe 2.5
@@ -210,13 +244,7 @@ class MedianTests {
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `rowMedianOf with dataframe and nulls`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1f, 2, 3,
-            4f, null, 6,
-            7f, 8, 9,
-        )
+        val df = dataFrameOf("a", "b", "c")(1f, 2, 3, 4f, null, 6, 7f, 8, 9)
 
         // Find median value in each row
         df[0].rowMedianOf<Int>() shouldBe 2.5
@@ -230,13 +258,18 @@ class MedianTests {
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `rowMedianOf with dataframe and NaNs`() {
         // Median functions should return NaN if any value is NaN
-        val dfWithNaN = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1.0, Double.NaN, 3.0,
-            Double.NaN, 5.0, 6.0,
-            7.0, 8.0, Double.NaN,
-        )
+        val dfWithNaN =
+            dataFrameOf("a", "b", "c")(
+                1.0,
+                Double.NaN,
+                3.0,
+                Double.NaN,
+                5.0,
+                6.0,
+                7.0,
+                8.0,
+                Double.NaN,
+            )
 
         dfWithNaN[0].rowMedianOf<Double>().shouldBeNaN()
         dfWithNaN[1].rowMedianOf<Double>().shouldBeNaN()
@@ -250,13 +283,21 @@ class MedianTests {
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe median`() {
-        val df = dataFrameOf(
-            "a", "b", "c", "d",
-        )(
-            1, 2f, 3.0, 1.toBigInteger(),
-            4, 5f, 6.0, 2.toBigInteger(),
-            7, 8f, 9.0, 4.toBigInteger(),
-        )
+        val df =
+            dataFrameOf("a", "b", "c", "d")(
+                1,
+                2f,
+                3.0,
+                1.toBigInteger(),
+                4,
+                5f,
+                6.0,
+                2.toBigInteger(),
+                7,
+                8f,
+                9.0,
+                4.toBigInteger(),
+            )
 
         // Get row with median values for each column
         val medians = df.median()
@@ -274,13 +315,7 @@ class MedianTests {
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe medianBy and medianOf`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1, 2, 3,
-            4, 5, 6,
-            7, 8, 9,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         // Find row with median value of column "a"
         val medianByA = df.medianBy("a")
@@ -296,40 +331,55 @@ class MedianTests {
     fun `median with NaN values for floating point numbers`() {
         // Test with Float.NaN values
         val floatWithNaN = columnOf(5.0f, 2.0f, Float.NaN, 1.0f, 9.0f)
-        floatWithNaN.median().shouldBeNaN() // Median functions should return NaN if any value is NaN
-        floatWithNaN.median(skipNaN = true) shouldBe 3.5 // With skipNaN=true, NaN values should be ignored
+        floatWithNaN
+            .median()
+            .shouldBeNaN() // Median functions should return NaN if any value is NaN
+        floatWithNaN.median(skipNaN = true) shouldBe
+            3.5 // With skipNaN=true, NaN values should be ignored
 
         // Test with Double.NaN values
         val doubleWithNaN = columnOf(5.0, 2.0, Double.NaN, 1.0, 9.0)
-        doubleWithNaN.median().shouldBeNaN() // Median functions should return NaN if any value is NaN
-        doubleWithNaN.median(skipNaN = true) shouldBe 3.5 // With skipNaN=true, NaN values should be ignored
+        doubleWithNaN
+            .median()
+            .shouldBeNaN() // Median functions should return NaN if any value is NaN
+        doubleWithNaN.median(skipNaN = true) shouldBe
+            3.5 // With skipNaN=true, NaN values should be ignored
 
         // Test with multiple NaN values in different positions
         val multipleNaN = columnOf(Float.NaN, 2.0f, Float.NaN, 1.0f, Float.NaN)
         multipleNaN.median().shouldBeNaN() // Median functions should return NaN if any value is NaN
-        multipleNaN.median(skipNaN = true) shouldBe 1.5f // With skipNaN=true, NaN values should be ignored
+        multipleNaN.median(skipNaN = true) shouldBe
+            1.5f // With skipNaN=true, NaN values should be ignored
 
         // Test with all NaN values
         val allNaN = columnOf(Float.NaN, Float.NaN, Float.NaN)
         allNaN.median().shouldBeNaN() // All values are NaN, so result is NaN
         allNaN.medianOrNull()!!.shouldBeNaN() // All values are NaN, so result is NaN
-        allNaN.medianOrNull(skipNaN = true)
+        allNaN
+            .medianOrNull(skipNaN = true)
             .shouldBeNull() // With skipNaN=true and only NaN values, result should be null
 
         // Test with DataFrame containing NaN values
-        val dfWithNaN = dataFrameOf(
-            "a", "b", "c",
-        )(
-            5.0, Double.NaN, 3.0,
-            4.0, 2.0, Float.NaN,
-            Double.NaN, 8.0, 1.0,
-        )
+        val dfWithNaN =
+            dataFrameOf("a", "b", "c")(
+                5.0,
+                Double.NaN,
+                3.0,
+                4.0,
+                2.0,
+                Float.NaN,
+                Double.NaN,
+                8.0,
+                1.0,
+            )
 
         // Test DataFrame median with NaN values
-        val mediansWithNaN = dfWithNaN.median() // Median functions should return NaN if any value is NaN
+        val mediansWithNaN =
+            dfWithNaN.median() // Median functions should return NaN if any value is NaN
         (mediansWithNaN["a"] as Double).isNaN() shouldBe true // Column 'a' has a NaN value
         (mediansWithNaN["b"] as Double).isNaN() shouldBe true // Column 'b' has a NaN value
-        "c" shouldNotBeIn mediansWithNaN.columnNames() // Column 'c' should be excluded due to mixed number types
+        "c" shouldNotBeIn
+            mediansWithNaN.columnNames() // Column 'c' should be excluded due to mixed number types
 
         // Test DataFrame median with skipNaN=true
         val mediansWithSkipNaN = dfWithNaN.median(skipNaN = true)
@@ -337,7 +387,8 @@ class MedianTests {
         mediansWithSkipNaN["b"] shouldBe 5.0 // Median of 2.0 and 8.0, skipping NaN
 
         // Test medianFor with NaN values
-        val medianForWithNaN = dfWithNaN.medianFor("a", "b") // Median functions should return NaN if any value is NaN
+        val medianForWithNaN =
+            dfWithNaN.medianFor("a", "b") // Median functions should return NaN if any value is NaN
         (medianForWithNaN["a"] as Double).isNaN() shouldBe true // Column 'a' has a NaN value
         (medianForWithNaN["b"] as Double).isNaN() shouldBe true // Column 'b' has a NaN value
 
@@ -347,28 +398,21 @@ class MedianTests {
         medianForWithSkipNaN["b"] shouldBe 5.0 // Median of 2.0 and 8.0, skipping NaN
 
         // Test median of all columns as a single value
-        (
-            dfWithNaN.median(
-                "a",
-                "b",
-            ) as Double
-        ).isNaN() shouldBe true // Median functions should return NaN if any value is NaN
-        dfWithNaN.median("a", "b", skipNaN = true) shouldBe 4.5 // With skipNaN=true, NaN values should be ignored
+        (dfWithNaN.median("a", "b") as Double).isNaN() shouldBe
+            true // Median functions should return NaN if any value is NaN
+        dfWithNaN.median("a", "b", skipNaN = true) shouldBe
+            4.5 // With skipNaN=true, NaN values should be ignored
 
         // Test medianOf with transformation that might produce NaN values
-        val dfForTransform = dataFrameOf(
-            "a", "b",
-        )(
-            4.0, 0.0,
-            1.0, 2.0,
-            0.0, 0.0,
-        )
+        val dfForTransform = dataFrameOf("a", "b")(4.0, 0.0, 1.0, 2.0, 0.0, 0.0)
 
         // Median functions should return NaN if any value is NaN
-        dfForTransform.medianOf {
-            val b = "b"<Double>()
-            if (b == 0.0) Double.NaN else "a"<Double>() / b
-        }.isNaN() shouldBe true
+        dfForTransform
+            .medianOf {
+                val b = "b"<Double>()
+                if (b == 0.0) Double.NaN else "a"<Double>() / b
+            }
+            .isNaN() shouldBe true
 
         // With skipNaN=true, NaN values should be ignored
         dfForTransform.medianOf(skipNaN = true) {

@@ -14,8 +14,10 @@ import org.locationtech.jts.geom.Geometry
 /**
  * Converts the `GeoDataFrame` to a `SimpleFeatureCollection`.
  *
- * @param name Optional name for the `SimpleFeatureCollection`. Defaults to "geodata" if not specified.
- * @param singleGeometryType Whether to enforce a single geometry type within the collection. Defaults to false.
+ * @param name Optional name for the `SimpleFeatureCollection`. Defaults to "geodata" if not
+ *   specified.
+ * @param singleGeometryType Whether to enforce a single geometry type within the collection.
+ *   Defaults to false.
  * @return A `SimpleFeatureCollection` representing the `GeoDataFrame`.
  */
 public fun GeoDataFrame<*>.toSimpleFeatureCollection(
@@ -25,16 +27,17 @@ public fun GeoDataFrame<*>.toSimpleFeatureCollection(
     val typeBuilder = SimpleFeatureTypeBuilder()
     typeBuilder.name = name ?: "geodata"
     typeBuilder.setCRS(crs)
-    val geometryClass = if (singleGeometryType) {
-        // todo singleOrNull() ?: error()
-        df["geometry"].map { it!!::class.java }.distinct().single()
-    } else {
-        Geometry::class.java
-    }
+    val geometryClass =
+        if (singleGeometryType) {
+            // todo singleOrNull() ?: error()
+            df["geometry"].map { it!!::class.java }.distinct().single()
+        } else {
+            Geometry::class.java
+        }
     typeBuilder.add("the_geom", geometryClass)
-    df.columnNames().filter { it != "geometry" }.forEach { colName ->
-        typeBuilder.add(colName, String::class.java)
-    }
+    df.columnNames()
+        .filter { it != "geometry" }
+        .forEach { colName -> typeBuilder.add(colName, String::class.java) }
     val featureType = typeBuilder.buildFeatureType()
 
     val featureCollection = ListFeatureCollection(featureType)
@@ -46,9 +49,9 @@ public fun GeoDataFrame<*>.toSimpleFeatureCollection(
     df.forEach { row ->
         val geometry = row["geometry"]
         featureBuilder.add(geometry)
-        df.columnNames().filter { it != "geometry" }.forEach { colName ->
-            featureBuilder.add(row[colName])
-        }
+        df.columnNames()
+            .filter { it != "geometry" }
+            .forEach { colName -> featureBuilder.add(row[colName]) }
         val feature: SimpleFeature = featureBuilder.buildFeature(String.format(format, index()))
         featureCollection.add(feature)
     }

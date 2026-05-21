@@ -9,7 +9,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 
-internal fun <T, C> HeaderFormatClause<T, C>.formatHeaderImpl(formatter: HeaderColFormatter<C>): FormattedFrame<T> {
+internal fun <T, C> HeaderFormatClause<T, C>.formatHeaderImpl(
+    formatter: HeaderColFormatter<C>
+): FormattedFrame<T> {
     val selectedPaths = df.getColumnPaths(UnresolvedColumnsPolicy.Skip, columns).toSet()
     val oldHeader = oldHeaderFormatter
 

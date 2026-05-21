@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
@@ -27,13 +28,11 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 internal const val UNNAMED_COLUMN_PREFIX = "untitled"
 
 internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
-    DataFrame<T>,
-    AggregatableInternal<T> {
+    DataFrame<T>, AggregatableInternal<T> {
 
     private val columnsMap: Map<String, Int>
 
@@ -120,13 +119,12 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
     override fun getColumnOrNull(name: String): AnyCol? =
         getColumnIndex(name).let { if (it != -1) getColumn(it) else null }
 
-    override fun getColumnOrNull(index: Int) = if (index >= 0 && index < columns.size) columns[index] else null
+    override fun getColumnOrNull(index: Int) =
+        if (index >= 0 && index < columns.size) columns[index] else null
 
     override fun <R> getColumnOrNull(column: ColumnSelector<T, R>): DataColumn<R>? =
-        getColumnsImpl(
-            unresolvedColumnsPolicy = UnresolvedColumnsPolicy.Skip,
-            selector = column,
-        ).singleOrNull()
+        getColumnsImpl(unresolvedColumnsPolicy = UnresolvedColumnsPolicy.Skip, selector = column)
+            .singleOrNull()
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -135,7 +133,8 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    override fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>? = getColumnOrNull(column.toColumnAccessor())
+    override fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>? =
+        getColumnOrNull(column.toColumnAccessor())
 
     override fun getColumnOrNull(path: ColumnPath): AnyCol? =
         when (path.size) {
@@ -144,7 +143,8 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
             1 -> getColumnOrNull(path[0])
 
             else ->
-                path.dropLast(1)
+                path
+                    .dropLast(1)
                     .fold(this as AnyFrame?) { df, name -> df?.getColumnOrNull(name) as? AnyFrame? }
                     ?.getColumnOrNull(path.last())
         }
@@ -154,23 +154,14 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
     override fun containsColumn(path: ColumnPath): Boolean = getColumnOrNull(path) != null
 }
 
-internal fun <T, C> DataFrame<T>.valuesImpl(byRow: Boolean, columns: ColumnsSelector<T, C>): Sequence<C> {
+internal fun <T, C> DataFrame<T>.valuesImpl(
+    byRow: Boolean,
+    columns: ColumnsSelector<T, C>,
+): Sequence<C> {
     val cols = get(columns)
     return if (byRow) {
-        sequence {
-            indices().forEach { row ->
-                cols.forEach {
-                    yield(it[row])
-                }
-            }
-        }
+        sequence { indices().forEach { row -> cols.forEach { yield(it[row]) } } }
     } else {
-        sequence {
-            cols.forEach { col ->
-                col.values().forEach {
-                    yield(it)
-                }
-            }
-        }
+        sequence { cols.forEach { col -> col.values().forEach { yield(it) } } }
     }
 }

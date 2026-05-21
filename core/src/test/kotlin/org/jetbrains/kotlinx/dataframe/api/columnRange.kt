@@ -15,47 +15,45 @@ class ColumnRangeTest : ColumnsSelectionDslTests() {
     @Test
     fun `top level columns`() {
         listOf(
-            df.select { age and city and weight },
-            df.select { "age".."weight" },
-            df.select { "age"..Person::weight },
-            df.select { "age"..weight },
-            df.select { "age"..pathOf("weight") },
-            df.select { Person::age.."weight" },
-            df.select { Person::age..Person::weight },
-            df.select { Person::age..weight },
-            df.select { Person::age..pathOf("weight") },
-            df.select { age.."weight" },
-            df.select { age..Person::weight },
-            df.select { age..weight },
-            df.select { age..pathOf("weight") },
-            df.select { pathOf("age").."weight" },
-            df.select { pathOf("age")..Person::weight },
-            df.select { pathOf("age")..weight },
-            df.select { pathOf("age")..pathOf("weight") },
-        ).shouldAllBeEqual()
+                df.select { age and city and weight },
+                df.select { "age".."weight" },
+                df.select { "age"..Person::weight },
+                df.select { "age"..weight },
+                df.select { "age"..pathOf("weight") },
+                df.select { Person::age.."weight" },
+                df.select { Person::age..Person::weight },
+                df.select { Person::age..weight },
+                df.select { Person::age..pathOf("weight") },
+                df.select { age.."weight" },
+                df.select { age..Person::weight },
+                df.select { age..weight },
+                df.select { age..pathOf("weight") },
+                df.select { pathOf("age").."weight" },
+                df.select { pathOf("age")..Person::weight },
+                df.select { pathOf("age")..weight },
+                df.select { pathOf("age")..pathOf("weight") },
+            )
+            .shouldAllBeEqual()
 
         // range of single column
         df.select { age..age } shouldBe df.select { age }
 
         // wrong order
-        shouldThrow<IllegalArgumentException> {
-            df.select { weight..age }
-        }
+        shouldThrow<IllegalArgumentException> { df.select { weight..age } }
     }
 
     @Test
     fun `inside column group`() {
         listOf(
-            df.select { name.firstName and name.lastName },
-            df.select { name.firstName..name.lastName },
-            df.select { name.firstName.."name"["lastName"] },
-            df.select { "name"["firstName"]..name.lastName },
-            df.select { "name"["firstName"].."name"["lastName"] },
-        ).shouldAllBeEqual()
+                df.select { name.firstName and name.lastName },
+                df.select { name.firstName..name.lastName },
+                df.select { name.firstName.."name"["lastName"] },
+                df.select { "name"["firstName"]..name.lastName },
+                df.select { "name"["firstName"].."name"["lastName"] },
+            )
+            .shouldAllBeEqual()
 
         // other parent
-        shouldThrow<IllegalArgumentException> {
-            df.select { name.firstName..age }
-        }
+        shouldThrow<IllegalArgumentException> { df.select { name.firstName..age } }
     }
 }

@@ -4,7 +4,8 @@ import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.documentation.NA
 
 /**
- * Type alias for a function representing a reduction over a sequence of values trying to find the "best" value.
+ * Type alias for a function representing a reduction over a sequence of values trying to find the
+ * "best" value.
  *
  * Return `true` if `this` is considered "better" than `other`, else return `false`.
  *
@@ -12,20 +13,20 @@ import org.jetbrains.kotlinx.dataframe.documentation.NA
  *
  * You add additional constraints to an [IsBetterThan] function in the following fashion:
  *
- * Let's say you want a value to álways be returned when it satisfies the condition `isPreferred(it)`,
- * but in all other cases, you just want the best.
- * Then you can write:
+ * Let's say you want a value to álways be returned when it satisfies the condition
+ * `isPreferred(it)`, but in all other cases, you just want the best. Then you can write:
  * ```kt
  * val isBetterThan: IsBetterThan<C>
  * val newIsBetterThan: IsBetterThan<C> = { other -> isPreferred(this) || (!isPreferred(other) && this.isBetterThan(other)) }
  * ```
  *
- * Alternatively, if you prefer a value not be returned when it satisfies the condition `isNotPreferred()`,
- * then you can write:
+ * Alternatively, if you prefer a value not be returned when it satisfies the condition
+ * `isNotPreferred()`, then you can write:
  * ```kt
  * val isBetterThan: IsBetterThan<C>
  * val newIsBetterThan: IsBetterThan<C> = { other -> !isNotPreferred(this) && (isNotPreferred(other) || this.isBetterThan(other)) }
  * ```
+ *
  * Note that for the latter case, if the source contains only `isNotPreferred()`-satisfying values,
  * a non-preferred value will still be returned.
  */
@@ -34,34 +35,40 @@ internal typealias IsBetterThan<C> = C.(other: C) -> Boolean
 // region indexOfBestBy
 
 /**
- * Returns the index of the first element in this sequence that is not null and is better than all previous elements.
+ * Returns the index of the first element in this sequence that is not null and is better than all
+ * previous elements.
  *
  * Returns -1 if there are no elements non-`null` elements in [this].
  *
  * @param isBetterThan A function defining what it means for a value to be "better" than another.
  */
 internal inline fun <C> Sequence<C>.indexOfBestNotNullBy(isBetterThan: IsBetterThan<C & Any>): Int {
-    val bestIndex = indexOfBestBy { other -> this != null && (other == null || this.isBetterThan(other)) }
+    val bestIndex = indexOfBestBy { other ->
+        this != null && (other == null || this.isBetterThan(other))
+    }
     // catch case where all values are null
     return if (bestIndex == 0 && first() == null) -1 else bestIndex
 }
 
 /**
- * Returns the index of the first element in this sequence
- * that is not [NA (null or NaN)][NA] and is better than all previous elements.
+ * Returns the index of the first element in this sequence that is not [NA (null or NaN)][NA] and is
+ * better than all previous elements.
  *
  * Returns -1 if there are no elements non-`NA` elements in [this].
  *
  * @param isBetterThan A function defining what it means for a value to be "better" than another.
  */
 internal inline fun <C> Sequence<C>.indexOfBestNotNaBy(isBetterThan: IsBetterThan<C & Any>): Int {
-    val bestIndex = indexOfBestBy { other -> !this.isNA() && (other.isNA() || this.isBetterThan(other)) }
+    val bestIndex = indexOfBestBy { other ->
+        !this.isNA() && (other.isNA() || this.isBetterThan(other))
+    }
     // catch case where all values are NA (null or NaN)
     return if (bestIndex == 0 && first().isNA()) -1 else bestIndex
 }
 
 /**
- * Returns the index of the first element in this sequence that is better than all previous elements.
+ * Returns the index of the first element in this sequence that is better than all previous
+ * elements.
  *
  * Returns -1 if there are no elements in [this].
  *
@@ -103,9 +110,10 @@ internal inline fun <C : R, R : Any?> Sequence<C?>.bestNotNaByOrElse(
     ifEmptyOrAllNa: () -> R,
 ): R =
     bestByOrElse(
-        isBetterThan = { other -> !this.isNA() && (other.isNA() || this.isBetterThan(other)) },
-        ifEmpty = ifEmptyOrAllNa,
-    )?.takeUnless { it.isNA() } ?: ifEmptyOrAllNa()
+            isBetterThan = { other -> !this.isNA() && (other.isNA() || this.isBetterThan(other)) },
+            ifEmpty = ifEmptyOrAllNa,
+        )
+        ?.takeUnless { it.isNA() } ?: ifEmptyOrAllNa()
 
 // endregion
 
@@ -137,13 +145,14 @@ internal inline fun <C : Any?> Sequence<C>.bestBy(isBetterThan: IsBetterThan<C>)
 internal inline fun <C : Any?> Sequence<C>.bestByOrNull(isBetterThan: IsBetterThan<C>): C? =
     bestByOrElse(isBetterThan) { null }
 
-internal inline fun <C : R, R : Any?> Sequence<C>.bestByOrElse(isBetterThan: IsBetterThan<C>, ifEmpty: () -> R): R =
+internal inline fun <C : R, R : Any?> Sequence<C>.bestByOrElse(
+    isBetterThan: IsBetterThan<C>,
+    ifEmpty: () -> R,
+): R =
     when {
         none() -> ifEmpty()
 
-        else -> reduce { bestFound, next ->
-            if (next.isBetterThan(bestFound)) next else bestFound
-        }
+        else -> reduce { bestFound, next -> if (next.isBetterThan(bestFound)) next else bestFound }
     }
 
 // endregion

@@ -8,10 +8,8 @@ abstract class DataFrameJupyterTest :
     JupyterReplTestCase(
         ReplProvider.forLibrariesTesting(
             libraries = setOf("dataframe", "kandy-geo", "kandy"),
-            extraCompilerArguments = listOf(
-                "-Xopt-in=kotlin.uuid.ExperimentalUuidApi",
-            ),
-        ),
+            extraCompilerArguments = listOf("-Xopt-in=kotlin.uuid.ExperimentalUuidApi"),
+        )
     )
 
 fun interface CodeReplacer {
@@ -20,14 +18,14 @@ fun interface CodeReplacer {
     companion object {
         val DEFAULT = CodeReplacer { it }
 
-        fun byMap(replacements: Map<String, String>) =
-            CodeReplacer { code ->
-                replacements.entries.fold(code) { acc, (key, replacement) ->
-                    acc.replace(key, replacement)
-                }
+        fun byMap(replacements: Map<String, String>) = CodeReplacer { code ->
+            replacements.entries.fold(code) { acc, (key, replacement) ->
+                acc.replace(key, replacement)
             }
+        }
 
-        fun byMap(vararg replacements: Pair<String, String>): CodeReplacer = byMap(mapOf(*replacements))
+        fun byMap(vararg replacements: Pair<String, String>): CodeReplacer =
+            byMap(mapOf(*replacements))
     }
 }
 
@@ -39,13 +37,12 @@ fun interface CellClause {
     }
 }
 
-infix fun CellClause.and(other: CellClause): CellClause =
-    CellClause { cell ->
-        // Prevent lazy evaluation
-        val acceptedThis = this.isAccepted(cell)
-        val acceptedOther = other.isAccepted(cell)
-        acceptedThis && acceptedOther
-    }
+infix fun CellClause.and(other: CellClause): CellClause = CellClause { cell ->
+    // Prevent lazy evaluation
+    val acceptedThis = this.isAccepted(cell)
+    val acceptedOther = other.isAccepted(cell)
+    acceptedThis && acceptedOther
+}
 
 fun CellClause.Companion.stopAfter(breakClause: CellClause) =
     object : CellClause {

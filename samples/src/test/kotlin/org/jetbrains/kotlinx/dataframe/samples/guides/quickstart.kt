@@ -2,6 +2,7 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.guides
 
+import java.net.URL
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -30,7 +31,6 @@ import org.jetbrains.kotlinx.kandy.letsplot.feature.layout
 import org.jetbrains.kotlinx.kandy.letsplot.layers.bars
 import org.junit.Ignore
 import org.junit.Test
-import java.net.URL
 
 class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
@@ -43,50 +43,51 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         val topics: String
     }
 
-    private val df = DataFrame.readCsv(
-        "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
-    ).cast<Repositories>()
+    private val df =
+        DataFrame.readCsv(
+                "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+            )
+            .cast<Repositories>()
 
     private fun getDfSelected() = df.select { full_name and stargazers_count and topics }
 
-    private fun getDfFiltered() =
-        getDfSelected()
-            .filter { stargazers_count >= 1000 }
+    private fun getDfFiltered() = getDfSelected().filter { stargazers_count >= 1000 }
 
     private fun getDfRenamed() =
         getDfFiltered()
-            .rename { full_name }.to("name")
+            .rename { full_name }
+            .to("name")
             // And "stargazers_count" to "starsCount"
-            .rename { stargazers_count }.to("starsCount")
+            .rename { stargazers_count }
+            .to("starsCount")
 
     private fun getDfUpdated() =
         getDfRenamed()
             // Update "name" values with only its second part (after '/')
-            .update { name }.with { it.split("/")[1] }
+            .update { name }
+            .with { it.split("/")[1] }
             // Convert "topics" `String` values into `List<String>` by splitting:
-            .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
+            .convert { topics }
+            .with { it.removePrefix("[").removeSuffix("]").split(", ") }
 
     private fun getDfWithIsIntellij() =
-        getDfUpdated()
-            .add("isIntellij") {
-                name.contains("intellij") || "intellij" in topics
-            }
+        getDfUpdated().add("isIntellij") { name.contains("intellij") || "intellij" in topics }
 
-    private fun getGroupedByIsIntellij() =
-        getDfWithIsIntellij()
-            .groupBy { isIntellij }
+    private fun getGroupedByIsIntellij() = getDfWithIsIntellij().groupBy { isIntellij }
 
     private fun getDfTop10() =
         getDfWithIsIntellij()
             // Sort by "starsCount" value descending
-            .sortByDesc { starsCount }.take(10)
+            .sortByDesc { starsCount }
+            .take(10)
 
     @Test
     fun notebook_test_quickstart_2() {
         // SampleStart
-        val df = DataFrame.readCsv(
-            "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
-        )
+        val df =
+            DataFrame.readCsv(
+                "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+            )
         // SampleEnd
     }
 
@@ -132,9 +133,13 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         val dfFiltered = getDfFiltered()
         // SampleStart
         // Rename "full_name" column to "name"
-        val dfRenamed = dfFiltered.rename { full_name }.to("name")
-            // And "stargazers_count" to "starsCount"
-            .rename { stargazers_count }.to("starsCount")
+        val dfRenamed =
+            dfFiltered
+                .rename { full_name }
+                .to("name")
+                // And "stargazers_count" to "starsCount"
+                .rename { stargazers_count }
+                .to("starsCount")
         dfRenamed
             // SampleEnd
             .saveDfHtmlSample()
@@ -144,11 +149,14 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     fun notebook_test_quickstart_8() {
         val dfRenamed = getDfRenamed()
         // SampleStart
-        val dfUpdated = dfRenamed
-            // Update "name" values with only its second part (after '/')
-            .update { name }.with { it.split("/")[1] }
-            // Convert "topics" `String` values into `List<String>` by splitting:
-            .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
+        val dfUpdated =
+            dfRenamed
+                // Update "name" values with only its second part (after '/')
+                .update { name }
+                .with { it.split("/")[1] }
+                // Convert "topics" `String` values into `List<String>` by splitting:
+                .convert { topics }
+                .with { it.removePrefix("[").removeSuffix("]").split(", ") }
         dfUpdated
             // SampleEnd
             .saveDfHtmlSample()
@@ -168,9 +176,8 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         // SampleStart
         // Add a `Boolean` column indicating whether the `name` contains the "intellij" substring
         // or the topics include "intellij".
-        val dfWithIsIntellij = dfUpdated.add("isIntellij") {
-            name.contains("intellij") || "intellij" in topics
-        }
+        val dfWithIsIntellij =
+            dfUpdated.add("isIntellij") { name.contains("intellij") || "intellij" in topics }
         dfWithIsIntellij
             // SampleEnd
             .saveDfHtmlSample()
@@ -190,7 +197,8 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     fun notebook_test_quickstart_12() {
         val groupedByIsIntellij = getGroupedByIsIntellij()
         // SampleStart
-        groupedByIsIntellij.count()
+        groupedByIsIntellij
+            .count()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -199,11 +207,13 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     fun notebook_test_quickstart_13() {
         val groupedByIsIntellij = getGroupedByIsIntellij()
         // SampleStart
-        groupedByIsIntellij.aggregate {
-            // Compute sum and max of "starsCount" within each group into "sumStars" and "maxStars" columns
-            sumOf { starsCount } into "sumStars"
-            maxOf { starsCount } into "maxStars"
-        }
+        groupedByIsIntellij
+            .aggregate {
+                // Compute sum and max of "starsCount" within each group into "sumStars" and
+                // "maxStars" columns
+                sumOf { starsCount } into "sumStars"
+                maxOf { starsCount } into "maxStars"
+            }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -212,9 +222,11 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     fun notebook_test_quickstart_14() {
         val dfWithIsIntellij = getDfWithIsIntellij()
         // SampleStart
-        val dfTop10 = dfWithIsIntellij
-            // Sort by "starsCount" value descending
-            .sortByDesc { starsCount }.take(10)
+        val dfTop10 =
+            dfWithIsIntellij
+                // Sort by "starsCount" value descending
+                .sortByDesc { starsCount }
+                .take(10)
         dfTop10
             // SampleEnd
             .saveDfHtmlSample()
@@ -224,14 +236,15 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     fun notebook_test_quickstart_16() {
         val dfTop10 = getDfTop10()
         // SampleStart
-        dfTop10.plot {
-            bars {
-                x(name)
-                y(starsCount)
-            }
+        dfTop10
+            .plot {
+                bars {
+                    x(name)
+                    y(starsCount)
+                }
 
-            layout.title = "Top 10 JetBrains repositories by stars count"
-        }
+                layout.title = "Top 10 JetBrains repositories by stars count"
+            }
             // SampleEnd
             .savePlotSVGSample()
     }

@@ -91,7 +91,8 @@ class JoinTests : BaseJoinTest() {
         val withIndex = typed.addId(indexColumn)
         val joined = withIndex.filterJoin(typed2) { city.match(right.origin) }
         val joinedIndices = joined[indexColumn].toSet()
-        val expected = withIndex.filter { !joinedIndices.contains(it[indexColumn]) }.remove(indexColumn)
+        val expected =
+            withIndex.filter { !joinedIndices.contains(it[indexColumn]) }.remove(indexColumn)
 
         res shouldBe expected
     }

@@ -22,8 +22,7 @@ internal class JoinedDataRowImpl<A, B>(
     val index: Int,
     rightOwner: DataFrame<B>,
     index1: Int,
-) : DataRowImpl<A>(index, leftOwner),
-    JoinedDataRow<A, B> {
+) : DataRowImpl<A>(index, leftOwner), JoinedDataRow<A, B> {
     override val right: DataRow<B> = DataRowImpl(index1, rightOwner)
 }
 
@@ -81,9 +80,7 @@ internal fun <A, B> DataFrame<A>.joinWithImpl(
     if (type.allowLeftNulls) {
         rightMatched.forEachIndexed { row, matched ->
             if (!matched) {
-                repeat(columnsCount()) { col ->
-                    outputData[col].add(null)
-                }
+                repeat(columnsCount()) { col -> outputData[col].add(null) }
                 val offset = columnsCount()
                 val rowData = right[row].values()
                 for (col in rowData.indices) {
@@ -95,25 +92,31 @@ internal fun <A, B> DataFrame<A>.joinWithImpl(
 
     val leftColumns = columns()
     val rightColumns = if (addNewColumns) right.columns() else emptyList()
-    val df: DataFrame<*> = outputData.mapIndexed { index, values ->
-        val srcColumn = if (index < leftColumns.size) {
-            leftColumns[index]
-        } else {
-            rightColumns[index - leftColumns.size]
-        }
-        // let's optimize an easy case.
-        // handling introduction of nulls into ColumnGroup and FrameColumn is not straightforward
-        when (srcColumn.kind()) {
-            ColumnKind.Value -> DataColumn.createByType(
-                name = generator.names[index],
-                values = values,
-                type = srcColumn.type(),
-                infer = Infer.Nulls,
-            )
+    val df: DataFrame<*> =
+        outputData
+            .mapIndexed { index, values ->
+                val srcColumn =
+                    if (index < leftColumns.size) {
+                        leftColumns[index]
+                    } else {
+                        rightColumns[index - leftColumns.size]
+                    }
+                // let's optimize an easy case.
+                // handling introduction of nulls into ColumnGroup and FrameColumn is not
+                // straightforward
+                when (srcColumn.kind()) {
+                    ColumnKind.Value ->
+                        DataColumn.createByType(
+                            name = generator.names[index],
+                            values = values,
+                            type = srcColumn.type(),
+                            infer = Infer.Nulls,
+                        )
 
-            else -> DataColumn.createByInference(generator.names[index], values)
-        }
-    }.toDataFrame()
+                    else -> DataColumn.createByInference(generator.names[index], values)
+                }
+            }
+            .toDataFrame()
 
     return df.cast()
 }

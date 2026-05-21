@@ -24,7 +24,8 @@ public typealias Predicate<T> = (it: T) -> Boolean
 /**
  * ## Selector
  *
- * [Selector] is a lambda function expecting an `R` result given an instance of `T` as context (`this` and `it`).
+ * [Selector] is a lambda function expecting an `R` result given an instance of `T` as context
+ * (`this` and `it`).
  *
  * Shorthand for:
  * ```kotlin
@@ -38,9 +39,8 @@ public typealias Selector<T, R> = T.(it: T) -> R
 /**
  * ## DataFrame Expression
  *
- * [DataFrameExpression] is a lambda function expecting an `R` result given an instance of [DataFrame]`<T>` as context
- * (`this` and `it`).
- * `R` can be selected or expressed.
+ * [DataFrameExpression] is a lambda function expecting an `R` result given an instance of
+ * [DataFrame]`<T>` as context (`this` and `it`). `R` can be selected or expressed.
  *
  * Shorthand for:
  * ```kotlin
@@ -52,8 +52,8 @@ public typealias DataFrameExpression<T, R> = Selector<DataFrame<T>, R>
 /**
  * ## Row Expression
  *
- * [RowExpression] is a lambda function expecting an `R` result given an instance of [DataRow]`<T>` as context
- * (`this` and `it`). `R` can be selected or expressed.
+ * [RowExpression] is a lambda function expecting an `R` result given an instance of [DataRow]`<T>`
+ * as context (`this` and `it`). `R` can be selected or expressed.
  *
  * Shorthand for:
  * ```kotlin
@@ -78,8 +78,8 @@ public typealias RowValueExpression<T, C, R> = DataRow<T>.(it: C) -> R
 /**
  * ## Row Column Expression
  *
- * [RowColumnExpression] is a lambda function expecting an `R` result given an instance of [DataRow]`<T>` as
- * `row` and [DataColumn]`<C>` as `col`. `R` can be selected or expressed.
+ * [RowColumnExpression] is a lambda function expecting an `R` result given an instance of
+ * [DataRow]`<T>` as `row` and [DataColumn]`<C>` as `col`. `R` can be selected or expressed.
  *
  * Shorthand for:
  * ```kotlin
@@ -91,8 +91,8 @@ public typealias RowColumnExpression<T, C, R> = (row: DataRow<T>, col: DataColum
 /**
  * ## Column Expression
  *
- * [ColumnExpression] is a lambda function expecting an `R` result given an instance of [DataColumn]`<C>` as context
- * (`this` and `it`). `R` can be selected or expressed.
+ * [ColumnExpression] is a lambda function expecting an `R` result given an instance of
+ * [DataColumn]`<C>` as context (`this` and `it`). `R` can be selected or expressed.
  *
  * Shorthand for:
  * ```kotlin
@@ -104,8 +104,9 @@ public typealias ColumnExpression<C, R> = Selector<DataColumn<C>, R>
 /**
  * ## Column Selector
  *
- * [ColumnSelector] is a lambda function expecting a [SingleColumn]<`C`> result given an instance of [ColumnsSelectionDsl]`<T>`
- * as context (`this` and `it`). [SingleColumn]`<C>` can be selected or expressed.
+ * [ColumnSelector] is a lambda function expecting a [SingleColumn]<`C`> result given an instance of
+ * [ColumnsSelectionDsl]`<T>` as context (`this` and `it`). [SingleColumn]`<C>` can be selected or
+ * expressed.
  *
  * See [Columns Selection DSL][ColumnsSelectionDsl] for more information.
  *
@@ -119,9 +120,9 @@ public typealias ColumnSelector<T, C> = Selector<ColumnsSelectionDsl<T>, SingleC
 /**
  * ## Columns Selector
  *
- * [ColumnsSelector] is a lambda function expecting a [ColumnsResolver]<`C`> ([SingleColumn]<`C`> or [ColumnSet]<`C`>)
- * result given an instance of [ColumnsSelectionDsl]`<T>` as context (`this` and `it`).
- * [ColumnsResolver]<`C`> can be selected or expressed.
+ * [ColumnsSelector] is a lambda function expecting a [ColumnsResolver]<`C`> ([SingleColumn]<`C`> or
+ * [ColumnSet]<`C`>) result given an instance of [ColumnsSelectionDsl]`<T>` as context (`this` and
+ * `it`). [ColumnsResolver]<`C`> can be selected or expressed.
  *
  * See [Columns Selection DSL][ColumnsSelectionDsl] for more information.
  *
@@ -137,11 +138,11 @@ public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, Column
 // region filters
 
 /**
- * A lambda expression that evaluates a row of the [DataFrame]
- * and returns a [Boolean] indicating whether the row should be included in the result.
+ * A lambda expression that evaluates a row of the [DataFrame] and returns a [Boolean] indicating
+ * whether the row should be included in the result.
  *
- * The lambda has access to the [`DataRow<T>`][DataRow] both as `this` and as `it`,
- * enabling concise and readable conditions.
+ * The lambda has access to the [`DataRow<T>`][DataRow] both as `this` and as `it`, enabling concise
+ * and readable conditions.
  *
  * Commonly used in operations such as [filter][org.jetbrains.kotlinx.dataframe.api.filter],
  * [drop][org.jetbrains.kotlinx.dataframe.api.drop], and others.
@@ -156,8 +157,8 @@ public typealias RowFilter<T> = RowExpression<T, Boolean>
 /**
  * ## Column Filter
  *
- * [ColumnFilter] is a lambda function expecting a [Boolean] result given an instance of [DataColumn]`<C>` as context
- * (`this` and `it`).
+ * [ColumnFilter] is a lambda function expecting a [Boolean] result given an instance of
+ * [DataColumn]`<C>` as context (`this` and `it`).
  *
  * Return `true` if the column should be included in the result.
  *
@@ -171,8 +172,8 @@ public typealias ColumnFilter<T> = Predicate<ColumnWithPath<T>>
 /**
  * ## Row Value Filter
  *
- * [RowValueFilter] is a lambda function expecting a [Boolean] result given the value `it: C` and an instance
- * of [DataRow]`<T>` as context (`this`).
+ * [RowValueFilter] is a lambda function expecting a [Boolean] result given the value `it: C` and an
+ * instance of [DataRow]`<T>` as context (`this`).
  *
  * Return `true` if the row should be included in the result.
  *
@@ -190,14 +191,21 @@ public typealias RowValueFilter<T, C> = RowValueExpression<T, C, Boolean>
 public typealias AnyColumnReference = ColumnReference<*>
 
 public typealias ColumnGroupReference = ColumnReference<AnyRow>
+
 public typealias ColumnGroupAccessor<T> = ColumnAccessor<DataRow<T>>
+
 public typealias AnyColumnGroupAccessor = ColumnGroupAccessor<*>
 
 public typealias DoubleCol = DataColumn<Double?>
+
 public typealias BooleanCol = DataColumn<Boolean?>
+
 public typealias IntCol = DataColumn<Int?>
+
 public typealias NumberCol = DataColumn<Number?>
+
 public typealias StringCol = DataColumn<String?>
+
 public typealias AnyCol = DataColumn<*>
 
 // endregion

@@ -1,17 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.nrow
 import java.lang.reflect.Method
 import java.math.BigDecimal
 import kotlin.reflect.KCallable
@@ -27,9 +15,20 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.valueParameters
 import kotlin.reflect.full.withNullability
-import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.nrow
 
 internal infix fun <T> (Predicate<T>?).and(other: Predicate<T>): Predicate<T> =
     if (this == null) other else { it: T -> this(it) && other(it) }
@@ -116,11 +115,9 @@ public fun <T> Iterable<T>.asList(): List<T> =
         else -> this.toList()
     }
 
-@PublishedApi
-internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
+@PublishedApi internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
 
-@PublishedApi
-internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())
+@PublishedApi internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())
 
 internal fun <T> catchSilent(body: () -> T): T? =
     try {
@@ -134,14 +131,14 @@ internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType
 
 // helper overload for friend modules
 @JvmName("commonTypeOverload")
-internal fun commonType(types: Iterable<KType?>, useStar: Boolean = true) = types.commonType(useStar)
+internal fun commonType(types: Iterable<KType?>, useStar: Boolean = true) =
+    types.commonType(useStar)
 
 /**
  * Returns the common supertype of the given types.
  *
  * @param useStar if true, `*` will be used to fill in generic type parameters instead of `Any?`
- * (for invariant/out variance) or `Nothing` (for in variance)
- *
+ *   (for invariant/out variance) or `Nothing` (for in variance)
  * @see Iterable.commonTypeListifyValues
  */
 internal fun Iterable<KType?>.commonType(useStar: Boolean = true): KType {
@@ -154,40 +151,45 @@ internal fun Iterable<KType?>.commonType(useStar: Boolean = true): KType {
 
         else -> {
             // common parent class of all KTypes
-            val kClass = commonParent(distinct.map { it!!.jvmErasure })
-                ?: return typeOf<Any>().withNullability(nullable)
+            val kClass =
+                commonParent(distinct.map { it!!.jvmErasure })
+                    ?: return typeOf<Any>().withNullability(nullable)
 
-            // all KTypes projected to the common parent class with filled-in generic type parameters (no <T>, but <UpperBound>)
-            val projections = distinct
-                .map { it!!.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound() }
+            // all KTypes projected to the common parent class with filled-in generic type
+            // parameters (no <T>, but <UpperBound>)
+            val projections = distinct.map {
+                it!!.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound()
+            }
             require(projections.all { it.jvmErasure == kClass })
 
             // make new type arguments for the common parent class
-            val arguments = List(kClass.typeParameters.size) { i ->
-                val typeParameter = kClass.typeParameters[i]
-                val projectionTypes = projections
-                    .map { it.arguments[i].type }
-                    .filterNot { it in distinct } // avoid infinite recursion
+            val arguments =
+                List(kClass.typeParameters.size) { i ->
+                    val typeParameter = kClass.typeParameters[i]
+                    val projectionTypes =
+                        projections
+                            .map { it.arguments[i].type }
+                            .filterNot { it in distinct } // avoid infinite recursion
 
-                when {
-                    projectionTypes.isEmpty() && typeParameter.variance == KVariance.IN -> {
-                        if (useStar) {
-                            KTypeProjection.STAR
-                        } else {
-                            KTypeProjection.invariant(nothingType(false))
+                    when {
+                        projectionTypes.isEmpty() && typeParameter.variance == KVariance.IN -> {
+                            if (useStar) {
+                                KTypeProjection.STAR
+                            } else {
+                                KTypeProjection.invariant(nothingType(false))
+                            }
                         }
-                    }
 
-                    else -> {
-                        val commonType = projectionTypes.commonType(useStar)
-                        if (commonType == typeOf<Any?>() && useStar) {
-                            KTypeProjection.STAR
-                        } else {
-                            KTypeProjection(typeParameter.variance, commonType)
+                        else -> {
+                            val commonType = projectionTypes.commonType(useStar)
+                            if (commonType == typeOf<Any?>() && useStar) {
+                                KTypeProjection.STAR
+                            } else {
+                                KTypeProjection(typeParameter.variance, commonType)
+                            }
                         }
                     }
                 }
-            }
             kClass.createType(arguments, nullable)
         }
     }
@@ -216,7 +218,8 @@ internal fun createStarProjectedType(klass: KClass<*>, nullable: Boolean): KType
     }
 
 @JvmName("createStarProjectedTypeExt")
-internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType = createStarProjectedType(this, nullable)
+internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
+    createStarProjectedType(this, nullable)
 
 internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
     this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
@@ -237,10 +240,12 @@ internal fun headPlusArray(head: Long, cols: LongArray): LongArray = longArrayOf
 internal fun headPlusArray(head: Float, cols: FloatArray): FloatArray = floatArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(head: Double, cols: DoubleArray): DoubleArray = doubleArrayOf(head) + cols
+internal fun headPlusArray(head: Double, cols: DoubleArray): DoubleArray =
+    doubleArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(head: Boolean, cols: BooleanArray): BooleanArray = booleanArrayOf(head) + cols
+internal fun headPlusArray(head: Boolean, cols: BooleanArray): BooleanArray =
+    booleanArrayOf(head) + cols
 
 @PublishedApi
 internal fun headPlusArray(head: Char, cols: CharArray): CharArray = charArrayOf(head) + cols
@@ -264,18 +269,21 @@ internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Seque
 
 // helper overload for friend modules
 @JvmName("splitByIndicesOverload")
-internal fun <T> splitByIndices(list: List<T>, startIndices: Sequence<Int>) = list.splitByIndices(startIndices)
+internal fun <T> splitByIndices(list: List<T>, startIndices: Sequence<Int>) =
+    list.splitByIndices(startIndices)
 
 internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<List<T>> =
-    (startIndices + size).zipWithNext { start, endExclusive ->
-        subList(start, endExclusive)
-    }
+    (startIndices + size).zipWithNext { start, endExclusive -> subList(start, endExclusive) }
 
 internal fun <T> T.asNullable() = this as T?
 
 internal fun <T> List<T>.last(count: Int) = subList(size - count, size)
 
-internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: Boolean = true): Boolean =
+internal fun <T : Comparable<T>> T.between(
+    left: T,
+    right: T,
+    includeBoundaries: Boolean = true,
+): Boolean =
     if (includeBoundaries) {
         this in left..right
     } else {
@@ -284,23 +292,20 @@ internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries:
 
 // Single regex to split words by non-alphanumeric characters, camelCase, and numbers
 internal val CAMEL_DEFAULT_DELIMITERS_REGEX =
-    (
-        "[^\\p{L}0-9]+|(?<=[\\p{Ll}])(?=[\\p{Lu}])|(?<=[\\p{Lu}])" +
-            "(?=[\\p{Lu}][\\p{Ll}])|(?<=\\d)(?=[\\p{L}])|(?<=[\\p{L}])(?=\\d)"
-    )
+    ("[^\\p{L}0-9]+|(?<=[\\p{Ll}])(?=[\\p{Lu}])|(?<=[\\p{Lu}])" +
+            "(?=[\\p{Lu}][\\p{Ll}])|(?<=\\d)(?=[\\p{L}])|(?<=[\\p{L}])(?=\\d)")
         .toRegex()
 
 /**
  * Converts a string into lowerCamelCase using [delimiters].
  *
- * - Splits this string matching given [delimiters] regular expression
- * (by default, via [CAMEL_DEFAULT_DELIMITERS_REGEX] - any characters that are not letters or digits).
+ * - Splits this string matching given [delimiters] regular expression (by default, via
+ *   [CAMEL_DEFAULT_DELIMITERS_REGEX] - any characters that are not letters or digits).
  * - If the string does not contain any letters or numbers, it remains unchanged.
  * - Places underscore ("_") between consecutive numbers (that were split before).
  * - The first word remains in lowercase, and subsequent words are capitalized.
  *
  * Default behavior (with [CAMEL_DEFAULT_DELIMITERS_REGEX]):
- *
  * ```
  * "hello_world" -> "helloWorld"
  * "HelloWorld" -> "helloWorld"
@@ -348,8 +353,8 @@ public fun String.toCamelCaseByDelimiters(
     }
 
 /**
- * Joins consecutive numbers in a list with the given [separator].
- * Assumes that all numbers and strings are separated (after splitting via [CAMEL_DEFAULT_DELIMITERS_REGEX]).
+ * Joins consecutive numbers in a list with the given [separator]. Assumes that all numbers and
+ * strings are separated (after splitting via [CAMEL_DEFAULT_DELIMITERS_REGEX]).
  */
 private fun List<String>.joinNumbers(separator: CharSequence): List<String> {
     val result = mutableListOf<String>()
@@ -379,8 +384,9 @@ private fun List<String>.joinNumbers(separator: CharSequence): List<String> {
  */
 private fun List<String>.joinToCamelCaseString(): String =
     mapIndexed { index, word ->
-        if (index == 0) word.lowercase() else word.replaceFirstChar { it.uppercaseChar() }
-    }.joinToString("")
+            if (index == 0) word.lowercase() else word.replaceFirstChar { it.uppercaseChar() }
+        }
+        .joinToString("")
 
 internal val CAMEL_LETTERS_REGEX = "(?<=[a-zA-Z])[A-Z]".toRegex()
 
@@ -388,32 +394,33 @@ internal fun String.toSnakeCase(): String =
     if ("[A-Z_]+".toRegex().matches(this)) {
         this
     } else {
-        CAMEL_LETTERS_REGEX
-            .replace(this) { "_${it.value}" }
-            .replace(" ", "_")
-            .lowercase()
+        CAMEL_LETTERS_REGEX.replace(this) { "_${it.value}" }.replace(" ", "_").lowercase()
     }
 
-/** Returns `true` if this callable is a getter-like function.
+/**
+ * Returns `true` if this callable is a getter-like function.
  *
- * A callable is considered getter-like if it is either a property getter,
- * or it's a function with no (type) parameters that starts with "get"/"is". */
+ * A callable is considered getter-like if it is either a property getter, or it's a function with
+ * no (type) parameters that starts with "get"/"is".
+ */
 internal fun KFunction<*>.isGetterLike(): Boolean =
     (name.startsWith("get") || name.startsWith("is")) &&
         valueParameters.isEmpty() &&
         typeParameters.isEmpty()
 
-/** Returns `true` if this callable is a getter-like function.
+/**
+ * Returns `true` if this callable is a getter-like function.
  *
- * A callable is considered getter-like if it is either a property getter,
- * or it's a function with no (type) parameters that starts with "get"/"is". */
+ * A callable is considered getter-like if it is either a property getter, or it's a function with
+ * no (type) parameters that starts with "get"/"is".
+ */
 internal fun KProperty<*>.isGetterLike(): Boolean = true
 
 /**
  * Returns `true` if this callable is a getter-like function.
  *
- * A callable is considered getter-like if it is either a property getter,
- * or it's a function with no (type) parameters that starts with "get"/"is".
+ * A callable is considered getter-like if it is either a property getter, or it's a function with
+ * no (type) parameters that starts with "get"/"is".
  */
 internal fun KCallable<*>.isGetterLike(): Boolean =
     when (this) {
@@ -423,8 +430,8 @@ internal fun KCallable<*>.isGetterLike(): Boolean =
     }
 
 /**
- * Cached reference to the Class.isRecord() method, which exists only in Java 16+.
- * This is cached to avoid repeated reflection lookups.
+ * Cached reference to the Class.isRecord() method, which exists only in Java 16+. This is cached to
+ * avoid repeated reflection lookups.
  */
 private val isRecordMethod: Method? by lazy {
     try {
@@ -438,16 +445,16 @@ private val isRecordMethod: Method? by lazy {
 /**
  * Returns `true` if this class is a Java record.
  *
- * This method is compatible with JVM 1.8+ by using reflection to check for the
- * `Class.isRecord()` method which was introduced in Java 16. On older JVMs,
- * this will always return `false`.
+ * This method is compatible with JVM 1.8+ by using reflection to check for the `Class.isRecord()`
+ * method which was introduced in Java 16. On older JVMs, this will always return `false`.
  */
 internal val KClass<*>.isJavaRecord: Boolean
-    get() = try {
-        isRecordMethod?.invoke(this.java) as? Boolean ?: false
-    } catch (e: Exception) {
-        false
-    }
+    get() =
+        try {
+            isRecordMethod?.invoke(this.java) as? Boolean ?: false
+        } catch (e: Exception) {
+            false
+        }
 
 private val getRecordComponentsMethod: Method? by lazy {
     try {
@@ -468,58 +475,70 @@ private val getComponentNameMethod: Method? by lazy {
 
 internal val KClass<*>.recordComponentNames: Set<String>
     get() {
-        val components = getRecordComponentsMethod?.invoke(this.java) as? Array<*> ?: return emptySet()
+        val components =
+            getRecordComponentsMethod?.invoke(this.java) as? Array<*> ?: return emptySet()
         val getName = getComponentNameMethod ?: return emptySet()
         return components.mapTo(mutableSetOf()) { getName.invoke(it) as String }
     }
 
-/** Returns the getter name for this callable.
- * The name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+/**
+ * Returns the getter name for this callable. The name of the callable is returned with proper
+ * getter-trimming if it's a [KFunction].
+ */
 internal val KFunction<*>.getterName: String
-    get() = name
-        .removePrefix("get")
-        .removePrefix("is")
-        .replaceFirstChar { it.lowercase() }
+    get() = name.removePrefix("get").removePrefix("is").replaceFirstChar { it.lowercase() }
 
-/** Returns the getter name for this callable.
- * The name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+/**
+ * Returns the getter name for this callable. The name of the callable is returned with proper
+ * getter-trimming if it's a [KFunction].
+ */
 internal val KProperty<*>.getterName: String
     get() = name
 
 /**
- * Returns the getter name for this callable.
- * The name of the callable is returned with proper getter-trimming if it's a [KFunction].
+ * Returns the getter name for this callable. The name of the callable is returned with proper
+ * getter-trimming if it's a [KFunction].
  */
 internal val KCallable<*>.getterName: String
-    get() = when (this) {
-        is KFunction<*> -> getterName
-        is KProperty<*> -> getterName
-        else -> name
-    }
+    get() =
+        when (this) {
+            is KFunction<*> -> getterName
+            is KProperty<*> -> getterName
+            else -> name
+        }
 
-/** Returns the column name for this callable.
- * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+/**
+ * Returns the column name for this callable. If the callable contains the
+ * [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its
+ * [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a
+ * [KFunction].
+ */
 @PublishedApi
 internal val KFunction<*>.columnName: String
     get() = findAnnotation<ColumnName>()?.name ?: getterName
 
-/** Returns the column name for this callable.
- * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+/**
+ * Returns the column name for this callable. If the callable contains the
+ * [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its
+ * [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a
+ * [KFunction].
+ */
 @PublishedApi
 internal val KProperty<*>.columnName: String
     get() = findAnnotation<ColumnName>()?.name ?: getterName
 
 /**
- * Returns the column name for this callable.
- * If the callable contains the [ColumnName] annotation, its [ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction].
+ * Returns the column name for this callable. If the callable contains the [ColumnName] annotation,
+ * its [ColumnName.name] is returned. Otherwise, the name of the callable is returned with proper
+ * getter-trimming if it's a [KFunction].
  */
 @PublishedApi
 internal val KCallable<*>.columnName: String
-    get() = when (this) {
-        is KFunction<*> -> columnName
-        is KProperty<*> -> columnName
-        else -> findAnnotation<ColumnName>()?.name ?: getterName
-    }
+    get() =
+        when (this) {
+            is KFunction<*> -> columnName
+            is KProperty<*> -> columnName
+            else -> findAnnotation<ColumnName>()?.name ?: getterName
+        }

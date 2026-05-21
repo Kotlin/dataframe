@@ -11,14 +11,14 @@ import org.jetbrains.kotlinx.dataframe.impl.api.xsImpl
 @Refine
 @Interpretable("DataFrameXs")
 public fun <T> DataFrame<T>.xs(vararg keyValues: Any?): DataFrame<T> =
-    xs(*keyValues) {
-        colsAtAnyDepth().filter { !it.isColumnGroup() }.take(keyValues.size)
-    }
+    xs(*keyValues) { colsAtAnyDepth().filter { !it.isColumnGroup() }.take(keyValues.size) }
 
 @Refine
 @Interpretable("DataFrameXs")
-public fun <T, C> DataFrame<T>.xs(vararg keyValues: C, keyColumns: ColumnsSelector<T, C>): DataFrame<T> =
-    xsImpl(keyColumns, false, *keyValues)
+public fun <T, C> DataFrame<T>.xs(
+    vararg keyValues: C,
+    keyColumns: ColumnsSelector<T, C>,
+): DataFrame<T> = xsImpl(keyColumns, false, *keyValues)
 
 // endregion
 
@@ -27,13 +27,13 @@ public fun <T, C> DataFrame<T>.xs(vararg keyValues: C, keyColumns: ColumnsSelect
 @Refine
 @Interpretable("GroupByXs")
 public fun <T, G> GroupBy<T, G>.xs(vararg keyValues: Any?): GroupBy<T, G> =
-    xs(*keyValues) {
-        colsAtAnyDepth().filter { !it.isColumnGroup() }.take(keyValues.size)
-    }
+    xs(*keyValues) { colsAtAnyDepth().filter { !it.isColumnGroup() }.take(keyValues.size) }
 
 @Refine
 @Interpretable("GroupByXs")
-public fun <T, G, C> GroupBy<T, G>.xs(vararg keyValues: C, keyColumns: ColumnsSelector<T, C>): GroupBy<T, G> =
-    xsImpl(*keyValues, keyColumns = keyColumns)
+public fun <T, G, C> GroupBy<T, G>.xs(
+    vararg keyValues: C,
+    keyColumns: ColumnsSelector<T, C>,
+): GroupBy<T, G> = xsImpl(*keyValues, keyColumns = keyColumns)
 
 // endregion

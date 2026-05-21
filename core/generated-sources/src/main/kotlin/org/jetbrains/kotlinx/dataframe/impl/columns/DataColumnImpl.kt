@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -8,30 +13,26 @@ import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.kind
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.typeOf
 
 internal abstract class DataColumnImpl<T>(
     protected val values: List<T>,
     val name: String,
     val type: KType,
     distinct: Lazy<Set<T>>? = null,
-) : DataColumn<T>,
-    DataColumnInternal<T> {
+) : DataColumn<T>, DataColumnInternal<T> {
 
     private infix fun <T> T?.matches(type: KType) =
         when {
             this == null -> type.isMarkedNullable
 
-            // special case since functions are often stored as a $$Lambda$... class, the subClassOf check would fail
+            // special case since functions are often stored as a $$Lambda$... class, the subClassOf
+            // check would fail
             this is Function<*> && type.isSubtypeOf(typeOf<Function<*>?>()) -> true
 
             this.isPrimitiveArray ->
                 type.isPrimitiveArray &&
-                    this::class.qualifiedName == type.classifier?.let { (it as KClass<*>).qualifiedName }
+                    this::class.qualifiedName ==
+                        type.classifier?.let { (it as KClass<*>).qualifiedName }
 
             this.isArray -> type.isArray
 
@@ -44,7 +45,8 @@ internal abstract class DataColumnImpl<T>(
         // This only runs with `kotlin.dataframe.debug=true` in gradle.properties.
         if (BuildConfig.DEBUG) {
             require(values.all { it matches type }) {
-                val types = values.map { if (it == null) "Nothing?" else it::class.simpleName }.distinct()
+                val types =
+                    values.map { if (it == null) "Nothing?" else it::class.simpleName }.distinct()
                 "Values of $kind '$name' have types '$types' which are not compatible given with column type '$type'"
             }
         }
@@ -52,14 +54,11 @@ internal abstract class DataColumnImpl<T>(
 
     protected val distinct = distinct ?: lazy { values.toSet() }
 
-    @RequiredByIntellijPlugin
-    override fun name() = name
+    @RequiredByIntellijPlugin override fun name() = name
 
-    @RequiredByIntellijPlugin
-    override fun values() = values
+    @RequiredByIntellijPlugin override fun values() = values
 
-    @RequiredByIntellijPlugin
-    override fun type() = type
+    @RequiredByIntellijPlugin override fun type() = type
 
     override fun toSet() = distinct.value
 
@@ -80,7 +79,11 @@ internal abstract class DataColumnImpl<T>(
 
     override fun hashCode() = hashCode
 
-    override operator fun get(range: IntRange) = createWithValues(values.subList(range.first, range.last + 1))
+    override operator fun get(range: IntRange) =
+        createWithValues(values.subList(range.first, range.last + 1))
 
-    protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
+    protected abstract fun createWithValues(
+        values: List<T>,
+        hasNulls: Boolean? = null,
+    ): DataColumn<T>
 }

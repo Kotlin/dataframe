@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.math
 
+import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.impl.IsBetterThan
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
@@ -10,8 +12,6 @@ import org.jetbrains.kotlinx.dataframe.impl.indexOfBestNotNaBy
 import org.jetbrains.kotlinx.dataframe.impl.indexOfBestNotNullBy
 import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 
 // region min
 
@@ -65,13 +65,15 @@ private fun <T : Comparable<T>> Sequence<T>.bestOrNull(
     isBetterThan: IsBetterThan<T>,
 ): T? {
     if (type.isMarkedNullable) {
-        error("Encountered nullable type ${renderType(type)} in $name function. This should not occur.")
+        error(
+            "Encountered nullable type ${renderType(type)} in $name function. This should not occur."
+        )
     }
     if (!type.isIntraComparable()) {
         error(
             "Encountered non-comparable type ${
                 renderType(type)
-            } in $name function. Try converting the values to the same type `T : Comparable<T>`.",
+            } in $name function. Try converting the values to the same type `T : Comparable<T>`."
         )
     }
 

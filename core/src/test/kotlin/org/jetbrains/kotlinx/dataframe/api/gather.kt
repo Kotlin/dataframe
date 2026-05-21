@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -10,15 +11,15 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.kind
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class GatherTests {
 
-    //region Data Source
+    // region Data Source
 
     @Language("json")
-    val df = """
+    val df =
+        """
             [
                 {
                     "name": "abc",
@@ -51,15 +52,14 @@ class GatherTests {
                     }
                 }
             ]
-        """.let {
-        DataFrame.readJsonStr(it)
-    }
+        """
+            .let { DataFrame.readJsonStr(it) }
 
-    //endregion
+    // endregion
 
     val generatedCode = df.generateCode("Marker")
 
-    //region Generated code
+    // region Generated code
 
     @DataSchema(isOpen = false)
     interface Marker1 {
@@ -88,7 +88,7 @@ class GatherTests {
         val first: DataRow<Marker3>
     }
 
-    //endregion
+    // endregion
 
     val typed = df.cast<Marker>()
 
@@ -96,25 +96,29 @@ class GatherTests {
     fun gather() {
         val mode by column<String>()
         val temp by column<String>()
-        val gathered = typed
-            .gather { allExcept(name) }.cast<String>().into(mode, temp)
-            .ungroup(temp)
+        val gathered =
+            typed.gather { allExcept(name) }.cast<String>().into(mode, temp).ungroup(temp)
 
-        val expected = typed
-            .groupBy { name }.updateGroups {
-                val cols = columns().drop(1).map { it.asColumnGroup() } // drop 'name' column
-                val dataRows = cols.map { it[0] }
+        val expected =
+            typed
+                .groupBy { name }
+                .updateGroups {
+                    val cols = columns().drop(1).map { it.asColumnGroup() } // drop 'name' column
+                    val dataRows = cols.map { it[0] }
 
-                val newDf = listOf(
-                    List(cols.size) { name[0] }.toColumn("name"),
-                    cols.map { it.name() }.toColumn("mode"),
-                    dataRows.map { it.getValueOrNull<String>("c1") }.toColumn("c1"),
-                    dataRows.map { it.getValueOrNull<String>("c2") }.toColumn("c2"),
-                    dataRows.map { it.getValueOrNull<String>("c3") }.toColumn("c3"),
-                ).toDataFrame()
+                    val newDf =
+                        listOf(
+                                List(cols.size) { name[0] }.toColumn("name"),
+                                cols.map { it.name() }.toColumn("mode"),
+                                dataRows.map { it.getValueOrNull<String>("c1") }.toColumn("c1"),
+                                dataRows.map { it.getValueOrNull<String>("c2") }.toColumn("c2"),
+                                dataRows.map { it.getValueOrNull<String>("c3") }.toColumn("c3"),
+                            )
+                            .toDataFrame()
 
-                newDf
-            }.concat()
+                    newDf
+                }
+                .concat()
 
         gathered shouldBe expected
     }
@@ -148,9 +152,7 @@ class GatherTests {
 
         val df = dataFrameOf(a, b)[0..0]
 
-        val gathered = df
-            .gather { a and b }
-            .into("key", "value")
+        val gathered = df.gather { a and b }.into("key", "value")
 
         gathered["value"].type() shouldBe typeOf<Int>()
     }
@@ -174,32 +176,27 @@ class GatherTests {
         val a by columnOf(1, 2)
         val b by columnOf(listOf(3, 4), listOf(5, 6))
 
-        val df = dataFrameOf(a, b)
-            .gather { a and b }
-            .explodeLists()
-            .cast<Int>()
-            .where { it % 2 == 1 }
-            .into("key", "value")
+        val df =
+            dataFrameOf(a, b)
+                .gather { a and b }
+                .explodeLists()
+                .cast<Int>()
+                .where { it % 2 == 1 }
+                .into("key", "value")
 
-        df shouldBe dataFrameOf("key", "value")(
-            "a", 1,
-            "b", 3,
-            "b", 5,
-        )
+        df shouldBe dataFrameOf("key", "value")("a", 1, "b", 3, "b", 5)
     }
 
     @Test
     fun `gather explode lists typed`() {
-        val df = dataFrameOf("list" to columnOf(listOf(1, 2, 3)))
-            .gather { "list"<List<Int>>() }
-            .explodeLists()
-            .mapValues { listOf(it) }
-            .into("key", "value")
+        val df =
+            dataFrameOf("list" to columnOf(listOf(1, 2, 3)))
+                .gather { "list"<List<Int>>() }
+                .explodeLists()
+                .mapValues { listOf(it) }
+                .into("key", "value")
 
-        df shouldBe dataFrameOf("key", "value")(
-            "list", listOf(1),
-            "list", listOf(2),
-            "list", listOf(3),
-        )
+        df shouldBe
+            dataFrameOf("key", "value")("list", listOf(1), "list", listOf(2), "list", listOf(3))
     }
 }

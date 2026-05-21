@@ -1,5 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.samples.guides
 
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.PreparedStatement
+import java.sql.ResultSet
+import java.sql.SQLFeatureNotSupportedException
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -23,15 +32,6 @@ import org.jetbrains.kotlinx.dataframe.samples.guides.HsqldbGuide.helper_functio
 import org.jetbrains.kotlinx.dataframe.samples.guides.HsqldbGuide.helper_functions.removeTable
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.junit.Test
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLFeatureNotSupportedException
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 @Suppress("ClassName", "unused")
 class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides") {
@@ -42,8 +42,8 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
         /**
          * Represents the HSQLDB database type.
          *
-         * This object provides all functions to read data from a HSQLDB [ResultSet],
-         * preprocess the values, and build [columns][DataColumn].
+         * This object provides all functions to read data from a HSQLDB [ResultSet], preprocess the
+         * values, and build [columns][DataColumn].
          */
         object HSQLDB : DbType("hsqldb") {
 
@@ -51,17 +51,20 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
             override val driverClassName: String = "org.hsqldb.jdbcDriver"
 
             /**
-             * This function should return the correct type of the value returned by [ResultSet.getObject] from JDBC
-             * for the column with the given [tableColumnMetadata].
+             * This function should return the correct type of the value returned by
+             * [ResultSet.getObject] from JDBC for the column with the given [tableColumnMetadata].
              * [DbType] has a good default type-map, but your database type might deviate.
              *
-             * Supplying these types helps you and DataFrame to correctly interpret and handle data from the database.
+             * Supplying these types helps you and DataFrame to correctly interpret and handle data
+             * from the database.
              */
             override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
                 when (tableColumnMetadata.jdbcType) {
-                    // For example, here we say that we expect .getObject() to return a Java SQL Date
+                    // For example, here we say that we expect .getObject() to return a Java SQL
+                    // Date
                     // when the given JDBC SQL type is DATE
-                    java.sql.Types.DATE -> typeOf<java.sql.Date>().withNullability(tableColumnMetadata.isNullable)
+                    java.sql.Types.DATE ->
+                        typeOf<java.sql.Date>().withNullability(tableColumnMetadata.isNullable)
 
                     // TODO this list is likely incomplete for HSQLDB
 
@@ -109,21 +112,24 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
                     price DOUBLE NOT NULL,
                     order_date DATE
                 );
-                """.trimIndent(),
+                """
+                    .trimIndent()
             )
 
             stmt.executeUpdate(
                 """
                 INSERT INTO orders (item, price, order_date) 
                 VALUES ('Laptop', 1500.00, NOW())
-                """.trimIndent(),
+                """
+                    .trimIndent()
             )
 
             stmt.executeUpdate(
                 """
                 INSERT INTO orders (item, price, order_date) 
                 VALUES ('Smartphone', 700.00, NOW())
-                """.trimIndent(),
+                """
+                    .trimIndent()
             )
         }
         // SampleEnd
@@ -148,10 +154,10 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
             DriverManager.getConnection(URL, USER_NAME, PASSWORD).use { con ->
                 createAndPopulateTable(con)
 
-                val df = con
-                    .readDataFrame("SELECT * FROM orders", dbType = HSQLDB)
-                    .renameToCamelCase()
-                    .cast<Orders>(verify = true)
+                val df =
+                    con.readDataFrame("SELECT * FROM orders", dbType = HSQLDB)
+                        .renameToCamelCase()
+                        .cast<Orders>(verify = true)
 
                 df.filter { price > 800 }.print()
 
@@ -166,14 +172,14 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
             // SampleStart
 
             /**
-             * Specifies the default batch size for fetching rows from the database during query execution.
-             * Value is set to 1000 by default.
+             * Specifies the default batch size for fetching rows from the database during query
+             * execution. Value is set to 1000 by default.
              */
             override val defaultFetchSize: Int = 1000
 
             /**
-             * Specifies the default timeout in seconds for database queries.
-             * If set to `null`, no timeout is applied, allowing queries to run indefinitely.
+             * Specifies the default timeout in seconds for database queries. If set to `null`, no
+             * timeout is applied, allowing queries to run indefinitely.
              */
             override val defaultQueryTimeout: Int? = null // null = no timeout
             // SampleEnd
@@ -195,9 +201,7 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
         abstract class HSQLDB : DbType("hsqldb") {
             // SampleStart
 
-            /**
-             * Builds a SELECT query for reading from a table.
-             */
+            /** Builds a SELECT query for reading from a table. */
             override fun buildSelectTableQueryWithLimit(tableName: String, limit: Int?): String {
                 require(tableName.isNotBlank()) { "Table name cannot be blank" }
                 val quotedTableName = quoteIdentifier(tableName)
@@ -210,9 +214,10 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
             }
 
             /**
-             * Configures the provided `PreparedStatement` for optimized read operations.
-             * This method sets the fetch size for efficient streaming, applies a query timeout if specified,
-             * and configures the fetch direction to forward-only for better performance in read-only operations.
+             * Configures the provided `PreparedStatement` for optimized read operations. This
+             * method sets the fetch size for efficient streaming, applies a query timeout if
+             * specified, and configures the fetch direction to forward-only for better performance
+             * in read-only operations.
              */
             override fun configureReadStatement(statement: PreparedStatement) {
                 statement.fetchSize = defaultFetchSize
@@ -233,10 +238,9 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
                 return name
             }
 
-            /**
-             * Constructs a SQL query with a limit clause.
-             */
-            override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String = "$sqlQuery LIMIT $limit"
+            /** Constructs a SQL query with a limit clause. */
+            override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
+                "$sqlQuery LIMIT $limit"
             // SampleEnd
         }
     }
@@ -246,12 +250,13 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
             // SampleStart
 
             /**
-             * Creates a database connection using the provided configuration.
-             * Some databases (like Sqlite) require read-only mode to be set during connection creation
-             * rather than after the connection is established.
+             * Creates a database connection using the provided configuration. Some databases (like
+             * Sqlite) require read-only mode to be set during connection creation rather than after
+             * the connection is established.
              */
             override fun createConnection(dbConfig: DbConnectionConfig): Connection {
-                val connection = DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
+                val connection =
+                    DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
                 if (dbConfig.readOnly) {
                     connection.isReadOnly = true
                 }
@@ -259,9 +264,9 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
             }
 
             /**
-             * Retrieves column metadata from a JDBC [ResultSet].
-             * This method reads column metadata from [java.sql.ResultSetMetaData] with graceful fallbacks
-             * for JDBC drivers that throw [SQLFeatureNotSupportedException] for certain methods.
+             * Retrieves column metadata from a JDBC [ResultSet]. This method reads column metadata
+             * from [java.sql.ResultSetMetaData] with graceful fallbacks for JDBC drivers that throw
+             * [SQLFeatureNotSupportedException] for certain methods.
              */
             override fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata> {
                 // TODO, while the default implementation works for most databases,
@@ -270,8 +275,8 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
             }
 
             /**
-             * Extracts a value from the ResultSet for the given column.
-             * This method can be overridden by custom database types to provide specialized parsing logic.
+             * Extracts a value from the ResultSet for the given column. This method can be
+             * overridden by custom database types to provide specialized parsing logic.
              */
             override fun <J> getValueFromResultSet(
                 rs: ResultSet,
@@ -294,41 +299,44 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
             // SampleStart
 
             /**
-             * This function should return the correct type of the value returned by [ResultSet.getObject] from JDBC
-             * for the column with the given [tableColumnMetadata].
+             * This function should return the correct type of the value returned by
+             * [ResultSet.getObject] from JDBC for the column with the given [tableColumnMetadata].
              * [DbType] has a good default type-map, but your database type might deviate.
              *
              * This function was copied from the start of this page.
              */
             override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
                 when (tableColumnMetadata.jdbcType) {
-                    java.sql.Types.DATE -> typeOf<java.sql.Date>().withNullability(tableColumnMetadata.isNullable)
+                    java.sql.Types.DATE ->
+                        typeOf<java.sql.Date>().withNullability(tableColumnMetadata.isNullable)
                     else -> super.getExpectedJdbcType(tableColumnMetadata)
                 }
 
             /**
-             * If you want to preprocess certain values before creating a [DataColumn], you can override this function.
-             * [DbType] already has a few types of values being preprocessed, but you can customize this behavior.
+             * If you want to preprocess certain values before creating a [DataColumn], you can
+             * override this function. [DbType] already has a few types of values being
+             * preprocessed, but you can customize this behavior.
              *
-             * This function just specifies the type-behavior, [preprocessValue] actually does the preprocessing.
+             * This function just specifies the type-behavior, [preprocessValue] actually does the
+             * preprocessing.
              */
             override fun getPreprocessedValueType(
                 tableColumnMetadata: TableColumnMetadata,
                 expectedJdbcType: KType,
             ): KType =
                 when {
-                    // Let's say we want to convert java.sql.Date to kotlinx.datetime.LocalDate (taking nullability into account)
+                    // Let's say we want to convert java.sql.Date to kotlinx.datetime.LocalDate
+                    // (taking nullability into account)
                     expectedJdbcType.isSubtypeOf(typeOf<java.sql.Date?>()) ->
                         typeOf<LocalDate>().withNullability(tableColumnMetadata.isNullable)
 
                     // Else, we follow the default behavior
-                    else ->
-                        super.getPreprocessedValueType(tableColumnMetadata, expectedJdbcType)
+                    else -> super.getPreprocessedValueType(tableColumnMetadata, expectedJdbcType)
                 }
 
             /**
-             * This function actually preprocesses the values returned by [ResultSet.getObject], following the
-             * [getPreprocessedValueType] type-behavior.
+             * This function actually preprocesses the values returned by [ResultSet.getObject],
+             * following the [getPreprocessedValueType] type-behavior.
              */
             override fun <J, D> preprocessValue(
                 value: J,
@@ -337,7 +345,8 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
                 expectedPreprocessedValueType: KType,
             ): D =
                 when {
-                    // Here we actually perform the conversion from java.sql.Date to kotlinx.datetime.LocalDate
+                    // Here we actually perform the conversion from java.sql.Date to
+                    // kotlinx.datetime.LocalDate
                     expectedJdbcType.isSubtypeOf(typeOf<java.sql.Date?>()) ->
                         (value as java.sql.Date?)?.toLocalDate()?.toKotlinLocalDate() as D
 
@@ -360,15 +369,16 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
 
             /**
              * Returns the target [schema][ColumnSchema] of the given [column][tableColumnMetadata]
-             * which [buildDataColumn] will adhere to. This schema corresponds to type `P`, in the sense that
-             * it will describe the [schema][ColumnSchema] of `DataColumn<P>`.
+             * which [buildDataColumn] will adhere to. This schema corresponds to type `P`, in the
+             * sense that it will describe the [schema][ColumnSchema] of `DataColumn<P>`.
              *
-             * If `null` is returned, the [schema][ColumnSchema] cannot be determined before looking at the actual data.
+             * If `null` is returned, the [schema][ColumnSchema] cannot be determined before looking
+             * at the actual data.
              *
              * @param [tableColumnMetadata] all information we have about the column
              * @param [expectedValueType] the type of the values after preprocessing, `D`
-             * @return the target [schema][ColumnSchema] of the given column,
-             *   or `null` if it cannot be determined from the types alone.
+             * @return the target [schema][ColumnSchema] of the given column, or `null` if it cannot
+             *   be determined from the types alone.
              */
             override fun getTargetColumnSchema(
                 tableColumnMetadata: TableColumnMetadata,
@@ -385,14 +395,16 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
              * adhering to [targetColumnSchema].
              *
              * @param [D] the type of the values after preprocessing
-             * @param [P] the type of the resulting [DataColumn][DataColumn]`<`[P][P]`>`, [targetColumnSchema]
+             * @param [P] the type of the resulting [DataColumn][DataColumn]`<`[P][P]`>`,
+             *   [targetColumnSchema]
              * @param [name] the name of the column
              * @param [values] the ([preprocessed][preprocessValue]) values to put in the column
              * @param [tableColumnMetadata] all information we have about the column
-             * @param [targetColumnSchema] the schema of the column [DataColumn][DataColumn]`<`[P][P]`>`,
-             *   as determined by [getTargetColumnSchema]
-             * @param [inferNullability] whether to infer nullability from the runtime values (this is more expensive),
-             *   as opposed to using the nullability information from the [targetColumnSchema]
+             * @param [targetColumnSchema] the schema of the column
+             *   [DataColumn][DataColumn]`<`[P][P]`>`, as determined by [getTargetColumnSchema]
+             * @param [inferNullability] whether to infer nullability from the runtime values (this
+             *   is more expensive), as opposed to using the nullability information from the
+             *   [targetColumnSchema]
              * @return the built [DataColumn]
              */
             override fun <D, P> buildDataColumn(
@@ -406,8 +418,10 @@ class HsqldbGuide : DataFrameSampleHelper("readSqlFromCustomDatabase", "guides")
                 // the column needs to adhere to `targetColumnSchema` (if that isn't null)
                 // The `.toDataColumn()` helper function is available to create a:
                 //   - `ValueColumn`, if `targetColumnSchema` is a `ColumnSchema.Value`
-                //   - `FrameColumn`, if `targetColumnSchema` is a `ColumnSchema.Frame` (and `values` is a `List<DataFrame<*>>`)
-                //   - `ColumnGroup`, if `targetColumnSchema` is a `ColumnSchema.Group` (and `values` is a `List<DataRow<*>>`)
+                //   - `FrameColumn`, if `targetColumnSchema` is a `ColumnSchema.Frame` (and
+                // `values` is a `List<DataFrame<*>>`)
+                //   - `ColumnGroup`, if `targetColumnSchema` is a `ColumnSchema.Group` (and
+                // `values` is a `List<DataRow<*>>`)
                 return values.toDataColumn(
                     name = name,
                     targetColumnSchema = targetColumnSchema,

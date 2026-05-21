@@ -1,6 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -44,11 +49,6 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.size
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.jvm.jvmErasure
-import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger {}
 
@@ -61,11 +61,13 @@ internal interface ConvertSchemaDslInternal<T> : ConvertSchemaDsl<T> {
 }
 
 private class ConvertSchemaDslImpl<T> : ConvertSchemaDslInternal<T> {
-    private val converters: MutableMap<Pair<KType, KType>, Converter> = mutableMapOf<Pair<KType, KType>, Converter>()
+    private val converters: MutableMap<Pair<KType, KType>, Converter> =
+        mutableMapOf<Pair<KType, KType>, Converter>()
 
     val fillers = mutableListOf<Filler>()
 
-    private val flexibleConverters: MutableMap<(KType, ColumnSchema) -> Boolean, Converter> = mutableMapOf()
+    private val flexibleConverters: MutableMap<(KType, ColumnSchema) -> Boolean, Converter> =
+        mutableMapOf()
 
     @Suppress("UNCHECKED_CAST")
     override fun <A, B> convert(from: KType, to: KType, converter: (A) -> B) {
@@ -77,21 +79,22 @@ private class ConvertSchemaDslImpl<T> : ConvertSchemaDslInternal<T> {
         fillers.add(Filler(columns, expr))
     }
 
-    override fun convertIf(condition: (KType, ColumnSchema) -> Boolean, converter: ConverterScope.(Any?) -> Any?) {
+    override fun convertIf(
+        condition: (KType, ColumnSchema) -> Boolean,
+        converter: ConverterScope.(Any?) -> Any?,
+    ) {
         flexibleConverters[condition] = Converter(converter, false)
     }
 
     /**
-     * Attempts to find a converter for the given types. First it tries to find an exact match,
-     * then it tries to find a flexible match where the first one will be used.
+     * Attempts to find a converter for the given types. First it tries to find an exact match, then
+     * it tries to find a flexible match where the first one will be used.
      */
     fun getConverter(fromType: KType, toSchema: ColumnSchema): Converter? =
         converters[fromType.withNullability(false) to toSchema.type.withNullability(false)]
-            ?: flexibleConverters
-                .entries
-                .firstOrNull { (predicate, _) ->
-                    predicate(fromType, toSchema)
-                }?.value
+            ?: flexibleConverters.entries
+                .firstOrNull { (predicate, _) -> predicate(fromType, toSchema) }
+                ?.value
 }
 
 @PublishedApi
@@ -113,168 +116,206 @@ internal fun AnyFrame.convertToImpl(
         }
 
         val visited = mutableSetOf<String>()
-        val newColumns = columns().mapNotNull { originalColumn ->
-            val targetSchema = schema.columns[originalColumn.name()]
-            if (targetSchema == null) {
-                when (excessiveColumns) {
-                    ExcessiveColumns.Fail -> throw ExcessiveColumnsException(listOf(originalColumn.name))
-                    ExcessiveColumns.Keep -> originalColumn
-                    ExcessiveColumns.Remove -> null
-                }
-            } else {
-                visited.add(originalColumn.name())
-                val currentSchema = originalColumn.extractSchema()
-                when {
-                    targetSchema.compare(currentSchema).matches() -> originalColumn
-
-                    !allowConversion -> {
-                        val originalSchema = mapOf(originalColumn.name to currentSchema)
-                            .render(0, StringBuilder(), "\t")
-
-                        val targetSchema = mapOf(originalColumn.name to targetSchema)
-                            .render(0, StringBuilder(), "\t")
-
-                        throw IllegalArgumentException(
-                            "Column has schema:\n $originalSchema\n that differs from target schema:\n $targetSchema",
-                        )
-                    }
-
-                    else -> {
-                        val columnPath = path + originalColumn.name
-
-                        // try to perform any user-specified conversions first
-                        val from = originalColumn.type()
-                        val to = targetSchema.type
-                        val converter = dsl.getConverter(from, targetSchema)
-                            ?: run {
-                                // Special case for Char columns:
-                                // If there is no explicit Char converter,
-                                // check if we have any converters for String -> target
-                                // if so, we can convert Char -> String -> target
-                                // this allows `parser {}` to work both for Strings and Chars :)
-
-                                if (!from.isSubtypeOf(typeOf<Char?>())) return@run null
-
-                                val stringConverter = dsl.getConverter(
-                                    fromType = typeOf<String>().withNullability(from.isMarkedNullable),
-                                    toSchema = targetSchema,
-                                ) ?: return@run null
-
-                                Converter(
-                                    transform = { stringConverter.transform(this, (it as Char?)?.toString()) },
-                                    skipNulls = stringConverter.skipNulls,
-                                )
-                            }
-
-                        val convertedColumn = if (converter != null) {
-                            val nullsAllowed = to.isMarkedNullable
-                            originalColumn.map(to, Infer.Nulls) {
-                                val result =
-                                    if (it != null || !converter.skipNulls) {
-                                        converter.transform(ConverterScope(from, targetSchema), it)
-                                    } else {
-                                        it
-                                    }
-
-                                if (!nullsAllowed && result == null) {
-                                    throw TypeConversionException(
-                                        value = it,
-                                        from = from,
-                                        to = to,
-                                        column = originalColumn.path(),
-                                    )
-                                }
-
-                                result
-                            }
-                        } else {
-                            null
+        val newColumns =
+            columns()
+                .mapNotNull { originalColumn ->
+                    val targetSchema = schema.columns[originalColumn.name()]
+                    if (targetSchema == null) {
+                        when (excessiveColumns) {
+                            ExcessiveColumns.Fail ->
+                                throw ExcessiveColumnsException(listOf(originalColumn.name))
+                            ExcessiveColumns.Keep -> originalColumn
+                            ExcessiveColumns.Remove -> null
                         }
+                    } else {
+                        visited.add(originalColumn.name())
+                        val currentSchema = originalColumn.extractSchema()
+                        when {
+                            targetSchema.compare(currentSchema).matches() -> originalColumn
 
-                        when (targetSchema.kind) {
-                            ColumnKind.Value ->
-                                convertedColumn ?: originalColumn.convertTo(to)
+                            !allowConversion -> {
+                                val originalSchema =
+                                    mapOf(originalColumn.name to currentSchema)
+                                        .render(0, StringBuilder(), "\t")
 
-                            ColumnKind.Group -> {
-                                val column = when {
-                                    convertedColumn != null -> convertedColumn
+                                val targetSchema =
+                                    mapOf(originalColumn.name to targetSchema)
+                                        .render(0, StringBuilder(), "\t")
 
-                                    // Value column of DataRows (if it ever occurs) can be converted to a group column
-                                    originalColumn.kind == ColumnKind.Value &&
-                                        originalColumn.all { it is DataRow<*> } ->
-                                        DataColumn.createColumnGroup(
-                                            name = originalColumn.name,
-                                            df = originalColumn.values()
-                                                .let { it as Iterable<DataRow<*>> }
-                                                .toDataFrame(),
-                                        ) as DataColumn<*>
-
-                                    // Value column of nulls can be converted to an empty group column
-                                    originalColumn.kind == ColumnKind.Value && originalColumn.allNulls() ->
-                                        DataColumn.createColumnGroup(
-                                            name = originalColumn.name,
-                                            df = DataFrame.empty(nrow = originalColumn.size),
-                                        ) as DataColumn<*>
-
-                                    else -> originalColumn
-                                }
-                                require(column.isColumnGroup()) {
-                                    "Column `${column.name}` is ${column.kind} and can not be converted to `ColumnGroup`"
-                                }
-                                DataColumn.createColumnGroup(
-                                    name = column.name(),
-                                    df = column.convertToSchema(
-                                        schema = (targetSchema as ColumnSchema.Group).schema,
-                                        path = columnPath,
-                                    ),
+                                throw IllegalArgumentException(
+                                    "Column has schema:\n $originalSchema\n that differs from target schema:\n $targetSchema"
                                 )
                             }
 
-                            ColumnKind.Frame -> {
-                                val column = convertedColumn ?: originalColumn
-                                val frameSchema = (targetSchema as ColumnSchema.Frame).schema
+                            else -> {
+                                val columnPath = path + originalColumn.name
 
-                                val frames = when (column.kind) {
-                                    ColumnKind.Frame ->
-                                        (column as FrameColumn<*>).values()
+                                // try to perform any user-specified conversions first
+                                val from = originalColumn.type()
+                                val to = targetSchema.type
+                                val converter =
+                                    dsl.getConverter(from, targetSchema)
+                                        ?: run {
+                                            // Special case for Char columns:
+                                            // If there is no explicit Char converter,
+                                            // check if we have any converters for String -> target
+                                            // if so, we can convert Char -> String -> target
+                                            // this allows `parser {}` to work both for Strings and
+                                            // Chars :)
 
-                                    ColumnKind.Value -> {
-                                        require(
-                                            column.all {
-                                                it == null ||
-                                                    it is AnyFrame ||
-                                                    (it is List<*> && it.all { it is AnyRow? })
-                                            },
-                                        ) {
-                                            "Column `${column.name}` is ValueColumn and contains objects that can not be converted into `DataFrame`"
+                                            if (!from.isSubtypeOf(typeOf<Char?>())) return@run null
+
+                                            val stringConverter =
+                                                dsl.getConverter(
+                                                    fromType =
+                                                        typeOf<String>()
+                                                            .withNullability(from.isMarkedNullable),
+                                                    toSchema = targetSchema,
+                                                ) ?: return@run null
+
+                                            Converter(
+                                                transform = {
+                                                    stringConverter.transform(
+                                                        this,
+                                                        (it as Char?)?.toString(),
+                                                    )
+                                                },
+                                                skipNulls = stringConverter.skipNulls,
+                                            )
                                         }
-                                        column.values().map {
-                                            when (it) {
-                                                null -> emptyDataFrame()
-                                                is AnyFrame -> it
-                                                else -> (it as List<AnyRow?>).concat()
+
+                                val convertedColumn =
+                                    if (converter != null) {
+                                        val nullsAllowed = to.isMarkedNullable
+                                        originalColumn.map(to, Infer.Nulls) {
+                                            val result =
+                                                if (it != null || !converter.skipNulls) {
+                                                    converter.transform(
+                                                        ConverterScope(from, targetSchema),
+                                                        it,
+                                                    )
+                                                } else {
+                                                    it
+                                                }
+
+                                            if (!nullsAllowed && result == null) {
+                                                throw TypeConversionException(
+                                                    value = it,
+                                                    from = from,
+                                                    to = to,
+                                                    column = originalColumn.path(),
+                                                )
                                             }
+
+                                            result
                                         }
+                                    } else {
+                                        null
                                     }
+
+                                when (targetSchema.kind) {
+                                    ColumnKind.Value ->
+                                        convertedColumn ?: originalColumn.convertTo(to)
 
                                     ColumnKind.Group -> {
-                                        (column as ColumnGroup<*>).values().map { it.toDataFrame() }
+                                        val column =
+                                            when {
+                                                convertedColumn != null -> convertedColumn
+
+                                                // Value column of DataRows (if it ever occurs) can
+                                                // be converted to a group column
+                                                originalColumn.kind == ColumnKind.Value &&
+                                                    originalColumn.all { it is DataRow<*> } ->
+                                                    DataColumn.createColumnGroup(
+                                                        name = originalColumn.name,
+                                                        df =
+                                                            originalColumn
+                                                                .values()
+                                                                .let { it as Iterable<DataRow<*>> }
+                                                                .toDataFrame(),
+                                                    ) as DataColumn<*>
+
+                                                // Value column of nulls can be converted to an
+                                                // empty group column
+                                                originalColumn.kind == ColumnKind.Value &&
+                                                    originalColumn.allNulls() ->
+                                                    DataColumn.createColumnGroup(
+                                                        name = originalColumn.name,
+                                                        df =
+                                                            DataFrame.empty(
+                                                                nrow = originalColumn.size
+                                                            ),
+                                                    ) as DataColumn<*>
+
+                                                else -> originalColumn
+                                            }
+                                        require(column.isColumnGroup()) {
+                                            "Column `${column.name}` is ${column.kind} and can not be converted to `ColumnGroup`"
+                                        }
+                                        DataColumn.createColumnGroup(
+                                            name = column.name(),
+                                            df =
+                                                column.convertToSchema(
+                                                    schema =
+                                                        (targetSchema as ColumnSchema.Group).schema,
+                                                    path = columnPath,
+                                                ),
+                                        )
+                                    }
+
+                                    ColumnKind.Frame -> {
+                                        val column = convertedColumn ?: originalColumn
+                                        val frameSchema =
+                                            (targetSchema as ColumnSchema.Frame).schema
+
+                                        val frames =
+                                            when (column.kind) {
+                                                ColumnKind.Frame ->
+                                                    (column as FrameColumn<*>).values()
+
+                                                ColumnKind.Value -> {
+                                                    require(
+                                                        column.all {
+                                                            it == null ||
+                                                                it is AnyFrame ||
+                                                                (it is List<*> &&
+                                                                    it.all { it is AnyRow? })
+                                                        }
+                                                    ) {
+                                                        "Column `${column.name}` is ValueColumn and contains objects that can not be converted into `DataFrame`"
+                                                    }
+                                                    column.values().map {
+                                                        when (it) {
+                                                            null -> emptyDataFrame()
+                                                            is AnyFrame -> it
+                                                            else -> (it as List<AnyRow?>).concat()
+                                                        }
+                                                    }
+                                                }
+
+                                                ColumnKind.Group -> {
+                                                    (column as ColumnGroup<*>).values().map {
+                                                        it.toDataFrame()
+                                                    }
+                                                }
+                                            }
+
+                                        val convertedFrames = frames.map {
+                                            it.convertToSchema(frameSchema, columnPath)
+                                        }
+
+                                        DataColumn.createFrameColumn(
+                                            name = column.name(),
+                                            groups = convertedFrames,
+                                            schema = lazy { frameSchema },
+                                        )
                                     }
                                 }
-
-                                val convertedFrames = frames.map { it.convertToSchema(frameSchema, columnPath) }
-
-                                DataColumn.createFrameColumn(
-                                    name = column.name(),
-                                    groups = convertedFrames,
-                                    schema = lazy { frameSchema },
-                                )
                             }
                         }
                     }
                 }
-            }
-        }.toMutableList()
+                .toMutableList()
 
         // when the target is nullable but the source does not contain a column,
         // fill it in with nulls / empty dataframes
@@ -320,9 +361,10 @@ internal fun AnyFrame.convertToImpl(
         result = result.update { existingPaths.toColumnSet() }.with { filler.expr(this, this) }
 
         // then create any missing ones by filling using the `with {}` part of the dsl
-        result = newPaths.fold(result) { df, newPath ->
-            df.add(newPath, Infer.Type) { filler.expr(this, this) }
-        }
+        result =
+            newPaths.fold(result) { df, newPath ->
+                df.add(newPath, Infer.Type) { filler.expr(this, this) }
+            }
 
         // remove the paths that are now filled
         missingPaths -= paths
@@ -334,7 +376,7 @@ internal fun AnyFrame.convertToImpl(
         throw IllegalArgumentException(
             "The following columns were not found in DataFrame: ${
                 missingPaths.map { it.joinToString() }
-            }, and their type was not nullable. Use `fill` to initialize these columns",
+            }, and their type was not nullable. Use `fill` to initialize these columns"
         )
     }
 

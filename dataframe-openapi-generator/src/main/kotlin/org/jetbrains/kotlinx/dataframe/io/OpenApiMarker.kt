@@ -9,12 +9,14 @@ import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.name
 
 /**
- * Represents the type of Markers that we can use for code generation.
- * This includes [OpenApiMarker.Enum], [OpenApiMarker.Interface] (and [OpenApiMarker.AdditionalPropertyInterface]),
- * [OpenApiMarker.TypeAlias], and [OpenApiMarker.MarkerAlias].
- * It's a bit more flexible than [Marker] and insures the right arguments are given for the right type of [Marker].
+ * Represents the type of Markers that we can use for code generation. This includes
+ * [OpenApiMarker.Enum], [OpenApiMarker.Interface] (and
+ * [OpenApiMarker.AdditionalPropertyInterface]), [OpenApiMarker.TypeAlias], and
+ * [OpenApiMarker.MarkerAlias]. It's a bit more flexible than [Marker] and insures the right
+ * arguments are given for the right type of [Marker].
  */
-internal sealed class OpenApiMarker private constructor(
+internal sealed class OpenApiMarker
+private constructor(
     val nullable: Boolean, // in openApi, just like an enum, nullability can be saved in the object
     protected val topInterfaceName: ValidFieldName,
     name: String,
@@ -22,7 +24,8 @@ internal sealed class OpenApiMarker private constructor(
     fields: List<GeneratedField>,
     superMarkers: List<Marker>,
     prependTopInterfaceName: Boolean = true,
-) : Marker(
+) :
+    Marker(
         name = if (prependTopInterfaceName) name.withTopInterfaceName(topInterfaceName) else name,
         isOpen = false,
         fields = fields,
@@ -47,7 +50,8 @@ internal sealed class OpenApiMarker private constructor(
     /**
      * A [Marker] that will be used to generate an enum.
      *
-     * @param nullable whether the enum can be null. Needs to be checked when referring to this [Marker].
+     * @param nullable whether the enum can be null. Needs to be checked when referring to this
+     *   [Marker].
      * @param fields the fields of the enum, can be created using [generatedEnumFieldOf].
      * @param name the name of the enum.
      * @param visibility the visibility of the enum.
@@ -59,7 +63,8 @@ internal sealed class OpenApiMarker private constructor(
         topInterfaceName: ValidFieldName,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = true,
-    ) : OpenApiMarker(
+    ) :
+        OpenApiMarker(
             nullable = nullable,
             name = name,
             topInterfaceName = topInterfaceName,
@@ -79,7 +84,7 @@ internal sealed class OpenApiMarker private constructor(
                 // nullable or not, an enum must contain null to be nullable
                 // https://github.com/OAI/OpenAPI-Specification/blob/main/proposals/2019-10-31-Clarify-Nullable.md#if-a-schema-specifies-nullable-true-and-enum-1-2-3-does-that-schema-allow-null-values-see-1900
                 // if not required, it can still be omitted, resulting in null in Kotlin
-                typeFqName = name + if (nullable) "?" else "",
+                typeFqName = name + if (nullable) "?" else ""
             )
 
         override fun withName(name: String, prependTopInterfaceName: Boolean): Enum =
@@ -105,7 +110,8 @@ internal sealed class OpenApiMarker private constructor(
     /**
      * A [Marker] that will be used to generate an interface.
      *
-     * @param nullable whether the object can be null. Needs to be checked when referring to this [Marker].
+     * @param nullable whether the object can be null. Needs to be checked when referring to this
+     *   [Marker].
      * @param fields the fields of the enum, can be created using [generatedFieldOf].
      * @param name the name of the interface.
      * @param visibility the visibility of the interface.
@@ -119,7 +125,8 @@ internal sealed class OpenApiMarker private constructor(
         override val additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = true,
-    ) : OpenApiMarker(
+    ) :
+        OpenApiMarker(
             nullable = nullable,
             name = name,
             topInterfaceName = topInterfaceName,
@@ -163,10 +170,12 @@ internal sealed class OpenApiMarker private constructor(
     }
 
     /**
-     * Special type of [Interface] that inherits [AdditionalProperty]. Also generates different read-methods in
-     * [DefaultReadOpenApiMethod] including automatic conversion to [AdditionalProperty].
+     * Special type of [Interface] that inherits [AdditionalProperty]. Also generates different
+     * read-methods in [DefaultReadOpenApiMethod] including automatic conversion to
+     * [AdditionalProperty].
      *
-     * @param nullable whether the object can be null. Needs to be checked when referring to this [Marker].
+     * @param nullable whether the object can be null. Needs to be checked when referring to this
+     *   [Marker].
      * @param valueType the type of the value of the [AdditionalProperty].
      * @param name the name of the interface.
      * @param visibility the visibility of the interface.
@@ -179,25 +188,27 @@ internal sealed class OpenApiMarker private constructor(
         additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = true,
-    ) : Interface(
+    ) :
+        Interface(
             nullable = nullable,
             name = name,
             topInterfaceName = topInterfaceName,
             visibility = visibility,
-            fields = listOf(
-                generatedFieldOf(
-                    overrides = true,
-                    fieldName = ValidFieldName.of(AdditionalProperty<*>::`value`.name),
-                    columnName = "value",
-                    fieldType = valueType,
+            fields =
+                listOf(
+                    generatedFieldOf(
+                        overrides = true,
+                        fieldName = ValidFieldName.of(AdditionalProperty<*>::`value`.name),
+                        columnName = "value",
+                        fieldType = valueType,
+                    ),
+                    generatedFieldOf(
+                        overrides = true,
+                        fieldName = ValidFieldName.of(AdditionalProperty<*>::name.name),
+                        columnName = AdditionalProperty<*>::name.name,
+                        fieldType = FieldType.ValueFieldType(String::class.qualifiedName!!),
+                    ),
                 ),
-                generatedFieldOf(
-                    overrides = true,
-                    fieldName = ValidFieldName.of(AdditionalProperty<*>::name.name),
-                    columnName = AdditionalProperty<*>::name.name,
-                    fieldType = FieldType.ValueFieldType(String::class.qualifiedName!!),
-                ),
-            ),
             additionalPropertyPaths = (additionalPropertyPaths + JsonPath()).distinct(),
             superMarkers = listOf(AdditionalProperty.getMarker(listOf(valueType.name))),
             prependTopInterfaceName = prependTopInterfaceName,
@@ -213,7 +224,10 @@ internal sealed class OpenApiMarker private constructor(
                 renderAsList = false,
             )
 
-        override fun withName(name: String, prependTopInterfaceName: Boolean): AdditionalPropertyInterface =
+        override fun withName(
+            name: String,
+            prependTopInterfaceName: Boolean,
+        ): AdditionalPropertyInterface =
             AdditionalPropertyInterface(
                 nullable = nullable,
                 valueType = valueType,
@@ -238,7 +252,8 @@ internal sealed class OpenApiMarker private constructor(
     /**
      * A [Marker] that will be used to generate a type alias that points at a primitive.
      *
-     * @param nullable whether the object can be null. Needs to be checked when referring to this [Marker].
+     * @param nullable whether the object can be null. Needs to be checked when referring to this
+     *   [Marker].
      * @param name the name of the type alias.
      * @param superMarkerName the name of the type that the type alias points at.
      * @param visibility the visibility of the type alias.
@@ -251,33 +266,33 @@ internal sealed class OpenApiMarker private constructor(
         override val additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = false,
-    ) : OpenApiMarker(
+    ) :
+        OpenApiMarker(
             nullable = nullable,
             name = name,
             topInterfaceName = topInterfaceName,
             visibility = visibility,
             fields = emptyList(),
-            superMarkers = listOf(
-                Marker(
-                    name = superMarkerName,
-                    // all below is unused
-                    isOpen = false,
-                    fields = emptyList(),
-                    superMarkers = emptyList(),
-                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-                    typeParameters = emptyList(),
-                    typeArguments = emptyList(),
+            superMarkers =
+                listOf(
+                    Marker(
+                        name = superMarkerName,
+                        // all below is unused
+                        isOpen = false,
+                        fields = emptyList(),
+                        superMarkers = emptyList(),
+                        visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                        typeParameters = emptyList(),
+                        typeArguments = emptyList(),
+                    )
                 ),
-            ),
             prependTopInterfaceName = prependTopInterfaceName,
         ) {
 
         override val isObject = false
 
         override fun toFieldType(): FieldType =
-            FieldType.ValueFieldType(
-                typeFqName = name + if (nullable) "?" else "",
-            )
+            FieldType.ValueFieldType(typeFqName = name + if (nullable) "?" else "")
 
         override fun withName(name: String, prependTopInterfaceName: Boolean): TypeAlias =
             TypeAlias(
@@ -316,7 +331,8 @@ internal sealed class OpenApiMarker private constructor(
         name: String,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = false,
-    ) : OpenApiMarker(
+    ) :
+        OpenApiMarker(
             nullable = nullable || superMarker.nullable,
             name = name,
             topInterfaceName = topInterfaceName,

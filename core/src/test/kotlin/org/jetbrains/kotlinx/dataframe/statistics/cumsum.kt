@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -12,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.math.cumSumTypeConversion
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class CumsumTests {
@@ -80,34 +80,21 @@ class CumsumTests {
 
     @Test
     fun groupBy() {
-        val df = dataFrameOf("str", "col")(
-            "a", 1,
-            "b", 2,
-            "c", null,
-            "a", 3,
-            "c", 4,
-        )
+        val df = dataFrameOf("str", "col")("a", 1, "b", 2, "c", null, "a", 3, "c", 4)
         df.groupBy("str").cumSum().concat() shouldBe
-            dataFrameOf("str", "col")(
-                "a", 1,
-                "a", 4,
-                "b", 2,
-                "c", null,
-                "c", 4,
-            )
+            dataFrameOf("str", "col")("a", 1, "a", 4, "b", 2, "c", null, "c", 4)
     }
 
     @Test
     fun `df cumSum default`() {
-        val df = dataFrameOf(
-            "doubles" to columnOf(1.0, 2.0, null),
-            "shorts" to columnOf(1.toShort(), 2.toShort(), null),
-            "bigInts" to columnOf(1.toBigInteger(), 2.toBigInteger(), null),
-            "mixed" to columnOf<Number?>(1.0, 2, null),
-            "group" to columnOf(
-                "ints" to columnOf(1, 2, 3),
-            ),
-        )
+        val df =
+            dataFrameOf(
+                "doubles" to columnOf(1.0, 2.0, null),
+                "shorts" to columnOf(1.toShort(), 2.toShort(), null),
+                "bigInts" to columnOf(1.toBigInteger(), 2.toBigInteger(), null),
+                "mixed" to columnOf<Number?>(1.0, 2, null),
+                "group" to columnOf("ints" to columnOf(1, 2, 3)),
+            )
 
         val res = df.cumSum()
 

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.explainer
 
+import java.io.File
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -30,7 +31,6 @@ import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.sessionId
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHtml
-import java.io.File
 
 annotation class TransformDataFrameExpressions
 
@@ -91,9 +91,10 @@ object PluginCallbackProxy : PluginCallback {
                     statements.forEach { (index, expressions) ->
                         var details: DataFrameHtmlData = statementOutput(expressions)
 
-                        details = details.copy(
-                            body =
-                                """
+                        details =
+                            details.copy(
+                                body =
+                                    """
                                 <details>
                                 <summary>${
                                     expressions.joinToString(".") { it.source }.let {
@@ -107,8 +108,9 @@ object PluginCallbackProxy : PluginCallback {
                                 ${details.body}
                                 </details>
                                 <br>
-                                """.trimIndent(),
-                        )
+                                """
+                                        .trimIndent()
+                            )
                         output += details
                     }
                 }
@@ -119,31 +121,26 @@ object PluginCallbackProxy : PluginCallback {
 
         val input = expressionsByStatement.values.first().first()
         val name = "${input.containingClassFqName}.${input.containingFunName}"
-        val destination = File("build/dataframes").also {
-            it.mkdirs()
-        }
+        val destination = File("build/dataframes").also { it.mkdirs() }
         output.writeHtml(File(destination, "$name.html"))
-        val korro = File("build/korroOutputLines").also {
-            it.mkdirs()
-        }
+        val korro = File("build/korroOutputLines").also { it.mkdirs() }
 
         val group = name.substringBefore("_")
-        File(korro, group).writeText(
-            """
+        File(korro, group)
+            .writeText(
+                """
             
             <inline-frame src="resources/$group.html" width="100%"/>
-            """.trimIndent(),
-        )
+            """
+                    .trimIndent()
+            )
     }
 
     private fun List<Expression>.joinToSource(): String = joinToString(".") { it.source }
 
     private fun statementOutput(expressions: List<Expression>): DataFrameHtmlData {
         var data = DataFrameHtmlData()
-        val allow = setOf(
-            "toDataFrame",
-            "peek(dataFrameOf(col), dataFrameOf(col))",
-        )
+        val allow = setOf("toDataFrame", "peek(dataFrameOf(col), dataFrameOf(col))")
         if (expressions.isEmpty()) {
             error("No dataframe expressions in sample")
         }
@@ -152,50 +149,58 @@ object PluginCallbackProxy : PluginCallback {
                 val expression = expressions[0]
                 data += convertToHtml(expression.df)
             } else {
-                error("${expressions.joinToSource()} Sample without output or input (i.e. function returns some value)")
+                error(
+                    "${expressions.joinToSource()} Sample without output or input (i.e. function returns some value)"
+                )
             }
         } else {
             for ((i, expression) in expressions.withIndex()) {
                 when (i) {
                     0 -> {
                         val table = convertToHtml(expression.df)
-                        val description = table.copy(
-                            body =
-                                """
+                        val description =
+                            table.copy(
+                                body =
+                                    """
                                 <details>
                                 <summary>Input ${convertToDescription(expression.df)}</summary>
                                  ${table.body}
                                 </details>
-                                """.trimIndent(),
-                        )
+                                """
+                                        .trimIndent()
+                            )
                         data += description
                     }
 
                     expressions.lastIndex -> {
                         val table = convertToHtml(expression.df)
-                        val description = table.copy(
-                            body =
-                                """
+                        val description =
+                            table.copy(
+                                body =
+                                    """
                                 <details>
                                 <summary>Output ${convertToDescription(expression.df)}</summary>
                                  ${table.body}
                                 </details>
-                                """.trimIndent(),
-                        )
+                                """
+                                        .trimIndent()
+                            )
                         data += description
                     }
 
                     else -> {
                         val table = convertToHtml(expression.df)
-                        val description = table.copy(
-                            body =
-                                """
+                        val description =
+                            table.copy(
+                                body =
+                                    """
                                 <details>
                                 <summary>Step $i: ${convertToDescription(expression.df)}</summary>
                                  ${table.body}
                                 </details>
-                                """.trimIndent(),
-                        )
+                                """
+                                        .trimIndent()
+                            )
                         data += description
                     }
                 }
@@ -205,7 +210,15 @@ object PluginCallbackProxy : PluginCallback {
     }
 
     var action: PluginCallback =
-        PluginCallback { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+        PluginCallback {
+            source,
+            name,
+            df,
+            id,
+            receiverId,
+            containingClassFqName,
+            containingFunName,
+            statementIndex ->
             expressionsByStatement.compute(statementIndex) { _, list ->
                 val element = Expression(source, containingClassFqName, containingFunName, df)
                 list?.plus(element) ?: listOf(element)
@@ -222,12 +235,22 @@ object PluginCallbackProxy : PluginCallback {
         containingFunName: String?,
         statementIndex: Int,
     ) {
-        action.doAction(source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex)
+        action.doAction(
+            source,
+            name,
+            df,
+            id,
+            receiverId,
+            containingClassFqName,
+            containingFunName,
+            statementIndex,
+        )
     }
 }
 
 private fun convertToHtml(dataframeLike: Any): DataFrameHtmlData {
-    fun DataFrame<*>.toHtml() = this@toHtml.toHtml(SamplesDisplayConfiguration, getFooter = WritersideFooter)
+    fun DataFrame<*>.toHtml() =
+        this@toHtml.toHtml(SamplesDisplayConfiguration, getFooter = WritersideFooter)
 
     fun FormattedFrame<*>.toHtml1() = toHtml(SamplesDisplayConfiguration)
 
@@ -247,19 +270,22 @@ private fun convertToHtml(dataframeLike: Any): DataFrameHtmlData {
         is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHtml()
 
         is Update<*, *> ->
-            dataframeLike.df.let {
-                var it = it.format(
-                    dataframeLike.columns as ColumnsSelectionDsl<Any?>.(
-                        it: ColumnsSelectionDsl<Any?>,
-                    ) -> ColumnsResolver<*>,
-                )
-                if (dataframeLike.filter != null) {
-                    it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
+            dataframeLike.df
+                .let {
+                    var it =
+                        it.format(
+                            dataframeLike.columns
+                                as
+                                ColumnsSelectionDsl<Any?>.(
+                                    it: ColumnsSelectionDsl<Any?>
+                                ) -> ColumnsResolver<*>
+                        )
+                    if (dataframeLike.filter != null) {
+                        it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
+                    }
+                    it.with { background(rgb(152, 251, 152)) }
                 }
-                it.with {
-                    background(rgb(152, 251, 152))
-                }
-            }.toHtml1()
+                .toHtml1()
 
         is Convert<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
 
@@ -281,9 +307,10 @@ private fun convertToHtml(dataframeLike: Any): DataFrameHtmlData {
 
 private fun convertToDescription(dataframeLike: Any): String =
     when (dataframeLike) {
-        is AnyFrame -> dataframeLike.let {
-            "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"
-        }
+        is AnyFrame ->
+            dataframeLike.let {
+                "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"
+            }
 
         is Pivot<*> -> "Pivot"
 
@@ -314,29 +341,28 @@ private fun convertToDescription(dataframeLike: Any): String =
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }.escapeHtmlForIFrame()
 
-internal fun String.escapeHtmlForIFrame(): String =
-    buildString {
-        for (c in this@escapeHtmlForIFrame) {
-            when (c) {
-                '<' -> append("&lt;")
+internal fun String.escapeHtmlForIFrame(): String = buildString {
+    for (c in this@escapeHtmlForIFrame) {
+        when (c) {
+            '<' -> append("&lt;")
 
-                '>' -> append("&gt;")
+            '>' -> append("&gt;")
 
-                '&' -> append("&amp;")
+            '&' -> append("&amp;")
 
-                '"' -> append("&quot;")
+            '"' -> append("&quot;")
 
-                '\'' -> append("&#39;")
+            '\'' -> append("&#39;")
 
-                '\\' -> append("&#92;")
+            '\\' -> append("&#92;")
 
-                else -> {
-                    if (c.code > 127) {
-                        append("&#${c.code};")
-                    } else {
-                        append(c)
-                    }
+            else -> {
+                if (c.code > 127) {
+                    append("&#${c.code};")
+                } else {
+                    append(c)
                 }
             }
         }
     }
+}

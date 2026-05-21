@@ -23,89 +23,114 @@ import org.jetbrains.kotlinx.jupyter.api.mimeResult
 import org.jetbrains.kotlinx.jupyter.api.outputs.isIsolatedHtml
 import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 
-/** Starting from this version, dataframe integration will respond with additional data for rendering in Kotlin Notebooks plugin. */
+/**
+ * Starting from this version, dataframe integration will respond with additional data for rendering
+ * in Kotlin Notebooks plugin.
+ */
 private const val MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI = "0.11.0.311"
 private const val MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA = 241
 private const val MIN_IDE_VERSION_SUPPORT_IMAGE_VIEWER = 242
 private const val MIN_IDE_VERSION_SUPPORT_DATAFRAME_CONVERTABLE = 243
 
-internal class JupyterHtmlRenderer(val display: DisplayConfiguration, val builder: JupyterIntegration.Builder)
+internal class JupyterHtmlRenderer(
+    val display: DisplayConfiguration,
+    val builder: JupyterIntegration.Builder,
+)
 
 internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     noinline getFooter: (T) -> String,
     crossinline modifyConfig: T.(DisplayConfiguration) -> DisplayConfiguration = { it },
     applyRowsLimit: Boolean = true,
-) = builder.renderWithHost<T> { host, value ->
-    val addHtml = (value as? DisableRowsLimitWrapper)?.addHtml ?: true
-    val contextRenderer = JupyterCellRenderer(this.notebook, host)
-    val reifiedDisplayConfiguration = value.modifyConfig(display)
-    val footer = getFooter(value)
+) =
+    builder.renderWithHost<T> { host, value ->
+        val addHtml = (value as? DisableRowsLimitWrapper)?.addHtml ?: true
+        val contextRenderer = JupyterCellRenderer(this.notebook, host)
+        val reifiedDisplayConfiguration = value.modifyConfig(display)
+        val footer = getFooter(value)
 
-    val df = convertToDataFrame(value)
+        val df = convertToDataFrame(value)
 
-    val isFormatted = reifiedDisplayConfiguration.cellFormatter != null ||
-        df.hasFormattedColumns()
+        val isFormatted =
+            reifiedDisplayConfiguration.cellFormatter != null || df.hasFormattedColumns()
 
-    val limit = if (applyRowsLimit) {
-        reifiedDisplayConfiguration.rowsLimit ?: df.rowsCount()
-    } else {
-        df.rowsCount()
-    }
+        val limit =
+            if (applyRowsLimit) {
+                reifiedDisplayConfiguration.rowsLimit ?: df.rowsCount()
+            } else {
+                df.rowsCount()
+            }
 
-    val html by lazy {
-        DataFrameHtmlData
-            .tableDefinitions(
-                includeJs = reifiedDisplayConfiguration.isolatedOutputs,
-                includeCss = true,
-            ).plus(
-                df.toHtml(
-                    // is added later to make sure it's put outside of potential iFrames
-                    configuration = reifiedDisplayConfiguration.copy(enableFallbackStaticTables = false),
-                    cellRenderer = contextRenderer,
-                ) { footer },
-            ).toJupyterHtmlData()
-    }
-
-    // Generates a static version of the table which can be displayed in GitHub previews etc.
-    val staticHtml by lazy { df.toStaticHtml(reifiedDisplayConfiguration, DefaultCellRenderer).toJupyterHtmlData() }
-
-    if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
-        val ideBuildNumber = KotlinNotebookPluginUtils.getKotlinNotebookIDEBuildNumber()
-
-        // TODO Do we need to handle the improved meta data here as well?
-        val jsonEncodedDf = when {
-            !ideBuildNumber.supportsDynamicNestedTables() ->
-                encodeFrameNoDynamicNestedTables(df = df, limit = limit, isFormatted = isFormatted).toString()
-
-            else -> {
-                val encoders = buildList {
-                    if (ideBuildNumber.supportsDataFrameConvertableValues()) {
-                        add(DataframeConvertableEncoder(this))
+        val html by lazy {
+            DataFrameHtmlData.tableDefinitions(
+                    includeJs = reifiedDisplayConfiguration.isolatedOutputs,
+                    includeCss = true,
+                )
+                .plus(
+                    df.toHtml(
+                        // is added later to make sure it's put outside of potential iFrames
+                        configuration =
+                            reifiedDisplayConfiguration.copy(enableFallbackStaticTables = false),
+                        cellRenderer = contextRenderer,
+                    ) {
+                        footer
                     }
-                    if (ideBuildNumber.supportsImageViewer()) {
-                        add(BufferedImageEncoder(Base64ImageEncodingOptions()))
+                )
+                .toJupyterHtmlData()
+        }
+
+        // Generates a static version of the table which can be displayed in GitHub previews etc.
+        val staticHtml by lazy {
+            df.toStaticHtml(reifiedDisplayConfiguration, DefaultCellRenderer).toJupyterHtmlData()
+        }
+
+        if (
+            notebook.kernelVersion >=
+                KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!
+        ) {
+            val ideBuildNumber = KotlinNotebookPluginUtils.getKotlinNotebookIDEBuildNumber()
+
+            // TODO Do we need to handle the improved meta data here as well?
+            val jsonEncodedDf =
+                when {
+                    !ideBuildNumber.supportsDynamicNestedTables() ->
+                        encodeFrameNoDynamicNestedTables(
+                                df = df,
+                                limit = limit,
+                                isFormatted = isFormatted,
+                            )
+                            .toString()
+
+                    else -> {
+                        val encoders = buildList {
+                            if (ideBuildNumber.supportsDataFrameConvertableValues()) {
+                                add(DataframeConvertableEncoder(this))
+                            }
+                            if (ideBuildNumber.supportsImageViewer()) {
+                                add(BufferedImageEncoder(Base64ImageEncodingOptions()))
+                            }
+                        }
+
+                        df.toJsonWithMetadata(
+                            rowLimit = limit,
+                            nestedRowLimit = reifiedDisplayConfiguration.rowsLimit,
+                            customEncoders = encoders,
+                            isFormatted = isFormatted,
+                        )
                     }
                 }
-
-                df.toJsonWithMetadata(
-                    rowLimit = limit,
-                    nestedRowLimit = reifiedDisplayConfiguration.rowsLimit,
-                    customEncoders = encoders,
-                    isFormatted = isFormatted,
+            if (!addHtml) {
+                mimeResult("application/kotlindataframe+json" to jsonEncodedDf)
+            } else {
+                notebook.renderAsIFrameAsNeeded(
+                    data = html,
+                    staticData = staticHtml,
+                    jsonEncodedDf = jsonEncodedDf,
                 )
             }
-        }
-        if (!addHtml) {
-            mimeResult(
-                "application/kotlindataframe+json" to jsonEncodedDf,
-            )
         } else {
-            notebook.renderAsIFrameAsNeeded(data = html, staticData = staticHtml, jsonEncodedDf = jsonEncodedDf)
+            notebook.renderHtmlAsIFrameIfNeeded(data = html)
         }
-    } else {
-        notebook.renderHtmlAsIFrameIfNeeded(data = html)
     }
-}
 
 internal fun AnyFrame.hasFormattedColumns() =
     this.getColumns { colsAtAnyDepth().colsOf<FormattedFrame<*>?> { !it.allNulls() } }.isNotEmpty()
@@ -124,17 +149,16 @@ internal fun Notebook.renderAsIFrameAsNeeded(
     staticData: HtmlData,
     jsonEncodedDf: String,
 ): MimeTypedResult {
-    val textHtml = if (jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
-        data.generateIframePlaneText(currentColorScheme) +
-            staticData.toString(currentColorScheme)
-    } else {
-        (data + staticData).toString(currentColorScheme)
-    }
+    val textHtml =
+        if (jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
+            data.generateIframePlaneText(currentColorScheme) +
+                staticData.toString(currentColorScheme)
+        } else {
+            (data + staticData).toString(currentColorScheme)
+        }
 
-    return mimeResult(
-        "text/html" to textHtml,
-        "application/kotlindataframe+json" to jsonEncodedDf,
-    ).also { it.isIsolatedHtml = false }
+    return mimeResult("text/html" to textHtml, "application/kotlindataframe+json" to jsonEncodedDf)
+        .also { it.isIsolatedHtml = false }
 }
 
 internal fun DataFrameHtmlData.toJupyterHtmlData() = HtmlData(style, body, script)

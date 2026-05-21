@@ -1,14 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import kotlin.reflect.typeOf
 
 internal fun String.withTopInterfaceName(topInterfaceName: ValidFieldName): String =
-    if (startsWith("${topInterfaceName.quotedIfNeeded}.")) this else "${topInterfaceName.quotedIfNeeded}.$this"
+    if (startsWith("${topInterfaceName.quotedIfNeeded}.")) this
+    else "${topInterfaceName.quotedIfNeeded}.$this"
 
 internal fun String.withoutTopInterfaceName(topInterfaceName: ValidFieldName): String =
     if (startsWith("${topInterfaceName.quotedIfNeeded}.")) {
@@ -20,8 +21,7 @@ internal fun String.withoutTopInterfaceName(topInterfaceName: ValidFieldName): S
 internal fun String.snakeToLowerCamelCase(): String = toCamelCaseByDelimiters()
 
 internal fun String.snakeToUpperCamelCase(): String =
-    snakeToLowerCamelCase()
-        .replaceFirstChar { it.uppercaseChar() }
+    snakeToLowerCamelCase().replaceFirstChar { it.uppercaseChar() }
 
 internal fun String.toNullable() = if (this.last() == '?') this else "$this?"
 
@@ -50,7 +50,10 @@ internal fun generatedEnumFieldOf(fieldName: ValidFieldName, columnName: String)
         fieldName = fieldName,
         columnName = columnName,
         overrides = false,
-        fieldType = FieldType.ValueFieldType(typeOf<String>().toString()), // all enums will be of type String
+        fieldType =
+            FieldType.ValueFieldType(
+                typeOf<String>().toString()
+            ), // all enums will be of type String
     )
 
 /** Small helper function to produce a new enum Marker. */
@@ -62,17 +65,16 @@ internal fun produceNewEnum(
     produceAdditionalMarker: ProduceAdditionalMarker,
 ): OpenApiMarker.Enum {
     val enumName = ValidFieldName.of(name.snakeToUpperCamelCase())
-    val enumMarker = OpenApiMarker.Enum(
-        name = enumName.quotedIfNeeded,
-        fields = values.map {
-            generatedEnumFieldOf(
-                fieldName = ValidFieldName.of(it),
-                columnName = it,
-            )
-        },
-        nullable = nullable,
-        topInterfaceName = topInterfaceName,
-    )
+    val enumMarker =
+        OpenApiMarker.Enum(
+            name = enumName.quotedIfNeeded,
+            fields =
+                values.map {
+                    generatedEnumFieldOf(fieldName = ValidFieldName.of(it), columnName = it)
+                },
+            nullable = nullable,
+            topInterfaceName = topInterfaceName,
+        )
     val newName = produceAdditionalMarker(enumName, enumMarker, isTopLevelObject = false)
 
     return enumMarker.withName(newName)

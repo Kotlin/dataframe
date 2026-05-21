@@ -1,5 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.io
 
+import java.io.BufferedReader
+import java.io.Reader
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -12,10 +16,6 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.toKType
-import java.io.BufferedReader
-import java.io.Reader
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 internal fun DataFrame.Companion.readDelimImpl(
     reader: Reader,
@@ -32,21 +32,23 @@ internal fun DataFrame.Companion.readDelimImpl(
     }
 
     val csvParser = format.parse(reader)
-    val records = if (readLines == null) {
-        csvParser.records
-    } else {
-        require(readLines >= 0) { "`readLines` must not be negative" }
-        val records = ArrayList<CSVRecord>(readLines)
-        val iter = csvParser.iterator()
-        var count = readLines ?: 0
-        while (iter.hasNext() && 0 < count--) {
-            records.add(iter.next())
+    val records =
+        if (readLines == null) {
+            csvParser.records
+        } else {
+            require(readLines >= 0) { "`readLines` must not be negative" }
+            val records = ArrayList<CSVRecord>(readLines)
+            val iter = csvParser.iterator()
+            var count = readLines ?: 0
+            while (iter.hasNext() && 0 < count--) {
+                records.add(iter.next())
+            }
+            records
         }
-        records
-    }
 
-    val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
-        ?: (1..(records.firstOrNull()?.count() ?: 0)).map { index -> "X$index" }
+    val columnNames =
+        csvParser.headerNames.takeIf { it.isNotEmpty() }
+            ?: (1..(records.firstOrNull()?.count() ?: 0)).map { index -> "X$index" }
 
     val generator = ColumnNameGenerator()
     val uniqueNames = columnNames.map { generator.addUnique(it) }
@@ -66,7 +68,12 @@ internal fun DataFrame.Companion.readDelimImpl(
                 null
             }
         }
-        val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
+        val column =
+            DataColumn.createValueColumn(
+                colName,
+                values,
+                typeOf<String>().withNullability(hasNulls),
+            )
         when {
             colType != null ->
                 column.convertTo(

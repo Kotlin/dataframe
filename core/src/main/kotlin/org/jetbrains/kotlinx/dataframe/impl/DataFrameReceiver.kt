@@ -35,22 +35,23 @@ internal abstract class DataFrameReceiverBase<T>(protected val df: DataFrame<T>)
 internal open class DataFrameReceiver<T>(
     source: DataFrame<T>,
     private val unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-) : DataFrameReceiverBase<T>(source.unbox()),
-    SingleColumn<DataRow<T>> {
+) : DataFrameReceiverBase<T>(source.unbox()), SingleColumn<DataRow<T>> {
 
     private fun <R> DataColumn<R>?.check(path: ColumnPath): DataColumn<R> =
         when (this) {
-            null -> when (unresolvedColumnsPolicy) {
-                UnresolvedColumnsPolicy.Create, UnresolvedColumnsPolicy.Skip ->
-                    MissingColumnGroup<Any>(
-                        path = path,
-                        host = this@DataFrameReceiver,
-                    ).asDataColumn().cast()
+            null ->
+                when (unresolvedColumnsPolicy) {
+                    UnresolvedColumnsPolicy.Create,
+                    UnresolvedColumnsPolicy.Skip ->
+                        MissingColumnGroup<Any>(path = path, host = this@DataFrameReceiver)
+                            .asDataColumn()
+                            .cast()
 
-                UnresolvedColumnsPolicy.Fail -> error(
-                    "Column '${path.joinToString()}' not found among ${df.columnNames()}.",
-                )
-            }
+                    UnresolvedColumnsPolicy.Fail ->
+                        error(
+                            "Column '${path.joinToString()}' not found among ${df.columnNames()}."
+                        )
+                }
 
             is MissingDataColumn -> this
 
@@ -77,9 +78,7 @@ internal open class DataFrameReceiver<T>(
         DataColumn.createColumnGroup("", df).addPath(emptyPath())
 
     override fun columns() =
-        df.columns().map {
-            if (it.isColumnGroup()) ColumnGroupWithParent(null, it) else it
-        }
+        df.columns().map { if (it.isColumnGroup()) ColumnGroupWithParent(null, it) else it }
 
     override fun columnNames() = df.columnNames()
 

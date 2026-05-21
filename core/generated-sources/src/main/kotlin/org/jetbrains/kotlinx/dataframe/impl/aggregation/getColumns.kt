@@ -14,16 +14,16 @@ import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 
 internal inline fun <T> Aggregatable<T>.remainingColumns(
-    crossinline predicate: (AnyCol) -> Boolean,
+    crossinline predicate: (AnyCol) -> Boolean
 ): ColumnsSelector<T, Any?> = remainingColumnsSelector().filter { predicate(it.data) }
 
 /**
- * Emulates selecting all columns whose values are mutually comparable to each other.
- * These are columns of type `R` where `R : Comparable<R>`.
+ * Emulates selecting all columns whose values are mutually comparable to each other. These are
+ * columns of type `R` where `R : Comparable<R>`.
  *
- * There is no way to denote this generically in types, however,
- * hence the _fake_ type `Comparable<Any>` is used.
- * (`Comparable<Nothing>` would be more correct, but then the compiler complains)
+ * There is no way to denote this generically in types, however, hence the _fake_ type
+ * `Comparable<Any>` is used. (`Comparable<Nothing>` would be more correct, but then the compiler
+ * complains)
  */
 @Suppress("UNCHECKED_CAST")
 internal fun <T> Aggregatable<T>.intraComparableColumns(): ColumnsSelector<T, Comparable<Any>?> =
@@ -37,13 +37,15 @@ internal fun <T> Aggregatable<T>.numberColumns(): ColumnsSelector<T, Number?> =
 internal fun <T> Aggregatable<T>.primitiveOrMixedNumberColumns(): ColumnsSelector<T, Number?> =
     remainingColumns { it.isPrimitiveOrMixedNumber() } as ColumnsSelector<T, Number?>
 
-internal fun <T> DataRow<T>.primitiveOrMixedNumberColumns(): ColumnsSelector<T, Number?> =
-    { cols { it.isPrimitiveOrMixedNumber() }.cast() }
+internal fun <T> DataRow<T>.primitiveOrMixedNumberColumns(): ColumnsSelector<T, Number?> = {
+    cols { it.isPrimitiveOrMixedNumber() }.cast()
+}
 
 internal fun NamedValue.toColumnWithPath() =
-    path to createColumnGuessingType(
-        name = path.last(),
-        values = listOf(value),
-        suggestedType = TypeSuggestion.create(type, guessType),
-        defaultValue = default,
-    )
+    path to
+        createColumnGuessingType(
+            name = path.last(),
+            values = listOf(value),
+            suggestedType = TypeSuggestion.create(type, guessType),
+            defaultValue = default,
+        )

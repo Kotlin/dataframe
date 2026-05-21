@@ -333,8 +333,12 @@ class Access : TestBase() {
         df.dropNulls() // remove rows with null value in any column
         df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
         df.dropNulls { city } // remove rows with null value in 'city' column
-        df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'weight' columns
-        df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
+        df.dropNulls {
+            city and weight
+        } // remove rows with null value in 'city' OR 'weight' columns
+        df.dropNulls(whereAllNull = true) {
+            city and weight
+        } // remove rows with null value in 'city' AND 'weight' columns
         // SampleEnd
     }
 
@@ -346,7 +350,9 @@ class Access : TestBase() {
         df.dropNaNs(whereAllNaN = true) // remove rows with NaN in all columns
         df.dropNaNs { weight } // remove rows where 'weight' is NaN
         df.dropNaNs { age and weight } // remove rows where either 'age' or 'weight' is NaN
-        df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'age' and 'weight' are NaN
+        df.dropNaNs(whereAllNaN = true) {
+            age and weight
+        } // remove rows where both 'age' and 'weight' are NaN
         // SampleEnd
     }
 
@@ -358,7 +364,9 @@ class Access : TestBase() {
         df.dropNA(whereAllNA = true) // remove rows with null or NaN in all columns
         df.dropNA { weight } // remove rows where 'weight' is null or NaN
         df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is null or NaN
-        df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or NaN
+        df.dropNA(whereAllNA = true) {
+            age and weight
+        } // remove rows where both 'age' and 'weight' are null or NaN
         // SampleEnd
     }
 
@@ -613,9 +621,7 @@ class Access : TestBase() {
         df.select { first { it.name.startsWith("year") } }
 
         // find the last column inside a column group satisfying the condition
-        df.select {
-            colGroup("name").lastCol { it.name().endsWith("Name") }
-        }
+        df.select { colGroup("name").lastCol { it.name().endsWith("Name") } }
 
         // traversal of columns at any depth from here excluding ColumnGroups
         df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
@@ -650,7 +656,9 @@ class Access : TestBase() {
         df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.dropLast(3) }
 
         // filter column set by condition
-        df.select { colsAtAnyDepth().filter { !it.isColumnGroup() && it.name().startsWith("year") } }
+        df.select {
+            colsAtAnyDepth().filter { !it.isColumnGroup() && it.name().startsWith("year") }
+        }
 
         // exclude columns from column set
         df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.except { age } }
@@ -668,13 +676,9 @@ class Access : TestBase() {
             println(row.age)
         }
 
-        df.forEach {
-            println(it.age)
-        }
+        df.forEach { println(it.age) }
 
-        df.rows().forEach {
-            println(it.age)
-        }
+        df.rows().forEach { println(it.age) }
         // SampleEnd
     }
 
@@ -686,13 +690,9 @@ class Access : TestBase() {
             println(row["age"])
         }
 
-        df.forEach {
-            println(it["age"])
-        }
+        df.forEach { println(it["age"]) }
 
-        df.rows().forEach {
-            println(it["age"])
-        }
+        df.rows().forEach { println(it["age"]) }
         // SampleEnd
     }
 
@@ -700,9 +700,7 @@ class Access : TestBase() {
     @TransformDataFrameExpressions
     fun forColumn() {
         // SampleStart
-        df.columns().forEach {
-            println(it.name())
-        }
+        df.columns().forEach { println(it.name()) }
         // SampleEnd
     }
 
@@ -711,14 +709,10 @@ class Access : TestBase() {
     fun forCells() {
         // SampleStart
         // from top to bottom, then from left to right
-        df.values().forEach {
-            println(it)
-        }
+        df.values().forEach { println(it) }
 
         // from left to right, then from top to bottom
-        df.values(byRows = true).forEach {
-            println(it)
-        }
+        df.values(byRows = true).forEach { println(it) }
         // SampleEnd
     }
 

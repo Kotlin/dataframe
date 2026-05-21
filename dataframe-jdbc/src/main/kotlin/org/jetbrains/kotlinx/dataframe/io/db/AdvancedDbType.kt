@@ -1,22 +1,24 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import kotlin.reflect.KType
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 
 /**
- * Alternative version of [DbType] that allows to customize type mapping
- * by initializing a [JdbcToDataFrameConverter] instance for each JDBC type.
+ * Alternative version of [DbType] that allows to customize type mapping by initializing a
+ * [JdbcToDataFrameConverter] instance for each JDBC type.
  *
- * This can be helpful for JDBC databases that support structured data, like [DuckDb]
- * or that need to a lot of type mapping.
+ * This can be helpful for JDBC databases that support structured data, like [DuckDb] or that need
+ * to a lot of type mapping.
  *
  * This API is experimental and subject to change.
  */
 public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJdbcUrl) {
 
-    protected abstract fun generateConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter
+    protected abstract fun generateConverter(
+        tableColumnMetadata: TableColumnMetadata
+    ): AnyJdbcToDataFrameConverter
 
     private data class CacheKey(
         val sqlTypeName: String,
@@ -25,11 +27,14 @@ public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJ
         val isNullable: Boolean,
     )
 
-    private fun TableColumnMetadata.cacheKey(): CacheKey = CacheKey(sqlTypeName, jdbcType, javaClassName, isNullable)
+    private fun TableColumnMetadata.cacheKey(): CacheKey =
+        CacheKey(sqlTypeName, jdbcType, javaClassName, isNullable)
 
     private val converterCache = mutableMapOf<CacheKey, AnyJdbcToDataFrameConverter>()
 
-    protected fun getConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter =
+    protected fun getConverter(
+        tableColumnMetadata: TableColumnMetadata
+    ): AnyJdbcToDataFrameConverter =
         converterCache.getOrPut(tableColumnMetadata.cacheKey()) {
             generateConverter(tableColumnMetadata)
         }
@@ -54,26 +59,25 @@ public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJ
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
     ): J =
-        getConverter(tableColumnMetadata)
-            .cast<J, Any?, Any?>()
-            .getValueFromResultSetOrElse(rs, columnIndex) {
-                try {
-                    rs.getObject(columnIndex + 1)
-                } catch (_: Throwable) {
-                    // TODO?
-                    rs.getString(columnIndex + 1)
-                } as J
+        getConverter(tableColumnMetadata).cast<J, Any?, Any?>().getValueFromResultSetOrElse(
+            rs,
+            columnIndex,
+        ) {
+            try {
+                rs.getObject(columnIndex + 1)
+            } catch (_: Throwable) {
+                // TODO?
+                rs.getString(columnIndex + 1)
             }
+                as J
+        }
 
     final override fun <J, D> preprocessValue(
         value: J,
         tableColumnMetadata: TableColumnMetadata,
         expectedJdbcType: KType,
         expectedPreprocessedValueType: KType,
-    ): D =
-        getConverter(tableColumnMetadata)
-            .cast<J, D, Any?>()
-            .preprocessOrCast(value)
+    ): D = getConverter(tableColumnMetadata).cast<J, D, Any?>().preprocessOrCast(value)
 
     final override fun <D, P> buildDataColumn(
         name: String,

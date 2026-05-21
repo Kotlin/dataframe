@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
+import java.math.BigDecimal
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PRECISION
 import org.jetbrains.kotlinx.dataframe.typeClass
-import java.math.BigDecimal
 
 internal fun <T : Number> DataColumn<T?>.scale(): Int {
     if (size() == 0) return 0
@@ -24,7 +24,8 @@ internal fun Number.scale(): Int =
     when (this) {
         is Double -> scale()
         is Float -> scale()
-        is Int, is Long -> 0
+        is Int,
+        is Long -> 0
         is BigDecimal -> scale()
         else -> 0
     }

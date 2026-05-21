@@ -6,6 +6,12 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import java.math.BigDecimal
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.ResultSet
+import java.sql.SQLException
+import kotlin.reflect.typeOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -36,12 +42,6 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
-import java.math.BigDecimal
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.SQLException
-import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test5;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
 
@@ -118,18 +118,20 @@ class JdbcTest {
         }
 
         private fun initializeDataSource() {
-            val config = HikariConfig().apply {
-                jdbcUrl = URL
-                maximumPoolSize = MAXIMUM_POOL_SIZE
-                minimumIdle = 2
-            }
+            val config =
+                HikariConfig().apply {
+                    jdbcUrl = URL
+                    maximumPoolSize = MAXIMUM_POOL_SIZE
+                    minimumIdle = 2
+                }
             dataSource = HikariDataSource(config)
         }
 
         private fun createTablesAndData() {
             // Create table Customer
             @Language("SQL")
-            val createCustomerTableQuery = """
+            val createCustomerTableQuery =
+                """
                 CREATE TABLE Customer (
                     id INT PRIMARY KEY,
                     name VARCHAR(50),
@@ -141,7 +143,8 @@ class JdbcTest {
 
             // Create table Sale
             @Language("SQL")
-            val createSaleTableQuery = """
+            val createSaleTableQuery =
+                """
                 CREATE TABLE Sale (
                     id INT PRIMARY KEY,
                     customerId INT,
@@ -152,16 +155,32 @@ class JdbcTest {
             connection.createStatement().execute(createSaleTableQuery)
 
             // add data to the Customer table
-            connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
-            connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (2, 'Alice', 25)")
-            connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (3, 'Bob', 47)")
-            connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (4, NULL, NULL)")
+            connection
+                .createStatement()
+                .execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
+            connection
+                .createStatement()
+                .execute("INSERT INTO Customer (id, name, age) VALUES (2, 'Alice', 25)")
+            connection
+                .createStatement()
+                .execute("INSERT INTO Customer (id, name, age) VALUES (3, 'Bob', 47)")
+            connection
+                .createStatement()
+                .execute("INSERT INTO Customer (id, name, age) VALUES (4, NULL, NULL)")
 
             // add data to the Sale table
-            connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (1, 1, 100.50)")
-            connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (2, 2, 50.00)")
-            connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (3, 1, 75.25)")
-            connection.createStatement().execute("INSERT INTO Sale (id, customerId, amount) VALUES (4, 3, 35.15)")
+            connection
+                .createStatement()
+                .execute("INSERT INTO Sale (id, customerId, amount) VALUES (1, 1, 100.50)")
+            connection
+                .createStatement()
+                .execute("INSERT INTO Sale (id, customerId, amount) VALUES (2, 2, 50.00)")
+            connection
+                .createStatement()
+                .execute("INSERT INTO Sale (id, customerId, amount) VALUES (3, 1, 75.25)")
+            connection
+                .createStatement()
+                .execute("INSERT INTO Sale (id, customerId, amount) VALUES (4, 3, 35.15)")
         }
 
         @AfterClass
@@ -179,14 +198,14 @@ class JdbcTest {
         private fun assertCustomerData(df: AnyFrame, expectedRows: Int = 4) {
             val casted = df.cast<Customer>()
             casted.rowsCount() shouldBe expectedRows
-            val expectedOlderThan30 = when (expectedRows) {
-                4 -> 2
-                2 -> 1
-                else -> 1 // for 1 row or other small limits in tests
-            }
-            casted.filter {
-                "age"<Int?>()?.let { it > 30 } ?: false
-            }.rowsCount() shouldBe expectedOlderThan30
+            val expectedOlderThan30 =
+                when (expectedRows) {
+                    4 -> 2
+                    2 -> 1
+                    else -> 1 // for 1 row or other small limits in tests
+                }
+            casted.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe
+                expectedOlderThan30
             casted[0][1] shouldBe "John"
         }
 
@@ -198,7 +217,8 @@ class JdbcTest {
         private fun assertCustomerSalesData(df: AnyFrame, expectedRows: Int = 2) {
             val casted = df.cast<CustomerSales>()
             casted.rowsCount() shouldBe expectedRows
-            // In current tests, regardless of limit (2 or 1), the count of totalSalesAmount > 100 is 1
+            // In current tests, regardless of limit (2 or 1), the count of totalSalesAmount > 100
+            // is 1
             casted.filter { "totalSalesAmount"<Double?>()!! > 100 }.rowsCount() shouldBe 1
             casted[0][0] shouldBe "John"
         }
@@ -262,7 +282,8 @@ class JdbcTest {
             INNER JOIN Customer c ON s.customerId = c.id
             WHERE c.age > 35
             GROUP BY s.customerId, c.name
-            """.trimIndent()
+            """
+                .trimIndent()
     }
 
     // ========== Connection API Tests ==========
@@ -270,7 +291,8 @@ class JdbcTest {
     @Test
     fun `read from empty table`() {
         @Language("SQL")
-        val createTableQuery = """
+        val createTableQuery =
+            """
                 CREATE TABLE EmptyTestTable (
                     characterCol CHAR(10),
                     characterVaryingCol VARCHAR(20)
@@ -294,7 +316,8 @@ class JdbcTest {
     @Test
     fun `read from huge table`() {
         @Language("SQL")
-        val createTableQuery = """
+        val createTableQuery =
+            """
                 CREATE TABLE TestTable (
                     characterCol CHAR(10),
                     characterVaryingCol VARCHAR(20),
@@ -327,49 +350,58 @@ class JdbcTest {
 
         connection.createStatement().execute(createTableQuery.trimIndent())
 
-        connection.prepareStatement(
-            """
-            INSERT INTO TestTable VALUES (
-                'ABC', 'XYZ', 'Long text data for CLOB', 'Medium text data for CLOB',
-                'Varchar IgnoreCase', X'010203', X'040506', X'070809',
-                TRUE, 1, 100, 1000, 100000,
-                123.45, 1.23, 3.14, 2.71,
-                '2023-07-20', '08:30:00', '18:15:00', '2023-07-19 12:45:30',
-                '2023-07-18 12:45:30', NULL,
-                'Option1', '{"key": "value"}', '123e4567-e89b-12d3-a456-426655440000'
+        connection
+            .prepareStatement(
+                """
+                INSERT INTO TestTable VALUES (
+                    'ABC', 'XYZ', 'Long text data for CLOB', 'Medium text data for CLOB',
+                    'Varchar IgnoreCase', X'010203', X'040506', X'070809',
+                    TRUE, 1, 100, 1000, 100000,
+                    123.45, 1.23, 3.14, 2.71,
+                    '2023-07-20', '08:30:00', '18:15:00', '2023-07-19 12:45:30',
+                    '2023-07-18 12:45:30', NULL,
+                    'Option1', '{"key": "value"}', '123e4567-e89b-12d3-a456-426655440000'
+                )
+                """
+                    .trimIndent()
             )
-            """.trimIndent(),
-        ).executeUpdate()
+            .executeUpdate()
 
-        connection.prepareStatement(
-            """
-            INSERT INTO TestTable VALUES (
-                'DEF', 'LMN', 'Another CLOB data', 'Different CLOB data',
-                'Another Varchar', X'101112', X'131415', X'161718',
-                FALSE, 2, 200, 2000, 200000,
-                234.56, 2.34, 4.56, 3.14,
-                '2023-07-21', '14:30:00', '22:45:00', '2023-07-20 18:15:30',
-                '2023-07-19 18:15:30', NULL,
-                'Option2', '{"key": "another_value"}', '234e5678-e89b-12d3-a456-426655440001'
+        connection
+            .prepareStatement(
+                """
+                INSERT INTO TestTable VALUES (
+                    'DEF', 'LMN', 'Another CLOB data', 'Different CLOB data',
+                    'Another Varchar', X'101112', X'131415', X'161718',
+                    FALSE, 2, 200, 2000, 200000,
+                    234.56, 2.34, 4.56, 3.14,
+                    '2023-07-21', '14:30:00', '22:45:00', '2023-07-20 18:15:30',
+                    '2023-07-19 18:15:30', NULL,
+                    'Option2', '{"key": "another_value"}', '234e5678-e89b-12d3-a456-426655440001'
+                )
+                """
+                    .trimIndent()
             )
-            """.trimIndent(),
-        ).executeUpdate()
+            .executeUpdate()
 
-        connection.prepareStatement(
-            """
-            INSERT INTO TestTable VALUES (
-                'GHI', 'OPQ', 'Third CLOB entry', 'Yet another CLOB data',
-                'Yet Another Varchar', X'192021', X'222324', X'252627',
-                TRUE, 3, 300, 3000, 300000,
-                345.67, 3.45, 5.67, 4.71,
-                '2023-07-22', '20:45:00', '03:30:00', '2023-07-21 23:45:15',
-                '2023-07-20 23:45:15', NULL,
-                'Option3', '{ "person": { "name": "John Doe", "age": 30 }, ' ||
-                '"address": { "street": "123 Main St", "city": "Exampleville", "zipcode": "12345"}}', 
-                '345e6789-e89b-12d3-a456-426655440002'
+        connection
+            .prepareStatement(
+                """
+                INSERT INTO TestTable VALUES (
+                    'GHI', 'OPQ', 'Third CLOB entry', 'Yet another CLOB data',
+                    'Yet Another Varchar', X'192021', X'222324', X'252627',
+                    TRUE, 3, 300, 3000, 300000,
+                    345.67, 3.45, 5.67, 4.71,
+                    '2023-07-22', '20:45:00', '03:30:00', '2023-07-21 23:45:15',
+                    '2023-07-20 23:45:15', NULL,
+                    'Option3', '{ "person": { "name": "John Doe", "age": 30 }, ' ||
+                    '"address": { "street": "123 Main St", "city": "Exampleville", "zipcode": "12345"}}', 
+                    '345e6789-e89b-12d3-a456-426655440002'
+                )
+                """
+                    .trimIndent()
             )
-            """.trimIndent(),
-        ).executeUpdate()
+            .executeUpdate()
 
         val tableName = "TestTable"
         val df = DataFrame.readSqlTable(connection, tableName).cast<TestTableData>()
@@ -377,38 +409,34 @@ class JdbcTest {
         df.filter { "integerCol"<Int?>()!! > 1000 }.rowsCount() shouldBe 2
 
         // testing numeric columns
-        val result = df.select("tinyIntCol")
-            .add("tinyIntCol2") { "tinyIntCol"<Int?>() }
+        val result = df.select("tinyIntCol").add("tinyIntCol2") { "tinyIntCol"<Int?>() }
 
         result[0][1] shouldBe 1
 
-        val result1 = df.select("smallIntCol")
-            .add("smallIntCol2") { "smallIntCol"<Int?>() }
+        val result1 = df.select("smallIntCol").add("smallIntCol2") { "smallIntCol"<Int?>() }
 
         result1[0][1] shouldBe 100
 
-        val result2 = df.select("bigIntCol")
-            .add("bigIntCol2") { "bigIntCol"<Long?>() }
+        val result2 = df.select("bigIntCol").add("bigIntCol2") { "bigIntCol"<Long?>() }
 
         result2[0][1] shouldBe 100000
 
-        val result3 = df.select("numericCol")
-            .add("numericCol2") { "numericCol"<BigDecimal?>() }
+        val result3 = df.select("numericCol").add("numericCol2") { "numericCol"<BigDecimal?>() }
 
         BigDecimal("123.45").compareTo(result3[0][1] as BigDecimal) shouldBe 0
 
-        val result4 = df.select("realCol")
-            .add("realCol2") { "realCol"<Float?>() }
+        val result4 = df.select("realCol").add("realCol2") { "realCol"<Float?>() }
 
         result4[0][1] shouldBe 1.23f
 
-        val result5 = df.select("doublePrecisionCol")
-            .add("doublePrecisionCol2") { "doublePrecisionCol"<Double?>() }
+        val result5 =
+            df.select("doublePrecisionCol").add("doublePrecisionCol2") {
+                "doublePrecisionCol"<Double?>()
+            }
 
         result5[0][1] shouldBe 3.14
 
-        val result6 = df.select("decFloatCol")
-            .add("decFloatCol2") { "decFloatCol"<BigDecimal?>() }
+        val result6 = df.select("decFloatCol").add("decFloatCol2") { "decFloatCol"<BigDecimal?>() }
 
         BigDecimal("2.71").compareTo(result6[0][1] as BigDecimal) shouldBe 0
 
@@ -490,103 +518,106 @@ class JdbcTest {
     fun `read from ResultSet`() {
         val dbType = H2(Mode.MySql)
 
-        connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
-            @Language("SQL")
-            val selectStatement = "SELECT * FROM Customer"
+        connection
+            .createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)
+            .use { st ->
+                @Language("SQL") val selectStatement = "SELECT * FROM Customer"
 
-            st.executeQuery(selectStatement).use { rs ->
-                val df = DataFrame.readResultSet(rs, dbType)
-                assertCustomerData(df)
+                st.executeQuery(selectStatement).use { rs ->
+                    val df = DataFrame.readResultSet(rs, dbType)
+                    assertCustomerData(df)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val df1 = DataFrame.readResultSet(rs, dbType, 1)
-                assertCustomerData(df1, 1)
+                    val df1 = DataFrame.readResultSet(rs, dbType, 1)
+                    assertCustomerData(df1, 1)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val dataSchema = DataFrameSchema.readResultSet(rs, dbType)
-                assertCustomerSchema(dataSchema)
+                    val dataSchema = DataFrameSchema.readResultSet(rs, dbType)
+                    assertCustomerSchema(dataSchema)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val df2 = DataFrame.readResultSet(rs, connection)
-                assertCustomerData(df2)
+                    val df2 = DataFrame.readResultSet(rs, connection)
+                    assertCustomerData(df2)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val df3 = DataFrame.readResultSet(rs, connection, 1)
-                assertCustomerData(df3, 1)
+                    val df3 = DataFrame.readResultSet(rs, connection, 1)
+                    assertCustomerData(df3, 1)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val dataSchema1 = DataFrameSchema.readResultSet(rs, dbType)
-                assertCustomerSchema(dataSchema1)
+                    val dataSchema1 = DataFrameSchema.readResultSet(rs, dbType)
+                    assertCustomerSchema(dataSchema1)
+                }
             }
-        }
     }
 
     @Test
     fun `read from extension function on ResultSet`() {
         val dbType = H2(Mode.MySql)
 
-        connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
-            @Language("SQL")
-            val selectStatement = "SELECT * FROM Customer"
+        connection
+            .createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)
+            .use { st ->
+                @Language("SQL") val selectStatement = "SELECT * FROM Customer"
 
-            st.executeQuery(selectStatement).use { rs ->
-                val df = rs.readDataFrame(dbType)
-                assertCustomerData(df)
+                st.executeQuery(selectStatement).use { rs ->
+                    val df = rs.readDataFrame(dbType)
+                    assertCustomerData(df)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val df1 = rs.readDataFrame(dbType, 1)
-                assertCustomerData(df1, 1)
+                    val df1 = rs.readDataFrame(dbType, 1)
+                    assertCustomerData(df1, 1)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val dataSchema = rs.readDataFrameSchema(dbType)
-                assertCustomerSchema(dataSchema)
+                    val dataSchema = rs.readDataFrameSchema(dbType)
+                    assertCustomerSchema(dataSchema)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val df2 = rs.readDataFrame(connection)
-                assertCustomerData(df2)
+                    val df2 = rs.readDataFrame(connection)
+                    assertCustomerData(df2)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val df3 = rs.readDataFrame(connection, 1)
-                assertCustomerData(df3, 1)
+                    val df3 = rs.readDataFrame(connection, 1)
+                    assertCustomerData(df3, 1)
 
-                rs.beforeFirst()
+                    rs.beforeFirst()
 
-                val dataSchema1 = rs.readDataFrameSchema(dbType)
-                assertCustomerSchema(dataSchema1)
+                    val dataSchema1 = rs.readDataFrameSchema(dbType)
+                    assertCustomerSchema(dataSchema1)
+                }
             }
-        }
     }
 
     // to cover a reported case from https://github.com/Kotlin/dataframe/issues/494
     @Test
     fun `repeated read from ResultSet with limit`() {
-        connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
-            @Language("SQL")
-            val selectStatement = "SELECT * FROM Customer"
+        connection
+            .createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)
+            .use { st ->
+                @Language("SQL") val selectStatement = "SELECT * FROM Customer"
 
-            st.executeQuery(selectStatement).use { rs ->
-                repeat(10) {
-                    rs.beforeFirst()
+                st.executeQuery(selectStatement).use { rs ->
+                    repeat(10) {
+                        rs.beforeFirst()
 
-                    val df1 = DataFrame.readResultSet(rs, H2(Mode.MySql), 2)
-                    assertCustomerData(df1, 2)
+                        val df1 = DataFrame.readResultSet(rs, H2(Mode.MySql), 2)
+                        assertCustomerData(df1, 2)
 
-                    rs.beforeFirst()
+                        rs.beforeFirst()
 
-                    val df2 = DataFrame.readResultSet(rs, connection, 2)
-                    assertCustomerData(df2, 2)
+                        val df2 = DataFrame.readResultSet(rs, connection, 2)
+                        assertCustomerData(df2, 2)
+                    }
                 }
             }
-        }
     }
 
     @Test
@@ -600,7 +631,8 @@ class JdbcTest {
     @Test
     fun `read from incorrect SQL query`() {
         @Language("SQL")
-        val createSQL = """
+        val createSQL =
+            """
             CREATE TABLE Orders (
             order_id INT PRIMARY KEY,
             customer_id INT,
@@ -609,66 +641,59 @@ class JdbcTest {
             """
 
         @Language("SQL")
-        val dropSQL = """
+        val dropSQL =
+            """
             DROP TABLE Customer
             """
 
         @Language("SQL")
-        val alterSQL = """
+        val alterSQL =
+            """
             ALTER TABLE Customer
             ADD COLUMN email VARCHAR(100)
             """
 
         @Language("SQL")
-        val deleteSQL = """
+        val deleteSQL =
+            """
             DELETE FROM Customer
             WHERE id = 1
             """
 
         @Language("SQL")
-        val repeatedSQL = """
+        val repeatedSQL =
+            """
             SELECT * FROM Customer
             WHERE id = 1;
             SELECT * FROM Customer
             WHERE id = 1;
             """
 
-        shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, createSQL)
-        }
+        shouldThrow<IllegalArgumentException> { DataFrame.readSqlQuery(connection, createSQL) }
 
-        shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, dropSQL)
-        }
+        shouldThrow<IllegalArgumentException> { DataFrame.readSqlQuery(connection, dropSQL) }
 
-        shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, alterSQL)
-        }
+        shouldThrow<IllegalArgumentException> { DataFrame.readSqlQuery(connection, alterSQL) }
 
-        shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, deleteSQL)
-        }
+        shouldThrow<IllegalArgumentException> { DataFrame.readSqlQuery(connection, deleteSQL) }
 
-        shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, repeatedSQL)
-        }
+        shouldThrow<IllegalArgumentException> { DataFrame.readSqlQuery(connection, repeatedSQL) }
     }
 
     @Test
     fun `readFromTable should reject invalid table names to prevent SQL injections`() {
         // Invalid table names that attempt SQL injection
-        val invalidTableNames = listOf(
-            "Customer; DROP TABLE Customer", // Injection using semicolon
-            "Sale -- Comment", // Injection using single-line comment
-            "/* Multi-line comment */ Customer", // Injection using multi-line comment
-            "Sale WHERE 1=1", // Injection using always-true condition
-            "Sale UNION SELECT * FROM Customer", // UNION injection
-        )
+        val invalidTableNames =
+            listOf(
+                "Customer; DROP TABLE Customer", // Injection using semicolon
+                "Sale -- Comment", // Injection using single-line comment
+                "/* Multi-line comment */ Customer", // Injection using multi-line comment
+                "Sale WHERE 1=1", // Injection using always-true condition
+                "Sale UNION SELECT * FROM Customer", // UNION injection
+            )
 
         invalidTableNames.forEach { tableName ->
-            shouldThrow<IllegalArgumentException> {
-                DataFrame.readSqlTable(connection, tableName)
-            }
+            shouldThrow<IllegalArgumentException> { DataFrame.readSqlTable(connection, tableName) }
         }
     }
 
@@ -676,59 +701,66 @@ class JdbcTest {
     fun `readSqlQuery should reject malicious SQL queries to prevent SQL injections`() {
         // Malicious SQL queries attempting injection
         @Language("SQL")
-        val injectionComment = """
+        val injectionComment =
+            """
             SELECT * FROM Sale WHERE amount = 100.0 -- AND id = 5
             """
 
         @Language("SQL")
-        val injectionMultilineComment = """
+        val injectionMultilineComment =
+            """
             SELECT * FROM Customer /* Possible malicious comment */ WHERE id = 1
             """
 
         @Language("SQL")
-        val injectionSemicolon = """
+        val injectionSemicolon =
+            """
             SELECT * FROM Sale WHERE amount = 500.0; DROP TABLE Customer
             """
 
         @Language("SQL")
-        val injectionSQLWithSingleQuote = """
+        val injectionSQLWithSingleQuote =
+            """
             SELECT * FROM Sale WHERE id = 1 AND amount = 100.0 OR '1'='1
             """
 
         @Language("SQL")
-        val injectionUsingDropCommand = """
+        val injectionUsingDropCommand =
+            """
             DROP TABLE Customer; SELECT * FROM Sale
             """
 
-        val sqlInjectionQueries = listOf(
-            injectionComment,
-            injectionMultilineComment,
-            injectionSemicolon,
-            injectionSQLWithSingleQuote,
-            injectionUsingDropCommand,
-        )
+        val sqlInjectionQueries =
+            listOf(
+                injectionComment,
+                injectionMultilineComment,
+                injectionSemicolon,
+                injectionSQLWithSingleQuote,
+                injectionUsingDropCommand,
+            )
 
         sqlInjectionQueries.forEach { query ->
-            shouldThrow<IllegalArgumentException> {
-                DataFrame.readSqlQuery(connection, query)
-            }
+            shouldThrow<IllegalArgumentException> { DataFrame.readSqlQuery(connection, query) }
         }
     }
 
     @Test
     fun `readFromTable should work with non-standard table names when strictValidation is disabled`() {
         // Non-standard table names that are still valid but may appear strange
-        val nonStandardTableNames = listOf(
-            "`Customer With Space`", // Table name with spaces
-            "`Important-Data`", // Table name with hyphens
-            "`[123TableName]`", // Table name that resembles a special syntax
-        )
+        val nonStandardTableNames =
+            listOf(
+                "`Customer With Space`", // Table name with spaces
+                "`Important-Data`", // Table name with hyphens
+                "`[123TableName]`", // Table name that resembles a special syntax
+            )
 
         try {
             // Create these tables to ensure they exist for the test
             connection.createStatement().use { stmt ->
                 nonStandardTableNames.forEach { tableName ->
-                    stmt.execute("CREATE TABLE IF NOT EXISTS $tableName (id INT, name VARCHAR(255))")
+                    stmt.execute(
+                        "CREATE TABLE IF NOT EXISTS $tableName (id INT, name VARCHAR(255))"
+                    )
                 }
             }
 
@@ -748,19 +780,22 @@ class JdbcTest {
 
     @Test
     fun `read from Unicode table names`() {
-        val unicodeTableNames = listOf(
-            "Таблица", // Russian Cyrillic
-            "表", // Chinese character
-            "テーブル", // Japanese Katakana
-            "عربي", // Arabic
-            "Δοκιμή", // Greek
-        )
+        val unicodeTableNames =
+            listOf(
+                "Таблица", // Russian Cyrillic
+                "表", // Chinese character
+                "テーブル", // Japanese Katakana
+                "عربي", // Arabic
+                "Δοκιμή", // Greek
+            )
 
         try {
             // Create tables with Unicode names
             connection.createStatement().use { stmt ->
                 unicodeTableNames.forEach { tableName ->
-                    stmt.execute("CREATE TABLE IF NOT EXISTS `$tableName` (id INT PRIMARY KEY, name VARCHAR(255))")
+                    stmt.execute(
+                        "CREATE TABLE IF NOT EXISTS `$tableName` (id INT PRIMARY KEY, name VARCHAR(255))"
+                    )
                     stmt.execute("INSERT INTO `$tableName` (id, name) VALUES (1, 'TestName')")
                 }
             }
@@ -785,7 +820,8 @@ class JdbcTest {
     fun `readSqlQuery should execute DROP TABLE when validation is disabled`() {
         // Query to create a temporary test table
         @Language("SQL")
-        val createTableQuery = """
+        val createTableQuery =
+            """
             CREATE TABLE IF NOT EXISTS TestTable (
             id INT PRIMARY KEY,
             data VARCHAR(255)
@@ -794,7 +830,8 @@ class JdbcTest {
 
         // Query to drop the test table
         @Language("SQL")
-        val dropTableQuery = """
+        val dropTableQuery =
+            """
             SELECT * FROM TestTable; DROP TABLE TestTable;
 
             """
@@ -810,9 +847,7 @@ class JdbcTest {
 
             // Verify that the table has been successfully dropped
             connection.createStatement().use { stmt ->
-                shouldThrow<SQLException> {
-                    stmt.executeQuery("SELECT * FROM TestTable")
-                }
+                shouldThrow<SQLException> { stmt.executeQuery("SELECT * FROM TestTable") }
             }
         } finally {
             // Cleanup: Ensure the table is removed in case of failure
@@ -825,15 +860,15 @@ class JdbcTest {
     @Test
     fun `read from table with name from reserved SQL keywords`() {
         @Language("SQL")
-        val createAlterTableQuery = """
+        val createAlterTableQuery =
+            """
             CREATE TABLE "ALTER" (
             id INT PRIMARY KEY,
             description TEXT
             )
             """
 
-        @Language("SQL")
-        val selectFromWeirdTableSQL = """SELECT * from "ALTER""""
+        @Language("SQL") val selectFromWeirdTableSQL = """SELECT * from "ALTER""""
 
         try {
             connection.createStatement().execute(createAlterTableQuery)
@@ -842,7 +877,8 @@ class JdbcTest {
                 DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL)
             }
             // with disabled strictValidation
-            DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL, strictValidation = false).rowsCount() shouldBe 0
+            DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL, strictValidation = false)
+                .rowsCount() shouldBe 0
         } finally {
             connection.createStatement().execute("DROP TABLE IF EXISTS \"ALTER\"")
         }
@@ -851,15 +887,15 @@ class JdbcTest {
     @Test
     fun `read from table with column name containing the reserved SQL keywords`() {
         @Language("SQL")
-        val createAlterTableQuery = """
+        val createAlterTableQuery =
+            """
             CREATE TABLE HELLO_ALTER (
             id INT PRIMARY KEY,
             last_update TEXT
             )
             """
 
-        @Language("SQL")
-        val selectFromWeirdTableSQL = """SELECT last_update from HELLO_ALTER"""
+        @Language("SQL") val selectFromWeirdTableSQL = """SELECT last_update from HELLO_ALTER"""
 
         try {
             connection.createStatement().execute(createAlterTableQuery)
@@ -928,7 +964,8 @@ class JdbcTest {
             SELECT c1.name, c2.name
             FROM Customer c1
             INNER JOIN Customer c2 ON c1.id = c2.id
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
         schema.columns.size shouldBe 2
@@ -944,7 +981,8 @@ class JdbcTest {
             SELECT c1.name as name, c2.name as name_1, c1.name as name_1
             FROM Customer c1
             INNER JOIN Customer c2 ON c1.id = c2.id
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
         schema.columns.size shouldBe 3
@@ -982,9 +1020,7 @@ class JdbcTest {
 
     @Test
     fun `check require throws exception when specifying H2 database with H2 dialect`() {
-        val exception = shouldThrowExactly<IllegalArgumentException> {
-            H2(H2())
-        }
+        val exception = shouldThrowExactly<IllegalArgumentException> { H2(H2()) }
         exception.message shouldBe "H2 database could not be specified with H2 dialect!"
     }
 
@@ -1079,15 +1115,14 @@ class JdbcTest {
         val url = "jdbc:h2:mem:testUnsupported;MODE=Oracle"
         val dbConfig = DbConnectionConfig(url)
 
-        shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(dbConfig, QUERY_SELECT_ONE)
-        }
+        shouldThrow<IllegalArgumentException> { DataFrame.readSqlQuery(dbConfig, QUERY_SELECT_ONE) }
     }
 
     @Test
     fun `H2 Regular mode extraction and fallbacks`() {
         // 1. Create a connection without explicit MODE in URL.
-        // H2 defaults to Regular mode. extractDBTypeFromConnection should detect this by querying settings.
+        // H2 defaults to Regular mode. extractDBTypeFromConnection should detect this by querying
+        // settings.
         DriverManager.getConnection("jdbc:h2:mem:testRegularFallback").use { conn ->
             val dbType = extractDBTypeFromConnection(conn)
 
@@ -1096,7 +1131,8 @@ class JdbcTest {
 
             // 2. Verify fallback behaviors (when delegate is null)
 
-            // buildSqlQueryWithLimit: Check fallback to super implementation (standard LIMIT syntax)
+            // buildSqlQueryWithLimit: Check fallback to super implementation (standard LIMIT
+            // syntax)
             val query = "SELECT * FROM table"
             dbType.buildSqlQueryWithLimit(query, 10) shouldBe "SELECT * FROM table LIMIT 10"
 
@@ -1133,7 +1169,8 @@ class JdbcTest {
 
         // Test driverClassNameFromUrl
         driverClassNameFromUrl("jdbc:mysql://localhost:3306/db") shouldBe "com.mysql.jdbc.Driver"
-        driverClassNameFromUrl("jdbc:postgresql://localhost:5432/db") shouldBe "org.postgresql.Driver"
+        driverClassNameFromUrl("jdbc:postgresql://localhost:5432/db") shouldBe
+            "org.postgresql.Driver"
         driverClassNameFromUrl("jdbc:h2:mem:test") shouldBe "org.h2.Driver"
 
         // 2. Test unsupported Database URL
@@ -1142,9 +1179,7 @@ class JdbcTest {
         }
 
         // 3. Test null URL
-        shouldThrow<SQLException> {
-            extractDBTypeFromUrl(null)
-        }
+        shouldThrow<SQLException> { extractDBTypeFromUrl(null) }
 
         // 4. Test H2 specific mode extraction from Connection (End-to-End)
 
@@ -1195,14 +1230,16 @@ class JdbcTest {
         val df = DataFrame.readSqlQuery(connection, CUSTOMER_SALES_QUERY, dbType = CustomDB)
         assertCustomerSalesData(df)
 
-        val dataSchema = DataFrameSchema.readSqlQuery(connection, CUSTOMER_SALES_QUERY, dbType = CustomDB)
+        val dataSchema =
+            DataFrameSchema.readSqlQuery(connection, CUSTOMER_SALES_QUERY, dbType = CustomDB)
         assertCustomerSalesSchema(dataSchema)
 
         val dbConfig = DbConnectionConfig(url = URL)
         val df2 = DataFrame.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY, dbType = CustomDB)
         assertCustomerSalesData(df2)
 
-        val dataSchema1 = DataFrameSchema.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY, dbType = CustomDB)
+        val dataSchema1 =
+            DataFrameSchema.readSqlQuery(dbConfig, CUSTOMER_SALES_QUERY, dbType = CustomDB)
         assertCustomerSalesSchema(dataSchema1)
     }
 
@@ -1224,14 +1261,16 @@ class JdbcTest {
 
     @Test
     fun `withReadOnlyConnection sets readOnly and rolls back after execution`() {
-        val config = DbConnectionConfig("jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1", readOnly = true)
+        val config =
+            DbConnectionConfig("jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1", readOnly = true)
 
         var wasExecuted = false
-        val result = withReadOnlyConnection(config) { conn ->
-            wasExecuted = true
-            conn.autoCommit shouldBe false
-            42
-        }
+        val result =
+            withReadOnlyConnection(config) { conn ->
+                wasExecuted = true
+                conn.autoCommit shouldBe false
+                42
+            }
 
         wasExecuted shouldBe true
         result shouldBe 42
@@ -1316,7 +1355,8 @@ class JdbcTest {
         val df = DataFrame.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY, dbType = CustomDB)
         assertCustomerSalesData(df)
 
-        val dataSchema = DataFrameSchema.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY, dbType = CustomDB)
+        val dataSchema =
+            DataFrameSchema.readSqlQuery(dataSource, CUSTOMER_SALES_QUERY, dbType = CustomDB)
         assertCustomerSalesSchema(dataSchema)
     }
 

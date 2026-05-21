@@ -35,27 +35,19 @@ class ReplCodeGenTests : BaseTest() {
     val stringName = String::class.simpleName!!
 
     class Test1 {
-        @DataSchema
-        interface _DataFrameType
+        @DataSchema interface _DataFrameType
 
-        @DataSchema(isOpen = false)
-        interface _DataFrameType1 : _DataFrameType
+        @DataSchema(isOpen = false) interface _DataFrameType1 : _DataFrameType
 
-        @DataSchema(isOpen = false)
-        interface _DataFrameType2 : _DataFrameType
+        @DataSchema(isOpen = false) interface _DataFrameType2 : _DataFrameType
     }
 
     class Test2 {
-        @DataSchema
-        interface _DataFrameType
+        @DataSchema interface _DataFrameType
 
-        @DataSchema
-        interface _DataFrameType1
+        @DataSchema interface _DataFrameType1
 
-        @DataSchema(isOpen = false)
-        interface _DataFrameType2 :
-            _DataFrameType,
-            _DataFrameType1
+        @DataSchema(isOpen = false) interface _DataFrameType2 : _DataFrameType, _DataFrameType1
     }
 
     object Test3 {
@@ -64,16 +56,14 @@ class ReplCodeGenTests : BaseTest() {
             val x: List<*>
         }
 
-        @DataSchema
-        interface B : A
+        @DataSchema interface B : A
 
         @DataSchema(isOpen = false)
         interface C : B {
             override val x: List<Int>
         }
 
-        @DataSchema
-        interface D : A
+        @DataSchema interface D : A
 
         val df = dataFrameOf("x")(listOf(1))
     }
@@ -104,7 +94,8 @@ class ReplCodeGenTests : BaseTest() {
             val $dfRowName<$marker>.name: $stringName @JvmName("${marker}_name") get() = this["name"] as $stringName
             val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
-            """.trimIndent()
+            """
+                .trimIndent()
         code shouldBe expected
 
         val code2 = repl.process<Test1._DataFrameType>()
@@ -122,7 +113,8 @@ class ReplCodeGenTests : BaseTest() {
             
             val $dfName<$marker3>.city: $dataCol<$stringName> @JvmName("${marker3}_city") get() = this["city"] as $dataCol<$stringName>
             val $dfRowName<$marker3>.city: $stringName @JvmName("${marker3}_city") get() = this["city"] as $stringName
-            """.trimIndent()
+            """
+                .trimIndent()
 
         code3 shouldBe expected3
 
@@ -141,7 +133,8 @@ class ReplCodeGenTests : BaseTest() {
             
             val $dfName<$marker5>.weight: $dataCol<$intName> @JvmName("${marker5}_weight") get() = this["weight"] as $dataCol<$intName>
             val $dfRowName<$marker5>.weight: $intName @JvmName("${marker5}_weight") get() = this["weight"] as $intName
-            """.trimIndent()
+            """
+                .trimIndent()
         code5 shouldBe expected5
 
         val code6 = repl.process<Test1._DataFrameType2>()
@@ -161,7 +154,8 @@ class ReplCodeGenTests : BaseTest() {
             @DataSchema
             interface ${Test2._DataFrameType2::class.simpleName!!} : ${Test2._DataFrameType::class.qualifiedName}, ${Test2._DataFrameType1::class.qualifiedName} { }
             
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val code = repl.process(typed).declarations.trimIndent()
         code shouldBe expected
@@ -189,7 +183,8 @@ class ReplCodeGenTests : BaseTest() {
             val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?
             val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val code = repl.process(typed).declarations.trimIndent()
         code shouldBe expected
@@ -247,17 +242,16 @@ class ReplCodeGenTests : BaseTest() {
         }
 
         val ColumnsScope<_DataFrameType1>.a: DataColumn<Int>
-            @JvmName("_DataFrameType1_a")
-            get() = this["a"] as DataColumn<Int>
+            @JvmName("_DataFrameType1_a") get() = this["a"] as DataColumn<Int>
+
         val DataRow<_DataFrameType1>.a: Int
-            @JvmName("_DataFrameType1_a")
-            get() = this["a"] as Int
+            @JvmName("_DataFrameType1_a") get() = this["a"] as Int
+
         val ColumnsScope<_DataFrameType1>.b: DataColumn<Int>
-            @JvmName("_DataFrameType1_b")
-            get() = this["b"] as DataColumn<Int>
+            @JvmName("_DataFrameType1_b") get() = this["b"] as DataColumn<Int>
+
         val DataRow<_DataFrameType1>.b: Int
-            @JvmName("_DataFrameType1_b")
-            get() = this["b"] as Int
+            @JvmName("_DataFrameType1_b") get() = this["b"] as Int
 
         @DataSchema
         interface _DataFrameType {
@@ -265,14 +259,19 @@ class ReplCodeGenTests : BaseTest() {
             val leaf: _DataFrameType1
         }
 
-        val df = dataFrameOf("col" to listOf("a"), "leaf" to listOf(dataFrameOf("a")(1).first()))
-            .convert("leaf").cast<AnyRow>().asFrame { it.add("c") { 3 } }
+        val df =
+            dataFrameOf("col" to listOf("a"), "leaf" to listOf(dataFrameOf("a")(1).first()))
+                .convert("leaf")
+                .cast<AnyRow>()
+                .asFrame { it.add("c") { 3 } }
     }
 
     @Test
     fun `process closed inheritance override`() {
-        // if ReplCodeGenerator would generate schemas with isOpen = true or with fields = false, _DataFrameType2 could implement _DataFrameType
-        // but with isOpen = false and fields = true _DataFrameType2 : _DataFrameType produces incorrect override that couldn't be compiled
+        // if ReplCodeGenerator would generate schemas with isOpen = true or with fields = false,
+        // _DataFrameType2 could implement _DataFrameType
+        // but with isOpen = false and fields = true _DataFrameType2 : _DataFrameType produces
+        // incorrect override that couldn't be compiled
         // so we avoid this relation
         val repl = ReplCodeGenerator.create()
         repl.process<Test5._DataFrameType>()
@@ -301,7 +300,8 @@ class ReplCodeGenTests : BaseTest() {
             val $dfRowName<_DataFrameType2>.col: String @JvmName("_DataFrameType2_col") get() = this["col"] as String
             val $dfName<_DataFrameType2>.leaf: ColumnGroup<Leaf> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as ColumnGroup<Leaf>
             val $dfRowName<_DataFrameType2>.leaf: $dfRowName<Leaf> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as $dfRowName<Leaf>
-            """.trimIndent()
+            """
+                .trimIndent()
     }
 
     object TestColumnOrderInGroup {
@@ -317,13 +317,11 @@ class ReplCodeGenTests : BaseTest() {
             val extra: Int?
         }
 
-        val df = dataFrameOf(
-            "nested" to columnOf(
-                "y" to columnOf("hello"),
-                "x" to columnOf(42),
-            ),
-            "extra" to columnOf(1),
-        )
+        val df =
+            dataFrameOf(
+                "nested" to columnOf("y" to columnOf("hello"), "x" to columnOf(42)),
+                "extra" to columnOf(1),
+            )
     }
 
     @Test

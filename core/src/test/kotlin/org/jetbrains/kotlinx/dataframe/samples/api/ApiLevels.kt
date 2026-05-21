@@ -24,9 +24,7 @@ class ApiLevels {
             .add("lastName") { "name"<String>().split(",").last() }
             .dropNulls("age")
             .filter {
-                "survived"<Boolean>() &&
-                    "home"<String>().endsWith("NY") &&
-                    "age"<Int>() in 10..20
+                "survived"<Boolean>() && "home"<String>().endsWith("NY") && "age"<Int>() in 10..20
             }
         // SampleEnd
     }

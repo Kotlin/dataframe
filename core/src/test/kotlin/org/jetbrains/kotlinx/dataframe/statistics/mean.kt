@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -11,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.api.meanOf
 import org.jetbrains.kotlinx.dataframe.api.rowMean
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class MeanTests {
 
@@ -26,7 +26,9 @@ class MeanTests {
         columnOf<Number?>(10, 20, Double.NaN, null).mean().shouldBeNaN()
         columnOf<Number?>(10, 20, Double.NaN, null).mean(skipNaN = true) shouldBe 15
 
-        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false)).mean().shouldBeNaN()
+        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false))
+            .mean()
+            .shouldBeNaN()
         DataColumn.createValueColumn("", listOf(null), nothingType(true)).mean().shouldBeNaN()
     }
 
@@ -71,7 +73,8 @@ class MeanTests {
         val col = columnOf(1.toShort(), 2.toShort(), 3.toShort(), 4.toShort(), 5.toShort())
         col.mean() shouldBe 3.0
 
-        val colWithNull = columnOf<Short?>(1.toShort(), 2.toShort(), 3.toShort(), 4.toShort(), 5.toShort(), null)
+        val colWithNull =
+            columnOf<Short?>(1.toShort(), 2.toShort(), 3.toShort(), 4.toShort(), 5.toShort(), null)
         colWithNull.mean() shouldBe 3.0
     }
 
@@ -80,7 +83,8 @@ class MeanTests {
         val col = columnOf(1.toByte(), 2.toByte(), 3.toByte(), 4.toByte(), 5.toByte())
         col.mean() shouldBe 3.0
 
-        val colWithNull = columnOf<Byte?>(1.toByte(), 2.toByte(), 3.toByte(), 4.toByte(), 5.toByte(), null)
+        val colWithNull =
+            columnOf<Byte?>(1.toByte(), 2.toByte(), 3.toByte(), 4.toByte(), 5.toByte(), null)
         colWithNull.mean() shouldBe 3.0
     }
 
@@ -117,13 +121,7 @@ class MeanTests {
     @Suppress("ktlint:standard:argument-list-wrapping")
     @Test
     fun `rowMean with dataframe`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1, 2, 3,
-            4, 5, 6,
-            7, 8, 9,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         df[0].rowMean() shouldBe 2.0
         df[1].rowMean() shouldBe 5.0
@@ -133,13 +131,7 @@ class MeanTests {
     @Suppress("ktlint:standard:argument-list-wrapping")
     @Test
     fun `dataframe mean`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1, 2.0, 3f,
-            4, 5.0, 6f,
-            7, 8.0, 9f,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2.0, 3f, 4, 5.0, 6f, 7, 8.0, 9f)
 
         val means = df.mean()
         means["a"] shouldBe 4.0
@@ -158,13 +150,7 @@ class MeanTests {
     @Suppress("ktlint:standard:argument-list-wrapping")
     @Test
     fun `dataframe meanOf with transformation`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1, 2, 3,
-            4, 5, 6,
-            7, 8, 9,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         df.meanOf { "a"<Int>() + "c"<Int>() } shouldBe 10.0
     }
@@ -198,13 +184,18 @@ class MeanTests {
         mixedWithNaN.mean(skipNaN = true) shouldBe 3.0 // Skip NaN values
 
         // Test with DataFrame containing NaN values
-        val dfWithNaN = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1.0, Double.NaN, 3.0,
-            4.0, 5.0, Float.NaN,
-            Double.NaN, 8.0, 9.0,
-        )
+        val dfWithNaN =
+            dataFrameOf("a", "b", "c")(
+                1.0,
+                Double.NaN,
+                3.0,
+                4.0,
+                5.0,
+                Float.NaN,
+                Double.NaN,
+                8.0,
+                9.0,
+            )
 
         // Test DataFrame mean with skipNaN
         val meansWithNaN = dfWithNaN.mean() // Default behavior
@@ -231,16 +222,12 @@ class MeanTests {
         dfWithNaN.mean("a", "b", "c", skipNaN = true) shouldBe 5.0 // Skip NaN values
 
         // Test meanOf with transformation that might produce NaN values
-        val dfForTransform = dataFrameOf(
-            "a", "b",
-        )(
-            1.0, 0.0,
-            4.0, 2.0,
-            0.0, 0.0,
-        )
+        val dfForTransform = dataFrameOf("a", "b")(1.0, 0.0, 4.0, 2.0, 0.0, 0.0)
 
         // Division by zero produces NaN
-        dfForTransform.meanOf { "a"<Double>() / "b"<Double>() }.shouldBeNaN() // Default behavior: NaN propagates
+        dfForTransform
+            .meanOf { "a"<Double>() / "b"<Double>() }
+            .shouldBeNaN() // Default behavior: NaN propagates
 
         // Skip NaN values from division by zero
         dfForTransform.meanOf(skipNaN = true) {

@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 
 /**
  * ## ColumnsResolver
@@ -24,9 +23,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 public sealed interface ColumnsResolver<out C> {
 
     /**
-     * Resolves this [ColumnsResolver] as a [List]<[ColumnWithPath]<[C]>>.
-     * In many cases this function [transforms][ColumnsResolver.transform] a parent [ColumnsResolver] to reach
-     * the current [ColumnsResolver] result.
+     * Resolves this [ColumnsResolver] as a [List]<[ColumnWithPath]<[C]>>. In many cases this
+     * function [transforms][ColumnsResolver.transform] a parent [ColumnsResolver] to reach the
+     * current [ColumnsResolver] result.
      */
     public fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
 }
@@ -36,7 +35,12 @@ public class ColumnResolutionContext(
     public val unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
 ) {
 
-    public val allowMissingColumns: Boolean = unresolvedColumnsPolicy != UnresolvedColumnsPolicy.Fail
+    public val allowMissingColumns: Boolean =
+        unresolvedColumnsPolicy != UnresolvedColumnsPolicy.Fail
 }
 
-public enum class UnresolvedColumnsPolicy { Fail, Skip, Create }
+public enum class UnresolvedColumnsPolicy {
+    Fail,
+    Skip,
+    Create,
+}

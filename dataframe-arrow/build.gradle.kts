@@ -1,7 +1,5 @@
 plugins {
-    with(convention.plugins) {
-        alias(kotlinJvm8)
-    }
+    with(convention.plugins) { alias(kotlinJvm8) }
     with(libs.plugins) {
         alias(publisher)
         alias(binary.compatibility.validator)
@@ -39,6 +37,4 @@ kotlinPublications {
     }
 }
 
-tasks.test {
-    jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
-}
+tasks.test { jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED") }

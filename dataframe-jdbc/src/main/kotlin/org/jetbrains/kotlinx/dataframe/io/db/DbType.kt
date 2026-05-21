@@ -1,21 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.toKotlinLocalDateTime
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.Infer
-import org.jetbrains.kotlinx.dataframe.api.asDataColumn
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
-import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.math.BigDecimal
 import java.sql.Blob
 import java.sql.Clob
@@ -32,8 +16,10 @@ import java.sql.SQLXML
 import java.sql.Time
 import java.sql.Timestamp
 import java.sql.Types
+import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
+import java.util.Date as JavaDate
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -44,8 +30,22 @@ import kotlin.time.Instant
 import kotlin.time.toKotlinInstant
 import kotlin.uuid.Uuid
 import kotlin.uuid.toKotlinUuid
-import java.time.LocalDateTime as JavaLocalDateTime
-import java.util.Date as JavaDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.asDataColumn
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 
 /**
  * The `DbType` class represents a database type used for reading dataframe from the database.
@@ -65,11 +65,11 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
     /**
      * The table type(s) (`TABLE_TYPE`) of ordinary tables in the SQL database, used by
-     * [readAllSqlTables], and [readAllSqlTables] as a filter when querying the database
-     * for all the tables it has using [DatabaseMetaData.getTables].
+     * [readAllSqlTables], and [readAllSqlTables] as a filter when querying the database for all the
+     * tables it has using [DatabaseMetaData.getTables].
      *
-     * This is usually "TABLE" or "BASE TABLE", which is what [tableTypes] is set to by default,
-     * but it can be overridden to any custom list of table types, or `null` to let the JDBC integration
+     * This is usually "TABLE" or "BASE TABLE", which is what [tableTypes] is set to by default, but
+     * it can be overridden to any custom list of table types, or `null` to let the JDBC integration
      * return all types of tables.
      *
      * See [DatabaseMetaData.getTableTypes] for all supported table types of your specific database.
@@ -79,72 +79,73 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     /**
      * Specifies the default batch size for fetching rows from the database during query execution.
      *
-     * This property determines how many rows are fetched in a single batch from the database.
-     * A proper fetch size can improve performance by reducing the number of network round-trips required
-     * when handling large result sets.
+     * This property determines how many rows are fetched in a single batch from the database. A
+     * proper fetch size can improve performance by reducing the number of network round-trips
+     * required when handling large result sets.
      *
-     * Value is set to 1000 by default, but it can be overridden based on database-specific requirements
-     * or performance considerations.
+     * Value is set to 1000 by default, but it can be overridden based on database-specific
+     * requirements or performance considerations.
      */
     public open val defaultFetchSize: Int = 1000
 
     /**
      * Specifies the default timeout in seconds for database queries.
      *
-     * If set to `null`, no timeout is applied, allowing queries to run indefinitely.
-     * This property can be used to set a default query timeout for the database type,
-     * which can help manage long-running queries.
+     * If set to `null`, no timeout is applied, allowing queries to run indefinitely. This property
+     * can be used to set a default query timeout for the database type, which can help manage
+     * long-running queries.
      */
     public open val defaultQueryTimeout: Int? = null // null = no timeout
 
     /** Default mapping of [Java SQL Types][Types] to [KType]. */
-    protected val defaultJdbcTypeToKTypeMapping: Map<Int, KType> = mapOf(
-        Types.BIT to typeOf<Boolean>(),
-        Types.TINYINT to typeOf<Int>(),
-        Types.SMALLINT to typeOf<Int>(),
-        Types.INTEGER to typeOf<Int>(),
-        Types.BIGINT to typeOf<Long>(),
-        Types.FLOAT to typeOf<Float>(),
-        Types.REAL to typeOf<Float>(),
-        Types.DOUBLE to typeOf<Double>(),
-        Types.NUMERIC to typeOf<BigDecimal>(),
-        Types.DECIMAL to typeOf<BigDecimal>(),
-        Types.CHAR to typeOf<String>(),
-        Types.VARCHAR to typeOf<String>(),
-        Types.LONGVARCHAR to typeOf<String>(),
-        Types.DATE to typeOf<JavaDate>(),
-        Types.TIME to typeOf<Time>(),
-        Types.TIMESTAMP to typeOf<Timestamp>(),
-        Types.BINARY to typeOf<ByteArray>(),
-        Types.VARBINARY to typeOf<ByteArray>(),
-        Types.LONGVARBINARY to typeOf<ByteArray>(),
-        Types.NULL to typeOf<String>(),
-        Types.JAVA_OBJECT to typeOf<Any>(),
-        Types.DISTINCT to typeOf<Any>(),
-        Types.STRUCT to typeOf<Any>(),
-        Types.ARRAY to typeOf<Array<*>>(),
-        Types.BLOB to typeOf<ByteArray>(),
-        Types.CLOB to typeOf<Clob>(),
-        Types.REF to typeOf<Ref>(),
-        Types.DATALINK to typeOf<Any>(),
-        Types.BOOLEAN to typeOf<Boolean>(),
-        Types.ROWID to typeOf<RowId>(),
-        Types.NCHAR to typeOf<String>(),
-        Types.NVARCHAR to typeOf<String>(),
-        Types.LONGNVARCHAR to typeOf<String>(),
-        Types.NCLOB to typeOf<NClob>(),
-        Types.SQLXML to typeOf<SQLXML>(),
-        Types.REF_CURSOR to typeOf<Ref>(),
-        Types.TIME_WITH_TIMEZONE to typeOf<OffsetTime>(),
-        Types.TIMESTAMP_WITH_TIMEZONE to typeOf<OffsetDateTime>(),
-    )
+    protected val defaultJdbcTypeToKTypeMapping: Map<Int, KType> =
+        mapOf(
+            Types.BIT to typeOf<Boolean>(),
+            Types.TINYINT to typeOf<Int>(),
+            Types.SMALLINT to typeOf<Int>(),
+            Types.INTEGER to typeOf<Int>(),
+            Types.BIGINT to typeOf<Long>(),
+            Types.FLOAT to typeOf<Float>(),
+            Types.REAL to typeOf<Float>(),
+            Types.DOUBLE to typeOf<Double>(),
+            Types.NUMERIC to typeOf<BigDecimal>(),
+            Types.DECIMAL to typeOf<BigDecimal>(),
+            Types.CHAR to typeOf<String>(),
+            Types.VARCHAR to typeOf<String>(),
+            Types.LONGVARCHAR to typeOf<String>(),
+            Types.DATE to typeOf<JavaDate>(),
+            Types.TIME to typeOf<Time>(),
+            Types.TIMESTAMP to typeOf<Timestamp>(),
+            Types.BINARY to typeOf<ByteArray>(),
+            Types.VARBINARY to typeOf<ByteArray>(),
+            Types.LONGVARBINARY to typeOf<ByteArray>(),
+            Types.NULL to typeOf<String>(),
+            Types.JAVA_OBJECT to typeOf<Any>(),
+            Types.DISTINCT to typeOf<Any>(),
+            Types.STRUCT to typeOf<Any>(),
+            Types.ARRAY to typeOf<Array<*>>(),
+            Types.BLOB to typeOf<ByteArray>(),
+            Types.CLOB to typeOf<Clob>(),
+            Types.REF to typeOf<Ref>(),
+            Types.DATALINK to typeOf<Any>(),
+            Types.BOOLEAN to typeOf<Boolean>(),
+            Types.ROWID to typeOf<RowId>(),
+            Types.NCHAR to typeOf<String>(),
+            Types.NVARCHAR to typeOf<String>(),
+            Types.LONGNVARCHAR to typeOf<String>(),
+            Types.NCLOB to typeOf<NClob>(),
+            Types.SQLXML to typeOf<SQLXML>(),
+            Types.REF_CURSOR to typeOf<Ref>(),
+            Types.TIME_WITH_TIMEZONE to typeOf<OffsetTime>(),
+            Types.TIMESTAMP_WITH_TIMEZONE to typeOf<OffsetDateTime>(),
+        )
 
     /**
      * Retrieves column metadata from a JDBC ResultSet.
      *
-     * This method reads column metadata from [ResultSetMetaData] with graceful fallbacks
-     * for JDBC drivers that throw [java.sql.SQLFeatureNotSupportedException] for certain methods
-     * (e.g., Apache Hive).
+     * This method reads column metadata from [ResultSetMetaData] with graceful fallbacks for JDBC
+     * drivers that throw [java.sql.SQLFeatureNotSupportedException] for certain methods (e.g.,
+     * Apache Hive).
      *
      * Fallback behavior for unsupported methods:
      * - `getColumnName()` → `getColumnLabel()` → `"column_N"`
@@ -155,9 +156,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * - `getColumnDisplaySize()` → `0`
      * - `getColumnClassName()` → `"java.lang.Object"`
      *
-     * Override this method in subclasses to provide database-specific behavior
-     * (for example, to disable fallback for databases like Teradata or Oracle
-     * where [DatabaseMetaData.getColumns] is known to be slow).
+     * Override this method in subclasses to provide database-specific behavior (for example, to
+     * disable fallback for databases like Teradata or Oracle where [DatabaseMetaData.getColumns] is
+     * known to be slow).
      *
      * @param resultSet The [ResultSet] containing query results.
      * @return A list of [TableColumnMetadata] objects.
@@ -168,165 +169,177 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         val dbMetaData = connection.metaData
 
         // Some JDBC drivers (e.g., Hive) throw SQLFeatureNotSupportedException
-        val catalog = try {
-            connection.catalog.takeUnless { it.isNullOrBlank() }
-        } catch (_: Exception) {
-            null
-        }
+        val catalog =
+            try {
+                connection.catalog.takeUnless { it.isNullOrBlank() }
+            } catch (_: Exception) {
+                null
+            }
 
-        val schema = try {
-            connection.schema.takeUnless { it.isNullOrBlank() }
-        } catch (_: Exception) {
-            null
-        }
+        val schema =
+            try {
+                connection.schema.takeUnless { it.isNullOrBlank() }
+            } catch (_: Exception) {
+                null
+            }
 
         val columnCount = rsMetaData.columnCount
         val nameGenerator = ColumnNameGenerator()
-        val columns = List(columnCount) {
-            // SQL columns are 1-indexed
-            val index = it + 1
+        val columns =
+            List(columnCount) {
+                // SQL columns are 1-indexed
+                val index = it + 1
 
-            // Try to getColumnName, fallback to getColumnLabel, then generate name
-            val columnName = try {
-                rsMetaData.getColumnName(index)
-            } catch (_: Exception) {
-                try {
-                    rsMetaData.getColumnLabel(index)
-                } catch (_: Exception) {
-                    null
-                }
-            }
-
-            // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException
-            val tableName = try {
-                rsMetaData.getTableName(index).takeUnless { it.isBlank() }
-            } catch (_: Exception) {
-                // Fallback: try to extract table name from column name if it contains '.'
-                if (columnName?.contains('.') == true) {
-                    columnName.substringAfterLast('.')
-                } else {
-                    null
-                }
-            }
-
-            // Try to detect nullability from ResultSetMetaData
-            val isNullable = try {
-                when (rsMetaData.isNullable(index)) {
-                    ResultSetMetaData.columnNoNulls -> false
-
-                    ResultSetMetaData.columnNullable -> true
-
-                    // Unknown nullability: assume it nullable, may trigger fallback
-                    ResultSetMetaData.columnNullableUnknown -> true
-
-                    else -> true
-                }
-            } catch (_: Exception) {
-                // Some drivers may throw for unsupported features
-                // Try fallback to DatabaseMetaData, with additional safety
-                try {
-                    dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols ->
-                        if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
+                // Try to getColumnName, fallback to getColumnLabel, then generate name
+                val columnName =
+                    try {
+                        rsMetaData.getColumnName(index)
+                    } catch (_: Exception) {
+                        try {
+                            rsMetaData.getColumnLabel(index)
+                        } catch (_: Exception) {
+                            null
+                        }
                     }
-                } catch (_: Exception) {
-                    // Fallback failed, assume nullable as the safest default
-                    true
-                }
+
+                // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException
+                val tableName =
+                    try {
+                        rsMetaData.getTableName(index).takeUnless { it.isBlank() }
+                    } catch (_: Exception) {
+                        // Fallback: try to extract table name from column name if it contains '.'
+                        if (columnName?.contains('.') == true) {
+                            columnName.substringAfterLast('.')
+                        } else {
+                            null
+                        }
+                    }
+
+                // Try to detect nullability from ResultSetMetaData
+                val isNullable =
+                    try {
+                        when (rsMetaData.isNullable(index)) {
+                            ResultSetMetaData.columnNoNulls -> false
+
+                            ResultSetMetaData.columnNullable -> true
+
+                            // Unknown nullability: assume it nullable, may trigger fallback
+                            ResultSetMetaData.columnNullableUnknown -> true
+
+                            else -> true
+                        }
+                    } catch (_: Exception) {
+                        // Some drivers may throw for unsupported features
+                        // Try fallback to DatabaseMetaData, with additional safety
+                        try {
+                            dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols
+                                ->
+                                if (cols.next())
+                                    !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true)
+                                else true
+                            }
+                        } catch (_: Exception) {
+                            // Fallback failed, assume nullable as the safest default
+                            true
+                        }
+                    }
+
+                // adding fallbacks to avoid SQLException
+                val columnType =
+                    try {
+                        rsMetaData.getColumnTypeName(index)
+                    } catch (_: Exception) {
+                        "OTHER"
+                    }
+
+                val jdbcType =
+                    try {
+                        rsMetaData.getColumnType(index)
+                    } catch (_: Exception) {
+                        Types.OTHER
+                    }
+
+                val displaySize =
+                    try {
+                        rsMetaData.getColumnDisplaySize(index)
+                    } catch (_: Exception) {
+                        0
+                    }
+
+                val javaClassName =
+                    try {
+                        rsMetaData.getColumnClassName(index)
+                    } catch (_: Exception) {
+                        "java.lang.Object"
+                    }
+
+                // Generate DataFrame-compatible unique names in the same way as creating a
+                // DataFrame would
+                val uniqueName =
+                    nameGenerator.addUnique(
+                        preferredName = columnName.orEmpty().ifEmpty { UNNAMED_COLUMN_PREFIX }
+                    )
+
+                TableColumnMetadata(
+                    name = uniqueName,
+                    sqlTypeName = columnType,
+                    jdbcType = jdbcType,
+                    size = displaySize,
+                    javaClassName = javaClassName,
+                    isNullable = isNullable,
+                )
             }
-
-            // adding fallbacks to avoid SQLException
-            val columnType = try {
-                rsMetaData.getColumnTypeName(index)
-            } catch (_: Exception) {
-                "OTHER"
-            }
-
-            val jdbcType = try {
-                rsMetaData.getColumnType(index)
-            } catch (_: Exception) {
-                Types.OTHER
-            }
-
-            val displaySize = try {
-                rsMetaData.getColumnDisplaySize(index)
-            } catch (_: Exception) {
-                0
-            }
-
-            val javaClassName = try {
-                rsMetaData.getColumnClassName(index)
-            } catch (_: Exception) {
-                "java.lang.Object"
-            }
-
-            // Generate DataFrame-compatible unique names in the same way as creating a DataFrame would
-            val uniqueName = nameGenerator.addUnique(
-                preferredName = columnName.orEmpty().ifEmpty { UNNAMED_COLUMN_PREFIX },
-            )
-
-            TableColumnMetadata(
-                name = uniqueName,
-                sqlTypeName = columnType,
-                jdbcType = jdbcType,
-                size = displaySize,
-                javaClassName = javaClassName,
-                isNullable = isNullable,
-            )
-        }
 
         return columns
     }
 
     /**
-     * Returns the [type][KType] of the objects returned by [getValueFromResultSet]
-     * for the given [column][tableColumnMetadata]. Also called type `J`.
+     * Returns the [type][KType] of the objects returned by [getValueFromResultSet] for the given
+     * [column][tableColumnMetadata]. Also called type `J`.
      *
-     * While [DbType] contains a basic type mapping,
-     * it's often necessary to override this function for specific JDBC implementations,
-     * as each implementation can deviate from the standard type mapping and may return
-     * unexpected types when [ResultSet.getObject] is called.
+     * While [DbType] contains a basic type mapping, it's often necessary to override this function
+     * for specific JDBC implementations, as each implementation can deviate from the standard type
+     * mapping and may return unexpected types when [ResultSet.getObject] is called.
      *
      * @param [tableColumnMetadata] all information we have about the column
-     * @return the type of the objects returned by [getValueFromResultSet] and
-     *   [ResultSet.getObject] for the given column
+     * @return the type of the objects returned by [getValueFromResultSet] and [ResultSet.getObject]
+     *   for the given column
      */
     public open fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
-        val kType = when (tableColumnMetadata.jdbcType) {
-            Types.OTHER ->
-                when (tableColumnMetadata.javaClassName) {
-                    "[B" -> typeOf<ByteArray>()
-                    else -> typeOf<Any>()
-                }
+        val kType =
+            when (tableColumnMetadata.jdbcType) {
+                Types.OTHER ->
+                    when (tableColumnMetadata.javaClassName) {
+                        "[B" -> typeOf<ByteArray>()
+                        else -> typeOf<Any>()
+                    }
 
-            Types.TIMESTAMP if tableColumnMetadata.javaClassName == "java.time.LocalDateTime" ->
-                typeOf<JavaLocalDateTime>()
+                Types.TIMESTAMP if tableColumnMetadata.javaClassName == "java.time.LocalDateTime" ->
+                    typeOf<JavaLocalDateTime>()
 
-            Types.BINARY if tableColumnMetadata.javaClassName == "java.util.UUID" ->
-                typeOf<UUID>()
+                Types.BINARY if tableColumnMetadata.javaClassName == "java.util.UUID" ->
+                    typeOf<UUID>()
 
-            Types.REAL if tableColumnMetadata.javaClassName == "java.lang.Double" ->
-                typeOf<Double>()
+                Types.REAL if tableColumnMetadata.javaClassName == "java.lang.Double" ->
+                    typeOf<Double>()
 
-            Types.FLOAT if tableColumnMetadata.javaClassName == "java.lang.Double" ->
-                typeOf<Double>()
+                Types.FLOAT if tableColumnMetadata.javaClassName == "java.lang.Double" ->
+                    typeOf<Double>()
 
-            Types.NUMERIC if tableColumnMetadata.javaClassName == "java.lang.Double" ->
-                typeOf<Double>()
+                Types.NUMERIC if tableColumnMetadata.javaClassName == "java.lang.Double" ->
+                    typeOf<Double>()
 
-            // Force BIGINT to always be Long, regardless of javaClassName
-            // Some JDBC drivers (e.g., MariaDB) may report Integer for small BIGINT values
-            // TODO: tableColumnMetadata.jdbcType == Types.BIGINT -> typeOf<Long>()
+                // Force BIGINT to always be Long, regardless of javaClassName
+                // Some JDBC drivers (e.g., MariaDB) may report Integer for small BIGINT values
+                // TODO: tableColumnMetadata.jdbcType == Types.BIGINT -> typeOf<Long>()
 
-            else if tableColumnMetadata.javaClassName == "[B" ->
-                typeOf<ByteArray>()
+                else if tableColumnMetadata.javaClassName == "[B" -> typeOf<ByteArray>()
 
-            else if tableColumnMetadata.javaClassName == "java.sql.Blob" ->
-                typeOf<Blob>()
+                else if tableColumnMetadata.javaClassName == "java.sql.Blob" -> typeOf<Blob>()
 
-            else ->
-                defaultJdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType]
-                    ?: typeOf<String>()
-        }
+                else ->
+                    defaultJdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: typeOf<String>()
+            }
 
         return kType.withNullability(tableColumnMetadata.isNullable)
     }
@@ -336,15 +349,17 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      *
      * This method can be overridden for custom database types to change low-level reading logic.
      *
-     * The return value, of type [J], must match the [expectedJdbcType] parameter exactly.
-     * This parameter is obtained from [getExpectedJdbcType].
+     * The return value, of type [J], must match the [expectedJdbcType] parameter exactly. This
+     * parameter is obtained from [getExpectedJdbcType].
      *
      * @param [J] the JDBC type, [expectedJdbcType]
      * @param [rs] the ResultSet to read from
      * @param [columnIndex] zero-based column index
      * @param [tableColumnMetadata] all information we have about the column
-     * @param [expectedJdbcType] the type of the return value, [J], obtained from [getExpectedJdbcType]
-     * @return the value extracted from the [result set][rs] for the given [column index][columnIndex]
+     * @param [expectedJdbcType] the type of the return value, [J], obtained from
+     *   [getExpectedJdbcType]
+     * @return the value extracted from the [result set][rs] for the given
+     *   [column index][columnIndex]
      */
     @Suppress("UNCHECKED_CAST")
     public open fun <J> getValueFromResultSet(
@@ -358,14 +373,15 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         } catch (_: Throwable) {
             // TODO?
             rs.getString(columnIndex + 1)
-        } as J
+        }
+            as J
 
     /**
-     * Returns the [type][KType] of the objects returned by [preprocessValue]
-     * for the given [column][tableColumnMetadata]. Also called type `D`.
+     * Returns the [type][KType] of the objects returned by [preprocessValue] for the given
+     * [column][tableColumnMetadata]. Also called type `D`.
      *
-     * This is the type of the value after preprocessing the individual value,
-     * which may differ from the JDBC type `J`.
+     * This is the type of the value after preprocessing the individual value, which may differ from
+     * the JDBC type `J`.
      *
      * @param [tableColumnMetadata] all information we have about the column
      * @param [expectedJdbcType] the JDBC type, `J`, obtained from [getExpectedJdbcType]
@@ -379,29 +395,28 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             Types.TIMESTAMP if tableColumnMetadata.javaClassName == "java.time.LocalDateTime" ->
                 typeOf<LocalDateTime>()
 
-            Types.TIMESTAMP ->
-                typeOf<Instant>()
+            Types.TIMESTAMP -> typeOf<Instant>()
 
-            Types.BINARY if tableColumnMetadata.javaClassName == "java.util.UUID" ->
-                typeOf<Uuid>()
+            Types.BINARY if tableColumnMetadata.javaClassName == "java.util.UUID" -> typeOf<Uuid>()
 
-            else ->
-                expectedJdbcType
+            else -> expectedJdbcType
         }.withNullability(tableColumnMetadata.isNullable)
 
     /**
      * (Potentially) preprocesses the [value] for the given [column][tableColumnMetadata] before
      * collecting it in a DataFrame [DataColumn].
      *
-     * While [DbType] contains some basic preprocessing logic, converting some Java classes to Kotlin ones,
-     * it's often necessary to override this function for specific JDBC implementations.
+     * While [DbType] contains some basic preprocessing logic, converting some Java classes to
+     * Kotlin ones, it's often necessary to override this function for specific JDBC
+     * implementations.
      *
      * @param [J] the JDBC type, [expectedJdbcType]
      * @param [D] the type of the return value, [expectedPreprocessedValueType]
      * @param [value] the value to preprocess
      * @param [tableColumnMetadata] all information we have about the column
      * @param [expectedJdbcType] the JDBC type, [J], obtained from [getExpectedJdbcType]
-     * @param [expectedPreprocessedValueType] the type of the return value, [D], obtained from [getPreprocessedValueType]
+     * @param [expectedPreprocessedValueType] the type of the return value, [D], obtained from
+     *   [getPreprocessedValueType]
      * @return the preprocessed version of [value]
      */
     @Suppress("UNCHECKED_CAST")
@@ -415,52 +430,57 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             Types.TIMESTAMP if tableColumnMetadata.javaClassName == "java.time.LocalDateTime" ->
                 (value as JavaLocalDateTime?)?.toKotlinLocalDateTime()
 
-            Types.TIMESTAMP ->
-                (value as Timestamp?)?.toInstant()?.toKotlinInstant()
+            Types.TIMESTAMP -> (value as Timestamp?)?.toInstant()?.toKotlinInstant()
 
             Types.BINARY if tableColumnMetadata.javaClassName == "java.util.UUID" ->
                 (value as UUID?)?.toKotlinUuid()
 
-            else ->
-                value
-        } as D
+            else -> value
+        }
+            as D
 
     /**
-     * Returns the target [schema][ColumnSchema] of the given [column][tableColumnMetadata]
-     * which [buildDataColumn] will adhere to. This schema corresponds to type `P`, in the sense that
-     * it will describe the [schema][ColumnSchema] of `DataColumn<P>`.
+     * Returns the target [schema][ColumnSchema] of the given [column][tableColumnMetadata] which
+     * [buildDataColumn] will adhere to. This schema corresponds to type `P`, in the sense that it
+     * will describe the [schema][ColumnSchema] of `DataColumn<P>`.
      *
-     * If `null` is returned, the [schema][ColumnSchema] cannot be determined before looking at the actual data.
+     * If `null` is returned, the [schema][ColumnSchema] cannot be determined before looking at the
+     * actual data.
      *
      * @param [tableColumnMetadata] all information we have about the column
      * @param [expectedValueType] the type of the values after preprocessing, `D`
-     * @return the target [schema][ColumnSchema] of the given column,
-     *   or `null` if it cannot be determined from the types alone.
+     * @return the target [schema][ColumnSchema] of the given column, or `null` if it cannot be
+     *   determined from the types alone.
      */
     public open fun getTargetColumnSchema(
         tableColumnMetadata: TableColumnMetadata,
         expectedValueType: KType,
     ): ColumnSchema? =
         when (tableColumnMetadata.jdbcType) {
-            // buildDataColumn post-processes java.sql.Array -> Kotlin arrays, making the result type `Array<*>`
-            Types.ARRAY -> ColumnSchema.Value(typeOf<Array<*>>().withNullability(expectedValueType.isMarkedNullable))
+            // buildDataColumn post-processes java.sql.Array -> Kotlin arrays, making the result
+            // type `Array<*>`
+            Types.ARRAY ->
+                ColumnSchema.Value(
+                    typeOf<Array<*>>().withNullability(expectedValueType.isMarkedNullable)
+                )
 
             else -> ColumnSchema.Value(expectedValueType)
         }
 
     /**
-     * Builds a [DataColumn] from the given ([preprocessed][preprocessValue]) [values],
-     * adhering to [targetColumnSchema].
+     * Builds a [DataColumn] from the given ([preprocessed][preprocessValue]) [values], adhering to
+     * [targetColumnSchema].
      *
      * @param [D] the type of the values after preprocessing
-     * @param [P] the type of the resulting [DataColumn][DataColumn]`<`[P][P]`>`, [targetColumnSchema]
+     * @param [P] the type of the resulting [DataColumn][DataColumn]`<`[P][P]`>`,
+     *   [targetColumnSchema]
      * @param [name] the name of the column
      * @param [values] the ([preprocessed][preprocessValue]) values to put in the column
      * @param [tableColumnMetadata] all information we have about the column
-     * @param [targetColumnSchema] the schema of the column [DataColumn][DataColumn]`<`[P][P]`>`,
-     *   as determined by [getTargetColumnSchema]
-     * @param [inferNullability] whether to infer nullability from the runtime values (this is more expensive),
-     *   as opposed to using the nullability information from the [targetColumnSchema]
+     * @param [targetColumnSchema] the schema of the column [DataColumn][DataColumn]`<`[P][P]`>`, as
+     *   determined by [getTargetColumnSchema]
+     * @param [inferNullability] whether to infer nullability from the runtime values (this is more
+     *   expensive), as opposed to using the nullability information from the [targetColumnSchema]
      * @return the built [DataColumn]
      */
     public open fun <D, P> buildDataColumn(
@@ -470,12 +490,13 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         targetColumnSchema: ColumnSchema?,
         inferNullability: Boolean,
     ): DataColumn<P> {
-        val postProcessedValues = when (tableColumnMetadata.jdbcType) {
-            // Special case which post-processes java.sql.Array -> Kotlin arrays
-            Types.ARRAY -> handleArrayValues(values)
+        val postProcessedValues =
+            when (tableColumnMetadata.jdbcType) {
+                // Special case which post-processes java.sql.Array -> Kotlin arrays
+                Types.ARRAY -> handleArrayValues(values)
 
-            else -> values
-        }
+                else -> values
+            }
         return postProcessedValues.toDataColumn(
             name = name,
             targetColumnSchema = targetColumnSchema,
@@ -486,14 +507,15 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     /**
      * Helper function to convert [this] list of values to a [DataColumn][DataColumn]`<`[P][P]`>`.
      *
-     * **NOTE:** While this function can handle
-     * [targetColumnSchema][targetColumnSchema]`  =  `[ColumnSchema.Group][ColumnSchema.Group],
-     * and [this] being a [List][List]`<`[`DataRow<*>`][DataRow]`>`,
-     * this should generally be avoided to circumvent creating `n` [data rows][DataRow],
-     * (which essentially are `n` single-row [dataframes][DataFrame]).
+     * **NOTE:** While this function can handle [targetColumnSchema][targetColumnSchema]` =
+     * `[ColumnSchema.Group][ColumnSchema.Group], and [this] being a
+     * [List][List]`<`[`DataRow<*>`][DataRow]`>`, this should generally be avoided to circumvent
+     * creating `n` [data rows][DataRow], (which essentially are `n` single-row
+     * [dataframes][DataFrame]).
      *
-     * Instead, use [preprocessValue][preprocessValue] to convert to [Map][Map]`<`[String][String]`, `[Any?][Any]`>`
-     * and then use the more efficient [Iterable<Map<String, Any?>>.toDataFrame()][Iterable.toDataFrame] in [buildDataColumn]:
+     * Instead, use [preprocessValue][preprocessValue] to convert to [Map][Map]`<`[String][String]`,
+     * `[Any?][Any]`>` and then use the more efficient
+     * [Iterable<Map<String, Any?>>.toDataFrame()][Iterable.toDataFrame] in [buildDataColumn]:
      * ```kt
      * (values as List<Map<String, Any?>>)
      *     .toDataFrame()
@@ -509,32 +531,29 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         when (targetColumnSchema) {
             is ColumnSchema.Value ->
                 DataColumn.createValueColumn(
-                    name = name,
-                    values = this,
-                    infer = if (inferNullability) Infer.Nulls else Infer.None,
-                    type = targetColumnSchema.type,
-                ).cast()
+                        name = name,
+                        values = this,
+                        infer = if (inferNullability) Infer.Nulls else Infer.None,
+                        type = targetColumnSchema.type,
+                    )
+                    .cast()
 
             // NOTE: this case should be avoided.
             //  Creating `n` DataRows is heavy!
             is ColumnSchema.Group ->
-                DataColumn.createColumnGroup(
-                    name = name,
-                    df = (this as List<AnyRow>).toDataFrame(),
-                ).asDataColumn().cast()
+                DataColumn.createColumnGroup(name = name, df = (this as List<AnyRow>).toDataFrame())
+                    .asDataColumn()
+                    .cast()
 
             is ColumnSchema.Frame ->
                 DataColumn.createFrameColumn(
-                    name = name,
-                    groups = this as List<AnyFrame>,
-                    schema = lazy { targetColumnSchema.schema },
-                ).cast()
+                        name = name,
+                        groups = this as List<AnyFrame>,
+                        schema = lazy { targetColumnSchema.schema },
+                    )
+                    .cast()
 
-            null ->
-                DataColumn.createByInference(
-                    name = name,
-                    values = this,
-                ).cast()
+            null -> DataColumn.createByInference(name = name, values = this).cast()
         }
 
     /**
@@ -575,8 +594,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     /**
      * Configures the provided `PreparedStatement` for optimized read operations.
      *
-     * This method sets the fetch size for efficient streaming, applies a query timeout if specified,
-     * and configures the fetch direction to forward-only for better performance in read-only operations.
+     * This method sets the fetch size for efficient streaming, applies a query timeout if
+     * specified, and configures the fetch direction to forward-only for better performance in
+     * read-only operations.
      *
      * @param statement the `PreparedStatement` to be configured
      */
@@ -584,9 +604,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         // Set fetch size for better streaming performance
         statement.fetchSize = defaultFetchSize
 
-        defaultQueryTimeout?.let {
-            statement.queryTimeout = it
-        }
+        defaultQueryTimeout?.let { statement.queryTimeout = it }
 
         // Set the fetch direction (forward-only for read-only operations)
         statement.fetchDirection = ResultSet.FETCH_FORWARD
@@ -618,11 +636,12 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param limit The maximum number of rows to retrieve from the query. Default is 1.
      * @return A new SQL query with the limit clause added.
      */
-    public open fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int = 1): String = "$sqlQuery LIMIT $limit"
+    public open fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int = 1): String =
+        "$sqlQuery LIMIT $limit"
 
     /**
-     * Creates a database connection using the provided configuration.
-     * This method is only called when working with [DbConnectionConfig] (internally managed connections).
+     * Creates a database connection using the provided configuration. This method is only called
+     * when working with [DbConnectionConfig] (internally managed connections).
      *
      * Some databases (like [Sqlite]) require read-only mode to be set during connection creation
      * rather than after the connection is established.
@@ -639,11 +658,10 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     }
 
     /**
-     * todo?
-     * Converts SQL Array objects to strongly-typed arrays.
+     * todo? Converts SQL Array objects to strongly-typed arrays.
      *
-     * Extracts arrays from SQL Array objects and converts them to a consistent type
-     * if all elements share the same type. Returns original arrays if types vary.
+     * Extracts arrays from SQL Array objects and converts them to a consistent type if all elements
+     * share the same type. Returns original arrays if types vary.
      *
      * @param values raw values containing SQL Array objects
      * @return list of consistently typed arrays, or original arrays if no common type exists
@@ -654,16 +672,18 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             (it as? java.sql.Array)?.array?.let { array -> array as? Array<*> }
         }
 
-        // Flatten the arrays to iterate through all elements and filter out null values, then map to component types
-        val allElementTypes = sqlArrays
-            .flatMap { array ->
-                (array.javaClass.componentType?.kotlin?.let { listOf(it) } ?: emptyList())
-            } // Get the component type of each array and convert it to a Kotlin class, if available
+        // Flatten the arrays to iterate through all elements and filter out null values, then map
+        // to component types
+        val allElementTypes = sqlArrays.flatMap { array ->
+            (array.javaClass.componentType?.kotlin?.let { listOf(it) } ?: emptyList())
+        } // Get the component type of each array and convert it to a Kotlin class, if available
 
         // Find distinct types and ensure there's only one distinct type
-        val commonElementType = allElementTypes
-            .distinct() // Get unique element types
-            .singleOrNull() // Ensure there's only one unique element type, otherwise return null
+        val commonElementType =
+            allElementTypes
+                .distinct() // Get unique element types
+                .singleOrNull() // Ensure there's only one unique element type, otherwise return
+                                // null
             ?: Any::class // Fallback to Any::class if multiple distinct types or no elements found
 
         return if (commonElementType != Any::class) {
@@ -675,7 +695,9 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
     /** Utility function to cast arrays based on the type of elements */
     private fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> =
-        array.mapNotNull { elementType.safeCast(it) }
+        array.mapNotNull {
+            elementType.safeCast(it)
+        }
 }
 
 // same as org.jetbrains.kotlinx.dataframe.impl.UNNAMED_COLUMN_PREFIX

@@ -30,13 +30,15 @@ class AccessApis {
         val age: Int
     }
 
-    val df = dataFrameOf(
-        columnOf(
-            columnOf("Alice") named "firstName",
-            columnOf("Johnson") named "lastName",
-        ) named "fullName",
-        columnOf(20) named "age",
-    ).cast<Person>()
+    val df =
+        dataFrameOf(
+                columnOf(
+                    columnOf("Alice") named "firstName",
+                    columnOf("Johnson") named "lastName",
+                ) named "fullName",
+                columnOf(20) named "age",
+            )
+            .cast<Person>()
 
     @Test
     fun stringApiExample1() {
@@ -59,9 +61,7 @@ class AccessApis {
         // Takes only rows where the
         // ("fullName"/"firstName") column value is equal to "Alice"
         // and "age" column value is greater or equal to 18
-        df.filter {
-            "fullName"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18
-        }
+        df.filter { "fullName"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18 }
         // SampleEnd
     }
 
@@ -81,9 +81,7 @@ class AccessApis {
         // Takes only rows where the
         // ("fullName"/"firstName") column value is equal to "Alice"
         // and "age" column value is greater or equal to 18
-        df.filter {
-            fullName.firstName == "Alice" && age >= 18
-        }
+        df.filter { fullName.firstName == "Alice" && age >= 18 }
         // SampleEnd
     }
 
@@ -95,9 +93,7 @@ class AccessApis {
             .add("lastName") { "name"<String>().split(",").last() }
             .dropNulls("age")
             .filter {
-                "survived"<Boolean>() &&
-                    "home"<String>().endsWith("NY") &&
-                    "age"<Int>() in 10..20
+                "survived"<Boolean>() && "home"<String>().endsWith("NY") && "age"<Int>() in 10..20
             }
         // SampleEnd
     }

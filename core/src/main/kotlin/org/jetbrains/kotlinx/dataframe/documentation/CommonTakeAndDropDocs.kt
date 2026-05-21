@@ -5,33 +5,36 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 
 /**
  * ## {@get [TITLE]} (Cols)
- * This {@get [NOUN]}s the {@get [FIRST_OR_LAST]} [n\] columns from [this\] collecting
- * the result into a [ColumnSet].
+ * This {@get [NOUN]}s the {@get [FIRST_OR_LAST]} [n\] columns from [this\] collecting the result
+ * into a [ColumnSet].
  *
  * This function operates solely on columns at the top-level.
  *
  * Any {@include [AccessApiLink]} can be used as receiver for these functions.
  *
- * NOTE: To avoid ambiguity, `{@get [CommonTakeAndDropDocs.OPERATION]}` is called `{@get [CommonTakeAndDropDocs.OPERATION]}Cols` when called on
- * a [ColumnGroup].
+ * NOTE: To avoid ambiguity, `{@get [CommonTakeAndDropDocs.OPERATION]}` is called `{@get
+ * [CommonTakeAndDropDocs.OPERATION]}Cols` when called on a [ColumnGroup].
  *
  * ### Check out: [Grammar\]
  *
  * #### Examples:
- * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@get [OPERATION]}][ColumnSet.{@get [OPERATION]}]`(5) }`
+ * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my"
+ * `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@get [OPERATION]}][ColumnSet.{@get
+ * [OPERATION]}]`(5) }`
  *
- * `df.`[select][DataFrame.select]` { `[{@get [OPERATION]}][ColumnsSelectionDsl.{@get [OPERATION]}]`(1) }`
+ * `df.`[select][DataFrame.select]` { `[{@get [OPERATION]}][ColumnsSelectionDsl.{@get
+ * [OPERATION]}]`(1) }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@get [OPERATION]}Cols][SingleColumn.{@get [OPERATION]}Cols]`(2) }`
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@get [OPERATION]}Cols][SingleColumn.{@get
+ * [OPERATION]}Cols]`(2) }`
  *
- * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@get [OPERATION]}Cols][String.{@get [OPERATION]}Cols]`(3) }`
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@get [OPERATION]}Cols][String.{@get
+ * [OPERATION]}Cols]`(3) }`
  *
  * #### Examples for this overload:
  *

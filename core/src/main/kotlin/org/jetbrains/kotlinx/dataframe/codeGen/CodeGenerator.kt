@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
+import kotlin.reflect.KClass
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGeneratorImpl
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.FullyQualifiedNames
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ShortNames
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.id
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import kotlin.reflect.KClass
 
 public enum class InterfaceGenerationMode {
     NoFields,
@@ -56,11 +56,7 @@ internal fun CodeGenerator.generate(
     interfaceMode: InterfaceGenerationMode,
     extensionProperties: Boolean,
 ): CodeWithTypeCastGenerator =
-    generate(
-        MarkersExtractor.get(markerClass),
-        interfaceMode,
-        extensionProperties,
-    )
+    generate(MarkersExtractor.get(markerClass), interfaceMode, extensionProperties)
 
 public inline fun <reified T> CodeGenerator.generate(
     interfaceMode: InterfaceGenerationMode,

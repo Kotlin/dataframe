@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -13,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.math.cumSumImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region DataColumn
 
@@ -23,23 +23,23 @@ import kotlin.reflect.KProperty
  * Computes the cumulative sums of the values in each column from the {@get [CumSumDocs.DATA_TYPE]}
  * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and [skipNA\] is set to `true`,
- * `null` and `NaN` values are skipped when computing the cumulative sum.
- * When `false`, all values after the first `NA` will be `NaN` (for [Double] and [Float] columns)
- * or `null` (for other columns).
+ * __NOTE:__ If the column contains nullable values and [skipNA\] is set to `true`, `null` and `NaN`
+ * values are skipped when computing the cumulative sum. When `false`, all values after the first
+ * `NA` will be `NaN` (for [Double] and [Float] columns) or `null` (for other columns).
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
  * Similar to [sum][sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
  *
- * {@get [CumSumDocs.CUMSUM_PARAM] @param [columns\] The selection of the columns to apply the `cumSum` operation to.
- *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][ColumnsSelectionDsl.colsAtAnyDepth].
- * }
+ * {@get [CumSumDocs.CUMSUM_PARAM] @param [columns\] The selection of the columns to apply the
+ * `cumSum` operation to. If not provided, `cumSum` will be applied to all primitive columns
+ * [at any depth][ColumnsSelectionDsl.colsAtAnyDepth]. }
  *
  * @param [skipNA\] Whether to skip `null` and `NaN` values (default: `true`).
  * @return A new {@get [CumSumDocs.DATA_TYPE]} of the same type with the cumulative sums.
  *
  * {@get [CumSumDocs.CUMSUM_PARAM] @see [Selecting Columns][SelectSelectingOptions].}
+ *
  * @see {@include [DocumentationUrls.CumSum]}
  */
 @ExcludeFromSources
@@ -54,75 +54,66 @@ private interface CumSumDocs {
 }
 
 /**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataColumn]}
- * {@set [CumSumDocs.CUMSUM_PARAM]}
+ * {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataColumn]} {@set
+ * [CumSumDocs.CUMSUM_PARAM]}
  */
 @JvmName("cumSumShort")
 public fun DataColumn<Short>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Int> =
     cumSumImpl(type(), skipNA).cast()
 
 /**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataColumn]}
- * {@set [CumSumDocs.CUMSUM_PARAM]}
+ * {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataColumn]} {@set
+ * [CumSumDocs.CUMSUM_PARAM]}
  */
 @JvmName("cumSumNullableShort")
 public fun DataColumn<Short?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Int?> =
     cumSumImpl(type(), skipNA).cast()
 
 /**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataColumn]}
- * {@set [CumSumDocs.CUMSUM_PARAM]}
+ * {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataColumn]} {@set
+ * [CumSumDocs.CUMSUM_PARAM]}
  */
 @JvmName("cumSumByte")
 public fun DataColumn<Byte>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Int> =
     cumSumImpl(type(), skipNA).cast()
 
 /**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataColumn]}
- * {@set [CumSumDocs.CUMSUM_PARAM]}
+ * {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataColumn]} {@set
+ * [CumSumDocs.CUMSUM_PARAM]}
  */
 @JvmName("cumSumNullableByte")
 public fun DataColumn<Byte?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Int?> =
     cumSumImpl(type(), skipNA).cast()
 
 /**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataColumn]}
- * {@set [CumSumDocs.CUMSUM_PARAM]}
+ * {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataColumn]} {@set
+ * [CumSumDocs.CUMSUM_PARAM]}
  */
 @JvmName("cumSumDouble")
 public fun DataColumn<Double?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Double> =
     cumSumImpl(type(), skipNA).cast()
 
 /**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataColumn]}
- * {@set [CumSumDocs.CUMSUM_PARAM]}
+ * {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataColumn]} {@set
+ * [CumSumDocs.CUMSUM_PARAM]}
  */
 @JvmName("cumSumFloat")
 public fun DataColumn<Float?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Float> =
     cumSumImpl(type(), skipNA).cast()
 
 /**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataColumn]}
- * {@set [CumSumDocs.CUMSUM_PARAM]}
+ * {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataColumn]} {@set
+ * [CumSumDocs.CUMSUM_PARAM]}
  */
-public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<T> =
-    cumSumImpl(type(), skipNA).cast()
+public fun <T : Number?> DataColumn<T>.cumSum(
+    skipNA: Boolean = defaultCumSumSkipNA
+): DataColumn<T> = cumSumImpl(type(), skipNA).cast()
 
 // endregion
 
 // region DataFrame
 
-/**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
- */
+/** {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataFrame]} */
 @Refine
 @Interpretable("DataFrameCumSum")
 public fun <T, C : Number?> DataFrame<T>.cumSum(
@@ -130,17 +121,13 @@ public fun <T, C : Number?> DataFrame<T>.cumSum(
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = convert(columns).asColumn { it.cumSum(skipNA) }
 
-/**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
- */
-public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
-    cumSum(skipNA) { columns.toColumnSet().cast() }
+/** {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataFrame]} */
+public fun <T> DataFrame<T>.cumSum(
+    vararg columns: String,
+    skipNA: Boolean = defaultCumSumSkipNA,
+): DataFrame<T> = cumSum(skipNA) { columns.toColumnSet().cast() }
 
-/**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
- */
+/** {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataFrame]} */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.cumSum(
@@ -148,10 +135,7 @@ public fun <T> DataFrame<T>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
 ): DataFrame<T> = cumSum(skipNA) { columns.toColumnSet() }
 
-/**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
- */
+/** {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataFrame]} */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.cumSum(
@@ -160,25 +144,19 @@ public fun <T> DataFrame<T>.cumSum(
 ): DataFrame<T> = cumSum(skipNA) { columns.toColumnSet() }
 
 /**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [DataFrame]}
- * {@set [CumSumDocs.CUMSUM_PARAM]}
+ * {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [DataFrame]} {@set
+ * [CumSumDocs.CUMSUM_PARAM]}
  */
 @Refine
 @Interpretable("DataFrameCumSum0")
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
-    cumSum(skipNA) {
-        colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
-    }
+    cumSum(skipNA) { colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast() }
 
 // endregion
 
 // region GroupBy
 
-/**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
- */
+/** {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [GroupBy]} */
 @Refine
 @Interpretable("GroupByCumSum")
 public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
@@ -186,17 +164,13 @@ public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
     columns: ColumnsSelector<G, C>,
 ): GroupBy<T, G> = updateGroups { cumSum(skipNA, columns) }
 
-/**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
- */
-public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
-    cumSum(skipNA) { columns.toColumnSet().cast() }
+/** {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [GroupBy]} */
+public fun <T, G> GroupBy<T, G>.cumSum(
+    vararg columns: String,
+    skipNA: Boolean = defaultCumSumSkipNA,
+): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet().cast() }
 
-/**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
- */
+/** {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [GroupBy]} */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, G> GroupBy<T, G>.cumSum(
@@ -204,10 +178,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
 ): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
 
-/**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
- */
+/** {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [GroupBy]} */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, G> GroupBy<T, G>.cumSum(
@@ -216,15 +187,11 @@ public fun <T, G> GroupBy<T, G>.cumSum(
 ): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
 
 /**
- * {@include [CumSumDocs]}
- * {@set [CumSumDocs.DATA_TYPE] [GroupBy]}
- * {@set [CumSumDocs.CUMSUM_PARAM]}
+ * {@include [CumSumDocs]} {@set [CumSumDocs.DATA_TYPE] [GroupBy]} {@set [CumSumDocs.CUMSUM_PARAM]}
  */
 @Refine
 @Interpretable("GroupByCumSum0")
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
-    cumSum(skipNA) {
-        colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast()
-    }
+    cumSum(skipNA) { colsAtAnyDepth().filter { it.isPrimitiveOrMixedNumber() }.cast() }
 
 // endregion

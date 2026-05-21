@@ -2,6 +2,8 @@ package org.jetbrains.kotlinx.dataframe.testSets.person
 
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import java.awt.Desktop
+import java.io.File
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.group
@@ -10,8 +12,6 @@ import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
 import org.junit.Ignore
 import org.junit.Test
-import java.awt.Desktop
-import java.io.File
 
 class HtmlRenderingTests : BaseTest() {
 

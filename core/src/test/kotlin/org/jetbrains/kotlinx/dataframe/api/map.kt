@@ -14,9 +14,7 @@ class MapTests {
 
     @Test
     fun `map ColumnsContainer`() {
-        val df = dataFrameOf("a")(1, 2).add {
-            expr { "a"<Int>() + 1 }.cumSum() into "b"
-        }
+        val df = dataFrameOf("a")(1, 2).add { expr { "a"<Int>() + 1 }.cumSum() into "b" }
         df["b"][1] shouldBe 5
     }
 

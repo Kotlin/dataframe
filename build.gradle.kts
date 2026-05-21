@@ -24,9 +24,7 @@ plugins {
 
 val projectName: String by project
 
-configurations {
-    testImplementation.get().extendsFrom(compileOnly.get())
-}
+configurations { testImplementation.get().extendsFrom(compileOnly.get()) }
 
 dependencies {
     api(projects.core)
@@ -61,17 +59,14 @@ fun detectVersion(): String {
 }
 
 val detectVersionForTC by tasks.registering {
-    doLast {
-        println("##teamcity[buildNumber '$version']")
-    }
+    doLast { println("##teamcity[buildNumber '$version']") }
 }
 
 version = detectVersion()
+
 println("Current DataFrame version: $version")
 
-subprojects {
-    this.version = rootProject.version
-}
+subprojects { this.version = rootProject.version }
 
 kotlinPublications {
     fairDokkaJars = false
@@ -91,9 +86,7 @@ kotlinPublications {
     pom {
         githubRepo("Kotlin", "dataframe")
         inceptionYear = "2021"
-        licenses {
-            apache2()
-        }
+        licenses { apache2() }
         developers {
             developer("koperagen", "Nikita Klimenko", "nikita.klimenko@jetbrains.com")
             developer("Jolanrensen", "Jolan Rensen", "jolan.rensen@jetbrains.com")

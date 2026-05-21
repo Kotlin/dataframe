@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
@@ -32,15 +31,12 @@ import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.values
 
-/**
- * @property df DataFrame containing [groups] column and key columns. Represents GroupBy.
- */
+/** @property df DataFrame containing [groups] column and key columns. Represents GroupBy. */
 internal class GroupByImpl<T, G>(
     val df: DataFrame<T>,
     override val groups: FrameColumn<G>,
     internal val keyColumnsInGroups: ColumnsSelector<G, *>,
-) : GroupBy<T, G>,
-    AggregatableInternal<G> {
+) : GroupBy<T, G>, AggregatableInternal<G> {
 
     override val keys by lazy { df.remove(groups) }
 
@@ -53,10 +49,11 @@ internal class GroupByImpl<T, G>(
         keyColumnsInGroups.toColumnSet().let { groupCols -> { all().except(groupCols) } }
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G> {
-        val indices = (0 until df.nrow).filter {
-            val row = GroupedDataRowImpl(df.get(it), groups)
-            predicate(row, row)
-        }
+        val indices =
+            (0 until df.nrow).filter {
+                val row = GroupedDataRowImpl(df.get(it), groups)
+                predicate(row, row)
+            }
         return df[indices].asGroupBy(groups)
     }
 
@@ -82,37 +79,39 @@ internal fun <T, G, R> aggregateGroupBy(
 
     val hasKeyColumns = removed.df.ncol > 0
 
-    val groupedFrame = column.values.map {
-        if (it == null) {
-            null
-        } else {
-            val builder = GroupByReceiverImpl(it, hasKeyColumns)
-            val result = body(builder, builder)
-            if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) {
-                builder.yield(
-                    NamedValue.create(
-                        path = pathOf(defaultAggregateName),
-                        value = result,
-                        type = null,
-                        defaultValue = null,
-                        guessType = true,
-                    ),
-                )
+    val groupedFrame =
+        column.values
+            .map {
+                if (it == null) {
+                    null
+                } else {
+                    val builder = GroupByReceiverImpl(it, hasKeyColumns)
+                    val result = body(builder, builder)
+                    if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) {
+                        builder.yield(
+                            NamedValue.create(
+                                path = pathOf(defaultAggregateName),
+                                value = result,
+                                type = null,
+                                defaultValue = null,
+                                guessType = true,
+                            )
+                        )
+                    }
+                    builder.compute()
+                }
             }
-            builder.compute()
-        }
-    }.concat()
+            .concat()
 
     val removedNode = removed.removedColumns.single()
     val insertPath = removedNode.pathFromRoot().dropLast(1)
 
     if (!removeColumns) removedNode.data.wasRemoved = false
 
-    val columnsToInsert = groupedFrame.getColumnsWithPaths {
-        colsAtAnyDepth().filter { !it.isColumnGroup() }
-    }.map {
-        ColumnToInsert(insertPath + it.path, it, removedNode)
-    }
+    val columnsToInsert =
+        groupedFrame
+            .getColumnsWithPaths { colsAtAnyDepth().filter { !it.isColumnGroup() } }
+            .map { ColumnToInsert(insertPath + it.path, it, removedNode) }
     val src = if (removeColumns) removed.df else df
     return src.insertImpl(columnsToInsert)
 }

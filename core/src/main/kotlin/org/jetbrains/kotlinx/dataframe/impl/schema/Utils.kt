@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl.schema
 
+import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -21,18 +26,16 @@ import org.jetbrains.kotlinx.dataframe.impl.isJavaRecord
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
-import kotlin.reflect.KCallable
-import kotlin.reflect.KClass
-import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 internal fun AnyFrame.extractSchema(): DataFrameSchema =
-    DataFrameSchemaImpl(columns().filter { it.name().isNotEmpty() }.associate { it.name() to it.extractSchema() })
+    DataFrameSchemaImpl(
+        columns().filter { it.name().isNotEmpty() }.associate { it.name() to it.extractSchema() }
+    )
 
 // helper overload for friend modules
 @JvmName("intersectSchemasOverload")
-internal fun intersectSchemas(schemas: Iterable<DataFrameSchema>): DataFrameSchema = schemas.intersectSchemas()
+internal fun intersectSchemas(schemas: Iterable<DataFrameSchema>): DataFrameSchema =
+    schemas.intersectSchemas()
 
 internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
     val collectedTypes = mutableMapOf<String, MutableSet<ColumnSchema>>()
@@ -61,35 +64,42 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
         val columnKinds = columnSchemas.map { it.kind }.distinct()
         val kind = columnKinds.first()
         when {
-            columnKinds.size > 1 -> ColumnSchema.Value(typeOf<Any>().withNullability(columnSchemas.any { it.nullable }))
+            columnKinds.size > 1 ->
+                ColumnSchema.Value(typeOf<Any>().withNullability(columnSchemas.any { it.nullable }))
 
-            kind == ColumnKind.Value -> ColumnSchema.Value(
-                type = columnSchemas
-                    .map { (it as ColumnSchema.Value).type }
-                    .toSet()
-                    .commonType(),
-            )
+            kind == ColumnKind.Value ->
+                ColumnSchema.Value(
+                    type =
+                        columnSchemas.map { (it as ColumnSchema.Value).type }.toSet().commonType()
+                )
 
-            kind == ColumnKind.Frame -> ColumnSchema.Frame(
-                // intersect only not empty schemas
-                schema = columnSchemas
-                    .mapNotNull { (it as ColumnSchema.Frame).schema.takeIf { it.columns.isNotEmpty() } }
-                    .intersectSchemas(),
-                nullable = columnSchemas.any { it.nullable },
-                contentType = columnSchemas
-                    .mapNotNull { (it as ColumnSchema.Frame).contentType }
-                    .toSet()
-                    .commonType(),
-            )
+            kind == ColumnKind.Frame ->
+                ColumnSchema.Frame(
+                    // intersect only not empty schemas
+                    schema =
+                        columnSchemas
+                            .mapNotNull {
+                                (it as ColumnSchema.Frame).schema.takeIf { it.columns.isNotEmpty() }
+                            }
+                            .intersectSchemas(),
+                    nullable = columnSchemas.any { it.nullable },
+                    contentType =
+                        columnSchemas
+                            .mapNotNull { (it as ColumnSchema.Frame).contentType }
+                            .toSet()
+                            .commonType(),
+                )
 
-            kind == ColumnKind.Group -> ColumnSchema.Group(
-                schema = columnSchemas.map { (it as ColumnSchema.Group).schema }
-                    .intersectSchemas(),
-                contentType = columnSchemas
-                    .mapNotNull { (it as ColumnSchema.Group).contentType }
-                    .toSet()
-                    .commonType(),
-            )
+            kind == ColumnKind.Group ->
+                ColumnSchema.Group(
+                    schema =
+                        columnSchemas.map { (it as ColumnSchema.Group).schema }.intersectSchemas(),
+                    contentType =
+                        columnSchemas
+                            .mapNotNull { (it as ColumnSchema.Group).contentType }
+                            .toSet()
+                            .commonType(),
+                )
 
             else -> throw RuntimeException()
         }
@@ -108,25 +118,28 @@ internal fun AnyCol.extractSchema(): ColumnSchema =
 @PublishedApi
 internal fun getSchema(kClass: KClass<*>): DataFrameSchema = MarkersExtractor.get(kClass).schema
 
-/**
- * Create "empty" column based on the toplevel of [this] [ColumnSchema].
- */
+/** Create "empty" column based on the toplevel of [this] [ColumnSchema]. */
 internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol =
     when (this) {
         is ColumnSchema.Value -> DataColumn.createValueColumn<Any?>(name, emptyList(), type)
-        is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
-        is ColumnSchema.Frame -> DataColumn.createFrameColumn<Any?>(name, emptyList(), lazyOf(schema))
+        is ColumnSchema.Group ->
+            DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
+        is ColumnSchema.Frame ->
+            DataColumn.createFrameColumn<Any?>(name, emptyList(), lazyOf(schema))
     }
 
 /**
  * Creates a column based on [this] [ColumnSchema] filled with `null` or empty dataframes.
+ *
  * @throws IllegalStateException if the column is not nullable and [numberOfRows]` > 0`.
  */
 internal fun ColumnSchema.createNullFilledColumn(name: String, numberOfRows: Int): AnyCol =
     when (this) {
         is ColumnSchema.Value -> {
             if (!type.isMarkedNullable && numberOfRows > 0) {
-                error("Cannot create a null-filled value column of type $type as it's not nullable.")
+                error(
+                    "Cannot create a null-filled value column of type $type as it's not nullable."
+                )
             }
             DataColumn.createValueColumn(
                 name = name,
@@ -135,30 +148,30 @@ internal fun ColumnSchema.createNullFilledColumn(name: String, numberOfRows: Int
             )
         }
 
-        is ColumnSchema.Group -> DataColumn.createColumnGroup(
-            name = name,
-            df = schema.createEmptyDataFrame(numberOfRows),
-        ) as AnyCol
+        is ColumnSchema.Group ->
+            DataColumn.createColumnGroup(
+                name = name,
+                df = schema.createEmptyDataFrame(numberOfRows),
+            ) as AnyCol
 
-        is ColumnSchema.Frame -> DataColumn.createFrameColumn(
-            name = name,
-            groups = List(numberOfRows) { emptyDataFrame<Any?>() },
-            schema = lazyOf(schema),
-        )
+        is ColumnSchema.Frame ->
+            DataColumn.createFrameColumn(
+                name = name,
+                groups = List(numberOfRows) { emptyDataFrame<Any?>() },
+                schema = lazyOf(schema),
+            )
     }
 
 internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =
-    columns.map { (name, schema) ->
-        schema.createEmptyColumn(name)
-    }.toDataFrame()
+    columns.map { (name, schema) -> schema.createEmptyColumn(name) }.toDataFrame()
 
 internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
     if (columns.isEmpty()) {
         DataFrame.empty(numberOfRows)
     } else {
-        columns.map { (name, schema) ->
-            schema.createNullFilledColumn(name, numberOfRows)
-        }.toDataFrame()
+        columns
+            .map { (name, schema) -> schema.createNullFilledColumn(name, numberOfRows) }
+            .toDataFrame()
     }
 
 @PublishedApi
@@ -184,8 +197,8 @@ internal fun getPropertyOrderFromPrimaryConstructor(clazz: KClass<*>): Map<Strin
     }
 
 /**
- * Sorts [this] according to the order of their [columnName] in the primary/single constructor of [klass]
- * if it exists, else, it falls back to lexicographical sorting.
+ * Sorts [this] according to the order of their [columnName] in the primary/single constructor of
+ * [klass] if it exists, else, it falls back to lexicographical sorting.
  */
 internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): List<KCallable<T>> {
     require(klass.isJavaRecord || all { it.isGetterLike() })
@@ -204,6 +217,6 @@ internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): L
     val (propsInConstructor, propsNotInConstructor) =
         lexicographicalColumns.partition { it.getterName in primaryConstructorOrder.keys }
 
-    return propsInConstructor
-        .sortedBy { primaryConstructorOrder[it.getterName] } + propsNotInConstructor
+    return propsInConstructor.sortedBy { primaryConstructorOrder[it.getterName] } +
+        propsNotInConstructor
 }

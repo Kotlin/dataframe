@@ -32,13 +32,17 @@ class FormatHeaderSamples : DataFrameSampleHelper("format", "api") {
         // SampleStart
         df
             // Format all column headers with bold
-            .formatHeader().with { bold }
+            .formatHeader()
+            .with { bold }
             // Format the "name" column (including nested) header with red text
-            .formatHeader { name }.with { textColor(red) }
+            .formatHeader { name }
+            .with { textColor(red) }
             // Override "name"/"lastName" column formating header with blue text
-            .formatHeader { name.lastName }.with { textColor(blue) }
+            .formatHeader { name.lastName }
+            .with { textColor(blue) }
             // Format all numeric column headers with underlines
-            .formatHeader { colsOf<Number?>() }.with { underline }
+            .formatHeader { colsOf<Number?>() }
+            .with { underline }
             // SampleEnd
             .saveDfHtmlSample()
     }

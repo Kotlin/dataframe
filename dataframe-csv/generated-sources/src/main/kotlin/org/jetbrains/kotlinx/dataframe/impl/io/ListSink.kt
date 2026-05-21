@@ -15,19 +15,18 @@ import io.deephaven.csv.parsers.DataType.TIMESTAMP_AS_LONG
 import io.deephaven.csv.sinks.Sink
 import io.deephaven.csv.sinks.SinkFactory
 import io.deephaven.csv.sinks.Source
-import kotlinx.datetime.toKotlinLocalDateTime
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.time.Duration.Companion.nanoseconds
+import kotlinx.datetime.toKotlinLocalDateTime
 
-internal interface SinkSource<T : Any> :
-    Sink<T>,
-    Source<T>
+internal interface SinkSource<T : Any> : Sink<T>, Source<T>
 
 /**
  * Implementation of Deephaven's [Sink] and [Source] that stores data in an [ArrayList].
  *
- * The implementation is based on [Writing Your Own Data Sinks](https://github.com/deephaven/deephaven-csv/blob/main/ADVANCED.md).
+ * The implementation is based on
+ * [Writing Your Own Data Sinks](https://github.com/deephaven/deephaven-csv/blob/main/ADVANCED.md).
  *
  * If we ever store column data unboxed / primitively, this needs to be modified.
  */
@@ -36,22 +35,29 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
 
     @Suppress("ktlint:standard:comment-wrapping", "ktlint:standard:no-consecutive-comments")
     companion object {
-        val SINK_FACTORY: SinkFactory = SinkFactory.of(
-            // unused in Parsers.DEFAULT:
-            /* byteSinkSupplier = */ { ListSink(it, BYTE) as SinkSource<ByteArray> },
-            /* shortSinkSupplier = */ { ListSink(it, SHORT) as SinkSource<ShortArray> },
-            /* intSinkSupplier = */ { ListSink(it, INT) as SinkSource<IntArray> },
-            /* longSinkSupplier = */ { ListSink(it, LONG) as SinkSource<LongArray> },
-            // unused in Parsers.COMPLETE and Parsers.DEFAULT:
-            /* floatSinkSupplier = */ { ListSink(it, FLOAT) as SinkSource<FloatArray> },
-            /* doubleSinkSupplier = */ { ListSink(it, DOUBLE) as SinkSource<DoubleArray> },
-            /* booleanAsByteSinkSupplier = */ { ListSink(it, BOOLEAN_AS_BYTE) as SinkSource<ByteArray> },
-            /* charSinkSupplier = */ { ListSink(it, CHAR) as SinkSource<CharArray> },
-            /* stringSinkSupplier = */ { ListSink(it, STRING) as SinkSource<Array<String>> },
-            /* dateTimeAsLongSinkSupplier = */ { ListSink(it, DATETIME_AS_LONG) as SinkSource<LongArray> },
-            // unused in Parsers.COMPLETE and Parsers.DEFAULT:
-            /* timestampAsLongSinkSupplier = */ { ListSink(it, TIMESTAMP_AS_LONG) as SinkSource<LongArray> },
-        )
+        val SINK_FACTORY: SinkFactory =
+            SinkFactory.of(
+                // unused in Parsers.DEFAULT:
+                /* byteSinkSupplier = */ { ListSink(it, BYTE) as SinkSource<ByteArray> },
+                /* shortSinkSupplier = */ { ListSink(it, SHORT) as SinkSource<ShortArray> },
+                /* intSinkSupplier = */ { ListSink(it, INT) as SinkSource<IntArray> },
+                /* longSinkSupplier = */ { ListSink(it, LONG) as SinkSource<LongArray> },
+                // unused in Parsers.COMPLETE and Parsers.DEFAULT:
+                /* floatSinkSupplier = */ { ListSink(it, FLOAT) as SinkSource<FloatArray> },
+                /* doubleSinkSupplier = */ { ListSink(it, DOUBLE) as SinkSource<DoubleArray> },
+                /* booleanAsByteSinkSupplier = */ {
+                    ListSink(it, BOOLEAN_AS_BYTE) as SinkSource<ByteArray>
+                },
+                /* charSinkSupplier = */ { ListSink(it, CHAR) as SinkSource<CharArray> },
+                /* stringSinkSupplier = */ { ListSink(it, STRING) as SinkSource<Array<String>> },
+                /* dateTimeAsLongSinkSupplier = */ {
+                    ListSink(it, DATETIME_AS_LONG) as SinkSource<LongArray>
+                },
+                // unused in Parsers.COMPLETE and Parsers.DEFAULT:
+                /* timestampAsLongSinkSupplier = */ {
+                    ListSink(it, TIMESTAMP_AS_LONG) as SinkSource<LongArray>
+                },
+            )
     }
 
     private val _data: MutableList<Any?> = ArrayList(1000)
@@ -89,27 +95,28 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
 
                 STRING -> (src as Array<String>)[srcIndex]
 
-                DATETIME_AS_LONG -> (src as LongArray)[srcIndex].nanoseconds
-                    .toComponents { seconds, nanoseconds ->
-                        LocalDateTime.ofEpochSecond(seconds, nanoseconds, ZoneOffset.UTC)
-                    }.toKotlinLocalDateTime()
+                DATETIME_AS_LONG ->
+                    (src as LongArray)[srcIndex]
+                        .nanoseconds
+                        .toComponents { seconds, nanoseconds ->
+                            LocalDateTime.ofEpochSecond(seconds, nanoseconds, ZoneOffset.UTC)
+                        }
+                        .toKotlinLocalDateTime()
 
                 // unused in Parsers.COMPLETE and Parsers.DEFAULT
-                TIMESTAMP_AS_LONG -> (src as LongArray)[srcIndex].nanoseconds
-                    .toComponents { seconds, nanoseconds ->
-                        LocalDateTime.ofEpochSecond(seconds, nanoseconds, ZoneOffset.UTC)
-                    }.toKotlinLocalDateTime()
+                TIMESTAMP_AS_LONG ->
+                    (src as LongArray)[srcIndex]
+                        .nanoseconds
+                        .toComponents { seconds, nanoseconds ->
+                            LocalDateTime.ofEpochSecond(seconds, nanoseconds, ZoneOffset.UTC)
+                        }
+                        .toKotlinLocalDateTime()
 
                 else -> error("unsupported parser")
             }
         }
 
-    private fun writeAppending(
-        src: Any,
-        destBegin: Int,
-        destEnd: Int,
-        isNull: BooleanArray,
-    ) {
+    private fun writeAppending(src: Any, destBegin: Int, destEnd: Int, isNull: BooleanArray) {
         while (data.size < destBegin) {
             _data += null
             hasNulls = true
@@ -119,12 +126,7 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
         }
     }
 
-    private fun writeReplacing(
-        src: Any,
-        destBegin: Int,
-        destEnd: Int,
-        isNull: BooleanArray,
-    ) {
+    private fun writeReplacing(src: Any, destBegin: Int, destEnd: Int, isNull: BooleanArray) {
         for ((srcIndex, destIndex) in (destBegin..<destEnd).withIndex()) {
             _data[destIndex] = getValue(src, srcIndex, isNull)
         }
@@ -141,18 +143,23 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
         val destBeginAsInt = destBegin.toInt()
         val destEndAsInt = destEnd.toInt()
         if (appending) {
-            writeAppending(src = src, destBegin = destBeginAsInt, destEnd = destEndAsInt, isNull = isNull)
+            writeAppending(
+                src = src,
+                destBegin = destBeginAsInt,
+                destEnd = destEndAsInt,
+                isNull = isNull,
+            )
         } else {
-            writeReplacing(src = src, destBegin = destBeginAsInt, destEnd = destEndAsInt, isNull = isNull)
+            writeReplacing(
+                src = src,
+                destBegin = destBeginAsInt,
+                destEnd = destEndAsInt,
+                isNull = isNull,
+            )
         }
     }
 
-    override fun read(
-        dest: Any,
-        isNull: BooleanArray,
-        srcBegin: Long,
-        srcEnd: Long,
-    ) {
+    override fun read(dest: Any, isNull: BooleanArray, srcBegin: Long, srcEnd: Long) {
         if (srcBegin == srcEnd) return
         val srcBeginAsInt = srcBegin.toInt()
         val srcEndAsInt = srcEnd.toInt()
@@ -194,7 +201,8 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
                 }
             }
 
-            // Deephaven's fast path for numeric type inference supports only byte, short, int, and long
+            // Deephaven's fast path for numeric type inference supports only byte, short, int, and
+            // long
             // so this should never be reached
             else -> error("unsupported sink state")
         }

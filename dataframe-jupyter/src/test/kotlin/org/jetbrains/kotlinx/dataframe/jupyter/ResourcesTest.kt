@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import io.kotest.matchers.shouldNotBe
+import java.io.InputStreamReader
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.junit.Test
-import java.io.InputStreamReader
 
 class ResourcesTest {
 

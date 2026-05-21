@@ -1,9 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    with(convention.plugins) {
-        alias(kotlinJvm11)
-    }
+    with(convention.plugins) { alias(kotlinJvm11) }
     with(libs.plugins) {
         alias(publisher)
         alias(jupyter.api)
@@ -53,6 +51,4 @@ tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.IntegrationGeo")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+tasks.test { useJUnitPlatform() }

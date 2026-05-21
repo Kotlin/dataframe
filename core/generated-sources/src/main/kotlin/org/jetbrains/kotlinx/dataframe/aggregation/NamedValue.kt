@@ -1,12 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.aggregation
 
+import kotlin.reflect.KType
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.ValueWithDefault
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
-import kotlin.reflect.KType
 
 @Suppress("DataClassPrivateConstructor")
-public data class NamedValue private constructor(
+public data class NamedValue
+private constructor(
     val path: ColumnPath,
     val value: Any?,
     val type: KType?,
@@ -30,5 +31,6 @@ public data class NamedValue private constructor(
             NamedValue(emptyPath(), builder, null, null, false)
     }
 
-    val name: String get() = path.last()
+    val name: String
+        get() = path.last()
 }

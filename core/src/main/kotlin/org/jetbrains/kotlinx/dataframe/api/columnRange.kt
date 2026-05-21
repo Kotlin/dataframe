@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -12,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
 
@@ -26,16 +26,12 @@ public interface ColumnRangeColumnsSelectionDsl {
     /**
      * ## Range of Columns Grammar
      *
-     * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DEFINITIONS]
-     *  {@include [DslGrammarTemplate.ColumnDef]}
-     * }
+     * @include [DslGrammarTemplate] {@set [DslGrammarTemplate.DEFINITIONS] {@include
+     *   [DslGrammarTemplate.ColumnDef]} }
      *
-     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
-     *  {@include [DslGrammarTemplate.ColumnRef]}` `{@include [Grammar.PlainDslName]}` `{@include [DslGrammarTemplate.ColumnRef]}
-     * }
-     * {@set [DslGrammarTemplate.COLUMN_SET_PART]}
-     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS] {@include [DslGrammarTemplate.ColumnRef]}`
+     * `{@include [Grammar.PlainDslName]}` `{@include [DslGrammarTemplate.ColumnRef]} } {@set
+     * [DslGrammarTemplate.COLUMN_SET_PART]} {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
      */
     public interface Grammar {
 
@@ -45,22 +41,24 @@ public interface ColumnRangeColumnsSelectionDsl {
 
     /**
      * ## Range of Columns
-     * Creates a [ColumnSet] containing all columns from [this\] up to (and including) [endInclusive\].
+     * Creates a [ColumnSet] containing all columns from [this\] up to (and including)
+     * [endInclusive\].
      *
-     * Columns inside column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of {@include [AccessApiLink]}.
+     * Columns inside column groups are also supported (as long as they share the same direct
+     * parent), as well as any combination of {@include [AccessApiLink]}.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `<code>{@get [CommonRangeOfColumnsDocs.Example]}</code>` }`
+     * `df.`[select][DataFrame.select]` { `<code>{@get [CommonRangeOfColumnsDocs.Example]}</code>`
+     * }`
      *
      * @param [endInclusive\] The last column in the subset.
-     * @receiver The first column in the subset.
      * @return A [ColumnSet] containing all columns from [this\] to [endInclusive\].
-     * @throws [IllegalArgumentException\] if the columns have different parents or the end column is before the
-     *   start column.
+     * @receiver The first column in the subset.
+     * @throws [IllegalArgumentException\] if the columns have different parents or the end column
+     *   is before the start column.
      * @see [ColumnsSelectionDsl.allBefore\]
      * @see [ColumnsSelectionDsl.allAfter\]
      * @see [ColumnsSelectionDsl.allFrom\]
@@ -74,15 +72,15 @@ public interface ColumnRangeColumnsSelectionDsl {
     }
 
     /**
-     * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] `"fromColumn"`[`..`][String.rangeTo]`"toColumn"`}
+     * @include [CommonRangeOfColumnsDocs] {@set [CommonRangeOfColumnsDocs.Example]
+     *   `"fromColumn"`[`..`][String.rangeTo]`"toColumn"`}
      */
     public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
-     * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] `"fromColumn"`[`..`][String.rangeTo]`Type::toColumn`}
+     * @include [CommonRangeOfColumnsDocs] {@set [CommonRangeOfColumnsDocs.Example]
+     *   `"fromColumn"`[`..`][String.rangeTo]`Type::toColumn`}
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -90,15 +88,15 @@ public interface ColumnRangeColumnsSelectionDsl {
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
-     * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] `"fromColumn"`[`..`][String.rangeTo]`toColumn`}
+     * @include [CommonRangeOfColumnsDocs] {@set [CommonRangeOfColumnsDocs.Example]
+     *   `"fromColumn"`[`..`][String.rangeTo]`toColumn`}
      */
     public operator fun String.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
-     * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] `Type::fromColumn`[`..`][KProperty.rangeTo]`"toColumn"`}
+     * @include [CommonRangeOfColumnsDocs] {@set [CommonRangeOfColumnsDocs.Example]
+     *   `Type::fromColumn`[`..`][KProperty.rangeTo]`"toColumn"`}
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -106,8 +104,8 @@ public interface ColumnRangeColumnsSelectionDsl {
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
-     * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] `Type::fromColumn`[`..`][KProperty.rangeTo]`Type::toColumn`}
+     * @include [CommonRangeOfColumnsDocs] {@set [CommonRangeOfColumnsDocs.Example]
+     *   `Type::fromColumn`[`..`][KProperty.rangeTo]`Type::toColumn`}
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -115,8 +113,8 @@ public interface ColumnRangeColumnsSelectionDsl {
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
     /**
-     * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] `Type::fromColumn`[`..`][KProperty.rangeTo]`toColumn`}
+     * @include [CommonRangeOfColumnsDocs] {@set [CommonRangeOfColumnsDocs.Example]
+     *   `Type::fromColumn`[`..`][KProperty.rangeTo]`toColumn`}
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -124,22 +122,22 @@ public interface ColumnRangeColumnsSelectionDsl {
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
-     * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] `fromColumn`[`..`][ColumnReference.rangeTo]`"toColumn"`}
+     * @include [CommonRangeOfColumnsDocs] {@set [CommonRangeOfColumnsDocs.Example]
+     *   `fromColumn`[`..`][ColumnReference.rangeTo]`"toColumn"`}
      */
     public operator fun AnyColumnReference.rangeTo(endInclusive: String): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
-     * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] `fromColumn`[`..`][ColumnReference.rangeTo]`Type::toColumn`}
+     * @include [CommonRangeOfColumnsDocs] {@set [CommonRangeOfColumnsDocs.Example]
+     *   `fromColumn`[`..`][ColumnReference.rangeTo]`Type::toColumn`}
      */
     public operator fun AnyColumnReference.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
-     * @include [CommonRangeOfColumnsDocs]
-     * {@set [CommonRangeOfColumnsDocs.Example] `fromColumn`[`..`][ColumnReference.rangeTo]`toColumn`}
+     * @include [CommonRangeOfColumnsDocs] {@set [CommonRangeOfColumnsDocs.Example]
+     *   `fromColumn`[`..`][ColumnReference.rangeTo]`toColumn`}
      */
     @Interpretable("ColumnRange")
     public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
@@ -158,9 +156,7 @@ public interface ColumnRangeColumnsSelectionDsl {
             require(startIndex <= endIndex) { "End column is before start column" }
 
             (startIndex..endIndex).map {
-                parentCol.getColumn(it).let {
-                    it.addPath(parentPath + it.name)
-                }
+                parentCol.getColumn(it).let { it.addPath(parentPath + it.name) }
             }
         }
 }

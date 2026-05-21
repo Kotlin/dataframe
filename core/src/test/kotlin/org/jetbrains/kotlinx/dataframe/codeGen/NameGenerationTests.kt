@@ -16,15 +16,18 @@ class NameGenerationTests {
     @Test
     fun `interface generation`() {
         val codeGen = CodeGenerator.create()
-        val code = codeGen.generate(
-            schema = df.schema(),
-            name = "DataType",
-            fields = true,
-            extensionProperties = false,
-            isOpen = false,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            knownMarkers = emptyList(),
-        ).code
+        val code =
+            codeGen
+                .generate(
+                    schema = df.schema(),
+                    name = "DataType",
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = false,
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    knownMarkers = emptyList(),
+                )
+                .code
 
         val expected =
             """
@@ -36,7 +39,8 @@ class NameGenerationTests {
                 val `first column`: kotlin.Int
                 val second_column: kotlin.Int
             }
-            """.trimIndent()
+            """
+                .trimIndent()
 
         code.declarations shouldBe expected
     }
@@ -44,11 +48,9 @@ class NameGenerationTests {
     @Suppress("ktlint:standard:property-naming")
     @DataSchema
     interface DataRecord {
-        @ColumnName("first column")
-        val `first column`: Int
+        @ColumnName("first column") val `first column`: Int
 
-        @ColumnName("second column")
-        val `second column`: Int
+        @ColumnName("second column") val `second column`: Int
     }
 
     @Test
@@ -56,8 +58,6 @@ class NameGenerationTests {
         val codeGen = ReplCodeGenerator.create()
         val code = codeGen.process<DataRecord>().split("\n")
         code.size shouldBe 8
-        code.forEach {
-            it.count { it == '`' } shouldBe 2
-        }
+        code.forEach { it.count { it == '`' } shouldBe 2 }
     }
 }

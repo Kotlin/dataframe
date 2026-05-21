@@ -2,9 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.kotlin.dsl.withType
 
 plugins {
-    with(convention.plugins) {
-        alias(kotlinJvm8)
-    }
+    with(convention.plugins) { alias(kotlinJvm8) }
     with(libs.plugins) {
         alias(shadow)
         alias(publisher)
@@ -37,9 +35,7 @@ dependencies {
     testImplementation(libs.kotlin.test.junit5)
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+tasks.test { useJUnitPlatform() }
 
 tasks.withType<ShadowJar> {
     dependencies {

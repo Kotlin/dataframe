@@ -1,20 +1,22 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
-import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 
 @Suppress("UNCHECKED_CAST")
 @JvmName("sumNullableT")
 @PublishedApi
 internal fun Sequence<Number?>.sum(type: KType, skipNaN: Boolean): Number {
     if (type.isMarkedNullable) {
-        error("Encountered nullable type ${renderType(type)} in sum function. This should not occur.")
+        error(
+            "Encountered nullable type ${renderType(type)} in sum function. This should not occur."
+        )
     }
     return when (type) {
         typeOf<Double>() -> (this as Sequence<Double>).filterNot { skipNaN && it.isNaN() }.sum()
@@ -31,9 +33,10 @@ internal fun Sequence<Number?>.sum(type: KType, skipNaN: Boolean): Number {
 
         typeOf<Long>() -> (this as Sequence<Long>).sum()
 
-        typeOf<BigInteger>(), typeOf<BigDecimal>() ->
+        typeOf<BigInteger>(),
+        typeOf<BigDecimal>() ->
             throw IllegalArgumentException(
-                "Cannot calculate the sum for big numbers in DataFrame. Only primitive numbers are supported.",
+                "Cannot calculate the sum for big numbers in DataFrame. Only primitive numbers are supported."
             )
 
         typeOf<Number>() ->
@@ -41,29 +44,32 @@ internal fun Sequence<Number?>.sum(type: KType, skipNaN: Boolean): Number {
 
         nothingType -> 0.0
 
-        else -> throw IllegalArgumentException(
-            "Unable to compute the sum for ${renderType(type)}, Only primitive numbers are supported.",
-        )
+        else ->
+            throw IllegalArgumentException(
+                "Unable to compute the sum for ${renderType(type)}, Only primitive numbers are supported."
+            )
     }
 }
 
-/**
- * T: Number -> T
- * Byte -> Int
- * Short -> Int
- * Nothing -> Double
- */
+/** T: Number -> T Byte -> Int Short -> Int Nothing -> Double */
 internal val sumTypeConversion: CalculateReturnType = { type, _ ->
     when (val type = type.withNullability(false)) {
         // type changes to Int
-        typeOf<Short>(), typeOf<Byte>() -> typeOf<Int>()
+        typeOf<Short>(),
+        typeOf<Byte>() -> typeOf<Int>()
 
         // type remains the same
-        typeOf<Int>(), typeOf<Long>(), typeOf<Double>(), typeOf<Float>(), typeOf<Number>() -> type
+        typeOf<Int>(),
+        typeOf<Long>(),
+        typeOf<Double>(),
+        typeOf<Float>(),
+        typeOf<Number>() -> type
 
         nothingType -> typeOf<Double>()
 
         else ->
-            error("Unable to compute the sum for ${renderType(type)}, Only primitive numbers are supported.")
+            error(
+                "Unable to compute the sum for ${renderType(type)}, Only primitive numbers are supported."
+            )
     }
 }

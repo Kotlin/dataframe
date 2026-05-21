@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -19,41 +18,33 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 public interface DslGrammarTemplateColumnsSelectionDsl {
 
     /**
-     * {@include [LineBreak]}
-     * {@include [DslGrammarLink]}
-     * {@get [DslGrammarTemplate.DEFINITIONS_PART]
-     *  {@include [LineBreak]}
-     *  ### Definitions:
-     *  {@get [DslGrammarTemplate.DEFINITIONS]}
-     * }
-     * {@comment -------------------------------------------------------------------------------------------- }
-     * {@get [DslGrammarTemplate.PLAIN_DSL_PART]
-     *  {@include [LineBreak]}
-     *  ### What can be called directly in the {@include [ColumnsSelectionDslLink]}:
+     * {@include [LineBreak]} {@include [DslGrammarLink]} {@get
+     * [DslGrammarTemplate.DEFINITIONS_PART] {@include [LineBreak]}
      *
-     *  {@include [LineBreak]}
-     *  {@get [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]}
-     * }
-     * {@comment -------------------------------------------------------------------------------------------- }
-     * {@get [DslGrammarTemplate.COLUMN_SET_PART]
-     *  {@include [LineBreak]}
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     * ### Definitions:
+     * {@get [DslGrammarTemplate.DEFINITIONS]} } {@comment
+     * --------------------------------------------------------------------------------------------
+     * } {@get [DslGrammarTemplate.PLAIN_DSL_PART] {@include [LineBreak]}
      *
-     *  {@include [LineBreak]}
-     *  {@include [ColumnSetRef]}
+     * ### What can be called directly in the {@include [ColumnsSelectionDslLink]}:
      *
-     *  {@get [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]}
-     * }
-     * {@comment -------------------------------------------------------------------------------------------- }
-     * {@get [DslGrammarTemplate.COLUMN_GROUP_PART]
-     *  {@include [LineBreak]}
-     *  ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
+     * {@include [LineBreak]} {@get [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]} } {@comment
+     * --------------------------------------------------------------------------------------------
+     * } {@get [DslGrammarTemplate.COLUMN_SET_PART] {@include [LineBreak]}
      *
-     *  {@include [LineBreak]}
-     *  {@include [ColumnGroupRef]}
+     * ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  {@get [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]}
-     * }
+     * {@include [LineBreak]} {@include [ColumnSetRef]}
+     *
+     * {@get [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]} } {@comment
+     * --------------------------------------------------------------------------------------------
+     * } {@get [DslGrammarTemplate.COLUMN_GROUP_PART] {@include [LineBreak]}
+     *
+     * ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
+     *
+     * {@include [LineBreak]} {@include [ColumnGroupRef]}
+     *
+     * {@get [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]} }
      */
     public interface DslGrammarTemplate {
 
@@ -74,6 +65,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         // Can be set to nothing to disable the column group part
         @ExcludeFromSources
         public typealias COLUMN_GROUP_PART = Nothing
+
         // endregion
 
         // region Template arguments
@@ -93,12 +85,14 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         // What to put in the column group part. Needs indents.
         @ExcludeFromSources
         public typealias COLUMN_GROUP_FUNCTIONS = Nothing
+
         // endregion
 
         // region Definitions for at the top of the template
 
         /**
-         * `columnGroupReference: `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `columnGroupReference: `[`String`][String]` |
+         * `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public typealias ColumnGroupNoSingleColumnDef = Nothing
 
@@ -109,19 +103,27 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         public typealias ColumnsSelectorDef = Nothing
 
         /**
-         * `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` |
+         * `[`String`][String]` |
+         * `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public typealias ColumnDef = Nothing
 
         /**
-         * `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `columnGroup:
+         * `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>
+         * | `[`String`][String]` |
+         * `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public typealias ColumnGroupDef = Nothing
 
-        /** `columnNoAccessor: `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
+        /**
+         * `columnNoAccessor: `[`String`][String]` |
+         * `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         */
         public typealias ColumnNoAccessorDef = Nothing
 
-        /** `columnOrSet: `{@include [ColumnRef]}`  |  `{@include [ColumnSetRef]} */
+        /** `columnOrSet: `{@include [ColumnRef]}` | `{@include [ColumnSetRef]} */
         public typealias ColumnOrColumnSetDef = Nothing
 
         /** `columnSet: `[`ColumnSet`][ColumnSet]`<*>` */
@@ -164,7 +166,8 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         public typealias RegexDef = Nothing
 
         /**
-         * `singleColumn: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
+         * `singleColumn:
+         * `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
          */
         public typealias SingleColumnDef = Nothing
 
@@ -173,6 +176,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
 
         /** `text: `[`String`][String] */
         public typealias TextDef = Nothing
+
         // endregion
 
         // region References to the definitions
@@ -275,34 +279,27 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      * ## MyFunction Example Usage
      *
      * {@comment First include the template itself.}
+     *
      * @include [DslGrammarTemplate]
      *
-     * {@comment Then set the definition arguments for each definition that is used below.
-     *  Don't forget to add the definitions for ColumnSet and ColumnGroup if you're going to use them.
-     *  Also, add LineBreaks in between them.
-     * }
-     * {@set [DslGrammarTemplate.DEFINITIONS]
-     *  {@include [DslGrammarTemplate.ColumnSetDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.NumberDef]}
-     * }
+     * {@comment Then set the definition arguments for each definition that is used below. Don't
+     * forget to add the definitions for ColumnSet and ColumnGroup if you're going to use them.
+     * Also, add LineBreaks in between them. } {@set [DslGrammarTemplate.DEFINITIONS] {@include
+     * [DslGrammarTemplate.ColumnSetDef]} {@include [LineBreak]} {@include
+     * [DslGrammarTemplate.ColumnGroupDef]} {@include [LineBreak]} {@include
+     * [DslGrammarTemplate.NumberDef]} }
      *
-     * {@comment Then use PlainDslFunctionsArg, ColumnSetFunctionsArg, and ColumnGroupFunctionsArg to fill in
-     *  the parts belonging to each of these sections. Don't forget to add indents to the ColumnSet and ColumnGroup
-     *  parts. Also note we're using -Ref instead of -Def here to refer to definitions.
-     * }
-     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnSetName]}**`(`**`[`{@include [DslGrammarTemplate.NumberRef]}`]`**`)`**
-     * }
+     * {@comment Then use PlainDslFunctionsArg, ColumnSetFunctionsArg, and ColumnGroupFunctionsArg
+     * to fill in the parts belonging to each of these sections. Don't forget to add indents to the
+     * ColumnSet and ColumnGroup parts. Also note we're using -Ref instead of -Def here to refer to
+     * definitions. } {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnSetName]}**`(`**`[`{@include [DslGrammarTemplate.NumberRef]}`]`**`)`** }
      *
-     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnGroupName]}**`(`**`[`{@include [DslGrammarTemplate.NumberRef]}`]`**`)`**
-     * }
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnGroupName]}**`(`**`[`{@include [DslGrammarTemplate.NumberRef]}`]`**`)`** }
      *
-     * {@comment Our example function has no Plain DSL part, so we set it to nothing. No need to set PlainDslFunctionsArg.}
-     * {@set [DslGrammarTemplate.PLAIN_DSL_PART]}
+     * {@comment Our example function has no Plain DSL part, so we set it to nothing. No need to set
+     * PlainDslFunctionsArg.} {@set [DslGrammarTemplate.PLAIN_DSL_PART]}
      */
     @ExcludeFromSources
     public interface UsageTemplateExample {

@@ -49,65 +49,59 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         ColumnDescription::count from { it.size }
         ColumnDescription::unique from { it.countDistinct() }
         ColumnDescription::nulls from { it.values.count { it == null } }
-        ColumnDescription::top from inferType {
-            it.values.filterNotNull()
-                .groupBy { it }.maxByOrNull { it.value.size }
-                ?.key
-        }
+        ColumnDescription::top from
+            inferType {
+                it.values.filterNotNull().groupBy { it }.maxByOrNull { it.value.size }?.key
+            }
         if (hasNumericCols) {
             ColumnDescription::mean from { if (it.isNumber()) it.asNumbers().mean() else null }
             ColumnDescription::std from { if (it.isNumber()) it.asNumbers().std() else null }
         }
         if (hasComparableCols || hasNumericCols) {
-            ColumnDescription::min from inferType {
-                it.convertToComparableOrNull()?.minOrNull()
-            }
-            ColumnDescription::p25 from inferType {
-                it.convertToComparableOrNull()?.percentileOrNull(25.0)
-            }
-            ColumnDescription::median from inferType {
-                it.convertToComparableOrNull()?.medianOrNull()
-            }
-            ColumnDescription::p75 from inferType {
-                it.convertToComparableOrNull()?.percentileOrNull(75.0)
-            }
-            ColumnDescription::max from inferType {
-                it.convertToComparableOrNull()?.maxOrNull()
-            }
+            ColumnDescription::min from inferType { it.convertToComparableOrNull()?.minOrNull() }
+            ColumnDescription::p25 from
+                inferType { it.convertToComparableOrNull()?.percentileOrNull(25.0) }
+            ColumnDescription::median from
+                inferType { it.convertToComparableOrNull()?.medianOrNull() }
+            ColumnDescription::p75 from
+                inferType { it.convertToComparableOrNull()?.percentileOrNull(75.0) }
+            ColumnDescription::max from inferType { it.convertToComparableOrNull()?.maxOrNull() }
         }
     }
-    df = df.add(ColumnDescription::freq) {
-        val top = it[ColumnDescription::top]
-        val data = allCols[index]
-        data.values.count { it == top }
-    }.move(ColumnDescription::freq).after(ColumnDescription::top)
+    df =
+        df.add(ColumnDescription::freq) {
+                val top = it[ColumnDescription::top]
+                val data = allCols[index]
+                data.values.count { it == top }
+            }
+            .move(ColumnDescription::freq)
+            .after(ColumnDescription::top)
 
     return df.cast()
 }
 
-private fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> =
-    flatMap { col ->
-        when (col.kind) {
-            ColumnKind.Frame ->
-                col.asAnyFrameColumn()
-                    .concat()
+private fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> = flatMap { col ->
+    when (col.kind) {
+        ColumnKind.Frame ->
+            col.asAnyFrameColumn()
+                .concat()
+                .columns()
+                .map { it.addPath(col.path() + it.name) }
+                .collectAll(true)
+
+        ColumnKind.Group ->
+            if (atAnyDepth) {
+                col.asColumnGroup()
                     .columns()
                     .map { it.addPath(col.path() + it.name) }
                     .collectAll(true)
+            } else {
+                listOf(col)
+            }
 
-            ColumnKind.Group ->
-                if (atAnyDepth) {
-                    col.asColumnGroup()
-                        .columns()
-                        .map { it.addPath(col.path() + it.name) }
-                        .collectAll(true)
-                } else {
-                    listOf(col)
-                }
-
-            ColumnKind.Value -> listOf(col)
-        }
+        ColumnKind.Value -> listOf(col)
     }
+}
 
 /** Converts a column to a comparable column if it is not already comparable. */
 @Suppress("UNCHECKED_CAST")
@@ -116,13 +110,14 @@ private fun DataColumn<Any?>.convertToComparableOrNull(): DataColumn<Comparable<
         valuesAreComparable() -> asComparable()
 
         // Found incomparable number types, convert all to Double first
-        isNumber() -> cast<Number?>().map {
-            if (it?.isPrimitiveNumber() == false) {
-                // Cannot calculate statistics of a non-primitive number type
-                return@convertToComparableOrNull null
+        isNumber() ->
+            cast<Number?>().map {
+                if (it?.isPrimitiveNumber() == false) {
+                    // Cannot calculate statistics of a non-primitive number type
+                    return@convertToComparableOrNull null
+                }
+                it?.toDouble() as Comparable<Any>?
             }
-            it?.toDouble() as Comparable<Any>?
-        }
 
         else -> null
     }

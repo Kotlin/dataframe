@@ -1,5 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.schema
 
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.isSupertypeOf
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -7,10 +11,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.LENIENT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.isSupertypeOf
-import kotlin.reflect.typeOf
 
 public sealed class ColumnSchema {
 
@@ -21,18 +21,16 @@ public sealed class ColumnSchema {
     public abstract val nullable: Boolean
 
     /**
-     * The type of the column.
-     * For [Value] this is the common base type associated with all the values in the column.
-     * For [Group] this is [AnyRow].
-     * For [Frame] this is [AnyFrame].
+     * The type of the column. For [Value] this is the common base type associated with all the
+     * values in the column. For [Group] this is [AnyRow]. For [Frame] this is [AnyFrame].
      */
     public abstract val type: KType
 
     /**
-     * The type associated with the contents of the column.
-     * For [Value] this is irrelevant and thus `null`. Use [type] instead.
-     * For [Group] this is the common base type associated with all the [DataRow]s in the column.
-     * For [Frame] this is the common base type associated with all the [DataFrame]s in the column.
+     * The type associated with the contents of the column. For [Value] this is irrelevant and thus
+     * `null`. Use [type] instead. For [Group] this is the common base type associated with all the
+     * [DataRow]s in the column. For [Frame] this is the common base type associated with all the
+     * [DataFrame]s in the column.
      */
     public abstract val contentType: KType?
 
@@ -51,18 +49,17 @@ public sealed class ColumnSchema {
             }
     }
 
-    public class Group(public val schema: DataFrameSchema, override val contentType: KType?) : ColumnSchema() {
+    public class Group(public val schema: DataFrameSchema, override val contentType: KType?) :
+        ColumnSchema() {
         override val kind: ColumnKind = ColumnKind.Group
 
         /** A column group is never null, instead, make the columns inside nullable. */
         override val nullable: Boolean = false
-        override val type: KType get() = typeOf<AnyRow>()
+        override val type: KType
+            get() = typeOf<AnyRow>()
 
         public fun compare(other: Group, comparisonMode: ComparisonMode = LENIENT): CompareResult =
-            schema.compare(
-                other = other.schema,
-                comparisonMode = comparisonMode,
-            )
+            schema.compare(other = other.schema, comparisonMode = comparisonMode)
     }
 
     public class Frame(
@@ -71,13 +68,15 @@ public sealed class ColumnSchema {
         override val contentType: KType?,
     ) : ColumnSchema() {
         public override val kind: ColumnKind = ColumnKind.Frame
-        override val type: KType get() = typeOf<AnyFrame>()
+        override val type: KType
+            get() = typeOf<AnyFrame>()
 
         public fun compare(other: Frame, comparisonMode: ComparisonMode = LENIENT): CompareResult =
-            schema.compare(
-                other = other.schema,
-                comparisonMode = comparisonMode,
-            ) + CompareResult.compareNullability(thisIsNullable = nullable, otherIsNullable = other.nullable)
+            schema.compare(other = other.schema, comparisonMode = comparisonMode) +
+                CompareResult.compareNullability(
+                    thisIsNullable = nullable,
+                    otherIsNullable = other.nullable,
+                )
     }
 
     /** Checks equality by kind, type, or schema */
@@ -92,7 +91,10 @@ public sealed class ColumnSchema {
         }
     }
 
-    public fun compare(other: ColumnSchema, comparisonMode: ComparisonMode = LENIENT): CompareResult {
+    public fun compare(
+        other: ColumnSchema,
+        comparisonMode: ComparisonMode = LENIENT,
+    ): CompareResult {
         if (kind != other.kind) return CompareResult.None
         if (this === other) return CompareResult.Matches
         return when (this) {
@@ -105,11 +107,13 @@ public sealed class ColumnSchema {
     override fun hashCode(): Int {
         var result = nullable.hashCode()
         result = 31 * result + kind.hashCode()
-        result = 31 * result + when (this) {
-            is Value -> type.hashCode()
-            is Group -> schema.hashCode()
-            is Frame -> schema.hashCode()
-        }
+        result =
+            31 * result +
+                when (this) {
+                    is Value -> type.hashCode()
+                    is Group -> schema.hashCode()
+                    is Frame -> schema.hashCode()
+                }
         return result
     }
 }

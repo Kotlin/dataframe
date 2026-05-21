@@ -15,10 +15,8 @@ class AnySamples : DataFrameSampleHelper("any", "api") {
         val age: Int
     }
 
-    private val df = dataFrameOf(
-        "name" to listOf("Alice", "Bob"),
-        "age" to listOf(15, 20),
-    ).cast<SimplePerson>()
+    private val df =
+        dataFrameOf("name" to listOf("Alice", "Bob"), "age" to listOf(15, 20)).cast<SimplePerson>()
 
     @Test
     fun notebook_test_any_3() {

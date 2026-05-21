@@ -2,6 +2,11 @@
 
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -17,11 +22,6 @@ import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.IS_INTER_COMPARABLE_IMPORT
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.typeOf
 
 public fun AnyCol.isColumnGroup(): Boolean {
     contract { returns(true) implies (this@isColumnGroup is ColumnGroup<*>) }
@@ -52,17 +52,17 @@ public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
 public fun AnyCol.isMixedNumber(): Boolean = type().isMixedNumber()
 
 /**
- * Returns `true` when this column has the (nullable) type of either:
- * [Byte], [Short], [Int], [Long], [Float], or [Double].
+ * Returns `true` when this column has the (nullable) type of either: [Byte], [Short], [Int],
+ * [Long], [Float], or [Double].
  */
 public fun AnyCol.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
 
 /**
- * Returns `true` when this column has the (nullable) type of either:
- * [Byte], [Short], [Int], [Long], [Float], [Double], or [Number].
+ * Returns `true` when this column has the (nullable) type of either: [Byte], [Short], [Int],
+ * [Long], [Float], [Double], or [Number].
  *
- * Careful: Will return `true` if the column contains multiple number types that
- * might NOT be primitive.
+ * Careful: Will return `true` if the column contains multiple number types that might NOT be
+ * primitive.
  */
 public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixedNumber()
 
@@ -77,11 +77,11 @@ public fun AnyCol.isList(): Boolean = typeClass == List::class
 public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
 
 /**
- * Returns `true` if [this] column is intra-comparable (mutually comparable), i.e.,
- * its values can be compared with each other and thus ordered.
+ * Returns `true` if [this] column is intra-comparable (mutually comparable), i.e., its values can
+ * be compared with each other and thus ordered.
  *
- * If true, operations like [`min()`][DataColumn.min], [`max()`][DataColumn.max], [`median()`][DataColumn.median], etc.
- * will work.
+ * If true, operations like [`min()`][DataColumn.min], [`max()`][DataColumn.max],
+ * [`median()`][DataColumn.median], etc. will work.
  *
  * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)`
  */

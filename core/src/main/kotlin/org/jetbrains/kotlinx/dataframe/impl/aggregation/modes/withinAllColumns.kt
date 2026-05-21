@@ -40,45 +40,47 @@ internal fun <T, C : Any?, R : Any?> Grouped<T>.aggregateAll(
     aggregator: Aggregator<C & Any, R>,
     columns: ColumnsSelector<T, C>,
     name: String?,
-): DataFrame<T> =
-    aggregateInternal {
-        val cols = df[columns]
-        if (cols.size == 1) {
-            yield(pathOf(name ?: cols[0].name()), aggregator.aggregateSingleColumn(cols[0]))
-        } else {
-            yield(pathOf(name ?: aggregator.name), aggregator.aggregateMultipleColumns(cols.asSequence()))
-        }
+): DataFrame<T> = aggregateInternal {
+    val cols = df[columns]
+    if (cols.size == 1) {
+        yield(pathOf(name ?: cols[0].name()), aggregator.aggregateSingleColumn(cols[0]))
+    } else {
+        yield(
+            pathOf(name ?: aggregator.name),
+            aggregator.aggregateMultipleColumns(cols.asSequence()),
+        )
     }
+}
 
 internal fun <T, C : Any?, R : Any?> PivotGroupBy<T>.aggregateAll(
     aggregator: Aggregator<C & Any, R>,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> =
-    aggregate {
-        val cols = get(columns)
-        if (cols.size == 1) {
-            val returnType = aggregator.calculateReturnType(
-                valueType = cols[0].type(),
-                emptyInput = cols[0].isEmpty,
-            )
-            internal().yield(
+): DataFrame<T> = aggregate {
+    val cols = get(columns)
+    if (cols.size == 1) {
+        val returnType =
+            aggregator.calculateReturnType(valueType = cols[0].type(), emptyInput = cols[0].isEmpty)
+        internal()
+            .yield(
                 path = emptyPath(),
                 value = aggregator.aggregateSingleColumn(cols[0]),
                 type = returnType,
                 default = null,
                 guessType = false,
             )
-        } else {
-            val returnType = aggregator.calculateReturnTypeMultipleColumns(
+    } else {
+        val returnType =
+            aggregator.calculateReturnTypeMultipleColumns(
                 colTypes = cols.map { it.type() }.toSet(),
                 colsEmpty = cols.any { it.isEmpty },
             )
-            internal().yield(
+        internal()
+            .yield(
                 path = emptyPath(),
                 value = aggregator.aggregateMultipleColumns(cols.asSequence()),
                 type = returnType,
                 default = null,
                 guessType = false,
             )
-        }
     }
+}

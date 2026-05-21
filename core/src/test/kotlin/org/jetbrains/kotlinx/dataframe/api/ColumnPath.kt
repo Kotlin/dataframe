@@ -22,7 +22,8 @@ class ColumnPathTests : TestBase() {
         val parent = pathOf("city", "country")
         val child = pathOf("name", "firstName", "secondName")
 
-        dropOverlappingStartOfChild(parent, child) shouldBe listOf("name", "firstName", "secondName")
+        dropOverlappingStartOfChild(parent, child) shouldBe
+            listOf("name", "firstName", "secondName")
         child.dropStartWrt(parent) shouldBe pathOf("name", "firstName", "secondName")
     }
 

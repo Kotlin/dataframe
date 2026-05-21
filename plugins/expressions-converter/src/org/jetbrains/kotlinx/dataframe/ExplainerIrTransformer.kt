@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import java.io.File
 import org.jetbrains.kotlin.backend.common.FileLoweringPass
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.createIrBuilder
@@ -45,14 +46,16 @@ import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import java.io.File
 
-public data class ContainingDeclarations(val clazz: IrClass?, val function: IrFunction?, val statementIndex: Int = 0)
+public data class ContainingDeclarations(
+    val clazz: IrClass?,
+    val function: IrFunction?,
+    val statementIndex: Int = 0,
+)
 
 @OptIn(UnsafeDuringIrConstructionAPI::class)
 public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
-    IrTransformer<ContainingDeclarations>(),
-    FileLoweringPass {
+    IrTransformer<ContainingDeclarations>(), FileLoweringPass {
     public lateinit var file: IrFile
     public lateinit var source: String
 
@@ -61,19 +64,15 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
     public val explainerPackage: FqName = FqName("org.jetbrains.kotlinx.dataframe.explainer")
 
     internal val doAction by lazy {
-        val callableId = CallableId(
-            explainerPackage,
-            FqName("PluginCallbackProxy"),
-            Name.identifier("doAction"),
-        )
+        val callableId =
+            CallableId(explainerPackage, FqName("PluginCallbackProxy"), Name.identifier("doAction"))
         declarationFinder.findFunctions(callableId).single()
     }
 
     internal val alsoReference by lazy {
         declarationFinder
-            .findFunctions(
-                CallableId(FqName("kotlin"), Name.identifier("also")),
-            ).single()
+            .findFunctions(CallableId(FqName("kotlin"), Name.identifier("also")))
+            .single()
     }
 
     internal val plugin by lazy {
@@ -90,17 +89,20 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
         this.file = irFile
         source = file.readText()
         irFile.transformChildren(this, ContainingDeclarations(null, null))
-        irFile.transformChildrenVoid(object : IrElementTransformerVoid() {
-            override fun visitFunction(declaration: IrFunction): IrStatement {
-                declaration.acceptChildren(SetDeclarationsParentVisitor, declaration)
-                return super.visitFunction(declaration)
+        irFile.transformChildrenVoid(
+            object : IrElementTransformerVoid() {
+                override fun visitFunction(declaration: IrFunction): IrStatement {
+                    declaration.acceptChildren(SetDeclarationsParentVisitor, declaration)
+                    return super.visitFunction(declaration)
+                }
             }
-        })
+        )
     }
 
     override fun visitBlockBody(body: IrBlockBody, data: ContainingDeclarations): IrBody {
         for (i in body.statements.indices) {
-            body.statements[i] = body.statements[i].transformStatement(this, data.copy(statementIndex = i))
+            body.statements[i] =
+                body.statements[i].transformStatement(this, data.copy(statementIndex = i))
         }
         return body
     }
@@ -109,12 +111,13 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
         super.visitClass(declaration, data.copy(clazz = declaration))
 
     override fun visitFunction(declaration: IrFunction, data: ContainingDeclarations): IrStatement {
-        val annotated = declaration.annotations.any {
-            it.type.classFqName
-                ?.shortName()
-                ?.identifierOrNullIfSpecial
-                ?.equals("TransformDataFrameExpressions") == true
-        }
+        val annotated =
+            declaration.annotations.any {
+                it.type.classFqName
+                    ?.shortName()
+                    ?.identifierOrNullIfSpecial
+                    ?.equals("TransformDataFrameExpressions") == true
+            }
         return if (annotated) {
             super.visitFunction(declaration, data.copy(function = declaration))
         } else {
@@ -134,24 +137,33 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
         return declaration
     }
 
-    override fun visitExpressionBody(body: IrExpressionBody, data: ContainingDeclarations): IrBody = body
+    override fun visitExpressionBody(body: IrExpressionBody, data: ContainingDeclarations): IrBody =
+        body
 
     override fun visitGetValue(expression: IrGetValue, data: ContainingDeclarations): IrExpression {
         if (expression.startOffset < 0) return expression
         if (expression.type.classFqName in dataFrameLike) {
             val builder = pluginContext.irBuiltIns.createIrBuilder(expression.symbol)
-            return builder.transformDataFrameExpression(expression, expression.symbol.owner.name, receiver = null, data)
+            return builder.transformDataFrameExpression(
+                expression,
+                expression.symbol.owner.name,
+                receiver = null,
+                data,
+            )
         }
         return super.visitExpression(expression, data)
     }
 
-    // also, what if expression type is not DataFrame, but Unit? and receiver expression is DataFrame at some point
+    // also, what if expression type is not DataFrame, but Unit? and receiver expression is
+    // DataFrame at some point
     override fun visitCall(expression: IrCall, data: ContainingDeclarations): IrExpression {
         if (expression.startOffset < 0) return expression
         if (expression.type.classFqName in dataFrameLike) {
             if (expression.symbol.owner.name == Name.identifier("component1")) return expression
             val extensionReceiverIndex =
-                expression.symbol.owner.parameters.indexOfFirst { it.kind == IrParameterKind.ExtensionReceiver }
+                expression.symbol.owner.parameters.indexOfFirst {
+                    it.kind == IrParameterKind.ExtensionReceiver
+                }
             var receiver: IrExpression?
             // expression.arguments[extensionReceiverIndex] = extension callables,
             // expression.dispatchReceiver = member callables such as "GroupBy.aggregate"
@@ -161,7 +173,8 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
                 expression.arguments[extensionReceiverIndex] = transformedExtensionReceiver
             } else {
                 receiver = expression.dispatchReceiver
-                val transformedExtensionReceiver = expression.dispatchReceiver?.transform(this, data)
+                val transformedExtensionReceiver =
+                    expression.dispatchReceiver?.transform(this, data)
                 expression.dispatchReceiver = transformedExtensionReceiver
             }
             val builder = pluginContext.irBuiltIns.createIrBuilder(expression.symbol)
@@ -181,66 +194,86 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
         receiver: IrExpression?,
         data: ContainingDeclarations,
     ): IrCall {
-        val result = irCall(alsoReference).also {
-            it.typeArguments[0] = expression.type
-            it.arguments[0] = expression
+        val result =
+            irCall(alsoReference).also {
+                it.typeArguments[0] = expression.type
+                it.arguments[0] = expression
 
-            val alsoLambda = pluginContext.irFactory.buildFun {
-                origin = IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA
-                name = Name.special("<anonymous>")
-                visibility = DescriptorVisibilities.LOCAL
-                returnType = pluginContext.irBuiltIns.unitType
-            }.apply {
-                val itParam = addValueParameter("it", expression.type)
-                val source = try {
-                    source.substring(expression.startOffset, expression.endOffset)
-                } catch (e: Exception) {
-                    throw Exception("$expression ${ownerName.asString()} $source", e)
-                }
-                val expressionId = expressionId(expression)
-                val receiverId = receiver?.let { expressionId(it) }
-                val valueArguments = buildList<IrExpression?> {
-                    add(source.irConstImpl()) // source: String
-                    add(ownerName.asStringStripSpecialMarkers().irConstImpl()) // name: String
-                    add(irGet(itParam)) // df: Any
-                    add(expressionId.irConstImpl()) // id: String
-                    add(receiverId.irConstImpl()) // receiverId: String?
-                    add(data.clazz?.fqNameWhenAvailable?.asString().irConstImpl()) // containingClassFqName: String?
-                    add(data.function?.name?.asString().irConstImpl()) // containingFunName: String?
-                    add(irInt(data.statementIndex)) // statementIndex: Int
-                }
-                body = irBlockBody {
-                    +irCall(doAction).apply {
-                        dispatchReceiver = irGetObject(plugin)
-                        val firstValueArgumentIndex = 1 // skipping dispatch receiver
-                        valueArguments.forEachIndexed { i, argument ->
-                            this.arguments[firstValueArgumentIndex + i] = argument
+                val alsoLambda =
+                    pluginContext.irFactory
+                        .buildFun {
+                            origin = IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA
+                            name = Name.special("<anonymous>")
+                            visibility = DescriptorVisibilities.LOCAL
+                            returnType = pluginContext.irBuiltIns.unitType
                         }
-                    }
-                }
-            }
-            val alsoLambdaExpression = IrFunctionExpressionImpl(
-                startOffset = -1,
-                endOffset = -1,
-                type = pluginContext.irBuiltIns
-                    .functionN(2)
-                    .typeWith(listOf(expression.type, pluginContext.irBuiltIns.unitType)),
-                function = alsoLambda,
-                origin = IrStatementOrigin.LAMBDA,
-            )
+                        .apply {
+                            val itParam = addValueParameter("it", expression.type)
+                            val source =
+                                try {
+                                    source.substring(expression.startOffset, expression.endOffset)
+                                } catch (e: Exception) {
+                                    throw Exception(
+                                        "$expression ${ownerName.asString()} $source",
+                                        e,
+                                    )
+                                }
+                            val expressionId = expressionId(expression)
+                            val receiverId = receiver?.let { expressionId(it) }
+                            val valueArguments =
+                                buildList<IrExpression?> {
+                                    add(source.irConstImpl()) // source: String
+                                    add(
+                                        ownerName.asStringStripSpecialMarkers().irConstImpl()
+                                    ) // name: String
+                                    add(irGet(itParam)) // df: Any
+                                    add(expressionId.irConstImpl()) // id: String
+                                    add(receiverId.irConstImpl()) // receiverId: String?
+                                    add(
+                                        data.clazz?.fqNameWhenAvailable?.asString().irConstImpl()
+                                    ) // containingClassFqName: String?
+                                    add(
+                                        data.function?.name?.asString().irConstImpl()
+                                    ) // containingFunName: String?
+                                    add(irInt(data.statementIndex)) // statementIndex: Int
+                                }
+                            body = irBlockBody {
+                                +irCall(doAction).apply {
+                                    dispatchReceiver = irGetObject(plugin)
+                                    val firstValueArgumentIndex = 1 // skipping dispatch receiver
+                                    valueArguments.forEachIndexed { i, argument ->
+                                        this.arguments[firstValueArgumentIndex + i] = argument
+                                    }
+                                }
+                            }
+                        }
+                val alsoLambdaExpression =
+                    IrFunctionExpressionImpl(
+                        startOffset = -1,
+                        endOffset = -1,
+                        type =
+                            pluginContext.irBuiltIns
+                                .functionN(2)
+                                .typeWith(
+                                    listOf(expression.type, pluginContext.irBuiltIns.unitType)
+                                ),
+                        function = alsoLambda,
+                        origin = IrStatementOrigin.LAMBDA,
+                    )
 
-            it.arguments[1] = alsoLambdaExpression
-        }
+                it.arguments[1] = alsoLambdaExpression
+            }
         return result
     }
 
     private fun String?.irConstImpl(): IrConstImpl {
         val nullableString = pluginContext.irBuiltIns.stringType.makeNullable()
-        val argument = if (this == null) {
-            IrConstImpl.constNull(-1, -1, nullableString)
-        } else {
-            IrConstImpl.string(-1, -1, nullableString, this)
-        }
+        val argument =
+            if (this == null) {
+                IrConstImpl.constNull(-1, -1, nullableString)
+            } else {
+                IrConstImpl.string(-1, -1, nullableString, this)
+            }
         return argument
     }
 
@@ -251,22 +284,25 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
     }
 }
 
-internal fun <D> IrStatement.transformStatement(transformer: IrTransformer<D>, data: D): IrStatement =
-    transform(transformer, data) as IrStatement
+internal fun <D> IrStatement.transformStatement(
+    transformer: IrTransformer<D>,
+    data: D,
+): IrStatement = transform(transformer, data) as IrStatement
 
-internal val dataFrameLike: Set<FqName> = setOf(
-    FqName("org.jetbrains.kotlinx.dataframe.api.Pivot"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivot"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.PivotGroupBy"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.SplitWithTransform"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.Merge"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.Split"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.Gather"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.Update"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.Convert"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.FormattedFrame"),
-    FqName("org.jetbrains.kotlinx.dataframe.api.GroupBy"),
-    FqName("org.jetbrains.kotlinx.dataframe.DataFrame"),
-    FqName("org.jetbrains.kotlinx.dataframe.DataRow"),
-)
+internal val dataFrameLike: Set<FqName> =
+    setOf(
+        FqName("org.jetbrains.kotlinx.dataframe.api.Pivot"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivot"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.PivotGroupBy"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.SplitWithTransform"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.Merge"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.Split"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.Gather"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.Update"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.Convert"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.FormattedFrame"),
+        FqName("org.jetbrains.kotlinx.dataframe.api.GroupBy"),
+        FqName("org.jetbrains.kotlinx.dataframe.DataFrame"),
+        FqName("org.jetbrains.kotlinx.dataframe.DataRow"),
+    )

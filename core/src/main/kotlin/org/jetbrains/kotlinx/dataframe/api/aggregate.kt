@@ -16,24 +16,25 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
 // region Pivot
 
 /**
- * Aggregates this [Pivot] using the provided statistics
- * inside the [AggregateDsl].
+ * Aggregates this [Pivot] using the provided statistics inside the [AggregateDsl].
  *
- * Returns a new [DataRow] with the original [pivot] keys as top-level columns on top level
- * and the correspndonding aggregated values in new nested columns.
+ * Returns a new [DataRow] with the original [pivot] keys as top-level columns on top level and the
+ * correspndonding aggregated values in new nested columns.
  *
- * @include [AggregateDslDocs]
- * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}
- * {@set [AggregateDslDocs.RECEIVER] [Pivot]}
- * {@set [AggregateDslDocs.APPLY_NOTE] The given [aggregating expression][body] is applied to each group independently.}
- * {@set [AggregateDslDocs.RESULT_TYPE] [DataRow]}
- * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns within groups in [Pivot]}
+ * @param body The aggregation logic defined using [AggregateDsl].
+ * @return A new [DataFrame] with the results of the aggregation applied to each group.
+ * @include [AggregateDslDocs] {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]} {@set
+ *   [AggregateDslDocs.RECEIVER] [Pivot]} {@set [AggregateDslDocs.APPLY_NOTE] The given
+ *   [aggregating expression][body] is applied to each group independently.} {@set
+ *   [AggregateDslDocs.RESULT_TYPE] [DataRow]} {@set [AggregateDslDocs.OPERATING_COLUMNS] columns
+ *   within groups in [Pivot]}
  *
  * Check out [`pivot` Grammar][PivotDocs.Grammar] for more information.
  *
  * For more information: {@include [DocumentationUrls.Pivot]}
  *
  * #### Example
+ *
  * ```kotlin
  * df.pivot { city }.aggregate {
  *   // Сount rows within each pivot group and store the result
@@ -45,32 +46,31 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  *   max { age } into "maxAge"
  * }
  * ```
- *
- * @param body The aggregation logic defined using [AggregateDsl].
- * @return A new [DataFrame] with the results of the aggregation applied to each group.
  */
-public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<T> =
-    delegate {
-        aggregate(separate, body)
-    }
+public fun <T, R> Pivot<T>.aggregate(
+    separate: Boolean = false,
+    body: Selector<AggregateDsl<T>, R>,
+): DataRow<T> = delegate { aggregate(separate, body) }
 
 // endregion
 
 /**
- * Aggregates this [GroupBy] using the provided statistics
- * inside the [AggregateGroupedDsl].
+ * Aggregates this [GroupBy] using the provided statistics inside the [AggregateGroupedDsl].
  *
- * Returns a new [DataFrame] with the original [groupBy] key columns
- * and the correspodning aggregated values in new columns.
+ * Returns a new [DataFrame] with the original [groupBy] key columns and the correspodning
+ * aggregated values in new columns.
  *
- * @include [AggregateGroupedDslDocsSnippet]
- * {@set [AggregateDslDocs.APPLY_NOTE] The given [aggregating expression][body] is applied to each group independently.}
+ * @param body The aggregation logic defined using [AggregateGroupedDsl].
+ * @return A new [DataFrame] with the results of the aggregation applied to each group.
+ * @include [AggregateGroupedDslDocsSnippet] {@set [AggregateDslDocs.APPLY_NOTE] The given
+ *   [aggregating expression][body] is applied to each group independently.}
  *
  * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
  *
  * For more information: {@include [DocumentationUrls.GroupBy]}
  *
  * #### Examples
+ *
  * ```kotlin
  * df.groupBy { city }.aggregate {
  *   // Сount rows within each group and store the result
@@ -82,7 +82,6 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  *   max { age } into "maxAge"
  * }
  * ```
- *
  * ```kotlin
  * df.groupBy { name.firstName }.aggregate {
  *     // Pivot the "city" column within each group,
@@ -103,11 +102,14 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  *     count() into "total"
  * }
  * ```
- *
- * @param body The aggregation logic defined using [AggregateGroupedDsl].
- * @return A new [DataFrame] with the results of the aggregation applied to each group.
  */
 @Refine
 @Interpretable("Aggregate")
 public fun <T, R> Grouped<T>.aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T> =
-    aggregateGroupBy((this as GroupBy<*, *>).toDataFrame(), { groups.cast() }, removeColumns = true, body).cast<T>()
+    aggregateGroupBy(
+            (this as GroupBy<*, *>).toDataFrame(),
+            { groups.cast() },
+            removeColumns = true,
+            body,
+        )
+        .cast<T>()

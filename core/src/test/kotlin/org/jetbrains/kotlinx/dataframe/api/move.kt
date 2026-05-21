@@ -24,22 +24,25 @@ class MoveTests {
 
     @Test
     fun `select all`() {
-        grouped.getColumnsWithPaths { all() }.map { it.path.joinToString(".") } shouldBe grouped.columnNames()
+        grouped.getColumnsWithPaths { all() }.map { it.path.joinToString(".") } shouldBe
+            grouped.columnNames()
     }
 
     @Test
     fun `select all atAnyDepth`() {
-        val selected = grouped
-            .getColumnsWithPaths { colGroups().colsAtAnyDepth().filter { !it.isColumnGroup() } }
-            .map { it.path.joinToString(".") }
+        val selected =
+            grouped
+                .getColumnsWithPaths { colGroups().colsAtAnyDepth().filter { !it.isColumnGroup() } }
+                .map { it.path.joinToString(".") }
         selected shouldBe listOf("a.b", "a.c.d", "b.c", "b.d", "e.f")
     }
 
     @Test
     fun `batch ungrouping`() {
-        val ungrouped = grouped.move {
-            colsAtAnyDepth().filter { it.depth() > 0 && !it.isColumnGroup() }
-        }.into { pathOf(it.path.joinToString(".")) }
+        val ungrouped =
+            grouped
+                .move { colsAtAnyDepth().filter { it.depth() > 0 && !it.isColumnGroup() } }
+                .into { pathOf(it.path.joinToString(".")) }
         ungrouped.columnNames() shouldBe listOf("q", "a.b", "a.c.d", "b.c", "b.d", "w", "e.f", "r")
     }
 
@@ -52,9 +55,7 @@ class MoveTests {
 
     @Test
     fun `ungroup non-group column throws IllegalArgumentException`() {
-        shouldThrow<UngroupWrongColumnKindException> {
-            grouped.ungroup { it["q"] }
-        }
+        shouldThrow<UngroupWrongColumnKindException> { grouped.ungroup { it["q"] } }
     }
 
     @Test
@@ -87,7 +88,9 @@ class MoveTests {
     fun `columnsWithPath in selector`() {
         val selected = grouped.getColumnsWithPaths { it["a"] }
         val actual = grouped.getColumnsWithPaths {
-            selected.map { it.asColumnGroup().colsAtAnyDepth().filter { !it.isColumnGroup() } }.toColumnSet()
+            selected
+                .map { it.asColumnGroup().colsAtAnyDepth().filter { !it.isColumnGroup() } }
+                .toColumnSet()
         }
         actual.map { it.path.joinToString(".") } shouldBe listOf("a.b", "a.c.d")
     }
@@ -95,15 +98,12 @@ class MoveTests {
     @Test
     fun `move after last`() {
         val df = dataFrameOf("1", "2")(1, 2)
-        shouldNotThrowAny {
-            df.move("1").after("2") shouldBe dataFrameOf("2", "1")(2, 1)
-        }
+        shouldNotThrowAny { df.move("1").after("2") shouldBe dataFrameOf("2", "1")(2, 1) }
     }
 
     @Test
     fun `move after in nested structure`() {
-        val df = grouped.move { "a"["b"] }
-            .after { "a"["c"]["d"] }
+        val df = grouped.move { "a"["b"] }.after { "a"["c"]["d"] }
         df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
         df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d", "b")
@@ -111,8 +111,7 @@ class MoveTests {
 
     @Test
     fun `move after multiple columns`() {
-        val df = grouped.move { "a"["b"] and "b"["c"] }
-            .after { "a"["c"]["d"] }
+        val df = grouped.move { "a"["b"] and "b"["c"] }.after { "a"["c"]["d"] }
         df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
         df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d", "b", "c")
@@ -121,8 +120,10 @@ class MoveTests {
 
     @Test
     fun `move after with column selector`() {
-        val df = grouped.move { colsAtAnyDepth().filter { it.name == "r" || it.name == "w" } }
-            .after { "a"["c"]["d"] }
+        val df =
+            grouped
+                .move { colsAtAnyDepth().filter { it.name == "r" || it.name == "w" } }
+                .after { "a"["c"]["d"] }
         df.columnNames() shouldBe listOf("q", "a", "b", "e")
         df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d", "w", "r")
     }
@@ -138,40 +139,33 @@ class MoveTests {
     @Test
     fun `should throw when moving parent after child`() {
         // Simple case: direct parent-child relationship
-        shouldThrow<IllegalArgumentException> {
-            grouped.move("a").after { "a"["b"] }
-        }.message shouldBe "Cannot move column 'a' after its own child column 'a/b'"
+        shouldThrow<IllegalArgumentException> { grouped.move("a").after { "a"["b"] } }
+            .message shouldBe "Cannot move column 'a' after its own child column 'a/b'"
 
         // Nested case: deeper parent-child relationship
-        shouldThrow<IllegalArgumentException> {
-            grouped.move("a").after { "a"["c"]["d"] }
-        }.message shouldBe "Cannot move column 'a' after its own child column 'a/c/d'"
+        shouldThrow<IllegalArgumentException> { grouped.move("a").after { "a"["c"]["d"] } }
+            .message shouldBe "Cannot move column 'a' after its own child column 'a/c/d'"
 
         // Group case: moving group after its nested column
-        shouldThrow<IllegalArgumentException> {
-            grouped.move { "a"["c"] }.after { "a"["c"]["d"] }
-        }.message shouldBe "Cannot move column 'a/c' after its own child column 'a/c/d'"
+        shouldThrow<IllegalArgumentException> { grouped.move { "a"["c"] }.after { "a"["c"]["d"] } }
+            .message shouldBe "Cannot move column 'a/c' after its own child column 'a/c/d'"
     }
 
     @Test
     fun `should throw when moving column after itself`() {
-        shouldThrow<IllegalArgumentException> {
-            grouped.move { "a"["b"] }.after { "a"["b"] }
-        }.message shouldBe "Cannot move column 'a/b' after its own child column 'a/b'"
+        shouldThrow<IllegalArgumentException> { grouped.move { "a"["b"] }.after { "a"["b"] } }
+            .message shouldBe "Cannot move column 'a/b' after its own child column 'a/b'"
     }
 
     @Test
     fun `move before first`() {
         val df = dataFrameOf("1", "2")(1, 2)
-        shouldNotThrowAny {
-            df.move("2").before("1") shouldBe dataFrameOf("2", "1")(2, 1)
-        }
+        shouldNotThrowAny { df.move("2").before("1") shouldBe dataFrameOf("2", "1")(2, 1) }
     }
 
     @Test
     fun `move before in nested structure`() {
-        val df = grouped.move { "a"["b"] }
-            .before { "a"["c"]["d"] }
+        val df = grouped.move { "a"["b"] }.before { "a"["c"]["d"] }
         df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
         df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("b", "d")
@@ -179,8 +173,7 @@ class MoveTests {
 
     @Test
     fun `move before multiple columns`() {
-        val df = grouped.move { "a"["b"] and "b"["c"] }
-            .before { "a"["c"]["d"] }
+        val df = grouped.move { "a"["b"] and "b"["c"] }.before { "a"["c"]["d"] }
         df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
         df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
         df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("b", "c", "d")
@@ -189,8 +182,10 @@ class MoveTests {
 
     @Test
     fun `move before with column selector`() {
-        val df = grouped.move { colsAtAnyDepth().filter { it.name == "r" || it.name == "w" } }
-            .before { "a"["c"]["d"] }
+        val df =
+            grouped
+                .move { colsAtAnyDepth().filter { it.name == "r" || it.name == "w" } }
+                .before { "a"["c"]["d"] }
         df.columnNames() shouldBe listOf("q", "a", "b", "e")
         df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("w", "r", "d")
     }
@@ -206,26 +201,22 @@ class MoveTests {
     @Test
     fun `should throw when moving parent before child`() {
         // Simple case: direct parent-child relationship
-        shouldThrow<IllegalArgumentException> {
-            grouped.move("a").before { "a"["b"] }
-        }.message shouldBe "Cannot move column 'a' before its own child column 'a/b'"
+        shouldThrow<IllegalArgumentException> { grouped.move("a").before { "a"["b"] } }
+            .message shouldBe "Cannot move column 'a' before its own child column 'a/b'"
 
         // Nested case: deeper parent-child relationship
-        shouldThrow<IllegalArgumentException> {
-            grouped.move("a").before { "a"["c"]["d"] }
-        }.message shouldBe "Cannot move column 'a' before its own child column 'a/c/d'"
+        shouldThrow<IllegalArgumentException> { grouped.move("a").before { "a"["c"]["d"] } }
+            .message shouldBe "Cannot move column 'a' before its own child column 'a/c/d'"
 
         // Group case: moving group after its nested column
-        shouldThrow<IllegalArgumentException> {
-            grouped.move { "a"["c"] }.before { "a"["c"]["d"] }
-        }.message shouldBe "Cannot move column 'a/c' before its own child column 'a/c/d'"
+        shouldThrow<IllegalArgumentException> { grouped.move { "a"["c"] }.before { "a"["c"]["d"] } }
+            .message shouldBe "Cannot move column 'a/c' before its own child column 'a/c/d'"
     }
 
     @Test
     fun `should throw when moving column before itself`() {
-        shouldThrow<IllegalArgumentException> {
-            grouped.move { "a"["b"] }.before { "a"["b"] }
-        }.message shouldBe "Cannot move column 'a/b' before its own child column 'a/b'"
+        shouldThrow<IllegalArgumentException> { grouped.move { "a"["b"] }.before { "a"["b"] } }
+            .message shouldBe "Cannot move column 'a/b' before its own child column 'a/b'"
     }
 
     @Test
@@ -315,8 +306,8 @@ class MoveTests {
 
     @Test
     fun `should throw when moving columns of different groups`() {
-        shouldThrow<IllegalArgumentException> {
-            grouped.move { "a"["b"] and "b"["c"] }.to(0, true)
-        }.message shouldBe "Cannot move columns to an index remaining inside group if they have different parent"
+        shouldThrow<IllegalArgumentException> { grouped.move { "a"["b"] and "b"["c"] }.to(0, true) }
+            .message shouldBe
+            "Cannot move columns to an index remaining inside group if they have different parent"
     }
 }

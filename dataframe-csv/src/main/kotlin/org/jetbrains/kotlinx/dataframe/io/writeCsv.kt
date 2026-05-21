@@ -2,6 +2,10 @@
 
 package org.jetbrains.kotlinx.dataframe.io
 
+import java.io.File
+import java.io.FileWriter
+import java.nio.file.Path
+import kotlin.io.path.writer
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonWriteDelimDocs
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_FORMAT
@@ -17,10 +21,6 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.QUOTE_MODE
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.RECORD_SEPARATOR
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.WRITER_WRITE
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
-import java.io.File
-import java.io.FileWriter
-import java.nio.file.Path
-import kotlin.io.path.writer
 
 /**
  * @include [CommonWriteDelimDocs.CsvDocs]
@@ -126,6 +126,7 @@ public fun AnyFrame.writeCsv(
 
 /**
  * {@comment only one with adjustCsvFormat}
+ *
  * @include [CommonWriteDelimDocs.CsvDocs]
  * @set [CommonWriteDelimDocs.WRITE_OR_CONVERT] Write
  * @set [CommonWriteDelimDocs.DATA_TITLE] Appendable

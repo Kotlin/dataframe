@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
+import kotlin.test.assertEquals
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -26,17 +27,17 @@ import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.Person
 import org.junit.Test
-import kotlin.test.assertEquals
 
 class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `generateInterfaces with PredefinedName and nested structures`() {
-        val df = dataFrameOf("a", "b")(
-            1,
-            2,
-        ).move("a", "b").under("group")
-        val code = df.generateInterfaces("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
+        val df = dataFrameOf("a", "b")(1, 2).move("a", "b").under("group")
+        val code =
+            df.generateInterfaces(
+                "Marker",
+                nestedMarkerNameProvider = MarkerNameProvider.PredefinedName,
+            )
         val expected =
             """
             @DataSchema
@@ -49,17 +50,19 @@ class CodeGenerationTests : BaseTest() {
                     val b: Int
                 }
             }
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code.value)
     }
 
     @Test
     fun `generateDataClasses with PredefinedName and nested structures`() {
-        val df = dataFrameOf("a", "b")(
-            1,
-            2,
-        ).move("a", "b").under("group")
-        val code = df.generateDataClasses("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
+        val df = dataFrameOf("a", "b")(1, 2).move("a", "b").under("group")
+        val code =
+            df.generateDataClasses(
+                "Marker",
+                nestedMarkerNameProvider = MarkerNameProvider.PredefinedName,
+            )
         val expected =
             """
             @DataSchema
@@ -72,16 +75,14 @@ class CodeGenerationTests : BaseTest() {
                     val b: Int
                 )
             }
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code.value)
     }
 
     @Test
     fun `generateDataClasses with nested structures`() {
-        val df = dataFrameOf("a", "b")(
-            1,
-            2,
-        ).move("a", "b").under("group")
+        val df = dataFrameOf("a", "b")(1, 2).move("a", "b").under("group")
         val code = df.generateDataClasses("Marker")
         val expected =
             """
@@ -95,7 +96,8 @@ class CodeGenerationTests : BaseTest() {
                     val b: Int
                 )
             }
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code.value)
     }
 
@@ -114,20 +116,19 @@ class CodeGenerationTests : BaseTest() {
                     val age: Int
                 )
             }
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code.value)
     }
 
     @Test
     fun `resolve name clash between nested marker and property`() {
-        val df = dataFrameOf("Person", "b")(
-            1,
-            2,
-        ).move("b").under("_person")
+        val df = dataFrameOf("Person", "b")(1, 2).move("b").under("_person")
 
         val code = df.generateInterfaces("Marker")
 
-        val expected = """
+        val expected =
+            """
             @DataSchema
             interface Marker {
                 val Person: Int
@@ -145,14 +146,12 @@ class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `resolve name clash between nested marker and property with deep nesting`() {
-        val df = dataFrameOf("Person", "b")(
-            1,
-            2,
-        ).group("b").into { pathOf("bb", "_person") }
+        val df = dataFrameOf("Person", "b")(1, 2).group("b").into { pathOf("bb", "_person") }
 
         val code = df.generateInterfaces("Marker")
 
-        val expected = """
+        val expected =
+            """
             @DataSchema
             interface Marker {
                 val Person: Int
@@ -175,11 +174,12 @@ class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `generateInterfaces with PredefinedName`() {
-        val df = dataFrameOf("a", "b")(
-            1,
-            2,
-        ).move("a", "b").under("group")
-        val code = df.generateInterfaces("Marker", nestedMarkerNameProvider = MarkerNameProvider.PredefinedName)
+        val df = dataFrameOf("a", "b")(1, 2).move("a", "b").under("group")
+        val code =
+            df.generateInterfaces(
+                "Marker",
+                nestedMarkerNameProvider = MarkerNameProvider.PredefinedName,
+            )
         val expected =
             """
             @DataSchema
@@ -192,7 +192,8 @@ class CodeGenerationTests : BaseTest() {
                     val b: Int
                 }
             }
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code.value)
     }
 
@@ -206,7 +207,8 @@ class CodeGenerationTests : BaseTest() {
             data class DataEntry(
                 val value: Int
             )
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code.value)
     }
 
@@ -222,66 +224,69 @@ class CodeGenerationTests : BaseTest() {
     val stringName = String::class.simpleName!!
     val intName = Int::class.simpleName!!
 
-    fun expectedProperties(fullTypeName: String, shortTypeName: String, addNullable: Boolean = false) =
-        buildString {
+    fun expectedProperties(
+        fullTypeName: String,
+        shortTypeName: String,
+        addNullable: Boolean = false,
+    ) = buildString {
+        appendLine(
+            """val $dfName<$fullTypeName>.age: $dataCol<$intName> @JvmName("${shortTypeName}_age") get() = this["age"] as $dataCol<$intName>"""
+        )
+        appendLine(
+            """val $dfRowName<$fullTypeName>.age: $intName @JvmName("${shortTypeName}_age") get() = this["age"] as $intName"""
+        )
+        if (addNullable) {
             appendLine(
-                """val $dfName<$fullTypeName>.age: $dataCol<$intName> @JvmName("${shortTypeName}_age") get() = this["age"] as $dataCol<$intName>""",
+                """val $dfName<$fullTypeName?>.age: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $dataCol<$intName?>"""
             )
             appendLine(
-                """val $dfRowName<$fullTypeName>.age: $intName @JvmName("${shortTypeName}_age") get() = this["age"] as $intName""",
+                """val $dfRowName<$fullTypeName?>.age: $intName? @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $intName?"""
             )
-            if (addNullable) {
-                appendLine(
-                    """val $dfName<$fullTypeName?>.age: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $dataCol<$intName?>""",
-                )
-                appendLine(
-                    """val $dfRowName<$fullTypeName?>.age: $intName? @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $intName?""",
-                )
-            }
+        }
+        appendLine(
+            """val $dfName<$fullTypeName>.city: $dataCol<$stringName?> @JvmName("${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>"""
+        )
+        appendLine(
+            """val $dfRowName<$fullTypeName>.city: $stringName? @JvmName("${shortTypeName}_city") get() = this["city"] as $stringName?"""
+        )
+        if (addNullable) {
             appendLine(
-                """val $dfName<$fullTypeName>.city: $dataCol<$stringName?> @JvmName("${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
-            )
-            appendLine(
-                """val $dfRowName<$fullTypeName>.city: $stringName? @JvmName("${shortTypeName}_city") get() = this["city"] as $stringName?""",
-            )
-            if (addNullable) {
-                appendLine(
-                    """val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
-                )
-                appendLine(
-                    """val $dfRowName<$fullTypeName?>.city: $stringName? @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $stringName?""",
-                )
-            }
-            appendLine(
-                """val $dfName<$fullTypeName>.name: $dataCol<$stringName> @JvmName("${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName>""",
+                """val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>"""
             )
             appendLine(
-                """val $dfRowName<$fullTypeName>.name: $stringName @JvmName("${shortTypeName}_name") get() = this["name"] as $stringName""",
+                """val $dfRowName<$fullTypeName?>.city: $stringName? @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $stringName?"""
             )
-            if (addNullable) {
-                appendLine(
-                    """val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName?>""",
-                )
-                appendLine(
-                    """val $dfRowName<$fullTypeName?>.name: $stringName? @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $stringName?""",
-                )
-            }
+        }
+        appendLine(
+            """val $dfName<$fullTypeName>.name: $dataCol<$stringName> @JvmName("${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName>"""
+        )
+        appendLine(
+            """val $dfRowName<$fullTypeName>.name: $stringName @JvmName("${shortTypeName}_name") get() = this["name"] as $stringName"""
+        )
+        if (addNullable) {
             appendLine(
-                """val $dfName<$fullTypeName>.weight: $dataCol<$intName?> @JvmName("${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
+                """val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName?>"""
+            )
+            appendLine(
+                """val $dfRowName<$fullTypeName?>.name: $stringName? @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $stringName?"""
+            )
+        }
+        appendLine(
+            """val $dfName<$fullTypeName>.weight: $dataCol<$intName?> @JvmName("${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>"""
+        )
+        append(
+            """val $dfRowName<$fullTypeName>.weight: $intName? @JvmName("${shortTypeName}_weight") get() = this["weight"] as $intName?"""
+        )
+        if (addNullable) {
+            appendLine("")
+            appendLine(
+                """val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>"""
             )
             append(
-                """val $dfRowName<$fullTypeName>.weight: $intName? @JvmName("${shortTypeName}_weight") get() = this["weight"] as $intName?""",
+                """val $dfRowName<$fullTypeName?>.weight: $intName? @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $intName?"""
             )
-            if (addNullable) {
-                appendLine("")
-                appendLine(
-                    """val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
-                )
-                append(
-                    """val $dfRowName<$fullTypeName?>.weight: $intName? @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $intName?""",
-                )
-            }
         }
+    }
 
     @Test
     fun `generate marker interface`() {
@@ -298,7 +303,8 @@ class CodeGenerationTests : BaseTest() {
                 val weight: Int?
             }
             
-            """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
+            """
+                .trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
 
@@ -329,7 +335,8 @@ class CodeGenerationTests : BaseTest() {
                 val weight: Int?
             }
             
-            """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
+            """
+                .trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
 
@@ -357,7 +364,8 @@ class CodeGenerationTests : BaseTest() {
             val $dfName<$nestedType>.name: $dataCol<$stringName> @JvmName("${nestedType}_name") get() = this["name"] as $dataCol<$stringName>
             val $dfRowName<$nestedType>.name: $stringName @JvmName("${nestedType}_name") get() = this["name"] as $stringName
 
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val declaration2 =
             """
@@ -374,7 +382,8 @@ class CodeGenerationTests : BaseTest() {
             val $dfRowName<$type2>.nameAndCity: $dataRow<$nestedType> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$nestedType>
             val $dfName<$type2>.weight: $dataCol<$intName?> @JvmName("${type2}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$type2>.weight: $intName? @JvmName("${type2}_weight") get() = this["weight"] as $intName?
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val expectedConverter = "it.cast<$type2>()"
 
@@ -389,12 +398,15 @@ class CodeGenerationTests : BaseTest() {
             """
             @DataSchema
             interface $personClass { }
-            """.trimIndent() + "\n" + expectedProperties(personClassName, personShortName, addNullable = true)
+            """
+                .trimIndent() +
+                "\n" +
+                expectedProperties(personClassName, personShortName, addNullable = true)
 
-        val code = CodeGenerator
-            .create(useFqNames = false)
-            .generate<Person>(InterfaceGenerationMode.NoFields, extensionProperties = true)
-            .declarations
+        val code =
+            CodeGenerator.create(useFqNames = false)
+                .generate<Person>(InterfaceGenerationMode.NoFields, extensionProperties = true)
+                .declarations
         assertEquals(expected, code)
     }
 
@@ -410,15 +422,19 @@ class CodeGenerationTests : BaseTest() {
     fun `generate derived interface`() {
         val codeGen = CodeGenerator.create()
         val schema = df.dropNulls().schema()
-        val code = codeGen.generate(
-            schema = schema,
-            name = "ValidPerson",
-            fields = true,
-            extensionProperties = true,
-            isOpen = true,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            knownMarkers = listOf(MarkersExtractor.get<Person>()),
-        ).code.declarations
+        val code =
+            codeGen
+                .generate(
+                    schema = schema,
+                    name = "ValidPerson",
+                    fields = true,
+                    extensionProperties = true,
+                    isOpen = true,
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    knownMarkers = listOf(MarkersExtractor.get<Person>()),
+                )
+                .code
+                .declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         val expected =
             """
@@ -432,7 +448,8 @@ class CodeGenerationTests : BaseTest() {
             val $packageName.DataRow<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
             val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> @JvmName("ValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int>
             val $packageName.DataRow<ValidPerson>.weight: kotlin.Int @JvmName("ValidPerson_weight") get() = this["weight"] as kotlin.Int
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code)
     }
 
@@ -444,7 +461,8 @@ class CodeGenerationTests : BaseTest() {
             """
             @DataSchema
             interface Person { }
-            """.trimIndent() + "\n\n" + expectedProperties("Person", "Person")
+            """
+                .trimIndent() + "\n\n" + expectedProperties("Person", "Person")
         assertEquals(expected, code)
     }
 
@@ -461,7 +479,8 @@ class CodeGenerationTests : BaseTest() {
                 val name: kotlin.String
                 val weight: kotlin.Int?
             }
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code)
     }
 
@@ -469,7 +488,10 @@ class CodeGenerationTests : BaseTest() {
     fun `declaration with internal visibility`() {
         val repl = CodeGenerator.create()
         val code =
-            repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
+            repl
+                .generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL)
+                .code
+                .declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         val expected =
             """
@@ -489,23 +511,29 @@ class CodeGenerationTests : BaseTest() {
             internal val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
             internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             internal val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code)
     }
 
     @Test
     fun `declaration with explicit public visibility`() {
         val repl = CodeGenerator.create()
-        val code = repl.generate(
-            typed.schema(),
-            "DataType",
-            true,
-            true,
-            false,
-            MarkerVisibility.EXPLICIT_PUBLIC,
-        ).code.declarations
+        val code =
+            repl
+                .generate(
+                    typed.schema(),
+                    "DataType",
+                    true,
+                    true,
+                    false,
+                    MarkerVisibility.EXPLICIT_PUBLIC,
+                )
+                .code
+                .declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        val expected = """
+        val expected =
+            """
             @DataSchema(isOpen = false)
             public interface DataType {
                 public val age: kotlin.Int
@@ -531,7 +559,8 @@ class CodeGenerationTests : BaseTest() {
     fun `column starts with number`() {
         val df = dataFrameOf("1a", "-b", "?c")(1, 2, 3)
         val repl = CodeGenerator.create()
-        val declarations = repl.generate(df.schema(), "DataType", false, true, false).code.declarations
+        val declarations =
+            repl.generate(df.schema(), "DataType", false, true, false).code.declarations
         df.columnNames().forEach {
             val matches = "`$it`".toRegex().findAll(declarations).toList()
             matches.size shouldBe 2
@@ -548,7 +577,8 @@ class CodeGenerationTests : BaseTest() {
                 @ColumnName("my_name")
                 val myName: Int
             )
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, code.value)
     }
 
@@ -566,7 +596,8 @@ class CodeGenerationTests : BaseTest() {
             data class DataEntry(
                 val a: List<String>
             )
-            """.trimIndent()
+            """
+                .trimIndent()
         assertEquals(expected, df.generateDataClasses().value)
     }
 
@@ -578,16 +609,21 @@ class CodeGenerationTests : BaseTest() {
         val code1 = df.generateDataClasses()
         val code2 = df.schema().generateDataClasses("Person")
 
-        val expected = CodeGenerator.create(useFqNames = false).generate(
-            schema = df.schema(),
-            name = "Person",
-            fields = true,
-            extensionProperties = false,
-            isOpen = false,
-            asDataClass = true,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            fieldNameNormalizer = NameNormalizer.default,
-        ).code.declarations.toCodeString()
+        val expected =
+            CodeGenerator.create(useFqNames = false)
+                .generate(
+                    schema = df.schema(),
+                    name = "Person",
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = false,
+                    asDataClass = true,
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    fieldNameNormalizer = NameNormalizer.default,
+                )
+                .code
+                .declarations
+                .toCodeString()
 
         code1 shouldBe expected
         code2 shouldBe expected
@@ -597,16 +633,21 @@ class CodeGenerationTests : BaseTest() {
     fun `DataFrame generateInterfaces`() {
         val code = typed.generateInterfaces()
 
-        val expected = CodeGenerator.create(useFqNames = false).generate(
-            schema = df.schema(),
-            name = "Person",
-            fields = true,
-            extensionProperties = false,
-            isOpen = true,
-            asDataClass = false,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            fieldNameNormalizer = NameNormalizer.default,
-        ).code.declarations.toCodeString()
+        val expected =
+            CodeGenerator.create(useFqNames = false)
+                .generate(
+                    schema = df.schema(),
+                    name = "Person",
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = true,
+                    asDataClass = false,
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    fieldNameNormalizer = NameNormalizer.default,
+                )
+                .code
+                .declarations
+                .toCodeString()
 
         code.value shouldBe expected.value
     }
@@ -615,39 +656,50 @@ class CodeGenerationTests : BaseTest() {
     fun `DataFrame generateInterfaces - with marker name`() {
         val code = typed.generateInterfaces("CustomInterface")
 
-        val expected = CodeGenerator.create(useFqNames = false).generate(
-            schema = df.schema(),
-            name = "CustomInterface",
-            fields = true,
-            extensionProperties = false,
-            isOpen = true,
-            asDataClass = false,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            fieldNameNormalizer = NameNormalizer.default,
-        ).code.declarations.toCodeString()
+        val expected =
+            CodeGenerator.create(useFqNames = false)
+                .generate(
+                    schema = df.schema(),
+                    name = "CustomInterface",
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = true,
+                    asDataClass = false,
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    fieldNameNormalizer = NameNormalizer.default,
+                )
+                .code
+                .declarations
+                .toCodeString()
 
         code.value shouldBe expected.value
     }
 
     @Test
     fun `DataFrame generateDataClasses - with custom parameters`() {
-        val code = typed.generateDataClasses(
-            markerName = "CustomDataClass",
-            extensionProperties = true,
-            visibility = MarkerVisibility.INTERNAL,
-            useFqNames = true,
-        )
+        val code =
+            typed.generateDataClasses(
+                markerName = "CustomDataClass",
+                extensionProperties = true,
+                visibility = MarkerVisibility.INTERNAL,
+                useFqNames = true,
+            )
 
-        val expected = CodeGenerator.create(useFqNames = true).generate(
-            schema = df.schema(),
-            name = "CustomDataClass",
-            fields = true,
-            extensionProperties = true,
-            isOpen = true,
-            asDataClass = true,
-            visibility = MarkerVisibility.INTERNAL,
-            fieldNameNormalizer = NameNormalizer.default,
-        ).code.declarations.toCodeString()
+        val expected =
+            CodeGenerator.create(useFqNames = true)
+                .generate(
+                    schema = df.schema(),
+                    name = "CustomDataClass",
+                    fields = true,
+                    extensionProperties = true,
+                    isOpen = true,
+                    asDataClass = true,
+                    visibility = MarkerVisibility.INTERNAL,
+                    fieldNameNormalizer = NameNormalizer.default,
+                )
+                .code
+                .declarations
+                .toCodeString()
 
         code.value shouldBe expected.value
     }
@@ -657,16 +709,21 @@ class CodeGenerationTests : BaseTest() {
         val schema = typed.schema()
         val code = schema.generateInterfaces("SchemaInterface")
 
-        val expected = CodeGenerator.create(useFqNames = false).generate(
-            schema = schema,
-            name = "SchemaInterface",
-            fields = true,
-            extensionProperties = false,
-            isOpen = true,
-            asDataClass = false,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            fieldNameNormalizer = NameNormalizer.default,
-        ).code.declarations.toCodeString()
+        val expected =
+            CodeGenerator.create(useFqNames = false)
+                .generate(
+                    schema = schema,
+                    name = "SchemaInterface",
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = true,
+                    asDataClass = false,
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    fieldNameNormalizer = NameNormalizer.default,
+                )
+                .code
+                .declarations
+                .toCodeString()
 
         code.value shouldBe expected.value
     }
@@ -676,16 +733,21 @@ class CodeGenerationTests : BaseTest() {
         val schema = typed.schema()
         val code = schema.generateDataClasses("SchemaDataClass")
 
-        val expected = CodeGenerator.create(useFqNames = false).generate(
-            schema = schema,
-            name = "SchemaDataClass",
-            fields = true,
-            extensionProperties = false,
-            isOpen = false,
-            asDataClass = true,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            fieldNameNormalizer = NameNormalizer.default,
-        ).code.declarations.toCodeString()
+        val expected =
+            CodeGenerator.create(useFqNames = false)
+                .generate(
+                    schema = schema,
+                    name = "SchemaDataClass",
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = false,
+                    asDataClass = true,
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    fieldNameNormalizer = NameNormalizer.default,
+                )
+                .code
+                .declarations
+                .toCodeString()
 
         code.value shouldBe expected.value
     }
@@ -693,45 +755,55 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `DataFrameSchema generateDataClasses - with custom parameters`() {
         val schema = typed.schema()
-        val code = schema.generateDataClasses(
-            markerName = "SchemaDataClass",
-            extensionProperties = true,
-            visibility = MarkerVisibility.EXPLICIT_PUBLIC,
-            useFqNames = false,
-        )
+        val code =
+            schema.generateDataClasses(
+                markerName = "SchemaDataClass",
+                extensionProperties = true,
+                visibility = MarkerVisibility.EXPLICIT_PUBLIC,
+                useFqNames = false,
+            )
 
-        val expected = CodeGenerator.create(useFqNames = false).generate(
-            schema = schema,
-            name = "SchemaDataClass",
-            fields = true,
-            extensionProperties = true,
-            isOpen = false,
-            asDataClass = true,
-            visibility = MarkerVisibility.EXPLICIT_PUBLIC,
-            fieldNameNormalizer = NameNormalizer.default,
-        ).code.declarations.toCodeString()
+        val expected =
+            CodeGenerator.create(useFqNames = false)
+                .generate(
+                    schema = schema,
+                    name = "SchemaDataClass",
+                    fields = true,
+                    extensionProperties = true,
+                    isOpen = false,
+                    asDataClass = true,
+                    visibility = MarkerVisibility.EXPLICIT_PUBLIC,
+                    fieldNameNormalizer = NameNormalizer.default,
+                )
+                .code
+                .declarations
+                .toCodeString()
 
         code.value shouldBe expected.value
     }
 
     @Test
     fun `DataFrame generateDataClasses - with name normalizer`() {
-        val dfWithSpecialNames = dataFrameOf("my_column", "another column", "third-column")(1, "test", 3.14)
+        val dfWithSpecialNames =
+            dataFrameOf("my_column", "another column", "third-column")(1, "test", 3.14)
         val nameNormalizer = NameNormalizer { it.toCamelCaseByDelimiters() + "1" }
-        val code = dfWithSpecialNames.generateDataClasses(
-            nameNormalizer = nameNormalizer,
-        )
+        val code = dfWithSpecialNames.generateDataClasses(nameNormalizer = nameNormalizer)
 
-        val expected = CodeGenerator.create(useFqNames = false).generate(
-            schema = dfWithSpecialNames.schema(),
-            name = "DataEntry",
-            fields = true,
-            extensionProperties = false,
-            isOpen = false,
-            asDataClass = true,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            fieldNameNormalizer = nameNormalizer,
-        ).code.declarations.toCodeString()
+        val expected =
+            CodeGenerator.create(useFqNames = false)
+                .generate(
+                    schema = dfWithSpecialNames.schema(),
+                    name = "DataEntry",
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = false,
+                    asDataClass = true,
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    fieldNameNormalizer = nameNormalizer,
+                )
+                .code
+                .declarations
+                .toCodeString()
 
         code.value shouldBe expected.value
     }

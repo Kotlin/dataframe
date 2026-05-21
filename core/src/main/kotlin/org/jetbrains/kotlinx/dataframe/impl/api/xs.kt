@@ -28,22 +28,29 @@ internal fun <T, C> DataFrame<T>.xsImpl(
             selector = keyColumns,
         )
     val n = keyValues.count()
-    require(cols.size == n) { "Number of key values $n doesn't equal to number of key columns ${cols.size}" }
+    require(cols.size == n) {
+        "Number of key values $n doesn't equal to number of key columns ${cols.size}"
+    }
     val pairs = cols.zip(keyValues).filter { !it.first.isMissingColumn() }
     return filter {
-        val rowIndex = index()
-        var include = true
-        for ((col, value) in pairs) {
-            if (col[rowIndex] != value) {
-                include = false
-                break
+            val rowIndex = index()
+            var include = true
+            for ((col, value) in pairs) {
+                if (col[rowIndex] != value) {
+                    include = false
+                    break
+                }
             }
+            include
         }
-        include
-    }.removeImpl(allowMissingColumns, keyColumns).df
+        .removeImpl(allowMissingColumns, keyColumns)
+        .df
 }
 
-internal fun <T, G, C> GroupBy<T, G>.xsImpl(vararg keyValues: C, keyColumns: ColumnsSelector<T, C>): GroupBy<T, G> {
+internal fun <T, G, C> GroupBy<T, G>.xsImpl(
+    vararg keyValues: C,
+    keyColumns: ColumnsSelector<T, C>,
+): GroupBy<T, G> {
     val df = toDataFrame()
     val paths = df.getColumnPaths(UnresolvedColumnsPolicy.Create, keyColumns).toColumnSet()
     val d1 = df.xsImpl({ paths }, true, *keyValues).asGroupBy(groups)

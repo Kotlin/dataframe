@@ -13,7 +13,8 @@ import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_S
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.schema.plus
 
-public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
+public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) :
+    DataFrameSchema {
 
     override fun compare(other: DataFrameSchema, comparisonMode: ComparisonMode): CompareResult {
         require(other is DataFrameSchemaImpl)
@@ -21,30 +22,39 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
 
         var result: CompareResult = Matches
 
-        // check for each column in this schema if there is a column with the same name in the other schema
+        // check for each column in this schema if there is a column with the same name in the other
+        // schema
         // - if so, check those schemas for equality, taking comparisonMode into account
-        // - if not, consider the other schema derived from this (or unrelated (None) if comparisonMode == STRICT)
+        // - if not, consider the other schema derived from this (or unrelated (None) if
+        // comparisonMode == STRICT)
         this.columns.forEach { (thisColName, thisSchema) ->
             val otherSchema = other.columns[thisColName]
-            result += when {
-                otherSchema != null -> {
-                    // increase comparisonMode strictness when dealing with nested schemas of FrameColumns or ColumnGroups
-                    val newComparisonMode =
-                        if (comparisonMode == STRICT_FOR_NESTED_SCHEMAS && thisSchema !is ColumnSchema.Value) {
-                            STRICT
-                        } else {
-                            comparisonMode
-                        }
+            result +=
+                when {
+                    otherSchema != null -> {
+                        // increase comparisonMode strictness when dealing with nested schemas of
+                        // FrameColumns or ColumnGroups
+                        val newComparisonMode =
+                            if (
+                                comparisonMode == STRICT_FOR_NESTED_SCHEMAS &&
+                                    thisSchema !is ColumnSchema.Value
+                            ) {
+                                STRICT
+                            } else {
+                                comparisonMode
+                            }
 
-                    thisSchema.compare(other = otherSchema, comparisonMode = newComparisonMode)
+                        thisSchema.compare(other = otherSchema, comparisonMode = newComparisonMode)
+                    }
+
+                    else -> if (comparisonMode == STRICT) None else IsDerived
                 }
-
-                else -> if (comparisonMode == STRICT) None else IsDerived
-            }
             if (result == None) return None
         }
-        // then check for each column in the other schema if there is a column with the same name in this schema
-        // if not, consider the other schema as super to this (or unrelated (None) if comparisonMode == STRICT)
+        // then check for each column in the other schema if there is a column with the same name in
+        // this schema
+        // if not, consider the other schema as super to this (or unrelated (None) if comparisonMode
+        // == STRICT)
         other.columns.forEach { (otherColName, _) ->
             if (this.columns[otherColName] != null) return@forEach
             result += if (comparisonMode == STRICT) None else IsSuper
@@ -54,12 +64,11 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
     }
 
     /**
-     * Returns `true` if, and only if,
-     * [this schema][this] has the same columns **in the same order** as the [other schema][other].
-     * The types must also match exactly.
+     * Returns `true` if, and only if, [this schema][this] has the same columns **in the same
+     * order** as the [other schema][other]. The types must also match exactly.
      *
-     * Use [compare][DataFrameSchema.compare] it the order does not matter and
-     * for other comparison options.
+     * Use [compare][DataFrameSchema.compare] it the order does not matter and for other comparison
+     * options.
      *
      * @see [DataFrameSchema.compare]
      * @see [CompareResult.matches]
@@ -103,7 +112,11 @@ internal fun DataFrameSchemaImpl.render(): String {
     return sb.toString()
 }
 
-internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, indentSequence: String): String {
+internal fun Map<String, ColumnSchema>.render(
+    indent: Int,
+    sb: StringBuilder,
+    indentSequence: String,
+): String {
     entries.forEachIndexed { i, (name, columnSchema) ->
         sb.append(indentSequence.repeat(indent))
         sb.append("$name:")

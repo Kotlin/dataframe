@@ -2,6 +2,7 @@
 
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -20,18 +21,12 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
-import kotlin.reflect.typeOf
 
-@Check
-public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
+@Check public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
 
 public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> =
     if (verify) {
-        convertToImpl(
-            typeOf<T>(),
-            allowConversion = false,
-            ExcessiveColumns.Keep,
-        ).cast()
+        convertToImpl(typeOf<T>(), allowConversion = false, ExcessiveColumns.Keep).cast()
     } else {
         cast()
     }
@@ -42,10 +37,11 @@ public inline fun <reified T> AnyFrame.castTo(
 ): DataFrame<T> = cast<T>(verify = verify)
 
 /**
- * With the compiler plugin, schema marker T of DataFrame can be a local type.
- * You cannot refer to it directly from your code, like a type argument for cast.
- * The example below shows a situation where you'd need to cast DataFrame<*> to DataFrame<plugin generated local type>.
- * This function helps by inferring type from [schemaFrom]
+ * With the compiler plugin, schema marker T of DataFrame can be a local type. You cannot refer to
+ * it directly from your code, like a type argument for cast. The example below shows a situation
+ * where you'd need to cast DataFrame<*> to DataFrame<plugin generated local type>. This function
+ * helps by inferring type from [schemaFrom]
+ *
  * ```
  *
  * // parse listOf("b:1:abc", "c:2:bca")
@@ -73,10 +69,10 @@ public inline fun <reified T> AnyFrame.castTo(
 
 public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>
 
-public inline fun <reified T> AnyRow.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[0]
+public inline fun <reified T> AnyRow.cast(verify: Boolean = true): DataRow<T> =
+    df().cast<T>(verify)[0]
 
-@Interpretable("AnyColCast")
-public fun <T> AnyCol.cast(): DataColumn<T> = this as DataColumn<T>
+@Interpretable("AnyColCast") public fun <T> AnyCol.cast(): DataColumn<T> = this as DataColumn<T>
 
 public fun <T> ValueColumn<*>.cast(): ValueColumn<T> = this as ValueColumn<T>
 

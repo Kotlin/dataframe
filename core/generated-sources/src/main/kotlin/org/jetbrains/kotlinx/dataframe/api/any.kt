@@ -14,8 +14,8 @@ import org.jetbrains.kotlinx.dataframe.columns.values
  *
  * This is a convenience alias that delegates to [Iterable.any] on the column's [values].
  *
- * @param predicate A lambda function that takes a value from the column
- * and returns `true` if it matches the condition.
+ * @param predicate A lambda function that takes a value from the column and returns `true` if it
+ *   matches the condition.
  * @return `true` if at least one element matches the [predicate], `false` otherwise.
  * @see [DataColumn.all]
  * @see [DataColumn.filter]
@@ -30,28 +30,30 @@ public fun <T> DataColumn<T>.any(predicate: Predicate<T>): Boolean = values.any(
 /**
  * Returns `true` if at least one row in this [DataFrame] satisfies the given [predicate].
  *
+ * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that
+ * receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it` and is
+ * expected to return a [Boolean] value.
  *
- *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
- *
- * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * It allows you to define conditions using the row's values directly, including through
+ * [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ * Fore more information,
+ * [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
  *
  * ### Example
+ *
  * ```kotlin
  * // Check if there is at least one row where "age" is greater than 18
  * val hasAdults = df.any { age > 18 }
  * ```
  *
- * @param predicate A [RowFilter] lambda that takes a [DataRow] (as both `this` and `it`)
- * and returns `true` if the row should be considered a match.
+ * @param predicate A [RowFilter] lambda that takes a [DataRow] (as both `this` and `it`) and
+ *   returns `true` if the row should be considered a match.
  * @return `true` if at least one row satisfies the [predicate], `false` otherwise.
  * @see [DataFrame.all]
  */
-public inline fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
+public inline fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean =
+    rows().any { predicate(it, it) }
 
 // endregion

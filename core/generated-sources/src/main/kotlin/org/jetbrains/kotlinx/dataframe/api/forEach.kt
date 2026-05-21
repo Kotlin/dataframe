@@ -9,13 +9,15 @@ import org.jetbrains.kotlinx.dataframe.columns.values
 
 public inline fun <T> DataColumn<T>.forEach(action: (T) -> Unit): Unit = values().forEach(action)
 
-public inline fun <T> DataColumn<T>.forEachIndexed(action: (Int, T) -> Unit): Unit = values().forEachIndexed(action)
+public inline fun <T> DataColumn<T>.forEachIndexed(action: (Int, T) -> Unit): Unit =
+    values().forEachIndexed(action)
 
 // endregion
 
 // region DataFrame
 
-public inline fun <T> DataFrame<T>.forEach(action: RowExpression<T, Unit>): Unit = rows().forEach { action(it, it) }
+public inline fun <T> DataFrame<T>.forEach(action: RowExpression<T, Unit>): Unit =
+    rows().forEach { action(it, it) }
 
 // endregion
 

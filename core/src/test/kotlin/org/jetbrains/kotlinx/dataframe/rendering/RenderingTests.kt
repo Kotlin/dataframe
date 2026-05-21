@@ -4,7 +4,9 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldInclude
 import io.kotest.matchers.string.shouldNotContain
-import org.jetbrains.kotlinx.dataframe.DataColumn
+import java.net.URL
+import java.text.DecimalFormatSymbols
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.api.CellAttributes
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -42,9 +44,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.secondName
 import org.jsoup.Jsoup
 import org.junit.Test
-import java.net.URL
-import java.text.DecimalFormatSymbols
-import kotlin.reflect.typeOf
 
 class RenderingTests : TestBase() {
 
@@ -102,9 +101,7 @@ class RenderingTests : TestBase() {
     @Test
     fun `empty row with nested empty row`() {
         val df = dataFrameOf("a", "b", "c")(null, null, null)
-        val grouped = df
-            .group("a", "b").into("d")
-            .group("c", "d").into("e")[0]
+        val grouped = df.group("a", "b").into("d").group("c", "d").into("e")[0]
 
         val formatted = formatter.format(grouped, DefaultCellRenderer, DisplayConfiguration())
         Jsoup.parse(formatted).text() shouldBe "{ }"
@@ -130,9 +127,12 @@ class RenderingTests : TestBase() {
 
     @Test
     fun `render successfully 2`() {
-        val df = dataFrameOf("name", "parent", "type")("Boston (MA)", "123wazxdPag5", "Campus")
-            .move("parent").into { "parent"["id"] }
-            .group { all() }.into("Campus")
+        val df =
+            dataFrameOf("name", "parent", "type")("Boston (MA)", "123wazxdPag5", "Campus")
+                .move("parent")
+                .into { "parent"["id"] }
+                .group { all() }
+                .into("Campus")
         df.toHtml().print()
     }
 
@@ -140,12 +140,11 @@ class RenderingTests : TestBase() {
     fun `render double with exponent`() {
         val d = DecimalFormatSymbols.getInstance().decimalSeparator
         listOf(
-            dataFrameOf("col")(1E27) to "1${d}000000e+27",
-            dataFrameOf("col")(1.123) to "1${d}123",
-            dataFrameOf("col")(1.0) to "1${d}0",
-        ).forEach { (df, rendered) ->
-            df.toHtml().script shouldContain rendered
-        }
+                dataFrameOf("col")(1E27) to "1${d}000000e+27",
+                dataFrameOf("col")(1.123) to "1${d}123",
+                dataFrameOf("col")(1.0) to "1${d}0",
+            )
+            .forEach { (df, rendered) -> df.toHtml().script shouldContain rendered }
     }
 
     @Test
@@ -170,7 +169,9 @@ class RenderingTests : TestBase() {
             </tr>
             </tbody>
             </table>
-            """.trimIndent().replace("\n", "")
+            """
+                .trimIndent()
+                .replace("\n", "")
     }
 
     @Test
@@ -191,12 +192,13 @@ class RenderingTests : TestBase() {
 
     @Test
     fun `render array types correctly`() {
-        val df = dataFrameOf(
-            columnOf(1, null).named("a"),
-            columnOf(intArrayOf(1), intArrayOf(2)).named("b"),
-            columnOf(arrayOf(1), arrayOf(2)).named("c"),
-            columnOf(arrayOf(1, null), arrayOf(2, null)).named("d"),
-        )
+        val df =
+            dataFrameOf(
+                columnOf(1, null).named("a"),
+                columnOf(intArrayOf(1), intArrayOf(2)).named("b"),
+                columnOf(arrayOf(1), arrayOf(2)).named("c"),
+                columnOf(arrayOf(1, null), arrayOf(2, null)).named("d"),
+            )
 
         val schema = df.schema()
         val rendered = schema.toString()
@@ -205,9 +207,10 @@ class RenderingTests : TestBase() {
 
     @Test
     fun `render nested FormattedFrame as DataFrame`() {
-        val empty = object : CellAttributes {
-            override fun attributes(): List<Pair<String, String>> = emptyList()
-        }
+        val empty =
+            object : CellAttributes {
+                override fun attributes(): List<Pair<String, String>> = emptyList()
+            }
         val df = dataFrameOf("b")(1)
 
         val formatted = dataFrameOf("a")(df.format { all() }.with { empty })
@@ -230,7 +233,8 @@ class RenderingTests : TestBase() {
 
     @Test
     fun `render img`() {
-        val src = "https://github.com/Kotlin/dataframe/blob/master/docs/StardustDocs/images/gettingStarted.png?raw=true"
+        val src =
+            "https://github.com/Kotlin/dataframe/blob/master/docs/StardustDocs/images/gettingStarted.png?raw=true"
         val df = dataFrameOf("img")(IMG(src))
         df.toStandaloneHtml().toString() shouldInclude
             """values: ["<img src=\"https://github.com/Kotlin/dataframe/blob/master/docs/StardustDocs/images/gettingStarted.png?raw=true\" style=\"\"/>"]"""
@@ -238,7 +242,10 @@ class RenderingTests : TestBase() {
 
     @Test
     fun `render custom content`() {
-        val df = dataFrameOf("customUrl")(RenderedContent.media("""<a href="http://example.com">Click me!</a>"""))
+        val df =
+            dataFrameOf("customUrl")(
+                RenderedContent.media("""<a href="http://example.com">Click me!</a>""")
+            )
         df.toStandaloneHtml().toString() shouldInclude
             """values: ["<a href=\"http://example.com\">Click me!</a>"]"""
     }

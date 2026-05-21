@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.api.cast
  * Class representing generated code declarations for a [Marker].
  *
  * @param declarations The generated code.
- * @param typeCastGenerator Optional [TypeCastGenerator] for the [Marker], see [TypeCastGenerator] for
- *   more information.
+ * @param typeCastGenerator Optional [TypeCastGenerator] for the [Marker], see [TypeCastGenerator]
+ *   for more information.
  */
 public data class CodeWithTypeCastGenerator(
     val declarations: Code,
@@ -22,11 +22,12 @@ public data class CodeWithTypeCastGenerator(
         public val EMPTY: CodeWithTypeCastGenerator = CodeWithTypeCastGenerator(EMPTY_DECLARATIONS)
     }
 
-    val hasDeclarations: Boolean get() = declarations.isNotBlank()
+    val hasDeclarations: Boolean
+        get() = declarations.isNotBlank()
 
     val hasCaster: Boolean
-        get() = typeCastGenerator !is TypeCastGenerator.Empty &&
-            typeCastGenerator("it").trim() != "it"
+        get() =
+            typeCastGenerator !is TypeCastGenerator.Empty && typeCastGenerator("it").trim() != "it"
 
     public fun declarationsWithCastExpression(expression: Expression): Code =
         when {
@@ -37,11 +38,12 @@ public data class CodeWithTypeCastGenerator(
 }
 
 public typealias Code = String
+
 public typealias Expression = String
 
 /**
- * A [TypeCastGenerator] can generate [Code] given an [Expression] that casts or converts
- * it to a predefined target type.
+ * A [TypeCastGenerator] can generate [Code] given an [Expression] that casts or converts it to a
+ * predefined target type.
  *
  * To create a [TypeCastGenerator] that, for instance, casts everything you pass to [Any?][Any]:
  * ```kt
@@ -63,10 +65,11 @@ public fun interface TypeCastGenerator {
     /**
      * [TypeCastGenerator] that uses the [cast] functions of the DataFrame API.
      *
-     * NOTE: This generator assumes there's a `.cast<>()` function available that can be called on your
-     * specific [Expression]. It will cause runtime errors when there isn't one.
+     * NOTE: This generator assumes there's a `.cast<>()` function available that can be called on
+     * your specific [Expression]. It will cause runtime errors when there isn't one.
      */
-    public class DataFrameApi private constructor(public val types: Array<out String>) : TypeCastGenerator {
+    public class DataFrameApi private constructor(public val types: Array<out String>) :
+        TypeCastGenerator {
         override fun addCastTo(expression: Expression): Code =
             if (types.isEmpty()) {
                 "$expression.cast()"
@@ -77,7 +80,8 @@ public fun interface TypeCastGenerator {
         override fun toString(): String = addCastTo($$"$var$")
 
         public companion object {
-            public operator fun invoke(vararg types: String): TypeCastGenerator = DataFrameApi(types)
+            public operator fun invoke(vararg types: String): TypeCastGenerator =
+                DataFrameApi(types)
         }
     }
 }

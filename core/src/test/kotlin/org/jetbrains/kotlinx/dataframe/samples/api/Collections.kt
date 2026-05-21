@@ -43,15 +43,13 @@ class Collections {
         val df = list.toDataFrame()
 
         // SampleStart
-        @DataSchema
-        data class Input(val a: Int, val b: Int)
+        @DataSchema data class Input(val a: Int, val b: Int)
 
         val df2 = df.add("c") { a + b }
         // SampleEnd
     }
 
-    @DataSchema
-    data class Input(val a: Int, val b: Int)
+    @DataSchema data class Input(val a: Int, val b: Int)
 
     @DataSchema
     interface Input2 {
@@ -76,14 +74,19 @@ class Collections {
     @TransformDataFrameExpressions
     fun listInterop5() {
         // SampleStart
-        val df = dataFrameOf("name", "lastName", "age")("John", "Doe", 21)
-            .group("name", "lastName").into("fullName")
+        val df =
+            dataFrameOf("name", "lastName", "age")("John", "Doe", 21)
+                .group("name", "lastName")
+                .into("fullName")
 
         data class FullName(val name: String, val lastName: String)
 
         data class Person(val fullName: FullName, val age: Int)
 
-        val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]
+        val persons =
+            df.toListOf<
+                Person
+            >() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]
         // SampleEnd
 
         persons shouldBe listOf(Person(FullName("John", "Doe"), 21))

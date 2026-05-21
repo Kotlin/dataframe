@@ -30,19 +30,18 @@ public fun AnyFrame.toDelimStr(
     commentChar: Char? = COMMENT_CHAR,
     headerComments: List<String> = HEADER_COMMENTS,
     recordSeparator: String = RECORD_SEPARATOR,
-): String =
-    buildString {
-        writeDelimImpl(
-            df = this@toDelimStr,
-            writer = this,
-            delimiter = delimiter,
-            includeHeader = includeHeader,
-            quote = quote,
-            quoteMode = quoteMode,
-            escapeChar = escapeChar,
-            commentChar = commentChar,
-            headerComments = headerComments,
-            recordSeparator = recordSeparator,
-            adjustCsvFormat = ADJUST_CSV_FORMAT,
-        )
-    }
+): String = buildString {
+    writeDelimImpl(
+        df = this@toDelimStr,
+        writer = this,
+        delimiter = delimiter,
+        includeHeader = includeHeader,
+        quote = quote,
+        quoteMode = quoteMode,
+        escapeChar = escapeChar,
+        commentChar = commentChar,
+        headerComments = headerComments,
+        recordSeparator = recordSeparator,
+        adjustCsvFormat = ADJUST_CSV_FORMAT,
+    )
+}

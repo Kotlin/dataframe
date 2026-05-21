@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.exceptions
 
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import kotlin.reflect.KType
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 
 public open class TypeConversionException(
     public val value: Any?,

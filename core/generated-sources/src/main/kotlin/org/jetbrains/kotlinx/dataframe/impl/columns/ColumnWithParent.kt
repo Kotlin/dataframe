@@ -19,15 +19,16 @@ internal interface ColumnWithParent<out C> : ColumnReference<C> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
         val parentDef = parent
-        val (targetDf, pathPrefix) = when (parentDef) {
-            null -> context.df to emptyPath()
+        val (targetDf, pathPrefix) =
+            when (parentDef) {
+                null -> context.df to emptyPath()
 
-            else -> {
-                val parentCol = parentDef.resolveSingle(context) ?: return null
-                val group = parentCol.data.asColumnGroup()
-                group to parentCol.path
+                else -> {
+                    val parentCol = parentDef.resolveSingle(context) ?: return null
+                    val group = parentCol.data.asColumnGroup()
+                    group to parentCol.path
+                }
             }
-        }
 
         val data = targetDf.getColumn<C>(name(), context.unresolvedColumnsPolicy)
         return data?.addPath(pathPrefix + name())

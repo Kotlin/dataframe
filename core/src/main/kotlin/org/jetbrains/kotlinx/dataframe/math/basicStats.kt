@@ -9,10 +9,13 @@ internal data class BasicStats(val count: Int, val mean: Double, val variance: D
 /**
  * Creates [BasicStats] instance for [this] sequence.
  *
- * This contains the [count][BasicStats.count], [mean][BasicStats.mean], and [variance][BasicStats.variance] and
- * can be used to efficiently calculate the [standard deviation][std].
+ * This contains the [count][BasicStats.count], [mean][BasicStats.mean], and
+ * [variance][BasicStats.variance] and can be used to efficiently calculate the
+ * [standard deviation][std].
  */
-internal fun Sequence<Double>.calculateBasicStatsOrNull(skipNaN: Boolean = skipNaNDefault): BasicStats? {
+internal fun Sequence<Double>.calculateBasicStatsOrNull(
+    skipNaN: Boolean = skipNaNDefault
+): BasicStats? {
     var count = 0
     var sum = .0
     for (element in this) {

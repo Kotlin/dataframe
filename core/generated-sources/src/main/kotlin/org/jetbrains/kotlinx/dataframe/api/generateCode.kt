@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
@@ -9,11 +8,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.util.GENERATE_CODE
@@ -28,39 +22,51 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
 // region DataFrame
 
 /**
- * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces
- * for the given [DataFrame's][this] [schema][DataFrameSchema]
- * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated
+ * [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces for the given
+ * [DataFrame's][this] [schema][DataFrameSchema] (including all nested
+ * [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
  * These generated declarations can also be called "markers".
  *
- * This is useful when working with the compiler plugin in cases where the schema
- *   cannot be inferred automatically from the source. [See Compiler Plugin on the documentation website.](https://kotlin.github.io/dataframe/compiler-plugin.html)
+ * This is useful when working with the compiler plugin in cases where the schema cannot be inferred
+ * automatically from the source.
+ * [See Compiler Plugin on the documentation website.](https://kotlin.github.io/dataframe/compiler-plugin.html)
  *
  * This function is a simplified wrapper for the more advanced and customizable
- * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API. For more
+ * customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
  *
- * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
+ * For more information:
+ * [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
- * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
- *   the generated Kotlin code of data schema declarations (markers).
- * @param markerName The base name to use for generated data schema declarations (markers). If not specified, it generates a name from type [T].
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
- *   in addition to data schema declarations (markers).
- *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
- *   Default is `false`.
- * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
- * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
- * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
- *  to Kotlin-style identifiers.
- *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
- * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
- *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- *  - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+ * @param markerName The base name to use for generated data schema declarations (markers). If not
+ *   specified, it generates a name from type [T].
+ * @param extensionProperties Whether to generate
+ *   [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ *   in addition to data schema declarations (markers). Useful if you don't use the compiler plugin,
+ *   otherwise they are not needed; the compiler plugin, notebooks, and older Gradle/KSP plugin
+ *   generate them automatically. Default is `false`.
+ * @param visibility Visibility modifier for the generated declarations (markers). Default is
+ *   [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
+ * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default
+ *   is `false`.
+ * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.) to
+ *   Kotlin-style identifiers. Generated properties will still refer to columns by their actual name
+ *   using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *   Default is
+ *   [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations
+ *   (markers).
+ *     - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column
+ *       names.
+ *     - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName]
+ *       will use the name of root marker for all nested declarations and append numerical suffix to
+ *       resolve name conflicts.
+ *
+ * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for
+ *   [String], containing the generated Kotlin code of data schema declarations (markers).
  */
 public fun <T> DataFrame<T>.generateInterfaces(
     markerName: String,
@@ -70,49 +76,64 @@ public fun <T> DataFrame<T>.generateInterfaces(
     nameNormalizer: NameNormalizer = NameNormalizer.default,
     nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
-    schema().generateCodeImpl(
-        markerName = markerName,
-        extensionProperties = extensionProperties,
-        visibility = visibility,
-        useFqNames = useFqNames,
-        nameNormalizer = nameNormalizer,
-        asDataClass = false,
-        nestedMarkerNameProvider = nestedMarkerNameProvider,
-    )
+    schema()
+        .generateCodeImpl(
+            markerName = markerName,
+            extensionProperties = extensionProperties,
+            visibility = visibility,
+            useFqNames = useFqNames,
+            nameNormalizer = nameNormalizer,
+            asDataClass = false,
+            nestedMarkerNameProvider = nestedMarkerNameProvider,
+        )
 
-/** Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces
- * for the given [DataFrame's][this] [schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema]
- * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
+/**
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated
+ * [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces for the given
+ * [DataFrame's][this] [schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] (including
+ * all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
  * These generated declarations can also be called "markers".
  *
- * This is useful when working with the compiler plugin in cases where the schema
- *   cannot be inferred automatically from the source. [See Compiler Plugin on the documentation website.](https://kotlin.github.io/dataframe/compiler-plugin.html)
+ * This is useful when working with the compiler plugin in cases where the schema cannot be inferred
+ * automatically from the source.
+ * [See Compiler Plugin on the documentation website.](https://kotlin.github.io/dataframe/compiler-plugin.html)
  *
  * This function is a simplified wrapper for the more advanced and customizable
- * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API. For more
+ * customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
  *
- * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
+ * For more information:
+ * [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
- * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
- *   the generated Kotlin code of data schema declarations (markers).
- * @param markerName The base name to use for generated data schema declarations (markers). If not specified, it generates a name from type [T].
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
- *   in addition to data schema declarations (markers).
- *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
- *   Default is `false`.
- * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
- * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
- * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
- *  to Kotlin-style identifiers.
- *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
- * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
- *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- * - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts. */
+ * @param markerName The base name to use for generated data schema declarations (markers). If not
+ *   specified, it generates a name from type [T].
+ * @param extensionProperties Whether to generate
+ *   [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ *   in addition to data schema declarations (markers). Useful if you don't use the compiler plugin,
+ *   otherwise they are not needed; the compiler plugin, notebooks, and older Gradle/KSP plugin
+ *   generate them automatically. Default is `false`.
+ * @param visibility Visibility modifier for the generated declarations (markers). Default is
+ *   [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
+ * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default
+ *   is `false`.
+ * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.) to
+ *   Kotlin-style identifiers. Generated properties will still refer to columns by their actual name
+ *   using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *   Default is
+ *   [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations
+ *   (markers).
+ *     - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column
+ *       names.
+ * - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName]
+ *   will use the name of root marker for all nested declarations and append numerical suffix to
+ *   resolve name conflicts.
+ *
+ * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for
+ *   [String], containing the generated Kotlin code of data schema declarations (markers).
+ */
 public inline fun <reified T> DataFrame<T>.generateInterfaces(
     extensionProperties: Boolean = false,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
@@ -120,53 +141,66 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
     nameNormalizer: NameNormalizer = NameNormalizer.default,
     nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
-    schema().generateCodeImpl(
-        markerName = markerName<T>(),
-        extensionProperties = extensionProperties,
-        visibility = visibility,
-        useFqNames = useFqNames,
-        nameNormalizer = nameNormalizer,
-        asDataClass = false,
-        nestedMarkerNameProvider = nestedMarkerNameProvider,
-    )
+    schema()
+        .generateCodeImpl(
+            markerName = markerName<T>(),
+            extensionProperties = extensionProperties,
+            visibility = visibility,
+            useFqNames = useFqNames,
+            nameNormalizer = nameNormalizer,
+            asDataClass = false,
+            nestedMarkerNameProvider = nestedMarkerNameProvider,
+        )
 
 /**
- * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes
- * for the given [DataFrame's][this] [schema][DataFrameSchema]
- * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated
+ * [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes for the given
+ * [DataFrame's][this] [schema][DataFrameSchema] (including all nested
+ * [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
  * These generated declarations can also be called "markers".
  *
  * This is useful when you want to:
- *   - Work with the data as regular Kotlin data classes.
- *   - Convert a dataframe to instantiated data classes with [`df.toListOf<DataClassType>()`][DataFrame.toListOf].
- *   - Work with data classes serialization.
- *   - Extract structured types for further use in your application.
+ * - Work with the data as regular Kotlin data classes.
+ * - Convert a dataframe to instantiated data classes with
+ *   [`df.toListOf<DataClassType>()`][DataFrame.toListOf].
+ * - Work with data classes serialization.
+ * - Extract structured types for further use in your application.
  *
  * This function is a simplified wrapper for the more advanced and customizable
- * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API. For more
+ * customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
  *
- * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
+ * For more information:
+ * [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
- * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
- *   the generated Kotlin code of data schema declarations (markers).
- * @param markerName The base name to use for generated data schema declarations (markers). If not specified, it generates a name from type [T].
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
- *   in addition to data schema declarations (markers).
- *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
- *   Default is `false`.
- * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
- * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
- * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
- *  to Kotlin-style identifiers.
- *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
- * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
- *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- *  - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+ * @param markerName The base name to use for generated data schema declarations (markers). If not
+ *   specified, it generates a name from type [T].
+ * @param extensionProperties Whether to generate
+ *   [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ *   in addition to data schema declarations (markers). Useful if you don't use the compiler plugin,
+ *   otherwise they are not needed; the compiler plugin, notebooks, and older Gradle/KSP plugin
+ *   generate them automatically. Default is `false`.
+ * @param visibility Visibility modifier for the generated declarations (markers). Default is
+ *   [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
+ * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default
+ *   is `false`.
+ * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.) to
+ *   Kotlin-style identifiers. Generated properties will still refer to columns by their actual name
+ *   using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *   Default is
+ *   [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations
+ *   (markers).
+ *     - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column
+ *       names.
+ *     - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName]
+ *       will use the name of root marker for all nested declarations and append numerical suffix to
+ *       resolve name conflicts.
+ *
+ * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for
+ *   [String], containing the generated Kotlin code of data schema declarations (markers).
  */
 public fun <T> DataFrame<T>.generateDataClasses(
     markerName: String,
@@ -176,52 +210,67 @@ public fun <T> DataFrame<T>.generateDataClasses(
     nameNormalizer: NameNormalizer = NameNormalizer.default,
     nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
-    schema().generateCodeImpl(
-        markerName = markerName,
-        extensionProperties = extensionProperties,
-        visibility = visibility,
-        useFqNames = useFqNames,
-        nameNormalizer = nameNormalizer,
-        asDataClass = true,
-        nestedMarkerNameProvider = nestedMarkerNameProvider,
-    )
+    schema()
+        .generateCodeImpl(
+            markerName = markerName,
+            extensionProperties = extensionProperties,
+            visibility = visibility,
+            useFqNames = useFqNames,
+            nameNormalizer = nameNormalizer,
+            asDataClass = true,
+            nestedMarkerNameProvider = nestedMarkerNameProvider,
+        )
 
-/** Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes
- * for the given [DataFrame's][this] [schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema]
- * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
+/**
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated
+ * [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes for the given
+ * [DataFrame's][this] [schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] (including
+ * all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
  * These generated declarations can also be called "markers".
  *
  * This is useful when you want to:
- *   - Work with the data as regular Kotlin data classes.
- *   - Convert a dataframe to instantiated data classes with [`df.toListOf<DataClassType>()`][org.jetbrains.kotlinx.dataframe.DataFrame.toListOf].
- *   - Work with data classes serialization.
- *   - Extract structured types for further use in your application.
+ * - Work with the data as regular Kotlin data classes.
+ * - Convert a dataframe to instantiated data classes with
+ *   [`df.toListOf<DataClassType>()`][org.jetbrains.kotlinx.dataframe.DataFrame.toListOf].
+ * - Work with data classes serialization.
+ * - Extract structured types for further use in your application.
  *
  * This function is a simplified wrapper for the more advanced and customizable
- * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API. For more
+ * customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
  *
- * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
+ * For more information:
+ * [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
- * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
- *   the generated Kotlin code of data schema declarations (markers).
- * @param markerName The base name to use for generated data schema declarations (markers). If not specified, it generates a name from type [T].
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
- *   in addition to data schema declarations (markers).
- *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
- *   Default is `false`.
- * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
- * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
- * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
- *  to Kotlin-style identifiers.
- *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
- * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
- *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- * - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts. */
+ * @param markerName The base name to use for generated data schema declarations (markers). If not
+ *   specified, it generates a name from type [T].
+ * @param extensionProperties Whether to generate
+ *   [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ *   in addition to data schema declarations (markers). Useful if you don't use the compiler plugin,
+ *   otherwise they are not needed; the compiler plugin, notebooks, and older Gradle/KSP plugin
+ *   generate them automatically. Default is `false`.
+ * @param visibility Visibility modifier for the generated declarations (markers). Default is
+ *   [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
+ * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default
+ *   is `false`.
+ * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.) to
+ *   Kotlin-style identifiers. Generated properties will still refer to columns by their actual name
+ *   using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *   Default is
+ *   [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations
+ *   (markers).
+ *     - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column
+ *       names.
+ * - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName]
+ *   will use the name of root marker for all nested declarations and append numerical suffix to
+ *   resolve name conflicts.
+ *
+ * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for
+ *   [String], containing the generated Kotlin code of data schema declarations (markers).
+ */
 public inline fun <reified T> DataFrame<T>.generateDataClasses(
     extensionProperties: Boolean = false,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
@@ -229,54 +278,66 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
     nameNormalizer: NameNormalizer = NameNormalizer.default,
     nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString =
-    schema().generateCodeImpl(
-        markerName = markerName<T>(),
-        extensionProperties = extensionProperties,
-        visibility = visibility,
-        useFqNames = useFqNames,
-        nameNormalizer = nameNormalizer,
-        asDataClass = true,
-        nestedMarkerNameProvider = nestedMarkerNameProvider,
-    )
+    schema()
+        .generateCodeImpl(
+            markerName = markerName<T>(),
+            extensionProperties = extensionProperties,
+            visibility = visibility,
+            useFqNames = useFqNames,
+            nameNormalizer = nameNormalizer,
+            asDataClass = true,
+            nestedMarkerNameProvider = nestedMarkerNameProvider,
+        )
 
 // endregion
 
 // region DataFrameSchema
 
 /**
- * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces
- * for the given [DataFrameSchema][this]
- * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated
+ * [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces for the given
+ * [DataFrameSchema][this] (including all nested
+ * [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
  * These generated declarations can also be called "markers".
  *
- * This is useful when working with the compiler plugin in cases where the schema
- *   cannot be inferred automatically from the source. [See Compiler Plugin on the documentation website.](https://kotlin.github.io/dataframe/compiler-plugin.html)
+ * This is useful when working with the compiler plugin in cases where the schema cannot be inferred
+ * automatically from the source.
+ * [See Compiler Plugin on the documentation website.](https://kotlin.github.io/dataframe/compiler-plugin.html)
  *
  * This function is a simplified wrapper for the more advanced and customizable
- * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API. For more
+ * customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
  *
- * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
+ * For more information:
+ * [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
- * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
- *   the generated Kotlin code of data schema declarations (markers).
  * @param markerName The base name to use for generated data schema declarations (markers).
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
- *   in addition to data schema declarations (markers).
- *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
- *   Default is `false`.
- * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
- * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
- * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
- *  to Kotlin-style identifiers.
- *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
- * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
- *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- *  - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+ * @param extensionProperties Whether to generate
+ *   [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ *   in addition to data schema declarations (markers). Useful if you don't use the compiler plugin,
+ *   otherwise they are not needed; the compiler plugin, notebooks, and older Gradle/KSP plugin
+ *   generate them automatically. Default is `false`.
+ * @param visibility Visibility modifier for the generated declarations (markers). Default is
+ *   [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
+ * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default
+ *   is `false`.
+ * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.) to
+ *   Kotlin-style identifiers. Generated properties will still refer to columns by their actual name
+ *   using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *   Default is
+ *   [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations
+ *   (markers).
+ *     - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column
+ *       names.
+ *     - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName]
+ *       will use the name of root marker for all nested declarations and append numerical suffix to
+ *       resolve name conflicts.
+ *
+ * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for
+ *   [String], containing the generated Kotlin code of data schema declarations (markers).
  */
 @JvmName("generateInterfacesForSchema")
 public fun DataFrameSchema.generateInterfaces(
@@ -298,44 +359,53 @@ public fun DataFrameSchema.generateInterfaces(
     )
 
 /**
- * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes
- * for the given [DataFrameSchema][this]
- * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated
+ * [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes for the given
+ * [DataFrameSchema][this] (including all nested
+ * [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
  * These generated declarations can also be called "markers".
  *
  * This is useful when you want to:
- *   - Work with the data as regular Kotlin data classes.
- *   - Convert a dataframe to instantiated data classes with [`df.toListOf<DataClassType>()`][DataFrame.toListOf].
- *   - Work with data classes serialization.
- *   - Extract structured types for further use in your application.
+ * - Work with the data as regular Kotlin data classes.
+ * - Convert a dataframe to instantiated data classes with
+ *   [`df.toListOf<DataClassType>()`][DataFrame.toListOf].
+ * - Work with data classes serialization.
+ * - Extract structured types for further use in your application.
  *
  * This function is a simplified wrapper for the more advanced and customizable
- * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API. For more
+ * customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
  *
- * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
- *
- * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for [String], containing
- *   the generated Kotlin code of data schema declarations (markers).
- *
+ * For more information:
+ * [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
  * @param markerName The base name to use for generated data schema declarations (markers).
- * @param extensionProperties Whether to generate [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
- *   in addition to data schema declarations (markers).
- *   Useful if you don't use the compiler plugin, otherwise they are not needed;
- *   the compiler plugin, notebooks, and older Gradle/KSP plugin generate them automatically.
- *   Default is `false`.
- * @param visibility Visibility modifier for the generated declarations (markers). Default is [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
- * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default is `false`.
- * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
- *  to Kotlin-style identifiers.
- *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
- * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
- *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- *  - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+ * @param extensionProperties Whether to generate
+ *   [extension properties (column accessors)][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ *   in addition to data schema declarations (markers). Useful if you don't use the compiler plugin,
+ *   otherwise they are not needed; the compiler plugin, notebooks, and older Gradle/KSP plugin
+ *   generate them automatically. Default is `false`.
+ * @param visibility Visibility modifier for the generated declarations (markers). Default is
+ *   [MarkerVisibility.IMPLICIT_PUBLIC][org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility.IMPLICIT_PUBLIC].
+ * @param useFqNames If `true`, fully qualified type names will be used in generated code. Default
+ *   is `false`.
+ * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.) to
+ *   Kotlin-style identifiers. Generated properties will still refer to columns by their actual name
+ *   using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *   Default is
+ *   [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations
+ *   (markers).
+ *     - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column
+ *       names.
+ *     - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName]
+ *       will use the name of root marker for all nested declarations and append numerical suffix to
+ *       resolve name conflicts.
+ *
+ * @return [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] – A value class wrapper for
+ *   [String], containing the generated Kotlin code of data schema declarations (markers).
  */
 @JvmName("generateDataClassesForSchema")
 public fun DataFrameSchema.generateDataClasses(
@@ -366,14 +436,13 @@ internal inline fun <reified T> markerName(): String =
         "DataEntry"
     }
 
-/**
- * Converts delimited 'my_name', 'my name', etc., String to camelCase 'myName'
- */
-public val NameNormalizer.Companion.default: NameNormalizer get() = NameNormalizer.from(setOf('\t', ' ', '_'))
+/** Converts delimited 'my_name', 'my name', etc., String to camelCase 'myName' */
+public val NameNormalizer.Companion.default: NameNormalizer
+    get() = NameNormalizer.from(setOf('\t', ' ', '_'))
 
 /**
- * A value class wrapper for [String], containing
- * generated Kotlin code of data schema declarations (markers) and optionally extension properties.
+ * A value class wrapper for [String], containing generated Kotlin code of data schema declarations
+ * (markers) and optionally extension properties.
  *
  * @see CodeString.print
  */
@@ -383,8 +452,7 @@ public value class CodeString(public val value: String) {
     override fun toString(): String = value
 }
 
-@PublishedApi
-internal fun String.toCodeString(): CodeString = CodeString(this)
+@PublishedApi internal fun String.toCodeString(): CodeString = CodeString(this)
 
 /**
  * Generates a [CodeString] containing generated [@DataSchema][DataSchema] declarations (markers).
@@ -401,18 +469,22 @@ internal fun DataFrameSchema.generateCodeImpl(
     nestedMarkerNameProvider: MarkerNameProvider = MarkerNameProvider.fromColumnName,
 ): CodeString {
     val codeGen = CodeGenerator.create(useFqNames)
-    return codeGen.generate(
-        schema = this,
-        name = markerName,
-        fields = true,
-        extensionProperties = extensionProperties,
-        isOpen = !asDataClass,
-        visibility = visibility,
-        knownMarkers = knownMarkers,
-        asDataClass = asDataClass,
-        fieldNameNormalizer = nameNormalizer,
-        nestedMarkerNameProvider = nestedMarkerNameProvider,
-    ).code.declarations.toCodeString()
+    return codeGen
+        .generate(
+            schema = this,
+            name = markerName,
+            fields = true,
+            extensionProperties = extensionProperties,
+            isOpen = !asDataClass,
+            visibility = visibility,
+            knownMarkers = knownMarkers,
+            asDataClass = asDataClass,
+            fieldNameNormalizer = nameNormalizer,
+            nestedMarkerNameProvider = nestedMarkerNameProvider,
+        )
+        .code
+        .declarations
+        .toCodeString()
 }
 
 // region Deprecated
@@ -427,14 +499,18 @@ public inline fun <reified T> DataFrame<T>.generateCode(
     extensionProperties: Boolean = true,
 ): CodeString {
     val codeGen = CodeGenerator.create()
-    return codeGen.generate(
-        schema = this.schema(),
-        name = markerName<T>(),
-        fields = fields,
-        extensionProperties = extensionProperties,
-        isOpen = true,
-        visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-    ).code.declarations.toCodeString()
+    return codeGen
+        .generate(
+            schema = this.schema(),
+            name = markerName<T>(),
+            fields = fields,
+            extensionProperties = extensionProperties,
+            isOpen = true,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+        )
+        .code
+        .declarations
+        .toCodeString()
 }
 
 @Deprecated(
@@ -450,20 +526,26 @@ public fun <T> DataFrame<T>.generateCode(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ): CodeString {
     val codeGen = CodeGenerator.create()
-    return codeGen.generate(
-        schema = this.schema(),
-        name = markerName,
-        fields = fields,
-        extensionProperties = extensionProperties,
-        isOpen = true,
-        visibility = visibility,
-    ).code.declarations.toCodeString()
+    return codeGen
+        .generate(
+            schema = this.schema(),
+            name = markerName,
+            fields = fields,
+            extensionProperties = extensionProperties,
+            isOpen = true,
+            visibility = visibility,
+        )
+        .code
+        .declarations
+        .toCodeString()
 }
 
 @Deprecated(message = GENERATE_INTERFACES, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString = generateInterfaces<T>()
+public inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString =
+    generateInterfaces<T>()
 
 @Deprecated(message = GENERATE_INTERFACES, level = DeprecationLevel.HIDDEN)
-public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString = generateInterfaces(markerName)
+public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString =
+    generateInterfaces(markerName)
 
 // endregion

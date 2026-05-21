@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io.local
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import java.sql.DriverManager
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -10,12 +11,13 @@ import org.jetbrains.kotlinx.dataframe.io.readDataFrame
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Ignore
 import org.junit.Test
-import java.sql.DriverManager
 
-private const val URL_WITH_LOGIN_PASSWORD = "jdbc:postgresql://localhost:5432/test?" +
-    "user=postgres&password=pass&connectTimeout=10&tcpKeepAlive=true"
+private const val URL_WITH_LOGIN_PASSWORD =
+    "jdbc:postgresql://localhost:5432/test?" +
+        "user=postgres&password=pass&connectTimeout=10&tcpKeepAlive=true"
 
-private const val URL_NO_LOGIN_PASSWORD = "jdbc:postgresql://localhost:5432/test?connectTimeout=10&tcpKeepAlive=true"
+private const val URL_NO_LOGIN_PASSWORD =
+    "jdbc:postgresql://localhost:5432/test?connectTimeout=10&tcpKeepAlive=true"
 
 private const val URL_WITH_PASSWORD =
     "jdbc:postgresql://localhost:5432/test?password=pass&connectTimeout=10&tcpKeepAlive=true"
@@ -70,27 +72,21 @@ class PostgresConnectionUrlTest {
     fun `read from table without login and password`() {
         val dbConfig = DbConnectionConfig(URL_NO_LOGIN_PASSWORD)
 
-        shouldThrow<org.postgresql.util.PSQLException> {
-            testReadFromTable(dbConfig)
-        }
+        shouldThrow<org.postgresql.util.PSQLException> { testReadFromTable(dbConfig) }
     }
 
     @Test
     fun `read from table with password only`() {
         val dbConfig = DbConnectionConfig(URL_WITH_PASSWORD)
 
-        shouldThrow<org.postgresql.util.PSQLException> {
-            testReadFromTable(dbConfig)
-        }
+        shouldThrow<org.postgresql.util.PSQLException> { testReadFromTable(dbConfig) }
     }
 
     @Test
     fun `read from table with login only`() {
         val dbConfig = DbConnectionConfig(URL_WITH_LOGIN)
 
-        shouldThrow<org.postgresql.util.PSQLException> {
-            testReadFromTable(dbConfig)
-        }
+        shouldThrow<org.postgresql.util.PSQLException> { testReadFromTable(dbConfig) }
     }
 
     private fun testReadFromTable(dbConfig: DbConnectionConfig) {

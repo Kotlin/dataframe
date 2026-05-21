@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.statistics
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -17,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class StdTests {
 
@@ -67,8 +67,10 @@ class StdTests {
         // Integer types
         columnOf(1, 2, 3, 4, 5).std() shouldBe 1.5811388300841898
         columnOf(1L, 2L, 3L, 4L, 5L).std() shouldBe 1.5811388300841898
-        columnOf(1.toShort(), 2.toShort(), 3.toShort(), 4.toShort(), 5.toShort()).std() shouldBe 1.5811388300841898
-        columnOf(1.toByte(), 2.toByte(), 3.toByte(), 4.toByte(), 5.toByte()).std() shouldBe 1.5811388300841898
+        columnOf(1.toShort(), 2.toShort(), 3.toShort(), 4.toShort(), 5.toShort()).std() shouldBe
+            1.5811388300841898
+        columnOf(1.toByte(), 2.toByte(), 3.toByte(), 4.toByte(), 5.toByte()).std() shouldBe
+            1.5811388300841898
 
         // Floating point types
         columnOf(1.0, 2.0, 3.0, 4.0, 5.0).std() shouldBe 1.5811388300841898
@@ -120,10 +122,12 @@ class StdTests {
     fun `stdOf with transformer function with NaNs`() {
         // Std functions should return NaN if any value is NaN
         val mixedValues = columnOf("1.0", "2.0", "NaN", "4.0", "5.0")
-        mixedValues.stdOf {
-            val num = it.toDoubleOrNull()
-            if (num == null || num.isNaN()) Double.NaN else num
-        }.shouldBeNaN()
+        mixedValues
+            .stdOf {
+                val num = it.toDoubleOrNull()
+                if (num == null || num.isNaN()) Double.NaN else num
+            }
+            .shouldBeNaN()
 
         // With skipNaN=true, NaN values should be ignored
         mixedValues.stdOf(skipNaN = true) {
@@ -134,13 +138,7 @@ class StdTests {
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `rowStd with dataframe`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1, 2, 3,
-            4, 5, 6,
-            7, 8, 9,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         // Calculate standard deviation across each row
         df[0].rowStd() shouldBe 1.0
@@ -150,13 +148,7 @@ class StdTests {
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `rowStd with dataframe and nulls`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1, 2, 3,
-            4, null, 6,
-            7, 8, 9,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 4, null, 6, 7, 8, 9)
 
         // Calculate standard deviation across each row
         df[0].rowStd() shouldBe 1.0
@@ -167,13 +159,18 @@ class StdTests {
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `rowStd with dataframe and NaNs`() {
         // Std functions should return NaN if any value is NaN
-        val dfWithNaN = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1.0, Double.NaN, 3.0,
-            Double.NaN, 5.0, 6.0,
-            7.0, 8.0, Double.NaN,
-        )
+        val dfWithNaN =
+            dataFrameOf("a", "b", "c")(
+                1.0,
+                Double.NaN,
+                3.0,
+                Double.NaN,
+                5.0,
+                6.0,
+                7.0,
+                8.0,
+                Double.NaN,
+            )
 
         dfWithNaN[0].rowStd().shouldBeNaN()
         dfWithNaN[1].rowStd().shouldBeNaN()
@@ -187,13 +184,7 @@ class StdTests {
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe std`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1, 2, 3,
-            4, 5, 6,
-            7, 8, 9,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         // Get row with standard deviations for each column
         val stds = df.std()
@@ -209,13 +200,7 @@ class StdTests {
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe stdOf`() {
-        val df = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1, 2, 3,
-            4, 5, 6,
-            7, 8, 9,
-        )
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         // Calculate standard deviation of a + c for each row
         df.stdOf { "a"<Int>() + "c"<Int>() } shouldBe 6.0 // std of [4, 10, 16]
@@ -241,16 +226,23 @@ class StdTests {
         // Test with all NaN values
         val allNaN = columnOf(Float.NaN, Float.NaN, Float.NaN)
         allNaN.std().shouldBeNaN() // All values are NaN, so result is NaN
-        allNaN.std(skipNaN = true).shouldBeNaN() // With skipNaN=true and only NaN values, result should be NaN
+        allNaN
+            .std(skipNaN = true)
+            .shouldBeNaN() // With skipNaN=true and only NaN values, result should be NaN
 
         // Test with DataFrame containing NaN values
-        val dfWithNaN = dataFrameOf(
-            "a", "b", "c",
-        )(
-            1.0, Double.NaN, 3.0,
-            4.0, 5.0, Float.NaN,
-            Double.NaN, 8.0, 9.0,
-        )
+        val dfWithNaN =
+            dataFrameOf("a", "b", "c")(
+                1.0,
+                Double.NaN,
+                3.0,
+                4.0,
+                5.0,
+                Float.NaN,
+                Double.NaN,
+                8.0,
+                9.0,
+            )
 
         // Test DataFrame std with NaN values
         val stdsWithNaN = dfWithNaN.std() // Default behavior
@@ -274,25 +266,23 @@ class StdTests {
         stdForSkipNaN["c"] shouldBe 4.242640687119285 // std of [3.0, 9.0]
 
         // Test stdOf with transformation that might produce NaN values
-        val dfForTransform = dataFrameOf(
-            "a", "b",
-        )(
-            1.0, 0.0,
-            4.0, 2.0,
-            0.0, 0.0,
-        )
+        val dfForTransform = dataFrameOf("a", "b")(1.0, 0.0, 4.0, 2.0, 0.0, 0.0)
 
         // Division by zero produces NaN
-        dfForTransform.stdOf {
-            val b = "b"<Double>()
-            if (b == 0.0) Double.NaN else "a"<Double>() / b
-        }.shouldBeNaN() // Default behavior: NaN propagates
+        dfForTransform
+            .stdOf {
+                val b = "b"<Double>()
+                if (b == 0.0) Double.NaN else "a"<Double>() / b
+            }
+            .shouldBeNaN() // Default behavior: NaN propagates
 
         // Skip NaN values from division by zero
-        dfForTransform.stdOf(skipNaN = true) {
-            val b = "b"<Double>()
-            if (b == 0.0) Double.NaN else "a"<Double>() / b
-        }.shouldBeNaN() // Only 4.0/2.0 = 2.0 is valid, std of a single value is NaN
+        dfForTransform
+            .stdOf(skipNaN = true) {
+                val b = "b"<Double>()
+                if (b == 0.0) Double.NaN else "a"<Double>() / b
+            }
+            .shouldBeNaN() // Only 4.0/2.0 = 2.0 is valid, std of a single value is NaN
     }
 
     @Test

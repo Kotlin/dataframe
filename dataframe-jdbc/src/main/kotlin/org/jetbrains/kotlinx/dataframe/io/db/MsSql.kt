@@ -1,11 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
-import kotlin.reflect.KType
 
 /**
  * Represents the MSSQL database type.
@@ -20,7 +16,8 @@ public object MsSql : DbType("sqlserver") {
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
 
-        fun String?.containsWithLowercase(substr: String) = this?.lowercase(locale)?.contains(substr) == true
+        fun String?.containsWithLowercase(substr: String) =
+            this?.lowercase(locale)?.contains(substr) == true
 
         val schemaName = tableMetadata.schemaName
         val tableName = tableMetadata.name

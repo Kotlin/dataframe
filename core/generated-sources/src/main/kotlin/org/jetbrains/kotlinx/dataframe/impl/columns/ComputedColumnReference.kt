@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import kotlin.reflect.KType
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import kotlin.reflect.KType
 
 internal class ComputedColumnReference<R>(
     val name: String,
@@ -16,9 +16,7 @@ internal class ComputedColumnReference<R>(
 ) : ColumnReference<R> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<R> =
-        context.df
-            .newColumn(type, name, infer) { compute(it, it) }
-            .addPath()
+        context.df.newColumn(type, name, infer) { compute(it, it) }.addPath()
 
     override fun name() = name
 

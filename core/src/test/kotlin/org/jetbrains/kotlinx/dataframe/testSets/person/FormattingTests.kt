@@ -24,13 +24,16 @@ class FormattingTests : BaseTest() {
 
     @Test
     fun `conditional formatting`() {
-        val formattedFrame = typed.format { colsOf<Int>() }.with {
-            if (it > 10) {
-                background(white) and bold and italic
-            } else {
-                textColor(linear(it, 30.5 to red, 50 to green)) and underline
-            }
-        }
+        val formattedFrame =
+            typed
+                .format { colsOf<Int>() }
+                .with {
+                    if (it > 10) {
+                        background(white) and bold and italic
+                    } else {
+                        textColor(linear(it, 30.5 to red, 50 to green)) and underline
+                    }
+                }
 
         val formatter = formattedFrame.formatter!!
         for (row in 0 until typed.nrow) {
@@ -38,15 +41,20 @@ class FormattingTests : BaseTest() {
                 if (typed[row].age > 10) 3 else 2
         }
 
-        formattedFrame.toHtml(DisplayConfiguration.DEFAULT).toString() shouldContain "font-style:italic"
+        formattedFrame.toHtml(DisplayConfiguration.DEFAULT).toString() shouldContain
+            "font-style:italic"
     }
 
     @Test
     fun `override format`() {
-        val formatter = typed
-            .format { age }.linearBg(20 to green, 80 to red)
-            .format { age and weight }.where { index % 2 == 0 }.with { background(gray) }
-            .formatter!!
+        val formatter =
+            typed
+                .format { age }
+                .linearBg(20 to green, 80 to red)
+                .format { age and weight }
+                .where { index % 2 == 0 }
+                .with { background(gray) }
+                .formatter!!
 
         for (row in 0 until typed.nrow step 2) {
             FormattingDsl.formatter(typed[row], typed.age.addPath())!!.attributes() shouldBe
@@ -55,7 +63,10 @@ class FormattingTests : BaseTest() {
 
         for (row in 1 until typed.nrow step 2) {
             FormattingDsl.formatter(typed[row], typed.age.addPath())!!.attributes() shouldBe
-                listOf("background-color" to linearGradient(typed[row].age.toDouble(), 20.0, green, 80.0, red).encode())
+                listOf(
+                    "background-color" to
+                        linearGradient(typed[row].age.toDouble(), 20.0, green, 80.0, red).encode()
+                )
         }
     }
 }

@@ -8,9 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.map
 
 // Needed to attach an expanded node with lazily evaluated expressions to DataFrame debug view
-@Suppress("unused")
-@RequiredByIntellijPlugin
-internal class Info(val df: AnyFrame)
+@Suppress("unused") @RequiredByIntellijPlugin internal class Info(val df: AnyFrame)
 
 internal class Counts(val value: Any?, val count: Int) {
     override fun toString(): String = "$value -> $count"

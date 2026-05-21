@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import kotlin.reflect.full.withNullability
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -25,14 +26,15 @@ import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
-import kotlin.reflect.full.withNullability
 
 internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnsSelector<T, T> =
     {
-        dataFrames.map { it.columnNames() }
+        dataFrames
+            .map { it.columnNames() }
             .fold<List<String>, Set<String>?>(null) { set, names ->
                 set?.intersect(names.toSet()) ?: names.toSet()
-            }.orEmpty()
+            }
+            .orEmpty()
             .map { it.toColumnAccessor() }
             .let { ColumnListImpl(it) }
     }
@@ -40,7 +42,8 @@ internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinCol
 internal fun <C> ColumnsResolver<C>.extractJoinColumns(): List<ColumnMatch<C>> =
     when (this) {
         is ColumnsList -> columns.flatMap { it.extractJoinColumns() }
-        is ColumnReference<C> -> listOf(ColumnMatch(this, path().toColumnAccessor() as ColumnReference<C>))
+        is ColumnReference<C> ->
+            listOf(ColumnMatch(this, path().toColumnAccessor() as ColumnReference<C>))
         is ColumnMatch -> listOf(this)
         else -> throw Exception()
     }
@@ -51,7 +54,8 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     addNewColumns: Boolean = true,
     selector: JoinColumnsSelector<A, B>?,
 ): DataFrame<A> {
-    val joinColumns = JoinDsl.getColumns(this, other, selector ?: JoinDsl.defaultJoinColumns<A, B>(this, other))
+    val joinColumns =
+        JoinDsl.getColumns(this, other, selector ?: JoinDsl.defaultJoinColumns<A, B>(this, other))
 
     val leftJoinColumns = getColumnsWithPaths { joinColumns.map { it.left }.toColumnSet() }
     val rightJoinColumns = other.getColumnsWithPaths { joinColumns.map { it.right }.toColumnSet() }
@@ -100,25 +104,28 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     }
 
     // compute left to right column path mappings
-    val pathMapping = allLeftJoinColumns
-        .mapIndexed { colNumber, leftCol ->
-            leftCol.path to allRightJoinColumns[colNumber].path
-        }.toMap()
+    val pathMapping =
+        allLeftJoinColumns
+            .mapIndexed { colNumber, leftCol ->
+                leftCol.path to allRightJoinColumns[colNumber].path
+            }
+            .toMap()
 
     // compute pairs of join key to row index from right dataframe
-    val rightJoinKeyToIndex = other
-        .indices()
-        .map { index -> allRightJoinColumns.map { it.data[index] } to index }
+    val rightJoinKeyToIndex =
+        other.indices().map { index -> allRightJoinColumns.map { it.data[index] } to index }
 
     // group row indices by key from right dataframe
-    val groupedRight = when (joinType) {
-        JoinType.Exclude -> rightJoinKeyToIndex.associate { it.first to emptyList() }
-        else -> rightJoinKeyToIndex.groupBy({ it.first }) { it.second }
-    }
+    val groupedRight =
+        when (joinType) {
+            JoinType.Exclude -> rightJoinKeyToIndex.associate { it.first to emptyList() }
+            else -> rightJoinKeyToIndex.groupBy({ it.first }) { it.second }
+        }
 
     var outputRowsCount = 0
 
-    // for every row index from left dataframe compute a list of matched indices from right dataframe
+    // for every row index from left dataframe compute a list of matched indices from right
+    // dataframe
     val leftToRightMapping = indices.map { leftIndex ->
         val leftKey = allLeftJoinColumns.map { it.data[leftIndex] }
         val rightIndices = groupedRight[leftKey]
@@ -126,10 +133,12 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         rightIndices
     }
 
-    // for every row index in right dataframe store a flag indicating whether this row was matched by some row in left dataframe
+    // for every row index in right dataframe store a flag indicating whether this row was matched
+    // by some row in left dataframe
     val rightMatched = BooleanArray(other.nrow) { false }
 
-    // number of rows in right dataframe that were not matched by any row in left dataframe. Used for correct allocation of an output array
+    // number of rows in right dataframe that were not matched by any row in left dataframe. Used
+    // for correct allocation of an output array
     var rightUnmatchedCount = other.nrow
 
     // compute matched indices from right dataframe and number of rows in output dataframe
@@ -177,7 +186,8 @@ internal fun <A, B> DataFrame<A>.joinImpl(
             if (joinType.allowRightNulls) {
                 for (col in 0 until leftColumnsCount) {
                     val leftColumn = leftColumns[col].data
-                    outputData[col][row] = leftColumn[leftRow].also { if (it == null) hasNulls[col] = true }
+                    outputData[col][row] =
+                        leftColumn[leftRow].also { if (it == null) hasNulls[col] = true }
                 }
                 for (col in 0 until newRightColumnsCount) {
                     outputData[leftColumnsCount + col][row] = null
@@ -189,12 +199,15 @@ internal fun <A, B> DataFrame<A>.joinImpl(
             for (rightRow in rightRows) {
                 for (col in 0 until leftColumnsCount) {
                     val leftColumn = leftColumns[col].data
-                    outputData[col][row] = leftColumn[leftRow].also { if (it == null) hasNulls[col] = true }
+                    outputData[col][row] =
+                        leftColumn[leftRow].also { if (it == null) hasNulls[col] = true }
                 }
                 for (col in 0 until newRightColumnsCount) {
                     val rightColumn = newRightColumns[col].data
                     outputData[leftColumnsCount + col][row] =
-                        rightColumn[rightRow].also { if (it == null) hasNulls[leftColumnsCount + col] = true }
+                        rightColumn[rightRow].also {
+                            if (it == null) hasNulls[leftColumnsCount + col] = true
+                        }
                 }
                 row++
             }
@@ -206,12 +219,15 @@ internal fun <A, B> DataFrame<A>.joinImpl(
             if (!rightMatched[rightRow]) {
                 for (col in 0 until leftColumnsCount) {
                     val rightColumn = leftToRightColumns[col]
-                    outputData[col][row] = rightColumn?.get(rightRow).also { if (it == null) hasNulls[col] = true }
+                    outputData[col][row] =
+                        rightColumn?.get(rightRow).also { if (it == null) hasNulls[col] = true }
                 }
                 for (col in 0 until newRightColumnsCount) {
                     val rightColumn = newRightColumns[col].data
                     outputData[leftColumnsCount + col][row] =
-                        rightColumn[rightRow].also { if (it == null) hasNulls[leftColumnsCount + col] = true }
+                        rightColumn[rightRow].also {
+                            if (it == null) hasNulls[leftColumnsCount + col] = true
+                        }
                 }
                 row++
             }
@@ -219,23 +235,30 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     }
 
     val columns = outputData.mapIndexed { columnIndex, columnValues ->
-        val srcColumn = if (columnIndex < leftColumnsCount) {
-            leftColumns[columnIndex]
-        } else {
-            newRightColumns[columnIndex - leftColumnsCount]
-        }
+        val srcColumn =
+            if (columnIndex < leftColumnsCount) {
+                leftColumns[columnIndex]
+            } else {
+                newRightColumns[columnIndex - leftColumnsCount]
+            }
         val hasNulls = hasNulls[columnIndex]
-        val newColumn = when (srcColumn.kind) {
-            ColumnKind.Value -> DataColumn.createValueColumn(
-                name = srcColumn.name,
-                values = columnValues.asList(),
-                type = srcColumn.type.withNullability(hasNulls),
-            )
+        val newColumn =
+            when (srcColumn.kind) {
+                ColumnKind.Value ->
+                    DataColumn.createValueColumn(
+                        name = srcColumn.name,
+                        values = columnValues.asList(),
+                        type = srcColumn.type.withNullability(hasNulls),
+                    )
 
-            ColumnKind.Frame -> DataColumn.createFrameColumn(srcColumn.name, columnValues.asList() as List<AnyFrame>)
+                ColumnKind.Frame ->
+                    DataColumn.createFrameColumn(
+                        srcColumn.name,
+                        columnValues.asList() as List<AnyFrame>,
+                    )
 
-            ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")
-        }
+                ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")
+            }
         srcColumn.path to newColumn
     }
 

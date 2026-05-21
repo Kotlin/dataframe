@@ -16,7 +16,8 @@ internal interface AggregatableInternal<out T> : Aggregatable<T> {
 internal fun <T> Aggregatable<T>.remainingColumnsSelector() = internal().remainingColumnsSelector()
 
 @PublishedApi
-internal fun <T> Aggregatable<T>.internal(): AggregatableInternal<T> = this as AggregatableInternal<T>
+internal fun <T> Aggregatable<T>.internal(): AggregatableInternal<T> =
+    this as AggregatableInternal<T>
 
 @PublishedApi
 internal fun <T, R> Grouped<T>.aggregateInternal(body: AggregateBodyInternal<T, R>): DataFrame<T> =

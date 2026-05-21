@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import java.io.File
 import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 import org.jetbrains.kotlin.test.TestJdkKind
@@ -17,7 +18,6 @@ import org.jetbrains.kotlin.test.services.RuntimeClasspathProvider
 import org.jetbrains.kotlin.test.services.TemporaryDirectoryManager
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlinx.dataframe.services.TemporaryDirectoryManagerImplFixed
-import java.io.File
 
 open class AbstractExplainerBlackBoxCodegenTest : AbstractFirLightTreeBlackBoxCodegenTest() {
 

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
+import kotlin.reflect.KType
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -17,9 +18,11 @@ import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.getListType
-import kotlin.reflect.KType
 
-internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override val hasGroupingKeys: Boolean) :
+internal class GroupByReceiverImpl<T>(
+    override val df: DataFrame<T>,
+    override val hasGroupingKeys: Boolean,
+) :
     AggregateGroupedDsl<T>(),
     AggregateInternalDsl<T>,
     AggregatableInternal<T> by df as AggregatableInternal<T>,
@@ -38,30 +41,29 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
         values.forEach {
             when (it.value) {
                 is GroupByReceiverImpl<*> -> {
-                    it.value.values.forEach {
-                        allValues.add(it)
-                    }
+                    it.value.values.forEach { allValues.add(it) }
                 }
 
                 is ValueColumn<*> -> {
                     allValues.add(
-                        NamedValue.create(it.path, it.value.toList(), getListType(it.value.type()), emptyList<Unit>()),
+                        NamedValue.create(
+                            it.path,
+                            it.value.toList(),
+                            getListType(it.value.type()),
+                            emptyList<Unit>(),
+                        )
                     )
                 }
 
                 is ColumnGroup<*> -> {
-                    val frameType = it.value
-                        .type()
-                        .arguments
-                        .singleOrNull()
-                        ?.type
+                    val frameType = it.value.type().arguments.singleOrNull()?.type
                     allValues.add(
                         NamedValue.create(
                             path = it.path,
                             value = it.value.asDataFrame(),
                             type = DataFrame::class.createTypeWithArgument(frameType),
                             defaultValue = DataFrame.Empty,
-                        ),
+                        )
                     )
                 }
 
@@ -72,7 +74,7 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
                             value = it.value.toList(),
                             type = getListType(it.value.type()),
                             defaultValue = emptyList<Unit>(),
-                        ),
+                        )
                     )
                 }
 
@@ -91,12 +93,8 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
 
     override fun pathForSingleColumn(column: AnyCol) = column.shortPath()
 
-    override fun <R> yield(
-        path: ColumnPath,
-        value: R,
-        type: KType?,
-        default: R?,
-    ) = yield(path, value, type, default, false)
+    override fun <R> yield(path: ColumnPath, value: R, type: KType?, default: R?) =
+        yield(path, value, type, default, false)
 
     override fun yield(value: NamedValue): NamedValue {
         when (value.value) {
@@ -121,16 +119,12 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
 
             is AggregateInternalDsl<*> -> {
                 // Attempt to create DataFrame<Type> from AggregateInternalDsl<Type>
-                val dfType = value.type?.arguments?.firstOrNull()?.type
-                    ?.let { DataFrame::class.createTypeWithArgument(it) }
-                    ?: DataFrame::class.createStarProjectedType(nullable = false)
+                val dfType =
+                    value.type?.arguments?.firstOrNull()?.type?.let {
+                        DataFrame::class.createTypeWithArgument(it)
+                    } ?: DataFrame::class.createStarProjectedType(nullable = false)
 
-                yield(
-                    value.copy(
-                        value = value.value.df,
-                        type = dfType,
-                    ),
-                )
+                yield(value.copy(value = value.value.df, type = dfType))
             }
 
             else -> values.add(value)

@@ -26,17 +26,19 @@ public fun <T> DataColumn<T>.none(predicate: Predicate<T>): Boolean = values.non
  * {@include [org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowFilterSnippet]}
  *
  * ### Example
+ *
  * ```kotlin
  * // Check if there is not any row where "age" is greater than 18
  * val hasNoAdults = df.none { age > 18 }
  * ```
  *
- * @param predicate A [RowFilter] lambda that takes a [DataRow] (as both `this` and `it`)
- * and returns `true` if none of the rows should be considered a match.
+ * @param predicate A [RowFilter] lambda that takes a [DataRow] (as both `this` and `it`) and
+ *   returns `true` if none of the rows should be considered a match.
  * @return `true` if none of the rows satisfies the [predicate], `false` otherwise.
  * @see [DataFrame.any]
  */
-public inline fun <T> DataFrame<T>.none(predicate: RowFilter<T>): Boolean = rows().none { predicate(it, it) }
+public inline fun <T> DataFrame<T>.none(predicate: RowFilter<T>): Boolean =
+    rows().none { predicate(it, it) }
 
 // endregion
 
@@ -54,12 +56,9 @@ public interface NoneColumnsSelectionDsl {
      *
      * @include [DslGrammarTemplate]
      *
-     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
-     *  {@include [PlainDslName]}**`()`**
-     * }
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS] {@include [PlainDslName]}**`()`** }
      *
-     * {@set [DslGrammarTemplate.COLUMN_SET_PART]}
-     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
+     * {@set [DslGrammarTemplate.COLUMN_SET_PART]} {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
      */
     public interface Grammar {
 
@@ -78,7 +77,7 @@ public interface NoneColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[groupBy][DataFrame.groupBy]`  {  `[`none`][none]`() }`
+     * `df.`[groupBy][DataFrame.groupBy]` { `[`none`][none]`() }`
      *
      * @return An empty [ColumnsResolver].
      */

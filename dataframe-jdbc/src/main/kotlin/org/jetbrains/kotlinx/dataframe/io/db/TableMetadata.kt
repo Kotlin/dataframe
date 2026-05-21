@@ -1,17 +1,21 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 /**
- * Represents a table metadata to store information about a database table,
- * including its name, schema name, and catalogue name.
+ * Represents a table metadata to store information about a database table, including its name,
+ * schema name, and catalogue name.
  *
- * NOTE: we need to extract both, [schemaName] and [catalogue]
- * because the different databases have different implementations of metadata.
+ * NOTE: we need to extract both, [schemaName] and [catalogue] because the different databases have
+ * different implementations of metadata.
  *
  * @property [name] the name of the table.
  * @property [schemaName] the name of the schema the table belongs to (optional).
  * @property [catalogue] the name of the catalogue the table belongs to (optional).
  */
-public class TableMetadata(public val name: String, public val schemaName: String?, public val catalogue: String?) {
+public class TableMetadata(
+    public val name: String,
+    public val schemaName: String?,
+    public val catalogue: String?,
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is TableMetadata) return false
@@ -30,14 +34,17 @@ public class TableMetadata(public val name: String, public val schemaName: Strin
         return result
     }
 
-    override fun toString(): String = "TableMetadata(name='$name', schemaName=$schemaName, catalogue=$catalogue)"
+    override fun toString(): String =
+        "TableMetadata(name='$name', schemaName=$schemaName, catalogue=$catalogue)"
 
     /**
      * Creates a copy of the `TableMetadata` instance with optional modifications.
      *
      * @param name the name of the table; defaults to the current name of the instance.
-     * @param schemaName the name of the schema the table belongs to; defaults to the current schema name of the instance.
-     * @param catalogue the name of the catalogue the table belongs to; defaults to the current catalogue of the instance.
+     * @param schemaName the name of the schema the table belongs to; defaults to the current schema
+     *   name of the instance.
+     * @param catalogue the name of the catalogue the table belongs to; defaults to the current
+     *   catalogue of the instance.
      * @return a new `TableMetadata` instance with the specified or default values.
      */
     public fun copy(

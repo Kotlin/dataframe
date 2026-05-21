@@ -21,7 +21,10 @@ class ApacheArrow {
     @Test
     fun readArrowFeatherViaUrl() {
         // SampleStart
-        val df = DataFrame.readArrowFeather("https://kotlin.github.io/dataframe/resources/example.feather")
+        val df =
+            DataFrame.readArrowFeather(
+                "https://kotlin.github.io/dataframe/resources/example.feather"
+            )
         // SampleEnd
     }
 }

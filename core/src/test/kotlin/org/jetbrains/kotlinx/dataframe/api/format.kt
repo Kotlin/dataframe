@@ -5,7 +5,6 @@ import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.red
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb
-import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
@@ -72,12 +71,18 @@ class FormatTests : TestBase() {
 
     @Test
     fun `format with italic and underline for entire group`() {
-        val formatted = df
-            .format().with { background(white) }
-            .format { age }.with { background(blue) and textColor(white) }
-            .format { name }.with { background(green) }
-            .format { name.firstName }.with { italic and underline }
-            .format { name.colsOf<String>() }.where { it.startsWith("C") }.with { background(red) }
+        val formatted =
+            df.format()
+                .with { background(white) }
+                .format { age }
+                .with { background(blue) and textColor(white) }
+                .format { name }
+                .with { background(green) }
+                .format { name.firstName }
+                .with { italic and underline }
+                .format { name.colsOf<String>() }
+                .where { it.startsWith("C") }
+                .with { background(red) }
 
         val html = formatted.toHtml().toString()
 
@@ -159,9 +164,9 @@ class FormatTests : TestBase() {
 
     @Test
     fun `format with perRowCol`() {
-        val formatted = df.format { age }.perRowCol { row, col ->
-            if (col[row] > 25) background(red) else background(green)
-        }
+        val formatted =
+            df.format { age }
+                .perRowCol { row, col -> if (col[row] > 25) background(red) else background(green) }
         val html = formatted.toHtml().toString()
 
         // Should contain formatting based on age values
@@ -188,9 +193,8 @@ class FormatTests : TestBase() {
 
     @Test
     fun `format with linear color interpolation`() {
-        val formatted = df.format { age }.with { value ->
-            textColor(linear(value, 15 to blue, 45 to red))
-        }
+        val formatted =
+            df.format { age }.with { value -> textColor(linear(value, 15 to blue, 45 to red)) }
         val html = formatted.toHtml().toString()
 
         (html.split("color:#0000ff").size - 1) shouldBe 2
@@ -205,10 +209,13 @@ class FormatTests : TestBase() {
 
     @Test
     fun `chained format operations`() {
-        val formatted = df
-            .format().with { background(white) and textColor(black) }
-            .format { age }.with { background(red) }
-            .format { isHappy }.with { background(if (it) green else red) }
+        val formatted =
+            df.format()
+                .with { background(white) and textColor(black) }
+                .format { age }
+                .with { background(red) }
+                .format { isHappy }
+                .with { background(if (it) green else red) }
 
         val html = formatted.toHtml().toString()
 
@@ -234,19 +241,22 @@ class FormatTests : TestBase() {
         val formatted = df.format("age", "weight").with { background(blue) }
         val html = formatted.toHtml().toString()
 
-        html.split("background-color:#0000ff").size - 1 shouldBe 14 // 7 rows * 2 columns (age, weight)
+        html.split("background-color:#0000ff").size - 1 shouldBe
+            14 // 7 rows * 2 columns (age, weight)
     }
 
     @Test
     fun `format with complex perRowCol logic`() {
-        val formatted = df.format { age }.perRowCol { row, col ->
-            val value = col[row]
-            when {
-                value < 20 -> textColor(blue)
-                value < 30 -> textColor(green)
-                else -> textColor(red)
-            }
-        }
+        val formatted =
+            df.format { age }
+                .perRowCol { row, col ->
+                    val value = col[row]
+                    when {
+                        value < 20 -> textColor(blue)
+                        value < 30 -> textColor(green)
+                        else -> textColor(red)
+                    }
+                }
         val html = formatted.toHtml().toString()
 
         // Ages: 15(blue), 45(red), 20(green), 40(red), 30(green), 20(green), 30(green)
@@ -282,9 +292,12 @@ class FormatTests : TestBase() {
     @Test
     fun `documentation example - simple formatting`() {
         // Simple formatting example
-        val formatted = df
-            .format { age }.with { background(red) }
-            .format { weight }.notNull().with { textColor(blue) }
+        val formatted =
+            df.format { age }
+                .with { background(red) }
+                .format { weight }
+                .notNull()
+                .with { textColor(blue) }
 
         val html = formatted.toHtml().toString()
 
@@ -304,13 +317,13 @@ class FormatTests : TestBase() {
 
     @Test
     fun `format with null values handled correctly`() {
-        val formatted = df.format { weight }.with { value ->
-            if (value != null) background(green) else null
-        }
+        val formatted =
+            df.format { weight }.with { value -> if (value != null) background(green) else null }
         val html = formatted.toHtml().toString()
 
         // Should handle null values gracefully
-        html.split("background-color:#00ff00").size - 1 shouldBe 5 // Only non-null weight values get formatted
+        html.split("background-color:#00ff00").size - 1 shouldBe
+            5 // Only non-null weight values get formatted
         formatted::class.simpleName shouldBe "FormattedFrame"
     }
 
@@ -318,19 +331,60 @@ class FormatTests : TestBase() {
     @Suppress("ktlint:standard:argument-list-wrapping")
     @Test
     fun `formatting a column shouldn't affect nested columns with the same name`() {
-        val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
-            "Alice", "Cooper", 15, "London", 54, true,
-            "Bob", "Dylan", 45, "Dubai", 87, true,
-            "Charlie", "Daniels", 20, "Moscow", null, false,
-            "Charlie", "Chaplin", 40, "Milan", null, true,
-            "Bob", "Marley", 30, "Tokyo", 68, true,
-            "Alice", "Wolf", 20, null, 55, false,
-            "Charlie", "Byrd", 30, "Moscow", 90, true,
-        ).group("firstName", "lastName").into("name")
-            .groupBy("city").toDataFrame()
-            .add("cityCopy") { "city"<String>() }
-            .group("city").into("cityGroup")
-            .rename("cityCopy").to("city")
+        val df =
+            dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+                    "Alice",
+                    "Cooper",
+                    15,
+                    "London",
+                    54,
+                    true,
+                    "Bob",
+                    "Dylan",
+                    45,
+                    "Dubai",
+                    87,
+                    true,
+                    "Charlie",
+                    "Daniels",
+                    20,
+                    "Moscow",
+                    null,
+                    false,
+                    "Charlie",
+                    "Chaplin",
+                    40,
+                    "Milan",
+                    null,
+                    true,
+                    "Bob",
+                    "Marley",
+                    30,
+                    "Tokyo",
+                    68,
+                    true,
+                    "Alice",
+                    "Wolf",
+                    20,
+                    null,
+                    55,
+                    false,
+                    "Charlie",
+                    "Byrd",
+                    30,
+                    "Moscow",
+                    90,
+                    true,
+                )
+                .group("firstName", "lastName")
+                .into("name")
+                .groupBy("city")
+                .toDataFrame()
+                .add("cityCopy") { "city"<String>() }
+                .group("city")
+                .into("cityGroup")
+                .rename("cityCopy")
+                .to("city")
 
         val formatted = df.format("city").with { bold and italic and textColor(green) }
         val html = formatted.toHtml().toString()

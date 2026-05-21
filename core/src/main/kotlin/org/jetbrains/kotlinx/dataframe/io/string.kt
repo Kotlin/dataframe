@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import java.math.BigDecimal
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
@@ -17,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
-import java.math.BigDecimal
 
 public fun AnyFrame.renderToString(
     rowsLimit: Int = 20,
@@ -50,12 +50,15 @@ public fun AnyFrame.renderToString(
         val top = it.take(rowsLimit)
         val precision = if (top.isNumber()) top.asNumbers().scale() else 0
         val decimalFormat =
-            if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
+            if (precision >= 0) RendererDecimalFormat.fromPrecision(precision)
+            else RendererDecimalFormat.of("%e")
         top.values().map {
             renderValueForStdout(it, valueLimit, decimalFormat = decimalFormat).truncatedContent
         }
     }
-    val columnLengths = values.mapIndexed { col, vals -> (vals + header[col]).map { it.length }.maxOrNull()!! + 1 }
+    val columnLengths = values.mapIndexed { col, vals ->
+        (vals + header[col]).map { it.length }.maxOrNull()!! + 1
+    }
 
     // top border
     if (borders) {
@@ -128,10 +131,9 @@ internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
 internal fun AnyRow.renderToString(): String {
     val values = getVisibleValues()
     if (values.isEmpty()) return "{ }"
-    return values.joinToString(
-        prefix = "{ ",
-        postfix = " }",
-    ) { "${it.first}:${renderValueForStdout(it.second).truncatedContent}" }
+    return values.joinToString(prefix = "{ ", postfix = " }") {
+        "${it.first}:${renderValueForStdout(it.second).truncatedContent}"
+    }
 }
 
 internal fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
@@ -139,7 +141,9 @@ internal fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
     val pairs = owner.columns().map { it.name() to renderValueForRowTable(it[index], forHtml) }
     val width = pairs.maxOf { it.first.length + it.second.textLength } + 4
     return pairs.joinToString("\n") {
-        it.first + " ".repeat(width - it.first.length - it.second.textLength) + it.second.truncatedContent
+        it.first +
+            " ".repeat(width - it.first.length - it.second.textLength) +
+            it.second.truncatedContent
     }
 }
 
@@ -153,20 +157,30 @@ internal fun renderCollectionName(value: Collection<*>) =
 
 internal fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedContent =
     when (value) {
-        is AnyFrame -> "DataFrame [${value.nrow} x ${value.ncol}]".let {
-            val content = if (value.nrow == 1) it + " " + value[0].toString() else it
-            RenderedContent.textWithLength(content, "DataFrame".length)
-        }
+        is AnyFrame ->
+            "DataFrame [${value.nrow} x ${value.ncol}]"
+                .let {
+                    val content = if (value.nrow == 1) it + " " + value[0].toString() else it
+                    RenderedContent.textWithLength(content, "DataFrame".length)
+                }
 
         is AnyRow -> RenderedContent.textWithLength("DataRow $value", "DataRow".length)
 
-        is Collection<*> -> renderCollectionName(value).let { RenderedContent.textWithLength("$it $value", it.length) }
+        is Collection<*> ->
+            renderCollectionName(value).let {
+                RenderedContent.textWithLength("$it $value", it.length)
+            }
 
-        else -> if (forHtml) {
-            renderValueForHtml(value, valueToStringLimitForRowAsTable, RendererDecimalFormat.DEFAULT)
-        } else {
-            renderValueForStdout(value, valueToStringLimitForRowAsTable)
-        }
+        else ->
+            if (forHtml) {
+                renderValueForHtml(
+                    value,
+                    valueToStringLimitForRowAsTable,
+                    RendererDecimalFormat.DEFAULT,
+                )
+            } else {
+                renderValueForStdout(value, valueToStringLimitForRowAsTable)
+            }
     }
 
 internal fun renderValueForStdout(
@@ -174,13 +188,14 @@ internal fun renderValueForStdout(
     limit: Int = valueToStringLimitDefault,
     decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
 ): RenderedContent =
-    renderValueToString(value, decimalFormat)
-        .truncate(limit)
-        .let { it.copy(truncatedContent = it.truncatedContent.escapeNewLines()) }
+    renderValueToString(value, decimalFormat).truncate(limit).let {
+        it.copy(truncatedContent = it.truncatedContent.escapeNewLines())
+    }
 
 internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalFormat): String =
     when (value) {
-        is AnyFrame -> "[${value.size}]".let { if (value.nrow == 1) it + " " + value[0].toString() else it }
+        is AnyFrame ->
+            "[${value.size}]".let { if (value.nrow == 1) it + " " + value[0].toString() else it }
 
         is Double -> value.format(decimalFormat)
 
@@ -193,13 +208,15 @@ internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalForm
         is Array<*> -> if (value.isEmpty()) "[ ]" else value.toList().toString()
 
         else ->
-            value?.asArrayAsListOrNull()
-                ?.let { renderValueToString(it, decimalFormat) }
+            value?.asArrayAsListOrNull()?.let { renderValueToString(it, decimalFormat) }
                 ?: value.toString()
     }
 
-internal fun Double.format(decimalFormat: RendererDecimalFormat): String = decimalFormat.format.format(this)
+internal fun Double.format(decimalFormat: RendererDecimalFormat): String =
+    decimalFormat.format.format(this)
 
-internal fun Float.format(decimalFormat: RendererDecimalFormat): String = decimalFormat.format.format(this)
+internal fun Float.format(decimalFormat: RendererDecimalFormat): String =
+    decimalFormat.format.format(this)
 
-internal fun BigDecimal.format(decimalFormat: RendererDecimalFormat): String = decimalFormat.format.format(this)
+internal fun BigDecimal.format(decimalFormat: RendererDecimalFormat): String =
+    decimalFormat.format.format(this)

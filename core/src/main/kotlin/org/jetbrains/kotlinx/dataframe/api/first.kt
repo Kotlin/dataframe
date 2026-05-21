@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -26,7 +27,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerI
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 // region DataColumn
 
@@ -36,7 +36,6 @@ import kotlin.reflect.KProperty
  * See also [firstOrNull], [last], [take], [takeLast].
  *
  * @return The first value in this [DataColumn].
- *
  * @throws [IndexOutOfBoundsException] if the [DataColumn] is empty.
  */
 public fun <T> DataColumn<T>.first(): T = get(0)
@@ -54,6 +53,7 @@ public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
  * Returns the first value in this [DataColumn] that matches the given [predicate].
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of financial transactions sorted by time,
  * // find the amount of the first transaction over 100 euros
@@ -62,24 +62,22 @@ public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
  *
  * See also [firstOrNull], [last], [take], [takeLast].
  *
- * @param [predicate] A lambda expression used to get the first value
- * that satisfies a condition specified in this expression.
- * This predicate takes a value from the [DataColumn] as an input
- * and returns `true` if the value satisfies the condition or `false` otherwise.
- *
+ * @param [predicate] A lambda expression used to get the first value that satisfies a condition
+ *   specified in this expression. This predicate takes a value from the [DataColumn] as an input
+ *   and returns `true` if the value satisfies the condition or `false` otherwise.
  * @return The first value in this [DataColumn] that matches the given [predicate].
- *
- * @throws [NoSuchElementException] if the [DataColumn] contains no elements matching the [predicate]
- * (including the case when the [DataColumn] is empty).
+ * @throws [NoSuchElementException] if the [DataColumn] contains no elements matching the
+ *   [predicate] (including the case when the [DataColumn] is empty).
  */
 public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(predicate)
 
 /**
- * Returns the first value in this [DataColumn] that matches the given [predicate].
- * Returns `null` if the [DataColumn] contains no elements matching the [predicate]
- * (including the case when the [DataColumn] is empty).
+ * Returns the first value in this [DataColumn] that matches the given [predicate]. Returns `null`
+ * if the [DataColumn] contains no elements matching the [predicate] (including the case when the
+ * [DataColumn] is empty).
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of financial transactions sorted by time,
  * // find the amount of the first transaction over 100 euros,
@@ -89,15 +87,14 @@ public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(
  *
  * See also [first], [last], [take], [takeLast].
  *
- * @param [predicate] A lambda expression used to get the first value
- * that satisfies a condition specified in this expression.
- * This predicate takes a value from the [DataColumn] as an input
- * and returns `true` if the value satisfies the condition or `false` otherwise.
- *
- * @return The first value in this [DataColumn] that matches the given [predicate],
- * or `null` if the [DataColumn] contains no elements matching the [predicate].
+ * @param [predicate] A lambda expression used to get the first value that satisfies a condition
+ *   specified in this expression. This predicate takes a value from the [DataColumn] as an input
+ *   and returns `true` if the value satisfies the condition or `false` otherwise.
+ * @return The first value in this [DataColumn] that matches the given [predicate], or `null` if the
+ *   [DataColumn] contains no elements matching the [predicate].
  */
-public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values.firstOrNull(predicate)
+public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? =
+    values.firstOrNull(predicate)
 
 // endregion
 
@@ -106,14 +103,10 @@ public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values
 /**
  * Returns the first [row][DataRow] in this [DataFrame].
  *
- * See also [firstOrNull][DataFrame.firstOrNull],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [firstOrNull][DataFrame.firstOrNull], [last][DataFrame.last], [take][DataFrame.take],
+ * [takeWhile][DataFrame.takeWhile], [takeLast][DataFrame.takeLast].
  *
  * @return A [DataRow] containing the first row in this [DataFrame].
- *
  * @throws NoSuchElementException if the [DataFrame] contains no rows.
  */
 public fun <T> DataFrame<T>.first(): DataRow<T> {
@@ -124,60 +117,55 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 }
 
 /**
- * Returns the first [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
+ * Returns the first [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any
+ * rows, returns `null`.
  *
- * See also [first][DataFrame.first],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [first][DataFrame.first], [last][DataFrame.last], [take][DataFrame.take],
+ * [takeWhile][DataFrame.takeWhile], [takeLast][DataFrame.takeLast].
  *
- * @return A [DataRow] containing the first row in this [DataFrame], or `null` if the [DataFrame] is empty.
+ * @return A [DataRow] containing the first row in this [DataFrame], or `null` if the [DataFrame] is
+ *   empty.
  */
 public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
 
 /**
  * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
  *
+ * @param [predicate] A [row filter][RowFilter] used to get the first value that satisfies a
+ *   condition specified in this filter.
+ * @return A [DataRow] containing the first row that matches the given [predicate].
+ * @throws [NoSuchElementException] if the [DataFrame] contains no rows matching the [predicate].
  * @include [SelectingRows.RowFilterSnippet]
- *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of financial transactions sorted by time,
  * // find the first transaction with amount over 100 euros
  * df.first { amount > 100 }
  * ```
  *
- * See also [firstOrNull][DataFrame.firstOrNull],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
- *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
- * that satisfies a condition specified in this filter.
- *
- * @return A [DataRow] containing the first row that matches the given [predicate].
- *
- * @throws [NoSuchElementException] if the [DataFrame] contains no rows matching the [predicate].
+ * See also [firstOrNull][DataFrame.firstOrNull], [last][DataFrame.last], [take][DataFrame.take],
+ * [takeWhile][DataFrame.takeWhile], [takeLast][DataFrame.takeLast].
  */
 public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
-    rows().first {
-        predicate(it, it)
-    }
+    rows().first { predicate(it, it) }
 
 /**
  * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
- * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
- * (including the case when the [DataFrame] is empty).
+ * Returns `null` if the [DataFrame] contains no rows matching the [predicate] (including the case
+ * when the [DataFrame] is empty).
  *
+ * @param [predicate] A [row filter][RowFilter] used to get the first value that satisfies a
+ *   condition specified in this filter.
+ * @return A [DataRow] containing the first row that matches the given [predicate], or `null` if the
+ *   [DataFrame] contains no rows matching the [predicate].
  * @include [SelectingRows.RowFilterSnippet]
- *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of financial transactions sorted by time,
  * // find the first transaction with amount over 100 euros,
@@ -185,38 +173,27 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * df.firstOrNull { amount > 100 }
  * ```
  *
- * See also [first][DataFrame.first],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
- *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
- * that satisfies a condition specified in this filter.
- *
- * @return A [DataRow] containing the first row that matches the given [predicate],
- * or `null` if the [DataFrame] contains no rows matching the [predicate].
+ * See also [first][DataFrame.first], [last][DataFrame.last], [take][DataFrame.take],
+ * [takeWhile][DataFrame.takeWhile], [takeLast][DataFrame.takeLast].
  */
 public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? =
-    rows().firstOrNull {
-        predicate(it, it)
-    }
+    rows().firstOrNull { predicate(it, it) }
 
 // endregion
 
 // region GroupBy
 
 /**
- * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
- * by taking the first [row][DataRow] from each group,
- * and returns a [ReducedGroupBy] containing these rows
- * (one [row][DataRow] per group, each [row][DataRow] is the first [row][DataRow] in its group).
+ * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy] by taking the first [row][DataRow]
+ * from each group, and returns a [ReducedGroupBy] containing these rows (one [row][DataRow] per
+ * group, each [row][DataRow] is the first [row][DataRow] in its group).
  *
- * If a group in this [GroupBy] is empty,
- * the corresponding [row][DataRow] in the resulting [ReducedGroupBy] will contain `null` values
- * for all columns in the group, except the grouping key.
+ * If a group in this [GroupBy] is empty, the corresponding [row][DataRow] in the resulting
+ * [ReducedGroupBy] will contain `null` values for all columns in the group, except the grouping
+ * key.
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of orders sorted by date and time,
  * // find the first order placed by each customer
@@ -225,27 +202,30 @@ public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow
  *
  * See also [last][GroupBy.last].
  *
- * @return A [ReducedGroupBy] containing the first [row][DataRow]
- * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
+ * @return A [ReducedGroupBy] containing the first [row][DataRow] (or a [row][DataRow] with `null`
+ *   values, except the grouping key) from each group.
  */
 @Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOrNull() }
 
 /**
- * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
- * by taking from each group the first [row][DataRow] satisfying the given [predicate],
- * and returns a [ReducedGroupBy] containing these rows (one [row][DataRow] per group,
- * each [row][DataRow] is the first [row][DataRow] in its group that satisfies the [predicate]).
+ * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy] by taking from each group the first
+ * [row][DataRow] satisfying the given [predicate], and returns a [ReducedGroupBy] containing these
+ * rows (one [row][DataRow] per group, each [row][DataRow] is the first [row][DataRow] in its group
+ * that satisfies the [predicate]).
  *
- * If the group in [GroupBy] contains no matching rows,
- * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
- * except the grouping key.
+ * If the group in [GroupBy] contains no matching rows, the corresponding row in [ReducedGroupBy]
+ * will contain `null` values for all columns in the group, except the grouping key.
  *
+ * @param [predicate] A [row filter][RowFilter] used to get the first value that satisfies a
+ *   condition specified in this filter.
+ * @return A [ReducedGroupBy] containing the first [row][DataRow] matching the [predicate] (or a
+ *   [row][DataRow] with `null` values, except the grouping key) from each group.
  * @include [SelectingRows.RowFilterSnippet]
- *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of orders sorted by date and time,
  * // find the first order over 100 euros placed by each customer
@@ -253,15 +233,11 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * ```
  *
  * See also [last][GroupBy.last].
- *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
- * that satisfies a condition specified in this filter.
- *
- * @return A [ReducedGroupBy] containing the first [row][DataRow] matching the [predicate]
- * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
  */
 @Interpretable("GroupByReducePredicate")
-public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce { firstOrNull(predicate) }
+public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce {
+    firstOrNull(predicate)
+}
 
 // endregion
 
@@ -269,11 +245,13 @@ public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T
 
 /**
  * [Reduces][PivotDocs.Reducing] this [Pivot] by taking the first [row][DataRow] from each group,
- * and returns a [ReducedPivot] that contains the first [row][DataRow] from the corresponding group in each column.
+ * and returns a [ReducedPivot] that contains the first [row][DataRow] from the corresponding group
+ * in each column.
  *
  * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of real estate listings sorted by price,
  * // find the cheapest listing for each type of property (house, apartment, etc.)
@@ -282,22 +260,27 @@ public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T
  *
  * See also [pivot], [reduce][Pivot.reduce], [last][Pivot.last].
  *
- * @return A [ReducedPivot] containing in each column the first [row][DataRow] from the corresponding group.
+ * @return A [ReducedPivot] containing in each column the first [row][DataRow] from the
+ *   corresponding group.
  */
 public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
 
 /**
  * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
- * satisfying the given [predicate], and returns a [ReducedPivot] that contains the first row, matching the [predicate],
- * from the corresponding group in each column.
+ * satisfying the given [predicate], and returns a [ReducedPivot] that contains the first row,
+ * matching the [predicate], from the corresponding group in each column.
  *
  * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
  *
+ * @param [predicate] A [row filter][RowFilter] used to get the first value that satisfies a
+ *   condition specified in this filter.
+ * @return A [ReducedPivot] containing in each column the first [row][DataRow] that satisfies the
+ *   [predicate], from the corresponding group (or a [row][DataRow] with `null` values).
  * @include [SelectingRows.RowFilterSnippet]
- *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of real estate listings sorted by price,
  * // find the cheapest listing for each type of property (house, apartment, etc.)
@@ -306,29 +289,27 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  * ```
  *
  * See also [pivot], [reduce][Pivot.reduce], [last][Pivot.last].
- *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
- * that satisfies a condition specified in this filter.
- *
- * @return A [ReducedPivot] containing in each column the first [row][DataRow]
- * that satisfies the [predicate], from the corresponding group (or a [row][DataRow] with `null` values).
  */
-public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce { firstOrNull(predicate) }
+public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce {
+    firstOrNull(predicate)
+}
 
 // endregion
 
 // region PivotGroupBy
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking the first [row][DataRow]
- * from each combined [pivot] + [groupBy] group, and returns a [ReducedPivotGroupBy]
- * that contains the first row from each corresponding group.
- * If any combined [pivot] + [groupBy] group in [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy]
- * it will be represented by a [row][DataRow] with `null` values (except the grouping key).
+ * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking the first [row][DataRow] from
+ * each combined [pivot] + [groupBy] group, and returns a [ReducedPivotGroupBy] that contains the
+ * first row from each corresponding group. If any combined [pivot] + [groupBy] group in
+ * [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy] it will be represented by a
+ * [row][DataRow] with `null` values (except the grouping key).
  *
- * For more information about [PivotGroupBy] with examples: {@include [DocumentationUrls.PivotGroupBy]}
+ * For more information about [PivotGroupBy] with examples: {@include
+ * [DocumentationUrls.PivotGroupBy]}
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of real estate listings sorted by price,
  * // find the cheapest listing for each combination of type of property (house, apartment, etc.)
@@ -336,36 +317,38 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
  * df.pivot { type }.groupBy { city }.first().values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
+ * See also [groupBy][Pivot.groupBy], [pivot][GroupBy.pivot], [reduce][PivotGroupBy.reduce],
  * [last][PivotGroupBy.last].
  *
- * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
- * the first [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
- * or a [row][DataRow] with `null` values (except the grouping key) if this [DataFrame] is empty.
+ * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot]
+ *   key either the first [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group
+ *   pair, or a [row][DataRow] with `null` values (except the grouping key) if this [DataFrame] is
+ *   empty.
  */
 public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstOrNull() }
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy]
- * by taking from each combined [pivot] + [groupBy] group the first [row][DataRow] satisfying the given [predicate].
- * Returns a [ReducedPivotGroupBy] that contains the first row, matching the [predicate], from each corresponding group.
- * If any combined [pivot] + [groupBy] group in [PivotGroupBy] does not contain any rows matching the [predicate],
- * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
- * (except the grouping key).
+ * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each combined
+ * [pivot] + [groupBy] group the first [row][DataRow] satisfying the given [predicate]. Returns a
+ * [ReducedPivotGroupBy] that contains the first row, matching the [predicate], from each
+ * corresponding group. If any combined [pivot] + [groupBy] group in [PivotGroupBy] does not contain
+ * any rows matching the [predicate], in the resulting [ReducedPivotGroupBy] it will be represented
+ * by a [row][DataRow] with `null` values (except the grouping key).
  *
+ * @param [predicate] A [row filter][RowFilter] used to get the first value that satisfies a
+ *   condition specified in this filter.
+ * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot]
+ *   key either the first matching the [predicate] [row][DataRow] of the corresponding [DataFrame]
+ *   formed by this pivot–group pair, or a [row][DataRow] with `null` values if this [DataFrame]
+ *   does not contain any rows matching the [predicate].
  * @include [DocumentationUrls.PivotGroupBy]
- *
  * @include [DocumentationUrls.Pivot]
- *
  * @include [DocumentationUrls.GroupBy]
- *
  * @include [SelectingRows.RowFilterSnippet]
- *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * ### Example
+ *
  * ```kotlin
  * // In a DataFrame of real estate listings sorted by price,
  * // for each combination of type of property (house, apartment, etc.)
@@ -374,20 +357,12 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * df.pivot { type }.groupBy { city }.first { !soldOut }.values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
+ * See also [groupBy][Pivot.groupBy], [pivot][GroupBy.pivot], [reduce][PivotGroupBy.reduce],
  * [last][PivotGroupBy.last].
- *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
- * that satisfies a condition specified in this filter.
- *
- * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
- * the first matching the [predicate] [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
- * or a [row][DataRow] with `null` values if this [DataFrame] does not contain any rows matching the [predicate].
  */
-public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroupBy<T> =
-    reduce { firstOrNull(predicate) }
+public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroupBy<T> = reduce {
+    firstOrNull(predicate)
+}
 
 // endregion
 
@@ -403,26 +378,19 @@ public interface FirstColumnsSelectionDsl {
     /**
      * ## First (Col) Grammar
      *
-     * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DEFINITIONS]
-     *  {@include [DslGrammarTemplate.ColumnSetDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ColumnGroupDef]}
-     *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ConditionDef]}
-     * }
+     * @include [DslGrammarTemplate] {@set [DslGrammarTemplate.DEFINITIONS] {@include
+     *   [DslGrammarTemplate.ColumnSetDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ColumnGroupDef]} {@include [LineBreak]} {@include
+     *   [DslGrammarTemplate.ConditionDef]} }
      *
-     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
-     *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
-     * }
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS] {@include [PlainDslName]}` [ `**`{
+     * `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]` }
      *
-     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
-     * }
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnSetName]}` [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]` }
      *
-     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
-     * }
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS] {@include [Indent]}{@include
+     * [ColumnGroupName]}` [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]` }
      */
     public interface Grammar {
 
@@ -439,28 +407,30 @@ public interface FirstColumnsSelectionDsl {
     /**
      * ## First (Col)
      *
-     * Returns the first column from [this\] that adheres to the optional given [condition\].
-     * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
+     * Returns the first column from [this\] that adheres to the optional given [condition\]. If no
+     * column adheres to the given [condition\], [NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid
+     * confusion.
      *
      * ### Check out: [Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]`  {  `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]` {
+     * it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` {
+     * it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
      * {@get [Examples]}
      *
      * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn] containing the first column
-     *   that adheres to the given [condition\].
+     * @return A [SingleColumn] containing the first column that adheres to the given [condition\].
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [ColumnsSelectionDsl.last\]
      */
@@ -472,10 +442,12 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * @include [CommonFirstDocs]
-     * @set [CommonFirstDocs.Examples]
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[first][ColumnSet.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * @set [CommonFirstDocs.Examples] `df.`[select][DataFrame.select]` {
+     *   `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[first][ColumnSet.first]` {
+     *   it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[first][ColumnSet.first]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[first][ColumnSet.first]`() }`
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("First0")
@@ -488,11 +460,13 @@ public interface FirstColumnsSelectionDsl {
      * @include [CommonFirstDocs]
      * @set [CommonFirstDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  {  `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]` {
+     * it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     @Interpretable("First1")
-    public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        asSingleColumn().firstCol(condition)
+    public fun ColumnsSelectionDsl<*>.first(
+        condition: ColumnFilter<*> = { true }
+    ): SingleColumn<*> = asSingleColumn().firstCol(condition)
 
     /**
      * @include [CommonFirstDocs]
@@ -501,23 +475,27 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
      */
     @Interpretable("First2")
-    public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        this.ensureIsColumnGroup().asColumnSet().first(condition)
+    public fun SingleColumn<DataRow<*>>.firstCol(
+        condition: ColumnFilter<*> = { true }
+    ): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().first(condition)
 
     /**
      * @include [CommonFirstDocs]
-     * @set [CommonFirstDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * @set [CommonFirstDocs.Examples] `df.`[select][DataFrame.select]` {
+     *   "myColumnGroup".`[firstCol][String.firstCol]` {
+     *   it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun String.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 
     /**
      * @include [CommonFirstDocs]
-     * @set [CommonFirstDocs.Examples]
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[firstCol][SingleColumn.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * @set [CommonFirstDocs.Examples] `df.`[select][DataFrame.select]` {
+     *   Type::myColumnGroup.`[firstCol][SingleColumn.firstCol]` {
+     *   it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[firstCol][KProperty.firstCol]`() }`
+     * `df.`[select][DataFrame.select]` {
+     * DataSchemaType::myColumnGroup.`[firstCol][KProperty.firstCol]`() }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -526,8 +504,9 @@ public interface FirstColumnsSelectionDsl {
 
     /**
      * @include [CommonFirstDocs]
-     * @set [CommonFirstDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[firstCol][ColumnPath.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * @set [CommonFirstDocs.Examples] `df.`[select][DataFrame.select]` {
+     *   "pathTo"["myColumnGroup"].`[firstCol][ColumnPath.firstCol]` {
+     *   it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun ColumnPath.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)

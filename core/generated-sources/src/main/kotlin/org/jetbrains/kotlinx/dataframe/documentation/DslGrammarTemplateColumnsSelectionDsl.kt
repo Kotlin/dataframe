@@ -3,8 +3,6 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -19,57 +17,36 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 public interface DslGrammarTemplateColumnsSelectionDsl {
 
     /**
-     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * ### Definitions:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### Definitions:
-     *
-     *
-     *
-     *
+     * ### What can be called directly in the
+     * [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      *
+     * ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *
-     *
-     *
-     *
+     * [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
-     *
-     *
-     *
-     *
-     *
+     * ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
-     *
-     *
-     *
+     * [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      */
     public interface DslGrammarTemplate {
 
@@ -84,7 +61,8 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         // region Definitions for at the top of the template
 
         /**
-         * `columnGroupReference: `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `columnGroupReference: `[`String`][String]` |
+         * `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public typealias ColumnGroupNoSingleColumnDef = Nothing
 
@@ -95,19 +73,32 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         public typealias ColumnsSelectorDef = Nothing
 
         /**
-         * `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` |
+         * `[`String`][String]` |
+         * `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public typealias ColumnDef = Nothing
 
         /**
-         * `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `columnGroup:
+         * `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>
+         * | `[`String`][String]` |
+         * `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public typealias ColumnGroupDef = Nothing
 
-        /** `columnNoAccessor: `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
+        /**
+         * `columnNoAccessor: `[`String`][String]` |
+         * `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         */
         public typealias ColumnNoAccessorDef = Nothing
 
-        /** `columnOrSet: `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef] */
+        /**
+         * `columnOrSet:
+         * `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`
+         * |
+         * `[`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+         */
         public typealias ColumnOrColumnSetDef = Nothing
 
         /** `columnSet: `[`ColumnSet`][ColumnSet]`<*>` */
@@ -119,7 +110,10 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         /** `condition: `[`ColumnFilter`][ColumnFilter] */
         public typealias ConditionDef = Nothing
 
-        /** `expression: `[Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] */
+        /**
+         * `expression: `[Column
+         * Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression]
+         */
         public typealias ColumnExpressionDef = Nothing
 
         /** `ignoreCase: `[`Boolean`][Boolean] */
@@ -150,7 +144,8 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         public typealias RegexDef = Nothing
 
         /**
-         * `singleColumn: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
+         * `singleColumn:
+         * `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
          */
         public typealias SingleColumnDef = Nothing
 

@@ -1,6 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.io.local
 
 import io.kotest.matchers.shouldBe
+import java.math.BigDecimal
+import java.sql.Connection
+import java.sql.Date
+import java.sql.DriverManager
+import java.sql.SQLException
+import java.sql.Time
+import java.sql.Timestamp
+import java.sql.Types
+import java.util.UUID
+import kotlin.reflect.typeOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -27,16 +37,6 @@ import org.postgresql.geometric.PGpolygon
 import org.postgresql.util.PGInterval
 import org.postgresql.util.PGmoney
 import org.postgresql.util.PGobject
-import java.math.BigDecimal
-import java.sql.Connection
-import java.sql.Date
-import java.sql.DriverManager
-import java.sql.SQLException
-import java.sql.Time
-import java.sql.Timestamp
-import java.sql.Types
-import java.util.UUID
-import kotlin.reflect.typeOf
 
 private const val BASIC_URL = "jdbc:postgresql://localhost:5432/test"
 private const val USER_NAME = "postgres"
@@ -99,7 +99,8 @@ internal fun createTestData(connection: Connection) {
     connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
     connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
 
-    val createTableStatement = """
+    val createTableStatement =
+        """
         CREATE TABLE IF NOT EXISTS table1 (
         id serial PRIMARY KEY,
         bigintCol bigint not null,
@@ -127,7 +128,8 @@ internal fun createTestData(connection: Connection) {
         """
     connection.createStatement().execute(createTableStatement.trimIndent())
 
-    val createTableQuery = """
+    val createTableQuery =
+        """
         CREATE TABLE IF NOT EXISTS table2 (
         id serial PRIMARY KEY,
         lineCol line not null,
@@ -154,7 +156,8 @@ internal fun createTestData(connection: Connection) {
     connection.createStatement().execute(createTableQuery.trimIndent())
 
     @Language("SQL")
-    val insertData1 = """
+    val insertData1 =
+        """
         INSERT INTO table1 (
             bigintCol, smallintCol, bigserialCol,  booleanCol, 
             boxCol, byteaCol, characterCol, characterNCol, charCol, 
@@ -165,7 +168,8 @@ internal fun createTestData(connection: Connection) {
         """
 
     @Language("SQL")
-    val insertData2 = """
+    val insertData2 =
+        """
         INSERT INTO table2 (
             lineCol, lsegCol, macaddrCol, moneyCol, numericCol, 
             pathCol, pointCol, polygonCol, realCol, smallintCol, 
@@ -177,7 +181,11 @@ internal fun createTestData(connection: Connection) {
 
     val intArray = connection.createArrayOf("INTEGER", arrayOf(1, 2, 3))
     val doubleArray = connection.createArrayOf("DOUBLE", arrayOf(1.1, 2.2, 3.3))
-    val dateArray = connection.createArrayOf("DATE", arrayOf(Date.valueOf("2023-08-01"), Date.valueOf("2023-08-02")))
+    val dateArray =
+        connection.createArrayOf(
+            "DATE",
+            arrayOf(Date.valueOf("2023-08-01"), Date.valueOf("2023-08-02")),
+        )
     val textArray = connection.createArrayOf("TEXT", arrayOf("Hello", "World"))
     val booleanArray = connection.createArrayOf("BOOLEAN", arrayOf(true, false, true))
 
@@ -331,7 +339,8 @@ class PostgresTest {
                 t2.textCol
             FROM table1 t1
             JOIN table2 t2 ON t1.id = t2.id
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>()
         val result = df.filter { "id"<Int>() == 1 }
@@ -357,9 +366,7 @@ class PostgresTest {
         val table2Df = dataframes[1].cast<Table2>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter {
-            "pathcol"<PGpath>() == PGpath("((1,2),(3,1))")
-        }.rowsCount() shouldBe 1
+        table2Df.filter { "pathcol"<PGpath>() == PGpath("((1,2),(3,1))") }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
     }
 
@@ -367,39 +374,32 @@ class PostgresTest {
     fun `read columns of different types to check type mapping`() {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
-        val result = df1.select("smallintcol")
-            .add("smallintcol2") { "smallintcol"<Int>() }
+        val result = df1.select("smallintcol").add("smallintcol2") { "smallintcol"<Int>() }
         result[0][1] shouldBe 11
 
-        val result1 = df1.select("bigserialcol")
-            .add("bigserialcol2") { "bigserialcol"<Long>() }
+        val result1 = df1.select("bigserialcol").add("bigserialcol2") { "bigserialcol"<Long>() }
         result1[0][1] shouldBe 1000000001L
 
-        val result2 = df1.select("doublecol")
-            .add("doublecol2") { "doublecol"<Double>() }
+        val result2 = df1.select("doublecol").add("doublecol2") { "doublecol"<Double>() }
         result2[0][1] shouldBe 12.34
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
 
-        val result3 = df2.select("moneycol")
-            .add("moneycol2") { "moneycol"<PGmoney?>() }
+        val result3 = df2.select("moneycol").add("moneycol2") { "moneycol"<PGmoney?>() }
         (result3[0][1] as PGmoney).`val` shouldBe 123.45
 
-        val result4 = df2.select("numericcol")
-            .add("numericcol2") { "numericcol"<BigDecimal>() }
+        val result4 = df2.select("numericcol").add("numericcol2") { "numericcol"<BigDecimal>() }
         result4[0][1] shouldBe BigDecimal("12.34")
 
-        val result5 = df2.select("realcol")
-            .add("realcol2") { "realcol"<Float>() }
+        val result5 = df2.select("realcol").add("realcol2") { "realcol"<Float>() }
         result5[0][1] shouldBe 12.34f
 
-        val result7 = df2.select("smallserialcol")
-            .add("smallserialcol2") { "smallserialcol"<Int>() }
+        val result7 =
+            df2.select("smallserialcol").add("smallserialcol2") { "smallserialcol"<Int>() }
         result7[0][1] shouldBe 1001
 
-        val result8 = df2.select("serialcol")
-            .add("serialcol2") { "serialcol"<Int>() }
+        val result8 = df2.select("serialcol").add("serialcol2") { "serialcol"<Int>() }
         result8[0][1] shouldBe 1000001
 
         val schema = DataFrameSchema.readSqlTable(connection, tableName1)

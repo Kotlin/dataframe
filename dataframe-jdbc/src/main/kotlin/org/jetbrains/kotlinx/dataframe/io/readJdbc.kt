@@ -1,6 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.sql.Connection
+import java.sql.DatabaseMetaData
+import java.sql.DriverManager
+import java.sql.PreparedStatement
+import java.sql.ResultSet
+import javax.sql.DataSource
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -11,20 +20,10 @@ import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.`dataframe-jdbc`.BuildConfig
-import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import java.sql.Connection
-import java.sql.DatabaseMetaData
-import java.sql.DriverManager
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import javax.sql.DataSource
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubclassOf
 
 private val logger = KotlinLogging.logger {}
 
@@ -37,21 +36,22 @@ private val logger = KotlinLogging.logger {}
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
- * and only permits safe `SELECT` operations internally.
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents
+ * data-modifying queries and only permits safe `SELECT` operations internally.
  *
  * @param [dbConfig] the configuration for the database, including URL, user, and password.
  * @param [tableName] the name of the table to read data from.
- * @param [limit] the maximum number of rows to retrieve from the table.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ * @param [limit] the maximum number of rows to retrieve from the table. `null` (default) means no
+ *   limit - all available rows will be fetched or positive integer (e.g., `100`) - fetch at most
+ *   that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dbConfig].
- * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
- *                           Default is `true` for strict validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [strictValidation] if `true`, the method validates that the provided table name is in a
+ *   valid format. Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
  * @return the DataFrame containing the data from the SQL table.
  */
 public fun DataFrame.Companion.readSqlTable(
@@ -65,7 +65,15 @@ public fun DataFrame.Companion.readSqlTable(
 ): AnyFrame {
     validateLimit(limit)
     return withReadOnlyConnection(dbConfig, dbType) { conn ->
-        readSqlTable(conn, tableName, limit, inferNullability, dbType, strictValidation, configureStatement)
+        readSqlTable(
+            conn,
+            tableName,
+            limit,
+            inferNullability,
+            dbType,
+            strictValidation,
+            configureStatement,
+        )
     }
 }
 
@@ -74,18 +82,18 @@ public fun DataFrame.Companion.readSqlTable(
  *
  * @param [dataSource] the [DataSource] to get a database connection from.
  * @param [tableName] the name of the table to read data from.
- * @param [limit] the maximum number of rows to retrieve from the table.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ * @param [limit] the maximum number of rows to retrieve from the table. `null` (default) means no
+ *   limit - all available rows will be fetched or positive integer (e.g., `100`) - fetch at most
+ *   that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dataSource].
- * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
- *                           Default is `true` for strict validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [dataSource].
+ * @param [strictValidation] if `true`, the method validates that the provided table name is in a
+ *   valid format. Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
  * @return the DataFrame containing the data from the SQL table.
- *
  * @see [DataSource.getConnection]
  */
 public fun DataFrame.Companion.readSqlTable(
@@ -116,18 +124,18 @@ public fun DataFrame.Companion.readSqlTable(
  *
  * @param [connection] the database connection to read tables from.
  * @param [tableName] the name of the table to read data from.
- * @param [limit] the maximum number of rows to retrieve from the table.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ * @param [limit] the maximum number of rows to retrieve from the table. `null` (default) means no
+ *   limit - all available rows will be fetched or positive integer (e.g., `100`) - fetch at most
+ *   that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [connection].
- * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
- *                           Default is `true` for strict validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [connection].
+ * @param [strictValidation] if `true`, the method validates that the provided table name is in a
+ *   valid format. Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
  * @return the DataFrame containing the data from the SQL table.
- *
  * @see [DriverManager.getConnection]
  */
 public fun DataFrame.Companion.readSqlTable(
@@ -145,7 +153,9 @@ public fun DataFrame.Companion.readSqlTable(
             "The provided table name '$tableName' is invalid. Please ensure it matches a valid table name in the database schema."
         }
     } else {
-        logger.warn { "Strict validation is disabled. Make sure the table name '$tableName' is correct." }
+        logger.warn {
+            "Strict validation is disabled. Make sure the table name '$tableName' is correct."
+        }
     }
 
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
@@ -167,14 +177,17 @@ public fun DataFrame.Companion.readSqlTable(
  * Reads a data frame from the specified database using the provided SQL query and configurations.
  *
  * @param [connection] The database connection to be used for executing the query.
- * @param [sqlQuery]  The SQL query string to be executed.
- * @param [determinedDbType]  The type of database being accessed, which determines specific configurations.
- * @param [configureStatement]  A lambda function to configure the prepared statement before execution.
- * @param [limit] the maximum number of rows to retrieve from the table.
- *                `null` (default) means no limit - all available rows will be fetched.
- * @param [inferNullability]  A flag to determine whether to infer nullability for result set fields.
+ * @param [sqlQuery] The SQL query string to be executed.
+ * @param [determinedDbType] The type of database being accessed, which determines specific
+ *   configurations.
+ * @param [configureStatement] A lambda function to configure the prepared statement before
+ *   execution.
+ * @param [limit] the maximum number of rows to retrieve from the table. `null` (default) means no
+ *   limit - all available rows will be fetched.
+ * @param [inferNullability] A flag to determine whether to infer nullability for result set fields.
  * @return The data frame constructed from the database query results.
- * @throws [IllegalStateException]  If an error occurs while reading from the database or processing the data.
+ * @throws [IllegalStateException] If an error occurs while reading from the database or processing
+ *   the data.
  */
 private fun executeQueryAndBuildDataFrame(
     connection: Connection,
@@ -186,17 +199,26 @@ private fun executeQueryAndBuildDataFrame(
 ): AnyFrame =
     try {
         connection.prepareStatement(sqlQuery).use { statement ->
-            logger.debug { "Connection established successfully (${connection.metaData.databaseProductName})" }
+            logger.debug {
+                "Connection established successfully (${connection.metaData.databaseProductName})"
+            }
             determinedDbType.configureReadStatement(statement)
             configureStatement(statement)
             logger.debug { "Executing query: $sqlQuery" }
             statement.executeQuery().use { rs ->
                 val tableColumns = getTableColumnsMetadata(rs, determinedDbType)
-                fetchAndConvertDataFromResultSet(determinedDbType, tableColumns, rs, limit, inferNullability)
+                fetchAndConvertDataFromResultSet(
+                    determinedDbType,
+                    tableColumns,
+                    rs,
+                    limit,
+                    inferNullability,
+                )
             }
         }
     } catch (e: java.sql.SQLException) {
-        // Provide the same type for all SQLExceptions from JDBC and enrich with additional information
+        // Provide the same type for all SQLExceptions from JDBC and enrich with additional
+        // information
         logger.error(e) { "Database operation failed: $sqlQuery" }
         throw IllegalStateException(
             "Failed to read from database. Query: $sqlQuery, Database: ${determinedDbType.dbTypeInJdbcUrl}",
@@ -211,8 +233,8 @@ private fun executeQueryAndBuildDataFrame(
 /**
  * Converts the result of an SQL query to the DataFrame.
  *
- * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any
+ * manipulation. It should not contain `;` symbol.
  *
  * ### Default Behavior:
  * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
@@ -220,21 +242,23 @@ private fun executeQueryAndBuildDataFrame(
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
- * and only permits safe `SELECT` operations internally.
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents
+ * data-modifying queries and only permits safe `SELECT` operations internally.
  *
- * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
+ * @param [dbConfig] the database configuration to connect to the database, including URL, user, and
+ *   password.
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dbConfig].
- * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
- *                           Default is `true` for strict validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [strictValidation] if `true`, the method validates that the provided query is in a valid
+ *   format. Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun DataFrame.Companion.readSqlQuery(
@@ -248,30 +272,38 @@ public fun DataFrame.Companion.readSqlQuery(
 ): AnyFrame {
     validateLimit(limit)
     return withReadOnlyConnection(dbConfig, dbType) { conn ->
-        readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, strictValidation, configureStatement)
+        readSqlQuery(
+            conn,
+            sqlQuery,
+            limit,
+            inferNullability,
+            dbType,
+            strictValidation,
+            configureStatement,
+        )
     }
 }
 
 /**
  * Converts the result of an SQL query to the DataFrame.
  *
- * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any
+ * manipulation. It should not contain `;` symbol.
  *
  * @param [dataSource] the [DataSource] to obtain a database connection from.
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dataSource].
- * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
- *                           Default is `true` for strict validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [dataSource].
+ * @param [strictValidation] if `true`, the method validates that the provided query is in a valid
+ *   format. Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
  * @return the DataFrame containing the result of the SQL query.
- *
  * @see [DataSource.getConnection]
  */
 public fun DataFrame.Companion.readSqlQuery(
@@ -285,30 +317,38 @@ public fun DataFrame.Companion.readSqlQuery(
 ): AnyFrame {
     validateLimit(limit)
     dataSource.connection.use { connection ->
-        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, strictValidation, configureStatement)
+        return readSqlQuery(
+            connection,
+            sqlQuery,
+            limit,
+            inferNullability,
+            dbType,
+            strictValidation,
+            configureStatement,
+        )
     }
 }
 
 /**
  * Converts the result of an SQL query to the DataFrame.
  *
- * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any
+ * manipulation. It should not contain `;` symbol.
  *
  * @param [connection] the database connection to execute the SQL query.
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [connection].
- * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
- *                           Default is `true` for strict validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [connection].
+ * @param [strictValidation] if `true`, the method validates that the provided query is in a valid
+ *   format. Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
  * @return the DataFrame containing the result of the SQL query.
- *
  * @see [DriverManager.getConnection]
  */
 public fun DataFrame.Companion.readSqlQuery(
@@ -327,14 +367,15 @@ public fun DataFrame.Companion.readSqlQuery(
                 "Also it should not contain any separators like `;`."
         }
     } else {
-        logger.warn { "Strict validation is disabled. Ensure the SQL query '$sqlQuery' is correct and safe." }
+        logger.warn {
+            "Strict validation is disabled. Ensure the SQL query '$sqlQuery' is correct and safe."
+        }
     }
 
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    val internalSqlQuery = limit?.let {
-        determinedDbType.buildSqlQueryWithLimit(sqlQuery, it)
-    } ?: sqlQuery
+    val internalSqlQuery =
+        limit?.let { determinedDbType.buildSqlQueryWithLimit(sqlQuery, it) } ?: sqlQuery
 
     return executeQueryAndBuildDataFrame(
         connection,
@@ -355,23 +396,23 @@ public fun DataFrame.Companion.readSqlQuery(
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
- * and only permits safe `SELECT` operations internally.
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents
+ * data-modifying queries and only permits safe `SELECT` operations internally.
  *
- * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
- * It should be a name of one of the existing SQL tables,
- * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table. It should be a
+ *   name of one of the existing SQL tables, or the SQL query should start from SELECT and contain
+ *   one query for reading data without any manipulation. It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [DbConnectionConfig].
- * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
- * Default is `true` for strict validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [DbConnectionConfig].
+ * @param [strictValidation] if `true`, the method validates that the provided query or table name
+ *   is in a valid format. Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun DbConnectionConfig.readDataFrame(
@@ -384,49 +425,52 @@ public fun DbConnectionConfig.readDataFrame(
 ): AnyFrame {
     validateLimit(limit)
     return when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
-            this,
-            sqlQueryOrTableName,
-            limit,
-            inferNullability,
-            dbType,
-            strictValidation,
-            configureStatement,
-        )
+        isSqlQuery(sqlQueryOrTableName) ->
+            DataFrame.readSqlQuery(
+                this,
+                sqlQueryOrTableName,
+                limit,
+                inferNullability,
+                dbType,
+                strictValidation,
+                configureStatement,
+            )
 
-        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
-            this,
-            sqlQueryOrTableName,
-            limit,
-            inferNullability,
-            dbType,
-            strictValidation,
-            configureStatement,
-        )
+        isSqlTableName(sqlQueryOrTableName) ->
+            DataFrame.readSqlTable(
+                this,
+                sqlQueryOrTableName,
+                limit,
+                inferNullability,
+                dbType,
+                strictValidation,
+                configureStatement,
+            )
 
-        else -> throw IllegalArgumentException(
-            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
-        )
+        else ->
+            throw IllegalArgumentException(
+                "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!"
+            )
     }
 }
 
 /**
  * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
  *
- * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
- * It should be a name of one of the existing SQL tables,
- * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table. It should be a
+ *   name of one of the existing SQL tables, or the SQL query should start from SELECT and contain
+ *   one query for reading data without any manipulation. It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [Connection].
- * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
- * Default is `true` for strict validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [Connection].
+ * @param [strictValidation] if `true`, the method validates that the provided query or table name
+ *   is in a valid format. Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun Connection.readDataFrame(
@@ -439,29 +483,32 @@ public fun Connection.readDataFrame(
 ): AnyFrame {
     validateLimit(limit)
     return when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
-            this,
-            sqlQueryOrTableName,
-            limit,
-            inferNullability,
-            dbType,
-            strictValidation,
-            configureStatement,
-        )
+        isSqlQuery(sqlQueryOrTableName) ->
+            DataFrame.readSqlQuery(
+                this,
+                sqlQueryOrTableName,
+                limit,
+                inferNullability,
+                dbType,
+                strictValidation,
+                configureStatement,
+            )
 
-        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
-            this,
-            sqlQueryOrTableName,
-            limit,
-            inferNullability,
-            dbType,
-            strictValidation,
-            configureStatement,
-        )
+        isSqlTableName(sqlQueryOrTableName) ->
+            DataFrame.readSqlTable(
+                this,
+                sqlQueryOrTableName,
+                limit,
+                inferNullability,
+                dbType,
+                strictValidation,
+                configureStatement,
+            )
 
-        else -> throw IllegalArgumentException(
-            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
-        )
+        else ->
+            throw IllegalArgumentException(
+                "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!"
+            )
     }
 }
 
@@ -487,22 +534,21 @@ public fun Connection.readDataFrame(
  * val queryDF = dataSource.readDataFrame("SELECT * FROM orders WHERE amount > 100")
  * ```
  *
- * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
- * It should be a name of one of the existing SQL tables,
- * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table. It should be a
+ *   name of one of the existing SQL tables, or the SQL query should start from SELECT and contain
+ *   one query for reading data without any manipulation. It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [DataSource].
- * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
- * Default is `true` for strict validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [DataSource].
+ * @param [strictValidation] if `true`, the method validates that the provided query or table name
+ *   is in a valid format. Default is `true` for strict validation.
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
  * @return the DataFrame containing the result of the SQL query.
- *
  * @see [DataSource.getConnection]
  */
 public fun DataSource.readDataFrame(
@@ -516,29 +562,32 @@ public fun DataSource.readDataFrame(
     validateLimit(limit)
     connection.use { conn ->
         return when {
-            isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
-                conn,
-                sqlQueryOrTableName,
-                limit,
-                inferNullability,
-                dbType,
-                strictValidation,
-                configureStatement,
-            )
+            isSqlQuery(sqlQueryOrTableName) ->
+                DataFrame.readSqlQuery(
+                    conn,
+                    sqlQueryOrTableName,
+                    limit,
+                    inferNullability,
+                    dbType,
+                    strictValidation,
+                    configureStatement,
+                )
 
-            isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
-                conn,
-                sqlQueryOrTableName,
-                limit,
-                inferNullability,
-                dbType,
-                strictValidation,
-                configureStatement,
-            )
+            isSqlTableName(sqlQueryOrTableName) ->
+                DataFrame.readSqlTable(
+                    conn,
+                    sqlQueryOrTableName,
+                    limit,
+                    inferNullability,
+                    dbType,
+                    strictValidation,
+                    configureStatement,
+                )
 
-            else -> throw IllegalArgumentException(
-                "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
-            )
+            else ->
+                throw IllegalArgumentException(
+                    "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!"
+                )
         }
     }
 }
@@ -554,15 +603,14 @@ public fun DataSource.readDataFrame(
  *
  * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
  *
- * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
- * Its state may be altered after the read operation.
+ * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read. Its state may
+ *   be altered after the read operation.
  * @param [dbType] the type of database that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
- *
  * @see [java.sql.ResultSet]
  */
 public fun DataFrame.Companion.readResultSet(
@@ -573,7 +621,13 @@ public fun DataFrame.Companion.readResultSet(
 ): AnyFrame {
     validateLimit(limit)
     val tableColumns = getTableColumnsMetadata(resultSet, dbType)
-    return fetchAndConvertDataFromResultSet(dbType, tableColumns, resultSet, limit, inferNullability)
+    return fetchAndConvertDataFromResultSet(
+        dbType,
+        tableColumns,
+        resultSet,
+        limit,
+        inferNullability,
+    )
 }
 
 /**
@@ -589,14 +643,17 @@ public fun DataFrame.Companion.readResultSet(
  *
  * @param [dbType] the type of database that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
- *
  * @see [java.sql.ResultSet]
  */
-public fun ResultSet.readDataFrame(dbType: DbType, limit: Int? = null, inferNullability: Boolean = true): AnyFrame {
+public fun ResultSet.readDataFrame(
+    dbType: DbType,
+    limit: Int? = null,
+    inferNullability: Boolean = true,
+): AnyFrame {
     validateLimit(limit)
     return DataFrame.readResultSet(this, dbType, limit, inferNullability)
 }
@@ -612,18 +669,17 @@ public fun ResultSet.readDataFrame(dbType: DbType, limit: Int? = null, inferNull
  *
  * __NOTE:__ Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
  *
- * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
- * Its state may be altered after the read operation.
+ * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read. Its state may
+ *   be altered after the read operation.
  * @param [connection] the connection to the database (it's required to extract the database type)
- * that the [ResultSet] belongs to.
+ *   that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [resultSet].
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [resultSet].
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
- *
  * @see [java.sql.ResultSet]
  */
 public fun DataFrame.Companion.readResultSet(
@@ -651,15 +707,14 @@ public fun DataFrame.Companion.readResultSet(
  * __NOTE:__ Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
  *
  * @param [connection] the connection to the database (it's required to extract the database type)
- * that the [ResultSet] belongs to.
+ *   that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ *   `null` (default) means no limit - all available rows will be fetched or positive integer (e.g.,
+ *   `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [ResultSet].
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [ResultSet].
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
- *
  * @see [java.sql.ResultSet]
  */
 public fun ResultSet.readDataFrame(
@@ -673,8 +728,8 @@ public fun ResultSet.readDataFrame(
 }
 
 /**
- * Reads all non-system tables from a database and returns them
- * as a map of SQL tables and corresponding dataframes using the provided database configuration and limit.
+ * Reads all non-system tables from a database and returns them as a map of SQL tables and
+ * corresponding dataframes using the provided database configuration and limit.
  *
  * ### Default Behavior:
  * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
@@ -682,20 +737,24 @@ public fun ResultSet.readDataFrame(
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
- * and only permits safe `SELECT` operations internally.
+ * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents
+ * data-modifying queries and only permits safe `SELECT` operations internally.
  *
- * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @param [limit] the maximum number of rows to read from each table.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
- * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
+ * @param [dbConfig] the database configuration to connect to the database, including URL, user, and
+ *   password.
+ * @param [limit] the maximum number of rows to read from each table. `null` (default) means no
+ *   limit - all available rows will be fetched or positive integer (e.g., `100`) - fetch at most
+ *   that many rows
+ * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value
+ *   retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dbConfig].
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
- * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
+ * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the
+ *   database.
  */
 public fun DataFrame.Companion.readAllSqlTables(
     dbConfig: DbConnectionConfig,
@@ -712,8 +771,8 @@ public fun DataFrame.Companion.readAllSqlTables(
 }
 
 /**
- * Reads all non-system tables from a database and returns them
- * as a map of SQL tables and corresponding dataframes.
+ * Reads all non-system tables from a database and returns them as a map of SQL tables and
+ * corresponding dataframes.
  *
  * ### Example with HikariCP:
  * ```kotlin
@@ -736,17 +795,19 @@ public fun DataFrame.Companion.readAllSqlTables(
  * ```
  *
  * @param [dataSource] the [DataSource] to get a database connection from.
- * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
- * @param [limit] the maximum number of rows to read from each table.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
+ * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value
+ *   retrieves tables from all catalogs.
+ * @param [limit] the maximum number of rows to read from each table. `null` (default) means no
+ *   limit - all available rows will be fetched or positive integer (e.g., `100`) - fetch at most
+ *   that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dataSource].
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
- * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
- *
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [dataSource].
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
+ * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the
+ *   database.
  * @see [DataSource.getConnection]
  */
 public fun DataFrame.Companion.readAllSqlTables(
@@ -759,26 +820,35 @@ public fun DataFrame.Companion.readAllSqlTables(
 ): Map<String, AnyFrame> {
     validateLimit(limit)
     dataSource.connection.use { connection ->
-        return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType, configureStatement)
+        return readAllSqlTables(
+            connection,
+            catalogue,
+            limit,
+            inferNullability,
+            dbType,
+            configureStatement,
+        )
     }
 }
 
 /**
- * Reads all non-system tables from a database and returns them
- * as a map of SQL tables and corresponding dataframes.
+ * Reads all non-system tables from a database and returns them as a map of SQL tables and
+ * corresponding dataframes.
  *
  * @param [connection] the database connection to read tables from.
- * @param [limit] the maximum number of rows to read from each table.
- *                `null` (default) means no limit - all available rows will be fetched
- *                or positive integer (e.g., `100`) - fetch at most that many rows
- * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
+ * @param [limit] the maximum number of rows to read from each table. `null` (default) means no
+ *   limit - all available rows will be fetched or positive integer (e.g., `100`) - fetch at most
+ *   that many rows
+ * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value
+ *   retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [connection].
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
- *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
- * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
- *
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional,
+ *   default is `null`, in that case the [dbType] will be recognized from the [connection].
+ * @param [configureStatement] optional lambda to configure the [PreparedStatement] before
+ *   execution. This allows for custom tuning of fetch size, query timeout, and other JDBC
+ *   parameters.
+ * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the
+ *   database.
  * @see [DriverManager.getConnection]
  */
 public fun DataFrame.Companion.readAllSqlTables(
@@ -798,36 +868,45 @@ public fun DataFrame.Companion.readAllSqlTables(
         while (tablesResultSet.next()) {
             val tableMetadata = determinedDbType.buildTableMetadata(tablesResultSet)
 
-            // We filter here a second time because of specific logic with SQLite and possible issues with future databases
+            // We filter here a second time because of specific logic with SQLite and possible
+            // issues with future databases
             if (determinedDbType.isSystemTable(tableMetadata)) {
                 continue
             }
 
-            val fullTableName = buildFullTableName(catalogue, tableMetadata.schemaName, tableMetadata.name)
+            val fullTableName =
+                buildFullTableName(catalogue, tableMetadata.schemaName, tableMetadata.name)
 
-            val dataFrame = readTableAsDataFrame(
-                connection,
-                fullTableName,
-                limit,
-                inferNullability,
-                dbType,
-                configureStatement,
-            )
+            val dataFrame =
+                readTableAsDataFrame(
+                    connection,
+                    fullTableName,
+                    limit,
+                    inferNullability,
+                    dbType,
+                    configureStatement,
+                )
 
             put(fullTableName, dataFrame)
         }
     }
 }
 
-private fun retrieveTableMetadata(metaData: DatabaseMetaData, catalogue: String?, dbType: DbType): ResultSet {
-    // Exclude system- and other tables without data (it looks like it is supported badly for many databases)
+private fun retrieveTableMetadata(
+    metaData: DatabaseMetaData,
+    catalogue: String?,
+    dbType: DbType,
+): ResultSet {
+    // Exclude system- and other tables without data (it looks like it is supported badly for many
+    // databases)
     val tableTypes = dbType.tableTypes?.toTypedArray()
     return metaData.getTables(catalogue, null, null, tableTypes)
 }
 
 private fun buildFullTableName(catalogue: String?, schemaName: String?, tableName: String): String {
     // TODO: both cases is schema specified or not in URL
-    // in h2 database name is recognized as a schema name https://www.h2database.com/html/features.html#database_url
+    // in h2 database name is recognized as a schema name
+    // https://www.h2database.com/html/features.html#database_url
     // https://stackoverflow.com/questions/20896935/spring-hibernate-h2-database-schema-not-found
     // could be Dialect/Database specific
     return when {
@@ -847,23 +926,26 @@ private fun readTableAsDataFrame(
 ): AnyFrame {
     logger.debug { "Reading table: $tableName" }
 
-    val dataFrame = DataFrame.readSqlTable(
-        connection,
-        tableName,
-        limit,
-        inferNullability,
-        dbType,
-        true,
-        configureStatement,
-    )
+    val dataFrame =
+        DataFrame.readSqlTable(
+            connection,
+            tableName,
+            limit,
+            inferNullability,
+            dbType,
+            true,
+            configureStatement,
+        )
 
     logger.debug { "Finished reading table: $tableName" }
 
     return dataFrame
 }
 
-internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): List<TableColumnMetadata> =
-    dbType.getTableColumnsMetadata(resultSet)
+internal fun getTableColumnsMetadata(
+    resultSet: ResultSet,
+    dbType: DbType,
+): List<TableColumnMetadata> = dbType.getTableColumnsMetadata(resultSet)
 
 /**
  * Fetches and converts data from a ResultSet into a [DataFrame].
@@ -873,18 +955,18 @@ internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): List
  * - For each column (inside [readAndPreprocessRowsFromResultSet]):
  *     - Fetches each individual value from the [ResultSet] using [DbType.getValueFromResultSet]
  *       with the return type defined by [DbType.getExpectedJdbcType].
- *     - Potentially preprocesses the value using [DbType.preprocessValue]
- *       with the return type defined by [DbType.getPreprocessedValueType].
+ *     - Potentially preprocesses the value using [DbType.preprocessValue] with the return type
+ *       defined by [DbType.getPreprocessedValueType].
  * - From the resulting list of columns,`List<List<Any?>>`, (inside [buildDataFrameFromColumnData]):
- *     - Uses [DbType.buildDataColumn] to turn each list of values into a [DataColumn]
- *       with the correct structure defined by [DbType.getTargetColumnSchema].
+ *     - Uses [DbType.buildDataColumn] to turn each list of values into a [DataColumn] with the
+ *       correct structure defined by [DbType.getTargetColumnSchema].
  *     - Turns the result into a [DataFrame].
  *
  * @param [tableColumns] a list containing the column metadata for the table.
  * @param [rs] the ResultSet object containing the data to be fetched and converted.
  * @param [dbType] the type of the database.
- * @param [limit] the maximum number of rows to retrieve from the table.
- *                `null` (default) means no limit - all available rows will be fetched.
+ * @param [limit] the maximum number of rows to retrieve from the table. `null` (default) means no
+ *   limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @return A [DataFrame] containing the fetched and converted data.
  */
@@ -895,37 +977,38 @@ internal fun fetchAndConvertDataFromResultSet(
     limit: Int?,
     inferNullability: Boolean,
 ): AnyFrame {
-    val expectedJdbcTypes = getExpectedJdbcTypes(
-        dbType = dbType,
-        tableColumns = tableColumns,
-    )
-    val preprocessedValueTypes = getPreprocessedValueTypes(
-        dbType = dbType,
-        tableColumns = tableColumns,
-        expectedJdbcTypes = expectedJdbcTypes,
-    )
-    val targetColumnSchemas = getTargetColumnSchemas(
-        dbType = dbType,
-        tableColumns = tableColumns,
-        preprocessedValueTypes = preprocessedValueTypes,
-    )
+    val expectedJdbcTypes = getExpectedJdbcTypes(dbType = dbType, tableColumns = tableColumns)
+    val preprocessedValueTypes =
+        getPreprocessedValueTypes(
+            dbType = dbType,
+            tableColumns = tableColumns,
+            expectedJdbcTypes = expectedJdbcTypes,
+        )
+    val targetColumnSchemas =
+        getTargetColumnSchemas(
+            dbType = dbType,
+            tableColumns = tableColumns,
+            preprocessedValueTypes = preprocessedValueTypes,
+        )
 
-    val columnData = readAndPreprocessRowsFromResultSet(
-        rs = rs,
-        tableColumns = tableColumns,
-        expectedJdbcTypes = expectedJdbcTypes,
-        preprocessedValueTypes = preprocessedValueTypes,
-        dbType = dbType,
-        limit = limit,
-    )
+    val columnData =
+        readAndPreprocessRowsFromResultSet(
+            rs = rs,
+            tableColumns = tableColumns,
+            expectedJdbcTypes = expectedJdbcTypes,
+            preprocessedValueTypes = preprocessedValueTypes,
+            dbType = dbType,
+            limit = limit,
+        )
 
-    val dataFrame = buildDataFrameFromColumnData(
-        dbType = dbType,
-        tableColumns = tableColumns,
-        columnData = columnData,
-        targetColumnSchemas = targetColumnSchemas,
-        inferNullability = inferNullability,
-    )
+    val dataFrame =
+        buildDataFrameFromColumnData(
+            dbType = dbType,
+            tableColumns = tableColumns,
+            columnData = columnData,
+            targetColumnSchemas = targetColumnSchemas,
+            inferNullability = inferNullability,
+        )
 
     logger.debug {
         "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query."
@@ -934,38 +1017,34 @@ internal fun fetchAndConvertDataFromResultSet(
     return dataFrame
 }
 
-internal fun getExpectedJdbcTypes(dbType: DbType, tableColumns: List<TableColumnMetadata>): List<KType> =
-    tableColumns.map {
-        dbType.getExpectedJdbcType(tableColumnMetadata = it)
-    }
+internal fun getExpectedJdbcTypes(
+    dbType: DbType,
+    tableColumns: List<TableColumnMetadata>,
+): List<KType> = tableColumns.map { dbType.getExpectedJdbcType(tableColumnMetadata = it) }
 
 internal fun getPreprocessedValueTypes(
     dbType: DbType,
     tableColumns: List<TableColumnMetadata>,
     expectedJdbcTypes: List<KType>,
-): List<KType> =
-    tableColumns.mapIndexed { index, it ->
-        dbType.getPreprocessedValueType(
-            tableColumnMetadata = it,
-            expectedJdbcType = expectedJdbcTypes[index],
-        )
-    }
+): List<KType> = tableColumns.mapIndexed { index, it ->
+    dbType.getPreprocessedValueType(
+        tableColumnMetadata = it,
+        expectedJdbcType = expectedJdbcTypes[index],
+    )
+}
 
 internal fun getTargetColumnSchemas(
     dbType: DbType,
     tableColumns: List<TableColumnMetadata>,
     preprocessedValueTypes: List<KType>,
-): List<ColumnSchema?> =
-    tableColumns.mapIndexed { index, it ->
-        dbType.getTargetColumnSchema(
-            tableColumnMetadata = it,
-            expectedValueType = preprocessedValueTypes[index],
-        )
-    }
+): List<ColumnSchema?> = tableColumns.mapIndexed { index, it ->
+    dbType.getTargetColumnSchema(
+        tableColumnMetadata = it,
+        expectedValueType = preprocessedValueTypes[index],
+    )
+}
 
-/**
- * Reads all rows from ResultSet and returns a column-oriented data structure.
- */
+/** Reads all rows from ResultSet and returns a column-oriented data structure. */
 private fun readAndPreprocessRowsFromResultSet(
     dbType: DbType,
     rs: ResultSet,
@@ -982,30 +1061,33 @@ private fun readAndPreprocessRowsFromResultSet(
             val expectedJdbcType = expectedJdbcTypes[index]
             val preprocessedValueType = preprocessedValueTypes[index]
 
-            val value = dbType.getValueFromResultSet<Any?>(
-                rs = rs,
-                columnIndex = index,
-                tableColumnMetadata = tableColumnMetadata,
-                expectedJdbcType = expectedJdbcType,
-            )
-            val preprocessedValue = dbType.preprocessValue<Any?, Any?>(
-                value = value,
-                tableColumnMetadata = tableColumnMetadata,
-                expectedJdbcType = expectedJdbcType,
-                expectedPreprocessedValueType = preprocessedValueType,
-            )
+            val value =
+                dbType.getValueFromResultSet<Any?>(
+                    rs = rs,
+                    columnIndex = index,
+                    tableColumnMetadata = tableColumnMetadata,
+                    expectedJdbcType = expectedJdbcType,
+                )
+            val preprocessedValue =
+                dbType.preprocessValue<Any?, Any?>(
+                    value = value,
+                    tableColumnMetadata = tableColumnMetadata,
+                    expectedJdbcType = expectedJdbcType,
+                    expectedPreprocessedValueType = preprocessedValueType,
+                )
             columnData[index] += preprocessedValue
         }
         rowsRead++
-        // if (rowsRead % 1000 == 0) logger.debug { "Loaded $rowsRead rows." } // TODO: https://github.com/Kotlin/dataframe/issues/455
+        // if (rowsRead % 1000 == 0) logger.debug { "Loaded $rowsRead rows." } // TODO:
+        // https://github.com/Kotlin/dataframe/issues/455
     }
 
     return columnData
 }
 
 /**
- * Builds DataFrame from column-oriented data.
- * Accepts mutable lists to enable efficient in-place transformations.
+ * Builds DataFrame from column-oriented data. Accepts mutable lists to enable efficient in-place
+ * transformations.
  */
 private fun buildDataFrameFromColumnData(
     dbType: DbType,
@@ -1015,21 +1097,24 @@ private fun buildDataFrameFromColumnData(
     inferNullability: Boolean,
     checkSchema: Boolean = BuildConfig.DEBUG,
 ): AnyFrame =
-    tableColumns.mapIndexed { index, it ->
-        val column = dbType.buildDataColumn<Any?, Any?>(
-            name = it.name,
-            values = columnData[index],
-            tableColumnMetadata = it,
-            targetColumnSchema = targetColumnSchemas[index],
-            inferNullability = inferNullability,
-        )
+    tableColumns
+        .mapIndexed { index, it ->
+            val column =
+                dbType.buildDataColumn<Any?, Any?>(
+                    name = it.name,
+                    values = columnData[index],
+                    tableColumnMetadata = it,
+                    targetColumnSchema = targetColumnSchemas[index],
+                    inferNullability = inferNullability,
+                )
 
-        if (checkSchema) {
-            column.checkSchema(targetColumnSchemas[index])
+            if (checkSchema) {
+                column.checkSchema(targetColumnSchemas[index])
+            }
+
+            column
         }
-
-        column
-    }.toDataFrame()
+        .toDataFrame()
 
 private fun AnyCol.checkSchema(expected: ColumnSchema?) {
     when (expected) {
@@ -1042,14 +1127,20 @@ private fun AnyCol.checkSchema(expected: ColumnSchema?) {
                 """
                 Found mismatching schema for column '${this.name()}'.
                 Column ${this.name()} is expected to be a value column of type ${expected.type} but it is ${this.type()}.
-                """.trimIndent()
+                """
+                    .trimIndent()
             }
-            require(values().all { it == null || it::class.isSubclassOf(expected.type.classifier as KClass<*>) }) {
+            require(
+                values().all {
+                    it == null || it::class.isSubclassOf(expected.type.classifier as KClass<*>)
+                }
+            ) {
                 """
                 Found mismatching type for value column '${this.name()}'.
                 Expected type: ${expected.type}
                 Actual types: ${values().map { it?.javaClass?.name ?: "null" }.distinct()}
-                """.trimIndent()
+                """
+                    .trimIndent()
             }
         }
 
@@ -1058,7 +1149,8 @@ private fun AnyCol.checkSchema(expected: ColumnSchema?) {
                 """
                 Found mismatching schema for column '${name()}'.
                 Column ${this.name()} is expected to be a column group but it is ${this.type()}.
-                """.trimIndent()
+                """
+                    .trimIndent()
             }
             require(expected.schema.compare(this.schema()).isSuperOrMatches()) {
                 """
@@ -1068,7 +1160,8 @@ private fun AnyCol.checkSchema(expected: ColumnSchema?) {
                 
                 Actual schema:
                 ${this.schema()}
-                """.trimIndent()
+                """
+                    .trimIndent()
             }
         }
 
@@ -1077,7 +1170,8 @@ private fun AnyCol.checkSchema(expected: ColumnSchema?) {
                 """
                 Found mismatching schema for column '${this.name()}'.
                 Column ${this.name()} is expected to be a frame column but it is ${this.type()}.
-                """.trimIndent()
+                """
+                    .trimIndent()
             }
             require(values().all { expected.schema.compare(it.schema()).isSuperOrMatches() }) {
                 """
@@ -1091,7 +1185,8 @@ private fun AnyCol.checkSchema(expected: ColumnSchema?) {
                         .distinct()
                         .filterNot { expected.schema.compare(it).isSuperOrMatches() }
                 }
-                """.trimIndent()
+                """
+                    .trimIndent()
             }
         }
     }

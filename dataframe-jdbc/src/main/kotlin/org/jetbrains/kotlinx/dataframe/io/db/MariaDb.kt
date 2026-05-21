@@ -26,13 +26,17 @@ public object MariaDb : DbType("mariadb") {
         //    return ColumnSchema.Value(kType)
         // }
 
-        if (tableColumnMetadata.sqlTypeName == "INTEGER UNSIGNED" ||
-            tableColumnMetadata.sqlTypeName == "INT UNSIGNED"
+        if (
+            tableColumnMetadata.sqlTypeName == "INTEGER UNSIGNED" ||
+                tableColumnMetadata.sqlTypeName == "INT UNSIGNED"
         ) {
             return typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
         }
 
-        if (tableColumnMetadata.sqlTypeName == "SMALLINT" && tableColumnMetadata.javaClassName == "java.lang.Short") {
+        if (
+            tableColumnMetadata.sqlTypeName == "SMALLINT" &&
+                tableColumnMetadata.javaClassName == "java.lang.Short"
+        ) {
             return typeOf<Short>().withNullability(tableColumnMetadata.isNullable)
         }
         if (tableColumnMetadata.sqlTypeName == "BIGINT UNSIGNED") {
@@ -41,7 +45,8 @@ public object MariaDb : DbType("mariadb") {
         return super.getExpectedJdbcType(tableColumnMetadata)
     }
 
-    override fun isSystemTable(tableMetadata: TableMetadata): Boolean = MySql.isSystemTable(tableMetadata)
+    override fun isSystemTable(tableMetadata: TableMetadata): Boolean =
+        MySql.isSystemTable(tableMetadata)
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata =
         TableMetadata(

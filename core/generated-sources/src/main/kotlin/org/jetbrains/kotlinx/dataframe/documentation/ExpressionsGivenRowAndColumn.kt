@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression as DfRowColumnExpression
 
 /**
@@ -13,11 +12,15 @@ internal interface ExpressionsGivenRowAndColumn {
 
     // Using <code>` notation to not create double `` when including
 
-    /** Provide a new value for every selected cell given both its row and column using a [row-column expression][DfRowColumnExpression]. */
+    /**
+     * Provide a new value for every selected cell given both its row and column using a
+     * [row-column expression][DfRowColumnExpression].
+     */
     interface RowColumnExpression {
 
         /**
-         * Provide a new value for every selected cell given both its row and column using a [row-column expression][org.jetbrains.kotlinx.dataframe.RowColumnExpression].
+         * Provide a new value for every selected cell given both its row and column using a
+         * [row-column expression][org.jetbrains.kotlinx.dataframe.RowColumnExpression].
          *
          * For example:
          *
@@ -26,8 +29,6 @@ internal interface ExpressionsGivenRowAndColumn {
          * &nbsp;&nbsp;&nbsp;&nbsp;`row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
          *
          * `}`
-         *
-         *
          */
         typealias WithExample = Nothing
     }

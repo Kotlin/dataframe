@@ -7,35 +7,25 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 @Suppress("unused")
 @DataSchema
 interface DsSalaries {
-    @ColumnName("company_location")
-    val companyLocation: String
+    @ColumnName("company_location") val companyLocation: String
 
-    @ColumnName("company_size")
-    val companySize: String
+    @ColumnName("company_size") val companySize: String
 
-    @ColumnName("employee_residence")
-    val employeeResidence: String
+    @ColumnName("employee_residence") val employeeResidence: String
 
-    @ColumnName("employment_type")
-    val employmentType: String
+    @ColumnName("employment_type") val employmentType: String
 
-    @ColumnName("experience_level")
-    val experienceLevel: String
+    @ColumnName("experience_level") val experienceLevel: String
 
-    @ColumnName("job_title")
-    val jobTitle: String
+    @ColumnName("job_title") val jobTitle: String
 
-    @ColumnName("remote_ratio")
-    val remoteRatio: Int
+    @ColumnName("remote_ratio") val remoteRatio: Int
     val salary: Int
 
-    @ColumnName("salary_currency")
-    val salaryCurrency: String
+    @ColumnName("salary_currency") val salaryCurrency: String
 
-    @ColumnName("salary_in_usd")
-    val salaryInUsd: Int
+    @ColumnName("salary_in_usd") val salaryInUsd: Int
     val untitled: Int
 
-    @ColumnName("work_year")
-    val workYear: Int
+    @ColumnName("work_year") val workYear: Int
 }

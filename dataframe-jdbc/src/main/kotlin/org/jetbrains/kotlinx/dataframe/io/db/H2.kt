@@ -11,16 +11,18 @@ import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql as PostgreSqlType
 /**
  * Represents the H2 database type.
  *
- * This class provides methods to convert data from a ResultSet to the appropriate type for H2
- * and to generate the corresponding column schema.
+ * This class provides methods to convert data from a ResultSet to the appropriate type for H2 and
+ * to generate the corresponding column schema.
  *
  * NOTE: All date and timestamp-related types are converted to String to avoid java.sql.* types.
  */
 public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     @Deprecated("Use H2(mode = Mode.XXX) instead", ReplaceWith("H2(H2.Mode.MySql)"))
-    public constructor(dialect: DbType) : this(
+    public constructor(
+        dialect: DbType
+    ) : this(
         Mode.fromDbType(dialect)
-            ?: throw IllegalArgumentException("H2 database could not be specified with H2 dialect!"),
+            ?: throw IllegalArgumentException("H2 database could not be specified with H2 dialect!")
     )
 
     private val delegate: DbType? = mode.toDbType()
@@ -36,7 +38,7 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
         MySql("MySQL"),
         PostgreSql("PostgreSQL"),
         MsSqlServer("MSSQLServer"),
-        MariaDb("MariaDB"), ;
+        MariaDb("MariaDB");
 
         /**
          * Converts this Mode to the corresponding DbType delegate.
@@ -70,17 +72,17 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
                 }
 
             /**
-             * Finds a Mode by its string value (case-insensitive).
-             * Handles both URL values (MySQL, PostgreSQL, etc.) and
-             * INFORMATION_SCHEMA values (Regular).
+             * Finds a Mode by its string value (case-insensitive). Handles both URL values (MySQL,
+             * PostgreSQL, etc.) and INFORMATION_SCHEMA values (Regular).
              *
              * @param value The string value to search for.
              * @return The matching Mode, or null if not found.
              */
             public fun fromValue(value: String): Mode? {
                 // "Regular" from INFORMATION_SCHEMA or "H2-Regular" from URL
-                if (value.equals("regular", ignoreCase = true) ||
-                    value.equals("h2-regular", ignoreCase = true)
+                if (
+                    value.equals("regular", ignoreCase = true) ||
+                        value.equals("h2-regular", ignoreCase = true)
                 ) {
                     return Regular
                 }
@@ -92,9 +94,10 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     /**
      * It contains constants related to different database modes.
      *
-     * The mode value is used in the [extractDBTypeFromConnection] function to determine the corresponding `DbType` for the H2 database connection URL.
-     * For example, if the URL contains the mode value "MySQL", the H2 instance with the MySQL database type is returned.
-     * Otherwise, the `DbType` is determined based on the URL without the mode value.
+     * The mode value is used in the [extractDBTypeFromConnection] function to determine the
+     * corresponding `DbType` for the H2 database connection URL. For example, if the URL contains
+     * the mode value "MySQL", the H2 instance with the MySQL database type is returned. Otherwise,
+     * the `DbType` is determined based on the URL without the mode value.
      *
      * @see [extractDBTypeFromConnection]
      * @see [createH2Instance]
@@ -117,9 +120,7 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     override val driverClassName: String
         get() = "org.h2.Driver"
 
-    /**
-     * TODO check and map all types from https://www.h2database.com/html/datatypes.html
-     */
+    /** TODO check and map all types from https://www.h2database.com/html/datatypes.html */
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
         delegate?.getExpectedJdbcType(tableColumnMetadata)
             ?: super.getExpectedJdbcType(tableColumnMetadata)
@@ -127,7 +128,8 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
 
-        fun String?.containsWithLowercase(substr: String) = this?.lowercase(locale)?.contains(substr) == true
+        fun String?.containsWithLowercase(substr: String) =
+            this?.lowercase(locale)?.contains(substr) == true
         val schemaName = tableMetadata.schemaName
 
         // could be extended for other symptoms of the system tables for H2
@@ -149,5 +151,6 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
             )
 
     public override fun buildSqlQueryWithLimit(sqlQuery: String, limit: Int): String =
-        delegate?.buildSqlQueryWithLimit(sqlQuery, limit) ?: super.buildSqlQueryWithLimit(sqlQuery, limit)
+        delegate?.buildSqlQueryWithLimit(sqlQuery, limit)
+            ?: super.buildSqlQueryWithLimit(sqlQuery, limit)
 }

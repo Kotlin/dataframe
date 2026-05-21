@@ -23,14 +23,18 @@ public sealed interface TypeSuggestion {
             when {
                 suggestedType != null && guessType -> InferWithUpperbound(suggestedType)
                 suggestedType != null && !guessType -> Use(suggestedType)
-                else -> Infer // no type was suggested, so we need to guess, no matter what guessType is
+                else ->
+                    Infer // no type was suggested, so we need to guess, no matter what guessType is
             }
     }
 
     /** The library will try to infer the type by checking all the values. */
     public data object Infer : TypeSuggestion
 
-    /** The library will infer the type by checking all the values taking a given upper bound into account. */
+    /**
+     * The library will infer the type by checking all the values taking a given upper bound into
+     * account.
+     */
     public data class InferWithUpperbound(val upperbound: KType) : TypeSuggestion
 
     /** The library will use the specified type without inference. */

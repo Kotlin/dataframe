@@ -4,7 +4,9 @@ import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.documentationCsv.ExcludeFromSources
 
-/** [\["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"\]][DEFAULT_DELIM_NULL_STRINGS] */
+/**
+ * [\["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"\]][DEFAULT_DELIM_NULL_STRINGS]
+ */
 @ExcludeFromSources
 internal typealias DefaultNullStringsContentLink = Nothing
 
@@ -17,13 +19,13 @@ public val DEFAULT_DELIM_NULL_STRINGS: Set<String> =
     setOf("", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil")
 
 /**
- * Typealias for `CsvSpecs.Builder.(CsvSpecs.Builder) -> CsvSpecs.Builder`.
- * A lambda where you can overwrite or adjust any of the CSV specs.
+ * Typealias for `CsvSpecs.Builder.(CsvSpecs.Builder) -> CsvSpecs.Builder`. A lambda where you can
+ * overwrite or adjust any of the CSV specs.
  */
 public typealias AdjustCsvSpecs = CsvSpecs.Builder.(CsvSpecs.Builder) -> CsvSpecs.Builder
 
 /**
- * Typealias for `CSVFormat.Builder.(CSVFormat.Builder) -> CSVFormat.Builder`.
- * A lambda where you can overwrite or adjust any of the CSV format options.
+ * Typealias for `CSVFormat.Builder.(CSVFormat.Builder) -> CSVFormat.Builder`. A lambda where you
+ * can overwrite or adjust any of the CSV format options.
  */
 public typealias AdjustCSVFormat = CSVFormat.Builder.(CSVFormat.Builder) -> CSVFormat.Builder

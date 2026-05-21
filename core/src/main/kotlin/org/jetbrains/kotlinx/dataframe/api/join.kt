@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlin.reflect.KProperty
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -22,15 +23,13 @@ import org.jetbrains.kotlinx.dataframe.impl.api.extractJoinColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
-import kotlin.reflect.KProperty
 
 /**
  * If no join columns are specified, all columns with matching names in both [DataFrame]s are used.
  *
  * If both [DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
- * in the resulting [DataFrame].
+ * [automatically renamed][`AutoRenamingColumnsInDataFrame`] in the resulting [DataFrame].
  */
 @ExcludeFromSources
 private typealias JoinBehavior = Nothing
@@ -38,15 +37,15 @@ private typealias JoinBehavior = Nothing
 /**
  * Joins this [DataFrame] with the [other][\other] [DataFrame] using the selected key columns.
  *
- * Creates a new [DataFrame] by combining [rows][org.jetbrains.kotlinx.dataframe.DataRow]
- * from two input dataframes according to one or more matching key columns.
+ * Creates a new [DataFrame] by combining [rows][org.jetbrains.kotlinx.dataframe.DataRow] from two
+ * input dataframes according to one or more matching key columns.
  *
  * {@include [JoinTypeDescription]}
  *
  * @include [JoinBehavior]
  *
- * Each join type has a corresponding shortcut function:
- * [innerJoin], [leftJoin], [rightJoin], [fullJoin], [filterJoin], and [excludeJoin].
+ * Each join type has a corresponding shortcut function: [innerJoin], [leftJoin], [rightJoin],
+ * [fullJoin], [filterJoin], and [excludeJoin].
  *
  * See also [joinWith], which performs a join by matching row values condition.
  *
@@ -67,18 +66,17 @@ private typealias JoinDocs = Nothing
 private typealias JOIN_METHOD = Nothing
 
 /**
- * [JoinDsl] allows you to define the columns used for joining [DataFrame]s
- * and provides methods to match columns with different names
- * between the left and right side.
+ * [JoinDsl] allows you to define the columns used for joining [DataFrame]s and provides methods to
+ * match columns with different names between the left and right side.
  *
- * Provides the left [DataFrame] both as the receiver (`this`) and as the argument (`it`),
- * allowing you to reference its columns directly.
- * Use [right][JoinDsl.right] to access columns from the right [DataFrame],
- * and [match][JoinDsl.match] to explicitly pair columns with different names.
+ * Provides the left [DataFrame] both as the receiver (`this`) and as the argument (`it`), allowing
+ * you to reference its columns directly. Use [right][JoinDsl.right] to access columns from the
+ * right [DataFrame], and [match][JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][SelectingColumns.ColumnsSelectionDsl].
  *
  * ### Examples
+ *
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
  * dfLeft.{@get [JoinMethod] join}(dfRight) { name and city }
@@ -95,8 +93,8 @@ private typealias JOIN_METHOD = Nothing
 internal typealias JoinDslDescription = Nothing
 
 /**
- * Select join columns (including those that have different names in different [DataFrame]s)
- * using [JoinDsl].
+ * Select join columns (including those that have different names in different [DataFrame]s) using
+ * [JoinDsl].
  *
  * @include [JoinDslDescription]
  */
@@ -104,13 +102,13 @@ internal typealias JoinDslDescription = Nothing
 private typealias SelectingColumnsJoinDsl = Nothing
 
 /**
- * @include [JoinDocs]
- * @include [SelectingColumnsJoinDsl]
  * @param other [DataFrame] to join with.
  * @param type [JoinType] defining how the resulting rows are constructed.
- * @param selector [JoinColumnsSelector] specifying join columns;
- * if `null`, same-name columns are used.
+ * @param selector [JoinColumnsSelector] specifying join columns; if `null`, same-name columns are
+ *   used.
  * @return joined [DataFrame].
+ * @include [JoinDocs]
+ * @include [SelectingColumnsJoinDsl]
  */
 @Refine
 @Interpretable("Join0")
@@ -122,6 +120,7 @@ public fun <A, B> DataFrame<A>.join(
 
 /**
  * ### Example
+ *
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
  * dfLeft.{@get [JoinMethod] join}(dfRight, "name", "city")
@@ -131,13 +130,13 @@ public fun <A, B> DataFrame<A>.join(
 private typealias JoinStringApiExample = Nothing
 
 /**
- * @include [JoinDocs]
- * @include [SelectingColumns.ColumnNamesApi]
- * @include [JoinStringApiExample]
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
  * @param type [JoinType] defining how the resulting rows are constructed.
  * @return joined [DataFrame].
+ * @include [JoinDocs]
+ * @include [SelectingColumns.ColumnNamesApi]
+ * @include [JoinStringApiExample]
  */
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
@@ -148,14 +147,15 @@ public fun <A, B> DataFrame<A>.join(
 /**
  * Performs an [inner join][JoinType.Inner] of this [DataFrame] with the [other][\other] [DataFrame]
  * using the selected key columns.
+ *
  * @include [InnerJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Inner].
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
- * [leftJoin], [rightJoin], [fullJoin], [filterJoin], [excludeJoin].
+ * See also general [join], as well as other shortcuts with each of join types: [leftJoin],
+ * [rightJoin], [fullJoin], [filterJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -169,12 +169,12 @@ public fun <A, B> DataFrame<A>.join(
 private typealias InnerJoinDocs = Nothing
 
 /**
+ * @param other [DataFrame] to join with.
+ * @param selector [JoinColumnsSelector] specifying join columns; if `null`, same-name columns are
+ *   used.
+ * @return joined [DataFrame].
  * @include [InnerJoinDocs]
  * @include [SelectingColumnsJoinDsl] {@set [JOIN_METHOD] innerJoin}
- * @param other [DataFrame] to join with.
- * @param selector [JoinColumnsSelector] specifying join columns;
- * if `null`, same-name columns are used.
- * @return joined [DataFrame].
  */
 @Refine
 @Interpretable("InnerJoin")
@@ -184,27 +184,30 @@ public fun <A, B> DataFrame<A>.innerJoin(
 ): DataFrame<A> = join(other, JoinType.Inner, selector = selector)
 
 /**
- * @include [InnerJoinDocs]
- * @include [SelectingColumns.ColumnNamesApi]
- * @include [JoinStringApiExample] {@set [JOIN_METHOD] innerJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
  * @return joined [DataFrame].
+ * @include [InnerJoinDocs]
+ * @include [SelectingColumns.ColumnNamesApi]
+ * @include [JoinStringApiExample] {@set [JOIN_METHOD] innerJoin}
  */
-public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    innerJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.innerJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = innerJoin(other) { columns.toColumnSet() }
 
 /**
  * Performs a [left join][JoinType.Left] of this [DataFrame] with the [other][\other] [DataFrame]
  * using the selected key columns.
+ *
  * @include [LeftJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Left].
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
- * [innerJoin], [rightJoin], [fullJoin], [filterJoin], [excludeJoin].
+ * See also general [join], as well as other shortcuts with each of join types: [innerJoin],
+ * [rightJoin], [fullJoin], [filterJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -218,12 +221,12 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
 private typealias LeftJoinDocs = Nothing
 
 /**
+ * @param other [DataFrame] to join with.
+ * @param selector [JoinColumnsSelector] specifying join columns; if `null`, same-name columns are
+ *   used.
+ * @return joined [DataFrame].
  * @include [LeftJoinDocs]
  * @include [SelectingColumnsJoinDsl] {@set [JOIN_METHOD] leftJoin}
- * @param other [DataFrame] to join with.
- * @param selector [JoinColumnsSelector] specifying join columns;
- * if `null`, same-name columns are used.
- * @return joined [DataFrame].
  */
 @Refine
 @Interpretable("LeftJoin")
@@ -233,12 +236,12 @@ public fun <A, B> DataFrame<A>.leftJoin(
 ): DataFrame<A> = join(other, JoinType.Left, selector = selector)
 
 /**
- * @include [LeftJoinDocs]
- * @include [SelectingColumns.ColumnNamesApi]
- * @include [JoinStringApiExample] {@set [JOIN_METHOD] leftJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
  * @return joined [DataFrame].
+ * @include [LeftJoinDocs]
+ * @include [SelectingColumns.ColumnNamesApi]
+ * @include [JoinStringApiExample] {@set [JOIN_METHOD] leftJoin}
  */
 public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     leftJoin(other) { columns.toColumnSet() }
@@ -246,14 +249,15 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
 /**
  * Performs a [right join][JoinType.Right] of this [DataFrame] with the [other][\other] [DataFrame]
  * using the selected key columns.
+ *
  * @include [RightJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Right].
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
- * [innerJoin], [leftJoin], [fullJoin], [filterJoin], [excludeJoin].
+ * See also general [join], as well as other shortcuts with each of join types: [innerJoin],
+ * [leftJoin], [fullJoin], [filterJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -267,12 +271,12 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
 private typealias RightJoinDocs = Nothing
 
 /**
+ * @param other [DataFrame] to join with.
+ * @param selector [JoinColumnsSelector] specifying join columns; if `null`, same-name columns are
+ *   used.
+ * @return joined [DataFrame].
  * @include [RightJoinDocs]
  * @include [SelectingColumnsJoinDsl] {@set [JOIN_METHOD] rightJoin}
- * @param other [DataFrame] to join with.
- * @param selector [JoinColumnsSelector] specifying join columns;
- * if `null`, same-name columns are used.
- * @return joined [DataFrame].
  */
 @Refine
 @Interpretable("RightJoin")
@@ -282,27 +286,30 @@ public fun <A, B> DataFrame<A>.rightJoin(
 ): DataFrame<A> = join(other, JoinType.Right, selector = selector)
 
 /**
- * @include [RightJoinDocs]
- * @include [SelectingColumns.ColumnNamesApi]
- * @include [JoinStringApiExample] {@set [JOIN_METHOD] rightJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
  * @return joined [DataFrame].
+ * @include [RightJoinDocs]
+ * @include [SelectingColumns.ColumnNamesApi]
+ * @include [JoinStringApiExample] {@set [JOIN_METHOD] rightJoin}
  */
-public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    rightJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.rightJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = rightJoin(other) { columns.toColumnSet() }
 
 /**
  * Performs a [full join][JoinType.Full] of this [DataFrame] with the [other][\other] [DataFrame]
  * using the selected key columns.
+ *
  * @include [FullJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Full].
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
- * [innerJoin], [leftJoin], [rightJoin], [filterJoin], [excludeJoin].
+ * See also general [join], as well as other shortcuts with each of join types: [innerJoin],
+ * [leftJoin], [rightJoin], [filterJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -316,12 +323,12 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
 private typealias FullJoinDocs = Nothing
 
 /**
+ * @param other [DataFrame] to join with.
+ * @param selector [JoinColumnsSelector] specifying join columns; if `null`, same-name columns are
+ *   used.
+ * @return joined [DataFrame].
  * @include [FullJoinDocs]
  * @include [SelectingColumnsJoinDsl] {@set [JOIN_METHOD] fullJoin}
- * @param other [DataFrame] to join with.
- * @param selector [JoinColumnsSelector] specifying join columns;
- * if `null`, same-name columns are used.
- * @return joined [DataFrame].
  */
 @Refine
 @Interpretable("FullJoin")
@@ -331,27 +338,28 @@ public fun <A, B> DataFrame<A>.fullJoin(
 ): DataFrame<A> = join(other, JoinType.Full, selector = selector)
 
 /**
- * @include [FullJoinDocs]
- * @include [SelectingColumns.ColumnNamesApi]
- * @include [JoinStringApiExample] {@set [JOIN_METHOD] fullJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
  * @return joined [DataFrame].
+ * @include [FullJoinDocs]
+ * @include [SelectingColumns.ColumnNamesApi]
+ * @include [JoinStringApiExample] {@set [JOIN_METHOD] fullJoin}
  */
 public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     fullJoin(other) { columns.toColumnSet() }
 
 /**
- * Performs a [filter join][JoinType.Filter] of this [DataFrame] with the [other][\other] [DataFrame]
- * using the selected key columns.
+ * Performs a [filter join][JoinType.Filter] of this [DataFrame] with the [other][\other]
+ * [DataFrame] using the selected key columns.
+ *
  * @include [FilterJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Filter].
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
- * [innerJoin], [leftJoin], [rightJoin], [fullJoin], [excludeJoin].
+ * See also general [join], as well as other shortcuts with each of join types: [innerJoin],
+ * [leftJoin], [rightJoin], [fullJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -365,12 +373,12 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
 private typealias FilterJoinDocs = Nothing
 
 /**
+ * @param other [DataFrame] to join with.
+ * @param selector [JoinColumnsSelector] specifying join columns; if `null`, same-name columns are
+ *   used.
+ * @return joined [DataFrame].
  * @include [FilterJoinDocs]
  * @include [SelectingColumnsJoinDsl] {@set [JOIN_METHOD] filterJoin}
- * @param other [DataFrame] to join with.
- * @param selector [JoinColumnsSelector] specifying join columns;
- * if `null`, same-name columns are used.
- * @return joined [DataFrame].
  */
 @Refine
 @Interpretable("FilterJoin")
@@ -380,27 +388,30 @@ public fun <A, B> DataFrame<A>.filterJoin(
 ): DataFrame<A> = joinImpl(other, JoinType.Inner, addNewColumns = false, selector = selector)
 
 /**
- * @include [FilterJoinDocs]
- * @include [SelectingColumns.ColumnNamesApi]
- * @include [JoinStringApiExample] {@set [JOIN_METHOD] filterJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
  * @return joined [DataFrame].
+ * @include [FilterJoinDocs]
+ * @include [SelectingColumns.ColumnNamesApi]
+ * @include [JoinStringApiExample] {@set [JOIN_METHOD] filterJoin}
  */
-public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    filterJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.filterJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = filterJoin(other) { columns.toColumnSet() }
 
 /**
- * Performs an [exclude join][JoinType.Exclude] of this [DataFrame] with the [other][\other] [DataFrame]
- * using the selected key columns.
+ * Performs an [exclude join][JoinType.Exclude] of this [DataFrame] with the [other][\other]
+ * [DataFrame] using the selected key columns.
+ *
  * @include [ExcludeJoinTypeDocs]
  *
  * This is a shortcut for [join] with [JoinType.Exclude].
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
- * [innerJoin], [leftJoin], [rightJoin], [filterJoin], [fullJoin].
+ * See also general [join], as well as other shortcuts with each of join types: [innerJoin],
+ * [leftJoin], [rightJoin], [filterJoin], [fullJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -414,12 +425,12 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
 private typealias ExcludeJoinDocs = Nothing
 
 /**
+ * @param other [DataFrame] to join with.
+ * @param selector [JoinColumnsSelector] specifying join columns; if `null`, same-name columns are
+ *   used.
+ * @return joined [DataFrame].
  * @include [ExcludeJoinDocs]
  * @include [SelectingColumnsJoinDsl] {@set [JOIN_METHOD] excludeJoin}
- * @param other [DataFrame] to join with.
- * @param selector [JoinColumnsSelector] specifying join columns;
- * if `null`, same-name columns are used.
- * @return joined [DataFrame].
  */
 @Refine
 @Interpretable("ExcludeJoin")
@@ -429,21 +440,23 @@ public fun <A, B> DataFrame<A>.excludeJoin(
 ): DataFrame<A> = joinImpl(other, JoinType.Exclude, addNewColumns = false, selector = selector)
 
 /**
- * @include [ExcludeJoinDocs]
- * @include [SelectingColumns.ColumnNamesApi]
- * @include [JoinStringApiExample] {@set [JOIN_METHOD] excludeJoin}
  * @param other [DataFrame] to join with.
  * @param columns [Column Names][String] specifying join columns.
  * @return joined [DataFrame].
+ * @include [ExcludeJoinDocs]
+ * @include [SelectingColumns.ColumnNamesApi]
+ * @include [JoinStringApiExample] {@set [JOIN_METHOD] excludeJoin}
  */
-public fun <A, B> DataFrame<A>.excludeJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    excludeJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.excludeJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = excludeJoin(other) { columns.toColumnSet() }
 
 /**
  * Joins all [DataFrame]s in this iterable into a single [DataFrame].
  *
- * Sequentially applies the [join] operation to each [DataFrame] in order.
- * Returns `null` if the iterable is empty.
+ * Sequentially applies the [join] operation to each [DataFrame] in order. Returns `null` if the
+ * iterable is empty.
  *
  * @param [joinType] [JoinType] defining how rows are matched and combined.
  * @param [selector] optional [JoinColumnsSelector] specifying key columns.
@@ -453,44 +466,49 @@ public fun <T> Iterable<DataFrame<T>>.joinOrNull(
     joinType: JoinType = JoinType.Inner,
     selector: JoinColumnsSelector<T, T>? = null,
 ): DataFrame<T>? =
-    fold<DataFrame<T>, DataFrame<T>?>(null) { joined, new -> joined?.join(new, joinType, selector = selector) ?: new }
+    fold<DataFrame<T>, DataFrame<T>?>(null) { joined, new ->
+        joined?.join(new, joinType, selector = selector) ?: new
+    }
 
 /**
- * A specialized [ColumnsSelectionDsl] that allows specifying [join] matching columns
- * with different names in left and right [DataFrame]s.
+ * A specialized [ColumnsSelectionDsl] that allows specifying [join] matching columns with different
+ * names in left and right [DataFrame]s.
  *
  * @include [JoinDslDescription]
  */
 public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 
     /**
-     * Provides access to columns of the right [DataFrame]
-     * for further matching with left columns [match].
+     * Provides access to columns of the right [DataFrame] for further matching with left columns
+     * [match].
      */
     public val right: DataFrame<B>
 
     /**
      * Matches columns from the left and right [DataFrame]s for [joining][join].
      *
-     * The receiver column must belong to the left [DataFrame],
-     * and the argument ([\other]) column must belong to the right [DataFrame].
+     * The receiver column must belong to the left [DataFrame], and the argument ([\other]) column
+     * must belong to the right [DataFrame].
      *
-     * @receiver column from the left [DataFrame].
      * @param [other] column from the right [DataFrame].
      * @return [ColumnMatch] representing the column pair used for joining.
+     * @receiver column from the left [DataFrame].
      */
     @ExcludeFromSources
     private typealias MatchDocs = Nothing
 
     /** @include [MatchDocs] */
     @Interpretable("Match0")
-    public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(this, other)
+    public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> =
+        ColumnMatch(this, other)
 
     /** @include [MatchDocs] */
-    public infix fun <C> String.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(toColumnOf(), other)
+    public infix fun <C> String.match(other: ColumnReference<C>): ColumnMatch<C> =
+        ColumnMatch(toColumnOf(), other)
 
     /** @include [MatchDocs] */
-    public infix fun <C> ColumnReference<C>.match(other: String): ColumnMatch<C> = ColumnMatch(this, other.toColumnOf())
+    public infix fun <C> ColumnReference<C>.match(other: String): ColumnMatch<C> =
+        ColumnMatch(this, other.toColumnOf())
 
     /** @include [MatchDocs] */
     public infix fun String.match(other: String): ColumnMatch<Any?> =
@@ -513,21 +531,23 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 
     public companion object {
         /**
-         * **For internal use only.**
-         * Not intended for public API consumption.
+         * **For internal use only.** Not intended for public API consumption.
          *
          * Used in Compiler Plugin.
          */
-        public fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnsSelector<A, B> =
-            {
-                left.columnNames().intersect(right.columnNames().toSet())
-                    .map { it.toColumnAccessor() }
-                    .let { ColumnListImpl(it) }
-            }
+        public fun <A, B> defaultJoinColumns(
+            left: DataFrame<A>,
+            right: DataFrame<B>,
+        ): JoinColumnsSelector<A, B> = {
+            left
+                .columnNames()
+                .intersect(right.columnNames().toSet())
+                .map { it.toColumnAccessor() }
+                .let { ColumnListImpl(it) }
+        }
 
         /**
-         * **For internal use only.**
-         * Not intended for public API consumption.
+         * **For internal use only.** Not intended for public API consumption.
          *
          * Used in Compiler Plugin.
          */
@@ -536,9 +556,11 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
             other: DataFrame<B>,
             selector: JoinColumnsSelector<A, B>,
         ): List<ColumnMatch<Any?>> {
-            val receiver = object : DataFrameReceiver<A>(left, UnresolvedColumnsPolicy.Fail), JoinDsl<A, B> {
-                override val right: DataFrame<B> = DataFrameReceiver(other, UnresolvedColumnsPolicy.Fail)
-            }
+            val receiver =
+                object : DataFrameReceiver<A>(left, UnresolvedColumnsPolicy.Fail), JoinDsl<A, B> {
+                    override val right: DataFrame<B> =
+                        DataFrameReceiver(other, UnresolvedColumnsPolicy.Fail)
+                }
             val columns = selector(receiver, left)
             return columns.extractJoinColumns()
         }
@@ -553,8 +575,10 @@ public interface ColumnMatch<C> : ColumnSet<C> {
     public val right: ColumnReference<C>
 }
 
-internal class ColumnMatchImpl<C>(override val left: ColumnReference<C>, override val right: ColumnReference<C>) :
-    ColumnMatch<C> {
+internal class ColumnMatchImpl<C>(
+    override val left: ColumnReference<C>,
+    override val right: ColumnReference<C>,
+) : ColumnMatch<C> {
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
         throw UnsupportedOperationException()
@@ -571,45 +595,43 @@ public fun <C> ColumnMatch(left: ColumnReference<C>, right: ColumnReference<C>):
 /**
  * A specialized [ColumnsSelector] used for matching columns in a [join] operation.
  *
- * Provides [JoinDsl] both as the receiver and the lambda parameter, and expects
- * a [ColumnsResolver] as the return value.
+ * Provides [JoinDsl] both as the receiver and the lambda parameter, and expects a [ColumnsResolver]
+ * as the return value.
  *
- * Enables defining matching columns from left and right [DataFrame]s
- * using [right][JoinDsl.right] and [match][JoinDsl.match].
+ * Enables defining matching columns from left and right [DataFrame]s using [right][JoinDsl.right]
+ * and [match][JoinDsl.match].
  */
-public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnsResolver<*>
+public typealias JoinColumnsSelector<A, B> =
+    JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnsResolver<*>
 
-/**
- * Includes only matching rows from both [DataFrame]s;
- * rows are merged.
- */
+/** Includes only matching rows from both [DataFrame]s; rows are merged. */
 @ExcludeFromSources
 internal typealias InnerJoinTypeDocs = Nothing
 
 /**
- * Includes all rows from the left [DataFrame]; matching rows are merged,
- * unmatched right-side values are filled with `null`.
+ * Includes all rows from the left [DataFrame]; matching rows are merged, unmatched right-side
+ * values are filled with `null`.
  */
 @ExcludeFromSources
 internal typealias LeftJoinTypeDocs = Nothing
 
 /**
- * Includes all rows from the right [DataFrame]; matching rows are merged,
- * unmatched left-side values are filled with `null`.
+ * Includes all rows from the right [DataFrame]; matching rows are merged, unmatched left-side
+ * values are filled with `null`.
  */
 @ExcludeFromSources
 internal typealias RightJoinTypeDocs = Nothing
 
 /**
- * Includes only rows from the left [DataFrame] that have a match in the right one;
- * right-side columns are not merged.
+ * Includes only rows from the left [DataFrame] that have a match in the right one; right-side
+ * columns are not merged.
  */
 @ExcludeFromSources
 internal typealias FilterJoinTypeDocs = Nothing
 
 /**
- * Includes all rows from both [DataFrame]s; matching rows are merged,
- * all mismatches are filled with `null`.
+ * Includes all rows from both [DataFrame]s; matching rows are merged, all mismatches are filled
+ * with `null`.
  */
 @ExcludeFromSources
 internal typealias FullJoinTypeDocs = Nothing
@@ -629,32 +651,29 @@ internal typealias ExcludeJoinTypeDocs = Nothing
 public enum class JoinType {
 
     /**
-     * Includes all rows from the left [DataFrame]; matching rows are merged,
-     * unmatched right-side values are filled with `null`.
+     * Includes all rows from the left [DataFrame]; matching rows are merged, unmatched right-side
+     * values are filled with `null`.
      */
     Left,
 
     /**
-     * Includes all rows from the right [DataFrame]; matching rows are merged,
-     * unmatched left-side values are filled with `null`.
+     * Includes all rows from the right [DataFrame]; matching rows are merged, unmatched left-side
+     * values are filled with `null`.
      */
     Right,
 
-    /**
-     * Includes only matching rows from both [DataFrame]s;
-     * rows are merged.
-     */
+    /** Includes only matching rows from both [DataFrame]s; rows are merged. */
     Inner,
 
     /**
-     * Includes only rows from the left [DataFrame] that have a match in the right one;
-     * right-side columns are not merged.
+     * Includes only rows from the left [DataFrame] that have a match in the right one; right-side
+     * columns are not merged.
      */
     Filter,
 
     /**
-     * Includes all rows from both [DataFrame]s; matching rows are merged,
-     * all mismatches are filled with `null`.
+     * Includes all rows from both [DataFrame]s; matching rows are merged, all mismatches are filled
+     * with `null`.
      */
     Full,
 
@@ -668,8 +687,8 @@ public enum class JoinType {
 /**
  * There are two categories of joins:
  * * **Merging joins** — merge matching rows from both [DataFrame]s into a single row.
- * * **Non-merging joins** — select rows from the left [DataFrame] based on whether
- * a match exists in the right one, without merging columns.
+ * * **Non-merging joins** — select rows from the left [DataFrame] based on whether a match exists
+ *   in the right one, without merging columns.
  *
  * The exact behavior depends on the specified [join type][\type]:
  *
@@ -687,15 +706,18 @@ public enum class JoinType {
 internal typealias JoinTypeDescription = Nothing
 
 internal val JoinType.addNewColumns: Boolean
-    get() = when (this) {
-        JoinType.Filter, JoinType.Exclude -> false
-        JoinType.Left, JoinType.Right, JoinType.Inner, JoinType.Full -> true
-    }
+    get() =
+        when (this) {
+            JoinType.Filter,
+            JoinType.Exclude -> false
+            JoinType.Left,
+            JoinType.Right,
+            JoinType.Inner,
+            JoinType.Full -> true
+        }
 
 internal val JoinType.allowLeftNulls: Boolean
     get() = this == JoinType.Right || this == JoinType.Full
 
 internal val JoinType.allowRightNulls: Boolean
-    get() = this == JoinType.Left ||
-        this == JoinType.Full ||
-        this == JoinType.Exclude
+    get() = this == JoinType.Left || this == JoinType.Full || this == JoinType.Exclude

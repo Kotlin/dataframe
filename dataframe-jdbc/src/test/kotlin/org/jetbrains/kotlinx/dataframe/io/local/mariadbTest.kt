@@ -1,6 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.io.local
 
 import io.kotest.matchers.shouldBe
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.sql.Blob
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.SQLException
+import java.util.Date
+import kotlin.reflect.typeOf
+import kotlin.time.Instant
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -17,15 +26,6 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.sql.Blob
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
-import java.util.Date
-import kotlin.reflect.typeOf
-import kotlin.time.Instant
 
 private const val URL = "jdbc:mariadb://localhost:3307"
 private const val USER_NAME = "root"
@@ -146,7 +146,8 @@ class MariadbTest {
             connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
 
             @Language("SQL")
-            val createTableQuery = """
+            val createTableQuery =
+                """
             CREATE TABLE IF NOT EXISTS table1 (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 bitCol BIT NOT NULL,
@@ -187,7 +188,8 @@ class MariadbTest {
             connection.createStatement().execute(createTableQuery.trimIndent())
 
             @Language("SQL")
-            val createTableQuery2 = """
+            val createTableQuery2 =
+                """
                 CREATE TABLE IF NOT EXISTS table2 (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 bitCol BIT,
@@ -234,7 +236,8 @@ class MariadbTest {
                     timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
                     mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, bigintUnsignedCol, jsonCol
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             @Language("SQL")
             val insertData2 =
@@ -245,7 +248,8 @@ class MariadbTest {
                     timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
                     mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, bigintUnsignedCol
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
+                """
+                    .trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
                 // Insert data into table1
@@ -332,7 +336,9 @@ class MariadbTest {
             try {
                 connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
                 connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
-                connection.createStatement().use { st -> st.execute("DROP DATABASE IF EXISTS $TEST_DATABASE_NAME") }
+                connection.createStatement().use { st ->
+                    st.execute("DROP DATABASE IF EXISTS $TEST_DATABASE_NAME")
+                }
                 connection.close()
             } catch (e: SQLException) {
                 e.printStackTrace()
@@ -381,7 +387,8 @@ class MariadbTest {
                t2.setCol
             FROM table1 t1
             JOIN table2 t2 ON t1.id = t2.id
-            """.trimIndent()
+            """
+                .trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MariaDb>()
         val result = df.filter { "id"<Int>() == 1 }
@@ -395,7 +402,8 @@ class MariadbTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 1000).values.toList()
+        val dataframes =
+            DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 1000).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MariaDb>()
 
@@ -409,9 +417,7 @@ class MariadbTest {
         val table2Df = dataframes[1].cast<Table2MariaDb>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter {
-            "integerCol"<Int?>()?.let { it > 400 } ?: false
-        }.rowsCount() shouldBe 1
+        table2Df.filter { "integerCol"<Int?>()?.let { it > 400 } ?: false }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
     }
@@ -420,53 +426,52 @@ class MariadbTest {
     fun `reading numeric types`() {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
 
-        val result = df1.select("tinyintCol")
-            .add("tinyintCol2") { "tinyintCol"<Int>() }
+        val result = df1.select("tinyintCol").add("tinyintCol2") { "tinyintCol"<Int>() }
 
         result[0][1] shouldBe 1
 
-        val result1 = df1.select("smallintCol")
-            .add("smallintCol2") { "smallintCol"<Short?>() }
+        val result1 = df1.select("smallintCol").add("smallintCol2") { "smallintCol"<Short?>() }
 
         result1[0][1] shouldBe 10
 
-        val result2 = df1.select("mediumintCol")
-            .add("mediumintCol2") { "mediumintCol"<Int>() }
+        val result2 = df1.select("mediumintCol").add("mediumintCol2") { "mediumintCol"<Int>() }
 
         result2[0][1] shouldBe 100
 
-        val result3 = df1.select("mediumintUnsignedCol")
-            .add("mediumintUnsignedCol2") { "mediumintUnsignedCol"<Int>() }
+        val result3 =
+            df1.select("mediumintUnsignedCol").add("mediumintUnsignedCol2") {
+                "mediumintUnsignedCol"<Int>()
+            }
 
         result3[0][1] shouldBe 100
 
-        val result4 = df1.select("integerUnsignedCol")
-            .add("integerUnsignedCol2") { "integerUnsignedCol"<Long>() }
+        val result4 =
+            df1.select("integerUnsignedCol").add("integerUnsignedCol2") {
+                "integerUnsignedCol"<Long>()
+            }
 
         result4[0][1] shouldBe 100L
 
-        val result5 = df1.select("bigintCol")
-            .add("bigintCol2") { "bigintCol"<Long>() }
+        val result5 = df1.select("bigintCol").add("bigintCol2") { "bigintCol"<Long>() }
 
         result5[0][1] shouldBe 100
 
-        val result5a = df1.select("bigintUnsignedCol")
-            .add("bigintUnsignedCol2") { "bigintUnsignedCol"<BigInteger>() }
+        val result5a =
+            df1.select("bigintUnsignedCol").add("bigintUnsignedCol2") {
+                "bigintUnsignedCol"<BigInteger>()
+            }
 
         result5a[0][1] shouldBe BigInteger.valueOf(1000)
 
-        val result6 = df1.select("floatCol")
-            .add("floatCol2") { "floatCol"<Float>() }
+        val result6 = df1.select("floatCol").add("floatCol2") { "floatCol"<Float>() }
 
         result6[0][1] shouldBe 10.0f
 
-        val result7 = df1.select("doubleCol")
-            .add("doubleCol2") { "doubleCol"<Double>() }
+        val result7 = df1.select("doubleCol").add("doubleCol2") { "doubleCol"<Double>() }
 
         result7[0][1] shouldBe 10.0
 
-        val result8 = df1.select("decimalCol")
-            .add("decimalCol2") { "decimalCol"<BigDecimal>() }
+        val result8 = df1.select("decimalCol").add("decimalCol2") { "decimalCol"<BigDecimal>() }
 
         result8[0][1] shouldBe BigDecimal("10")
 

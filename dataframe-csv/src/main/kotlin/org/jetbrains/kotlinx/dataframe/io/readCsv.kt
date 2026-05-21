@@ -2,6 +2,13 @@
 
 package org.jetbrains.kotlinx.dataframe.io
 
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
+import java.net.URL
+import java.nio.charset.Charset
+import java.nio.file.Path
+import kotlin.io.path.inputStream
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonReadDelimDocs
@@ -30,13 +37,6 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
 import org.jetbrains.kotlinx.dataframe.util.READ_CSV_BINARY_COMPATIBILITY
-import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
-import java.net.URL
-import java.nio.charset.Charset
-import java.nio.file.Path
-import kotlin.io.path.inputStream
 
 /**
  * @include [CommonReadDelimDocs.CsvDocs]
@@ -252,6 +252,7 @@ public fun DataFrame.Companion.readCsv(
 
 /**
  * {@comment the only one with adjustCsvSpecs}
+ *
  * @include [CommonReadDelimDocs.CsvDocs]
  * @set [CommonReadDelimDocs.DATA_TITLE] InputStream
  * @set [CommonReadDelimDocs.DATA] input stream

@@ -1,5 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import java.io.File
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.net.URI
+import java.nio.channels.ReadableByteChannel
+import java.nio.channels.SeekableByteChannel
+import java.nio.file.Files
+import java.time.LocalTime as JavaLocalTime
+import kotlin.reflect.KType
+import kotlin.reflect.KTypeProjection
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
+import kotlin.time.Duration
+import kotlin.time.toKotlinDuration
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -70,24 +85,10 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
 import org.jetbrains.kotlinx.dataframe.impl.asList
-import java.io.File
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.net.URI
-import java.nio.channels.ReadableByteChannel
-import java.nio.channels.SeekableByteChannel
-import java.nio.file.Files
-import kotlin.reflect.KType
-import kotlin.reflect.KTypeProjection
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
-import kotlin.time.Duration
-import kotlin.time.toKotlinDuration
-import java.time.LocalTime as JavaLocalTime
 
 /**
- * same as [Iterable<DataFrame<T>>.concat()] without internal type guessing (all batches should have the same schema)
+ * same as [Iterable<DataFrame<T>>.concat()] without internal type guessing (all batches should have
+ * the same schema)
  */
 internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
     val dataFrames = asList()
@@ -96,9 +97,11 @@ internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
         1 -> return dataFrames[0]
     }
 
-    val columnPaths = dataFrames.first()
-        .getColumnsWithPaths { colsAtAnyDepth().filter { !it.isColumnGroup() } }
-        .map { it.path }
+    val columnPaths =
+        dataFrames
+            .first()
+            .getColumnsWithPaths { colsAtAnyDepth().filter { !it.isColumnGroup() } }
+            .map { it.path }
 
     val totalRows = dataFrames.sumOf { it.count() }
     val columns = columnPaths.map { path ->
@@ -106,9 +109,19 @@ internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
         val hasNulls = dataFrames.any { it.getColumn(path).hasNulls() }
         val col = dataFrames[0][path]
         if (col.isFrameColumn()) {
-            path to DataColumn.createFrameColumn(path.name(), values as List<AnyFrame>, schema = col.schema)
+            path to
+                DataColumn.createFrameColumn(
+                    path.name(),
+                    values as List<AnyFrame>,
+                    schema = col.schema,
+                )
         } else {
-            path to DataColumn.createValueColumn(path.name(), values, col.type().withNullability(hasNulls))
+            path to
+                DataColumn.createValueColumn(
+                    path.name(),
+                    values,
+                    col.type().withNullability(hasNulls),
+                )
         }
     }
     return columns.toDataFrameFromPairs()
@@ -116,13 +129,17 @@ internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
 
 private fun BitVector.values(range: IntRange): List<Boolean?> = range.map { getObject(it) }
 
-private fun UInt1Vector.values(range: IntRange): List<Short?> = range.map { getObjectNoOverflow(it) }
+private fun UInt1Vector.values(range: IntRange): List<Short?> = range.map {
+    getObjectNoOverflow(it)
+}
 
 private fun UInt2Vector.values(range: IntRange): List<Int?> = range.map { getObject(it)?.code }
 
 private fun UInt4Vector.values(range: IntRange): List<Long?> = range.map { getObjectNoOverflow(it) }
 
-private fun UInt8Vector.values(range: IntRange): List<BigInteger?> = range.map { getObjectNoOverflow(it) }
+private fun UInt8Vector.values(range: IntRange): List<BigInteger?> = range.map {
+    getObjectNoOverflow(it)
+}
 
 private fun TinyIntVector.values(range: IntRange): List<Byte?> = range.map { getObject(it) }
 
@@ -134,57 +151,61 @@ private fun BigIntVector.values(range: IntRange): List<Long?> = range.map { getO
 
 private fun DecimalVector.values(range: IntRange): List<BigDecimal?> = range.map { getObject(it) }
 
-private fun Decimal256Vector.values(range: IntRange): List<BigDecimal?> = range.map { getObject(it) }
+private fun Decimal256Vector.values(range: IntRange): List<BigDecimal?> = range.map {
+    getObject(it)
+}
 
 private fun Float4Vector.values(range: IntRange): List<Float?> = range.map { getObject(it) }
 
 private fun Float8Vector.values(range: IntRange): List<Double?> = range.map { getObject(it) }
 
-private fun DurationVector.values(range: IntRange): List<Duration?> = range.map { getObject(it).toKotlinDuration() }
+private fun DurationVector.values(range: IntRange): List<Duration?> = range.map {
+    getObject(it).toKotlinDuration()
+}
 
-private fun DateDayVector.values(range: IntRange): List<LocalDate?> =
-    range.map {
-        if (getObject(it) == null) {
-            null
-        } else {
-            DateUtility.getLocalDateTimeFromEpochMilli(getObject(it).toLong() * DateUtility.daysToStandardMillis)
-                .toLocalDate()
-                .toKotlinLocalDate()
-        }
+private fun DateDayVector.values(range: IntRange): List<LocalDate?> = range.map {
+    if (getObject(it) == null) {
+        null
+    } else {
+        DateUtility.getLocalDateTimeFromEpochMilli(
+                getObject(it).toLong() * DateUtility.daysToStandardMillis
+            )
+            .toLocalDate()
+            .toKotlinLocalDate()
     }
+}
 
-private fun DateMilliVector.values(range: IntRange): List<LocalDateTime?> =
-    range.map { getObject(it)?.toKotlinLocalDateTime() }
+private fun DateMilliVector.values(range: IntRange): List<LocalDateTime?> = range.map {
+    getObject(it)?.toKotlinLocalDateTime()
+}
 
-private fun TimeNanoVector.values(range: IntRange): List<LocalTime?> =
-    range.mapIndexed { i, it ->
-        if (isNull(i)) {
-            null
-        } else {
-            JavaLocalTime.ofNanoOfDay(get(it)).toKotlinLocalTime()
-        }
+private fun TimeNanoVector.values(range: IntRange): List<LocalTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        JavaLocalTime.ofNanoOfDay(get(it)).toKotlinLocalTime()
     }
+}
 
-private fun TimeMicroVector.values(range: IntRange): List<LocalTime?> =
-    range.mapIndexed { i, it ->
-        if (isNull(i)) {
-            null
-        } else {
-            JavaLocalTime.ofNanoOfDay(getObject(it) * 1000).toKotlinLocalTime()
-        }
+private fun TimeMicroVector.values(range: IntRange): List<LocalTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        JavaLocalTime.ofNanoOfDay(getObject(it) * 1000).toKotlinLocalTime()
     }
+}
 
-private fun TimeMilliVector.values(range: IntRange): List<LocalTime?> =
-    range.mapIndexed { i, it ->
-        if (isNull(i)) {
-            null
-        } else {
-            JavaLocalTime.ofNanoOfDay(get(it).toLong() * 1000_000).toKotlinLocalTime()
-        }
+private fun TimeMilliVector.values(range: IntRange): List<LocalTime?> = range.mapIndexed { i, it ->
+    if (isNull(i)) {
+        null
+    } else {
+        JavaLocalTime.ofNanoOfDay(get(it).toLong() * 1000_000).toKotlinLocalTime()
     }
+}
 
-private fun TimeSecVector.values(range: IntRange): List<LocalTime?> =
-    range.map { getObject(it)?.let { JavaLocalTime.ofSecondOfDay(it.toLong()).toKotlinLocalTime() } }
+private fun TimeSecVector.values(range: IntRange): List<LocalTime?> = range.map {
+    getObject(it)?.let { JavaLocalTime.ofSecondOfDay(it.toLong()).toKotlinLocalTime() }
+}
 
 private fun TimeStampNanoVector.values(range: IntRange): List<LocalDateTime?> =
     range.mapIndexed { i, it ->
@@ -222,76 +243,71 @@ private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
         }
     }
 
-private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> =
-    range.map {
-        getObject(it)
-    }
+private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> = range.map {
+    getObject(it)
+}
 
-private fun NullVector.values(range: IntRange): List<Nothing?> =
-    range.map {
-        getObject(it) as Nothing?
-    }
+private fun NullVector.values(range: IntRange): List<Nothing?> = range.map {
+    getObject(it) as Nothing?
+}
 
-private fun VarCharVector.values(range: IntRange): List<String?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            String(get(it))
-        }
+private fun VarCharVector.values(range: IntRange): List<String?> = range.map {
+    if (isNull(it)) {
+        null
+    } else {
+        String(get(it))
     }
+}
 
-private fun LargeVarCharVector.values(range: IntRange): List<String?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            String(get(it))
-        }
+private fun LargeVarCharVector.values(range: IntRange): List<String?> = range.map {
+    if (isNull(it)) {
+        null
+    } else {
+        String(get(it))
     }
+}
 
-private fun ViewVarCharVector.values(range: IntRange): List<String?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            String(get(it))
-        }
+private fun ViewVarCharVector.values(range: IntRange): List<String?> = range.map {
+    if (isNull(it)) {
+        null
+    } else {
+        String(get(it))
     }
+}
 
-private fun VarBinaryVector.values(range: IntRange): List<ByteArray?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            get(it)
-        }
+private fun VarBinaryVector.values(range: IntRange): List<ByteArray?> = range.map {
+    if (isNull(it)) {
+        null
+    } else {
+        get(it)
     }
+}
 
-private fun LargeVarBinaryVector.values(range: IntRange): List<ByteArray?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            get(it)
-        }
+private fun LargeVarBinaryVector.values(range: IntRange): List<ByteArray?> = range.map {
+    if (isNull(it)) {
+        null
+    } else {
+        get(it)
     }
+}
 
-private fun ViewVarBinaryVector.values(range: IntRange): List<ByteArray?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            get(it)
-        }
+private fun ViewVarBinaryVector.values(range: IntRange): List<ByteArray?> = range.map {
+    if (isNull(it)) {
+        null
+    } else {
+        get(it)
     }
+}
 
 internal fun nothingType(nullable: Boolean): KType =
     if (nullable) {
-        typeOf<List<Nothing?>>()
-    } else {
-        typeOf<List<Nothing>>()
-    }.arguments.first().type!!
+            typeOf<List<Nothing?>>()
+        } else {
+            typeOf<List<Nothing>>()
+        }
+        .arguments
+        .first()
+        .type!!
 
 private inline fun <reified T> List<T?>.withTypeNullable(
     expectedNulls: Boolean,
@@ -319,9 +335,10 @@ private fun readField(
 ): AnyBaseCol {
     try {
         if (vector is StructVector) {
-            val columns = field.children.map { childField ->
-                readField(vector.getChild(childField.name), childField, nullability, range)
-            }
+            val columns =
+                field.children.map { childField ->
+                    readField(vector.getChild(childField.name), childField, nullability, range)
+                }
             return DataColumn.createColumnGroup(field.name, columns.toDataFrame())
         }
         if (vector is LargeListVector) {
@@ -330,76 +347,110 @@ private fun readField(
         if (vector is ListVector) {
             return readListVector(vector.asAccessor(), field, range, nullability)
         }
-        val (list, type) = when (vector) {
-            is VarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+        val (list, type) =
+            when (vector) {
+                is VarCharVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is LargeVarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is LargeVarCharVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is ViewVarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is ViewVarCharVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is VarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is VarBinaryVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is LargeVarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is LargeVarBinaryVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is ViewVarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is ViewVarBinaryVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is BitVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is BitVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is SmallIntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is SmallIntVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TinyIntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is TinyIntVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is UInt1Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is UInt1Vector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is UInt2Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is UInt2Vector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is UInt4Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is UInt4Vector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is UInt8Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is UInt8Vector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is IntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is IntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is BigIntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is BigIntVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is DecimalVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is DecimalVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is Decimal256Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is Decimal256Vector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is Float8Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is Float8Vector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is Float4Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is Float4Vector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is DurationVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is DurationVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is DateDayVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is DateDayVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is DateMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is DateMilliVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is TimeNanoVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is TimeMicroVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is TimeMilliVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is TimeSecVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeStampNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is TimeStampNanoVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeStampMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is TimeStampMicroVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is TimeStampMilliVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is TimeStampSecVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+                is NullVector ->
+                    vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            else -> {
-                throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
+                else -> {
+                    throw NotImplementedError(
+                        "reading from ${vector.javaClass.canonicalName} is not implemented"
+                    )
+                }
             }
-        }
         return DataColumn.createValueColumn(field.name, list, type, Infer.None)
     } catch (unexpectedNull: NullabilityException) {
-        throw IllegalArgumentException("Column `${field.name}` should be not nullable but has nulls")
+        throw IllegalArgumentException(
+            "Column `${field.name}` should be not nullable but has nulls"
+        )
     }
 }
 
@@ -415,14 +466,15 @@ private fun readListVector(
         val frames = range.map { i ->
             val start = accessor.getElementStartIndex(i)
             val end = accessor.getElementEndIndex(i)
-            val columns = structField.children.map { childField ->
-                readField(
-                    dataVector.getChild(childField.name),
-                    childField,
-                    NullabilityOptions.Widening,
-                    start until end,
-                )
-            }
+            val columns =
+                structField.children.map { childField ->
+                    readField(
+                        dataVector.getChild(childField.name),
+                        childField,
+                        NullabilityOptions.Widening,
+                        start until end,
+                    )
+                }
             columns.toDataFrame()
         }
         DataColumn.createFrameColumn(field.name, frames)
@@ -442,10 +494,11 @@ private fun readListVector(
 
         val listNullable = nullability.applyNullability(fieldsData, field.isNullable)
 
-        val listType = List::class.createType(
-            arguments = listOf(KTypeProjection.invariant(elementType)),
-            nullable = listNullable,
-        )
+        val listType =
+            List::class.createType(
+                arguments = listOf(KTypeProjection.invariant(elementType)),
+                nullable = listNullable,
+            )
 
         DataColumn.createValueColumn(field.name, fieldsData.map { it?.values() }, listType)
     }
@@ -463,7 +516,8 @@ private interface ListVectorAccessor {
 
 private fun ListVector.asAccessor() =
     object : ListVectorAccessor {
-        override val dataVector: FieldVector get() = this@asAccessor.dataVector
+        override val dataVector: FieldVector
+            get() = this@asAccessor.dataVector
 
         override fun getElementStartIndex(index: Int) = this@asAccessor.getElementStartIndex(index)
 
@@ -475,22 +529,30 @@ private fun ListVector.asAccessor() =
 // Arrow in Java doesn't support allocating 64-bit-indexed vectors itself
 private fun LargeListVector.asAccessor() =
     object : ListVectorAccessor {
-        override val dataVector: FieldVector get() = this@asAccessor.dataVector
+        override val dataVector: FieldVector
+            get() = this@asAccessor.dataVector
 
-        override fun getElementStartIndex(index: Int) = Math.toIntExact(this@asAccessor.getElementStartIndex(index))
+        override fun getElementStartIndex(index: Int) =
+            Math.toIntExact(this@asAccessor.getElementStartIndex(index))
 
-        override fun getElementEndIndex(index: Int) = Math.toIntExact(this@asAccessor.getElementEndIndex(index))
+        override fun getElementEndIndex(index: Int) =
+            Math.toIntExact(this@asAccessor.getElementEndIndex(index))
 
         override fun isNull(index: Int) = this@asAccessor.isNull(index)
     }
 
 internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
 
-private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol =
-    readField(root.getVector(field), field, nullability)
+private fun readField(
+    root: VectorSchemaRoot,
+    field: Field,
+    nullability: NullabilityOptions,
+): AnyBaseCol = readField(root.getVector(field), field, nullability)
 
 /**
- * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
+ * Read
+ * [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
+ * data from existing [channel]
  */
 internal fun DataFrame.Companion.readArrowIPCImpl(
     channel: ReadableByteChannel,
@@ -499,7 +561,9 @@ internal fun DataFrame.Companion.readArrowIPCImpl(
 ): AnyFrame = readArrowImpl(ArrowStreamReader(channel, allocator), nullability)
 
 /**
- * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
+ * Read
+ * [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
+ * data from existing [channel]
  */
 internal fun DataFrame.Companion.readArrowFeatherImpl(
     channel: SeekableByteChannel,
@@ -508,7 +572,8 @@ internal fun DataFrame.Companion.readArrowFeatherImpl(
 ): AnyFrame = readArrowImpl(ArrowFileReader(channel, allocator), nullability)
 
 /**
- * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [reader]
+ * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats)
+ * data from existing [reader]
  */
 internal fun DataFrame.Companion.readArrowImpl(
     reader: ArrowReader,
@@ -522,7 +587,8 @@ internal fun DataFrame.Companion.readArrowImpl(
                         reader.loadRecordBatch(block)
                         val root = reader.vectorSchemaRoot
                         val schema = root.schema
-                        val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                        val df =
+                            schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
                         add(df)
                     }
                 }
@@ -531,7 +597,8 @@ internal fun DataFrame.Companion.readArrowImpl(
                     val root = reader.vectorSchemaRoot
                     val schema = root.schema
                     while (reader.loadNextBatch()) {
-                        val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                        val df =
+                            schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
                         add(df)
                     }
                 }
@@ -542,29 +609,29 @@ internal fun DataFrame.Companion.readArrowImpl(
 }
 
 private fun resolveArrowDatasetUris(fileUris: Array<String>): Array<String> =
-    fileUris.map {
-        when {
-            it.startsWith("http:", true) -> {
-                val url = URI.create(it).toURL()
-                val tempFile = File.createTempFile("kdf", ".parquet")
-                tempFile.deleteOnExit()
-                url.openStream().use { input ->
-                    Files.copy(input, tempFile.toPath())
-                    tempFile.toURI().toString()
+    fileUris
+        .map {
+            when {
+                it.startsWith("http:", true) -> {
+                    val url = URI.create(it).toURL()
+                    val tempFile = File.createTempFile("kdf", ".parquet")
+                    tempFile.deleteOnExit()
+                    url.openStream().use { input ->
+                        Files.copy(input, tempFile.toPath())
+                        tempFile.toURI().toString()
+                    }
                 }
-            }
 
-            !it.startsWith("file:", true) && File(it).exists() -> {
-                File(it).toURI().toString()
-            }
+                !it.startsWith("file:", true) && File(it).exists() -> {
+                    File(it).toURI().toString()
+                }
 
-            else -> it
+                else -> it
+            }
         }
-    }.toTypedArray()
+        .toTypedArray()
 
-/**
- * Read [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html) from [fileUris]
- */
+/** Read [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html) from [fileUris] */
 internal fun DataFrame.Companion.readArrowDatasetImpl(
     fileUris: Array<String>,
     fileFormat: FileFormat,
@@ -574,18 +641,19 @@ internal fun DataFrame.Companion.readArrowDatasetImpl(
     val scanOptions = ScanOptions(batchSize)
     RootAllocator().use { allocator ->
         FileSystemDatasetFactory(
-            allocator,
-            NativeMemoryPool.createListenable(DirectReservationListener.instance()),
-            fileFormat,
-            resolveArrowDatasetUris(fileUris),
-        ).use { datasetFactory ->
-            datasetFactory.finish().use { dataset ->
-                dataset.newScan(scanOptions).use { scanner ->
-                    scanner.scanBatches().use { reader ->
-                        return readArrowImpl(reader, nullability)
+                allocator,
+                NativeMemoryPool.createListenable(DirectReservationListener.instance()),
+                fileFormat,
+                resolveArrowDatasetUris(fileUris),
+            )
+            .use { datasetFactory ->
+                datasetFactory.finish().use { dataset ->
+                    dataset.newScan(scanOptions).use { scanner ->
+                        scanner.scanBatches().use { reader ->
+                            return readArrowImpl(reader, nullability)
+                        }
                     }
                 }
             }
-        }
     }
 }
