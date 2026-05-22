@@ -1,4 +1,4 @@
-# Data Schemas Troubleshooting
+# Data Schemas and Extension Properties Troubleshooting
 
 Sometimes you can get an exception with a message containing
 
