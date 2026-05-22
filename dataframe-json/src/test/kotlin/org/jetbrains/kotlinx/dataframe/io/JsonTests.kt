@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -1204,8 +1205,13 @@ class JsonTests {
         @Suppress("JsonStandardCompliance")
         val json = Json.decodeFromString<JsonElement>("""[jetbrains, jetbrains-youtrack, youtrack, youtrack-api]""")
         shouldThrow<IllegalStateException> {
-            readJsonImpl(json, true, emptyList())
+            readJsonImpl(json, true, emptyList(), isLenient = false)
         }
+
+        val expected = dataFrameOf(
+            "value" to columnOf("jetbrains", "jetbrains-youtrack", "youtrack", "youtrack-api"),
+        )
+        readJsonImpl(json, true, emptyList(), isLenient = true) shouldBe expected
     }
 }
 
