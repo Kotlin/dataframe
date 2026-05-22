@@ -334,7 +334,7 @@ public fun DataRow.Companion.readJson(
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
- * @param jsonInstance [Json] instance to use for parsing. Defaults to [Json.Default].
+ * @param format [Json] format to use for parsing. Defaults to [Json.Default].
  * @return [DataFrame] from the given [stream].
  */
 @OptIn(ExperimentalSerializationApi::class)
@@ -344,15 +344,15 @@ public fun DataFrame.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-    jsonInstance: Json = Json.Default,
+    format: Json = Json.Default,
 ): AnyFrame =
     readJsonImpl(
-        parsed = jsonInstance.decodeFromStream<JsonElement>(stream),
+        parsed = format.decodeFromStream<JsonElement>(stream),
         unifyNumbers = unifyNumbers,
         header = header,
         keyValuePaths = keyValuePaths,
         typeClashTactic = typeClashTactic,
-        isLenient = jsonInstance.configuration.isLenient,
+        isLenient = format.configuration.isLenient,
     )
 
 @Deprecated(
@@ -372,7 +372,7 @@ public fun DataFrame.Companion.readJson(
         keyValuePaths = keyValuePaths,
         typeClashTactic = typeClashTactic,
         unifyNumbers = unifyNumbers,
-        jsonInstance = Json.Default,
+        format = Json.Default,
     )
 
 /**
@@ -382,7 +382,7 @@ public fun DataFrame.Companion.readJson(
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
- * @param jsonInstance Json instance to use for parsing. Defaults to [Json.Default].
+ * @param format [Json] format to use for parsing. Defaults to [Json.Default].
  * @return [DataRow] from the given [stream].
  */
 public fun DataRow.Companion.readJson(
@@ -391,7 +391,7 @@ public fun DataRow.Companion.readJson(
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     unifyNumbers: Boolean = true,
-    jsonInstance: Json = Json.Default,
+    format: Json = Json.Default,
 ): AnyRow =
     DataFrame.readJson(
         stream = stream,
@@ -399,7 +399,7 @@ public fun DataRow.Companion.readJson(
         keyValuePaths = keyValuePaths,
         typeClashTactic = typeClashTactic,
         unifyNumbers = unifyNumbers,
-        jsonInstance = jsonInstance,
+        format = format,
     ).single()
 
 @Deprecated(

@@ -392,7 +392,7 @@ class Read : DataFrameSampleHelper("read", "api") {
         // SampleStart
         DataFrame.readJson(
             stream = json.byteInputStream(),
-            jsonInstance = Json {
+            format = Json {
                 isLenient = true
                 allowTrailingComma = true
                 allowComments = true

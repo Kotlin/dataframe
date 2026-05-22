@@ -580,7 +580,7 @@ For example, you can read JSON looking like this:
 ```kotlin
 DataFrame.readJson(
     stream = json.byteInputStream(),
-    jsonInstance = Json {
+    format = Json {
         isLenient = true
         allowTrailingComma = true
         allowComments = true
