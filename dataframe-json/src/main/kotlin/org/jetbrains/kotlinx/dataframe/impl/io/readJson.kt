@@ -75,6 +75,7 @@ internal fun readJsonImpl(
     parsed: Any?,
     unifyNumbers: Boolean,
     header: List<String>,
+    isLenient: Boolean,
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
 ): DataFrame<*> {
@@ -86,12 +87,14 @@ internal fun readJsonImpl(
                     unifyNumbers = unifyNumbers,
                     header = header,
                     keyValuePaths = keyValuePaths,
+                    isLenient = isLenient,
                 )
 
                 else -> fromJsonListArrayAndValueColumns(
                     records = listOf(parsed),
                     unifyNumbers = unifyNumbers,
                     keyValuePaths = keyValuePaths,
+                    isLenient = isLenient,
                 )
             }
         }
@@ -103,12 +106,14 @@ internal fun readJsonImpl(
                     unifyNumbers = unifyNumbers,
                     header = header,
                     keyValuePaths = keyValuePaths,
+                    isLenient = isLenient,
                 )
 
                 else -> fromJsonListAnyColumns(
                     records = listOf(parsed),
                     unifyNumbers = unifyNumbers,
                     keyValuePaths = keyValuePaths,
+                    isLenient = isLenient,
                 )
             }
         }
@@ -122,6 +127,7 @@ internal fun readJsonImpl(
  *
  * @param records List of json elements to be converted to a [DataFrame].
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers].
+ * @param isLenient Whether to ignore malformed JSON elements and treat them as strings.
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param header Optional list of column names. If given, [records] will be read like an object with [header] being the keys.
@@ -130,6 +136,7 @@ internal fun readJsonImpl(
 internal fun fromJsonListAnyColumns(
     records: List<*>,
     unifyNumbers: Boolean,
+    isLenient: Boolean,
     keyValuePaths: List<JsonPath> = emptyList(),
     header: List<String> = emptyList(),
     jsonPath: JsonPath = JsonPath(),
@@ -187,6 +194,7 @@ internal fun fromJsonListAnyColumns(
                                 records = listOf(v),
                                 unifyNumbers = unifyNumbers,
                                 keyValuePaths = keyValuePaths,
+                                isLenient = isLenient,
                                 jsonPath = jsonPath.replaceLastWildcardWithIndex(i),
                             )
                         collector.add(
@@ -203,6 +211,7 @@ internal fun fromJsonListAnyColumns(
                             records = v,
                             unifyNumbers = unifyNumbers,
                             keyValuePaths = keyValuePaths,
+                            isLenient = isLenient,
                             jsonPath = jsonPath.replaceLastWildcardWithIndex(i).appendArrayWithWildcard(),
                         )
                         collector.add(
@@ -234,6 +243,8 @@ internal fun fromJsonListAnyColumns(
                             v.floatOrNull != null -> collector.add(v.float)
 
                             v.doubleOrNull != null -> collector.add(v.double)
+
+                            isLenient -> collector.add(v.content)
 
                             else -> error("Malformed JSON element ${v::class}: $v")
                         }
@@ -286,6 +297,7 @@ internal fun fromJsonListAnyColumns(
                 unifyNumbers = unifyNumbers,
                 keyValuePaths = keyValuePaths,
                 jsonPath = jsonPath.appendArrayWithWildcard(),
+                isLenient = isLenient,
             )
 
             val res = when {
@@ -326,6 +338,7 @@ internal fun fromJsonListAnyColumns(
                                 unifyNumbers = unifyNumbers,
                                 keyValuePaths = keyValuePaths,
                                 jsonPath = jsonPath.append(key),
+                                isLenient = isLenient,
                             )
                             if (parsed.isSingleUnnamedColumn()) {
                                 (parsed.getColumn(0) as UnnamedColumn).col.values.first()
@@ -399,6 +412,7 @@ internal fun fromJsonListAnyColumns(
                 val parsed = fromJsonListAnyColumns(
                     records = values,
                     unifyNumbers = unifyNumbers,
+                    isLenient = isLenient,
                     keyValuePaths = keyValuePaths,
                     jsonPath = jsonPath.append(colName),
                 )
@@ -443,6 +457,7 @@ private fun AnyFrame.isSingleUnnamedColumn() = columnsCount() == 1 && getColumn(
  *
  * @param records List of json elements to be converted to a [DataFrame].
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers].
+ * @param isLenient Whether to ignore malformed JSON elements and treat them as strings.
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param header Optional list of column names. If given, [records] will be read like an object with [header] being the keys.
@@ -451,6 +466,7 @@ private fun AnyFrame.isSingleUnnamedColumn() = columnsCount() == 1 && getColumn(
 internal fun fromJsonListArrayAndValueColumns(
     records: List<*>,
     unifyNumbers: Boolean,
+    isLenient: Boolean,
     keyValuePaths: List<JsonPath> = emptyList(),
     header: List<String> = emptyList(),
     jsonPath: JsonPath = JsonPath(),
@@ -512,6 +528,7 @@ internal fun fromJsonListArrayAndValueColumns(
                             val parsed = fromJsonListArrayAndValueColumns(
                                 records = listOf(value),
                                 unifyNumbers = unifyNumbers,
+                                isLenient = isLenient,
                                 keyValuePaths = keyValuePaths,
                                 jsonPath = jsonPath.append(key),
                             )
@@ -590,6 +607,8 @@ internal fun fromJsonListArrayAndValueColumns(
 
                                         v.doubleOrNull != null -> collector.add(v.double)
 
+                                        isLenient -> collector.add(v.content)
+
                                         else -> error("Malformed JSON element ${v::class}: $v")
                                     }
                                 }
@@ -636,6 +655,7 @@ internal fun fromJsonListArrayAndValueColumns(
                             records = values,
                             unifyNumbers = unifyNumbers,
                             keyValuePaths = keyValuePaths,
+                            isLenient = isLenient,
                             jsonPath = jsonPath.appendArrayWithWildcard(),
                         )
 
@@ -674,6 +694,7 @@ internal fun fromJsonListArrayAndValueColumns(
                             records = values,
                             unifyNumbers = unifyNumbers,
                             keyValuePaths = keyValuePaths,
+                            isLenient = isLenient,
                             jsonPath = jsonPath.append(colName),
                         )
                         when {

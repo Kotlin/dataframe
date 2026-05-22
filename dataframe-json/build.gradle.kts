@@ -17,8 +17,8 @@ dependencies {
     api(projects.core)
 
     implementation(libs.kotlin.stdlib)
-    implementation(libs.serialization.core)
-    implementation(libs.serialization.json)
+    api(libs.serialization.core)
+    api(libs.serialization.json)
     implementation(libs.sl4j)
 
     // Use Kotlin test integration for JUnit 5 to satisfy variant 'kotlin-test-framework-junit5'

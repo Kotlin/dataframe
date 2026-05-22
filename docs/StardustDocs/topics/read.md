@@ -554,6 +554,44 @@ among other reasons.)
 
 For more examples, see the "examples/json" module.
 
+#### Unlocking Kotlinx Serialization JSON parsing features
+
+Both `DataFrame.readJson()` and `DataRow.readJson()` have one overload with the `jsonInstance` parameter.
+This is an advanced option because it exposes the
+[kotlinx-serialization Json entry point](https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-json/kotlinx.serialization.json/-json/)
+to you.
+Generally, the default settings serve best for most JSON you will encounter, but sometimes
+you may want to customize the behavior.
+
+For example, you can read JSON looking like this:
+```json
+[{ // some comment
+   a: 123,
+   b: hello,
+ },
+ { // some other comment
+   a: 456,
+   b: world,
+ }]
+```
+
+<!---FUN readJsonWithJsonInstance-->
+
+```kotlin
+DataFrame.readJson(
+    stream = json.byteInputStream(),
+    format = Json {
+        isLenient = true
+        allowTrailingComma = true
+        allowComments = true
+    },
+)
+```
+
+<!---END-->
+<inline-frame src="./resources/readJsonWithJsonInstance.html" width="100%" height="500px"></inline-frame>
+
+
 ## Read from Excel
 
 Before you can read data from Excel, add the following dependency:

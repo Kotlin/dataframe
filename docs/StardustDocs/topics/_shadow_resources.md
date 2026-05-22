@@ -305,6 +305,7 @@
 <resource src="readJsonFromString.html"></resource>
 <resource src="readJsonFromStringWithoutKeyValuePairs.html"></resource>
 <resource src="readJsonFromStringWithKeyValuePairs.html"></resource>
+<resource src="readJsonWithJsonInstance.html"></resource>
 <resource src="csvTypeInference.html"></resource>
 <resource src="readCsvTypeInference.html"></resource>
 <resource src="csvWithJsonColumns.html"></resource>
