@@ -299,7 +299,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         propertyType: String,
         getter: String,
         visibility: String,
-        columnName: String
+        columnName: String,
     ): String {
         // jvm name is required to prevent signature clash like this:
         // val DataRow<Type>.name: String
