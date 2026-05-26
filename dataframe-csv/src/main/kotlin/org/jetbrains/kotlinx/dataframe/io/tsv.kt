@@ -57,7 +57,7 @@ public class Tsv : DataFrameReadSource {
         val parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
     ) : DataFrameReadOptions
 
-    override val supportedTypes: Set<KType> =
+    override val supportedReadingTypes: Set<KType> =
         setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
 
     public companion object {
@@ -73,48 +73,48 @@ public class Tsv : DataFrameReadSource {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension != null && sourceInfo.extension !in EXTENSIONS) return false
         if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPE) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
-    override fun readDataFrameOrNull(
+    override fun readDataFrame(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrame<*>? {
-        val opts = (options ?: Options()) as Options
-        val kType = sourceInfo.kType
+    ): Result<DataFrame<*>> =
+        runCatching {
+            val opts = (options ?: Options()) as Options
+            val kType = sourceInfo.kType
 
-        val url: URL? = when {
-            kType.isSubTypeOf<URL>() -> source as? URL
-            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
-            else -> null
-        }
-        if (url != null) {
-            return DataFrame.readTsv(
-                url = url,
-                delimiter = opts.delimiter,
-                header = opts.header,
-                charset = opts.charset,
-                colTypes = opts.colTypes,
-                skipLines = opts.skipLines,
-                readLines = opts.readLines,
-                parserOptions = opts.parserOptions,
-                ignoreEmptyLines = opts.ignoreEmptyLines,
-                allowMissingColumns = opts.allowMissingColumns,
-                ignoreExcessColumns = opts.ignoreExcessColumns,
-                quote = opts.quote,
-                ignoreSurroundingSpaces = opts.ignoreSurroundingSpaces,
-                trimInsideQuoted = opts.trimInsideQuoted,
-                parseParallel = opts.parseParallel,
-            )
-        }
+            val url: URL? = when {
+                kType.isSubTypeOf<URL>() -> source as? URL
+                kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+                kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+                else -> null
+            }
+            if (url != null) {
+                return@runCatching DataFrame.readTsv(
+                    url = url,
+                    delimiter = opts.delimiter,
+                    header = opts.header,
+                    charset = opts.charset,
+                    colTypes = opts.colTypes,
+                    skipLines = opts.skipLines,
+                    readLines = opts.readLines,
+                    parserOptions = opts.parserOptions,
+                    ignoreEmptyLines = opts.ignoreEmptyLines,
+                    allowMissingColumns = opts.allowMissingColumns,
+                    ignoreExcessColumns = opts.ignoreExcessColumns,
+                    quote = opts.quote,
+                    ignoreSurroundingSpaces = opts.ignoreSurroundingSpaces,
+                    trimInsideQuoted = opts.trimInsideQuoted,
+                    parseParallel = opts.parseParallel,
+                )
+            }
 
-        return when {
-            kType.isSubTypeOf<InputStream>() ->
-                (source as? InputStream)?.let { stream ->
+            when {
+                kType.isSubTypeOf<InputStream>() -> {
                     DataFrame.readTsv(
-                        inputStream = stream,
+                        inputStream = source as InputStream,
                         delimiter = opts.delimiter,
                         header = opts.header,
                         charset = opts.charset,
@@ -132,13 +132,16 @@ public class Tsv : DataFrameReadSource {
                     )
                 }
 
-            kType.isSubTypeOf<String>() ->
-                (source as? String)?.let { text ->
+                kType.isSubTypeOf<String>() -> {
                     // early fail
-                    if (opts.delimiter !in text) return null
+                    if (opts.delimiter !in source as String) {
+                        return Result.failure(
+                            IllegalStateException("String does not contain delimiter '${opts.delimiter}'"),
+                        )
+                    }
 
                     DataFrame.readTsvStr(
-                        text = text,
+                        text = source,
                         delimiter = opts.delimiter,
                         header = opts.header,
                         colTypes = opts.colTypes,
@@ -155,9 +158,9 @@ public class Tsv : DataFrameReadSource {
                     )
                 }
 
-            else -> null
+                else -> return Result.failure(IllegalStateException("Cannot read source of type $kType as TSV"))
+            }
         }
-    }
 
     override val testOrder: Int = 30_000
 

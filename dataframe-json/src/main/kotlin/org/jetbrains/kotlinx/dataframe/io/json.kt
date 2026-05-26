@@ -45,7 +45,7 @@ public class Json : DataFrameReadSource {
         val unifyNumbers: Boolean = true,
     ) : DataFrameReadOptions
 
-    override val supportedTypes: Set<KType> =
+    override val supportedReadingTypes: Set<KType> =
         setOf(
             typeOf<URL>(),
             typeOf<Path>(),
@@ -69,58 +69,62 @@ public class Json : DataFrameReadSource {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
         if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override fun readDataFrameOrNull(
+    override fun readDataFrame(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrame<*>? {
-        val opts = (options ?: Options()) as Options
-        val kType = sourceInfo.kType
+    ): Result<DataFrame<*>> =
+        runCatching {
+            val opts = (options ?: Options()) as Options
+            val kType = sourceInfo.kType
 
-        val url: URL? = when {
-            kType.isSubTypeOf<URL>() -> source as? URL
-            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
-            else -> null
-        }
-        if (url != null) {
-            return DataFrame.readJson(
-                url = url,
+            val url: URL? = when {
+                kType.isSubTypeOf<URL>() -> source as? URL
+                kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+                kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+                else -> null
+            }
+            if (url != null) {
+                return@runCatching DataFrame.readJson(
+                    url = url,
+                    header = opts.header,
+                    typeClashTactic = opts.typeClashTactic,
+                    keyValuePaths = opts.keyValuePaths,
+                    unifyNumbers = opts.unifyNumbers,
+                )
+            }
+
+            val element: JsonElement = when {
+                kType.isSubTypeOf<InputStream>() ->
+                    Json.decodeFromStream<JsonElement>(source as InputStream)
+
+                kType.isSubTypeOf<String>() -> {
+                    if ((source as String).isNotJson()) {
+                        return Result.failure(
+                            IllegalArgumentException("Source string is not valid JSON"),
+                        )
+                    }
+                    Json.decodeFromString<JsonElement>(source)
+                }
+
+                kType.isSubTypeOf<JsonElement>() ->
+                    source as JsonElement
+
+                else -> return Result.failure(IllegalStateException("Unsupported JSON source type: $kType"))
+            }
+
+            return@runCatching readJsonImpl(
+                parsed = element,
                 header = opts.header,
                 typeClashTactic = opts.typeClashTactic,
                 keyValuePaths = opts.keyValuePaths,
                 unifyNumbers = opts.unifyNumbers,
             )
         }
-
-        val element: JsonElement = when {
-            kType.isSubTypeOf<InputStream>() ->
-                (source as? InputStream)?.let { Json.decodeFromStream<JsonElement>(it) }
-
-            kType.isSubTypeOf<String>() ->
-                (source as? String)?.let {
-                    if (it.isNotJson()) return null
-                    Json.decodeFromString<JsonElement>(it)
-                }
-
-            kType.isSubTypeOf<JsonElement>() ->
-                source as? JsonElement
-
-            else -> null
-        } ?: return null
-
-        return readJsonImpl(
-            parsed = element,
-            header = opts.header,
-            typeClashTactic = opts.typeClashTactic,
-            keyValuePaths = opts.keyValuePaths,
-            unifyNumbers = opts.unifyNumbers,
-        )
-    }
 
     override val testOrder: Int = 10_000
 

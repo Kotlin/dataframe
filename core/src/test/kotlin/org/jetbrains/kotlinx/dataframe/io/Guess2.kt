@@ -478,8 +478,8 @@ class Guess2 {
     @Test
     fun `OpenAPI does not steal plain JSON DataFrame reads`() {
         // A regular JSON file (not an OpenAPI spec) still goes to Json, even though OpenApi2 runs first.
-        // OpenApi2.readDataSchemaCodeOrNull returns null for non-OpenAPI content, but more importantly
-        // OpenApi2.readDataFrameOrNull is the interface default (null), so DataFrame reads fall through.
+        // OpenApi2.readDataSchemaCode returns a failed Result for non-OpenAPI content, but more importantly
+        // OpenApi2.readDataFrame returns a failed Result, so DataFrame reads fall through.
         val expected = DataFrame.readJson("../data/participants.json")
         DataFrame.readSource(File("../data/participants.json")) shouldBe expected
     }

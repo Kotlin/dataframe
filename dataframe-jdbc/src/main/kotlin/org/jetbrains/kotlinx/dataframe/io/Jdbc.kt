@@ -80,7 +80,7 @@ public class Jdbc2 : DataFrameReadSource {
         val resultSetConnection: Connection? = null,
     ) : DataFrameReadOptions
 
-    override val supportedTypes: Set<KType> =
+    override val supportedReadingTypes: Set<KType> =
         setOf(
             typeOf<Connection>(),
             typeOf<DataSource>(),
@@ -90,102 +90,127 @@ public class Jdbc2 : DataFrameReadSource {
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
-    override fun readDataFrameOrNull(
+    override fun readDataFrame(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrame<*>? {
-        val opts = (options ?: Options()) as Options
-        return when (source) {
-            is ResultSet -> when {
-                opts.dbType != null ->
-                    DataFrame.readResultSet(source, opts.dbType, opts.limit, opts.inferNullability)
+    ): Result<DataFrame<*>> =
+        runCatching {
+            val opts = (options ?: Options()) as Options
+            @Suppress("RedundantReturnKeyword")
+            return@runCatching when (source) {
+                is ResultSet -> when {
+                    opts.dbType != null ->
+                        DataFrame.readResultSet(source, opts.dbType, opts.limit, opts.inferNullability)
 
-                opts.resultSetConnection != null ->
-                    DataFrame.readResultSet(
-                        source,
-                        opts.resultSetConnection,
-                        opts.limit,
-                        opts.inferNullability,
+                    opts.resultSetConnection != null ->
+                        DataFrame.readResultSet(
+                            source,
+                            opts.resultSetConnection,
+                            opts.limit,
+                            opts.inferNullability,
+                        )
+
+                    // Without dbType or a connection we can't read a ResultSet — fall through.
+                    else -> return Result.failure(
+                        IllegalArgumentException(
+                            "ResultSet read requires either Options.dbType or Options.resultSetConnection",
+                        ),
                     )
+                }
 
-                // Without dbType or a connection we can't read a ResultSet — fall through.
-                else -> null
+                is Connection -> {
+                    val query = opts.sqlQueryOrTableName
+                        ?: return Result.failure(
+                            IllegalArgumentException("Connection read requires Options.sqlQueryOrTableName"),
+                        )
+                    source.readDataFrame(
+                        sqlQueryOrTableName = query,
+                        limit = opts.limit,
+                        inferNullability = opts.inferNullability,
+                        dbType = opts.dbType,
+                        strictValidation = opts.strictValidation,
+                        configureStatement = opts.configureStatement,
+                    )
+                }
+
+                is DataSource -> {
+                    val query = opts.sqlQueryOrTableName
+                        ?: return Result.failure(
+                            IllegalArgumentException("DataSource read requires Options.sqlQueryOrTableName"),
+                        )
+                    source.readDataFrame(
+                        sqlQueryOrTableName = query,
+                        limit = opts.limit,
+                        inferNullability = opts.inferNullability,
+                        dbType = opts.dbType,
+                        strictValidation = opts.strictValidation,
+                        configureStatement = opts.configureStatement,
+                    )
+                }
+
+                is DbConnectionConfig -> {
+                    val query = opts.sqlQueryOrTableName
+                        ?: return Result.failure(
+                            IllegalArgumentException("DbConnectionConfig read requires Options.sqlQueryOrTableName"),
+                        )
+                    source.readDataFrame(
+                        sqlQueryOrTableName = query,
+                        limit = opts.limit,
+                        inferNullability = opts.inferNullability,
+                        dbType = opts.dbType,
+                        strictValidation = opts.strictValidation,
+                        configureStatement = opts.configureStatement,
+                    )
+                }
+
+                else -> return Result.failure(IllegalStateException("Unsupported JDBC source type: ${source::class}"))
             }
-
-            is Connection -> opts.sqlQueryOrTableName?.let {
-                source.readDataFrame(
-                    sqlQueryOrTableName = it,
-                    limit = opts.limit,
-                    inferNullability = opts.inferNullability,
-                    dbType = opts.dbType,
-                    strictValidation = opts.strictValidation,
-                    configureStatement = opts.configureStatement,
-                )
-            }
-
-            is DataSource -> opts.sqlQueryOrTableName?.let {
-                source.readDataFrame(
-                    sqlQueryOrTableName = it,
-                    limit = opts.limit,
-                    inferNullability = opts.inferNullability,
-                    dbType = opts.dbType,
-                    strictValidation = opts.strictValidation,
-                    configureStatement = opts.configureStatement,
-                )
-            }
-
-            is DbConnectionConfig -> opts.sqlQueryOrTableName?.let {
-                source.readDataFrame(
-                    sqlQueryOrTableName = it,
-                    limit = opts.limit,
-                    inferNullability = opts.inferNullability,
-                    dbType = opts.dbType,
-                    strictValidation = opts.strictValidation,
-                    configureStatement = opts.configureStatement,
-                )
-            }
-
-            else -> null
         }
-    }
 
-    override fun readDataFrameSchemaOrNull(
+    override fun readDataFrameSchema(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrameSchema? {
-        val opts = (options ?: Options()) as Options
-        return when (source) {
-            // ResultSet has a true zero-row metadata-only path.
-            is ResultSet -> when {
-                opts.dbType != null ->
-                    DataFrameSchema.readResultSet(source, opts.dbType)
+    ): Result<DataFrameSchema> =
+        runCatching {
+            val opts = (options ?: Options()) as Options
+            when (source) {
+                // ResultSet has a true zero-row metadata-only path.
+                is ResultSet -> when {
+                    opts.dbType != null ->
+                        DataFrameSchema.readResultSet(source, opts.dbType)
 
-                opts.resultSetConnection != null ->
-                    DataFrameSchema.readResultSet(source, extractDBTypeFromConnection(opts.resultSetConnection))
+                    opts.resultSetConnection != null ->
+                        DataFrameSchema.readResultSet(source, extractDBTypeFromConnection(opts.resultSetConnection))
 
-                else -> null
+                    else -> error("ResultSet schema read requires either Options.dbType or Options.resultSetConnection")
+                }
+
+                is Connection -> {
+                    val query = opts.sqlQueryOrTableName
+                        ?: error("Connection schema read requires Options.sqlQueryOrTableName")
+                    source.readDataFrameSchema(sqlQueryOrTableName = query, dbType = opts.dbType)
+                }
+
+                is DataSource -> {
+                    val query = opts.sqlQueryOrTableName
+                        ?: error("DataSource schema read requires Options.sqlQueryOrTableName")
+                    source.readDataFrameSchema(sqlQueryOrTableName = query, dbType = opts.dbType)
+                }
+
+                is DbConnectionConfig -> {
+                    val query = opts.sqlQueryOrTableName
+                        ?: error("DbConnectionConfig schema read requires Options.sqlQueryOrTableName")
+                    source.readDataFrameSchema(sqlQueryOrTableName = query, dbType = opts.dbType)
+                }
+
+                else -> error("Unsupported source type: ${source::class}")
             }
-
-            is Connection -> opts.sqlQueryOrTableName?.let {
-                source.readDataFrameSchema(sqlQueryOrTableName = it, dbType = opts.dbType)
-            }
-
-            is DataSource -> opts.sqlQueryOrTableName?.let {
-                source.readDataFrameSchema(sqlQueryOrTableName = it, dbType = opts.dbType)
-            }
-
-            is DbConnectionConfig -> opts.sqlQueryOrTableName?.let {
-                source.readDataFrameSchema(sqlQueryOrTableName = it, dbType = opts.dbType)
-            }
-
-            else -> null
         }
-    }
 
     override val testOrder: Int = 50_000
 

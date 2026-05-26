@@ -82,7 +82,7 @@ public class ExcelNEW : DataFrameReadSource {
 
     // String reference paths are normalized to URL by readSourceImpl, so no String entry here;
     // Excel is binary, so raw String content isn't a meaningful input either.
-    override val supportedTypes: Set<KType> =
+    override val supportedReadingTypes: Set<KType> =
         setOf(
             typeOf<URL>(),
             typeOf<Path>(),
@@ -108,42 +108,43 @@ public class ExcelNEW : DataFrameReadSource {
         if (ext != null && ext !in EXTENSIONS) return false
         val mime = sourceInfo.mimeType?.lowercase()
         if (mime != null && mime !in MIME_TYPES) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
-    override fun readDataFrameOrNull(
+    override fun readDataFrame(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrame<*>? {
-        val opts = (options ?: Options()) as Options
-        val kType = sourceInfo.kType
+    ): Result<DataFrame<*>> =
+        runCatching {
+            val opts = (options ?: Options()) as Options
+            val kType = sourceInfo.kType
 
-        val url: URL? = when {
-            kType.isSubTypeOf<URL>() -> source as? URL
-            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
-            else -> null
-        }
-        if (url != null) {
-            return DataFrame.readExcel(
-                url = url,
-                sheetName = opts.sheetName,
-                skipRows = opts.skipRows,
-                columns = opts.columns,
-                stringColumns = opts.stringColumns,
-                rowsCount = opts.rowsCount,
-                nameRepairStrategy = opts.nameRepairStrategy,
-                firstRowIsHeader = opts.firstRowIsHeader,
-                parseEmptyAsNull = opts.parseEmptyAsNull,
-            )
-        }
+            val url: URL? = when {
+                kType.isSubTypeOf<URL>() -> source as? URL
+                kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+                kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+                else -> null
+            }
+            if (url != null) {
+                return@runCatching DataFrame.readExcel(
+                    url = url,
+                    sheetName = opts.sheetName,
+                    skipRows = opts.skipRows,
+                    columns = opts.columns,
+                    stringColumns = opts.stringColumns,
+                    rowsCount = opts.rowsCount,
+                    nameRepairStrategy = opts.nameRepairStrategy,
+                    firstRowIsHeader = opts.firstRowIsHeader,
+                    parseEmptyAsNull = opts.parseEmptyAsNull,
+                )
+            }
 
-        return when {
-            kType.isSubTypeOf<InputStream>() ->
-                (source as? InputStream)?.let { stream ->
+            @Suppress("RedundantReturnKeyword")
+            return@runCatching when {
+                kType.isSubTypeOf<InputStream>() -> {
                     DataFrame.readExcel(
-                        inputStream = stream,
+                        inputStream = source as InputStream,
                         sheetName = opts.sheetName,
                         skipRows = opts.skipRows,
                         columns = opts.columns,
@@ -155,10 +156,9 @@ public class ExcelNEW : DataFrameReadSource {
                     )
                 }
 
-            kType.isSubTypeOf<Workbook>() ->
-                (source as? Workbook)?.let { wb ->
+                kType.isSubTypeOf<Workbook>() -> {
                     DataFrame.readExcel(
-                        wb = wb,
+                        wb = source as Workbook,
                         sheetName = opts.sheetName,
                         skipRows = opts.skipRows,
                         columns = opts.columns,
@@ -170,11 +170,10 @@ public class ExcelNEW : DataFrameReadSource {
                     )
                 }
 
-            kType.isSubTypeOf<Sheet>() ->
-                (source as? Sheet)?.let { sheet ->
+                kType.isSubTypeOf<Sheet>() -> {
                     // readExcel(Sheet) has no sheetName parameter — the sheet is already selected.
                     DataFrame.readExcel(
-                        sheet = sheet,
+                        sheet = source as Sheet,
                         columns = opts.columns,
                         formattingOptions = opts.stringColumns?.toFormattingOptions(),
                         skipRows = opts.skipRows,
@@ -185,9 +184,9 @@ public class ExcelNEW : DataFrameReadSource {
                     )
                 }
 
-            else -> null
+                else -> return Result.failure(IllegalStateException("Cannot read source of type $kType as Excel"))
+            }
         }
-    }
 
     override val testOrder: Int = 40_000
 

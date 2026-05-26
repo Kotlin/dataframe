@@ -53,7 +53,7 @@ public class ArrowFeatherNEW : DataFrameReadSource {
 
     public data class Options(val nullability: NullabilityOptions = NullabilityOptions.Infer) : DataFrameReadOptions
 
-    override val supportedTypes: Set<KType> =
+    override val supportedReadingTypes: Set<KType> =
         setOf(
             typeOf<URL>(),
             typeOf<Path>(),
@@ -71,47 +71,50 @@ public class ArrowFeatherNEW : DataFrameReadSource {
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
-    override fun readDataFrameOrNull(
+    override fun readDataFrame(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrame<*>? {
-        val opts = (options ?: Options()) as Options
-        val kType = sourceInfo.kType
+    ): Result<DataFrame<*>> =
+        runCatching {
+            val opts = (options ?: Options()) as Options
+            val kType = sourceInfo.kType
 
-        // ArrowReader is exclusive; check before more general types.
-        if (kType.isSubTypeOf<ArrowReader>()) {
-            return (source as? ArrowReader)?.let { DataFrame.readArrow(it, opts.nullability) }
-        }
+            // ArrowReader is exclusive; check before more general types.
+            if (kType.isSubTypeOf<ArrowReader>()) {
+                return@runCatching DataFrame.readArrow(source as ArrowReader, opts.nullability)
+            }
 
-        val url: URL? = when {
-            kType.isSubTypeOf<URL>() -> source as? URL
-            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
-            else -> null
-        }
-        if (url != null) {
-            return DataFrame.readArrowFeather(url, opts.nullability)
-        }
+            val url: URL? = when {
+                kType.isSubTypeOf<URL>() -> source as? URL
+                kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+                kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+                else -> null
+            }
+            if (url != null) {
+                return@runCatching DataFrame.readArrowFeather(url, opts.nullability)
+            }
 
-        return when {
-            kType.isSubTypeOf<SeekableByteChannel>() ->
-                (source as? SeekableByteChannel)?.let {
-                    DataFrame.readArrowFeather(it, nullability = opts.nullability)
+            return@runCatching when {
+                kType.isSubTypeOf<SeekableByteChannel>() ->
+                    DataFrame.readArrowFeather(source as SeekableByteChannel, nullability = opts.nullability)
+
+                kType.isSubTypeOf<ByteArray>() ->
+                    DataFrame.readArrowFeather(source as ByteArray, opts.nullability)
+
+                kType.isSubTypeOf<InputStream>() ->
+                    DataFrame.readArrowFeather(source as InputStream, opts.nullability)
+
+                else -> {
+                    // return the exception without throwing it; cheaper
+                    @Suppress("RedundantReturnKeyword")
+                    return Result.failure(IllegalStateException("Cannot read source of type $kType as Arrow Feather"))
                 }
-
-            kType.isSubTypeOf<ByteArray>() ->
-                (source as? ByteArray)?.let { DataFrame.readArrowFeather(it, opts.nullability) }
-
-            kType.isSubTypeOf<InputStream>() ->
-                (source as? InputStream)?.let { DataFrame.readArrowFeather(it, opts.nullability) }
-
-            else -> null
+            }
         }
-    }
 
     override val testOrder: Int = 60_000
 
@@ -138,7 +141,7 @@ public class ArrowIPC : DataFrameReadSource {
         val nullability: NullabilityOptions = NullabilityOptions.Infer,
     ) : DataFrameReadOptions
 
-    override val supportedTypes: Set<KType> =
+    override val supportedReadingTypes: Set<KType> =
         setOf(
             typeOf<URL>(),
             typeOf<Path>(),
@@ -156,46 +159,49 @@ public class ArrowIPC : DataFrameReadSource {
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
-    override fun readDataFrameOrNull(
+    override fun readDataFrame(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrame<*>? {
-        val opts = (options ?: Options()) as Options
-        val kType = sourceInfo.kType
+    ): Result<DataFrame<*>> =
+        runCatching {
+            val opts = (options ?: Options()) as Options
+            val kType = sourceInfo.kType
 
-        if (kType.isSubTypeOf<ArrowReader>()) {
-            return (source as? ArrowReader)?.let { DataFrame.readArrow(it, opts.nullability) }
-        }
+            if (kType.isSubTypeOf<ArrowReader>()) {
+                return@runCatching DataFrame.readArrow(source as ArrowReader, opts.nullability)
+            }
 
-        val url: URL? = when {
-            kType.isSubTypeOf<URL>() -> source as? URL
-            kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
-            kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
-            else -> null
-        }
-        if (url != null) {
-            return DataFrame.readArrowIPC(url, opts.nullability)
-        }
+            val url: URL? = when {
+                kType.isSubTypeOf<URL>() -> source as? URL
+                kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+                kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+                else -> null
+            }
+            if (url != null) {
+                return@runCatching DataFrame.readArrowIPC(url, opts.nullability)
+            }
 
-        return when {
-            kType.isSubTypeOf<ReadableByteChannel>() ->
-                (source as? ReadableByteChannel)?.let {
-                    DataFrame.readArrowIPC(it, allocator = opts.allocator, nullability = opts.nullability)
+            return@runCatching when {
+                kType.isSubTypeOf<ReadableByteChannel>() ->
+                    DataFrame.readArrowIPC(source as ReadableByteChannel, opts.allocator, opts.nullability)
+
+                kType.isSubTypeOf<ByteArray>() ->
+                    DataFrame.readArrowIPC(source as ByteArray, opts.nullability)
+
+                kType.isSubTypeOf<InputStream>() ->
+                    DataFrame.readArrowIPC(source as InputStream, opts.nullability)
+
+                else -> {
+                    // return the exception without throwing it; cheaper
+                    @Suppress("RedundantReturnKeyword")
+                    return Result.failure(IllegalStateException("Cannot read source of type $kType as Arrow IPC"))
                 }
-
-            kType.isSubTypeOf<ByteArray>() ->
-                (source as? ByteArray)?.let { DataFrame.readArrowIPC(it, opts.nullability) }
-
-            kType.isSubTypeOf<InputStream>() ->
-                (source as? InputStream)?.let { DataFrame.readArrowIPC(it, opts.nullability) }
-
-            else -> null
+            }
         }
-    }
 
     // Runs after ArrowFeatherNEW so that `.feather` files get the random-access reader first.
     // Both accept `.arrow`; if Feather reading throws on an IPC streaming file the framework falls
@@ -221,7 +227,7 @@ public class Parquet : DataFrameReadSource {
         val batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
     ) : DataFrameReadOptions
 
-    override val supportedTypes: Set<KType> =
+    override val supportedReadingTypes: Set<KType> =
         setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>())
 
     public companion object {
@@ -236,47 +242,46 @@ public class Parquet : DataFrameReadSource {
         if (options != null && options !is Options) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
         if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
-    override fun readDataFrameOrNull(
+    override fun readDataFrame(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrame<*>? {
-        val opts = (options ?: Options()) as Options
-        val kType = sourceInfo.kType
-        return when {
-            kType.isSubTypeOf<URL>() ->
-                (source as? URL)?.let {
+    ): Result<DataFrame<*>> =
+        runCatching {
+            val opts = (options ?: Options()) as Options
+            val kType = sourceInfo.kType
+            return@runCatching when {
+                kType.isSubTypeOf<URL>() ->
                     DataFrame.readParquet(
-                        it,
+                        source as URL,
                         nullability = opts.nullability,
                         batchSize = opts.batchSize,
                     )
-                }
 
-            kType.isSubTypeOf<Path>() ->
-                (source as? Path)?.let {
+                kType.isSubTypeOf<Path>() ->
                     DataFrame.readParquet(
-                        it,
+                        source as Path,
                         nullability = opts.nullability,
                         batchSize = opts.batchSize,
                     )
-                }
 
-            kType.isSubTypeOf<File>() ->
-                (source as? File)?.let {
+                kType.isSubTypeOf<File>() ->
                     DataFrame.readParquet(
-                        it,
+                        source as File,
                         nullability = opts.nullability,
                         batchSize = opts.batchSize,
                     )
-                }
 
-            else -> null
+                else -> {
+                    // return the exception without throwing it; cheaper
+                    @Suppress("RedundantReturnKeyword")
+                    return Result.failure(IllegalStateException("Cannot read source of type $kType as Parquet"))
+                }
+            }
         }
-    }
 
     override val testOrder: Int = 60_500
 

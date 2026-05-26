@@ -39,6 +39,8 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.parser
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.singleOrNull
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -48,9 +50,11 @@ import org.jetbrains.kotlinx.dataframe.impl.LazyMap
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.resetToDefault
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.flatMap
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.impl.lazyMapOf
+import org.jetbrains.kotlinx.dataframe.impl.toResult
 import org.jetbrains.kotlinx.dataframe.io.DataFrameReadSource
 import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.io.newSupportedFormats
@@ -961,8 +965,9 @@ internal object Parsers : GlobalParserOptions {
                         formats = newSupportedFormats,
                         resultKind = "DataRow",
                         doStringToUrlConversion = isConverter,
-                        readOrNull = { source, sourceInfo, options ->
-                            readDataFrameOrNull(source, sourceInfo, options)?.singleOrNull()
+                        read = { source, sourceInfo, options ->
+                            readDataFrame(source, sourceInfo, options)
+                                .flatMap { it.singleOrNull().toResult() }
                         },
                     ).getOrNull()
                 }
@@ -980,7 +985,7 @@ internal object Parsers : GlobalParserOptions {
                         formats = newSupportedFormats,
                         resultKind = "DataFrame",
                         doStringToUrlConversion = isConverter,
-                        readOrNull = DataFrameReadSource::readDataFrameOrNull,
+                        read = DataFrameReadSource::readDataFrame,
                     ).getOrNull()
                 }
             } else {

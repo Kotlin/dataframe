@@ -41,13 +41,13 @@ public interface DataFrameReadSource {
      * is invoked, so only include `String` here when raw text content is a legitimate input (e.g., JSON/CSV
      * text). For binary formats, leave `String` out.
      */
-    public val supportedTypes: Set<KType>
+    public val supportedReadingTypes: Set<KType>
 
-    public fun readDataFrameOrNull(
+    public fun readDataFrame(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions? = null,
-    ): DataFrame<*>?
+    ): Result<DataFrame<*>>
 
     /**
      * Read just the [DataFrameSchema] for [source].
@@ -56,26 +56,20 @@ public interface DataFrameReadSource {
      * source format can introspect types without materializing rows (e.g., JDBC metadata queries, Parquet/Arrow
      * file footers, OpenAPI specs).
      */
-    public fun readDataFrameSchemaOrNull(
+    public fun readDataFrameSchema(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions? = null,
-    ): DataFrameSchema? = readDataFrameOrNull(source, sourceInfo, options)?.schema()
+    ): Result<DataFrameSchema> = readDataFrame(source, sourceInfo, options).map { it.schema() }
 
-    public fun readDataSchemaCodeOrNull(
+    public fun readDataSchemaCode(
         source: Any,
         sourceInfo: DataSourceInfo,
         name: String,
         options: DataFrameReadOptions? = null,
-    ): CodeString? =
-        readDataFrameSchemaOrNull(source, sourceInfo, options)
-            ?.generateInterfaces(name)
+    ): Result<CodeString> = readDataFrameSchema(source, sourceInfo, options).map { it.generateInterfaces(name) }
 
     public fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean
-
-    // `DataFrame.Companion.read` methods uses this to sort list of all supported formats in ascending order (-1, 2, 10)
-    // sorted list is used to test if any format can read given input
-    public val testOrder: Int
 }
 
 /**
@@ -106,7 +100,7 @@ internal val newSupportedFormats: List<DataFrameReadSource> by lazy {
 internal val dataFrameReadSourceByType: Map<KType, List<DataFrameReadSource>> by lazy {
     buildMap<KType, MutableList<DataFrameReadSource>> {
         newSupportedFormats.forEach { format ->
-            format.supportedTypes.forEach { type ->
+            format.supportedReadingTypes.forEach { type ->
                 getOrPut(type) { mutableListOf() }.let {
                     if (format !in it) it += format
                 }
@@ -121,9 +115,9 @@ internal val dataFrameReadSourceByType: Map<KType, List<DataFrameReadSource>> by
 /**
  * Shared dispatch loop for [readDataFrameImpl] and [readDataFrameSchemaImpl]: handles String→URL
  * normalization, InputStream buffering, sorted iteration, and error aggregation. The per-format read
- * operation is supplied as [readOrNull]; [resultKind] is used only in the "unknown source" error message.
+ * operation is supplied as [read]; [resultKind] is used only in the "unknown source" error message.
  *
- * @param [readOrNull] [DataFrameReadSource.readDataFrameOrNull] or [DataFrameReadSource.readDataFrameSchemaOrNull]
+ * @param [read] [DataFrameReadSource.readDataFrame] or [DataFrameReadSource.readDataFrameSchema]
  *   Potentially, this could also return another type, like a GeoDataFrame.
  */
 internal fun <T : Any> readSourceImpl(
@@ -133,11 +127,11 @@ internal fun <T : Any> readSourceImpl(
     formats: List<DataFrameReadSource>,
     resultKind: String,
     doStringToUrlConversion: Boolean,
-    readOrNull: DataFrameReadSource.(
+    read: DataFrameReadSource.(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ) -> T?,
+    ) -> Result<T>,
 ): Result<T> {
     if (doStringToUrlConversion && source is String) {
         val url = asUrlOrNull(source)
@@ -149,7 +143,7 @@ internal fun <T : Any> readSourceImpl(
                 formats = formats,
                 resultKind = resultKind,
                 doStringToUrlConversion = true,
-                readOrNull = readOrNull,
+                read = read,
             )
         }
     }
@@ -176,18 +170,14 @@ internal fun <T : Any> readSourceImpl(
     val tries = mutableMapOf<String, Throwable>()
     formats.sortedBy { it.testOrder }.forEach {
         if (!it.acceptsSource(sourceInfo, options)) return@forEach
-        try {
-            val result = it.readOrNull(getSource(), sourceInfo, options)
-            if (result != null) return Result.success(result)
-
-            val name = it::class.simpleName!!
-            tries[name] = Exception("$name returned null.")
-        } catch (e: FileNotFoundException) {
-            // fail early. File not found means the reference is broken.
-            return Result.failure(exception = e)
-        } catch (e: Exception) {
-            tries[it::class.simpleName!!] = e
-        }
+        val result = it.read(getSource(), sourceInfo, options)
+        result
+            .onSuccess { return Result.success(it) }
+            .onFailure { e ->
+                // fail early. File not found means the reference is broken.
+                if (e is FileNotFoundException) return Result.failure(exception = e)
+                tries[it::class.simpleName!!] = e
+            }
     }
     return Result.failure(
         exception = IllegalArgumentException("Unknown $resultKind source $source, $sourceInfo; Tried $tries"),
@@ -219,7 +209,7 @@ public fun DataFrame.Companion.readSource(
         formats = formats,
         resultKind = "DataFrame",
         doStringToUrlConversion = true,
-        readOrNull = DataFrameReadSource::readDataFrameOrNull,
+        read = DataFrameReadSource::readDataFrame,
     ).getOrThrow()
 
 public inline fun <reified R : Any> DataRow.Companion.readSource(
@@ -241,8 +231,8 @@ public fun DataRow.Companion.readSource(
         formats = formats,
         resultKind = "DataRow",
         doStringToUrlConversion = true,
-        readOrNull = { source, sourceInfo, options ->
-            readDataFrameOrNull(source, sourceInfo, options)?.single()
+        read = { source, sourceInfo, options ->
+            readDataFrame(source, sourceInfo, options).mapCatching { it.single() }
         },
     ).getOrThrow()
 
@@ -277,7 +267,7 @@ public fun DataFrameSchema.Companion.readSource(
         formats = formats,
         resultKind = "DataFrameSchema",
         doStringToUrlConversion = true,
-        readOrNull = DataFrameReadSource::readDataFrameSchemaOrNull,
+        read = DataFrameReadSource::readDataFrameSchema,
     ).getOrThrow()
 
 public inline fun <reified R : Any> DataFrameSchema.Companion.readSource(
@@ -298,8 +288,8 @@ public inline fun <reified R : Any> DataFrameSchema.Companion.readSource(
  * declarations (plus enums/typealiases for formats like OpenAPI). The [name] is the marker name used for
  * the top-level generated interface.
  *
- * The default implementation in [DataFrameReadSource.readDataSchemaCodeOrNull] runs
- * [DataFrameSchema.generateInterfaces] on the format's [DataFrameReadSource.readDataFrameSchemaOrNull]
+ * The default implementation in [DataFrameReadSource.readDataSchemaCode] runs
+ * [DataFrameSchema.generateInterfaces] on the format's [DataFrameReadSource.readDataFrameSchema]
  * result; formats that produce richer code (OpenAPI markers, enums, typealiases) override the method
  * directly.
  */
@@ -317,8 +307,8 @@ public fun CodeString.Companion.readSource(
         formats = formats,
         resultKind = "CodeString",
         doStringToUrlConversion = true,
-        readOrNull = { src, info, opts ->
-            readDataSchemaCodeOrNull(src, info, name, opts)
+        read = { src, info, opts ->
+            readDataSchemaCode(src, info, name, opts)
         },
     ).getOrThrow()
 

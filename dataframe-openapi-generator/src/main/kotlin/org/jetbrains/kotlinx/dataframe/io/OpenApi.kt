@@ -22,13 +22,12 @@ import kotlin.reflect.typeOf
  * [DataFrameReadSource] for OpenAPI specifications.
  *
  * OpenAPI doesn't produce a `DataFrame` or a single `DataFrameSchema` — its output is a multi-marker code
- * blob (interfaces + enums + typealiases). Only [readDataSchemaCodeOrNull] is overridden; the DataFrame
- * and Schema methods return `null` (via the interface's defaults), so calling
- * `DataFrame.readSource(openapiFile)` falls through to JSON, while `CodeString.readSource(openapiFile, name)`
- * dispatches here.
+ * blob (interfaces + enums + typealiases). Only [readDataSchemaCode] is overridden; the DataFrame
+ * and Schema methods return a failed [Result], so calling `DataFrame.readSource(openapiFile)` falls
+ * through to JSON, while `CodeString.readSource(openapiFile, name)` dispatches here.
  *
  * `.yaml`/`.yml` files are unambiguously OpenAPI; `.json` files are disambiguated at read time by
- * [isOpenApiStr] returning null early when the JSON isn't actually an OpenAPI spec, letting the framework
+ * [isOpenApiStr] failing early when the JSON isn't actually an OpenAPI spec, letting the framework
  * fall through to the JSON format for plain data.
  */
 public class OpenApi2 : DataFrameReadSource {
@@ -41,7 +40,7 @@ public class OpenApi2 : DataFrameReadSource {
         val visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     ) : DataFrameReadOptions
 
-    override val supportedTypes: Set<KType> =
+    override val supportedReadingTypes: Set<KType> =
         setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
 
     public companion object {
@@ -67,80 +66,88 @@ public class OpenApi2 : DataFrameReadSource {
         val ext = sourceInfo.extension?.lowercase()
         if (ext != null && ext !in EXTENSIONS) return false
         if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
-        return supportedTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
     // OpenAPI doesn't produce a DataFrame.
-    override fun readDataFrameOrNull(
+    override fun readDataFrame(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrame<*>? = null
+    ): Result<DataFrame<*>> = Result.failure(UnsupportedOperationException("OpenAPI does not produce a DataFrame"))
 
     // ...nor a single DataFrameSchema, it can produce enums, typealiases, etc.
-    // so it only supports readDataSchemaCodeOrNull()
-    override fun readDataFrameSchemaOrNull(
+    // so it only supports readDataSchemaCode()
+    override fun readDataFrameSchema(
         source: Any,
         sourceInfo: DataSourceInfo,
         options: DataFrameReadOptions?,
-    ): DataFrameSchema? = null
+    ): Result<DataFrameSchema> =
+        Result.failure(UnsupportedOperationException("OpenAPI does not produce a single DataFrameSchema"))
 
-    override fun readDataSchemaCodeOrNull(
+    override fun readDataSchemaCode(
         source: Any,
         sourceInfo: DataSourceInfo,
         name: String,
         options: DataFrameReadOptions?,
-    ): CodeString? {
-        val opts = (options ?: Options()) as Options
-        val kType = sourceInfo.kType
+    ): Result<CodeString> =
+        runCatching {
+            val opts = (options ?: Options()) as Options
+            val kType = sourceInfo.kType
 
-        // Resolve to OpenAPI-spec text, returning null if the content isn't OpenAPI.
-        val text: String = when {
-            kType.isSubtypeOf(typeOf<URL>()) -> {
-                val url = (source as? URL) ?: return null
-                if (!isOpenApi(url)) return null
-                url.readText()
+            // Resolve to OpenAPI-spec text, returning null if the content isn't OpenAPI.
+            val text: String = when {
+                kType.isSubtypeOf(typeOf<URL>()) -> {
+                    if (!isOpenApi(source as URL)) {
+                        return Result.failure(IllegalStateException("URL does not point to an OpenAPI spec"))
+                    }
+                    source.readText()
+                }
+
+                kType.isSubtypeOf(typeOf<Path>()) -> {
+                    if (!isOpenApi(source as Path)) {
+                        return Result.failure(IllegalStateException("Path does not point to an OpenAPI spec"))
+                    }
+                    source.readText()
+                }
+
+                kType.isSubtypeOf(typeOf<File>()) -> {
+                    if (!isOpenApi((source as File).toPath())) {
+                        return Result.failure(IllegalStateException("File does not point to an OpenAPI spec"))
+                    }
+                    source.readText()
+                }
+
+                kType.isSubtypeOf(typeOf<String>()) -> {
+                    if (!isOpenApiStr(source as String)) {
+                        return Result.failure(IllegalStateException("String content is not an OpenAPI spec"))
+                    }
+                    source
+                }
+
+                kType.isSubtypeOf(typeOf<InputStream>()) -> {
+                    val text = (source as InputStream).bufferedReader().readText()
+                    if (!isOpenApiStr(text)) {
+                        return Result.failure(IllegalStateException("InputStream content is not an OpenAPI spec"))
+                    }
+                    text
+                }
+
+                else -> error("Unsupported source type: $kType")
             }
 
-            kType.isSubtypeOf(typeOf<Path>()) -> {
-                val path = (source as? Path) ?: return null
-                if (!isOpenApi(path)) return null
-                path.readText()
-            }
-
-            kType.isSubtypeOf(typeOf<File>()) -> {
-                val file = (source as? File) ?: return null
-                if (!isOpenApi(file.toPath())) return null
-                file.readText()
-            }
-
-            kType.isSubtypeOf(typeOf<String>()) -> {
-                val text = (source as? String) ?: return null
-                if (!isOpenApiStr(text)) return null
-                text
-            }
-
-            kType.isSubtypeOf(typeOf<InputStream>()) -> {
-                val text = (source as? InputStream)?.bufferedReader()?.readText() ?: return null
-                if (!isOpenApiStr(text)) return null
-                text
-            }
-
-            else -> return null
+            CodeString(
+                readOpenApiAsString(
+                    openApiAsString = text,
+                    name = name,
+                    auth = opts.auth,
+                    options = opts.parseOptions,
+                    extensionProperties = opts.extensionProperties,
+                    generateHelperCompanionObject = opts.generateHelperCompanionObject,
+                    visibility = opts.visibility,
+                ),
+            )
         }
-
-        return CodeString(
-            readOpenApiAsString(
-                openApiAsString = text,
-                name = name,
-                auth = opts.auth,
-                options = opts.parseOptions,
-                extensionProperties = opts.extensionProperties,
-                generateHelperCompanionObject = opts.generateHelperCompanionObject,
-                visibility = opts.visibility,
-            ),
-        )
-    }
 
     // Run before Json (10_000) so .json files get the OpenAPI content check first.
     override val testOrder: Int = 9_000
