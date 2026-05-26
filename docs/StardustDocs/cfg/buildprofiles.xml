@@ -19,6 +19,7 @@
         <include-in-head>include-head.html</include-in-head>
     </variables>
     <sitemap change-frequency="monthly"/>
+    <llms-txt/>
     <build-profile instance="d">
         <variables>
             <noindex-content>false</noindex-content>
