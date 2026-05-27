@@ -74,6 +74,8 @@ jobs:
         uses: montudor/action-zip@v1
         with:
           args: unzip -qq ${{ env.ARTIFACT }} -d dir
+      - name: Fix permissions
+        run: chmod -R +w dir
       - name: Generate llms.txt index
         run: node docs/scripts/llms/generate-llms-index.mjs dir
       - name: Setup Pages
