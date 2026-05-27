@@ -433,30 +433,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun countDistinct() {
-        // SampleStart
-        df.countDistinct()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun countDistinctColumns_properties() {
-        // SampleStart
-        df.countDistinct { age and name }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun countDistinctColumns_strings() {
-        // SampleStart
-        df.countDistinct("age", "name")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun distinctColumns_strings() {
         // SampleStart
         df.distinct("age", "name")
