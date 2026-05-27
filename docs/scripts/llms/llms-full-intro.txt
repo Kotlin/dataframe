@@ -1,0 +1,3 @@
+# Kotlin DataFrame Documentation - Full Content
+
+This file contains the combined content of all documentation topics, optimized for LLMs.

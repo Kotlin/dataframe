@@ -1,0 +1,4 @@
+# Kotlin DataFrame Documentation
+
+Kotlin DataFrame is a typesafe DSL for structured data processing in Kotlin.
+This index provides links to individual topics in a format optimized for LLMs.
