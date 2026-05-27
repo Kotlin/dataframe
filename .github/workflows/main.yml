@@ -64,6 +64,8 @@ jobs:
     needs: build-job
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
@@ -72,6 +74,8 @@ jobs:
         uses: montudor/action-zip@v1
         with:
           args: unzip -qq ${{ env.ARTIFACT }} -d dir
+      - name: Generate llms.txt index
+        run: node docs/scripts/llms/generate-llms-index.mjs dir
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

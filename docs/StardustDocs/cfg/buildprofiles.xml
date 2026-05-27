@@ -19,6 +19,13 @@
         <include-in-head>include-head.html</include-in-head>
     </variables>
     <sitemap change-frequency="monthly"/>
+
+    <!-- This generates a txt file for each topic in the Writerside `_llms` folder.
+         It also generates an `llms.txt` file containing everything in one file.
+         However, using scripts/llms our GitHub action renames this to `llms-full.txt`
+         and generates a new `llms.txt` serving as a table-of-contents for all generated llm files. -->
+    <llms-txt/>
+
     <build-profile instance="d">
         <variables>
             <noindex-content>false</noindex-content>
