@@ -62,10 +62,17 @@ function generateLlmsIndex(docsDir) {
     const outputPath = path.join(docsDir, 'llms.txt');
     const fullPath = path.join(docsDir, 'llms-full.txt');
 
-    // Move existing llms.txt (full content) to llms-full.txt
+    // Move existing llms.txt (full content) to llms-full.txt and add intro
     if (fs.existsSync(outputPath) && !fs.existsSync(fullPath)) {
-        fs.renameSync(outputPath, fullPath);
-        console.log(` Moved existing llms.txt to llms-full.txt`);
+        try {
+            const originalContent = fs.readFileSync(outputPath, 'utf-8');
+            const fullIntro = readIntroFile('llms-full-intro.txt', '# Kotlin DataFrame Documentation - Full Content\n\nThis file contains the combined content of all documentation topics, optimized for LLMs.');
+            fs.writeFileSync(fullPath, fullIntro + '\n\n' + originalContent, 'utf-8');
+            console.log(` Created llms-full.txt with intro`);
+        } catch (error) {
+            console.warn(` Warning: Could not create llms-full.txt from existing llms.txt:`, error.message);
+            // If it failed but we still need to proceed, we'll just overwrite llms.txt later
+        }
     }
 
     try {
