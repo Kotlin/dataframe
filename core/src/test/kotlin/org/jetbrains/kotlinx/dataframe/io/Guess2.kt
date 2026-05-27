@@ -38,16 +38,16 @@ class Guess2 {
             Path("../data/participants.json").absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
-        val options = org.jetbrains.kotlinx.dataframe.io.Json.Options(
+        val readOptions = org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions(
             typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS,
         )
 
-        DataFrame.readSource("../data/participants.json", options) shouldBe expected
-        DataFrame.readSource(Path("../data/participants.json"), options) shouldBe expected
-        DataFrame.readSource(File("../data/participants.json"), options) shouldBe expected
+        DataFrame.readSource("../data/participants.json", readOptions) shouldBe expected
+        DataFrame.readSource(Path("../data/participants.json"), readOptions) shouldBe expected
+        DataFrame.readSource(File("../data/participants.json"), readOptions) shouldBe expected
         DataFrame.readSource(
             Path("../data/participants.json").absolute().normalize().toUri().toURL(),
-            options,
+            readOptions,
         ) shouldBe expected
     }
 
@@ -61,13 +61,13 @@ class Guess2 {
         DataFrame.readSource(file.inputStream()) shouldBe expected
         DataFrame.readSource(Json.decodeFromString<JsonElement>(file.readText())) shouldBe expected
 
-        val options = org.jetbrains.kotlinx.dataframe.io.Json.Options(
+        val readOptions = org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions(
             typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS,
         )
 
-        DataFrame.readSource(file.readText(), options) shouldBe expected
-        DataFrame.readSource(file.inputStream(), options) shouldBe expected
-        DataFrame.readSource(Json.decodeFromString<JsonElement>(file.readText()), options) shouldBe expected
+        DataFrame.readSource(file.readText(), readOptions) shouldBe expected
+        DataFrame.readSource(file.inputStream(), readOptions) shouldBe expected
+        DataFrame.readSource(Json.decodeFromString<JsonElement>(file.readText()), readOptions) shouldBe expected
     }
 
     @Test

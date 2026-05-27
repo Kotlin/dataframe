@@ -39,8 +39,6 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.parser
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.singleOrNull
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -57,7 +55,7 @@ import org.jetbrains.kotlinx.dataframe.impl.lazyMapOf
 import org.jetbrains.kotlinx.dataframe.impl.toResult
 import org.jetbrains.kotlinx.dataframe.io.DataFrameReadSource
 import org.jetbrains.kotlinx.dataframe.io.isUrl
-import org.jetbrains.kotlinx.dataframe.io.newSupportedFormats
+import org.jetbrains.kotlinx.dataframe.io.dataframeReadSources
 import org.jetbrains.kotlinx.dataframe.io.readSourceImpl
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
@@ -962,7 +960,7 @@ internal object Parsers : GlobalParserOptions {
                         source = it,
                         sourceType = typeOf<String>(),
                         options = null,
-                        formats = newSupportedFormats,
+                        formats = dataframeReadSources,
                         resultKind = "DataRow",
                         doStringToUrlConversion = isConverter,
                         read = { source, sourceInfo, options ->
@@ -982,7 +980,7 @@ internal object Parsers : GlobalParserOptions {
                         source = it,
                         sourceType = typeOf<String>(),
                         options = null,
-                        formats = newSupportedFormats,
+                        formats = dataframeReadSources,
                         resultKind = "DataFrame",
                         doStringToUrlConversion = isConverter,
                         read = DataFrameReadSource::readDataFrame,
