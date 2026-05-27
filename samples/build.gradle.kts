@@ -114,6 +114,7 @@ korro {
                 include("columnArithmetics.md")
                 include("groupBy.md")
                 include("pivot.md")
+                include("countDistinct.md")
             },
         )
         baseDir = rootProject.file("docs/StardustDocs/topics")
