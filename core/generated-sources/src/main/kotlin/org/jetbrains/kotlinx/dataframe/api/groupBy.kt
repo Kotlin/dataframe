@@ -163,6 +163,9 @@ internal interface GroupByDocs {
      * `| `__`.`__[**`count`**][Grouped.count]**`() `**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`countDistinct`**][Grouped.countDistinct]**`() `**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`aggregate`**][Grouped.aggregate]**`  {  `**`aggregations: `[`AggregateDsl`][AggregateDsl]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -357,6 +360,8 @@ internal interface GroupByDocs {
      *   from all rows of each group for the selected columns.
      * * [count][Grouped.count] — creates a [DataFrame] containing the grouping key columns and an additional column
      *   with the number of rows in each corresponding group;
+     * * [countDistinct][Grouped.countDistinct] — creates a [DataFrame] containing the grouping key columns
+     *   and an additional column with the number of distinct rows in each corresponding group;
      * * [aggregate][Grouped.aggregate] — performs a set of custom aggregations using [AggregateDsl],
      *   allowing you to compute one or more derived values per group;
      * * [Various aggregation statistics][AggregationStatistics] — predefined shortcuts
