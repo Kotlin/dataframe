@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -9,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
@@ -65,7 +65,7 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
 }
 
 @JvmName("toDataFrameMapStringAnyNullable")
-public fun Iterable<Map<String, Any?>>.toDataFrame(): AnyFrame {
+public fun Iterable<Map<String, Any?>>.toDataFrame(): DataFrame<*> {
     val list = asList()
     if (list.isEmpty()) return DataFrame.empty()
 
@@ -86,10 +86,10 @@ public fun Iterable<Map<String, Any?>>.toDataFrame(): AnyFrame {
 }
 
 @JvmName("toDataFrameAnyColumn")
-public fun Iterable<AnyBaseCol>.toDataFrame(): AnyFrame = dataFrameOf(this)
+public fun Iterable<BaseColumn<*>>.toDataFrame(): DataFrame<*> = dataFrameOf(this)
 
 @JvmName("toDataFramePairColumnPathAnyCol")
-public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): DataFrame<T> {
+public fun <T> Iterable<Pair<ColumnPath, BaseColumn<*>>>.toDataFrameFromPairs(): DataFrame<T> {
     val nameGenerator = ColumnNameGenerator()
     val columnNames = mutableListOf<String>()
     val columnGroups = mutableListOf<MutableList<Pair<ColumnPath, AnyBaseCol>>?>()
@@ -143,12 +143,12 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
 }
 
 @JvmName("toDataFrameColumnPathAnyNullable")
-public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame =
+public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): DataFrame<*> =
     map {
         it.first to createColumnGuessingType(it.first.last(), it.second.asList())
     }.toDataFrameFromPairs<Unit>()
 
-public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame =
+public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFrame<*> =
     map {
         ColumnPath(it.first) to createColumnGuessingType(it.first, it.second.asList())
     }.toDataFrameFromPairs<Unit>()
@@ -192,13 +192,13 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     public abstract val source: Iterable<T>
 
-    public abstract fun add(column: AnyBaseCol, path: ColumnPath? = null)
+    public abstract fun add(column: BaseColumn<*>, path: ColumnPath? = null)
 
     @Interpretable("ToDataFrameDslIntoString")
-    public infix fun AnyBaseCol.into(name: String): Unit = add(this, pathOf(name))
+    public infix fun BaseColumn<*>.into(name: String): Unit = add(this, pathOf(name))
 
     @Interpretable("ToDataFrameDslIntoPath")
-    public infix fun AnyBaseCol.into(path: ColumnPath): Unit = add(this, path)
+    public infix fun BaseColumn<*>.into(path: ColumnPath): Unit = add(this, path)
 
     @Interpretable("Properties0")
     public abstract fun properties(
@@ -259,13 +259,13 @@ public interface ValueProperty<T> {
 
 // region Create DataFrame from Map
 
-public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame =
+public fun Map<String, Iterable<Any?>>.toDataFrame(): DataFrame<*> =
     map {
         DataColumn.createByInference(it.key, it.value.asList())
     }.toDataFrame()
 
 @JvmName("toDataFrameColumnPathAnyNullable")
-public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
+public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): DataFrame<*> =
     map {
         it.key to DataColumn.createByInference(
             name = it.key.last(),
@@ -293,7 +293,7 @@ public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
  */
 @Refine
 @Interpretable("ValuesListsToDataFrame")
-public fun <T> List<List<T>>.toDataFrame(header: List<String>?, containsColumns: Boolean = false): AnyFrame =
+public fun <T> List<List<T>>.toDataFrame(header: List<String>?, containsColumns: Boolean = false): DataFrame<*> =
     when {
         containsColumns -> {
             mapIndexedNotNull { index, list ->

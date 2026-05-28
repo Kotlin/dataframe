@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -60,15 +59,15 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOfOrNul
 // region DataRow
 
 @Deprecated(ROW_MAX_OR_NULL, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMaxOrNull(): Nothing? = error(ROW_MAX_OR_NULL)
+public fun DataRow<*>.rowMaxOrNull(): Nothing? = error(ROW_MAX_OR_NULL)
 
 @Deprecated(ROW_MAX, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMax(): Nothing = error(ROW_MAX)
+public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
     Aggregators.max<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOf(skipNaN: Boolean = skipNaNDefault): T =
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boolean = skipNaNDefault): T =
     rowMaxOfOrNull<T>(skipNaN).suggestIfNull("rowMaxOf")
 
 // endregion
@@ -489,10 +488,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOfOrNul
     maxOfOrNull(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOfOrNull(): T? = rowMaxOfOrNull<T>(skipNaN = skipNaNDefault)
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(): T? =
+    rowMaxOfOrNull<T>(skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMaxOf(): T & Any = rowMaxOf(skipNaN = skipNaNDefault)
+public inline fun <reified T : Comparable<T & Any>?> DataRow<*>.rowMaxOf(): T & Any = rowMaxOf(skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.max(): DataRow<T> = max(skipNaN = skipNaNDefault)

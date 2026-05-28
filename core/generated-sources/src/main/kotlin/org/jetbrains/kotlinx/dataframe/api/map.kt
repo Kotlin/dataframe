@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -143,7 +142,7 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
 
 @Refine
 @Interpretable("MapToFrame")
-public inline fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
+public inline fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): DataFrame<*> {
     val dsl = AddDsl(this)
     body(dsl)
     return dataFrameOf(dsl.columns)
