@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -159,7 +158,7 @@ public class ConvertType<T>(
  * @throws [TypeConversionException] if type converter failed to convert column values.
  * @return converted [DataFrame].
  */
-public inline fun <reified T : Any> AnyFrame.convertTo(
+public inline fun <reified T : Any> DataFrame<*>.convertTo(
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
 ): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
@@ -195,7 +194,7 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
  * @throws [TypeConversionException] if type converter failed to convert column values.
  * @return converted [DataFrame].
  */
-public inline fun <reified T : Any> AnyFrame.convertTo(
+public inline fun <reified T : Any> DataFrame<*>.convertTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
@@ -231,10 +230,10 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
  * @throws [TypeConversionException] if type converter failed to convert column values.
  * @return converted [DataFrame].
  */
-public fun AnyFrame.convertTo(
+public fun DataFrame<*>.convertTo(
     schemaType: KType,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     body: ConvertSchemaDsl<Any>.() -> Unit = {},
-): AnyFrame = convertToImpl(schemaType, true, excessiveColumnsBehavior, body)
+): DataFrame<*> = convertToImpl(schemaType, true, excessiveColumnsBehavior, body)
 
 // endregion

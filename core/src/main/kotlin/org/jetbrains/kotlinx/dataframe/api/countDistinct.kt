@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -29,7 +28,7 @@ import kotlin.reflect.KProperty
  *
  * @return The number of distinct rows in this [DataFrame].
  */
-public fun AnyFrame.countDistinct(): Int = countDistinct { all() }
+public fun DataFrame<*>.countDistinct(): Int = countDistinct { all() }
 
 /**
  * Returns number of distinct combinations of values in selected [columns\] in this [DataFrame].
