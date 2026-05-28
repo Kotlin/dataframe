@@ -1,9 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -12,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -49,9 +47,9 @@ public fun <T> ColumnPath.toColumnOf(): ColumnAccessor<T> = ColumnAccessorImpl(t
 
 public fun ColumnPath.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
 
-public fun ColumnPath.toColumnGroupAccessor(): ColumnAccessor<AnyRow> = ColumnAccessorImpl(this)
+public fun ColumnPath.toColumnGroupAccessor(): ColumnAccessor<DataRow<*>> = ColumnAccessorImpl(this)
 
-public fun ColumnPath.toFrameColumnAccessor(): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(this)
+public fun ColumnPath.toFrameColumnAccessor(): ColumnAccessor<DataFrame<*>> = ColumnAccessorImpl(this)
 
 // endregion
 
@@ -73,7 +71,7 @@ public fun <T> KProperty<T>.toColumnAccessor(): ColumnAccessor<T> = ColumnAccess
 
 // region DataColumn
 
-public fun AnyBaseCol.toDataFrame(): AnyFrame = dataFrameOf(listOf(this))
+public fun BaseColumn<*>.toDataFrame(): DataFrame<*> = dataFrameOf(listOf(this))
 
 @JvmName("asNumberAnyNullable")
 public fun DataColumn<Any?>.asNumbers(): ValueColumn<Number?> {
@@ -345,18 +343,18 @@ public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): Data
 
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 
-public fun Iterable<AnyBaseCol>.toColumnGroup(name: String): ColumnGroup<*> = dataFrameOf(this).asColumnGroup(name)
+public fun Iterable<BaseColumn<*>>.toColumnGroup(name: String): ColumnGroup<*> = dataFrameOf(this).asColumnGroup(name)
 
-public fun <T> Iterable<AnyBaseCol>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> =
+public fun <T> Iterable<BaseColumn<*>>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> =
     dataFrameOf(this).cast<T>().asColumnGroup(column)
 
-public fun <T> Iterable<AnyBaseCol>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
+public fun <T> Iterable<BaseColumn<*>>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
 
 // endregion
 
 // region DataFrame
 
-public fun AnyFrame.toMap(): Map<String, List<Any?>> = columns().associateBy({ it.name }, { it.toList() })
+public fun DataFrame<*>.toMap(): Map<String, List<Any?>> = columns().associateBy({ it.name }, { it.toList() })
 
 public fun <T> DataFrame<T>.asColumnGroup(name: String = ""): ColumnGroup<T> =
     when (this) {
@@ -402,7 +400,7 @@ public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G
 
 public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
-public fun AnyRow.toMap(): Map<String, Any?> = df().columns().associate { it.name() to it[index] }
+public fun DataRow<*>.toMap(): Map<String, Any?> = df().columns().associate { it.name() to it[index] }
 
 public fun Map<String, Any?>.toDataRow(): DataRow<*> {
     val df = mapValues { listOf(it.value) }.toDataFrame()

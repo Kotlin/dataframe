@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.get
@@ -60,7 +60,9 @@ public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<AnyCol>): DataFrame<
 /**
  * For an alternative supported in the compiler plugin use [Convert.asColumn]
  */
-public fun <T, C> ReplaceClause<T, C>.with(transform: ColumnsContainer<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> {
+public fun <T, C> ReplaceClause<T, C>.with(
+    transform: ColumnsContainer<T>.(DataColumn<C>) -> BaseColumn<*>,
+): DataFrame<T> {
     val removeResult = df.removeImpl(columns = columns)
     val toInsert = removeResult.removedColumns.map {
         @Suppress("UNCHECKED_CAST")
