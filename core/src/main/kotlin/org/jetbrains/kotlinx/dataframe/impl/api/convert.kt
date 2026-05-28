@@ -223,7 +223,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 DataFrame.readSource(
                     source = source,
                     type = from,
-                    options = null,
+                    readOptions = null,
                 )
             }
 
@@ -232,7 +232,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 DataRow.readSource(
                     source = source,
                     type = from,
-                    options = null,
+                    readOptions = null,
                 )
             }
 
@@ -241,7 +241,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 DataFrameSchema.readSource(
                     source = source,
                     type = from,
-                    options = null,
+                    readOptions = null,
                 )
             }
 

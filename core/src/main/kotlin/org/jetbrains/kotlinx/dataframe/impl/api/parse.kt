@@ -959,7 +959,7 @@ internal object Parsers : GlobalParserOptions {
                     readSourceImpl(
                         source = it,
                         sourceType = typeOf<String>(),
-                        options = null,
+                        readOptions = null,
                         formats = dataframeReadSources,
                         resultKind = "DataRow",
                         doStringToUrlConversion = isConverter,
@@ -979,7 +979,7 @@ internal object Parsers : GlobalParserOptions {
                     readSourceImpl(
                         source = it,
                         sourceType = typeOf<String>(),
-                        options = null,
+                        readOptions = null,
                         formats = dataframeReadSources,
                         resultKind = "DataFrame",
                         doStringToUrlConversion = isConverter,

@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.CodeString
 import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -187,7 +186,7 @@ internal val dataframeWriteTargetByType: Map<KType, List<DataFrameWriteTarget>> 
 }
 
 /**
- * Shared dispatch loop for [readDataFrameImpl] and [readDataFrameSchemaImpl]: handles String→URL
+ * Shared dispatch loop for each [readSource]: handles String→URL
  * normalization, InputStream buffering, sorted iteration, and error aggregation. The per-format read
  * operation is supplied as [read]; [resultKind] is used only in the "unknown source" error message.
  *
@@ -197,7 +196,7 @@ internal val dataframeWriteTargetByType: Map<KType, List<DataFrameWriteTarget>> 
 internal fun <T : Any> readSourceImpl(
     source: Any,
     sourceType: KType,
-    options: DataFrameReadOptions?,
+    readOptions: DataFrameReadOptions?,
     formats: List<DataFrameReadSource>,
     resultKind: String,
     doStringToUrlConversion: Boolean,
@@ -209,7 +208,7 @@ internal fun <T : Any> readSourceImpl(
             return readSourceImpl(
                 source = url,
                 sourceType = typeOf<URL>(),
-                options = options,
+                readOptions = readOptions,
                 formats = formats,
                 resultKind = resultKind,
                 doStringToUrlConversion = true,
@@ -239,8 +238,8 @@ internal fun <T : Any> readSourceImpl(
 
     val tries = mutableMapOf<String, Throwable>()
     formats.sortedBy { it.testOrder }.forEach {
-        if (!it.acceptsSource(sourceInfo, options)) return@forEach
-        val result = it.read(getSource(), sourceInfo, options)
+        if (!it.acceptsSource(sourceInfo, readOptions)) return@forEach
+        val result = it.read(getSource(), sourceInfo, readOptions)
         result
             .onSuccess { return Result.success(it) }
             .onFailure { e ->
@@ -258,7 +257,7 @@ internal fun <T : Any> writeTargetImpl(
     source: T,
     target: Any,
     targetType: KType,
-    options: DataFrameWriteOptions?,
+    writeOptions: DataFrameWriteOptions?,
     formats: List<DataFrameWriteTarget>,
     sourceKind: String,
     doStringToPathConversion: Boolean,
@@ -271,7 +270,7 @@ internal fun <T : Any> writeTargetImpl(
                 source = source,
                 target = path,
                 targetType = typeOf<Path>(),
-                options = options,
+                writeOptions = writeOptions,
                 formats = formats,
                 sourceKind = sourceKind,
                 doStringToPathConversion = true,
@@ -287,7 +286,7 @@ internal fun <T : Any> writeTargetImpl(
     )
 
     val formats = formats.sortedBy { it.testOrder }
-        .filter { it.acceptsTarget(targetInfo, options) }
+        .filter { it.acceptsTarget(targetInfo, writeOptions) }
 
     if (formats.isEmpty()) {
         return Result.failure(
@@ -308,7 +307,7 @@ internal fun <T : Any> writeTargetImpl(
         )
     }
     val format = formats.single()
-    val result = format.write(source, target, targetInfo, options)
+    val result = format.write(source, target, targetInfo, writeOptions)
     return result
 }
 
@@ -327,13 +326,13 @@ internal fun <T : Any> writeTargetImpl(
 public fun DataFrame.Companion.readSource(
     source: Any,
     type: KType,
-    options: DataFrameReadOptions? = null,
+    readOptions: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = dataframeReadSources,
 ): AnyFrame =
     readSourceImpl(
         source = source,
         sourceType = type.withNullability(false),
-        options = options,
+        readOptions = readOptions,
         formats = formats,
         resultKind = "DataFrame",
         doStringToUrlConversion = true,
@@ -342,20 +341,20 @@ public fun DataFrame.Companion.readSource(
 
 public inline fun <reified R : Any> DataRow.Companion.readSource(
     source: R,
-    options: DataFrameReadOptions? = null,
+    readOptions: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = dataframeReadSources,
-): AnyRow = readSource(source = source, type = typeOf<R>(), options = options, formats = formats)
+): AnyRow = readSource(source = source, type = typeOf<R>(), readOptions = readOptions, formats = formats)
 
 public fun DataRow.Companion.readSource(
     source: Any,
     type: KType,
-    options: DataFrameReadOptions? = null,
+    readOptions: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = dataframeReadSources,
 ): AnyRow =
     readSourceImpl(
         source = source,
         sourceType = type.withNullability(false),
-        options = options,
+        readOptions = readOptions,
         formats = formats,
         resultKind = "DataRow",
         doStringToUrlConversion = true,
@@ -366,13 +365,13 @@ public fun DataRow.Companion.readSource(
 
 public inline fun <reified R : Any> DataFrame.Companion.readSource(
     source: R,
-    options: DataFrameReadOptions? = null,
+    readOptions: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = dataframeReadSources,
 ): AnyFrame =
     readSource(
         source = source,
         type = typeOf<R>(),
-        options = options,
+        readOptions = readOptions,
         formats = formats,
     )
 
@@ -385,13 +384,13 @@ public inline fun <reified R : Any> DataFrame.Companion.readSource(
 public fun DataFrameSchema.Companion.readSource(
     source: Any,
     type: KType,
-    options: DataFrameReadOptions? = null,
+    readOptions: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = dataframeReadSources,
 ): DataFrameSchema =
     readSourceImpl(
         source = source,
         sourceType = type.withNullability(false),
-        options = options,
+        readOptions = readOptions,
         formats = formats,
         resultKind = "DataFrameSchema",
         doStringToUrlConversion = true,
@@ -400,13 +399,13 @@ public fun DataFrameSchema.Companion.readSource(
 
 public inline fun <reified R : Any> DataFrameSchema.Companion.readSource(
     source: R,
-    options: DataFrameReadOptions? = null,
+    readOptions: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = dataframeReadSources,
 ): DataFrameSchema =
     readSource(
         source = source,
         type = typeOf<R>(),
-        options = options,
+        readOptions = readOptions,
         formats = formats,
     )
 
@@ -425,13 +424,13 @@ public fun CodeString.Companion.readSource(
     source: Any,
     type: KType,
     name: String,
-    options: DataFrameReadOptions? = null,
+    readOptions: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = dataframeReadSources,
 ): CodeString =
     readSourceImpl(
         source = source,
         sourceType = type.withNullability(false),
-        options = options,
+        readOptions = readOptions,
         formats = formats,
         resultKind = "CodeString",
         doStringToUrlConversion = true,
@@ -443,28 +442,28 @@ public fun CodeString.Companion.readSource(
 public inline fun <reified R : Any> CodeString.Companion.readSource(
     source: R,
     name: String,
-    options: DataFrameReadOptions? = null,
+    readOptions: DataFrameReadOptions? = null,
     formats: List<DataFrameReadSource> = dataframeReadSources,
 ): CodeString =
     readSource(
         source = source,
         type = typeOf<R>(),
         name = name,
-        options = options,
+        readOptions = readOptions,
         formats = formats,
     )
 
 public fun DataFrame<*>.write(
     target: Any,
     type: KType,
-    options: DataFrameWriteOptions? = null,
+    writeOptions: DataFrameWriteOptions? = null,
     formats: List<DataFrameWriteTarget> = dataframeWriteTargets,
 ) {
     writeTargetImpl(
         source = this,
         target = target,
         targetType = type.withNullability(false),
-        options = options,
+        writeOptions = writeOptions,
         formats = formats,
         sourceKind = "DataFrame",
         doStringToPathConversion = true,
@@ -474,27 +473,27 @@ public fun DataFrame<*>.write(
 
 public inline fun <reified W : Any> DataFrame<*>.write(
     target: W,
-    options: DataFrameWriteOptions? = null,
+    writeOptions: DataFrameWriteOptions? = null,
     formats: List<DataFrameWriteTarget> = dataframeWriteTargets,
 ): Unit =
     write(
         target = target,
         type = typeOf<W>(),
-        options = options,
+        writeOptions = writeOptions,
         formats = formats,
     )
 
 public fun DataRow<*>.write(
     target: Any,
     type: KType,
-    options: DataFrameWriteOptions? = null,
+    writeOptions: DataFrameWriteOptions? = null,
     formats: List<DataFrameWriteTarget> = dataframeWriteTargets,
 ) {
     writeTargetImpl(
         source = this,
         target = target,
         targetType = type.withNullability(false),
-        options = options,
+        writeOptions = writeOptions,
         formats = formats,
         sourceKind = "DataRow",
         doStringToPathConversion = true,
@@ -504,13 +503,13 @@ public fun DataRow<*>.write(
 
 public inline fun <reified W : Any> DataRow<*>.write(
     target: W,
-    options: DataFrameWriteOptions? = null,
+    writeOptions: DataFrameWriteOptions? = null,
     formats: List<DataFrameWriteTarget> = dataframeWriteTargets,
 ): Unit =
     write(
         target = target,
         type = typeOf<W>(),
-        options = options,
+        writeOptions = writeOptions,
         formats = formats,
     )
 

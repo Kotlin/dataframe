@@ -1,9 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -15,10 +18,13 @@ import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.io.Json.WriteOptions
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.nio.file.Files
 import java.sql.Connection
 import java.sql.DriverManager
 import javax.sql.DataSource
@@ -638,6 +644,153 @@ class Guess2 {
         val expected = DataFrame.readJson(jsonUrl)
         converted["source"][0] shouldBe expected
         converted["source"][1] shouldBe expected
+    }
+
+    // endregion
+
+    // region DataFrame.write / DataRow.write — write to various JSON targets
+
+    @Test
+    fun `write DataFrame as JSON to Path`() {
+        val df = DataFrame.readJson("../data/participants.json")
+        val tempPath = Files.createTempFile("guess2-write-df", ".json")
+            .also { it.toFile().deleteOnExit() }
+        df.write(tempPath)
+        DataFrame.readJson(tempPath) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as JSON to File`() {
+        val df = DataFrame.readJson("../data/participants.json")
+        val tempFile = Files.createTempFile("guess2-write-df", ".json").toFile()
+            .also { it.deleteOnExit() }
+        df.write(tempFile)
+        DataFrame.readJson(tempFile) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as JSON to String pointing at existing file`() {
+        // doStringToPathConversion in writeTargetImpl only fires when the path already exists;
+        // createTempFile creates the file, so the String → Path routing kicks in.
+        val df = DataFrame.readJson("../data/participants.json")
+        val tempFile = Files.createTempFile("guess2-write-df-str", ".json").toFile()
+            .also { it.deleteOnExit() }
+        df.write(tempFile.path)
+        DataFrame.readJson(tempFile) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as JSON to Appendable`() {
+        val df = DataFrame.readJson("../data/participants.json")
+        val sb = StringBuilder()
+        // StringBuilder is reified — pin Appendable so the framework dispatches to that branch.
+        df.write(sb)
+        DataFrame.readJsonStr(sb.toString()) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as JSON to OutputStream`() {
+        val df = DataFrame.readJson("../data/participants.json")
+        val baos = ByteArrayOutputStream()
+        df.write(baos)
+        DataFrame.readJsonStr(baos.toString()) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as JSON to Function1 of JsonArray`() {
+        val df = DataFrame.readJson("../data/participants.json")
+        var captured: JsonArray? = null
+        df.write({ it: JsonArray -> captured = it })
+        captured shouldBe df.toJsonElement()
+    }
+
+    @Test
+    fun `write DataFrame as JSON to Function1 of String`() {
+        val df = DataFrame.readJson("../data/participants.json")
+        var captured: String? = null
+        df.write({ it: String -> captured = it })
+        captured shouldBe df.toJson()
+    }
+
+    @Test
+    fun `write DataFrame as JSON to Function1 of JsonObject fails`() {
+        // A DataFrame can only be converted to a JsonArray, not a JsonObject.
+        val df = DataFrame.readJson("../data/participants.json")
+        shouldThrow<IllegalArgumentException> { df.write({ _: JsonObject -> }) }
+    }
+
+    @Test
+    fun `write DataRow as JSON to Path`() {
+        val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
+        val tempPath = Files.createTempFile("guess2-write-row", ".json")
+            .also { it.toFile().deleteOnExit() }
+        row.write(tempPath)
+        DataRow.readJson(tempPath) shouldBe row
+    }
+
+    @Test
+    fun `write DataRow as JSON to File`() {
+        val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
+        val tempFile = Files.createTempFile("guess2-write-row", ".json").toFile()
+            .also { it.deleteOnExit() }
+        row.write(tempFile)
+        DataRow.readJson(tempFile) shouldBe row
+    }
+
+    @Test
+    fun `write DataRow as JSON to Appendable`() {
+        val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
+        val sb = StringBuilder()
+        row.write(sb)
+        sb.toString() shouldBe row.toJson()
+    }
+
+    @Test
+    fun `write DataRow as JSON to OutputStream`() {
+        val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
+        val baos = ByteArrayOutputStream()
+        row.write(baos)
+        baos.toString() shouldBe row.toJson()
+    }
+
+    @Test
+    fun `write DataRow as JSON to Function1 of JsonObject`() {
+        val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
+        var captured: JsonObject? = null
+        row.write({ it: JsonObject -> captured = it })
+        captured shouldBe row.toJsonElement()
+    }
+
+    @Test
+    fun `write DataRow as JSON to Function1 of String`() {
+        val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
+        var captured: String? = null
+        row.write({ it: String -> captured = it })
+        captured shouldBe row.toJson()
+    }
+
+    @Test
+    fun `write DataRow as JSON to Function1 of JsonArray fails`() {
+        // A single DataRow can only be turned into a JsonObject, not a JsonArray.
+        val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
+        shouldThrow<IllegalArgumentException> { row.write({ _: JsonArray -> }) }
+    }
+
+    @Test
+    fun `write DataFrame as JSON with prettyPrint option produces multi-line output`() {
+        val df = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""")
+        val sb = StringBuilder()
+        df.write(sb, WriteOptions(prettyPrint = true))
+        sb.toString() shouldContain "\n"
+        DataFrame.readJsonStr(sb.toString()) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame with unsupported target type fails`() {
+        // Int is not a supported writing type for any registered format → no format accepts it,
+        // and writeTargetImpl reports "Failed to find a suitable format".
+        val df = DataFrame.readJsonStr("""[{"a": 1}]""")
+        shouldThrow<IllegalStateException> { df.write(42) }
     }
 
     // endregion
