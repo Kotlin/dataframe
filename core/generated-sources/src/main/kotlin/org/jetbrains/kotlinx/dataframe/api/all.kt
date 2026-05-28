@@ -50,7 +50,7 @@ public fun <C> DataColumn<C>.allNulls(): Boolean =
 
 // region DataRow
 
-public fun AnyRow.allNA(): Boolean = owner.columns().all { it[index()].isNA }
+public fun DataRow<*>.allNA(): Boolean = owner.columns().all { it[index()].isNA }
 
 // endregion
 

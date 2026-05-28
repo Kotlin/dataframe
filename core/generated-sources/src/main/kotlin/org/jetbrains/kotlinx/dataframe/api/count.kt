@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -43,7 +42,7 @@ public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int =
  * @return the number of columns in this row.
  * @see [columnsCount].
  */
-public fun AnyRow.count(): Int = columnsCount()
+public fun DataRow<*>.count(): Int = columnsCount()
 
 /**
  * Counts the number of elements in the current row that satisfy the given [predicate].
@@ -52,7 +51,7 @@ public fun AnyRow.count(): Int = columnsCount()
  * The predicate should return `true` for elements to be counted.
  * @return The number of elements that satisfy the predicate.
  */
-public inline fun AnyRow.count(predicate: Predicate<Any?>): Int = values().count(predicate)
+public inline fun DataRow<*>.count(predicate: Predicate<Any?>): Int = values().count(predicate)
 
 // endregion
 

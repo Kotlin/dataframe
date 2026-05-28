@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -30,13 +29,13 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 @Deprecated(MESSAGE_SHORTCUT, ReplaceWith(IS_EMPTY_REPLACE), DeprecationLevel.WARNING)
-public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
+public fun DataRow<*>.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 
 @Suppress("DEPRECATION_ERROR")
 @Deprecated(MESSAGE_SHORTCUT, ReplaceWith(IS_NOT_EMPTY_REPLACE), DeprecationLevel.WARNING)
-public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
+public fun DataRow<*>.isNotEmpty(): Boolean = !isEmpty()
 
-public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
+public inline fun <reified R> DataRow<*>.valuesOf(): List<R> = values().filterIsInstance<R>()
 
 // region DataSchema
 @DataSchema
@@ -62,50 +61,50 @@ public val DataRow<NameValuePair<*>>.value: Any?
 
 // endregion
 
-public inline fun <reified R> AnyRow.namedValuesOf(): List<NameValuePair<R>> =
+public inline fun <reified R> DataRow<*>.namedValuesOf(): List<NameValuePair<R>> =
     values().zip(columnNames()).filter { it.first is R }.map { NameValuePair(it.second, it.first as R) }
 
 @RequiredByIntellijPlugin
-public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
+public fun DataRow<*>.namedValues(): List<NameValuePair<Any?>> =
     values().zip(columnNames()) { value, name -> NameValuePair(name, value) }
 
 // region getValue
 
-public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
+public fun <T> DataRow<*>.getValue(columnName: String): T = get(columnName) as T
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
+public fun <T> DataRow<*>.getValue(column: ColumnReference<T>): T = get(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> AnyRow.getValue(column: KProperty<T>): T = get(column)
+public fun <T> DataRow<*>.getValue(column: KProperty<T>): T = get(column)
 
-public fun <T> AnyRow.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
+public fun <T> DataRow<*>.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
+public fun <T> DataRow<*>.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
 
 // endregion
 
 // region contains
 
-public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
+public fun DataRow<*>.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun AnyRow.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
+public fun DataRow<*>.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun AnyRow.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
+public fun DataRow<*>.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
-public operator fun AnyRow.contains(column: AnyColumnReference): Boolean = containsKey(column)
+public operator fun DataRow<*>.contains(column: AnyColumnReference): Boolean = containsKey(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey(column)
+public operator fun DataRow<*>.contains(column: KProperty<*>): Boolean = containsKey(column)
 
 // endregion
 
@@ -199,11 +198,11 @@ public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>)
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 @RequiredByIntellijPlugin
-public fun AnyRow.columnsCount(): Int = df().ncol
+public fun DataRow<*>.columnsCount(): Int = df().ncol
 
-public fun AnyRow.columnNames(): List<String> = df().columnNames()
+public fun DataRow<*>.columnNames(): List<String> = df().columnNames()
 
-public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
+public fun DataRow<*>.columnTypes(): List<KType> = df().columnTypes()
 
 @Suppress("DEPRECATION_ERROR")
 @Deprecated(MESSAGE_SHORTCUT, ReplaceWith(GET_ROW_REPLACE), DeprecationLevel.WARNING)

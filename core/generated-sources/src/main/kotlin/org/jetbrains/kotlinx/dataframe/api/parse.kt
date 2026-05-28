@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -103,5 +102,5 @@ public fun DataColumn<Char?>.parse(options: ParserOptions? = null): DataColumn<*
         .also { if (it.isSubtypeOf<Char?>() || it.isSubtypeOf<String?>()) error("Can't guess column type") }
 
 @JvmName("parseAnyFrameNullable")
-public fun DataColumn<AnyFrame?>.parse(options: ParserOptions? = null): DataColumn<AnyFrame?> =
+public fun DataColumn<DataFrame<*>?>.parse(options: ParserOptions? = null): DataColumn<DataFrame<*>?> =
     map { it?.parse(options) }
