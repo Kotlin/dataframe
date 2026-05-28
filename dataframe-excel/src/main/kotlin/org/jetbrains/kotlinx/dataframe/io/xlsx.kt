@@ -70,15 +70,38 @@ public class Excel : SupportedDataFrameFormat {
 public class ExcelNEW : DataFrameReadSource {
 
     public data class ReadOptions(
-        val sheetName: String? = null,
-        val skipRows: Int = 0,
-        val columns: String? = null,
-        val stringColumns: StringColumns? = null,
-        val rowsCount: Int? = null,
-        val nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-        val firstRowIsHeader: Boolean = true,
-        val parseEmptyAsNull: Boolean = true,
-    ) : DataFrameReadOptions
+        val sheetName: String?,
+        val skipRows: Int,
+        val columns: String?,
+        val stringColumns: StringColumns?,
+        val rowsCount: Int?,
+        val nameRepairStrategy: NameRepairStrategy,
+        val firstRowIsHeader: Boolean,
+        val parseEmptyAsNull: Boolean,
+    ) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                sheetName: String? = null,
+                skipRows: Int = 0,
+                columns: String? = null,
+                stringColumns: StringColumns? = null,
+                rowsCount: Int? = null,
+                nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+                firstRowIsHeader: Boolean = true,
+                parseEmptyAsNull: Boolean = true,
+            ): ReadOptions =
+                ReadOptions(
+                    sheetName = sheetName,
+                    skipRows = skipRows,
+                    columns = columns,
+                    stringColumns = stringColumns,
+                    rowsCount = rowsCount,
+                    nameRepairStrategy = nameRepairStrategy,
+                    firstRowIsHeader = firstRowIsHeader,
+                    parseEmptyAsNull = parseEmptyAsNull,
+                )
+        }
+    }
 
     // String reference paths are normalized to URL by readSourceImpl, so no String entry here;
     // Excel is binary, so raw String content isn't a meaningful input either.
@@ -192,6 +215,9 @@ public class ExcelNEW : DataFrameReadSource {
 
     override fun toString(): String = "Xlsx"
 }
+
+public val DataFrameReadOptions.Companion.Excel: org.jetbrains.kotlinx.dataframe.io.ExcelNEW.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.ExcelNEW.ReadOptions.Companion
 
 private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 

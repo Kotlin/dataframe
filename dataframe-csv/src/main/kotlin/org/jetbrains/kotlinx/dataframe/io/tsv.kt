@@ -41,21 +41,56 @@ public class TsvDeephaven(private val delimiter: Char = DelimParams.TSV_DELIMITE
 public class Tsv : DataFrameReadSource {
 
     public data class ReadOptions(
-        val delimiter: Char = DelimParams.TSV_DELIMITER,
-        val header: List<String> = DelimParams.HEADER,
-        val charset: Charset? = DelimParams.CHARSET,
-        val colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
-        val skipLines: Long = DelimParams.SKIP_LINES,
-        val readLines: Long? = DelimParams.READ_LINES,
-        val parserOptions: ParserOptions? = DelimParams.PARSER_OPTIONS,
-        val ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
-        val allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
-        val ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
-        val quote: Char = DelimParams.QUOTE,
-        val ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
-        val trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
-        val parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
-    ) : DataFrameReadOptions
+        val delimiter: Char,
+        val header: List<String>,
+        val charset: Charset?,
+        val colTypes: Map<String, ColType>,
+        val skipLines: Long,
+        val readLines: Long?,
+        val parserOptions: ParserOptions?,
+        val ignoreEmptyLines: Boolean,
+        val allowMissingColumns: Boolean,
+        val ignoreExcessColumns: Boolean,
+        val quote: Char,
+        val ignoreSurroundingSpaces: Boolean,
+        val trimInsideQuoted: Boolean,
+        val parseParallel: Boolean,
+    ) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                delimiter: Char = DelimParams.TSV_DELIMITER,
+                header: List<String> = DelimParams.HEADER,
+                charset: Charset? = DelimParams.CHARSET,
+                colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
+                skipLines: Long = DelimParams.SKIP_LINES,
+                readLines: Long? = DelimParams.READ_LINES,
+                parserOptions: ParserOptions? = DelimParams.PARSER_OPTIONS,
+                ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
+                allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
+                ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
+                quote: Char = DelimParams.QUOTE,
+                ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
+                trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
+                parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
+            ): ReadOptions =
+                ReadOptions(
+                    delimiter = delimiter,
+                    header = header,
+                    charset = charset,
+                    colTypes = colTypes,
+                    skipLines = skipLines,
+                    readLines = readLines,
+                    parserOptions = parserOptions,
+                    ignoreEmptyLines = ignoreEmptyLines,
+                    allowMissingColumns = allowMissingColumns,
+                    ignoreExcessColumns = ignoreExcessColumns,
+                    quote = quote,
+                    ignoreSurroundingSpaces = ignoreSurroundingSpaces,
+                    trimInsideQuoted = trimInsideQuoted,
+                    parseParallel = parseParallel,
+                )
+        }
+    }
 
     override val supportedReadingTypes: Set<KType> =
         setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
@@ -166,6 +201,9 @@ public class Tsv : DataFrameReadSource {
 
     override fun toString(): String = "Tsv"
 }
+
+public val DataFrameReadOptions.Companion.Tsv: org.jetbrains.kotlinx.dataframe.io.Tsv.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.Tsv.ReadOptions.Companion
 
 private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 

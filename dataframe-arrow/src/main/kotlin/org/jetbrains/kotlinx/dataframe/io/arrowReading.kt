@@ -51,7 +51,16 @@ public class ArrowFeather : SupportedDataFrameFormat {
  */
 public class ArrowFeatherNEW : DataFrameReadSource {
 
-    public data class ReadOptions(val nullability: NullabilityOptions = NullabilityOptions.Infer) : DataFrameReadOptions
+    public data class ReadOptions(val nullability: NullabilityOptions) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                nullability: NullabilityOptions = NullabilityOptions.Infer,
+            ): ReadOptions =
+                ReadOptions(
+                    nullability = nullability,
+                )
+        }
+    }
 
     override val supportedReadingTypes: Set<KType> =
         setOf(
@@ -121,6 +130,10 @@ public class ArrowFeatherNEW : DataFrameReadSource {
     override fun toString(): String = "ArrowFeather"
 }
 
+public val DataFrameReadOptions.Companion.ArrowFeather:
+    org.jetbrains.kotlinx.dataframe.io.ArrowFeatherNEW.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.ArrowFeatherNEW.ReadOptions.Companion
+
 /**
  * [DataFrameReadSource] for [Arrow IPC streaming files][DataFrame.readArrowIPC].
  *
@@ -137,9 +150,20 @@ public class ArrowFeatherNEW : DataFrameReadSource {
 public class ArrowIPC : DataFrameReadSource {
 
     public data class ReadOptions(
-        val allocator: RootAllocator = Allocator.ROOT,
-        val nullability: NullabilityOptions = NullabilityOptions.Infer,
-    ) : DataFrameReadOptions
+        val allocator: RootAllocator,
+        val nullability: NullabilityOptions,
+    ) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                allocator: RootAllocator = Allocator.ROOT,
+                nullability: NullabilityOptions = NullabilityOptions.Infer,
+            ): ReadOptions =
+                ReadOptions(
+                    allocator = allocator,
+                    nullability = nullability,
+                )
+        }
+    }
 
     override val supportedReadingTypes: Set<KType> =
         setOf(
@@ -211,6 +235,9 @@ public class ArrowIPC : DataFrameReadSource {
     override fun toString(): String = "ArrowIPC"
 }
 
+public val DataFrameReadOptions.Companion.ArrowIPC: org.jetbrains.kotlinx.dataframe.io.ArrowIPC.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.ArrowIPC.ReadOptions.Companion
+
 /**
  * [DataFrameReadSource] for Apache Parquet files (read via Arrow Dataset).
  *
@@ -223,9 +250,20 @@ public class ArrowIPC : DataFrameReadSource {
 public class Parquet : DataFrameReadSource {
 
     public data class ReadOptions(
-        val nullability: NullabilityOptions = NullabilityOptions.Infer,
-        val batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
-    ) : DataFrameReadOptions
+        val nullability: NullabilityOptions,
+        val batchSize: Long,
+    ) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                nullability: NullabilityOptions = NullabilityOptions.Infer,
+                batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
+            ): ReadOptions =
+                ReadOptions(
+                    nullability = nullability,
+                    batchSize = batchSize,
+                )
+        }
+    }
 
     override val supportedReadingTypes: Set<KType> =
         setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>())
@@ -287,6 +325,9 @@ public class Parquet : DataFrameReadSource {
 
     override fun toString(): String = "Parquet"
 }
+
+public val DataFrameReadOptions.Companion.Parquet: org.jetbrains.kotlinx.dataframe.io.Parquet.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.Parquet.ReadOptions.Companion
 
 private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 

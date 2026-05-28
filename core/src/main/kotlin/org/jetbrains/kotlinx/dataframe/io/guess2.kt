@@ -38,7 +38,9 @@ public sealed interface DataFrameIO {
     public val testOrder: Int
 }
 
-public interface DataFrameReadOptions
+public interface DataFrameReadOptions {
+    public companion object;
+}
 
 public interface DataFrameReadSource : DataFrameIO {
     /**
@@ -88,7 +90,9 @@ internal typealias DataFrameReadSourceFunction<T> =
         options: DataFrameReadOptions?,
     ) -> Result<T>
 
-public interface DataFrameWriteOptions
+public interface DataFrameWriteOptions {
+    public companion object;
+}
 
 public interface DataFrameWriteTarget : DataFrameIO {
     public val supportedWritingTypes: Set<KType>

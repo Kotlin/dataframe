@@ -67,7 +67,7 @@ class Guess2 {
         DataFrame.readSource(file.inputStream()) shouldBe expected
         DataFrame.readSource(Json.decodeFromString<JsonElement>(file.readText())) shouldBe expected
 
-        val readOptions = org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions(
+        val readOptions = DataFrameReadOptions.Json(
             typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS,
         )
 
@@ -123,7 +123,7 @@ class Guess2 {
             Path(tsvFile.path).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
-        val options = Tsv.ReadOptions(delimiter = '\t')
+        val options = DataFrameReadOptions.Tsv(delimiter = '\t')
 
         DataFrame.readSource(tsvFile.path, options) shouldBe expected
         DataFrame.readSource(Path(tsvFile.path), options) shouldBe expected
@@ -192,7 +192,7 @@ class Guess2 {
             DataFrame.readSource(wb.getSheetAt(0)) shouldBe expected
         }
 
-        val options = ExcelNEW.ReadOptions()
+        val options = DataFrameReadOptions.Excel()
 
         // Binary streams have no extension and are accepted by every format,
         // so options are needed to pin ExcelNEW for the InputStream variant.

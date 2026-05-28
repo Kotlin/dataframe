@@ -66,19 +66,40 @@ public class Jdbc2 : DataFrameReadSource {
          * Required for [Connection], [DataSource], and [DbConnectionConfig] sources.
          * Ignored for [ResultSet] (it's already an executed query).
          */
-        val sqlQueryOrTableName: String? = null,
-        val limit: Int? = null,
-        val inferNullability: Boolean = true,
+        val sqlQueryOrTableName: String?,
+        val limit: Int?,
+        val inferNullability: Boolean,
         /** Optional, auto-detected from the source when `null`. */
-        val dbType: DbType? = null,
-        val strictValidation: Boolean = true,
-        val configureStatement: (PreparedStatement) -> Unit = {},
+        val dbType: DbType?,
+        val strictValidation: Boolean,
+        val configureStatement: (PreparedStatement) -> Unit,
         /**
          * Only used when the source is a [ResultSet] and [dbType] is `null`; provides a [Connection]
          * to auto-detect the database type. Ignored otherwise.
          */
-        val resultSetConnection: Connection? = null,
-    ) : DataFrameReadOptions
+        val resultSetConnection: Connection?,
+    ) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                sqlQueryOrTableName: String? = null,
+                limit: Int? = null,
+                inferNullability: Boolean = true,
+                dbType: DbType? = null,
+                strictValidation: Boolean = true,
+                configureStatement: (PreparedStatement) -> Unit = {},
+                resultSetConnection: Connection? = null,
+            ): ReadOptions =
+                ReadOptions(
+                    sqlQueryOrTableName = sqlQueryOrTableName,
+                    limit = limit,
+                    inferNullability = inferNullability,
+                    dbType = dbType,
+                    strictValidation = strictValidation,
+                    configureStatement = configureStatement,
+                    resultSetConnection = resultSetConnection,
+                )
+        }
+    }
 
     override val supportedReadingTypes: Set<KType> =
         setOf(
@@ -216,6 +237,9 @@ public class Jdbc2 : DataFrameReadSource {
 
     override fun toString(): String = "Jdbc"
 }
+
+public val DataFrameReadOptions.Companion.Jdbc: org.jetbrains.kotlinx.dataframe.io.Jdbc2.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.Jdbc2.ReadOptions.Companion
 
 private fun DataFrame.Companion.readJDBC(stream: File): DataFrame<*> {
     TODO("Not yet implemented")

@@ -33,12 +33,29 @@ import kotlin.reflect.typeOf
 public class OpenApi2 : DataFrameReadSource {
 
     public data class ReadOptions(
-        val auth: List<AuthorizationValue>? = null,
-        val parseOptions: ParseOptions? = null,
-        val extensionProperties: Boolean = false,
-        val generateHelperCompanionObject: Boolean = false,
-        val visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-    ) : DataFrameReadOptions
+        val auth: List<AuthorizationValue>?,
+        val parseOptions: ParseOptions?,
+        val extensionProperties: Boolean,
+        val generateHelperCompanionObject: Boolean,
+        val visibility: MarkerVisibility,
+    ) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                auth: List<AuthorizationValue>? = null,
+                parseOptions: ParseOptions? = null,
+                extensionProperties: Boolean = false,
+                generateHelperCompanionObject: Boolean = false,
+                visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            ): ReadOptions =
+                ReadOptions(
+                    auth = auth,
+                    parseOptions = parseOptions,
+                    extensionProperties = extensionProperties,
+                    generateHelperCompanionObject = generateHelperCompanionObject,
+                    visibility = visibility,
+                )
+        }
+    }
 
     override val supportedReadingTypes: Set<KType> =
         setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
@@ -154,6 +171,9 @@ public class OpenApi2 : DataFrameReadSource {
 
     override fun toString(): String = "OpenApi"
 }
+
+public val DataFrameReadOptions.Companion.OpenApi: org.jetbrains.kotlinx.dataframe.io.OpenApi2.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.OpenApi2.ReadOptions.Companion
 
 /**
  * Allows for OpenApi type schemas to be converted to [DataSchema] interfaces.

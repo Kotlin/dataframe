@@ -56,12 +56,13 @@ public class Json :
                 typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
                 keyValuePaths: List<JsonPath> = emptyList(),
                 unifyNumbers: Boolean = true,
-            ): ReadOptions = ReadOptions(
-                header = header,
-                typeClashTactic = typeClashTactic,
-                keyValuePaths = keyValuePaths,
-                unifyNumbers = unifyNumbers
-            )
+            ): ReadOptions =
+                ReadOptions(
+                    header = header,
+                    typeClashTactic = typeClashTactic,
+                    keyValuePaths = keyValuePaths,
+                    unifyNumbers = unifyNumbers,
+                )
         }
     }
 
@@ -75,7 +76,12 @@ public class Json :
             typeOf<JsonElement>(),
         )
 
-    public data class WriteOptions(val prettyPrint: Boolean = false) : DataFrameWriteOptions
+    public data class WriteOptions(val prettyPrint: Boolean) : DataFrameWriteOptions {
+        public companion object {
+            public operator fun invoke(prettyPrint: Boolean = false): WriteOptions =
+                WriteOptions(prettyPrint = prettyPrint)
+        }
+    }
 
     override val supportedWritingTypes: Set<KType> =
         setOf(
@@ -287,8 +293,8 @@ public class Json :
 public val DataFrameReadOptions.Companion.Json: org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
     get() = org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
 
-public val DataFrameWriteOptions.Companion.Json: org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
-    get() = org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
+public val DataFrameWriteOptions.Companion.Json: org.jetbrains.kotlinx.dataframe.io.Json.WriteOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.Json.WriteOptions.Companion
 
 private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 
