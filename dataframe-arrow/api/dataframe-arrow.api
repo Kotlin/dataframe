@@ -24,13 +24,13 @@ public final class org/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW : org/jetb
 public final class org/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW$Companion {
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW$Options : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW$ReadOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
 	public fun <init> ()V
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)V
 	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;
-	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW$Options;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW$Options;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW$Options;
+	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW$ReadOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW$ReadOptions;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowFeatherNEW$ReadOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getNullability ()Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;
 	public fun hashCode ()I
@@ -52,14 +52,14 @@ public final class org/jetbrains/kotlinx/dataframe/io/ArrowIPC : org/jetbrains/k
 public final class org/jetbrains/kotlinx/dataframe/io/ArrowIPC$Companion {
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/ArrowIPC$Options : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowIPC$ReadOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
 	public fun <init> ()V
 	public fun <init> (Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)V
 	public synthetic fun <init> (Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lorg/apache/arrow/memory/RootAllocator;
 	public final fun component2 ()Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;
-	public final fun copy (Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowIPC$Options;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ArrowIPC$Options;Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowIPC$Options;
+	public final fun copy (Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowIPC$ReadOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ArrowIPC$ReadOptions;Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowIPC$ReadOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAllocator ()Lorg/apache/arrow/memory/RootAllocator;
 	public final fun getNullability ()Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;
@@ -396,14 +396,14 @@ public final class org/jetbrains/kotlinx/dataframe/io/Parquet : org/jetbrains/ko
 public final class org/jetbrains/kotlinx/dataframe/io/Parquet$Companion {
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/Parquet$Options : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
+public final class org/jetbrains/kotlinx/dataframe/io/Parquet$ReadOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
 	public fun <init> ()V
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;J)V
 	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;
 	public final fun component2 ()J
-	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;J)Lorg/jetbrains/kotlinx/dataframe/io/Parquet$Options;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Parquet$Options;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;JILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Parquet$Options;
+	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;J)Lorg/jetbrains/kotlinx/dataframe/io/Parquet$ReadOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Parquet$ReadOptions;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;JILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Parquet$ReadOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBatchSize ()J
 	public final fun getNullability ()Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;

@@ -40,7 +40,7 @@ public class CsvDeephaven(private val delimiter: Char = DelimParams.CSV_DELIMITE
 
 public class Csv : DataFrameReadSource {
 
-    public data class Options(
+    public data class ReadOptions(
         val delimiter: Char = DelimParams.CSV_DELIMITER,
         val header: List<String> = DelimParams.HEADER,
         val charset: Charset? = DelimParams.CHARSET,
@@ -70,7 +70,7 @@ public class Csv : DataFrameReadSource {
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
-        if (options != null && options !is Options) return false
+        if (options != null && options !is ReadOptions) return false
         if (sourceInfo.extension != null && sourceInfo.extension !in EXTENSIONS) return false
         if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
         return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
@@ -82,7 +82,7 @@ public class Csv : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): Result<DataFrame<*>> =
         runCatching {
-            val opts = (options ?: Options()) as Options
+            val opts = (options ?: ReadOptions()) as ReadOptions
             val kType = sourceInfo.kType
 
             val url: URL? = when {

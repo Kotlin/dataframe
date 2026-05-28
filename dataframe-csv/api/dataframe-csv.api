@@ -13,7 +13,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/Csv : org/jetbrains/kotlin
 public final class org/jetbrains/kotlinx/dataframe/io/Csv$Companion {
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/Csv$Options : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
+public final class org/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
 	public fun <init> ()V
 	public fun <init> (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)V
 	public synthetic fun <init> (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -31,8 +31,8 @@ public final class org/jetbrains/kotlinx/dataframe/io/Csv$Options : org/jetbrain
 	public final fun component7 ()Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 	public final fun component8 ()Z
 	public final fun component9 ()Z
-	public final fun copy (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/io/Csv$Options;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Csv$Options;CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$Options;
+	public final fun copy (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions;CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAllowMissingColumns ()Z
 	public final fun getCharset ()Ljava/nio/charset/Charset;
@@ -190,7 +190,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/Tsv : org/jetbrains/kotlin
 public final class org/jetbrains/kotlinx/dataframe/io/Tsv$Companion {
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/Tsv$Options : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
+public final class org/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
 	public fun <init> ()V
 	public fun <init> (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)V
 	public synthetic fun <init> (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -208,8 +208,8 @@ public final class org/jetbrains/kotlinx/dataframe/io/Tsv$Options : org/jetbrain
 	public final fun component7 ()Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 	public final fun component8 ()Z
 	public final fun component9 ()Z
-	public final fun copy (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$Options;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Tsv$Options;CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$Options;
+	public final fun copy (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions;CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAllowMissingColumns ()Z
 	public final fun getCharset ()Ljava/nio/charset/Charset;

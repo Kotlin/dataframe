@@ -69,7 +69,7 @@ public class Excel : SupportedDataFrameFormat {
 
 public class ExcelNEW : DataFrameReadSource {
 
-    public data class Options(
+    public data class ReadOptions(
         val sheetName: String? = null,
         val skipRows: Int = 0,
         val columns: String? = null,
@@ -103,7 +103,7 @@ public class ExcelNEW : DataFrameReadSource {
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
-        if (options != null && options !is Options) return false
+        if (options != null && options !is ReadOptions) return false
         val ext = sourceInfo.extension?.lowercase()
         if (ext != null && ext !in EXTENSIONS) return false
         val mime = sourceInfo.mimeType?.lowercase()
@@ -117,7 +117,7 @@ public class ExcelNEW : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): Result<DataFrame<*>> =
         runCatching {
-            val opts = (options ?: Options()) as Options
+            val opts = (options ?: ReadOptions()) as ReadOptions
             val kType = sourceInfo.kType
 
             val url: URL? = when {

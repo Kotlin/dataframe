@@ -50,7 +50,7 @@ public class Jdbc :
  * [DataFrameReadSource] for JDBC.
  *
  * Reading from JDBC always needs a "what" (a SQL query or table name) — unlike a file, a [Connection] doesn't
- * carry that instruction. Provide it via [Options.sqlQueryOrTableName]. The only exception is [ResultSet],
+ * carry that instruction. Provide it via [ReadOptions.sqlQueryOrTableName]. The only exception is [ResultSet],
  * which is already an executed query.
  *
  * Supported source types: [Connection], [DataSource], [DbConnectionConfig], [ResultSet].
@@ -60,7 +60,7 @@ public class Jdbc :
  */
 public class Jdbc2 : DataFrameReadSource {
 
-    public data class Options(
+    public data class ReadOptions(
         /**
          * SQL query (e.g. `"SELECT * FROM users"`) or table name (e.g. `"users"`).
          * Required for [Connection], [DataSource], and [DbConnectionConfig] sources.
@@ -89,7 +89,7 @@ public class Jdbc2 : DataFrameReadSource {
         )
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
-        if (options != null && options !is Options) return false
+        if (options != null && options !is ReadOptions) return false
         return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
 
@@ -99,7 +99,7 @@ public class Jdbc2 : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): Result<DataFrame<*>> =
         runCatching {
-            val opts = (options ?: Options()) as Options
+            val opts = (options ?: ReadOptions()) as ReadOptions
             @Suppress("RedundantReturnKeyword")
             return@runCatching when (source) {
                 is ResultSet -> when {
@@ -117,7 +117,7 @@ public class Jdbc2 : DataFrameReadSource {
                     // Without dbType or a connection we can't read a ResultSet — fall through.
                     else -> return Result.failure(
                         IllegalArgumentException(
-                            "ResultSet read requires either Options.dbType or Options.resultSetConnection",
+                            "ResultSet read requires either ReadOptions.dbType or ReadOptions.resultSetConnection",
                         ),
                     )
                 }
@@ -125,7 +125,7 @@ public class Jdbc2 : DataFrameReadSource {
                 is Connection -> {
                     val query = opts.sqlQueryOrTableName
                         ?: return Result.failure(
-                            IllegalArgumentException("Connection read requires Options.sqlQueryOrTableName"),
+                            IllegalArgumentException("Connection read requires ReadOptions.sqlQueryOrTableName"),
                         )
                     source.readDataFrame(
                         sqlQueryOrTableName = query,
@@ -140,7 +140,7 @@ public class Jdbc2 : DataFrameReadSource {
                 is DataSource -> {
                     val query = opts.sqlQueryOrTableName
                         ?: return Result.failure(
-                            IllegalArgumentException("DataSource read requires Options.sqlQueryOrTableName"),
+                            IllegalArgumentException("DataSource read requires ReadOptions.sqlQueryOrTableName"),
                         )
                     source.readDataFrame(
                         sqlQueryOrTableName = query,
@@ -155,7 +155,7 @@ public class Jdbc2 : DataFrameReadSource {
                 is DbConnectionConfig -> {
                     val query = opts.sqlQueryOrTableName
                         ?: return Result.failure(
-                            IllegalArgumentException("DbConnectionConfig read requires Options.sqlQueryOrTableName"),
+                            IllegalArgumentException("DbConnectionConfig read requires ReadOptions.sqlQueryOrTableName"),
                         )
                     source.readDataFrame(
                         sqlQueryOrTableName = query,
@@ -177,7 +177,7 @@ public class Jdbc2 : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): Result<DataFrameSchema> =
         runCatching {
-            val opts = (options ?: Options()) as Options
+            val opts = (options ?: ReadOptions()) as ReadOptions
             when (source) {
                 // ResultSet has a true zero-row metadata-only path.
                 is ResultSet -> when {
@@ -187,24 +187,24 @@ public class Jdbc2 : DataFrameReadSource {
                     opts.resultSetConnection != null ->
                         DataFrameSchema.readResultSet(source, extractDBTypeFromConnection(opts.resultSetConnection))
 
-                    else -> error("ResultSet schema read requires either Options.dbType or Options.resultSetConnection")
+                    else -> error("ResultSet schema read requires either ReadOptions.dbType or ReadOptions.resultSetConnection")
                 }
 
                 is Connection -> {
                     val query = opts.sqlQueryOrTableName
-                        ?: error("Connection schema read requires Options.sqlQueryOrTableName")
+                        ?: error("Connection schema read requires ReadOptions.sqlQueryOrTableName")
                     source.readDataFrameSchema(sqlQueryOrTableName = query, dbType = opts.dbType)
                 }
 
                 is DataSource -> {
                     val query = opts.sqlQueryOrTableName
-                        ?: error("DataSource schema read requires Options.sqlQueryOrTableName")
+                        ?: error("DataSource schema read requires ReadOptions.sqlQueryOrTableName")
                     source.readDataFrameSchema(sqlQueryOrTableName = query, dbType = opts.dbType)
                 }
 
                 is DbConnectionConfig -> {
                     val query = opts.sqlQueryOrTableName
-                        ?: error("DbConnectionConfig schema read requires Options.sqlQueryOrTableName")
+                        ?: error("DbConnectionConfig schema read requires ReadOptions.sqlQueryOrTableName")
                     source.readDataFrameSchema(sqlQueryOrTableName = query, dbType = opts.dbType)
                 }
 

@@ -32,7 +32,7 @@ import kotlin.reflect.typeOf
  */
 public class OpenApi2 : DataFrameReadSource {
 
-    public data class Options(
+    public data class ReadOptions(
         val auth: List<AuthorizationValue>? = null,
         val parseOptions: ParseOptions? = null,
         val extensionProperties: Boolean = false,
@@ -62,7 +62,7 @@ public class OpenApi2 : DataFrameReadSource {
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
-        if (options != null && options !is Options) return false
+        if (options != null && options !is ReadOptions) return false
         val ext = sourceInfo.extension?.lowercase()
         if (ext != null && ext !in EXTENSIONS) return false
         if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
@@ -92,7 +92,7 @@ public class OpenApi2 : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): Result<CodeString> =
         runCatching {
-            val opts = (options ?: Options()) as Options
+            val opts = (options ?: ReadOptions()) as ReadOptions
             val kType = sourceInfo.kType
 
             // Resolve to OpenAPI-spec text, returning null if the content isn't OpenAPI.

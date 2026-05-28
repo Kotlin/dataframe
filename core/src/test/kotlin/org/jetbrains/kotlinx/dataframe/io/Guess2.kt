@@ -88,7 +88,7 @@ class Guess2 {
             Path(csvPath).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
-        val options = Csv.Options(delimiter = ',')
+        val options = Csv.ReadOptions(delimiter = ',')
 
         DataFrame.readSource(csvPath, options) shouldBe expected
         DataFrame.readSource(Path(csvPath), options) shouldBe expected
@@ -105,7 +105,7 @@ class Guess2 {
         val expected = DataFrame.readCsv(file)
 
         // String content has no extension hint, so we pin the format via options.
-        val options = Csv.Options(delimiter = ',')
+        val options = Csv.ReadOptions(delimiter = ',')
 
         DataFrame.readSource(file.readText(), options) shouldBe expected
         DataFrame.readSource(file.inputStream(), options) shouldBe expected
@@ -123,7 +123,7 @@ class Guess2 {
             Path(tsvFile.path).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
-        val options = Tsv.Options(delimiter = '\t')
+        val options = Tsv.ReadOptions(delimiter = '\t')
 
         DataFrame.readSource(tsvFile.path, options) shouldBe expected
         DataFrame.readSource(Path(tsvFile.path), options) shouldBe expected
@@ -138,7 +138,7 @@ class Guess2 {
     fun `read TSV in memory`() {
         val tsvFile = File("src/test/resources/abc.tsv")
         val expected = DataFrame.readTsv(tsvFile)
-        val options = Tsv.Options(delimiter = '\t')
+        val options = Tsv.ReadOptions(delimiter = '\t')
 
         // Binary/text without extension — options pin Tsv over Csv/Json/Xlsx.
         DataFrame.readSource(tsvFile.readText(), options) shouldBe expected
@@ -157,7 +157,7 @@ class Guess2 {
             Path(xlsxFile.path).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
-        val options = ExcelNEW.Options(sheetName = "Sheet1")
+        val options = ExcelNEW.ReadOptions(sheetName = "Sheet1")
 
         DataFrame.readSource(xlsxFile.path, options) shouldBe expected
         DataFrame.readSource(Path(xlsxFile.path), options) shouldBe expected
@@ -192,7 +192,7 @@ class Guess2 {
             DataFrame.readSource(wb.getSheetAt(0)) shouldBe expected
         }
 
-        val options = ExcelNEW.Options()
+        val options = ExcelNEW.ReadOptions()
 
         // Binary streams have no extension and are accepted by every format,
         // so options are needed to pin ExcelNEW for the InputStream variant.
@@ -234,8 +234,8 @@ class Guess2 {
             seed(conn)
 
             val expected = DataFrame.readSqlTable(conn, "Customer")
-            val tableOpts = Jdbc2.Options(sqlQueryOrTableName = "Customer")
-            val queryOpts = Jdbc2.Options(sqlQueryOrTableName = "SELECT * FROM Customer")
+            val tableOpts = Jdbc2.ReadOptions(sqlQueryOrTableName = "Customer")
+            val queryOpts = Jdbc2.ReadOptions(sqlQueryOrTableName = "SELECT * FROM Customer")
 
             // Connection — exclusive type, but query/table name must come from options.
             DataFrame.readSource(conn, tableOpts) shouldBe expected
@@ -273,7 +273,7 @@ class Guess2 {
                 ps.executeQuery().use { rs ->
                     DataFrame.readSource(
                         rs,
-                        Jdbc2.Options(dbType = H2()),
+                        Jdbc2.ReadOptions(dbType = H2()),
                     ) shouldBe expected
                 }
             }
@@ -281,7 +281,7 @@ class Guess2 {
                 ps.executeQuery().use { rs ->
                     DataFrame.readSource(
                         rs,
-                        Jdbc2.Options(resultSetConnection = conn),
+                        Jdbc2.ReadOptions(resultSetConnection = conn),
                     ) shouldBe expected
                 }
             }
@@ -317,10 +317,10 @@ class Guess2 {
 
         val config = DbConnectionConfig(url = url)
         val expected = DataFrame.readSqlTable(config, "Customer")
-        val tableOpts = Jdbc2.Options(sqlQueryOrTableName = "Customer")
+        val tableOpts = Jdbc2.ReadOptions(sqlQueryOrTableName = "Customer")
 
         DataFrame.readSource(config, tableOpts) shouldBe expected
-        DataFrame.readSource(config, Jdbc2.Options(sqlQueryOrTableName = "SELECT * FROM Customer")) shouldBe expected
+        DataFrame.readSource(config, Jdbc2.ReadOptions(sqlQueryOrTableName = "SELECT * FROM Customer")) shouldBe expected
     }
 
     @Test
@@ -357,8 +357,8 @@ class Guess2 {
         DriverManager.getConnection(url).use { conn ->
             seed(conn)
             val expected = DataFrameSchema.readSqlTable(conn, "Customer")
-            val tableOpts = Jdbc2.Options(sqlQueryOrTableName = "Customer")
-            val queryOpts = Jdbc2.Options(sqlQueryOrTableName = "SELECT * FROM Customer")
+            val tableOpts = Jdbc2.ReadOptions(sqlQueryOrTableName = "Customer")
+            val queryOpts = Jdbc2.ReadOptions(sqlQueryOrTableName = "SELECT * FROM Customer")
 
             DataFrameSchema.readSource(conn, tableOpts) shouldBe expected
             DataFrameSchema.readSource(conn, queryOpts) shouldBe expected
@@ -384,7 +384,7 @@ class Guess2 {
                         conn.prepareStatement("SELECT * FROM Customer").executeQuery(),
                         H2(),
                     )
-                    val schema = DataFrameSchema.readSource(rs, Jdbc2.Options(dbType = H2()))
+                    val schema = DataFrameSchema.readSource(rs, Jdbc2.ReadOptions(dbType = H2()))
                     schema shouldBe expected
                     rs.isBeforeFirst shouldBe true
                 }
@@ -404,7 +404,7 @@ class Guess2 {
             Path(featherFile.path).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
-        val options = ArrowFeatherNEW.Options()
+        val options = ArrowFeatherNEW.ReadOptions()
 
         DataFrame.readSource(featherFile.path, options) shouldBe expected
         DataFrame.readSource(featherFile, options) shouldBe expected
@@ -414,7 +414,7 @@ class Guess2 {
     fun `read Arrow Feather in memory`() {
         val featherFile = File("src/test/resources/test.feather")
         val expected = DataFrame.readArrowFeather(featherFile)
-        val options = ArrowFeatherNEW.Options()
+        val options = ArrowFeatherNEW.ReadOptions()
 
         // ByteArray, InputStream, SeekableByteChannel all need options to disambiguate (no extension).
         DataFrame.readSource(featherFile.readBytes(), options) shouldBe expected
@@ -436,7 +436,7 @@ class Guess2 {
             Path(ipcFile.path).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
-        val options = ArrowIPC.Options()
+        val options = ArrowIPC.ReadOptions()
         DataFrame.readSource(ipcFile, options) shouldBe expected
     }
 
@@ -452,7 +452,7 @@ class Guess2 {
             Path(parquetFile.path).absolute().normalize().toUri().toURL(),
         ) shouldBe expected
 
-        val options = Parquet.Options()
+        val options = Parquet.ReadOptions()
         DataFrame.readSource(parquetFile, options) shouldBe expected
     }
 
@@ -505,14 +505,14 @@ class Guess2 {
     fun `read DataRow from CSV string`() {
         val csvText = "a,b,c\n1,2,3"
         val expected = DataFrame.readCsvStr(csvText).single()
-        DataRow.readSource(csvText, Csv.Options()) shouldBe expected
+        DataRow.readSource(csvText, Csv.ReadOptions()) shouldBe expected
     }
 
     @Test
     fun `read DataRow from TSV string`() {
         val tsvText = "a\tb\tc\n1\t2\t3"
         val expected = DataFrame.readTsvStr(tsvText).single()
-        DataRow.readSource(tsvText, Tsv.Options()) shouldBe expected
+        DataRow.readSource(tsvText, Tsv.ReadOptions()) shouldBe expected
     }
 
     @Test
@@ -538,7 +538,7 @@ class Guess2 {
             seed(conn)
             val query = "SELECT * FROM Customer WHERE id = 1"
             val expected = DataFrame.readSqlQuery(conn, query).single()
-            DataRow.readSource(conn, Jdbc2.Options(sqlQueryOrTableName = query)) shouldBe expected
+            DataRow.readSource(conn, Jdbc2.ReadOptions(sqlQueryOrTableName = query)) shouldBe expected
         }
     }
 

@@ -47,11 +47,11 @@ public class ArrowFeather : SupportedDataFrameFormat {
  *  - In-memory: [SeekableByteChannel], [ByteArray], [InputStream], [ArrowReader]
  *
  * Default-accepts the `.feather` extension. To read with no extension hint (e.g., an [InputStream]) pass
- * an [Options] instance to disambiguate from text formats.
+ * an [ReadOptions] instance to disambiguate from text formats.
  */
 public class ArrowFeatherNEW : DataFrameReadSource {
 
-    public data class Options(val nullability: NullabilityOptions = NullabilityOptions.Infer) : DataFrameReadOptions
+    public data class ReadOptions(val nullability: NullabilityOptions = NullabilityOptions.Infer) : DataFrameReadOptions
 
     override val supportedReadingTypes: Set<KType> =
         setOf(
@@ -69,7 +69,7 @@ public class ArrowFeatherNEW : DataFrameReadSource {
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
-        if (options != null && options !is Options) return false
+        if (options != null && options !is ReadOptions) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
         return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
@@ -80,7 +80,7 @@ public class ArrowFeatherNEW : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): Result<DataFrame<*>> =
         runCatching {
-            val opts = (options ?: Options()) as Options
+            val opts = (options ?: ReadOptions()) as ReadOptions
             val kType = sourceInfo.kType
 
             // ArrowReader is exclusive; check before more general types.
@@ -136,7 +136,7 @@ public class ArrowFeatherNEW : DataFrameReadSource {
  */
 public class ArrowIPC : DataFrameReadSource {
 
-    public data class Options(
+    public data class ReadOptions(
         val allocator: RootAllocator = Allocator.ROOT,
         val nullability: NullabilityOptions = NullabilityOptions.Infer,
     ) : DataFrameReadOptions
@@ -157,7 +157,7 @@ public class ArrowIPC : DataFrameReadSource {
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
-        if (options != null && options !is Options) return false
+        if (options != null && options !is ReadOptions) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
         return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
@@ -168,7 +168,7 @@ public class ArrowIPC : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): Result<DataFrame<*>> =
         runCatching {
-            val opts = (options ?: Options()) as Options
+            val opts = (options ?: ReadOptions()) as ReadOptions
             val kType = sourceInfo.kType
 
             if (kType.isSubTypeOf<ArrowReader>()) {
@@ -222,7 +222,7 @@ public class ArrowIPC : DataFrameReadSource {
  */
 public class Parquet : DataFrameReadSource {
 
-    public data class Options(
+    public data class ReadOptions(
         val nullability: NullabilityOptions = NullabilityOptions.Infer,
         val batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
     ) : DataFrameReadOptions
@@ -239,7 +239,7 @@ public class Parquet : DataFrameReadSource {
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
-        if (options != null && options !is Options) return false
+        if (options != null && options !is ReadOptions) return false
         if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
         if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
         return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
@@ -251,7 +251,7 @@ public class Parquet : DataFrameReadSource {
         options: DataFrameReadOptions?,
     ): Result<DataFrame<*>> =
         runCatching {
-            val opts = (options ?: Options()) as Options
+            val opts = (options ?: ReadOptions()) as ReadOptions
             val kType = sourceInfo.kType
             return@runCatching when {
                 kType.isSubTypeOf<URL>() ->

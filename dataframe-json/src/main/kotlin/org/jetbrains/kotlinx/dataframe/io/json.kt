@@ -45,11 +45,25 @@ public class Json :
     DataFrameWriteTarget {
 
     public data class ReadOptions(
-        val header: List<String> = emptyList(),
-        val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-        val keyValuePaths: List<JsonPath> = emptyList(),
-        val unifyNumbers: Boolean = true,
-    ) : DataFrameReadOptions
+        val header: List<String>,
+        val typeClashTactic: TypeClashTactic,
+        val keyValuePaths: List<JsonPath>,
+        val unifyNumbers: Boolean,
+    ) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                header: List<String> = emptyList(),
+                typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+                keyValuePaths: List<JsonPath> = emptyList(),
+                unifyNumbers: Boolean = true,
+            ): ReadOptions = ReadOptions(
+                header = header,
+                typeClashTactic = typeClashTactic,
+                keyValuePaths = keyValuePaths,
+                unifyNumbers = unifyNumbers
+            )
+        }
+    }
 
     override val supportedReadingTypes: Set<KType> =
         setOf(
@@ -269,6 +283,12 @@ public class Json :
                 )
         }
 }
+
+public val DataFrameReadOptions.Companion.Json: org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
+
+public val DataFrameWriteOptions.Companion.Json: org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
 
 private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 
