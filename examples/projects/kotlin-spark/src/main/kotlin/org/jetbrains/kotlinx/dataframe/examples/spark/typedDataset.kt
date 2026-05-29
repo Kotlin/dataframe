@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toList
+import org.jetbrains.kotlinx.dataframe.api.toListOf
 import java.io.Serializable
 
 /**
@@ -78,7 +78,9 @@ fun main() {
     ageStats.print(columnTypes = true, borders = true)
 
     // and when we want to convert a DataFrame back to Spark, we can do the same trick via a typed List
-    val sparkDatasetAgain = spark.createDataset(dataframe.toList(), beanEncoderOf())
+    // Using the compiler plugin, it's important to specify the target data class explicitly!
+    // The local compiler-plugin type is not a data class that can be instantiated.
+    val sparkDatasetAgain = spark.createDataset(dataframe.toListOf<Person>(), beanEncoderOf())
     sparkDatasetAgain.printSchema()
     sparkDatasetAgain.show()
 
@@ -93,6 +95,7 @@ data class Name
     @JvmOverloads
     constructor(var firstName: String = "", var lastName: String = "") : Serializable
 
+// The @DataSchema annotation is optional for this specific example, but is generally recommended
 @DataSchema
 data class Person
     @JvmOverloads

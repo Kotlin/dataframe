@@ -1,28 +1,25 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.dataframe)
+    alias(libs.plugins.ktlint.gradle)
+
     application
-    kotlin("jvm")
-
-    // uses the 'old' Gradle plugin instead of the compiler plugin for now
-    id("org.jetbrains.kotlinx.dataframe")
-
-    // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
-    id("com.google.devtools.ksp")
 }
 
 repositories {
-    mavenLocal() // in case of local dataframe development
     mavenCentral()
 }
 
 dependencies {
-    // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
-    implementation(project(":"))
+    implementation(libs.dataframe)
 
-    // (kotlin) spark support
+    // (Kotlin) Spark SQL (Spark 3.3.2)
     implementation(libs.kotlin.spark)
-    compileOnly(libs.spark)
+    compileOnly(libs.spark.sql)
+
+    // Logging to keep Spark quiet
     implementation(libs.log4j.core)
     implementation(libs.log4j.api)
 }
@@ -64,6 +61,7 @@ val runSparkUntypedDataset by tasks.registering(JavaExec::class) {
 }
 
 kotlin {
+    jvmToolchain(11)
     compilerOptions {
         jvmTarget = JvmTarget.JVM_11
         freeCompilerArgs.add("-Xjdk-release=11")
