@@ -137,6 +137,12 @@ internal interface GroupByDocs {
      * `| `__`.`__[**`last`**][GroupBy.last]`  [ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`medianBy`**][GroupBy.medianBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`percentileBy`**][GroupBy.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
      * __`.`__[**`concat`**][ReducedGroupBy.concat]**`() `**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -313,8 +319,8 @@ internal interface GroupByDocs {
      *   (optionally, the first or last one that satisfies a predicate) of each group;
      * * [minBy][GroupBy.minBy] / [maxBy][GroupBy.maxBy] — take the row with the minimum or maximum value
      *   of the given [RowExpression] calculated on rows within each group;
-     * * [medianBy][GroupBy.medianBy] / [percentileBy][GroupBy.percentileBy] — take the row with
-     *   the median or specific percentile value of the given [RowExpression] calculated on rows within each group;
+     * * [medianBy][GroupBy.medianBy] / [percentileBy][GroupBy.percentileBy] — take the row at the position closest
+     *   to the estimated median/percentile index of the [RowExpression]'s results calculated on rows within each group.
      *
      * These functions return a [ReducedGroupBy], which can then be transformed into a new [DataFrame]
      * containing the reduced rows (either original or transformed) using one of the following methods:
