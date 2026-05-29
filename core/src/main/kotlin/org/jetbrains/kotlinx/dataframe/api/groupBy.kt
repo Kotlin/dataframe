@@ -124,6 +124,12 @@ internal interface GroupByDocs {
      * `| `__`.`__[**`last`**][GroupBy.last]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
      * {@include [Indent]}
+     * `| `__`.`__[**`medianBy`**][GroupBy.medianBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`percentileBy`**][GroupBy.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     *
+     * {@include [Indent]}
      * __`.`__[**`concat`**][ReducedGroupBy.concat]**`() `**
      *
      * {@include [Indent]}
