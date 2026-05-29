@@ -150,8 +150,8 @@ internal interface PivotDocs {
      *   (optionally, the first or last one that satisfies a predicate) of each group;
      * * [minBy][Pivot.minBy] / [maxBy][Pivot.maxBy] — take the row with the minimum or maximum value
      *   of the given [RowExpression] evaluated on rows within each group;
-     * * [medianBy][Pivot.medianBy] / [percentileBy][Pivot.percentileBy] — take the row with
-     *   the median or a specific percentile value of the given [RowExpression] evaluated on rows within each group.
+     * * [medianBy][Pivot.medianBy] / [percentileBy][Pivot.percentileBy] — take the row at the position closest
+     *   to the estimated median/percentile index of the [RowExpression]'s results calculated on rows within each group.
      *
      * These functions return a [ReducedPivot], which can then be transformed into a new [DataFrame]
      * containing a single combined row (either using the original reduced rows or their transformed versions)

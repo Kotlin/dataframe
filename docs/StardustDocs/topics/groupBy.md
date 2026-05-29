@@ -372,7 +372,7 @@ To perform a reducing operation, use the following functions:
 * [`minBy`](minBy.md) / [`maxBy`](maxBy.md) – to get from each group the row with the smallest / largest result 
 of the [`row expression`](DataRow.md#row-expressions) supplied to the function.
 
-* [`medianBy`](median.md) / [`percentileBy`](percentile.md) – to get the row with the value closest to the estimated 
+* [`medianBy`](median.md) / [`percentileBy`](percentile.md) – to get the row at the position closest to the estimated 
 median/percentile index of the [`row expression`](DataRow.md#row-expressions)'s results calculated on rows within each group.
 
 These functions return an instance of `ReducedGroupBy`, which is a class serving as a transitional step
