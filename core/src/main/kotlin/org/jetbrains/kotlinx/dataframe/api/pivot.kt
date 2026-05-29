@@ -86,10 +86,10 @@ internal interface PivotDocs {
      * `| `__`.`__[**`last`**][Pivot.last]`  \[ `**`{  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`medianBy`**][Pivot.medianBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * `| `__`.`__[**`medianBy`**][Pivot.medianBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`percentileBy`**][Pivot.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * `| `__`.`__[**`percentileBy`**][Pivot.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
      * __`.`__[**`with`**][Pivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
