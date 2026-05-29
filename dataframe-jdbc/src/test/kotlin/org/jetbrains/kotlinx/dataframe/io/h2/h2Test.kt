@@ -661,11 +661,11 @@ class JdbcTest {
         // Pre-quoted names are rejected because the library adds quoting automatically.
         // Users should pass unquoted identifiers: schema.table, not "schema"."table".
         val preQuotedNames = listOf(
-            "\"Customer\"",          // ANSI double-quoted
+            "\"Customer\"", // ANSI double-quoted
             "\"PUBLIC\".\"Customer\"", // ANSI double-quoted schema.table
-            "`Customer`",            // MySQL backtick-quoted
-            "`PUBLIC`.`Customer`",   // MySQL backtick-quoted schema.table
-            "[Customer]",            // MSSQL bracket-quoted
+            "`Customer`", // MySQL backtick-quoted
+            "`PUBLIC`.`Customer`", // MySQL backtick-quoted schema.table
+            "[Customer]", // MSSQL bracket-quoted
         )
 
         preQuotedNames.forEach { tableName ->
