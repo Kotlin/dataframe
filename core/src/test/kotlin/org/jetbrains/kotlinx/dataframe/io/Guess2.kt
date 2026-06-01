@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.io.Json.WriteOptions
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
@@ -682,17 +681,17 @@ class Guess2 {
     @Test
     fun `write DataFrame as JSON to Appendable`() {
         val df = DataFrame.readJson("../data/participants.json")
-        val sb = StringBuilder()
-        // StringBuilder is reified — pin Appendable so the framework dispatches to that branch.
-        df.write(sb)
-        DataFrame.readJsonStr(sb.toString()) shouldBe df
+        val text = buildString {
+            df.write(this, DataFrameWriteOptions.Json())
+        }
+        DataFrame.readJsonStr(text) shouldBe df
     }
 
     @Test
     fun `write DataFrame as JSON to OutputStream`() {
         val df = DataFrame.readJson("../data/participants.json")
         val baos = ByteArrayOutputStream()
-        df.write(baos)
+        df.write(baos, DataFrameWriteOptions.Json())
         DataFrame.readJsonStr(baos.toString()) shouldBe df
     }
 
@@ -708,7 +707,7 @@ class Guess2 {
     fun `write DataFrame as JSON to Function1 of String`() {
         val df = DataFrame.readJson("../data/participants.json")
         var captured: String? = null
-        df.write({ it: String -> captured = it })
+        df.write({ it: String -> captured = it }, DataFrameWriteOptions.Json())
         captured shouldBe df.toJson()
     }
 
@@ -741,7 +740,7 @@ class Guess2 {
     fun `write DataRow as JSON to Appendable`() {
         val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
         val sb = StringBuilder()
-        row.write(sb)
+        row.write(sb, DataFrameWriteOptions.Json())
         sb.toString() shouldBe row.toJson()
     }
 
@@ -749,7 +748,7 @@ class Guess2 {
     fun `write DataRow as JSON to OutputStream`() {
         val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
         val baos = ByteArrayOutputStream()
-        row.write(baos)
+        row.write(baos, DataFrameWriteOptions.Json())
         baos.toString() shouldBe row.toJson()
     }
 
@@ -765,7 +764,8 @@ class Guess2 {
     fun `write DataRow as JSON to Function1 of String`() {
         val row = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""").single()
         var captured: String? = null
-        row.write({ it: String -> captured = it })
+        // Will require DataFrameWriteOptions.Json if multiple (String) -> Unit targets are present
+        row.write({ it: String -> captured = it }, DataFrameWriteOptions.Json())
         captured shouldBe row.toJson()
     }
 
@@ -780,9 +780,135 @@ class Guess2 {
     fun `write DataFrame as JSON with prettyPrint option produces multi-line output`() {
         val df = DataFrame.readJsonStr("""[{"a": 1, "b": "x"}]""")
         val sb = StringBuilder()
-        df.write(sb, WriteOptions(prettyPrint = true))
+        df.write(sb, DataFrameWriteOptions.Json(prettyPrint = true))
         sb.toString() shouldContain "\n"
         DataFrame.readJsonStr(sb.toString()) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as CSV to Path`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val tempPath = Files.createTempFile("guess2-write-df", ".csv")
+            .also { it.toFile().deleteOnExit() }
+        df.write(tempPath)
+        DataFrame.readCsv(tempPath) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as CSV to File`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val tempFile = Files.createTempFile("guess2-write-df", ".csv").toFile()
+            .also { it.deleteOnExit() }
+        df.write(tempFile)
+        DataFrame.readCsv(tempFile) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as CSV to String pointing at existing file`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val tempFile = Files.createTempFile("guess2-write-df-str", ".csv").toFile()
+            .also { it.deleteOnExit() }
+        df.write(tempFile.path)
+        DataFrame.readCsv(tempFile) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as CSV to Appendable with explicit options`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val sb = StringBuilder()
+        df.write(sb, DataFrameWriteOptions.Csv())
+        DataFrame.readCsvStr(sb.toString()) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as CSV to OutputStream with explicit options`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val baos = ByteArrayOutputStream()
+        df.write(baos, DataFrameWriteOptions.Csv())
+        DataFrame.readCsvStr(baos.toString()) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as CSV to Function1 of String with explicit options`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        var captured: String? = null
+        df.write({ it: String -> captured = it }, DataFrameWriteOptions.Csv())
+        captured shouldBe df.toCsvStr()
+    }
+
+    @Test
+    fun `write DataRow as CSV to Path`() {
+        val row = dataFrameOf("a", "b")(1, "xx").single()
+        val tempPath = Files.createTempFile("guess2-write-row", ".csv")
+            .also { it.toFile().deleteOnExit() }
+        row.write(tempPath)
+        DataFrame.readCsv(tempPath) shouldBe row.toDataFrame()
+    }
+
+    @Test
+    fun `write DataFrame as TSV to Path`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val tempPath = Files.createTempFile("guess2-write-df", ".tsv")
+            .also { it.toFile().deleteOnExit() }
+        df.write(tempPath)
+        DataFrame.readTsv(tempPath) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as TSV to File`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val tempFile = Files.createTempFile("guess2-write-df", ".tsv").toFile()
+            .also { it.deleteOnExit() }
+        df.write(tempFile)
+        DataFrame.readTsv(tempFile) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as TSV to String pointing at existing file`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val tempFile = Files.createTempFile("guess2-write-df-str", ".tsv").toFile()
+            .also { it.deleteOnExit() }
+        df.write(tempFile.path)
+        DataFrame.readTsv(tempFile) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as TSV to Appendable with explicit options`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val sb = StringBuilder()
+        df.write(sb, DataFrameWriteOptions.Tsv())
+        DataFrame.readTsvStr(sb.toString()) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as TSV to OutputStream with explicit options`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        val baos = ByteArrayOutputStream()
+        df.write(baos, DataFrameWriteOptions.Tsv())
+        DataFrame.readTsvStr(baos.toString()) shouldBe df
+    }
+
+    @Test
+    fun `write DataFrame as TSV to Function1 of String with explicit options`() {
+        val df = dataFrameOf("a", "b")(1, "xx", 2, "yy")
+        var captured: String? = null
+        df.write({ it: String -> captured = it }, DataFrameWriteOptions.Tsv())
+        captured shouldBe df.toTsvStr()
+    }
+
+    @Test
+    fun `write DataRow as TSV to Path`() {
+        val row = dataFrameOf("a", "b")(1, "xx").single()
+        val tempPath = Files.createTempFile("guess2-write-row", ".tsv")
+            .also { it.toFile().deleteOnExit() }
+        row.write(tempPath)
+        DataFrame.readTsv(tempPath) shouldBe row.toDataFrame()
+    }
+
+    @Test
+    fun `write DataFrame to shared text target requires explicit write options`() {
+        val df = dataFrameOf("a")(1)
+        shouldThrow<IllegalStateException> { df.write(StringBuilder()) }
     }
 
     @Test

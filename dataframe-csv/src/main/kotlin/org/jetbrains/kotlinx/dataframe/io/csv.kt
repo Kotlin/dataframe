@@ -3,12 +3,18 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams
+import org.jetbrains.kotlinx.dataframe.io.Csv.ReadOptions
+import org.jetbrains.kotlinx.dataframe.io.Csv.WriteOptions
 import java.io.File
 import java.io.InputStream
+import java.io.OutputStream
+import java.io.OutputStreamWriter
 import java.net.URL
 import java.nio.charset.Charset
 import java.nio.file.Path
@@ -38,7 +44,9 @@ public class CsvDeephaven(private val delimiter: Char = DelimParams.CSV_DELIMITE
     }
 }
 
-public class Csv : DataFrameReadSource {
+public class Csv :
+    DataFrameReadSource,
+    DataFrameWriteTarget {
 
     public data class ReadOptions(
         val delimiter: Char,
@@ -95,13 +103,62 @@ public class Csv : DataFrameReadSource {
     override val supportedReadingTypes: Set<KType> =
         setOf(typeOf<URL>(), typeOf<Path>(), typeOf<File>(), typeOf<String>(), typeOf<InputStream>())
 
+    public data class WriteOptions(
+        val delimiter: Char,
+        val includeHeader: Boolean,
+        val quote: Char?,
+        val quoteMode: QuoteMode,
+        val escapeChar: Char?,
+        val commentChar: Char?,
+        val headerComments: List<String>,
+        val recordSeparator: String,
+        val adjustCsvFormat: AdjustCSVFormat,
+    ) : DataFrameWriteOptions {
+        public companion object {
+            public operator fun invoke(
+                delimiter: Char = DelimParams.CSV_DELIMITER,
+                includeHeader: Boolean = DelimParams.INCLUDE_HEADER,
+                quote: Char? = DelimParams.QUOTE,
+                quoteMode: QuoteMode = DelimParams.QUOTE_MODE,
+                escapeChar: Char? = DelimParams.ESCAPE_CHAR,
+                commentChar: Char? = DelimParams.COMMENT_CHAR,
+                headerComments: List<String> = DelimParams.HEADER_COMMENTS,
+                recordSeparator: String = DelimParams.RECORD_SEPARATOR,
+                adjustCsvFormat: AdjustCSVFormat = DelimParams.ADJUST_CSV_FORMAT,
+            ): WriteOptions =
+                WriteOptions(
+                    delimiter = delimiter,
+                    includeHeader = includeHeader,
+                    quote = quote,
+                    quoteMode = quoteMode,
+                    escapeChar = escapeChar,
+                    commentChar = commentChar,
+                    headerComments = headerComments,
+                    recordSeparator = recordSeparator,
+                    adjustCsvFormat = adjustCsvFormat,
+                )
+        }
+    }
+
+    override val supportedWritingTypes: Set<KType> =
+        setOf(
+            typeOf<Path>(),
+            typeOf<File>(),
+            typeOf<String>(),
+            typeOf<Appendable>(),
+            typeOf<OutputStream>(),
+            typeOf<Function1<String, *>>(),
+        )
+
     public companion object {
         internal val EXTENSIONS = setOf("csv", "zip", "gz")
+        internal val WRITE_EXTENSIONS = setOf("csv")
         internal val MIME_TYPES = setOf(
             "text/csv",
             "application/zip",
             "application/gzip",
         )
+        internal val WRITE_MIME_TYPES = setOf("text/csv")
     }
 
     override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
@@ -110,6 +167,56 @@ public class Csv : DataFrameReadSource {
         if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
         return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
     }
+
+    override fun acceptsTarget(sourceInfo: DataSourceInfo, options: DataFrameWriteOptions?): Boolean {
+        if (options != null && options !is WriteOptions) return false
+        if (sourceInfo.extension != null && sourceInfo.extension !in WRITE_EXTENSIONS) return false
+        if (sourceInfo.mimeType != null && sourceInfo.mimeType !in WRITE_MIME_TYPES) return false
+        return supportedWritingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+    }
+
+    override fun writeDataFrame(
+        dataFrame: DataFrame<*>,
+        target: Any,
+        targetInfo: DataSourceInfo,
+        options: DataFrameWriteOptions?,
+    ): Result<Unit> =
+        runCatching {
+            val opts = (options ?: WriteOptions()) as WriteOptions
+            val kType = targetInfo.kType
+
+            @Suppress("RedundantReturnKeyword")
+            return@runCatching when {
+                kType.isSubTypeOf<Path>() ->
+                    dataFrame.writeCsv(path = target as Path, options = opts)
+
+                kType.isSubTypeOf<File>() ->
+                    dataFrame.writeCsv(file = target as File, options = opts)
+
+                kType.isSubTypeOf<String>() ->
+                    dataFrame.writeCsv(path = target as String, options = opts)
+
+                kType.isSubTypeOf<Appendable>() ->
+                    dataFrame.writeCsv(writer = target as Appendable, options = opts)
+
+                kType.isSubTypeOf<OutputStream>() ->
+                    OutputStreamWriter(target as OutputStream).use { dataFrame.writeCsv(writer = it, options = opts) }
+
+                kType.isSubTypeOf<Function1<String, *>>() -> {
+                    (target as Function1<String, *>).invoke(dataFrame.toCsvStr(options = opts))
+                    Unit
+                }
+
+                else -> return Result.failure(IllegalStateException("Unsupported target type for CSV writing: $kType"))
+            }
+        }
+
+    override fun writeDataRow(
+        dataRow: DataRow<*>,
+        target: Any,
+        targetInfo: DataSourceInfo,
+        options: DataFrameWriteOptions?,
+    ): Result<Unit> = writeDataFrame(dataRow.toDataFrame(), target, targetInfo, options)
 
     override fun readDataFrame(
         source: Any,
@@ -203,8 +310,11 @@ public class Csv : DataFrameReadSource {
     override fun toString(): String = "Csv"
 }
 
-public val DataFrameReadOptions.Companion.Csv: org.jetbrains.kotlinx.dataframe.io.Csv.ReadOptions.Companion
-    get() = org.jetbrains.kotlinx.dataframe.io.Csv.ReadOptions.Companion
+public val DataFrameReadOptions.Companion.Csv: ReadOptions.Companion
+    get() = ReadOptions.Companion
+
+public val DataFrameWriteOptions.Companion.Csv: WriteOptions.Companion
+    get() = WriteOptions.Companion
 
 private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 
@@ -212,3 +322,68 @@ private const val READ_CSV = "readCsv"
 
 internal class DefaultReadCsvMethod(path: String?, arguments: MethodArguments) :
     AbstractDefaultReadMethod(path, arguments, READ_CSV)
+
+private fun DataFrame<*>.writeCsv(path: Path, options: WriteOptions): Unit =
+    writeCsv(
+        path = path,
+        delimiter = options.delimiter,
+        includeHeader = options.includeHeader,
+        quote = options.quote,
+        quoteMode = options.quoteMode,
+        escapeChar = options.escapeChar,
+        commentChar = options.commentChar,
+        headerComments = options.headerComments,
+        recordSeparator = options.recordSeparator,
+    )
+
+private fun DataFrame<*>.writeCsv(file: File, options: WriteOptions): Unit =
+    writeCsv(
+        file = file,
+        delimiter = options.delimiter,
+        includeHeader = options.includeHeader,
+        quote = options.quote,
+        quoteMode = options.quoteMode,
+        escapeChar = options.escapeChar,
+        commentChar = options.commentChar,
+        headerComments = options.headerComments,
+        recordSeparator = options.recordSeparator,
+    )
+
+private fun DataFrame<*>.writeCsv(path: String, options: WriteOptions): Unit =
+    writeCsv(
+        path = path,
+        delimiter = options.delimiter,
+        includeHeader = options.includeHeader,
+        quote = options.quote,
+        quoteMode = options.quoteMode,
+        escapeChar = options.escapeChar,
+        commentChar = options.commentChar,
+        headerComments = options.headerComments,
+        recordSeparator = options.recordSeparator,
+    )
+
+private fun DataFrame<*>.writeCsv(writer: Appendable, options: WriteOptions): Unit =
+    writeCsv(
+        writer = writer,
+        delimiter = options.delimiter,
+        includeHeader = options.includeHeader,
+        quote = options.quote,
+        quoteMode = options.quoteMode,
+        escapeChar = options.escapeChar,
+        commentChar = options.commentChar,
+        headerComments = options.headerComments,
+        recordSeparator = options.recordSeparator,
+        adjustCsvFormat = options.adjustCsvFormat,
+    )
+
+private fun DataFrame<*>.toCsvStr(options: WriteOptions): String =
+    toCsvStr(
+        delimiter = options.delimiter,
+        includeHeader = options.includeHeader,
+        quote = options.quote,
+        quoteMode = options.quoteMode,
+        escapeChar = options.escapeChar,
+        commentChar = options.commentChar,
+        headerComments = options.headerComments,
+        recordSeparator = options.recordSeparator,
+    )
