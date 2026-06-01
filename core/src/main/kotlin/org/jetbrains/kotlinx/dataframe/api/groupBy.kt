@@ -193,6 +193,8 @@ internal interface GroupByDocs {
      *
      * * [count][Grouped.count] — calculate the number of rows in each group
      *   (optionally counting only rows that satisfy the given predicate);
+     * * [`countDistinct`][Grouped.countDistinct] — calculate the number of distinct rows in each group
+     *   (or distinct combinations of values in selected columns);
      * * [max][Grouped.max] / [maxOf][Grouped.maxOf] / [maxFor][Grouped.maxFor] —
      *   calculate the maximum of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;
