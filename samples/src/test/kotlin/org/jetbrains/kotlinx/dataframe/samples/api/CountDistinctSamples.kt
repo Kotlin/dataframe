@@ -4,22 +4,18 @@ import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.countDistinct
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.dataframe.util.defaultHeaderFormatting
 import org.junit.Test
 
 class CountDistinctSamples : DataFrameSampleHelper("countDistinct", "api") {
-    val df = peopleDf
-
-    private fun lastNameToColor(name: String): RgbColor =
-        when (name) {
-            "Byrd", "Daniels" -> RgbColor(210, 229, 199)
-            else -> RgbColor(255, 255, 255)
-        }
+    val df = peopleDf.take(7).filter { index() in setOf(0, 1, 2, 6) }
 
     private fun firstNameToColor(name: String): RgbColor =
         when (name) {
@@ -40,29 +36,29 @@ class CountDistinctSamples : DataFrameSampleHelper("countDistinct", "api") {
     @Test
     fun countDistinct() {
         // SampleStart
-        df.countDistinct() // the result is 10
+        df.countDistinct() // the result is 4
         // SampleEnd
     }
 
     @Test
     fun countDistinctColumns_properties() {
         // SampleStart
-        df.countDistinct { name.firstName and city } // the result is 9
+        df.countDistinct { name.firstName and city } // the result is 3
         // SampleEnd
     }
 
     @Test
     fun countDistinctColumns_strings() {
         // SampleStart
-        df.countDistinct { "name"["firstName"] and "city" } // the result is 9
+        df.countDistinct { "name"["firstName"] and "city" } // the result is 3
         // SampleEnd
     }
 
     @Test
     fun countDistinctColumnsDf() {
         df.format().perRowCol { row, _ ->
-            val lastName = df[row.index()].name.lastName
-            background(lastNameToColor(lastName)) and textColor(black)
+            val firstName = df[row.index()].name.firstName
+            background(firstNameToColor(firstName)) and textColor(black)
         }
             .saveDfHtmlSample()
     }
@@ -70,31 +66,31 @@ class CountDistinctSamples : DataFrameSampleHelper("countDistinct", "api") {
     @Test
     fun countDistinctGroupBy() {
         // SampleStart
-        df.groupBy { isHappy }
+        df.groupBy { city }
             // SampleEnd
             .saveDfHtmlSample()
     }
 
     @Test
-    fun countDistinctOnGroupBy_properties() {
+    fun countDistinctOnGroupBySmallTable_properties() {
         // SampleStart
-        df.groupBy { isHappy }.countDistinct()
+        df.groupBy { city }.countDistinct()
             // SampleEnd
             .defaultHeaderFormatting { "countDistinct"() }
             .saveDfHtmlSample()
     }
 
     @Test
-    fun countDistinctOnGroupBy_strings() {
+    fun countDistinctOnGroupBySmallTable_strings() {
         // SampleStart
-        df.groupBy("isHappy").countDistinct()
+        df.groupBy("city").countDistinct()
         // SampleEnd
     }
 
     @Test
     fun countDistinctColumnsOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.countDistinct { name.firstName }
+        df.groupBy { city }.countDistinct { name.firstName }
             // SampleEnd
             .defaultHeaderFormatting { "countDistinct"() }
             .saveDfHtmlSample()
@@ -103,14 +99,14 @@ class CountDistinctSamples : DataFrameSampleHelper("countDistinct", "api") {
     @Test
     fun countDistinctColumnsOnGroupBy_strings() {
         // SampleStart
-        df.groupBy("isHappy").countDistinct { "name"["firstName"] }
+        df.groupBy("city").countDistinct { "name"["firstName"] }
         // SampleEnd
     }
 
     @Test
     fun countDistinctColumnsCustomNameOnGroupBy_properties() {
         // SampleStart
-        df.groupBy { isHappy }.countDistinct("uniqueFirstNames") { name.firstName }
+        df.groupBy { city }.countDistinct("uniqueFirstNames") { name.firstName }
             // SampleEnd
             .defaultHeaderFormatting { "uniqueFirstNames"() }
             .saveDfHtmlSample()
@@ -119,13 +115,13 @@ class CountDistinctSamples : DataFrameSampleHelper("countDistinct", "api") {
     @Test
     fun countDistinctColumnsCustomNameOnGroupBy_strings() {
         // SampleStart
-        df.groupBy("isHappy").countDistinct("uniqueFirstNames") { "name"["firstName"] }
+        df.groupBy("city").countDistinct("uniqueFirstNames") { "name"["firstName"] }
         // SampleEnd
     }
 
     @Test
     fun countDistinctColumnsGroupBy() {
-        df.groupBy { isHappy }
+        df.groupBy { city }
             .toDataFrame()
             .convert { group }.with { group ->
                 val firstNameCol = group["name"]["firstName"]

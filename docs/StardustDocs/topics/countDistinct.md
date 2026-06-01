@@ -20,7 +20,7 @@ df
 <!---FUN countDistinct-->
 
 ```kotlin
-df.countDistinct() // the result is 10
+df.countDistinct() // the result is 4
 ```
 
 <!---END-->
@@ -34,14 +34,14 @@ You can also specify which columns to use when counting distinct combinations of
 <tab title="Properties">
 
 ```kotlin
-df.countDistinct { name.firstName and city } // the result is 9
+df.countDistinct { name.firstName and city } // the result is 3
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.countDistinct { "name"["firstName"] and "city" } // the result is 9
+df.countDistinct { "name"["firstName"] and "city" } // the result is 3
 ```
 
 </tab></tabs>
@@ -57,7 +57,7 @@ Let's take this `GroupBy` as an example:
 <!---FUN countDistinctGroupBy-->
 
 ```kotlin
-df.groupBy { isHappy }
+df.groupBy { city }
 ```
 
 <!---END-->
@@ -70,19 +70,19 @@ Applying `countDistinct` to this `GroupBy` yields the following result:
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { isHappy }.countDistinct()
+df.groupBy { city }.countDistinct()
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("isHappy").countDistinct()
+df.groupBy("city").countDistinct()
 ```
 
 </tab></tabs>
 <!---END-->
-<inline-frame src="./resources/countDistinctOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/countDistinctOnGroupBySmallTable_properties.html" width="100%" height="500px"></inline-frame>
 
 You can also specify which columns in the groups should be used to determine distinctness.
 
@@ -93,14 +93,14 @@ You can also specify which columns in the groups should be used to determine dis
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { isHappy }.countDistinct { name.firstName }
+df.groupBy { city }.countDistinct { name.firstName }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("isHappy").countDistinct { "name"["firstName"] }
+df.groupBy("city").countDistinct { "name"["firstName"] }
 ```
 
 </tab></tabs>
@@ -114,14 +114,14 @@ The default name of the new column is `countDistinct`, but you can choose a diff
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { isHappy }.countDistinct("uniqueFirstNames") { name.firstName }
+df.groupBy { city }.countDistinct("uniqueFirstNames") { name.firstName }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("isHappy").countDistinct("uniqueFirstNames") { "name"["firstName"] }
+df.groupBy("city").countDistinct("uniqueFirstNames") { "name"["firstName"] }
 ```
 
 </tab></tabs>
