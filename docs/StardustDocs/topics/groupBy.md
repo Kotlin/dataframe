@@ -1,7 +1,6 @@
 [//]: # (title: groupBy)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples-->
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.CountDistinctSamples-->
 
 Splits the rows of [`DataFrame`](DataFrame.md) into groups using one or several columns as grouping keys.
 
@@ -801,14 +800,14 @@ df.groupBy("city").count()
 <tab title="Properties">
 
 ```kotlin
-df.groupBy { isHappy }.countDistinct()
+df.groupBy { city }.countDistinct { name.firstName }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.groupBy("isHappy").countDistinct()
+df.groupBy("city").countDistinct { "name"["firstName"] }
 ```
 
 </tab></tabs>
@@ -883,6 +882,7 @@ Each function computes a statistic across the [`rows`](DataRow.md) of a group an
 
 The following aggregation statistics are available:
 * [`count`](count.md);
+* [`countDistinct`](countDistinct.md);
 * [`max / maxOf / maxFor`](minmax.md); 
 * [`min / minOf / minFor`](minmax.md); 
 * [`sum / sumOf / sumFor`](sum.md); 

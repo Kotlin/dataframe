@@ -202,6 +202,7 @@
 <resource src="valuesOnGroupBySelectedColumns_properties.html"></resource>
 <resource src="valuesOnGroupByRenameColumns_properties.html"></resource>
 <resource src="countOnGroupBy_properties.html"></resource>
+<resource src="countDistinctOnGroupBy_properties.html"></resource>
 <resource src="aggregateOnGroupBy_properties.html"></resource>
 <resource src="aggregateOnGroupByWithoutInto_properties.html"></resource>
 <resource src="maxOnGroupBy_properties.html"></resource>
@@ -320,7 +321,7 @@
 <resource src="readDatesWithSpecificDateTimeFormatter.html"></resource>
 <resource src="countDistinctDf.html"></resource>
 <resource src="countDistinctColumnsDf.html"></resource>
-<resource src="countDistinctOnGroupBy_properties.html"></resource>
+<resource src="countDistinctOnGroupBySmallTable_properties.html"></resource>
 <resource src="countDistinctGroupBy.html"></resource>
 <resource src="countDistinctColumnsOnGroupBy_properties.html"></resource>
 <resource src="countDistinctColumnsCustomNameOnGroupBy_properties.html"></resource>

@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.concatWithKeys
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.countDistinct
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
@@ -658,6 +659,22 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun countOnGroupBy_strings() {
         // SampleStart
         df.groupBy("city").count()
+        // SampleEnd
+    }
+
+    @Test
+    fun countDistinctOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { city }.countDistinct { name.firstName }
+            // SampleEnd
+            .defaultHeaderFormatting { "countDistinct"() }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun countDistinctOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("city").countDistinct { "name"["firstName"] }
         // SampleEnd
     }
 

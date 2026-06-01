@@ -50,12 +50,17 @@ class CountDistinctTests {
     // TODO: check columns as well when #1531 is fixed
     @Test
     fun `countDistinct on empty GroupBy`() {
-        df.drop(df.nrow).groupBy("group").countDistinct().count() shouldBe 0
+        df
+            .drop(df.nrow)
+            .groupBy("group").countDistinct()
+            .count() shouldBe 0
     }
 
     @Test
     fun `countDistinct on GroupBy with nulls`() {
-        val result = df.append(null, null, 1).groupBy("group").countDistinct()
+        val result = df
+            .append(null, null, 1)
+            .groupBy("group").countDistinct()
         val expected = dataFrameOf(
             "group" to columnOf(1, 2),
             "countDistinct" to columnOf(3, 1),
@@ -65,7 +70,9 @@ class CountDistinctTests {
 
     @Test
     fun `countDistinct on GroupBy with null group key`() {
-        val result = df.append("Dave", 30, null).groupBy("group").countDistinct()
+        val result = df
+            .append("Dave", 30, null)
+            .groupBy("group").countDistinct()
         val expected = dataFrameOf(
             "group" to columnOf(1, 2, null),
             "countDistinct" to columnOf(2, 1, 1),
