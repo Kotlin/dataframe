@@ -33,5 +33,4 @@ include("dataframe-compiler-plugin-core")
 
 include("examples:idea-examples:unsupported-data-sources:exposed")
 include("examples:idea-examples:unsupported-data-sources:hibernate")
-include("examples:idea-examples:unsupported-data-sources:spark")
 include("examples:idea-examples:unsupported-data-sources:multik")

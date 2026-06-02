@@ -44,7 +44,7 @@ This is why it was designed to be hierarchical and allows nesting of columns and
 * [**Interoperable**](collectionsInterop.md) — convertable with Kotlin data classes and collections.
   This also means conversion to/from other libraries' data structures is usually quite straightforward!
   See our [examples](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources) 
-  for some conversions between DataFrame and [Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/spark), [Multik](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/multik), and [JetBrains Exposed](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/exposed).
+  for some conversions between DataFrame and [Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-spark), [Multik](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/multik), and [JetBrains Exposed](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/exposed).
 * **Generic** — can store objects of any type, not only numbers or strings.
 * **Typesafe** — the Kotlin DataFrame library provides a mechanism of on-the-fly [**generation of extension properties**](extensionPropertiesApi.md) 
 that correspond to the columns of a dataframe. 

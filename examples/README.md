@@ -21,7 +21,7 @@ They show how to convert to and from Kotlin DataFrame and their respective table
     for an example of using Kotlin DataFrame with [Exposed](https://github.com/JetBrains/Exposed).
   * **Hibernate**: See the [hibernate folder](./idea-examples/unsupported-data-sources/hibernate)
     for an example of using Kotlin DataFrame with [Hibernate](https://hibernate.org/orm/).
-  * **Apache Spark**: See the [spark folder](./idea-examples/unsupported-data-sources/spark)
+  * **Apache Spark**: See the [spark folder](./projects/kotlin-spark)
     for an example of using Kotlin DataFrame with [Spark](https://spark.apache.org/) and with the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
   * **Multik**: See the [multik folder](./idea-examples/unsupported-data-sources/multik)
     for an example of using Kotlin DataFrame with [Multik](https://github.com/Kotlin/multik).
