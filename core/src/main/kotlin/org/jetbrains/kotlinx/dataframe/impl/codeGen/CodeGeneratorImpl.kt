@@ -34,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.TypeCastGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.toSnakeCase
 import org.jetbrains.kotlinx.dataframe.keywords.HardKeywords
 import org.jetbrains.kotlinx.dataframe.keywords.ModifierKeywords
@@ -274,6 +275,32 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
 
     private fun String.removeQuotes() = this.removeSurrounding("`")
 
+    private val troubleshootingLink = ""
+
+    /**
+     * Generate a try-catch block for column accessor with custom error messages.
+     *
+     * Catch any exception. Returns an `error()` with a special message. Can be improved with custom exception (#1872).
+     *
+     * 1) IllegalArgumentException -> most probably column not found. Should be replaced with a custom exception (#1871)
+     * 2) ClassCastException -> most probably incorrect column type. Should be replaced with a custom exception (#1871)
+     * 3) else -> unexpected exception.
+     */
+    private fun generateTryCatchColumnAccess(columnAccessCode: String, columnName: String): String {
+        val renderedColumnName = renderStringLiteral(columnName)
+        return """
+            try {
+                $columnAccessCode
+            } catch (e: Exception) {
+                 when (e) {
+                    is IllegalArgumentException -> error(message = "Column not found exception in the generated DataFrame extension property '$renderedColumnName': " + e.getLocalizedMessage() + ". See $troubleshootingLink for more information.")
+                    is ClassCastException -> error(message = "Incorrect column type exception in generated DataFrame extension property '$renderedColumnName': " + e.getLocalizedMessage() + " See $troubleshootingLink for more information.")
+                    else -> error(message = "Unexpected exception in generated DataFrame extension property '$renderedColumnName'. Please report it to https://github.com/Kotlin/dataframe/issues." + "Exception message: " + e.toString())
+                }
+            }
+            """.trimIndent()
+    }
+
     private fun generatePropertyCode(
         marker: IsolatedMarker,
         shortMarkerName: String,
@@ -282,6 +309,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         propertyType: String,
         getter: String,
         visibility: String,
+        columnName: String,
     ): String {
         // jvm name is required to prevent signature clash like this:
         // val DataRow<Type>.name: String
@@ -296,7 +324,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         }
         return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${
             renderStringLiteral(jvmName)
-        }\") get() = $getter as $propertyType"
+        }\") get() = ${generateTryCatchColumnAccess("$getter as $propertyType", columnName)} "
     }
 
     /**
@@ -355,6 +383,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                         propertyType = columnType,
                         getter = getter,
                         visibility = visibility,
+                        columnName = it.columnName,
                     ),
                     generatePropertyCode(
                         marker = marker,
@@ -364,6 +393,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                         propertyType = fieldType,
                         getter = getter,
                         visibility = visibility,
+                        columnName = it.columnName,
                     ),
                 ),
             )
@@ -378,6 +408,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                             propertyType = nullableColumnType,
                             getter = getter,
                             visibility = visibility,
+                            columnName = it.columnName,
                         ),
                         generatePropertyCode(
                             marker = marker,
@@ -387,6 +418,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                             propertyType = nullableFieldType,
                             getter = getter,
                             visibility = visibility,
+                            columnName = it.columnName,
                         ),
                     ),
                 )
