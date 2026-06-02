@@ -29,6 +29,8 @@ val versionsToSync =
         "maven",
         "kotlinDatetime",
         "log4j",
+        "spark3",
+        "kotlin-spark",
         "spark4",
         "kotlin-dl",
     )
