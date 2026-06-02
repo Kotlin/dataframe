@@ -20,6 +20,10 @@ Automatically generated archives of example projects.
 
 **Download:** [kotlin-dataframe-plugin-maven-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip)
 
+### Kotlin Spark
+
+**Download:** [kotlin-spark.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-spark.zip)
+
 ### Movies
 
 **Download:** [movies.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/movies.zip)
@@ -38,6 +42,6 @@ Automatically generated archives of example projects.
 
 ---
 
-Last updated: 2026-05-12 19:02 UTC
+Last updated: 2026-06-02 14:51 UTC
 
-Source commit: 2ace010dd582aacbc83e9d0ed361976d0fd0ab68
+Source commit: 727081434fca01befe834f2a59d76d17485501a2
