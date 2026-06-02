@@ -58,7 +58,7 @@ and make working with your data both convenient and type-safe.
 * [Using Unsupported Data Sources](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples):
   — A guide by examples. While these might one day become proper integrations of DataFrame, for now,
   we provide them as examples for how to make such integrations yourself.
-    * [Apache Spark Interop (With and Without Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/projects/spark-parquet-dataframe)
+    * [Apache Spark Interop (With and Without Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-spark)
     * [Multik Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/multik)
     * [JetBrains Exposed Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/exposed)
     * [Hibernate ORM](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/hibernate)

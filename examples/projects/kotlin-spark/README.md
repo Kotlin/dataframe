@@ -1,6 +1,6 @@
 # Apache Spark
 
-Showcase of how to use DataFrame [Apache Spark](https://spark.apache.org/) and
+Showcase of how to use DataFrame with [Apache Spark](https://spark.apache.org/) and
 the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
 
 Even though Spark is not officially supported as a data source in DataFrame,
