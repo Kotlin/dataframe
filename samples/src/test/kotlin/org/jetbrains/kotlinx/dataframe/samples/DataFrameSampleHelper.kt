@@ -54,43 +54,44 @@ abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "sa
     private val expandNestedFramesScript = DataFrameHtmlData(
         script =
             """
-        (function () {
-            function expandColumnGroups(df) {
-                for (let col of df.cols) {
-                    if (col.parent === undefined && col.children.length > 0) col.expanded = true;
+            (function () {
+                function expandColumnGroups(df) {
+                    for (let col of df.cols) {
+                        if (col.parent === undefined && col.children.length > 0) col.expanded = true;
+                    }
                 }
-            }
 
-            function expandNestedFrames(df, rootDf) {
-                for (let col of df.cols) {
-                    for (let value of col.values) {
-                        if (value && value.frameId !== undefined) {
-                            rootDf.expandedFrames.add(value.frameId);
-                            let child = rootDf.childFrames[value.frameId];
-                            if (child) {
-                                expandColumnGroups(child);
-                                expandNestedFrames(child, rootDf);
+                function expandNestedFrames(df, rootDf) {
+                    for (let col of df.cols) {
+                        for (let value of col.values) {
+                            if (value && value.frameId !== undefined) {
+                                rootDf.expandedFrames.add(value.frameId);
+                                let child = rootDf.childFrames[value.frameId];
+                                if (child) {
+                                    expandColumnGroups(child);
+                                    expandNestedFrames(child, rootDf);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            document.querySelectorAll("table.dataframe").forEach(function (table) {
-                if (table.df && table.df.id === table.df.rootId) {
-                    let rootDf = table.df;
-                    expandNestedFrames(rootDf, rootDf);
-                    DataFrame.renderTable(rootDf.id);
-                }
-            });
-        })();
-        """.trimIndent(),
+                document.querySelectorAll("table.dataframe").forEach(function (table) {
+                    if (table.df && table.df.id === table.df.rootId) {
+                        let rootDf = table.df;
+                        expandNestedFrames(rootDf, rootDf);
+                        DataFrame.renderTable(rootDf.id);
+                    }
+                });
+            })();
+            """.trimIndent(),
     )
 
-    fun DataFrame<*>.toExpandedHtml() = toStandaloneHtml(
-        configuration = DisplayConfiguration(enableFallbackStaticTables = false),
-        getFooter = { "" },
-    ) + expandNestedFramesScript
+    fun DataFrame<*>.toExpandedHtml() =
+        toStandaloneHtml(
+            configuration = DisplayConfiguration(enableFallbackStaticTables = false),
+            getFooter = { "" },
+        ) + expandNestedFramesScript
 
     fun GroupBy<*, *>.toExpandedHtml() = toDataFrame().toExpandedHtml()
 }
