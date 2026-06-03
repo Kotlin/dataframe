@@ -497,6 +497,36 @@ call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"f
 
 call_DataFrame(function() { DataFrame.renderTable(0) });
 
+(function () {
+    function expandColumnGroups(df) {
+        for (let col of df.cols) {
+            if (col.parent === undefined && col.children.length > 0) col.expanded = true;
+        }
+    }
+
+    function expandNestedFrames(df, rootDf) {
+        for (let col of df.cols) {
+            for (let value of col.values) {
+                if (value && value.frameId !== undefined) {
+                    rootDf.expandedFrames.add(value.frameId);
+                    let child = rootDf.childFrames[value.frameId];
+                    if (child) {
+                        expandColumnGroups(child);
+                        expandNestedFrames(child, rootDf);
+                    }
+                }
+            }
+        }
+    }
+
+    document.querySelectorAll("table.dataframe").forEach(function (table) {
+        if (table.df && table.df.id === table.df.rootId) {
+            let rootDf = table.df;
+            expandNestedFrames(rootDf, rootDf);
+            DataFrame.renderTable(rootDf.id);
+        }
+    });
+})();
 function sendHeight() {
     const table = document.querySelector('table.dataframe');
     if (!table) return;
