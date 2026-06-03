@@ -83,7 +83,7 @@ kotlin-spark = "1.2.4"
 spark3 = "3.3.2"
 spark4 = "4.0.0"
 
-multik = "0.2.3"
+multik = "0.3.1"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }

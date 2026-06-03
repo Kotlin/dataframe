@@ -45,7 +45,6 @@ fun main() {
         "t1WeightedMri" from { readT1WeightedMri(patientId) }
         "fMriBoldSeries" from { readFMRiBoldSeries(patientId) }
     }.cast<MriResults>(verify = true)
-        .append()
 
     results.print(borders = true)
 

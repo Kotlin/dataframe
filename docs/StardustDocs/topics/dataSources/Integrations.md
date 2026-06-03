@@ -20,7 +20,7 @@ These examples demonstrate how to bridge Kotlin DataFrame with external librarie
 
 - [Kotlin Exposed](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/exposed)
 - [Apache Spark (with/without Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-spark)
-- [Multik](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/multik)
+- [Multik](https://github.com/Kotlin/dataframe/tree/master/examples/projects/multik)
 
 You can use these examples as templates to create your own integrations
 with any data processing library that produces structured tabular data.

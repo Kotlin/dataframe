@@ -23,7 +23,7 @@ They show how to convert to and from Kotlin DataFrame and their respective table
     for an example of using Kotlin DataFrame with [Hibernate](https://hibernate.org/orm/).
   * **Apache Spark**: See the [spark folder](./projects/kotlin-spark)
     for an example of using Kotlin DataFrame with [Spark](https://spark.apache.org/) and with the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
-  * **Multik**: See the [multik folder](./idea-examples/unsupported-data-sources/multik)
+  * **Multik**: See the [multik folder](./projects/multik)
     for an example of using Kotlin DataFrame with [Multik](https://github.com/Kotlin/multik).
 
 The example projects in [examples/projects](projects) always target the latest stable version of the library.
