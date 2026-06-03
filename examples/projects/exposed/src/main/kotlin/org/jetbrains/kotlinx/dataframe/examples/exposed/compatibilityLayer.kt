@@ -40,9 +40,7 @@ fun Iterable<ResultRow>.convertToDataFrame(): AnyFrame {
     val map = mutableMapOf<String, MutableList<Any?>>()
     for (row in this) {
         for (expression in row.fieldIndex.keys) {
-            map.getOrPut(expression.readableName) {
-                mutableListOf()
-            } += row[expression]
+            map.getOrPut(expression.readableName) { mutableListOf() } += row[expression]
         }
     }
     return map.toDataFrame()
@@ -103,5 +101,7 @@ fun Table.toDataFrameSchema(columnNameToAccessor: MutableMap<String, String> = m
  */
 fun Table.toDataFrameSchemaWithNameNormalizer(): Pair<DataFrameSchema, NameNormalizer> {
     val columnNameToAccessor = mutableMapOf<String, String>()
-    return Pair(toDataFrameSchema(), NameNormalizer { columnNameToAccessor[it] ?: it })
+    val dataSchema = this.toDataFrameSchema(columnNameToAccessor)
+    val nameNormalizer = NameNormalizer { columnNameToAccessor[it] ?: it }
+    return Pair(dataSchema, nameNormalizer)
 }

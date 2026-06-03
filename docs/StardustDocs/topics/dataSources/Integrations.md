@@ -18,7 +18,7 @@ but you can still integrate them easily using custom code.
 Below is a list of example integrations with other data frameworks.
 These examples demonstrate how to bridge Kotlin DataFrame with external libraries or APIs.
 
-- [Kotlin Exposed](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/exposed)
+- [Kotlin Exposed](https://github.com/Kotlin/dataframe/tree/master/examples/projects/exposed)
 - [Apache Spark (with/without Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-spark)
 - [Multik](https://github.com/Kotlin/dataframe/tree/master/examples/projects/multik)
 

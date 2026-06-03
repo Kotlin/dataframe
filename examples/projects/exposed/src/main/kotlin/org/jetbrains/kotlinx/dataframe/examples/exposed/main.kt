@@ -66,7 +66,7 @@ fun main() {
     // now we have a DataFrame, we can perform DataFrame operations,
     // like doing the same operation as we did in Exposed above
     df.groupBy { country }.count()
-        .sortByDesc { "count"<Int>() }
+        .sortByDesc { count }
         .print(columnTypes = true, borders = true)
 
     // or just general statistics

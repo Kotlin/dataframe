@@ -60,7 +60,7 @@ and make working with your data both convenient and type-safe.
   we provide them as examples for how to make such integrations yourself.
     * [Apache Spark Interop (With and Without Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-spark)
     * [Multik Interop](https://github.com/Kotlin/dataframe/tree/master/examples/projects/multik)
-    * [JetBrains Exposed Interop](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/exposed)
+    * [JetBrains Exposed Interop](https://github.com/Kotlin/dataframe/tree/master/examples/projects/exposed)
     * [Hibernate ORM](https://github.com/Kotlin/dataframe/tree/master/examples/idea-examples/unsupported-data-sources/hibernate)
 * [OpenAPI Guide](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb)
   — learn how to parse and explore [OpenAPI](https://swagger.io) JSON structures using Kotlin DataFrame,
