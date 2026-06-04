@@ -15,10 +15,6 @@ plugins {
         alias(dokka)
 
         alias(simpleGit) apply false
-
-        // dependence on our own obsolete KSP plugin
-        // TODO remove when no examples need it anymore
-        alias(dataframe.ksp) apply false
     }
 }
 
