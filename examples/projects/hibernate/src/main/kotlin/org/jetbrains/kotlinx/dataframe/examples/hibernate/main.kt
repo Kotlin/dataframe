@@ -1,10 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.examples.hibernate
 
-import jakarta.persistence.Tuple
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaDelete
 import jakarta.persistence.criteria.CriteriaQuery
-import jakarta.persistence.criteria.Expression
 import jakarta.persistence.criteria.Root
 import org.hibernate.FlushMode
 import org.hibernate.SessionFactory
@@ -12,6 +10,7 @@ import org.hibernate.cfg.Configuration
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.asSequence
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -83,8 +82,8 @@ private fun SessionFactory.insertSampleData() {
     }
 }
 
-private fun SessionFactory.loadCustomersAsDataFrame(): DataFrame<DfCustomers> {
-    return withReadOnlyTransaction { session ->
+private fun SessionFactory.loadCustomersAsDataFrame(): DataFrame<DfCustomers> =
+    withReadOnlyTransaction { session ->
         val criteriaBuilder: CriteriaBuilder = session.criteriaBuilder
         val criteriaQuery: CriteriaQuery<CustomersEntity> = criteriaBuilder.createQuery(CustomersEntity::class.java)
         val root: Root<CustomersEntity> = criteriaQuery.from(CustomersEntity::class.java)
@@ -110,14 +109,16 @@ private fun SessionFactory.loadCustomersAsDataFrame(): DataFrame<DfCustomers> {
                 )
             }
             .toDataFrame()
+            // TODO This cast is a workaround for two bugs in DataFrame:
+            //   1) This `cast` should not be needed. `List<DfCustomers>` should become `DataFrame<DfCustomers>`
+            //      instead of `DataFrame<DfCustomers_XX>`, #1880
+            //   2) `cast` should not need `verify = false` here.
+            //      This is a bug related to `@ColumnName` in the compiler plugin.
+            .cast<DfCustomers>(verify = false)
     }
-}
 
 /** DTO used for aggregation projection. */
-private data class CountryCountDto(
-    val country: String,
-    val customerCount: Long,
-)
+private data class CountryCountDto(val country: String, val customerCount: Long)
 
 /**
  * **Hibernate + Criteria API:**
@@ -140,8 +141,8 @@ private fun SessionFactory.countCustomersPerCountryWithHibernate() {
         cq.select(
             cb.construct(
                 CountryCountDto::class.java,
-                countryPath,  // country
-                countExpr,    // customerCount
+                countryPath, // country
+                countExpr, // customerCount
             ),
         )
         cq.groupBy(countryPath)
@@ -166,7 +167,7 @@ private fun DataFrame<DfCustomers>.analyzeAndPrintResults() {
 
     // same operation as Exposed example: customers per country
     groupBy { country }.count()
-        .sortByDesc { "count"<Int>() }
+        .sortByDesc { count }
         .print(columnTypes = true, borders = true)
 
     // general statistics
@@ -191,9 +192,9 @@ private fun SessionFactory.replaceCustomersFromDataFrame(df: DataFrame<DfCustome
     }
 }
 
-private fun DataRow<DfCustomers>.toCustomersEntity(): CustomersEntity {
-    return CustomersEntity(
-        customerId = null, // let DB generate
+private fun DataRow<DfCustomers>.toCustomersEntity(): CustomersEntity =
+    CustomersEntity(
+        customerId = null, // let the DB generate
         firstName = this.firstName,
         lastName = this.lastName,
         company = this.company,
@@ -207,11 +208,9 @@ private fun DataRow<DfCustomers>.toCustomersEntity(): CustomersEntity {
         email = this.email,
         supportRepId = this.supportRepId,
     )
-}
 
-private inline fun <T> SessionFactory.withSession(block: (session: org.hibernate.Session) -> T): T {
-    return openSession().use(block)
-}
+private inline fun <T> SessionFactory.withSession(block: (session: org.hibernate.Session) -> T): T =
+    openSession().use(block)
 
 private inline fun SessionFactory.withTransaction(block: (session: org.hibernate.Session) -> Unit) {
     withSession { session ->
@@ -227,8 +226,8 @@ private inline fun SessionFactory.withTransaction(block: (session: org.hibernate
 }
 
 /** Read-only transaction helper for SELECT queries to minimize overhead. */
-private inline fun <T> SessionFactory.withReadOnlyTransaction(block: (session: org.hibernate.Session) -> T): T {
-    return withSession { session ->
+private inline fun <T> SessionFactory.withReadOnlyTransaction(block: (session: org.hibernate.Session) -> T): T =
+    withSession { session ->
         session.beginTransaction()
         // Minimize overhead for read operations
         session.isDefaultReadOnly = true
@@ -242,8 +241,6 @@ private inline fun <T> SessionFactory.withReadOnlyTransaction(block: (session: o
             throw e
         }
     }
-}
-
 
 private fun buildSessionFactory(): SessionFactory {
     // Load configuration from resources/hibernate/hibernate.cfg.xml

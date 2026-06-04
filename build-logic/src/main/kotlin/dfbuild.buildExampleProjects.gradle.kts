@@ -36,6 +36,10 @@ val versionsToSync =
         "multik",
         "exposed",
         "sqlite",
+        "h2db",
+        "hibernate",
+        "hikari",
+        "sl4j",
     )
 
 val syncAllExampleFolders by tasks.registering {

@@ -30,5 +30,3 @@ include("dataframe-geo-jupyter")
 include("dataframe-openapi-generator")
 include("core")
 include("dataframe-compiler-plugin-core")
-
-include("examples:idea-examples:unsupported-data-sources:hibernate")
