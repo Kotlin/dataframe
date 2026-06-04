@@ -109,9 +109,9 @@ private fun SessionFactory.loadCustomersAsDataFrame(): DataFrame<DfCustomers> =
                 )
             }
             .toDataFrame()
-            // TODO This cast is a workaround for two bugs in DataFrame:
-            //   1) This `cast` should not be needed. `List<DfCustomers>` should become `DataFrame<DfCustomers>`
-            //      instead of `DataFrame<DfCustomers_XX>`, #1880
+            // This cast is a workaround to turn `DataFrame<DfCustomers_XX>` into `DataFrame<DfCustomers>`:
+            // TODO We plan to improve this:
+            //   1) This `cast` should not be needed. `List<DfCustomers>` should become `DataFrame<DfCustomers>` #1880
             //   2) `cast` should not need `verify = false` here.
             //      This is a bug related to `@ColumnName` in the compiler plugin.
             .cast<DfCustomers>(verify = false)
