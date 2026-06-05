@@ -2178,6 +2178,7 @@ class DataFrameTests : BaseTest() {
             """
                   name  age     city  weight
                 String  Int  String?    Int?
+                  ---- ----     ----    ----
             0    Alice   15   London      54
             1      Bob   45    Dubai      87
             2  Charlie   20   Moscow    null

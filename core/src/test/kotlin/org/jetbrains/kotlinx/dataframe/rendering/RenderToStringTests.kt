@@ -25,6 +25,7 @@ class RenderToStringTests {
         val result = df.renderToString(columnTypes = false)
         val expected = """
             |        name  age    city
+            |        ---- ----    ----
             |  0    Alice   30  Berlin
             |  1      Bob   25   Paris
             |  2  Charlie   35  London
@@ -38,6 +39,7 @@ class RenderToStringTests {
         val result = df.renderToString(rowIndex = false, columnTypes = false)
         val expected = """
             |     name  age    city
+            |     ---- ----    ----
             |    Alice   30  Berlin
             |      Bob   25   Paris
             |  Charlie   35  London
@@ -67,6 +69,7 @@ class RenderToStringTests {
         val result = df.renderToString(alignLeft = true, rowIndex = false, columnTypes = false)
         val expected = """
             |name     age  city    
+            |----     ---- ----    
             |Alice    30   Berlin  
             |Bob      25   Paris   
             |Charlie  35   London  
@@ -82,6 +85,7 @@ class RenderToStringTests {
             """
             |       name  age    city
             |     String  Int  String
+            |       ---- ----    ----
             |  0   Alice   30  Berlin
             |
             """.trimMargin()
@@ -100,6 +104,7 @@ class RenderToStringTests {
             """
             |          a                 group
             |     Double  {l:Double, r:Double}
+            |       ----                  ----
             |  0     0.0      { l:0.0, r:0.0 }
             |
             """.trimMargin()
@@ -118,6 +123,7 @@ class RenderToStringTests {
             """
             |          a                                     group
             |     Double    [a:Double, group:{l:Double, r:Double}]
+            |       ----                                      ----
             |  0     0.0  [1 x 2] { a:0.000000, group:{ l:0.000...
             |
             """.trimMargin()
@@ -148,6 +154,7 @@ class RenderToStringTests {
             |DataFrame [3 x 3]
             |
             |     name  age    city
+            |     ---- ----    ----
             |    Alice   30  Berlin
             |      Bob   25   Paris
             |  Charlie   35  London
@@ -166,6 +173,7 @@ class RenderToStringTests {
         }.renderToString(columnTypes = false)
         val expected = """
             |       a             group
+            |    ----              ----
             |  0  0.0  { l:0.0, r:0.0 }
             |
         """.trimMargin()
@@ -177,6 +185,7 @@ class RenderToStringTests {
         val result = df.renderToString(rowsLimit = 2, rowIndex = false, columnTypes = false)
         val expected = """
             |   name  age    city
+            |   ---- ----    ----
             |  Alice   30  Berlin
             |    Bob   25   Paris
             |...
@@ -195,6 +204,7 @@ class RenderToStringTests {
         val result = nullDf.renderToString(rowIndex = false, columnTypes = false)
         val expected = """
          |  a      b
+         |---   ----
          |  1  hello
          |  2   null
          |
@@ -209,8 +219,8 @@ class RenderToStringTests {
             "hash" from { it.hashCode().toString() }
         }.renderToString(rowsLimit = null)
 
-        // header + data + empty newline
-        result.lines().size shouldBe 503
+        // header + separator + data + empty newline
+        result.lines().size shouldBe 504
     }
 
     @Test
