@@ -7,30 +7,37 @@
 
 <snippet id="rowFunctions">
 
-* `index(): Int` — sequential row number in [`DataFrame`](DataFrame.md), starts from 0
-* `prev(): DataRow?` — previous row (`null` for the first row)
-* `next(): DataRow?` — next row (`null` for the last row)
-* `diff(T) { rowExpression }: T / diffOrNull { rowExpression }: T?` — difference between the results of a [row expression](DataRow.md#row-expressions) calculated for current and previous rows
-* `explode(columns): DataFrame<T>` — spread lists and [`DataFrame`](DataFrame.md) objects vertically into new rows
-* `values(): List<Any?>` — list of all cell values from the current row
-* `valuesOf<T>(): List<T>` — list of values of the given type 
-* `columnsCount(): Int` — number of columns
-* `columnNames(): List<String>` — list of all column names
-* `columnTypes(): List<KType>` — list of all column types 
-* `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name and `value` is cell value
-* `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given type 
-* `transpose(): DataFrame<NameValuePair<*>>` — [`DataFrame`](DataFrame.md) of two columns: `name: String` is column names and `value: Any?` is cell values
-* `transposeTo<T>(): DataFrame<NameValuePair<T>>`— [`DataFrame`](DataFrame.md) of two columns: `name: String` is column names and `value: T` is cell values
-* `getRow(Int): DataRow` — row from [`DataFrame`](DataFrame.md) by row index
-* `getRows(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with subset of rows selected by absolute row index. 
-* `relative(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with subset of rows selected by relative row index: `relative(-1..1)` will return previous, current and next row. Requested indices will be coerced to the valid range and invalid indices will be skipped
-* `getValue<T>(columnName)` — cell value of type `T` by this row and given `columnName`
-* `getValueOrNull<T>(columnName)` — cell value of type `T?` by this row and given `columnName` or `null` if there's no such column
-* `get(column): T` — cell value by this row and given `column`
-* `String.invoke<T>(): T` — cell value of type `T` by this row and given `this` column name
-* `ColumnPath.invoke<T>(): T` — cell value of type `T` by this row and given `this` column path
-* `ColumnReference.invoke(): T` — cell value of type `T` by this row and given `this` column
-* `df()` — [`DataFrame`](DataFrame.md) that current row belongs to
+* `index(): Int` — sequential row number in [`DataFrame`](DataFrame.md), starts from 0;
+* `prev(): DataRow?` — previous row (`null` for the first row);
+* `next(): DataRow?` — next row (`null` for the last row);
+* `diff(T) { rowExpression }: T / diffOrNull { rowExpression }: T?` — difference between the results 
+of a [row expression](DataRow.md#row-expressions) calculated for the current and previous rows;
+* `explode(columns): DataFrame<T>` — spread lists and [`DataFrame`](DataFrame.md) objects vertically into new rows;
+* `values(): List<Any?>` — list of all cell values from the current row;
+* `valuesOf<T>(): List<T>` — list of values of the given type ;
+* `columnsCount(): Int` — number of columns;
+* `columnNames(): List<String>` — list of all column names;
+* `columnTypes(): List<KType>` — list of all column types;
+* `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name 
+and `value` is a cell value;
+* `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where the value has the given type;
+* `transpose(): DataFrame<NameValuePair<*>>` — [`DataFrame`](DataFrame.md) with two columns: `name: String` for column names 
+and `value: Any?` for cell values;
+* `transposeTo<T>(): DataFrame<NameValuePair<T>>` — [`DataFrame`](DataFrame.md) with two columns: `name: String` for column names 
+and `value: T` for cell values;
+* `getRow(Int): DataRow` — row from the [`DataFrame`](DataFrame.md) by a row index;
+* `getRows(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with a subset of rows selected by absolute row indices;
+* `relative(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with a subset of rows selected by relative row indices:
+`relative(-1..1)` will return the previous, current, and next row. Requested indices will be coerced to the valid range
+and invalid indices will be skipped;
+* `getValue<T>(columnName)` — cell value of type `T` by this row and the given `columnName`;
+* `getValueOrNull<T>(columnName)` — cell value of type `T?` by this row 
+and the given `columnName` or `null` if there's no such column;
+* `get(column): T` — cell value by this row and the given `column`;
+* `String.invoke<T>(): T` — cell value of type `T` by this row and the given `this` column name;
+* `ColumnPath.invoke<T>(): T` — cell value of type `T` by this row and the given `this` column path;
+* `ColumnReference.invoke(): T` — cell value of type `T` by this row and the given `this` column;
+* `df()` — [`DataFrame`](DataFrame.md) that the current row belongs to.
 
 </snippet>
 
@@ -326,7 +333,7 @@ These statistics will be applied only to values of appropriate types, and incomp
 For example, if a [dataframe](DataFrame.md) has columns of types `String` and `Int`,
 `rowSum()` will compute the sum of the `Int` values in the row and ignore `String` values.
 
-To apply statistics only to values of a particular type use `-Of` versions:
+To apply statistics only to values of a particular type, use `-Of` versions:
 * `rowSumOf<T>`
 * `rowMeanOf<T>`
 * `rowStdOf<T>`
